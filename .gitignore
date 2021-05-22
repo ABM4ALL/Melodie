@@ -150,10 +150,10 @@ out
 gen
 
 # database
-# Database/
+# _Database/
 
 # figure
-# Figures/
+# _Figures/
 
 # documentation
 ## Core latex/pdflatex auxiliary files:

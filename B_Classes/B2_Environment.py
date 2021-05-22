@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
 __author__ = 'Songmin'
 
-from Main._Config.ExPackages import *
+import random
+import numpy as np
 
 class Environment:
 
-    def __init__(self, _ParaFrame):
-        self.TradeNum = int(_ParaFrame.iloc[0]["TradeNum"])
-        self.WinProb = _ParaFrame.iloc[0]["RichWinProb"]
+    def __init__(self, para_series):
+        self.TradeNum = int(para_series.iloc[0]["TradeNum"])
+        self.WinProb = para_series.iloc[0]["RichWinProb"]
         self.TotalWealth = 0
         self.Gini = 0
 

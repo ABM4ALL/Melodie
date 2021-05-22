@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
 __author__ = 'Songmin'
 
-from Main._Config.ExPackages import *
+import numpy as np
 
 class Agent:
 
-    def __init__(self, _ParaSeries):
-        self.ID = _ParaSeries["ID"]
-        self.Account = _ParaSeries["InitialAccount"]
-        self.Productivity = _ParaSeries["Productivity"]
+    def __init__(self, para_series):
+        self.ID = para_series["ID_Agent"]
+        self.Account = para_series["InitialAccount"]
+        self.Productivity = para_series["Productivity"]
 
     def go_produce(self):
 
