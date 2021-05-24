@@ -10,11 +10,10 @@ class REG:
 
         # Exogenous Table
         self.Exo_SystemPara = self.ExogenousData + "SystemPara"
-        self.Exo_AgentPara = self.ExogenousData + "AgentPara"
         self.Exo_ScenarioPara = self.ExogenousData + "ScenarioPara"
 
         # Generated Table
-        self.Gen_AgentParaTable = self.GeneratedData + "AgentParaTable"
+        self.Gen_AgentPara = self.GeneratedData + "AgentPara"
 
         # Result Table
         self.Res_AgentPara = self.Result + "AgentPara"

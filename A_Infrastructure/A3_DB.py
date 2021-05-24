@@ -25,10 +25,7 @@ class DB:
         table_DataFrame.to_sql(table_name, conn, index=False, if_exists='replace', chunksize=1000)
         return None
 
-    def copy_DataFrame(self, table_name_from, conn_from, table_name_to, conn_to):
-        table = self.read_DataFrame(table_name_from, conn_from)
-        table.to_sql(table_name_to, conn_to, index=False, if_exists='replace', chunksize=1000)
-        return None
+
 
 
 

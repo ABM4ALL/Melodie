@@ -22,7 +22,7 @@ class Model:
 
     def gen_AgentList(self):
 
-        AgentParaDataFrame = DB().read_DataFrame(REG().Gen_AgentParaTable + "_S" + str(self.ID_Scenario), self.Conn)
+        AgentParaDataFrame = DB().read_DataFrame(REG().Gen_AgentPara + "_S" + str(self.ID_Scenario), self.Conn)
         Agent_list = []
         for row in range(0, AgentParaDataFrame.shape[0]):
             agent = Agent(AgentParaDataFrame.iloc[row])
@@ -39,7 +39,7 @@ class Model:
         DC = DataCollector(self.Conn, self.ID_Scenario)
 
         for t in range(0, SimulationPeriods):
-            print("period = " + str(t))
+            print("ID_Scenario = " + str(self.ID_Scenario) + ", period = " + str(t))
             DC.collect_AgentData(t, AgentList)
             Environment.go_MoneyProduce(AgentList)
             Environment.go_MoneyTransfer(AgentList)

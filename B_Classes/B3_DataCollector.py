@@ -17,13 +17,13 @@ class DataCollector:
     def collect_AgentData(self, period, AgentList):
 
         for agent in AgentList:
-            self.AgentVar.append([period, agent.ID, agent.Account])
+            self.AgentVar.append([period + 1, agent.ID, agent.Account])
 
         return None
 
     def collect_EnvironmentData(self, period, Environment):
 
-        self.EnvironmentVar.append([period, Environment.TotalWealth, Environment.Gini])
+        self.EnvironmentVar.append([period + 1, Environment.TotalWealth, Environment.Gini])
 
         return None
 
