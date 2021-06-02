@@ -1,8 +1,8 @@
 # README
 
-This Project ***ABM_Framework*** is a general framework that can be used to develop agent-based models for specific uses. To show how the framework can be used, I developed an minimized example about wealth allocation in the society. 
+This Project ***ABM_Framework*** is a general framework that can be used to develop agent-based models for specific uses. For illustration, a minimized example is provided. 
 
-After initialization, each agents get some money in their account. Then, in each period, all the agents go through following two processes:
+This example is about the wealth distribution in the society, exploring how "Gini index" can be influenced by the productivity and equality of people. After initialization, each agents get some money in their account. Then, in each period, all the agents go through following two processes:
 
 - MoneyProduce: randomly receive some money.
 - MoneyTransfer: in each period, there are multiple rounds. In each round, two agents are randomly selected and they play a game. The winner will take 1 dollar from the loser.
