@@ -8,6 +8,7 @@ from C_Model.C3_Analyzer import Analyzer
 if __name__ == "__main__":
 
     CONN = DB().create_Connection(CONS().RootDB)
-    ID_Scenario = 3
-    Model(CONN, ID_Scenario).run()
-    Analyzer(CONN, ID_Scenario).run()
+    for ID_Scenario in range(1, 2):
+        TableGenerator(CONN, ID_Scenario).run()
+        Model(CONN, ID_Scenario).run()
+        Analyzer(CONN, ID_Scenario).run()

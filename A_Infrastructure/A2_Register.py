@@ -9,7 +9,6 @@ class REG:
         self.Result = "Res_"
 
         # Exogenous Table
-        self.Exo_SystemPara = self.ExogenousData + "SystemPara"
         self.Exo_ScenarioPara = self.ExogenousData + "ScenarioPara"
 
         # Generated Table

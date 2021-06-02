@@ -9,16 +9,14 @@ class TableGenerator:
     def __init__(self, conn, id_scenario):
         self.Conn = conn
         self.ID_Scenario = id_scenario
+        self.ScenarioPara = DB().read_DataFrame(REG().Exo_ScenarioPara, self.Conn, ID_Scenario=self.ID_Scenario).iloc[0]
 
     def gen_AgentParaTable(self):
 
-        AgentParaRoot = DB().read_DataFrame(REG().Exo_ScenarioPara, self.Conn)
-        IntialAccountMin = AgentParaRoot.iloc[0]["AgentAccount_min"]
-        IntialAccountMax = AgentParaRoot.iloc[0]["AgentAccount_max"]
-        AgentProductivity = AgentParaRoot.iloc[0]["AgentProductivity"]
-
-        SystemPara = DB().read_DataFrame(REG().Exo_SystemPara, self.Conn)
-        AgentNum = int(SystemPara.iloc[0]["AgentNum"])
+        AgentNum = int(self.ScenarioPara["AgentNum"])
+        IntialAccountMin = self.ScenarioPara["AgentAccount_min"]
+        IntialAccountMax = self.ScenarioPara["AgentAccount_max"]
+        AgentProductivity = self.ScenarioPara["AgentProductivity"]
 
         AgentParaTable = np.zeros((AgentNum, 3))
         for agent in range(0, AgentNum):

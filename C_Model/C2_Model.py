@@ -12,13 +12,13 @@ class Model:
     def __init__(self, conn, id_scenario):
         self.Conn = conn
         self.ID_Scenario = id_scenario
+        self.ScenarioPara = DB().read_DataFrame(REG().Exo_ScenarioPara, self.Conn, ID_Scenario=self.ID_Scenario).iloc[0]
 
     def gen_Environment(self):
 
-        EnvironmentDataFrame = DB().read_DataFrame(REG().Exo_ScenarioPara, self.Conn, ID_Scenario=self.ID_Scenario)
-        EnvironmentAgent = Environment(EnvironmentDataFrame)
+        Env = Environment(self.ScenarioPara)
 
-        return EnvironmentAgent
+        return Env
 
     def gen_AgentList(self):
 
@@ -32,8 +32,7 @@ class Model:
 
     def run(self):
 
-        SystemPara = DB().read_DataFrame(REG().Exo_SystemPara, self.Conn)
-        SimulationPeriods = SystemPara.iloc[0]["Periods"]
+        SimulationPeriods = int(self.ScenarioPara["Periods"])
         Environment = self.gen_Environment()
         AgentList = self.gen_AgentList()
         DC = DataCollector(self.Conn, self.ID_Scenario)

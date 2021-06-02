@@ -32,7 +32,7 @@ class Figure:
     def plot_WealthAndGini(self, total_wealth_array, gini_array, figure_folder, id_scenario):
 
         figure = plt.figure(figsize=(12, 8), dpi=200, frameon=False)
-        ax = figure.add_axes([0.15, 0.1, 0.75, 0.8])
+        ax = figure.add_axes([0.15, 0.15, 0.7, 0.7])
         ax_2 = ax.twinx()
         x_pos = range(0, len(total_wealth_array))
 

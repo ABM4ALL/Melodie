@@ -7,8 +7,8 @@ import numpy as np
 class Environment:
 
     def __init__(self, para_series):
-        self.TradeNum = int(para_series.iloc[0]["TradeNum"])
-        self.WinProb = para_series.iloc[0]["RichWinProb"]
+        self.TradeNum = int(para_series["TradeNum"])
+        self.WinProb = para_series["RichWinProb"]
         self.TotalWealth = 0
         self.Gini = 0
 
