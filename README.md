@@ -14,4 +14,5 @@ There are two key parameters to discuss in the example:
 - Productivity: the probability of agents to successfully produce some money at the beginning of each period.
 - Winning probability of richer player: in each game between two randomly selected players, the result is probabilistically decided by a pre-defined parameter, i.e. the probability that the richer player will win the game. With this parameter, we introduce "allocation equality" in the model
 
-By changing this two parameters, I want to explore the following question: how is the "Gini index" influenced by the productivity and equality in the society.
+By changing these two parameters, we can explore the following question: how is the "Gini index" influenced by the productivity and equality in the society.
+
