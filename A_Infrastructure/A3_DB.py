@@ -20,9 +20,12 @@ class DB:
             DataFrame = pd.read_sql('select * from ' + table_name, con=conn)
         return DataFrame
 
-    def write_DataFrame(self, table, table_name, column_names, conn):
+    def write_DataFrame(self, table, table_name, column_names, conn, **kwargs):
         table_DataFrame = pd.DataFrame(table, columns=column_names)
-        table_DataFrame.to_sql(table_name, conn, index=False, if_exists='replace', chunksize=1000)
+        if len(kwargs) > 0:
+            table_DataFrame.to_sql(table_name, conn, index=False, if_exists='replace', chunksize=1000, dtype=kwargs["dtype"])
+        else:
+            table_DataFrame.to_sql(table_name, conn, index=False, if_exists='replace', chunksize=1000)
         return None
 
 

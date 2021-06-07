@@ -10,8 +10,14 @@ class DataCollector:
         self.Conn = conn
         self.ID_Scenario = id_scenario
         self.AgentVarList = ["Period", "ID", "Account"]
+        self.AgentVarDataType = {"Period": "INTEGER",
+                                 "ID": "INTEGER",
+                                 "Account": "REAL"}
         self.AgentVar = []
         self.EnvironmentVarList = ["Period", "TotalWealth", "Gini"]
+        self.EnvironmentVarDataType = {"Period": "INTEGER",
+                                       "TotalWealth": "REAL",
+                                       "Gini": "REAL"}
         self.EnvironmentVar = []
 
     def collect_AgentData(self, period, AgentList):
@@ -29,13 +35,13 @@ class DataCollector:
 
     def save_AgentData(self):
 
-        DB().write_DataFrame(self.AgentVar, REG().Res_AgentPara + "_S" + str(self.ID_Scenario), self.AgentVarList, self.Conn)
+        DB().write_DataFrame(self.AgentVar, REG().Res_AgentPara + "_S" + str(self.ID_Scenario), self.AgentVarList, self.Conn, dtype=self.AgentVarDataType)
 
         return None
 
     def save_EnvironmentData(self):
 
-        DB().write_DataFrame(self.EnvironmentVar, REG().Res_EnvironmentPara + "_S" + str(self.ID_Scenario), self.EnvironmentVarList, self.Conn)
+        DB().write_DataFrame(self.EnvironmentVar, REG().Res_EnvironmentPara + "_S" + str(self.ID_Scenario), self.EnvironmentVarList, self.Conn, dtype=self.EnvironmentVarDataType)
 
         return None
 
