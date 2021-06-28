@@ -23,12 +23,11 @@ class TableGenerator:
             AgentParaTable[agent][0] = int(agent + 1)
             AgentParaTable[agent][1] = np.random.randint(IntialAccountMin, IntialAccountMax + 1)
             AgentParaTable[agent][2] = AgentProductivity
-        column_name = ["ID_Agent", "InitialAccount", "Productivity"]
-        data_type = {"ID_Agent": "INTEGER",
-                     "InitialAccount": "REAL",
-                     "Productivity": "REAL"}
+        data_column = {"ID_Agent": "INTEGER",
+                       "InitialAccount": "REAL",
+                       "Productivity": "REAL"}
         DB().write_DataFrame(AgentParaTable, REG().Gen_AgentPara + "_S" + str(self.ID_Scenario),
-                             column_name, self.Conn, dtype=data_type)
+                             data_column.keys(), self.Conn, dtype=data_column)
 
         return None
 

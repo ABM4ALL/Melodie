@@ -9,39 +9,39 @@ class DataCollector:
     def __init__(self, conn, id_scenario):
         self.Conn = conn
         self.ID_Scenario = id_scenario
-        self.AgentVarList = ["Period", "ID", "Account"]
-        self.AgentVarDataType = {"Period": "INTEGER",
-                                 "ID": "INTEGER",
-                                 "Account": "REAL"}
-        self.AgentVar = []
-        self.EnvironmentVarList = ["Period", "TotalWealth", "Gini"]
-        self.EnvironmentVarDataType = {"Period": "INTEGER",
-                                       "TotalWealth": "REAL",
-                                       "Gini": "REAL"}
-        self.EnvironmentVar = []
+        self.AgentVar_Column = {"Period": "INTEGER",
+                                "ID": "INTEGER",
+                                "Account": "REAL"}
+        self.AgentVar_ValueList = []
+        self.EnvironmentVar_Column = {"Period": "INTEGER",
+                                      "TotalWealth": "REAL",
+                                      "Gini": "REAL"}
+        self.EnvironmentVar_ValueList = []
 
     def collect_AgentData(self, period, AgentList):
 
         for agent in AgentList:
-            self.AgentVar.append([period + 1, agent.ID, agent.Account])
+            self.AgentVar_ValueList.append([period + 1, agent.ID, agent.Account])
 
         return None
 
     def collect_EnvironmentData(self, period, Environment):
 
-        self.EnvironmentVar.append([period + 1, Environment.TotalWealth, Environment.Gini])
+        self.EnvironmentVar_ValueList.append([period + 1, Environment.TotalWealth, Environment.Gini])
 
         return None
 
     def save_AgentData(self):
 
-        DB().write_DataFrame(self.AgentVar, REG().Res_AgentPara + "_S" + str(self.ID_Scenario), self.AgentVarList, self.Conn, dtype=self.AgentVarDataType)
+        DB().write_DataFrame(self.AgentVar_ValueList, REG().Res_AgentPara + "_S" + str(self.ID_Scenario),
+                             self.AgentVar_Column.keys(), self.Conn, dtype=self.AgentVar_Column)
 
         return None
 
     def save_EnvironmentData(self):
 
-        DB().write_DataFrame(self.EnvironmentVar, REG().Res_EnvironmentPara + "_S" + str(self.ID_Scenario), self.EnvironmentVarList, self.Conn, dtype=self.EnvironmentVarDataType)
+        DB().write_DataFrame(self.EnvironmentVar_ValueList, REG().Res_EnvironmentPara + "_S" + str(self.ID_Scenario),
+                             self.EnvironmentVar_Column.keys(), self.Conn, dtype=self.EnvironmentVar_Column)
 
         return None
 
