@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 __author__ = 'Songmin'
 
+import os
 import matplotlib.pyplot as plt
 
 class Figure:
@@ -26,7 +27,7 @@ class Figure:
             tick.label1.set_fontsize(20)
 
         fig_name = "S" + str(id_scenario) + "_WealthAgent_" + str(id_agent)
-        figure.savefig(figure_folder + fig_name + ".png", dpi=200, format='PNG')
+        figure.savefig(os.path.join(figure_folder, fig_name + ".png"), dpi=200, format='PNG')
         plt.close(figure)
 
     def plot_WealthAndGini(self, total_wealth_array, gini_array, figure_folder, id_scenario):
@@ -64,5 +65,5 @@ class Figure:
             tick.label2.set_fontsize(20)
 
         fig_name = "S" + str(id_scenario) + "_WealthAndGini"
-        figure.savefig(figure_folder + fig_name + ".png", dpi=200, format='PNG')
+        figure.savefig(os.path.join(figure_folder , fig_name + ".png"), dpi=200, format='PNG')
         plt.close(figure)
