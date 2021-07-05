@@ -1,4 +1,4 @@
-
+import os
 import sqlite3
 import pandas as pd
 from A_Infrastructure.A1_Constants import CONS
@@ -6,7 +6,7 @@ from A_Infrastructure.A1_Constants import CONS
 class DB:
 
     def create_Connection(self, database_name):
-        conn = sqlite3.connect(CONS().DatabasePath + database_name + ".sqlite")
+        conn = sqlite3.connect(os.path.join(CONS().DatabasePath , database_name + ".sqlite"))
         return conn
 
     def read_DataFrame(self, table_name, conn, **kwargs):
