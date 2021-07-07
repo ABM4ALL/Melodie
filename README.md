@@ -1,8 +1,49 @@
 # README
 
-This Project ***ABM_Framework*** is a general framework that can be used to develop agent-based models for specific uses. For illustration, a minimized example is provided. 
+This project is supposed to be developed as a general framework that can be used to establish agent-based models for specific uses. Current main contributors are **Songmin YU** and **Zhanyi HOU**. 
 
-This example is about the wealth distribution in the society, exploring how "Gini index" can be influenced by the productivity and equality of people. After initialization, each agents get some money in their account. Then, in each period, all the agents go through following two processes:
+
+
+#### 1 Meetings
+
+- 20210707 - Brief exchange of development ideas
+- 2021080x - to be settled
+
+
+
+#### 2 Current Step
+
+##### Songmin
+
+- plan the modules that will be covered in the framework
+
+##### Zhanyi
+
+- go through the code of MESA and see what we could learn from and build based on them
+
+
+
+#### 3 Ideas
+
+
+
+
+
+
+
+
+
+
+
+
+
+---
+
+#### Application Example
+
+For illustration, a minimized example on **Wealth Distribution** is provided as below. 
+
+This example explores how "Gini index" can be influenced by the productivity and equality of people. After initialization, each agents get some money in their account. Then, in each period, all the agents go through following two processes:
 
 - MoneyProduce: randomly receive some money.
 - MoneyTransfer: in each period, there are multiple rounds. In each round, two agents are randomly selected and they play a game. The winner will take 1 dollar from the loser.
