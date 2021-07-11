@@ -3,8 +3,31 @@ __author__ = 'Songmin'
 
 import os
 import matplotlib.pyplot as plt
+from EG1_WealthDistribution.Config import CONN, REG
+from _Package.DB import DB
 
-class Figure:
+class Analyzer:
+
+    def __init__(self, conn, id_scenario):
+        self.Conn = conn
+        self.ID_Scenario = id_scenario
+
+    def analyze_AgentWealth(self, id_agent):
+
+        AgentResult = DB().read_DataFrame(REG().Res_AgentPara + "_S" + str(self.ID_Scenario), self.Conn)
+        AgentWealth = AgentResult.loc[AgentResult["ID"] == id_agent]["Account"].values
+        self.plot_AgentWealth(AgentWealth, id_agent, CONN().FiguresPath, self.ID_Scenario)
+
+        return None
+
+    def analyze_WealthAndGini(self):
+
+        EnvironmentResult = DB().read_DataFrame(REG().Res_EnvironmentPara + "_S" + str(self.ID_Scenario), self.Conn)
+        TotalWealth = EnvironmentResult["TotalWealth"].values
+        Gini = EnvironmentResult["Gini"].values
+        self.plot_WealthAndGini(TotalWealth, Gini, CONN().FiguresPath, self.ID_Scenario)
+
+        return None
 
     def plot_AgentWealth(self, agent_wealth_array, id_agent, figure_folder, id_scenario):
 
@@ -67,3 +90,8 @@ class Figure:
         fig_name = "S" + str(id_scenario) + "_WealthAndGini"
         figure.savefig(os.path.join(figure_folder , fig_name + ".png"), dpi=200, format='PNG')
         plt.close(figure)
+
+    def run(self):
+        self.analyze_AgentWealth(1)
+        self.analyze_WealthAndGini()
+

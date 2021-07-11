@@ -1,13 +1,6 @@
-import os
-import sqlite3
 import pandas as pd
-from A_Infrastructure.A1_Constants import CONS
 
 class DB:
-
-    def create_Connection(self, database_name):
-        conn = sqlite3.connect(os.path.join(CONS().DatabasePath , database_name + ".sqlite"))
-        return conn
 
     def read_DataFrame(self, table_name, conn, **kwargs):
         if len(kwargs) > 0:
@@ -29,10 +22,6 @@ class DB:
             table_DataFrame.to_sql(table_name, conn, index=False, if_exists='replace', chunksize=1000)
         return None
 
-    def revise_DataType(self, table_name, data_type, conn):
-        table_DataFrame = self.read_DataFrame(table_name, conn)
-        table_DataFrame.to_sql(table_name, conn, index=False, if_exists='replace', chunksize=1000,
-                               dtype=data_type)
 
 
 
