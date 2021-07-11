@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 __author__ = 'Songmin'
 
-from A_Infrastructure.A2_Register import REG
-from A_Infrastructure.A3_DB import DB
+from EG1_WealthDistribution.Config import REG
+from _Package.DB import DB
 
 class DataCollector:
 

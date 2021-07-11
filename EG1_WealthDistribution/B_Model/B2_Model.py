@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 __author__ = 'Songmin'
 
-from A_Infrastructure.A2_Register import REG
-from A_Infrastructure.A3_DB import DB
-from B_Classes.B1_Agent import Agent
-from B_Classes.B2_Environment import Environment
-from B_Classes.B3_DataCollector import DataCollector
+from EG1_WealthDistribution.Config import REG
+from _Package.DB import DB
+from EG1_WealthDistribution.A_Class.A1_Agent import Agent
+from EG1_WealthDistribution.A_Class.A2_Environment import Environment
+from EG1_WealthDistribution.A_Class.A3_DataCollector import DataCollector
 
 class Model:
 
