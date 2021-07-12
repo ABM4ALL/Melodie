@@ -1,0 +1,3 @@
+
+class DataCollector:
+    pass
