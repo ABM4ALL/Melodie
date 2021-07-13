@@ -25,14 +25,7 @@ This project is supposed to be developed as a general framework that can be used
 
 #### 3 Ideas
 
-##### 3.1 Package names
 
-- Melodie
-- ABMConstructor
-- Ritter
-- Emergence
-- MaoDouLe
-- Music
 
 
 
