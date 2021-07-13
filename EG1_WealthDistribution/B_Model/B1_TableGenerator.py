@@ -2,7 +2,7 @@
 __author__ = 'Songmin'
 import numpy as np
 from EG1_WealthDistribution.Config import REG
-from _Package.DB import DB
+from _Melodie.DB import DB
 
 class TableGenerator:
 
