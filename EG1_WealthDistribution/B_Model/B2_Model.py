@@ -2,7 +2,7 @@
 __author__ = 'Songmin'
 
 from EG1_WealthDistribution.Config import REG
-from _Package.DB import DB
+from _Melodie.DB import DB
 from EG1_WealthDistribution.A_Class.A1_Agent import Agent
 from EG1_WealthDistribution.A_Class.A2_Environment import Environment
 from EG1_WealthDistribution.A_Class.A3_DataCollector import DataCollector
