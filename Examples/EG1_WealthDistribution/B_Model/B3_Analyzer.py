@@ -3,7 +3,7 @@ __author__ = 'Songmin'
 
 import os
 import matplotlib.pyplot as plt
-from EG1_WealthDistribution.Config import CONN, REG
+from Examples.EG1_WealthDistribution.Config import CONN, REG
 from _Melodie.DB import DB
 
 class Analyzer:
