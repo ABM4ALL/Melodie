@@ -6,3 +6,4 @@ def test_fib_10():
 
 def test_fib_not_20():
 	assert(Agent().fibonacci(20) != 20)
+
