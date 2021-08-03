@@ -1,4 +1,6 @@
 # README
+[![Build status](https://travis-ci.com/SongminYu/ABM_Framework.svg?token=hUQyFUyaU39xjrgo3fuu&branch=master)](https://travis-ci.org/SongminYu)
+
 
 This project is supposed to be developed as a general framework that can be used to establish agent-based models for specific uses. Current main contributors are **Songmin YU** and **Zhanyi HOU**. 
 
