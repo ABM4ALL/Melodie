@@ -4,7 +4,7 @@ Welcome to Melodie's documentation!
 ===================================
 
 Melodie is a general framework that can be used to establish agent-based models for specific uses.
-The name comes from the most beautiful metaphor I have ever heard explaining \"what a complexity system is":
+The name comes from the most beautiful metaphor I have ever heard explaining \"What is a complexity system?"
 
 Melody is not about single notes, but emerges from the interaction among notes.
 
