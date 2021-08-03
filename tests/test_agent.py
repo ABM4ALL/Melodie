@@ -1,5 +1,4 @@
 import pytest
-
 from Melodie.Agent import Agent
 
 def test_fib_10():
