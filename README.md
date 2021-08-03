@@ -9,7 +9,7 @@ This project is supposed to be developed as a general framework that can be used
 #### 1 Meetings
 
 - 20210707 - Brief exchange of development ideas
-- 2021080x - to be settled
+- 20210806 - 
 
 
 
