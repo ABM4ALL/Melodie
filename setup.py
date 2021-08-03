@@ -14,8 +14,12 @@ setuptools.setup(
     author_email='songmin.yu@isi.fraunhofer.de',
     license='BSD 3',
     classifiers=[
-        'Development Status :: Just started',
+        'Development Status :: 4 - Beta',
+        'Intended Audience :: Science/Research',
+        'License :: OSI Approved :: BSD License',
         'Natural Language :: English',
+        'Operating System :: Unix',
+        'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
         'Topic :: Scientific/Engineering :: Artificial Intelligence',
     ],
