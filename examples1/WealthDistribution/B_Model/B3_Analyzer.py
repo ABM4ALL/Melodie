@@ -3,8 +3,8 @@ __author__ = 'Songmin'
 
 import os
 import matplotlib.pyplot as plt
-from examples.WealthDistribution.Config import CONN, REG
-from _Melodie.DB import DB
+from examples1.WealthDistribution.Config import CONN, REG
+from Melodie.DB import DB
 
 class Analyzer:
 
