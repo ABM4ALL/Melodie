@@ -1,6 +1,6 @@
 import pytest
 
-from _Melodie.Agent import Agent
+from Melodie.Agent import Agent
 
 def test_fib_10():
 	assert(Agent().fibonacci(10) == 55)

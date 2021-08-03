@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 __author__ = 'Songmin'
 
-from examples.WealthDistribution.Config import REG
-from _Melodie.DB import DB
-from examples.WealthDistribution.A_Class.A1_Agent import Agent
-from examples.WealthDistribution.A_Class.A2_Environment import Environment
-from examples.WealthDistribution.A_Class.A3_DataCollector import DataCollector
+from examples1.WealthDistribution.Config import REG
+from Melodie.DB import DB
+from examples1.WealthDistribution.A_Class.A1_Agent import Agent
+from examples1.WealthDistribution.A_Class.A2_Environment import Environment
+from examples1.WealthDistribution.A_Class.A3_DataCollector import DataCollector
 
 class Model:
 

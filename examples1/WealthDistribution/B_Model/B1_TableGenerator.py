@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 __author__ = 'Songmin'
 import numpy as np
-from examples.WealthDistribution.Config import REG
-from _Melodie.DB import DB
+from examples1.WealthDistribution.Config import REG
+from Melodie.DB import DB
 
 class TableGenerator:
 
