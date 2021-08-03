@@ -11,3 +11,12 @@ Since \"Melody" is already taken by other projects, here I take its German trans
 While writing down this paragraph, I am in Karlsruhe, Germany.
 
 
+.. toctree::
+   :maxdepth: 2
+   :caption: Contents
+
+   overview
+   featured_usage
+   install
+   tutorials/tutorials
+   api

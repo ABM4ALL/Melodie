@@ -1,6 +1,6 @@
 .. Abmarl documentation overview.
 
-Design
+Overview
 ======
 
 A reinforcement learning experiment in Abmarl contains two interacting components:

@@ -1,4 +1,4 @@
-.. Abmarl documentation installation instructions.
+.. Melodie documentation installation instructions.
 
 .. _installation:
 
@@ -7,22 +7,22 @@ Installation
 
 User Installation
 -----------------
-You can install abmarl via `pip`:
+You can install Melodie via `pip`:
 
 .. code-block::
 
-   pip install abmarl
+   pip install Melodie
 
 
 Developer Installation
 ----------------------
-To install Abmarl for development, first clone the repository and then install
+To install Melodie for development, first clone the repository and then install
 via pip's development mode.
 
 .. code-block::
 
-   git clone git@github.com:LLNL/Abmarl.git
-   cd abmarl
+   git clone git@github.com:SongminYu/Melodie.git
+   cd Melodie
    pip install -r requirements.txt
    pip install -e . --no-deps
 
@@ -34,10 +34,9 @@ via pip's development mode.
 
 Dependency Note
 ---------------
-Abmarl has the following dependencies
+Melodie has the following dependencies
 
 * Python 3.7 or Python3.8
-* Tensorflow 2.4+
-* Ray 1.2.0
+* numpy
+* pandas
 * matplotlib
-* seaborn

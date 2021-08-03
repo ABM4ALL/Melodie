@@ -1,10 +1,10 @@
-.. Abmarl documentation API.
+.. Melodie documentation API.
 
-Abmarl API Specification
+Melodie API Specification
 =========================
 
 
-Abmarl Simulations
+Melodie Simulations
 --------------------
 
 .. _api_agent:
@@ -35,7 +35,7 @@ Abmarl Simulations
 
 .. _api_sim:
 
-Abmarl Simulation Managers
+Melodie Simulation Managers
 ---------------------------
 
 .. autoclass:: abmarl.managers.SimulationManager
@@ -57,7 +57,7 @@ Abmarl Simulation Managers
 
 .. _api_gym_wrapper:
 
-Abmarl External Integration
+Melodie External Integration
 ----------------------------
 
 .. autoclass:: abmarl.external.GymWrapper
