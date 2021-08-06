@@ -9,7 +9,7 @@ This project is supposed to be developed as a general framework that can be used
 
 - 20210707 - Brief exchange of development ideas
 - 20210806 - Brief exchange about mesa and agentpy, and the plan of project
-- 2021082x - Discuss classes design and interaction (UML)
+- 2021082x - Discuss classes design and their interaction (UML)
 
 
 
