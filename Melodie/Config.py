@@ -10,7 +10,7 @@ class CONN:
         self.ProjectPath = Path(os.path.dirname(__file__))
         self.DatabasePath = os.path.join(str(self.ProjectPath), "_Database")
         self.FiguresPath = os.path.join(str(self.ProjectPath), "_Figures")
-        self.DBName = "WealthDistribution"
+        self.DBName = ""
         self.DBConnection = self.create_Connection(self.DBName)
 
     def create_Connection(self, database_name):
@@ -34,5 +34,5 @@ class REG:
         self.Gen_AgentPara = self.GeneratedData + "AgentPara"
 
         # Result Table
-        self.Res_AgentPara = self.Result + "AgentPara"
-        self.Res_EnvironmentPara = self.Result + "EnvironmentPara"
+        self.Res_AgentPara = self.Result + "AgentVar"
+        self.Res_EnvironmentPara = self.Result + "EnvironmentVar"

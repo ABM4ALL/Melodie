@@ -8,7 +8,8 @@ This project is supposed to be developed as a general framework that can be used
 #### 1 Meetings
 
 - 20210707 - Brief exchange of development ideas
-- 20210806 - 
+- 20210806 - Brief exchange about mesa and agentpy, and the plan of project
+- 2021082x - Discuss classes design and interaction (UML)
 
 
 
@@ -16,11 +17,13 @@ This project is supposed to be developed as a general framework that can be used
 
 ##### Songmin
 
-- plan the modules that will be covered in the framework
+- design classes and their interaction
 
 ##### Zhanyi
 
-- go through the code of MESA and see what we could learn from and build based on them
+- travis
+- codecov
+- cookie-cutter
 
 
 
