@@ -4,7 +4,7 @@ with open('README.md', 'r') as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name='melodie',
+    name='Melodie',
     version='0.1',
     description='A general framework that can be used to establish agent-based models for specific uses.',
     long_description=long_description,
@@ -24,7 +24,7 @@ setuptools.setup(
         'Topic :: Scientific/Engineering :: Artificial Intelligence',
     ],
     project_urls={
-        'Documentation': 'https://melodie.readthedocs.io/en/latest/index.html',
+        'Documentation': 'https://Melodie.readthedocs.io/en/latest/index.html',
     },
     packages=setuptools.find_packages(),
     install_requires=[
@@ -35,7 +35,7 @@ setuptools.setup(
     python_requires='>=3.7, <3.9',
     entry_points={
         'console_scripts': [
-            'melodie=melodie.scripts.scripts:cli'
+            'Melodie=Melodie.scripts.scripts:cli'
         ]
     },
 )
