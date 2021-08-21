@@ -402,3 +402,6 @@ TSWLatexianTemp*
 
 # generated if using elsarticle.cls
 #*.spl
+
+_Figures
+_Database
