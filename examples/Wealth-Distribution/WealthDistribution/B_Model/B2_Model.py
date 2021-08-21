@@ -1,11 +1,14 @@
 # -*- coding: utf-8 -*-
 __author__ = 'Songmin'
 
+import pandas.io.sql
+
 from ..Config import REG
 from Melodie.DB import DB
 from ..A_Class.A1_Agent import Agent
 from ..A_Class.A2_Environment import Environment
 from ..A_Class.A3_DataCollector import DataCollector
+
 
 class Model:
 
@@ -47,5 +50,3 @@ class Model:
 
         DC.save_AgentData()
         DC.save_EnvironmentData()
-
-
