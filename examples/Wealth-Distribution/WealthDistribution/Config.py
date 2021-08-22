@@ -2,6 +2,8 @@ import os
 import sqlite3
 from pathlib import Path
 
+from Melodie.ScenarioManager import Scenario
+
 
 class CONN:
 
@@ -38,3 +40,34 @@ class REG:
         # Result Table
         self.Res_AgentPara = self.Result + "AgentPara"
         self.Res_EnvironmentPara = self.Result + "EnvironmentPara"
+
+
+class GiniScenario(Scenario):
+    ScenarioPara = [
+        "ID_Scenario",
+        "Periods",
+        "AgentNum",
+        "AgentAccount_min",
+        "AgentAccount_max",
+        "AgentProductivity",
+        "TradeNum",
+        "RichWinProb"]
+    types = {
+        "ID_Scenario": 'INT',
+        "Periods": 'INT',
+        "AgentNum": 'INT',
+        "AgentAccount_min": 'REAL',
+        "AgentAccount_max": 'REAL',
+        "AgentProductivity": 'REAL',
+        "TradeNum": "REAL",
+        "RichWinProb": 'REAL'}
+
+    def __init__(self, id: int, periods: int, agentNum: int):
+        self.ID_Scenario = id
+        self.Periods = periods
+        self.AgentNum = agentNum
+        self.AgentAccount_min = 0.0
+        self.AgentAccount_max = 100.0
+        self.AgentProductivity = 0.5
+        self.TradeNum = 100.0
+        self.RichWinProb = 0.2

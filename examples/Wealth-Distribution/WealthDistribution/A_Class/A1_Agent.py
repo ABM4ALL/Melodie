@@ -2,13 +2,22 @@
 __author__ = 'Songmin'
 
 import numpy as np
+from Melodie.Agent import Agent
 
-class Agent:
 
-    def __init__(self, para_series):
-        self.ID = para_series["ID_Agent"]
-        self.Account = para_series["InitialAccount"]
-        self.Productivity = para_series["Productivity"]
+class GINIAgent(Agent):
+    params = ["ID", "Account", "Productivity"]
+    types = {
+        "ID": "INTEGER",
+        "Account": "REAL",
+        "Productivity": "REAL"
+    }
+
+    def __init__(self):
+        super(GINIAgent, self).__init__()
+        self.ID = 0
+        self.Account = 0.0
+        self.Productivity = 0.0
 
     def go_produce(self):
 
@@ -19,4 +28,3 @@ class Agent:
             pass
 
         return None
-

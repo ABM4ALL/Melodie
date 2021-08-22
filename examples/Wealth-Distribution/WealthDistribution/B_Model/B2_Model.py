@@ -1,11 +1,9 @@
 # -*- coding: utf-8 -*-
 __author__ = 'Songmin'
 
-import pandas.io.sql
-
 from ..Config import REG
 from Melodie.DB import DB
-from ..A_Class.A1_Agent import Agent
+from ..A_Class.A1_Agent import GINIAgent
 from ..A_Class.A2_Environment import Environment
 from ..A_Class.A3_DataCollector import DataCollector
 
@@ -28,7 +26,8 @@ class Model:
         AgentParaDataFrame = DB().read_DataFrame(REG().Gen_AgentPara + "_S" + str(self.ID_Scenario), self.Conn)
         Agent_list = []
         for row in range(0, AgentParaDataFrame.shape[0]):
-            agent = Agent(AgentParaDataFrame.iloc[row])
+            agent = GINIAgent()
+            agent.setup(AgentParaDataFrame.iloc[row])
             Agent_list.append(agent)
 
         return Agent_list

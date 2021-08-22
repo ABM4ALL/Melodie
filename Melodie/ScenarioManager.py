@@ -1,5 +1,10 @@
-
+from Melodie.Element import Element
 from Melodie.DB import DB
+
+
+class Scenario(Element):
+    pass
+
 
 class ScenarioManager:
 
