@@ -3,7 +3,12 @@ from Melodie.DB import DB
 
 
 class Scenario(Element):
-    pass
+    def toDict(self):
+        print(self.__dict__)
+        d = {}
+        for k in self.params:
+            d[k] = self.__dict__[k]
+        return d
 
 
 class ScenarioManager:

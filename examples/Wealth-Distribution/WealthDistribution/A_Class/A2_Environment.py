@@ -4,11 +4,14 @@ __author__ = 'Songmin'
 import random
 import numpy as np
 
+from ..Config import GiniScenario
+
+
 class Environment:
 
-    def __init__(self, para_series):
-        self.TradeNum = int(para_series["TradeNum"])
-        self.WinProb = para_series["RichWinProb"]
+    def __init__(self, scenario: GiniScenario):
+        self.TradeNum = scenario.TradeNum
+        self.WinProb = scenario.RichWinProb
         self.TotalWealth = 0
         self.Gini = 0
 
@@ -73,4 +76,3 @@ class Environment:
         self.Gini = self.calc_Gini(Account_list)
 
         return None
-

@@ -43,7 +43,7 @@ class REG:
 
 
 class GiniScenario(Scenario):
-    ScenarioPara = [
+    params = [
         "ID_Scenario",
         "Periods",
         "AgentNum",
@@ -62,7 +62,7 @@ class GiniScenario(Scenario):
         "TradeNum": "REAL",
         "RichWinProb": 'REAL'}
 
-    def __init__(self, id: int, periods: int, agentNum: int):
+    def __init__(self, id: int = 1, periods: int = 200, agentNum: int = 100):
         self.ID_Scenario = id
         self.Periods = periods
         self.AgentNum = agentNum

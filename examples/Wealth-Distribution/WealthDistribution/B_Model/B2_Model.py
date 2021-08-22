@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 __author__ = 'Songmin'
 
-from ..Config import REG
+from ..Config import REG, GiniScenario
 from Melodie.DB import DB
 from ..A_Class.A1_Agent import GINIAgent
 from ..A_Class.A2_Environment import Environment
@@ -12,18 +12,19 @@ class Model:
 
     def __init__(self, conn, id_scenario):
         self.Conn = conn
-        self.ID_Scenario = id_scenario
-        self.ScenarioPara = DB().read_DataFrame(REG().Exo_ScenarioPara, self.Conn, ID_Scenario=self.ID_Scenario).iloc[0]
+        scenarioPara = DB().read_DataFrame(REG().Exo_ScenarioPara, self.Conn, ID_Scenario=id_scenario).iloc[0]
+        self.Scenario = GiniScenario()
+        self.Scenario.setup(scenarioPara)
 
     def gen_Environment(self):
 
-        Env = Environment(self.ScenarioPara)
+        Env = Environment(self.Scenario)
 
         return Env
 
     def gen_AgentList(self):
 
-        AgentParaDataFrame = DB().read_DataFrame(REG().Gen_AgentPara + "_S" + str(self.ID_Scenario), self.Conn)
+        AgentParaDataFrame = DB().read_DataFrame(REG().Gen_AgentPara + "_S" + str(self.Scenario.ID_Scenario), self.Conn)
         Agent_list = []
         for row in range(0, AgentParaDataFrame.shape[0]):
             agent = GINIAgent()
@@ -34,13 +35,13 @@ class Model:
 
     def run(self):
 
-        SimulationPeriods = int(self.ScenarioPara["Periods"])
+        SimulationPeriods = int(self.Scenario.Periods)
         Environment = self.gen_Environment()
         AgentList = self.gen_AgentList()
-        DC = DataCollector(self.Conn, self.ID_Scenario)
+        DC = DataCollector(self.Conn, self.Scenario.ID_Scenario)
 
         for t in range(0, SimulationPeriods):
-            print("ID_Scenario = " + str(self.ID_Scenario) + ", period = " + str(t))
+            print("ID_Scenario = " + str(self.Scenario.ID_Scenario) + ", period = " + str(t))
             DC.collect_AgentData(t, AgentList)
             Environment.go_MoneyProduce(AgentList)
             Environment.go_MoneyTransfer(AgentList)

@@ -1,6 +1,9 @@
-from typing import Union, Dict
+from typing import Union, Dict, TYPE_CHECKING
 
 import pandas as pd
+
+if TYPE_CHECKING:
+    from Melodie.ScenarioManager import Scenario
 
 
 class DB:
@@ -25,7 +28,7 @@ class DB:
             table_DataFrame.to_sql(table_name, conn, index=False, if_exists='replace', chunksize=1000)
         return None
 
-    def createSettings(self, tableName: str, conn, params: Dict[str, Union[int, float]], **kwargs):
-        settingsDataFrame = pd.DataFrame([params])
+    def createScenario(self, tableName: str, conn, scenario: 'Scenario', **kwargs):
+        settingsDataFrame = pd.DataFrame([scenario.toDict()])
         settingsDataFrame.to_sql(tableName, conn, index=False, if_exists='replace', chunksize=1000,
                                  dtype=kwargs["dtype"])
