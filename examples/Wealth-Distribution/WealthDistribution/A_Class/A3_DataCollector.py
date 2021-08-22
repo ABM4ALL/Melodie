@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 __author__ = 'Songmin'
 
-from examples.WealthDistribution.Config import REG
+from ..Config import REG
 from Melodie.DB import DB
 
 class DataCollector:
