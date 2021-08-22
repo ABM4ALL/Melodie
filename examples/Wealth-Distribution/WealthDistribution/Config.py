@@ -59,7 +59,7 @@ class GiniScenario(Scenario):
         "AgentAccount_min": 'REAL',
         "AgentAccount_max": 'REAL',
         "AgentProductivity": 'REAL',
-        "TradeNum": "REAL",
+        "TradeNum": "INTEGER",
         "RichWinProb": 'REAL'}
 
     def __init__(self, id: int = 1, periods: int = 200, agentNum: int = 100):
@@ -69,5 +69,5 @@ class GiniScenario(Scenario):
         self.AgentAccount_min = 0.0
         self.AgentAccount_max = 100.0
         self.AgentProductivity = 0.5
-        self.TradeNum = 100.0
+        self.TradeNum = 100
         self.RichWinProb = 0.2

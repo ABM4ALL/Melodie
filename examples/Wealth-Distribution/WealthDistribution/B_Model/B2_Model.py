@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 __author__ = 'Songmin'
 
+import sys
+
 from ..Config import REG, GiniScenario
 from Melodie.DB import DB
 from ..A_Class.A1_Agent import GINIAgent
@@ -12,9 +14,12 @@ class Model:
 
     def __init__(self, conn, id_scenario):
         self.Conn = conn
-        scenarioPara = DB().read_DataFrame(REG().Exo_ScenarioPara, self.Conn, ID_Scenario=id_scenario).iloc[0]
+        # scenarioPara = DB().read_DataFrame(REG().Exo_ScenarioPara, self.Conn, ID_Scenario=id_scenario).iloc[0]
+        scenarioPara = DB().read_DataFrame(REG().Exo_ScenarioPara, self.Conn, ID_Scenario=id_scenario).loc[[0]]
+        # using 'loc' or 'to_json' instead of 'iloc' is much better because it will not be converted to float64
         self.Scenario = GiniScenario()
-        self.Scenario.setup(scenarioPara)
+        self.Scenario.setup(scenarioPara.to_dict('index')[0])
+
 
     def gen_Environment(self):
 
@@ -35,7 +40,7 @@ class Model:
 
     def run(self):
 
-        SimulationPeriods = int(self.Scenario.Periods)
+        SimulationPeriods = self.Scenario.Periods
         Environment = self.gen_Environment()
         AgentList = self.gen_AgentList()
         DC = DataCollector(self.Conn, self.Scenario.ID_Scenario)

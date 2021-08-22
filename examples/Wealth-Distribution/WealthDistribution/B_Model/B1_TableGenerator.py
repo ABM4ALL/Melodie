@@ -42,7 +42,7 @@ class TableGenerator:
 
         agentParaTable = np.zeros((agentNum, 3))
         for agent in range(0, agentNum):
-            agentParaTable[agent][0] = int(agent + 1)
+            agentParaTable[agent][0] = agent + 1
             agentParaTable[agent][1] = np.random.randint(intialAccountMin, intialAccountMax + 1)
             agentParaTable[agent][2] = agentProductivity
 

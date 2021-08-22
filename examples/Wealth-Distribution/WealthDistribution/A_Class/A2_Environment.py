@@ -33,7 +33,6 @@ class Environment:
         return None
 
     def go_MoneyTransfer(self, AgentList):
-
         for sub_period in range(0, self.TradeNum):
             [Agent1, Agent2] = random.sample(AgentList, 2)
 
