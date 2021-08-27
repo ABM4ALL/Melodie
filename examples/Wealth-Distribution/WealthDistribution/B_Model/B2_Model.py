@@ -18,7 +18,7 @@ class Model:
         scenarioPara = DB().read_DataFrame(REG().Exo_ScenarioPara, self.Conn, ID_Scenario=id_scenario).loc[[0]]
         # using 'loc' or 'to_json' instead of 'iloc' is much better because it will not be converted to float64
         self.Scenario = GiniScenario()
-        self.Scenario.setup(scenarioPara.to_dict('index')[0])
+        self.Scenario.set_params(scenarioPara.to_dict('index')[0])
 
 
     def gen_Environment(self):
@@ -33,7 +33,7 @@ class Model:
         Agent_list = []
         for row in range(0, AgentParaDataFrame.shape[0]):
             agent = GINIAgent()
-            agent.setup(AgentParaDataFrame.iloc[row])
+            agent.set_params(AgentParaDataFrame.iloc[row])
             Agent_list.append(agent)
 
         return Agent_list

@@ -13,7 +13,12 @@ class Element:
     results: List[str] = []
     types: Dict[str, str] = {}
 
-    def setup(self, params: Dict[str, Any]):
+    def set_params(self, params: Dict[str, Any]):
+        """
+        Set property which was declared at Element.params
+        :param params:
+        :return:
+        """
         allParamNames = self.params
         for paramName, paramValue in params.items():
             assert paramName in allParamNames, f"param named {paramName}, value {paramValue} not in Agent.params:{allParamNames}"
