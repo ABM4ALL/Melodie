@@ -11,6 +11,8 @@ class Agent(Element):
         """
         __init__method contains no parameter.
         """
+        self.__dict__['_indiced_watch'] = {}
+        self.__dict__['_mapped_watch'] = {}
         self._agent_list: 'AgentManager' = agent_manager
         self.indiced: Dict[Tuple[str], Callable[['Agent'], int]] = {}  # indiced only for numerical property
         self.mapped: Dict[Tuple[str], Callable[['Agent'], int]] = {}  # mapped can be for any computational standards
@@ -31,7 +33,7 @@ class Agent(Element):
 
     def after_setup(self):
         """
-        executed before setup()
+        executed after setup()
         :return:
         """
         for arg_names, func in self.indiced.items():
@@ -84,35 +86,36 @@ class Agent(Element):
         设置非索引属性所需时间长9倍
         设置索引属性所需时间长60倍
         """
-        if self.__dict__.get('indiced') and name in self._indiced_watch.keys():
+        if name in self._indiced_watch.keys():
             args_tuple, functions = self._indiced_watch[name]
             old_values = [0 * len(functions)]
             for i, fcn in enumerate(functions):
                 old_values[i] = fcn(self)
-            super().__setattr__(name, value)
+            object.__setattr__(self, name, value)
             agent_index = self._agent_list.indices[args_tuple]
             for i, fcn in enumerate(functions):
                 old_val = old_values[i]
                 new_val = fcn(self)
                 agent_index.update(self, old_val, new_val)
             return
-        elif self.__dict__.get('mapped') and name in self._mapped_watch.keys():
+        elif name in self._mapped_watch.keys():
             args_tuple, functions = self._mapped_watch[name]
             old_values = [0 * len(functions)]
             for i, fcn in enumerate(functions):
                 old_values[i] = fcn(self)
-            super().__setattr__(name, value)
+            object.__setattr__(self, name, value)
             for i, fcn in enumerate(functions):
                 old_val = old_values[i]
                 new_val = fcn(self)
                 agent_index = self._agent_list.groups[args_tuple]
                 agent_index.update(self, old_val, new_val)
             return
-
-        super().__setattr__(name, value)
+        else:
+            object.__setattr__(self, name, value)
 
     def __repr__(self) -> str:
 
         d = {k: v for k, v in self.__dict__.items() if
              not k.startswith("_")}
         return "<%s %s>" % (self.__class__.__name__, d)
+
