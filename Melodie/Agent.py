@@ -9,7 +9,7 @@ if TYPE_CHECKING:
 class Agent(Element):
     def __init__(self, agent_manager: Optional['AgentManager']):
         """
-        __init__method contains no parameter.
+        This method would not be exposed to user.
         """
         self.__dict__['_indiced_watch'] = {}
         self.__dict__['_mapped_watch'] = {}
@@ -36,30 +36,12 @@ class Agent(Element):
         executed after setup()
         :return:
         """
-        for arg_names, func in self.indiced.items():
-            if not isinstance(arg_names, tuple):
-                raise TypeError('Agent.indiced key type is expected to be Tuple[str,],'
-                                f' like (\'aaaaa\',) or (\'bbbbb\',\'aaaa\'). But got type:{type(arg_names)},'
-                                f'value: {arg_names}')
-            for name in arg_names:
-                if name not in self._indiced_watch:
-                    self._indiced_watch[name] = (arg_names, [func])
-                else:
-                    self._indiced_watch[name][1].append(func)
 
-        for arg_names, func in self.mapped.items():
-            if not isinstance(arg_names, tuple):
-                raise TypeError('Agent.mapped key type is expected to be Tuple[str,],'
-                                f' like (\'aaaaa\',) or (\'bbbbb\',\'aaaa\'). But got type:{type(arg_names)},'
-                                f'value: {arg_names}')
-            for name in arg_names:
-                if name not in self._mapped_watch:
-                    self._mapped_watch[name] = (arg_names, [func])
-                else:
-                    self._mapped_watch[name][1].append(func)
-
-    # hook before stepping, stepping and after stepping
     def before_step(self):
+        """
+        hook before stepping, stepping and after stepping
+        :return:
+        """
         pass
 
     def step(self):
@@ -118,4 +100,3 @@ class Agent(Element):
         d = {k: v for k, v in self.__dict__.items() if
              not k.startswith("_")}
         return "<%s %s>" % (self.__class__.__name__, d)
-

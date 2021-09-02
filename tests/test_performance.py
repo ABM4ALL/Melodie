@@ -1,7 +1,4 @@
-import random
 import time
-
-import pytest
 
 from Melodie.Agent import Agent
 from Melodie.AgentManager import AgentManager
@@ -19,10 +16,6 @@ class TestAgent(Agent):
         self.mapped = {
             ("val", "text"): lambda agent: agent.val
         }
-
-    # def __setattr__(self, key, value):
-    # if rewrite this method, you can speed up alot.
-    #     object.__setattr__(self, key, value)
 
 
 class A():

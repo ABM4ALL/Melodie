@@ -33,6 +33,34 @@ class AgentManager:
         agents = [self.agent_class(self) for a in range(self.initial_agent_num)]
         for agent in agents:
             agent.setup()
+
+        agent = agents[0]
+        for arg_names, func in agent.indiced.items():
+            if not isinstance(arg_names, tuple):
+                raise TypeError('Agent.indiced key type is expected to be Tuple[str,],'
+                                f' like (\'aaaaa\',) or (\'bbbbb\',\'aaaa\'). But got type:{type(arg_names)},'
+                                f'value: {arg_names}')
+            for name in arg_names:
+                if name not in agent._indiced_watch:
+                    agent._indiced_watch[name] = (arg_names, [func])
+                else:
+                    agent._indiced_watch[name][1].append(func)
+
+        for arg_names, func in agent.mapped.items():
+            if not isinstance(arg_names, tuple):
+                raise TypeError('Agent.mapped key type is expected to be Tuple[str,],'
+                                f' like (\'aaaaa\',) or (\'bbbbb\',\'aaaa\'). But got type:{type(arg_names)},'
+                                f'value: {arg_names}')
+            for name in arg_names:
+                if name not in agent._mapped_watch:
+                    agent._mapped_watch[name] = (arg_names, [func])
+                else:
+                    agent._mapped_watch[name][1].append(func)
+
+        agent.after_setup()
+        for i in range(1, len(agents)):
+            agents[i]._mapped_watch = agent._mapped_watch
+            agents[i]._indiced_watch = agent._indiced_watch
             agent.after_setup()
         return agents
 
@@ -42,3 +70,10 @@ class AgentManager:
         :return:
         """
         pass
+
+    def query(self):
+        """
+        How to implement this method?
+        :return:
+        """
+
