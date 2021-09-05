@@ -1,4 +1,4 @@
-from typing import Callable, Dict, List, TYPE_CHECKING, Union, Tuple
+from typing import Callable, Dict, List, TYPE_CHECKING, Union, Tuple, Any
 
 from .algorithms import binary_search
 
@@ -58,37 +58,73 @@ class SortedAgentIndex:
     def __getitem__(self, item):
         return self._agent_list[item][1]
 
+    def __repr__(self):
+        return "SortedAgentList%s" % [item for item in self._agent_list]
 
-class IndexedAgentList:
+
+# class IndexedAgentList:
+#     """
+#     agent list with index.
+#     Add/remove an agent at the time complexity of O(1)
+#     """
+#
+#     def __init__(self, agents: List['Agent']) -> None:
+#         self._index_dict: Dict[int, int] = {}  # stores the position map
+#         self._agent_list: List['Agent'] = []
+#         for i, agent in enumerate(agents):
+#             self._index_dict[id(agent)] = i
+#             self._agent_list.append(agent)
+#
+#     def add(self, agent: "Agent"):
+#         index = len(self._agent_list)
+#         self._agent_list.append(agent)
+#         self._index_dict[id(agent)] = index
+#
+#     def remove(self, agent: 'Agent'):
+#         index = self._index_dict.pop(id(agent))
+#         self._agent_list.pop(index)
+#
+#     def get_all_agents(self):
+#         return self._agent_list
+#
+#     def __repr__(self) -> str:
+#         return '<%s %s>' % (self.__class__.__name__, self._agent_list)
+#
+#     def __len__(self) -> int:
+#         return len(self._agent_list)
+
+
+class IndexedAgentList(list):
     """
     agent list with index.
-    it could add/remove an agent at the complexity of O(1)
+    Add/remove an agent at the time complexity of O(1)
     """
 
     def __init__(self, agents: List['Agent']) -> None:
+        super().__init__()
         self._index_dict: Dict[int, int] = {}  # stores the position map
-        self._agent_list: List['Agent'] = []
+        # self._agent_list: List['Agent'] = []
         for i, agent in enumerate(agents):
-            self._index_dict[id(agent)] = i
-            self._agent_list.append(agent)
+            self.append(agent)
+
+    def append(self, __object: 'Agent') -> None:
+        self._index_dict[id(__object)] = self.__len__()
+        super(IndexedAgentList, self).append(__object)
+
+    def pop(self, __index: int = ...) -> 'Agent':
+        obj = super().pop(__index)
+        self._index_dict.pop(id(obj))
+        return obj
 
     def add(self, agent: "Agent"):
-        index = len(self._agent_list)
-        self._agent_list.append(agent)
-        self._index_dict[id(agent)] = index
+        self.append(agent)
 
     def remove(self, agent: 'Agent'):
         index = self._index_dict.pop(id(agent))
-        self._agent_list.pop(index)
-
-    def get_all_agents(self):
-        return self._agent_list
+        super().pop(index)
 
     def __repr__(self) -> str:
-        return '<%s %s>' % (self.__class__.__name__, self._agent_list)
-
-    def __len__(self) -> int:
-        return len(self._agent_list)
+        return '<%s %s>' % (self.__class__.__name__, self)
 
 
 class AgentGroup:
@@ -103,6 +139,21 @@ class AgentGroup:
             else:
                 self.groups[value].add(agent)
 
+    def add(self, agent):
+        value = self.standard(agent)
+        assert isinstance(value, int)
+        if value not in self.groups:
+            self.groups[value] = IndexedAgentList([agent])
+        else:
+            self.groups[value].add(agent)
+
+    def remove(self, agent):
+        value = self.standard(agent)
+        if value not in self.groups:
+            raise ValueError
+        else:
+            self.groups[value].remove(agent)
+
     def update(self, agent, old: int, new: int):
         old_group = self.groups[old]
 
@@ -116,3 +167,9 @@ class AgentGroup:
 
     def group_names(self) -> List[int]:
         return list(self.groups.keys())
+
+    def agent_count(self) -> int:
+        count = 0
+        for _, group in self.groups.items():
+            count += len(group)
+        return count
