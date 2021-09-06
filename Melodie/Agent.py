@@ -10,6 +10,19 @@ ALLOWED_STATE_TYPES = Union[int, str, tuple]  # A collection of types allowed as
 ALLOWED_STATE_TYPES_INSTANCE = (int, str, tuple)
 
 
+def decorator(transfer: Tuple[ALLOWED_STATE_TYPES, ALLOWED_STATE_TYPES],
+              ):
+    def outer_wrapper(f):
+        def wrapper(agent):
+            print(transfer)
+            # assert agent
+            return f(agent)
+
+        return wrapper
+
+    return outer_wrapper
+
+
 class Agent(Element):
     def __init__(self, agent_manager: Optional['AgentManager']):
         """
@@ -23,7 +36,9 @@ class Agent(Element):
         self.mapped: Dict[Tuple[str], Callable[['Agent'], int]] = {}  # mapped can be for any computational standards
         self._indiced_watch: Dict[str, Tuple[Tuple[str], List[Callable[['Agent'], int]]]] = {}
         self._mapped_watch: Dict[str, Tuple[Tuple[str], List[Callable[['Agent'], int]]]] = {}
+
         self._state_watch: Dict[str, Dict[str, Set[str]]] = {}
+        self._state_funcs: Dict[Tuple[ALLOWED_STATE_TYPES, ALLOWED_STATE_TYPES], Callable] = {}
 
     def __setattr__(self, name: str, value: Any) -> None:
         """
@@ -83,7 +98,7 @@ class Agent(Element):
 
     def add_state_watch(self, attr_name: str, transfer_dict: Dict[ALLOWED_STATE_TYPES, Set[ALLOWED_STATE_TYPES]]):
         if not self.__dict__[attr_name] in transfer_dict.keys():
-            raise MelodieExceptions.State.StateNotFoundError(self.__dict__[attr_name],set(transfer_dict.keys()))
+            raise MelodieExceptions.State.StateNotFoundError(self.__dict__[attr_name], set(transfer_dict.keys()))
         for old_state, new_states in transfer_dict.items():
             assert isinstance(old_state, ALLOWED_STATE_TYPES_INSTANCE)
             for new_state in new_states:
