@@ -12,8 +12,15 @@ ALLOWED_STATE_TYPES_INSTANCE = (int, str, tuple)
 
 def decorator(transfer: Tuple[ALLOWED_STATE_TYPES, ALLOWED_STATE_TYPES],
               ):
+    print('aaaaaaaaaaaaaaaaaaaaaaaa')
+
     def outer_wrapper(f):
-        def wrapper(agent):
+        print('cccccccccccccc')
+        print(f.__qualname__)
+
+        # print(agent_class._state_funcs)
+
+        def wrapper(agent):  # 调用层
             print(transfer)
             # assert agent
             return f(agent)
@@ -24,21 +31,20 @@ def decorator(transfer: Tuple[ALLOWED_STATE_TYPES, ALLOWED_STATE_TYPES],
 
 
 class Agent(Element):
+    _state_funcs: Dict[str, Dict[Tuple[ALLOWED_STATE_TYPES, ALLOWED_STATE_TYPES], Callable]] = {}
+    _state_watch: Dict[str, Dict[str, Set[str]]] = {}
+
     def __init__(self, agent_manager: Optional['AgentManager']):
         """
         This method would not be exposed to user.
         """
         self.__dict__['_indiced_watch'] = {}
         self.__dict__['_mapped_watch'] = {}
-        self.__dict__['_state_watch'] = {}
         self._agent_list: 'AgentManager' = agent_manager
         self.indiced: Dict[Tuple[str], Callable[['Agent'], int]] = {}  # indiced only for numerical property
         self.mapped: Dict[Tuple[str], Callable[['Agent'], int]] = {}  # mapped can be for any computational standards
         self._indiced_watch: Dict[str, Tuple[Tuple[str], List[Callable[['Agent'], int]]]] = {}
         self._mapped_watch: Dict[str, Tuple[Tuple[str], List[Callable[['Agent'], int]]]] = {}
-
-        self._state_watch: Dict[str, Dict[str, Set[str]]] = {}
-        self._state_funcs: Dict[Tuple[ALLOWED_STATE_TYPES, ALLOWED_STATE_TYPES], Callable] = {}
 
     def __setattr__(self, name: str, value: Any) -> None:
         """
@@ -70,6 +76,11 @@ class Agent(Element):
                 agent_index.update(self, old_val, new_val)
             return
         elif name in self._state_watch.keys():
+            if name not in self.__dict__.keys():
+                object.__setattr__(self, name, value)
+                if value not in self._state_watch[name].keys():
+                    raise MelodieExceptions.State.StateNotFoundError(value, set(self._state_watch[name].keys()))
+                return
             old_value = object.__getattribute__(self, name)
             if value not in self._state_watch[name].keys():
                 raise MelodieExceptions.State.StateNotFoundError(value, set(self._state_watch[name].keys()))
@@ -96,14 +107,15 @@ class Agent(Element):
     def scenario(self):
         raise NotImplementedError
 
-    def add_state_watch(self, attr_name: str, transfer_dict: Dict[ALLOWED_STATE_TYPES, Set[ALLOWED_STATE_TYPES]]):
-        if not self.__dict__[attr_name] in transfer_dict.keys():
-            raise MelodieExceptions.State.StateNotFoundError(self.__dict__[attr_name], set(transfer_dict.keys()))
-        for old_state, new_states in transfer_dict.items():
-            assert isinstance(old_state, ALLOWED_STATE_TYPES_INSTANCE)
-            for new_state in new_states:
-                assert isinstance(new_state, ALLOWED_STATE_TYPES_INSTANCE)
-        self._state_watch[attr_name] = transfer_dict
+    # @classmethod
+    # def add_state_watch(cls, attr_name: str, transfer_dict: Dict[ALLOWED_STATE_TYPES, Set[ALLOWED_STATE_TYPES]]):
+    #     if not self.__dict__[attr_name] in transfer_dict.keys():
+    #         raise MelodieExceptions.State.StateNotFoundError(self.__dict__[attr_name], set(transfer_dict.keys()))
+    #     for old_state, new_states in transfer_dict.items():
+    #         assert isinstance(old_state, ALLOWED_STATE_TYPES_INSTANCE)
+    #         for new_state in new_states:
+    #             assert isinstance(new_state, ALLOWED_STATE_TYPES_INSTANCE)
+    #     self._state_watch[attr_name] = transfer_dict
 
     def setup(self):
         pass
@@ -139,3 +151,36 @@ class Agent(Element):
         if n == 1:  # usual base case
             return b
         return self.fibonacci(n - 1, b, a + b)
+
+    @classmethod
+    def decorator(cls, watched_attr: str, transfer: Tuple[ALLOWED_STATE_TYPES, ALLOWED_STATE_TYPES],
+                  ):
+        if watched_attr not in cls._state_funcs.keys():
+            cls._state_funcs[watched_attr] = {}
+        if watched_attr not in cls._state_watch.keys():
+            cls._state_watch[watched_attr] = {}
+
+        if transfer not in cls._state_funcs[watched_attr].keys():
+            cls._state_funcs[watched_attr][transfer] = {}
+
+        if transfer[0] not in cls._state_watch[watched_attr].keys():
+            cls._state_watch[watched_attr][transfer[0]] = set()
+        if transfer[1] not in cls._state_watch[watched_attr].keys():
+            cls._state_watch[watched_attr][transfer[1]] = set()
+
+        # if transfer[1] not in cls._state_watch[watched_attr][transfer[0]]:
+        cls._state_watch[watched_attr][transfer[0]].add(transfer[1])
+        # cls._state_watch[watched_attr][transfer[0]].add(transfer[1])
+
+        def outer_wrapper(f):
+
+            cls._state_funcs[watched_attr][transfer] = f
+
+            def wrapper(agent):  # 调用层
+                agent.__setattr__(watched_attr, transfer[1])
+
+                return f(agent)
+
+            return wrapper
+
+        return outer_wrapper
