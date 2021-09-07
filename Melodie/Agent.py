@@ -1,7 +1,8 @@
+import functools
 from typing import List, Dict, Any, TYPE_CHECKING, Callable, Tuple, Optional, Set, Union
 
 from Melodie.Element import Element
-from Melodie.basic import MelodieExceptions
+from Melodie.basic import MelodieExceptions, parse_watched_attrs
 
 if TYPE_CHECKING:
     from AgentManager import AgentManager
@@ -33,6 +34,7 @@ def decorator(transfer: Tuple[ALLOWED_STATE_TYPES, ALLOWED_STATE_TYPES],
 class Agent(Element):
     _state_funcs: Dict[str, Dict[Tuple[ALLOWED_STATE_TYPES, ALLOWED_STATE_TYPES], Callable]] = {}
     _state_watch: Dict[str, Dict[str, Set[str]]] = {}
+    _state_trigger_attrs: Dict[str, List[Callable]] = {}  # {'attr': [lambda agent:agent.attr==1,]}
 
     def __init__(self, agent_manager: Optional['AgentManager']):
         """
@@ -89,8 +91,13 @@ class Agent(Element):
                                                                         set(self._state_watch[name][old_value]))
             else:
                 object.__setattr__(self, name, value)
+
         else:
             object.__setattr__(self, name, value)
+
+        if name in self._state_trigger_attrs.keys():
+            for f in self._state_trigger_attrs[name]:
+                f(self)
 
     def __repr__(self) -> str:
 
@@ -152,34 +159,63 @@ class Agent(Element):
             return b
         return self.fibonacci(n - 1, b, a + b)
 
+    def current_state_is(self, state_attr: str, cmp_state: str) -> bool:
+        """
+        Get if self.<state_attr> == cmp_state
+        if `cmp_state` is not defined or cannot transfer to `cmp_state`, raise error
+        if `state_attr` is not a state attribute, raise error
+        :param state_attr:
+        :param cmp_state:
+        :return:
+        """
+        if state_attr not in self._state_watch.keys():
+            raise MelodieExceptions.State.NotAStateAttributeError(self.__class__, state_attr)
+        if cmp_state not in self._state_watch[state_attr].keys():
+            raise MelodieExceptions.State.StateNotFoundError(cmp_state, set(self._state_watch.keys()))
+        return self.__dict__[state_attr] == cmp_state
+
+    #
+    # @functools.lru_cache
+    # def get_state_funcs(self, arguments):
+    #     return self._state_funcs['status']
+
     @classmethod
-    def decorator(cls, watched_attr: str, transfer: Tuple[ALLOWED_STATE_TYPES, ALLOWED_STATE_TYPES],
-                  ):
+    def state_transition(cls, watched_attr: str, transition: Tuple[ALLOWED_STATE_TYPES, ALLOWED_STATE_TYPES],
+                         ):
         if watched_attr not in cls._state_funcs.keys():
             cls._state_funcs[watched_attr] = {}
         if watched_attr not in cls._state_watch.keys():
             cls._state_watch[watched_attr] = {}
 
-        if transfer not in cls._state_funcs[watched_attr].keys():
-            cls._state_funcs[watched_attr][transfer] = {}
+        if transition not in cls._state_funcs[watched_attr].keys():
+            cls._state_funcs[watched_attr][transition] = {}
 
-        if transfer[0] not in cls._state_watch[watched_attr].keys():
-            cls._state_watch[watched_attr][transfer[0]] = set()
-        if transfer[1] not in cls._state_watch[watched_attr].keys():
-            cls._state_watch[watched_attr][transfer[1]] = set()
+        if transition[0] not in cls._state_watch[watched_attr].keys():
+            cls._state_watch[watched_attr][transition[0]] = set()
+        if transition[1] not in cls._state_watch[watched_attr].keys():
+            cls._state_watch[watched_attr][transition[1]] = set()
 
-        # if transfer[1] not in cls._state_watch[watched_attr][transfer[0]]:
-        cls._state_watch[watched_attr][transfer[0]].add(transfer[1])
-        # cls._state_watch[watched_attr][transfer[0]].add(transfer[1])
+        cls._state_watch[watched_attr][transition[0]].add(transition[1])
 
         def outer_wrapper(f):
 
-            cls._state_funcs[watched_attr][transfer] = f
+            cls._state_funcs[watched_attr][transition] = f
 
             def wrapper(agent):  # 调用层
-                agent.__setattr__(watched_attr, transfer[1])
+                res = f(agent)
+                if not isinstance(res, bool):
+                    return
+                else:
+                    if res:
+                        agent.__setattr__(watched_attr, transition[1])
+                return
 
-                return f(agent)
+            attrs = parse_watched_attrs(f)
+            for attr in attrs:
+                if attr not in cls._state_trigger_attrs.keys():
+                    cls._state_trigger_attrs[attr] = []
+
+                cls._state_trigger_attrs[attr].append(wrapper)
 
             return wrapper
 

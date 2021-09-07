@@ -35,17 +35,20 @@ def test_states_error_in_class_creation():
             self.status = 'xxxxxx'
             self.b = 34.0
 
-        @Agent.decorator("status", ('closed', 'open'))
+        @Agent.state_transition("status", ('closed', 'open'))
         def open(self):
             print('opened!')
+            return True
 
-        @Agent.decorator("status", ('open', 'closed'))
+        @Agent.state_transition("status", ('open', 'closed'))
         def close(self):
             print('closed!')
+            return True
 
-        @Agent.decorator("status", ('closed', "broken"))
+        @Agent.state_transition("status", ('closed', "broken"))
         def break_door(self):
             print('broke the door!')
+            return True
 
     try:
         AgentWithError()
@@ -62,17 +65,20 @@ def test_states():
             self.status = 'open'  # 'open' , 'closed' and 'broken'
             self.b = 34.0
 
-        @Agent.decorator("status", ('closed', 'open'))
+        @Agent.state_transition("status", ('closed', 'open'))
         def open(self):
             print('opened!')
+            return True
 
-        @Agent.decorator("status", ('open', 'closed'))
+        @Agent.state_transition("status", ('open', 'closed'))
         def close(self):
             print('closed!')
+            return True
 
-        @Agent.decorator("status", ('closed', "broken"))
+        @Agent.state_transition("status", ('closed', "broken"))
         def break_door(self):
             print('broke the door!')
+            return True
 
     new_agent = NewAgent()
 
@@ -92,30 +98,20 @@ def test_states():
         assert e.id == 1101  # 1101 stands for StateNotFoundError
         print(e)
 
-
-# def drawCirc(ax, radius, centX, centY, angle_, theta2_, color_='black'):
-#     import matplotlib.patches as patches
-#     from numpy import radians as rad
-#     # ========Line
-#     arc = patches.Arc([centX, centY], radius, radius, angle=angle_,
-#                       theta1=0, theta2=theta2_, capstyle='round', linestyle='-', color=color_)
-#     ax.add_patch(arc)
-#
-#     # ========Create the arrow head
-#     endX = centX + (radius / 2) * np.cos(rad(theta2_ + angle_))  # Do trig to determine end position
-#     endY = centY + (radius / 2) * np.sin(rad(theta2_ + angle_))
-#
-#     ax.add_patch(  # Create triangle as arrow head
-#         patches.RegularPolygon(
-#             (endX, endY),  # (x,y)
-#             3,  # number of vertices
-#             radius / 9,  # radius
-#             rad(angle_ + theta2_),  # orientation
-#             color=color_
-#         )
-#     )
-#     # ax.set_xlim([centX - radius, centY + radius]) and ax.set_ylim([centY - radius, centY + radius])
-#     # Make sure you keep the axes scaled or else arrow will distort
+    assert new_agent.current_state_is('status', 'broken')
+    assert not new_agent.current_state_is('status', 'closed')
+    try:
+        new_agent.current_state_is('statusxxx', '')  # Unexisted attribute statusxxx
+    except MelodieException as e:
+        assert e.id == 1103
+    try:
+        new_agent.current_state_is('b', '')  # Existed attribute b, but b is not state attribute
+    except MelodieException as e:
+        assert e.id == 1103
+    try:
+        new_agent.current_state_is('status', 'x')  # Existed state attribute status, but state `x` is not found
+    except MelodieException as e:
+        assert e.id == 1101
 
 
 def test_mermaid_md():
@@ -145,17 +141,20 @@ def test_nx_plot():
             self.status = 'open'  # 'open' , 'closed' and 'broken'
             self.b = 34.0
 
-        @Agent.decorator("status", ('closed', 'open'))
+        @Agent.state_transition("status", ('closed', 'open'))
         def open(self):
             print('opened!')
+            return True
 
-        @Agent.decorator("status", ('open', 'closed'))
+        @Agent.state_transition("status", ('open', 'closed'))
         def close(self):
             print('closed!')
+            return True
 
-        @Agent.decorator("status", ('closed', "broken"))
+        @Agent.state_transition("status", ('closed', "broken"))
         def break_door(self):
             print('broke the door!')
+            return True
 
     new_agent = NewAgent()
     funcs = new_agent._state_funcs['status']

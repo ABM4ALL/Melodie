@@ -29,3 +29,7 @@ class MelodieExceptions:
                 return MelodieException(1102,
                                         f'Current state is {repr(old_state)}, on which the status could only move to'
                                         f' {all_possible_new_states}. However the new state was {repr(new_state)}')
+
+        @staticmethod
+        def NotAStateAttributeError(agent_cls, state_attr: str):
+            return MelodieException(1103, f'Class {agent_cls} has not defined state attribute {state_attr}')

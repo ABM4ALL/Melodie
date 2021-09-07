@@ -126,6 +126,9 @@ class IndexedAgentList(list):
     def __repr__(self) -> str:
         return '<%s %s>' % (self.__class__.__name__, self)
 
+    def __getitem__(self, item) -> 'Agent':
+        return super(IndexedAgentList, self).__getitem__(item)
+
 
 class AgentGroup:
     def __init__(self, agents, standard: Callable[['Agent'], int]) -> None:
