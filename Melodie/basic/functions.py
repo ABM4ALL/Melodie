@@ -23,12 +23,13 @@ def parse_watched_attrs(func) -> List[str]:
     IDLE = 0
     ARG_VAR_LOADED = 1
     status = IDLE
-    if len(func.__code__.co_varnames) != 1:
+    if func.__code__.co_argcount != 1:
         raise ValueError('The query %s should have only one argument' % func)
     argname = func.__code__.co_varnames[0]
     attr_watch_list: List[str] = []
 
     for instr in bytecode:
+        print(instr.opname, instr.argval)
         if instr.opname == 'LOAD_FAST':
             if instr.argval == argname:
                 status = ARG_VAR_LOADED
@@ -45,11 +46,35 @@ def parse_watched_attrs(func) -> List[str]:
 
 
 if __name__ == "__main__":
-    class A:
-        def a(self):
-            self.name + self.app
+    def f():
+        return True
+
+
+    def f1(agent, fwer):
+        a = 123
+        b = 456
+        if a == b:
+            c = 45
             pass
+
+
+    print(f1.__code__.co_varnames, f1.__code__.co_argcount)
+
+
+    class A:
+        def f(self):
+            pass
+
+        def a(self):
+            # a = 0
+            # b = 0
+            # c =
+            a = {}
+            b = dict()
+            return
+            # return ((self.name + self.app) is ({}.get(''))) or (self.app.started == True)
 
 
     s = parse_watched_attrs(A().a)
     print(s)
+    print(dis.dis(A().a))

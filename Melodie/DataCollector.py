@@ -1,3 +1,0 @@
-
-class DataCollector:
-    pass

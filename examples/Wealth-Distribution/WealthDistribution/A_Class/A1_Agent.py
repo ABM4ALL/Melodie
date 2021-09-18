@@ -19,6 +19,7 @@ class GINIAgent(Agent):
         self.Account = 0.0
         self.Productivity = 0.0
 
+
     def go_produce(self):
 
         rand = np.random.uniform(0, 1)

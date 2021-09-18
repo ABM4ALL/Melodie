@@ -1,37 +1,28 @@
 import functools
+import os
 from typing import List, Dict, Any, TYPE_CHECKING, Callable, Tuple, Optional, Set, Union
 
-from Melodie.Element import Element
+from Melodie.element import Element
 from Melodie.basic import MelodieExceptions, parse_watched_attrs
 
 if TYPE_CHECKING:
-    from AgentManager import AgentManager
+    from .agent_manager import AgentManager
 
 ALLOWED_STATE_TYPES = Union[int, str, tuple]  # A collection of types allowed as state variables
 ALLOWED_STATE_TYPES_INSTANCE = (int, str, tuple)
 
 
-def decorator(transfer: Tuple[ALLOWED_STATE_TYPES, ALLOWED_STATE_TYPES],
-              ):
-    print('aaaaaaaaaaaaaaaaaaaaaaaa')
-
-    def outer_wrapper(f):
-        print('cccccccccccccc')
-        print(f.__qualname__)
-
-        # print(agent_class._state_funcs)
-
-        def wrapper(agent):  # 调用层
-            print(transfer)
-            # assert agent
-            return f(agent)
-
-        return wrapper
-
-    return outer_wrapper
-
-
 class Agent(Element):
+    def __init__(self):
+        pass
+
+    def __repr__(self) -> str:
+        d = {k: v for k, v in self.__dict__.items() if
+             not k.startswith("_")}
+        return "<%s %s>" % (self.__class__.__name__, d)
+
+
+class StateAgent(Agent):
     _state_funcs: Dict[str, Dict[Tuple[ALLOWED_STATE_TYPES, ALLOWED_STATE_TYPES], Callable]] = {}
     _state_watch: Dict[str, Dict[str, Set[str]]] = {}
     _state_trigger_attrs: Dict[str, List[Callable]] = {}  # {'attr': [lambda agent:agent.attr==1,]}
@@ -95,15 +86,9 @@ class Agent(Element):
         else:
             object.__setattr__(self, name, value)
 
-        if name in self._state_trigger_attrs.keys():
-            for f in self._state_trigger_attrs[name]:
-                f(self)
-
-    def __repr__(self) -> str:
-
-        d = {k: v for k, v in self.__dict__.items() if
-             not k.startswith("_")}
-        return "<%s %s>" % (self.__class__.__name__, d)
+        # if name in self._state_trigger_attrs.keys():
+        #     for f in self._state_trigger_attrs[name]:
+        #         f(self)
 
     # readonly property getters
     @property
@@ -203,12 +188,12 @@ class Agent(Element):
 
             def wrapper(agent):  # 调用层
                 res = f(agent)
-                if not isinstance(res, bool):
-                    return
-                else:
-                    if res:
-                        agent.__setattr__(watched_attr, transition[1])
-                return
+                # if not isinstance(res, bool):
+                #     return
+                # else:
+                #     if res:
+                #         agent.__setattr__(watched_attr, transition[1])
+                return res
 
             attrs = parse_watched_attrs(f)
             for attr in attrs:
@@ -220,3 +205,20 @@ class Agent(Element):
             return wrapper
 
         return outer_wrapper
+
+    def plot_md(self):
+        graph_str = 'graph TD\n'
+        watch = self._state_watch['status']
+        funcs = self._state_funcs['status']
+        for old_state, new_states in watch.items():
+            for new_state in new_states:
+                func = funcs[(old_state, new_state)]
+                print(func.__qualname__)
+                func_name = ".".join(func.__qualname__.rsplit('.', maxsplit=2)[-2:])
+                graph_str += f'{old_state}-->|{func_name}|{new_state}\n'
+        with open(r'C:\Users\12957\Documents\Developing\Python\melodie\Melodie\static\mermaid.html', 'r') as f:
+            html = f.read()
+            html = html.replace('TEMPLATE', graph_str)
+            with open('out.html', 'w') as f:
+                f.write(html)
+                os.startfile('out.html')
