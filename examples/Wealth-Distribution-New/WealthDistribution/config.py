@@ -2,7 +2,7 @@ import os
 import sqlite3
 from pathlib import Path
 
-from Melodie.scenariomanager import  Scenario
+from Melodie.scenariomanager import Scenario
 
 
 class CONN:
@@ -42,32 +42,32 @@ class REG:
         self.Res_EnvironmentPara = self.Result + "EnvironmentPara"
 
 
-class GiniScenario(Scenario):
-    params = [
-        "ID_Scenario",
-        "Periods",
-        "AgentNum",
-        "AgentAccount_min",
-        "AgentAccount_max",
-        "AgentProductivity",
-        "TradeNum",
-        "RichWinProb"]
-    types = {
-        "ID_Scenario": 'INT',
-        "Periods": 'INT',
-        "AgentNum": 'INT',
-        "AgentAccount_min": 'REAL',
-        "AgentAccount_max": 'REAL',
-        "AgentProductivity": 'REAL',
-        "TradeNum": "INTEGER",
-        "RichWinProb": 'REAL'}
-
-    def __init__(self, id: int = 1, periods: int = 200, agentNum: int = 100):
-        self.ID_Scenario = id
-        self.Periods = periods
-        self.AgentNum = agentNum
-        self.AgentAccount_min = 0.0
-        self.AgentAccount_max = 100.0
-        self.AgentProductivity = 0.5
-        self.TradeNum = 100
-        self.RichWinProb = 0.2
+# class GiniScenario(Scenario):
+#     # params = [
+#     #     "ID_Scenario",
+#     #     "Periods",
+#     #     "AgentNum",
+#     #     "AgentAccount_min",
+#     #     "AgentAccount_max",
+#     #     "AgentProductivity",
+#     #     "TradeNum",
+#     #     "RichWinProb"]
+#     # types = {
+#     #     "ID_Scenario": 'INT',
+#     #     "Periods": 'INT',
+#     #     "AgentNum": 'INT',
+#     #     "AgentAccount_min": 'REAL',
+#     #     "AgentAccount_max": 'REAL',
+#     #     "AgentProductivity": 'REAL',
+#     #     "TradeNum": "INTEGER",
+#     #     "RichWinProb": 'REAL'}
+#
+#     def __init__(self, id: int = 1, periods: int = 200, agentNum: int = 100):
+#         self.ID_Scenario = id
+#         self.Periods = periods
+#         self.AgentNum = agentNum
+#         self.AgentAccount_min = 0.0
+#         self.AgentAccount_max = 100.0
+#         self.AgentProductivity = 0.5
+#         self.TradeNum = 100
+#         self.RichWinProb = 0.2

@@ -1,22 +1,24 @@
 # -*- coding: utf-8 -*-
 __author__ = 'Songmin'
 
-from ..Config import REG
+from ..config import REG
 from Melodie.db import DB
+from Melodie.datacollector import DataCollector
 
-class DataCollector:
-
-    def __init__(self, conn, id_scenario):
-        self.Conn = conn
-        self.ID_Scenario = id_scenario
-        self.AgentVar_Column = {"Period": "INTEGER",
-                                "ID": "INTEGER",
-                                "Account": "REAL"}
-        self.AgentVar_ValueList = []
-        self.EnvironmentVar_Column = {"Period": "INTEGER",
-                                      "TotalWealth": "REAL",
-                                      "Gini": "REAL"}
-        self.EnvironmentVar_ValueList = []
+class GiniDataCollector(DataCollector):
+    def setup(self):
+        self.add_agent_property('account')
+    # def __init__(self, conn, id_scenario):
+    #     self.Conn = conn
+    #     self.ID_Scenario = id_scenario
+    #     self.AgentVar_Column = {"Period": "INTEGER",
+    #                             "ID": "INTEGER",
+    #                             "Account": "REAL"}
+    #     self.AgentVar_ValueList = []
+    #     self.EnvironmentVar_Column = {"Period": "INTEGER",
+    #                                   "TotalWealth": "REAL",
+    #                                   "Gini": "REAL"}
+    #     self.EnvironmentVar_ValueList = []
 
     def collect_AgentData(self, period, AgentList):
 

@@ -3,7 +3,7 @@ __author__ = 'Songmin'
 
 import os
 import matplotlib.pyplot as plt
-from ..Config import CONN, REG
+from ..config import CONN, REG
 from Melodie.db import DB
 
 class Analyzer:

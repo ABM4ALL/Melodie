@@ -2,10 +2,13 @@
 __author__ = 'Songmin'
 
 import random
+from typing import TYPE_CHECKING
+
 import numpy as np
 
 from ..Config import GiniScenario
-
+if TYPE_CHECKING:
+    from .
 
 class Environment:
 
@@ -22,7 +25,7 @@ class Environment:
 
         return None
 
-    def go_GiveMoney(self, AgentFrom, AgentTo):
+    def go_GiveMoney(self, AgentFrom:GiniAgent, AgentTo):
 
         if AgentFrom.Account == 0:
             pass

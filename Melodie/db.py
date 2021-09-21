@@ -5,7 +5,7 @@ from typing import Union, Dict, TYPE_CHECKING
 import pandas as pd
 
 if TYPE_CHECKING:
-    from Melodie.scenariomanager import  Scenario
+    from Melodie.scenariomanager import Scenario
 
 
 class DB:
@@ -52,13 +52,24 @@ class DB:
     #         table_DataFrame.to_sql(table_name, conn, index=False, if_exists='replace', chunksize=1000)
     #     return None
     #
-    # def createScenario(self, tableName: str, conn, scenario: 'Scenario', **kwargs):
-    #     settingsDataFrame = pd.DataFrame([scenario.toDict()])
-    #     settingsDataFrame.to_sql(tableName, conn, index=False, if_exists='replace', chunksize=1000,
-    #                              dtype=kwargs["dtype"])
+    def createScenario(self, tableName: str, conn, scenario: 'Scenario', **kwargs):
+        settingsDataFrame = pd.DataFrame([scenario.toDict()])
+        settingsDataFrame.to_sql(tableName, conn, index=False, if_exists='replace', chunksize=1000,
+                                 dtype=kwargs["dtype"])
 
-    def write_dataframe(self, table_name: str, data_frame: pd.DataFrame):
-        data_frame.to_sql(table_name, self.connection, index=False, if_exists='replace', chunksize=1000)
+    def create_scenario(self, table_name: str, scenario: 'Scenario'):
+        settings_data_frame = pd.DataFrame([scenario.toDict()])
+        settings_data_frame.to_sql(table_name, self.connection, index=False, if_exists='replace', chunksize=1000)
 
-    def read_table(self, table_name: str) -> pd.DataFrame:
+    def reset(self):
+        self.drop_table('agent_params')
+        self.drop_table('agent_results')
+
+    def write_dataframe(self, table_name: str, data_frame: pd.DataFrame, if_exists='append'):
+        data_frame.to_sql(table_name, self.connection, index=False, if_exists=if_exists, chunksize=1000)
+
+    def read_dataframe(self, table_name: str) -> pd.DataFrame:
         return pd.read_sql(f'select * from {table_name}', self.connection)
+
+    def drop_table(self, table_name: str):
+        self.connection.execute(f'drop table if exists  {table_name} ;')

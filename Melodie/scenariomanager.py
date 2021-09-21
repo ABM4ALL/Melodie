@@ -1,12 +1,13 @@
 from typing import List, Optional, Union
 
 from Melodie.element import Element
+from Melodie.db import DB
 from .basic.exceptions import MelodieExceptions
 import pandas as pd
 
 
 class Scenario(Element):
-    def __init__(self, id_scenario: Optional[Union[int, str]] = None):
+    def __init__(self, id_scenario: Optional[Union[int, str]] = None, agent_num=0):
         """
 
         :param id_scenario: the id of scenario. if None, this will be self-increment from 0 to scenarios_number-1
@@ -15,8 +16,9 @@ class Scenario(Element):
         if (id_scenario is not None) and (not isinstance(id_scenario, (int, str))):
             raise MelodieExceptions.Scenario.ScenarioIDTypeError(id_scenario)
         self.id = id_scenario
-
+        self.agent_num = agent_num
         self.setup()
+        assert self.agent_num > 0
 
     def setup(self):
         pass
@@ -33,13 +35,14 @@ class Scenario(Element):
 
 
 class ScenarioManager:
-    def __init__(self):
+    def __init__(self,db_name:str):
         self._scenarios = self.gen_scenarios()
         if not isinstance(self._scenarios, list):
             raise MelodieExceptions.Scenario.NoValidScenarioGenerated(self._scenarios)
         elif len(self._scenarios) == 0:
             raise MelodieExceptions.Scenario.ScenariosIsEmptyList()
         self.check_scenarios()
+        DB(db_name).reset()
 
     def check_scenarios(self):
         """

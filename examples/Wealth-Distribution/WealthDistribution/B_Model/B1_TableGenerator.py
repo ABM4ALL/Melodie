@@ -5,11 +5,13 @@ import logging
 from typing import ClassVar
 
 import numpy as np
+import pandas as pd
 import pandas.io.sql
 
+from Melodie.config import CONN
 from ..Config import REG, GiniScenario
-from Melodie.DB import DB
-from Melodie.Agent import Agent
+from Melodie.db import DB
+from Melodie.agent import Agent
 
 logger = logging.getLogger(__name__)
 
@@ -26,13 +28,13 @@ class TableGenerator:
         self.Conn = conn
         self.Scenario = scenario
         self.agentClass = agentClass
-
+        db = DB('WealthDistribution')
         try:
-            DB().read_DataFrame(REG().Exo_ScenarioPara, self.Conn, ID_Scenario=self.Scenario.ID_Scenario).iloc[0]
+            db.read_dataframe(REG().Exo_ScenarioPara)  # , self.Conn, ID_Scenario=self.Scenario.ID_Scenario).iloc[0]
         except pandas.io.sql.DatabaseError:
             logger.warning(
                 f"Table {REG().Exo_ScenarioPara} does not exist and it will be created storing default value")
-            DB().createScenario(REG().Exo_ScenarioPara, self.Conn, self.Scenario, dtype=self.Scenario.types)
+            db.createScenario(REG().Exo_ScenarioPara, self.Conn, self.Scenario, dtype=self.Scenario.types)
 
     def gen_AgentParaTable(self):
         agentNum = self.Scenario.AgentNum
@@ -47,8 +49,12 @@ class TableGenerator:
             agentParaTable[agent][2] = agentProductivity
 
         data_column = self.agentClass.types
-        DB().write_DataFrame(agentParaTable, REG().Gen_AgentPara + "_S" + str(self.Scenario.ID_Scenario),
-                             data_column.keys(), self.Conn, dtype=data_column)
+        # DB().write_DataFrame(agentParaTable, REG().Gen_AgentPara + "_S" + str(self.Scenario.ID_Scenario),
+        #                      data_column.keys(), self.Conn, dtype=data_column)
+        agent_params = pd.DataFrame(agentParaTable, columns=data_column.keys())
+        DB('WealthDistribution').write_dataframe(REG().Gen_AgentPara + "_S" + str(self.Scenario.ID_Scenario),
+                                                 agent_params )
+        # data_column.keys(), self.Conn, dtype=data_column)
 
         return None
 

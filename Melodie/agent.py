@@ -13,7 +13,11 @@ ALLOWED_STATE_TYPES_INSTANCE = (int, str, tuple)
 
 
 class Agent(Element):
-    def __init__(self):
+    def __init__(self, agent_id: int):
+        self.id = agent_id
+        pass
+
+    def setup(self):
         pass
 
     def __repr__(self) -> str:

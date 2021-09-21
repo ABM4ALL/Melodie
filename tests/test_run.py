@@ -33,7 +33,7 @@ class TestScenario(Scenario):
 
 class TestScenarioManager(ScenarioManager):
     def gen_scenarios(self):
-        return [TestScenario() for i in range(100)]
+        return [TestScenario(agent_num=100) for i in range(100)]
 
 
 def test_model_run():

@@ -124,7 +124,7 @@ class IndexedAgentList(list):
         super().pop(index)
 
     def __repr__(self) -> str:
-        return '<%s %s>' % (self.__class__.__name__, self)
+        return '<IndexedAgentList %s>' % (list.__repr__(self))
 
     def __getitem__(self, item) -> 'Agent':
         return super(IndexedAgentList, self).__getitem__(item)

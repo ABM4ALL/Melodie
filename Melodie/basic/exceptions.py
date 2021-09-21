@@ -76,3 +76,23 @@ class MelodieExceptions:
         def ScenarioListItemTypeError(item):
             return MelodieException(1207,
                                     f'Scenario list elements are not Scenario() but a {type(item)} object with value {item}')
+
+    class Agents:
+        ID = 1300
+
+        @staticmethod
+        def AgentManagerEmpty(agent_manager):
+            return MelodieException(1301, f'Agent manager {agent_manager} contains no agents!')
+
+        @staticmethod
+        def AgentPropertyNameNotExist(property_name, agent):
+            return MelodieException(1301,
+                                    f'Agent {agent} does not have property {property_name}. All properties are:{list(agent.__dict__.keys())}')
+
+    class Environment:
+        ID = 1400
+
+        @staticmethod
+        def NoAgentManagerDefined(environment):
+            return MelodieException(1401,
+                                    f'Environment {environment} has no AgentManager defined, which is not allowed!')

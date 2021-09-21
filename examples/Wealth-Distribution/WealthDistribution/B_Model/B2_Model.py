@@ -4,7 +4,7 @@ __author__ = 'Songmin'
 import sys
 
 from ..Config import REG, GiniScenario
-from Melodie.DB import DB
+from Melodie.db import DB
 from ..A_Class.A1_Agent import GINIAgent
 from ..A_Class.A2_Environment import Environment
 from ..A_Class.A3_DataCollector import DataCollector
