@@ -7,4 +7,4 @@ def test_agent_manager_type_hinting():
         pass
 
     am = AgentManager(TestAgent, 0)
-    am.add(TestAgent())
+    am.add(TestAgent(0))

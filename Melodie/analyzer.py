@@ -3,3 +3,11 @@
 # @Author: Zhanyi Hou
 # @Email: 1295752786@qq.com
 # @File: analyzer.py
+
+
+
+class Analyzer:
+    def __init__(self):
+        pass
+
+

@@ -37,4 +37,4 @@ class TestScenarioManager(ScenarioManager):
 
 
 def test_model_run():
-    run(TestEnv, scenario_manager_class=TestScenarioManager)
+    run(TestAgent, TestEnv, scenario_manager_class=TestScenarioManager)

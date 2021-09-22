@@ -7,13 +7,16 @@ from Melodie.scenariomanager import Scenario, ScenarioManager
 
 
 class TestScenario(Scenario):
+    def __init__(self, id):
+        super().__init__(id, 10)
+
     def setup(self):
         self.productivity = random.random()
 
 
 class TestScenarioManager(ScenarioManager):
     def gen_scenarios(self):
-        return [TestScenario() for i in range(100)]
+        return [TestScenario(i) for i in range(100)]
 
 
 class TestScenarioManagerError1201(ScenarioManager):
@@ -97,8 +100,10 @@ def test_errors():
 def test_scenario():
     tsm = TestScenarioManager()
     df = tsm.to_dataframe()
-    db = DB('test_scenario', )
-    db.write_dataframe('test_scenario', df)
 
-    df2 = db.read_table('test_scenario')
+    DB('test_scenario').drop_table('test_scenario_table')
+    db = DB('test_scenario', )
+    db.write_dataframe('test_scenario_table', df)
+
+    df2 = db.read_dataframe('test_scenario_table')
     print(df2)

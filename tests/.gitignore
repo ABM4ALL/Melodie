@@ -1,0 +1,5 @@
+*.sqlite
+*.csv
+database
+output
+resources

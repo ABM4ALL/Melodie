@@ -15,7 +15,7 @@ import pandas as pd
 import pandas.io.sql
 
 from Melodie.config import CONN
-from Melodie.db import DB
+from Melodie.db import DB, create_db_conn
 from Melodie.agent import Agent
 from Melodie.scenariomanager import Scenario
 
@@ -31,19 +31,12 @@ class TableGenerator:
         :param scenario:
         :param agentClass:
         """
-        # 5 tables in database
-        # scenarios, agent_params, env_params, agent_results, env_results
-        # self.db = DB(db_name)
+
         self.db_name = db_name
         self.scenario = scenario
         self._agent_params = []
         self._environment_params = []
-        # try:
-        #     db.read_dataframe('agent_params')  # , self.Conn, ID_Scenario=self.Scenario.ID_Scenario).iloc[0]
-        # except pandas.io.sql.DatabaseError:
-        #     logger.warning(
-        #         f"Table {'agent_params'} does not exist and it will be created storing default value")
-        #     db.create_scenario(self.Scenario)
+
 
     def parse_generator(self, generator) -> Callable[[], Any]:
         if callable(generator):
@@ -76,7 +69,8 @@ class TableGenerator:
             data_list.append(d)
 
         df = pd.DataFrame(data_list)
-        DB(self.db_name).write_dataframe('agent_params', df)
+        db_conn = create_db_conn()
+        db_conn.write_dataframe(db_conn.AGENT_PARAM_TABLE, df)
 
     def gen_environment_param_table(self):
         d = {'scenario_id': self.scenario.id}
@@ -93,7 +87,7 @@ class TableGenerator:
 
     def run(self):
         self.gen_agent_param_table()
-        self.gen_environment_param_table()
+        # self.gen_environment_param_table()
 
     def setup(self):
         pass

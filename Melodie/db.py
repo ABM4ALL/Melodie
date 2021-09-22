@@ -4,12 +4,16 @@ from typing import Union, Dict, TYPE_CHECKING
 
 import pandas as pd
 
-
 if TYPE_CHECKING:
     from Melodie.scenariomanager import Scenario
+    from Melodie.config import Config
 
 
 class DB:
+    AGENT_PARAM_TABLE = 'agent_param'
+    AGENT_RESULT_TABLE = 'agent_result'
+    ENVIRONMENT_RESULT_TABLE = 'env_result'
+
     def __init__(self, db_name: str, db_type: str = 'sqlite', conn_params: Dict[str, str] = None):
         self.db_name = db_name
         assert db_type in {'sqlite'}
@@ -33,26 +37,6 @@ class DB:
     def close(self):
         self.connection.close()
 
-    # def read_DataFrame(self, table_name, conn, **kwargs):
-    #     if len(kwargs) > 0:
-    #         condition_temp = " where "
-    #         for key, value in kwargs.items():
-    #             condition_temp = condition_temp + key + " == '" + str(value) + "' and "
-    #         condition = condition_temp[0:-5]
-    #         DataFrame = pd.read_sql('select * from ' + table_name + condition, con=conn)
-    #     else:
-    #         DataFrame = pd.read_sql('select * from ' + table_name, con=conn)
-    #     return DataFrame
-    #
-    # def write_DataFrame(self, table, table_name, column_names, conn, **kwargs):
-    #     table_DataFrame = pd.DataFrame(table, columns=column_names)
-    #     if "dtype" in kwargs:
-    #         table_DataFrame.to_sql(table_name, conn, index=False,
-    #                                if_exists='replace', chunksize=1000, dtype=kwargs["dtype"])
-    #     else:
-    #         table_DataFrame.to_sql(table_name, conn, index=False, if_exists='replace', chunksize=1000)
-    #     return None
-    #
     def createScenario(self, tableName: str, conn, scenario: 'Scenario', **kwargs):
         settingsDataFrame = pd.DataFrame([scenario.toDict()])
         settingsDataFrame.to_sql(tableName, conn, index=False, if_exists='replace', chunksize=1000,
@@ -63,8 +47,9 @@ class DB:
         settings_data_frame.to_sql(table_name, self.connection, index=False, if_exists='replace', chunksize=1000)
 
     def reset(self):
-        self.drop_table('agent_params')
-        self.drop_table('agent_results')
+        self.drop_table(DB.AGENT_RESULT_TABLE)
+        self.drop_table(DB.AGENT_PARAM_TABLE)
+        self.drop_table(DB.ENVIRONMENT_RESULT_TABLE)
 
     def write_dataframe(self, table_name: str, data_frame: pd.DataFrame, if_exists='append'):
         data_frame.to_sql(table_name, self.connection, index=False, if_exists=if_exists, chunksize=1000)
@@ -74,3 +59,13 @@ class DB:
 
     def drop_table(self, table_name: str):
         self.connection.execute(f'drop table if exists  {table_name} ;')
+
+
+def create_db_conn() -> DB:
+    """
+    create a Database by current config
+    :return:
+    """
+    from .run import get_config
+    config = get_config()
+    return DB(config.project_name, conn_params={'db_path': config.db_folder})

@@ -4,7 +4,7 @@ import pandas as pd
 
 from Melodie.agent_manager import AgentManager
 from Melodie.basic import MelodieExceptions
-from Melodie.db import DB
+from Melodie.db import DB, create_db_conn
 
 if TYPE_CHECKING:
     from Melodie.agent import Agent
@@ -53,29 +53,14 @@ class DataCollector:
         from .run import get_environment, get_agent_manager
         env = get_environment()
         agent_manager = get_agent_manager()
-        env_dict = {}
-        for k, v in env.__dict__.items():
-            if k in self._environment_properties_to_collect:
-                env_dict[k] = v
-        df = agent_manager.to_dataframe([prop.property_name for prop in self._agent_properties_to_collect])
-        df['step'] = step
-        # print(self._environment_properties_to_collect, self._agent_properties_to_collect)
-        # print('env', env.to_json())
-        # print('agents', df)
-        self.agent_properties_df = pd.concat([self.agent_properties_df, df], axis=0)
+        df_env = env.to_dataframe([prop.property_name for prop in self._environment_properties_to_collect])
 
-    def save(self, proj_name: str):
-        DB(proj_name).write_dataframe('agent_results', self.agent_properties_df)
+        df_agent = agent_manager.to_dataframe([prop.property_name for prop in self._agent_properties_to_collect])
+        df_agent['step'] = step
+        self.agent_properties_df = pd.concat([self.agent_properties_df, df_agent], axis=0)
 
-    def store_data(self, env_data: dict, agents_data: pd.DataFrame):
-        """
-        The method to store data into dataframe.
-        :param env_data:
-        :param agents_data:
-        :return:
-        """
-        if self.target in {'sqlite'}:
-            db = DB()
-            db.write_dataframe('agent_data', agent)
-        elif self.target in {'csv', 'json'}:
-            raise NotImplementedError
+        self.environment_properties_df = pd.concat([self.environment_properties_df, df_env])
+
+    def save(self):
+        create_db_conn().write_dataframe(DB.AGENT_RESULT_TABLE, self.agent_properties_df)
+        create_db_conn().write_dataframe(DB.ENVIRONMENT_RESULT_TABLE, self.environment_properties_df)

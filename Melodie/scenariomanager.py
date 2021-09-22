@@ -1,7 +1,7 @@
 from typing import List, Optional, Union
 
 from Melodie.element import Element
-from Melodie.db import DB
+from Melodie.db import DB, create_db_conn
 from .basic.exceptions import MelodieExceptions
 import pandas as pd
 
@@ -35,14 +35,14 @@ class Scenario(Element):
 
 
 class ScenarioManager:
-    def __init__(self,db_name:str):
+    def __init__(self):
         self._scenarios = self.gen_scenarios()
         if not isinstance(self._scenarios, list):
             raise MelodieExceptions.Scenario.NoValidScenarioGenerated(self._scenarios)
         elif len(self._scenarios) == 0:
             raise MelodieExceptions.Scenario.ScenariosIsEmptyList()
         self.check_scenarios()
-        DB(db_name).reset()
+
 
     def check_scenarios(self):
         """
