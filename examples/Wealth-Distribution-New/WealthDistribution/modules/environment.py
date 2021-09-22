@@ -24,48 +24,48 @@ class GiniEnvironment(Environment):
         self.total_wealth = 0
         self.gini = 0
 
-    def go_MoneyProduce(self, AgentList):
+    def go_money_produce(self, AgentList):
 
         for agent in AgentList:
             agent.go_produce()
 
         return None
 
-    def go_GiveMoney(self, AgentFrom: 'GINIAgent', AgentTo: 'GINIAgent'):
+    def go_give_money(self, agent_from: 'GINIAgent', agent_to: 'GINIAgent'):
 
-        if AgentFrom.account == 0:
+        if agent_from.account == 0:
             pass
         else:
-            AgentFrom.account -= 1
-            AgentTo.account += 1
+            agent_from.account -= 1
+            agent_to.account += 1
 
         return None
 
-    def go_MoneyTransfer(self, AgentList:'AgentManager'):
+    def go_money_transfer(self, agent_list: 'AgentManager'):
         for sub_period in range(0, self.trade_num):
-            [Agent1, Agent2] = AgentList.random_sample(2)
+            [agent_1, agent_2] = agent_list.random_sample(2)
 
-            WhoWin = 0
+            who_win = 0
             rand = np.random.uniform(0, 1)
             if rand <= self.win_prob:
-                WhoWin = "Rich"
+                who_win = "Rich"
             else:
-                WhoWin = "Poor"
+                who_win = "Poor"
 
-            if Agent1.account >= Agent2.account and WhoWin == "Rich":
-                self.go_GiveMoney(Agent2, Agent1)
-            elif Agent1.account < Agent2.account and WhoWin == "Rich":
-                self.go_GiveMoney(Agent1, Agent2)
-            elif Agent1.account >= Agent2.account and WhoWin == "Poor":
-                self.go_GiveMoney(Agent1, Agent2)
-            elif Agent1.account < Agent2.account and WhoWin == "Poor":
-                self.go_GiveMoney(Agent2, Agent1)
+            if agent_1.account >= agent_2.account and who_win == "Rich":
+                self.go_give_money(agent_2, agent_1)
+            elif agent_1.account < agent_2.account and who_win == "Rich":
+                self.go_give_money(agent_1, agent_2)
+            elif agent_1.account >= agent_2.account and who_win == "Poor":
+                self.go_give_money(agent_1, agent_2)
+            elif agent_1.account < agent_2.account and who_win == "Poor":
+                self.go_give_money(agent_2, agent_1)
             else:
                 pass
 
         return None
 
-    def calc_Gini(self, Account_list):
+    def calc_gini(self, Account_list):
 
         x = sorted(Account_list)
         N = len(Account_list)
@@ -73,14 +73,14 @@ class GiniEnvironment(Environment):
 
         return (1 + (1 / N) - 2 * B)
 
-    def calc_WealthAndGini(self, AgentList):
+    def calc_wealth_and_gini(self, AgentList):
 
-        Account_list = []
+        account_list = []
         for agent in AgentList:
-            Account_list.append(agent.account)
+            account_list.append(agent.account)
 
-        Account_array = np.array(Account_list)
-        self.total_wealth = Account_array.sum()
-        self.gini = self.calc_Gini(Account_list)
+        account_array = np.array(account_list)
+        self.total_wealth = account_array.sum()
+        self.gini = self.calc_gini(account_list)
 
         return None

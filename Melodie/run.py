@@ -63,7 +63,6 @@ def run(proj_name: str, agent_class: ClassVar['Agent'], environment_class: Class
         scenario_manager = None
     else:
         scenario_manager: 'ScenarioManager' = scenario_manager_class(proj_name)
-        # print(scenario_manager.to_dataframe().to_csv('x.csv', ))
 
     if scenario_manager is None:
         _model = model_class(proj_name, environment_class, data_collector_class, table_generator_class)

@@ -3,29 +3,27 @@ __author__ = 'Songmin'
 
 import os
 import matplotlib.pyplot as plt
-from ..config import CONN, REG
-from Melodie.db import DB
+
+from Melodie.db import create_db_conn,DB
+from Melodie.run import get_config, current_scenario
+
 
 class Analyzer:
 
-    def __init__(self, conn, id_scenario):
-        self.Conn = conn
-        self.ID_Scenario = id_scenario
-
     def analyze_AgentWealth(self, id_agent):
 
-        AgentResult = DB().read_DataFrame(REG().Res_AgentPara + "_S" + str(self.ID_Scenario), self.Conn)
-        AgentWealth = AgentResult.loc[AgentResult["ID"] == id_agent]["Account"].values
-        self.plot_AgentWealth(AgentWealth, id_agent, CONN().FiguresPath, self.ID_Scenario)
+        AgentResult = create_db_conn().read_dataframe(DB.AGENT_RESULT_TABLE)
+        AgentWealth = AgentResult.loc[AgentResult["id"] == id_agent]["account"].values
+        self.plot_AgentWealth(AgentWealth, id_agent, get_config().output_folder, current_scenario().id)
 
         return None
 
     def analyze_WealthAndGini(self):
 
-        EnvironmentResult = DB().read_DataFrame(REG().Res_EnvironmentPara + "_S" + str(self.ID_Scenario), self.Conn)
-        TotalWealth = EnvironmentResult["TotalWealth"].values
-        Gini = EnvironmentResult["Gini"].values
-        self.plot_WealthAndGini(TotalWealth, Gini, CONN().FiguresPath, self.ID_Scenario)
+        EnvironmentResult = create_db_conn().read_dataframe(DB.ENVIRONMENT_RESULT_TABLE)
+        TotalWealth = EnvironmentResult["total_wealth"].values
+        Gini = EnvironmentResult["gini"].values
+        self.plot_WealthAndGini(TotalWealth, Gini, get_config().output_folder, current_scenario().id)
 
         return None
 
@@ -88,10 +86,9 @@ class Analyzer:
             tick.label2.set_fontsize(20)
 
         fig_name = "S" + str(id_scenario) + "_WealthAndGini"
-        figure.savefig(os.path.join(figure_folder , fig_name + ".png"), dpi=200, format='PNG')
+        figure.savefig(os.path.join(figure_folder, fig_name + ".png"), dpi=200, format='PNG')
         plt.close(figure)
 
     def run(self):
         self.analyze_AgentWealth(1)
         self.analyze_WealthAndGini()
-

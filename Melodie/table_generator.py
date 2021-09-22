@@ -74,10 +74,14 @@ class TableGenerator:
             d.update({k: g() for k, g in self._agent_params})
 
             data_list.append(d)
-        # print(data_list)
+
         df = pd.DataFrame(data_list)
         DB(self.db_name).write_dataframe('agent_params', df)
-        df2 = DB(self.db_name).read_dataframe('agent_params')
+
+    def gen_environment_param_table(self):
+        d = {'scenario_id': self.scenario.id}
+        d.update({k: g() for k, g in self._environment_params})
+        print(d)
         # print(df2)
         # data_column = self.agentClass.types
         # # DB().write_DataFrame(agentParaTable, REG().Gen_AgentPara + "_S" + str(self.Scenario.ID_Scenario),
@@ -89,6 +93,7 @@ class TableGenerator:
 
     def run(self):
         self.gen_agent_param_table()
+        self.gen_environment_param_table()
 
     def setup(self):
         pass

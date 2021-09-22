@@ -4,6 +4,7 @@ from typing import Union, Dict, TYPE_CHECKING
 
 import pandas as pd
 
+
 if TYPE_CHECKING:
     from Melodie.scenariomanager import Scenario
 
