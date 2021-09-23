@@ -23,7 +23,7 @@ class TestAgent(Agent):
 
 class TestEnv(Environment):
     def setup(self):
-        self.agent_manager = AgentManager(TestAgent, 10)
+        pass
 
 
 class TestScenario(Scenario):
@@ -37,4 +37,6 @@ class TestScenarioManager(ScenarioManager):
 
 
 def test_model_run():
-    run(TestAgent, TestEnv, scenario_manager_class=TestScenarioManager)
+    run(TestAgent,
+        TestEnv,
+        scenario_manager_class=TestScenarioManager)

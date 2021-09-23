@@ -1,5 +1,5 @@
 import sys
-from typing import ClassVar
+from typing import ClassVar, Optional
 
 from .agent import Agent
 from .agent_manager import AgentManager
@@ -8,7 +8,7 @@ from .datacollector import DataCollector
 from .environment import Environment
 from .scenariomanager import Scenario
 from .table_generator import TableGenerator
-from .db import DB, create_db_conn
+from .db import create_db_conn
 
 
 class Model:
@@ -27,6 +27,8 @@ class Model:
 
         self.data_collector_class = data_collector_class
         self.table_generator_class = table_generator_class
+        self.data_collector:Optional[DataCollector] = None
+        self.table_generator: Optional[TableGenerator] = None
 
     def setup_agent_manager(self):
         """
@@ -36,11 +38,14 @@ class Model:
 
         :return:
         """
+        self.agent_manager = AgentManager(self.agent_class, self.scenario.agent_num)
+        if self.table_generator is None:
+            return
+
         # Read agent parameters from database
         db_conn = create_db_conn()
         agent_para_data_frame = db_conn.read_dataframe(db_conn.AGENT_PARAM_TABLE)
         # Create agent manager
-        self.agent_manager = AgentManager(self.agent_class, self.scenario.agent_num)
 
         reserved_param_names = ['id']
         param_names = reserved_param_names + [param[0] for param in self.table_generator.agent_params]

@@ -9,16 +9,16 @@ from Melodie.db import DB, create_db_conn
 from Melodie.config import Config
 
 
-def test_create_db():
-    db = DB('test')
-    assert os.path.exists('test.sqlite')
-    db.close()
-    # os.remove('test.sqlite')
-
-    db = DB('test', conn_params={'db_path': 'resources'})
-    assert os.path.exists('resources/test.sqlite')
-    db.close()
-    # os.remove('resources/test.sqlite')
+# def test_create_db():
+#     db = DB('test')
+#     assert os.path.exists('test.sqlite')
+#     db.close()
+#     # os.remove('test.sqlite')
+#
+#     db = DB('test', conn_params={'db_path': 'resources'})
+#     assert os.path.exists('resources/test.sqlite')
+#     db.close()
+#     # os.remove('resources/test.sqlite')
 
 
 def test_get_scenarios():
