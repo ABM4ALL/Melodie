@@ -31,7 +31,7 @@ class DataCollector:
     """
 
     def __init__(self, target='sqlite'):
-        assert target in {'sqlite'}
+        assert target in {'sqlite', None}
         self.target = target
         self._agent_properties_to_collect: List[PropertyToCollect] = []
         self._environment_properties_to_collect: List[PropertyToCollect] = []
@@ -64,6 +64,7 @@ class DataCollector:
         self.agent_properties_df = pd.concat([self.agent_properties_df, df_agent], axis=0)
 
         self.environment_properties_df = pd.concat([self.environment_properties_df, df_env])
+        return self.agent_properties_df, self.environment_properties_df
 
     def save(self):
         create_db_conn().write_dataframe(DB.AGENT_RESULT_TABLE, self.agent_properties_df)

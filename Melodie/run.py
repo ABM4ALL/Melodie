@@ -61,6 +61,11 @@ def get_config() -> 'Config':
     return _config
 
 
+def set_config(config: "Config"):
+    global _config
+    _config = config
+
+
 def run(
         agent_class: ClassVar['Agent'],
         environment_class: ClassVar['Environment'],
@@ -82,8 +87,6 @@ def run(
     else:
         _config = config
         create_db_conn().reset()
-
-
 
     if model_class is None:
         model_class = Model

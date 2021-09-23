@@ -1,9 +1,9 @@
 from typing import Callable, Dict, List, TYPE_CHECKING, Union, Tuple, Any
 
-from .algorithms import binary_search
+# from .algorithms import binary_search
 
 if TYPE_CHECKING:
-    from ..Agent import Agent
+    from ..agent import Agent
 
 
 class AgentSet:
@@ -21,45 +21,45 @@ class AgentSet:
         return [agent for k, agent in self.agents_dic.items()]
 
 
-class SortedAgentIndex:
-    def __init__(self, agents: List['Agent'], standard: Callable[['Agent'], Union[int, float]]):
-        self._agent_list: List[Tuple[Union[int, float], 'Agent']] = [(standard(agent), agent) for agent in agents]
-        self._standard = standard
-        self._agent_list.sort(key=lambda value_agent_tuple: value_agent_tuple[0])
-
-    def add(self, agent: 'Agent'):
-        index_list = self._agent_list
-        val = self._standard(agent)
-        index = binary_search(index_list, val)
-        if index == -1:
-            index_list.append((val, agent))
-        else:
-            index_list.insert(index, (val, agent))
-
-    def remove(self, agent: 'Agent'):
-        index_list = self._agent_list
-        val = self._standard(agent)
-        index = binary_search(index_list, val)
-        index_list.pop(index)
-
-    def update(self, agent: 'Agent', old_value: Union[int, float], new_value: Union[int, float]):
-        index_list = self._agent_list
-        pre_index = binary_search(index_list, old_value)
-        index_list.pop(pre_index)
-        after_index = binary_search(index_list, new_value)
-        if after_index == -1:
-            index_list.append((new_value, agent))
-        else:
-            index_list.insert(after_index, (new_value, agent))
-
-    def __len__(self):
-        return self._agent_list.__len__()
-
-    def __getitem__(self, item):
-        return self._agent_list[item][1]
-
-    def __repr__(self):
-        return "SortedAgentList%s" % [item for item in self._agent_list]
+# class SortedAgentIndex:
+#     def __init__(self, agents: List['Agent'], standard: Callable[['Agent'], Union[int, float]]):
+#         self._agent_list: List[Tuple[Union[int, float], 'Agent']] = [(standard(agent), agent) for agent in agents]
+#         self._standard = standard
+#         self._agent_list.sort(key=lambda value_agent_tuple: value_agent_tuple[0])
+#
+#     def add(self, agent: 'Agent'):
+#         index_list = self._agent_list
+#         val = self._standard(agent)
+#         index = binary_search(index_list, val)
+#         if index == -1:
+#             index_list.append((val, agent))
+#         else:
+#             index_list.insert(index, (val, agent))
+#
+#     def remove(self, agent: 'Agent'):
+#         index_list = self._agent_list
+#         val = self._standard(agent)
+#         index = binary_search(index_list, val)
+#         index_list.pop(index)
+#
+#     def update(self, agent: 'Agent', old_value: Union[int, float], new_value: Union[int, float]):
+#         index_list = self._agent_list
+#         pre_index = binary_search(index_list, old_value)
+#         index_list.pop(pre_index)
+#         after_index = binary_search(index_list, new_value)
+#         if after_index == -1:
+#             index_list.append((new_value, agent))
+#         else:
+#             index_list.insert(after_index, (new_value, agent))
+#
+#     def __len__(self):
+#         return self._agent_list.__len__()
+#
+#     def __getitem__(self, item):
+#         return self._agent_list[item][1]
+#
+#     def __repr__(self):
+#         return "SortedAgentList%s" % [item for item in self._agent_list]
 
 
 # class IndexedAgentList:
@@ -130,49 +130,49 @@ class IndexedAgentList(list):
         return super(IndexedAgentList, self).__getitem__(item)
 
 
-class AgentGroup:
-    def __init__(self, agents, standard: Callable[['Agent'], int]) -> None:
-        self.groups: Dict[int, IndexedAgentList] = {}
-        self.standard = standard
-        for agent in agents:
-            value = standard(agent)
-            assert isinstance(value, int)
-            if value not in self.groups:
-                self.groups[value] = IndexedAgentList([agent])
-            else:
-                self.groups[value].add(agent)
-
-    def add(self, agent):
-        value = self.standard(agent)
-        assert isinstance(value, int)
-        if value not in self.groups:
-            self.groups[value] = IndexedAgentList([agent])
-        else:
-            self.groups[value].add(agent)
-
-    def remove(self, agent):
-        value = self.standard(agent)
-        if value not in self.groups:
-            raise ValueError
-        else:
-            self.groups[value].remove(agent)
-
-    def update(self, agent, old: int, new: int):
-        old_group = self.groups[old]
-
-        old_group.remove(agent)
-        new_group_val = new
-        if new_group_val not in self.groups:
-            self.groups[new_group_val] = IndexedAgentList([agent])
-
-        else:
-            self.groups[new_group_val].add(agent)
-
-    def group_names(self) -> List[int]:
-        return list(self.groups.keys())
-
-    def agent_count(self) -> int:
-        count = 0
-        for _, group in self.groups.items():
-            count += len(group)
-        return count
+# class AgentGroup:
+#     def __init__(self, agents, standard: Callable[['Agent'], int]) -> None:
+#         self.groups: Dict[int, IndexedAgentList] = {}
+#         self.standard = standard
+#         for agent in agents:
+#             value = standard(agent)
+#             assert isinstance(value, int)
+#             if value not in self.groups:
+#                 self.groups[value] = IndexedAgentList([agent])
+#             else:
+#                 self.groups[value].add(agent)
+#
+#     def add(self, agent):
+#         value = self.standard(agent)
+#         assert isinstance(value, int)
+#         if value not in self.groups:
+#             self.groups[value] = IndexedAgentList([agent])
+#         else:
+#             self.groups[value].add(agent)
+#
+#     def remove(self, agent):
+#         value = self.standard(agent)
+#         if value not in self.groups:
+#             raise ValueError
+#         else:
+#             self.groups[value].remove(agent)
+#
+#     def update(self, agent, old: int, new: int):
+#         old_group = self.groups[old]
+#
+#         old_group.remove(agent)
+#         new_group_val = new
+#         if new_group_val not in self.groups:
+#             self.groups[new_group_val] = IndexedAgentList([agent])
+#
+#         else:
+#             self.groups[new_group_val].add(agent)
+#
+#     def group_names(self) -> List[int]:
+#         return list(self.groups.keys())
+#
+#     def agent_count(self) -> int:
+#         count = 0
+#         for _, group in self.groups.items():
+#             count += len(group)
+#         return count

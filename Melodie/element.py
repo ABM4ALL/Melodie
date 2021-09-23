@@ -1,14 +1,7 @@
-from typing import List, Dict, Any
+from typing import Dict, Any
 
 
 class Element:
-    """
-    Basic element, the parent class of Agent, Environment and Managers.
-
-    Element.params: stores the initial param names
-    Element.results: stores the values should be saved into database every step
-    Element.types: stores the data type. for sqlite it can be :{"a":"INTEGER","txt":"TEXT"}
-    """
     def set_params(self, params: Dict[str, Any]):
         """
         Set property which was declared at Element.params
