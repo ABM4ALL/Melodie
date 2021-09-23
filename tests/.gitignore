@@ -1,5 +1,3 @@
-*.sqlite
 *.csv
-database
-output
-resources
+_database
+_output

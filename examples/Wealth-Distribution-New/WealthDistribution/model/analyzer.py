@@ -4,7 +4,7 @@ __author__ = 'Songmin'
 import os
 import matplotlib.pyplot as plt
 
-from Melodie.db import create_db_conn,DB
+from Melodie.db import create_db_conn
 from Melodie.run import get_config, current_scenario
 
 
@@ -12,7 +12,7 @@ class Analyzer:
 
     def analyze_AgentWealth(self, id_agent):
 
-        AgentResult = create_db_conn().read_dataframe(DB.AGENT_RESULT_TABLE)
+        AgentResult = create_db_conn().query_agent_results()
         AgentWealth = AgentResult.loc[AgentResult["id"] == id_agent]["account"].values
         self.plot_AgentWealth(AgentWealth, id_agent, get_config().output_folder, current_scenario().id)
 
@@ -20,7 +20,7 @@ class Analyzer:
 
     def analyze_WealthAndGini(self):
 
-        EnvironmentResult = create_db_conn().read_dataframe(DB.ENVIRONMENT_RESULT_TABLE)
+        EnvironmentResult = create_db_conn().query_env_results()
         TotalWealth = EnvironmentResult["total_wealth"].values
         Gini = EnvironmentResult["gini"].values
         self.plot_WealthAndGini(TotalWealth, Gini, get_config().output_folder, current_scenario().id)

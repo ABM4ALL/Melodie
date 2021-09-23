@@ -6,7 +6,6 @@ import logging
 import numpy as np
 
 from Melodie.table_generator import TableGenerator
-from .scenario import GiniScenario
 
 logger = logging.getLogger(__name__)
 

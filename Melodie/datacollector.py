@@ -50,13 +50,17 @@ class DataCollector:
         self._environment_properties_to_collect.append(PropertyToCollect(property_name, as_type))
 
     def collect(self, step: int):
-        from .run import get_environment, get_agent_manager
+        from .run import get_environment, get_agent_manager, current_scenario
         env = get_environment()
         agent_manager = get_agent_manager()
         df_env = env.to_dataframe([prop.property_name for prop in self._environment_properties_to_collect])
+        df_env['scenario_id'] = current_scenario().id
+        df_env['step'] = step
 
         df_agent = agent_manager.to_dataframe([prop.property_name for prop in self._agent_properties_to_collect])
         df_agent['step'] = step
+        df_agent['scenario_id'] = current_scenario().id
+
         self.agent_properties_df = pd.concat([self.agent_properties_df, df_agent], axis=0)
 
         self.environment_properties_df = pd.concat([self.environment_properties_df, df_env])

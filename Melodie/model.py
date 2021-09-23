@@ -8,7 +8,7 @@ from .datacollector import DataCollector
 from .environment import Environment
 from .scenariomanager import Scenario
 from .table_generator import TableGenerator
-from .db import DB,create_db_conn
+from .db import DB, create_db_conn
 
 
 class Model:
@@ -25,18 +25,8 @@ class Model:
         self.environment = environment_class()
         self.agent_manager: AgentManager = None
 
-        if callable(data_collector_class) and issubclass(data_collector_class, DataCollector):
-            data_collector = data_collector_class()
-            data_collector.setup()
-        elif data_collector_class is None:
-            data_collector = None
-        else:
-            raise TypeError(data_collector_class)
-        self.data_collector = data_collector
-        if table_generator_class is not None:
-            self.table_generator: TableGenerator = table_generator_class(config.project_name, self.scenario)
-            self.table_generator.setup()
-            self.table_generator.run()
+        self.data_collector_class = data_collector_class
+        self.table_generator_class = table_generator_class
 
     def setup_agent_manager(self):
         """
@@ -66,8 +56,31 @@ class Model:
 
         return self.agent_manager
 
-    def _setup(self):
+    def setup_environment(self):
         self.environment.setup()
+
+    def setup_data_collector(self, data_collector_class):
+        if callable(data_collector_class) and issubclass(data_collector_class, DataCollector):
+            data_collector = data_collector_class()
+            data_collector.setup()
+        elif data_collector_class is None:
+            data_collector = None
+        else:
+            raise TypeError(data_collector_class)
+
+        self.data_collector = data_collector
+
+    def setup_table_generator(self, table_generator_class):
+        if table_generator_class is not None:
+            self.table_generator: TableGenerator = table_generator_class(self.scenario)
+            self.table_generator.setup()
+            self.table_generator.run()
+
+    def _setup(self):
+        self.setup_data_collector(self.data_collector_class)
+        self.setup_table_generator(self.table_generator_class)
+        self.setup_environment()
+        self.setup_agent_manager()
 
     def run(self):
         pass

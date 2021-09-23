@@ -7,13 +7,10 @@ from .basic import AgentGroup, SortedAgentIndex, parse_watched_attrs, IndexedAge
 
 if TYPE_CHECKING:
     from .agent import Agent
-    from .run import DataCollector
 
 
 class AgentManager:
     def __init__(self, agent_class: ClassVar['Agent'], length: int) -> None:
-        # from .agent import Agent
-        # assert issubclass(agent_class, Agent)
         self._iter_index = 0
         self.agent_class: ClassVar['Agent'] = agent_class
         self.initial_agent_num: int = length
@@ -85,7 +82,9 @@ class AgentManager:
             if column_name not in agent0.__dict__.keys():
                 raise MelodieExceptions.Agents.AgentPropertyNameNotExist(column_name, agent0)
         for agent in self.agents:
-            data_list.append({k: agent.__dict__[k] for k in column_names})
+            d = {k: agent.__dict__[k] for k in column_names}
+            data_list.append(d)
         df= pd.DataFrame(data_list)
         df['id'] = df['id'].astype(int)
+        # df['scenario_id'] =
         return df

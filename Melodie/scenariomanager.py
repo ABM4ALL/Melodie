@@ -42,7 +42,7 @@ class ScenarioManager:
         elif len(self._scenarios) == 0:
             raise MelodieExceptions.Scenario.ScenariosIsEmptyList()
         self.check_scenarios()
-
+        self.save_scenarios()
 
     def check_scenarios(self):
         """
@@ -112,3 +112,6 @@ class ScenarioManager:
             data_list.append(scenario.__dict__)
         df = pd.DataFrame(data_list)
         return df
+
+    def save_scenarios(self):
+        create_db_conn().write_dataframe(DB.SCENARIO_TABLE, self.to_dataframe(), 'replace')

@@ -4,7 +4,7 @@
 # @Email: 1295752786@qq.com
 # @File: analyzer.py
 
-
+from .db import DB
 
 class Analyzer:
     def __init__(self):

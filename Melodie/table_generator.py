@@ -24,7 +24,7 @@ logger = logging.getLogger(__name__)
 
 class TableGenerator:
 
-    def __init__(self, db_name, scenario: 'Scenario'):
+    def __init__(self, scenario: 'Scenario'):
         """
         Pass the class of agent, to get the data type that how the properties are saved into database.
         :param conn:
@@ -32,11 +32,9 @@ class TableGenerator:
         :param agentClass:
         """
 
-        self.db_name = db_name
         self.scenario = scenario
         self._agent_params = []
         self._environment_params = []
-
 
     def parse_generator(self, generator) -> Callable[[], Any]:
         if callable(generator):
@@ -48,6 +46,13 @@ class TableGenerator:
             raise TypeError(generator)
 
     def add_agent_param(self, param_name, generator: Union[int, str, float, Callable[[], Any]]):
+        """
+        Add parameters to assign to agent properties.
+        Generator is a function
+        :param param_name:
+        :param generator:
+        :return:
+        """
         self._agent_params.append((param_name, self.parse_generator(generator)))
 
     def add_environment_param(self, param_name, generator: Union[int, str, float, Callable[[], Any]]):

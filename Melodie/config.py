@@ -40,8 +40,8 @@ class Config:
     def __init__(self,
                  project_name: str,
                  project_root: str = '',
-                 db_folder: str = 'database',
-                 output_folder: str = 'output',
+                 db_folder: str = '_database',
+                 output_folder: str = '_output',
                  ):
         self.project_name = project_name
         assert self.project_name.isidentifier(), 'project_name should be a valid identifier'
