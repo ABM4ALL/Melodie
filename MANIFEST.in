@@ -1,0 +1,1 @@
+recursive-include Melodie/static *.html *.js *.png *.jpg *.ico *.css *.json

@@ -30,9 +30,24 @@ This project is supposed to be developed as a general framework that can be used
 #### 3 Ideas
 
 
-#### 4 DataBase
+#### 4 Manager
 
+run this command in project root:
+```cmd
+python -m Melodie serve
+```
+and visit this website:
 
-scenarios, agent_params, env_params, agent_results, env_results
+http://localhost:8089/
+
+The webpage will provide a simple database viewer with two selection widgets.
+The one shows all database files in the path where you run this command and its
+sub-folders, and the other shows all tables of current selected database.
+
+This page loads the whole table data when you switch table, but only renders 
+several rows instead of rendering them all. So in most cases there will be no worry
+about performance.
+
+![img.png](docs/source/.images/melodiemanager-sqliteview.png)
 
 
