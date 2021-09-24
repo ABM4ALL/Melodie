@@ -1,5 +1,5 @@
 import sys
-from typing import ClassVar
+from typing import ClassVar, Optional
 
 from .agent import Agent
 from .agent_manager import AgentManager
@@ -8,7 +8,7 @@ from .datacollector import DataCollector
 from .environment import Environment
 from .scenariomanager import Scenario
 from .table_generator import TableGenerator
-from .db import DB,create_db_conn
+from .db import create_db_conn
 
 
 class Model:
@@ -25,18 +25,10 @@ class Model:
         self.environment = environment_class()
         self.agent_manager: AgentManager = None
 
-        if callable(data_collector_class) and issubclass(data_collector_class, DataCollector):
-            data_collector = data_collector_class()
-            data_collector.setup()
-        elif data_collector_class is None:
-            data_collector = None
-        else:
-            raise TypeError(data_collector_class)
-        self.data_collector = data_collector
-        if table_generator_class is not None:
-            self.table_generator: TableGenerator = table_generator_class(config.project_name, self.scenario)
-            self.table_generator.setup()
-            self.table_generator.run()
+        self.data_collector_class = data_collector_class
+        self.table_generator_class = table_generator_class
+        self.data_collector:Optional[DataCollector] = None
+        self.table_generator: Optional[TableGenerator] = None
 
     def setup_agent_manager(self):
         """
@@ -46,11 +38,14 @@ class Model:
 
         :return:
         """
+        self.agent_manager = AgentManager(self.agent_class, self.scenario.agent_num)
+        if self.table_generator is None:
+            return
+
         # Read agent parameters from database
         db_conn = create_db_conn()
         agent_para_data_frame = db_conn.read_dataframe(db_conn.AGENT_PARAM_TABLE)
         # Create agent manager
-        self.agent_manager = AgentManager(self.agent_class, self.scenario.agent_num)
 
         reserved_param_names = ['id']
         param_names = reserved_param_names + [param[0] for param in self.table_generator.agent_params]
@@ -66,8 +61,31 @@ class Model:
 
         return self.agent_manager
 
-    def _setup(self):
+    def setup_environment(self):
         self.environment.setup()
+
+    def setup_data_collector(self, data_collector_class):
+        if callable(data_collector_class) and issubclass(data_collector_class, DataCollector):
+            data_collector = data_collector_class()
+            data_collector.setup()
+        elif data_collector_class is None:
+            data_collector = None
+        else:
+            raise TypeError(data_collector_class)
+
+        self.data_collector = data_collector
+
+    def setup_table_generator(self, table_generator_class):
+        if table_generator_class is not None:
+            self.table_generator: TableGenerator = table_generator_class(self.scenario)
+            self.table_generator.setup()
+            self.table_generator.run()
+
+    def _setup(self):
+        self.setup_data_collector(self.data_collector_class)
+        self.setup_table_generator(self.table_generator_class)
+        self.setup_environment()
+        self.setup_agent_manager()
 
     def run(self):
         pass

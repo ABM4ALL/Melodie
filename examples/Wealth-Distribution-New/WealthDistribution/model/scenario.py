@@ -17,7 +17,6 @@ class GiniScenario(Scenario):
         self.agent_productivity = 0.5
         self.trade_num = 100
         self.rich_win_prob = 0.8
-        self.productivity = 0
 
 
 class GiniScenarioManager(ScenarioManager):
@@ -26,4 +25,8 @@ class GiniScenarioManager(ScenarioManager):
         Only generate one scenario here.
         :return:
         """
-        return [GiniScenario() for i in range(1)]
+
+        scenarios = [GiniScenario() for i in range(3)]
+        for i, scenario in enumerate(scenarios):
+            scenario.rich_win_prob = 0.1 * (i + 1) + 0.5  # 0.1,0.2,...0.9
+        return scenarios

@@ -2,18 +2,15 @@ import random
 
 import pandas as pd
 
-from typing import Dict, TYPE_CHECKING, ClassVar, List, Tuple, Callable, Union
-from .basic import AgentGroup, SortedAgentIndex, parse_watched_attrs, IndexedAgentList, MelodieExceptions
+from typing import TYPE_CHECKING, ClassVar, List
+from .basic import IndexedAgentList, MelodieExceptions
 
 if TYPE_CHECKING:
     from .agent import Agent
-    from .run import DataCollector
 
 
 class AgentManager:
     def __init__(self, agent_class: ClassVar['Agent'], length: int) -> None:
-        # from .agent import Agent
-        # assert issubclass(agent_class, Agent)
         self._iter_index = 0
         self.agent_class: ClassVar['Agent'] = agent_class
         self.initial_agent_num: int = length
@@ -23,6 +20,9 @@ class AgentManager:
 
     def __len__(self):
         return len(self.agents)
+
+    def __getitem__(self, item):
+        return self.agents.__getitem__(item)
 
     def __iter__(self):
         self._iter_index = 0
@@ -46,14 +46,8 @@ class AgentManager:
             agent.setup()
         return IndexedAgentList(agents)
 
-    def random_sample(self, sample_num: int):
+    def random_sample(self, sample_num: int) -> 'Agent':
         return random.sample(self.agents, sample_num)
-
-    def query(self, condition: Callable[['Agent'], bool]) -> List['Agent']:
-        """
-        How to implement this method?
-        :return:
-        """
 
     def remove(self, agent: 'Agent'):
         for i, a in enumerate(self.agents):
@@ -85,7 +79,8 @@ class AgentManager:
             if column_name not in agent0.__dict__.keys():
                 raise MelodieExceptions.Agents.AgentPropertyNameNotExist(column_name, agent0)
         for agent in self.agents:
-            data_list.append({k: agent.__dict__[k] for k in column_names})
-        df= pd.DataFrame(data_list)
+            d = {k: agent.__dict__[k] for k in column_names}
+            data_list.append(d)
+        df = pd.DataFrame(data_list)
         df['id'] = df['id'].astype(int)
         return df

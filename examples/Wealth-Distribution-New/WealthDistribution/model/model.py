@@ -8,7 +8,7 @@ class GiniModel(Model):
 
     def run(self):
         simulation_periods = self.scenario.periods
-        agent_manager = self.setup_agent_manager()
+        agent_manager = self.agent_manager
         dc = self.data_collector
 
         for t in range(0, simulation_periods):

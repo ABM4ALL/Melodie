@@ -97,13 +97,13 @@ def test_errors():
         assert e.id == 1207
 
 
-def test_scenario():
-    tsm = TestScenarioManager()
-    df = tsm.to_dataframe()
-
-    DB('test_scenario').drop_table('test_scenario_table')
-    db = DB('test_scenario', )
-    db.write_dataframe('test_scenario_table', df)
-
-    df2 = db.read_dataframe('test_scenario_table')
-    print(df2)
+# def test_scenario():
+#     tsm = TestScenarioManager()
+#     df = tsm.to_dataframe()
+#
+#     DB('test_scenario').drop_table('test_scenario_table')
+#     db = DB('test_scenario', )
+#     db.write_dataframe('test_scenario_table', df)
+#
+#     df2 = db.read_dataframe('test_scenario_table')
+#     print(df2)

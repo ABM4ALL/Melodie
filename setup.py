@@ -26,16 +26,19 @@ setuptools.setup(
     project_urls={
         'Documentation': 'https://Melodie.readthedocs.io/en/latest/index.html',
     },
-    packages=setuptools.find_packages(),
+    packages=setuptools.find_namespace_packages(
+        include=['Melodie', 'Melodie.*']
+    ),
     install_requires=[
         'numpy',
         'pandas',
         'matplotlib',
     ],
-    python_requires='>=3.7, <3.9',
+    python_requires='>=3.5',
     entry_points={
         'console_scripts': [
             'Melodie=Melodie.scripts.scripts:cli'
         ]
     },
+    include_package_data=True
 )
