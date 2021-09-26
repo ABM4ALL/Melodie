@@ -154,6 +154,7 @@ def run_with_xls(
             _model = model_class(config, agent_class,
                                  environment_class,
                                  data_collector_class,
+                                 table_generator_class=table_generator_class,
                                  scenario=scenario)
             _model._setup()
             _model.run()

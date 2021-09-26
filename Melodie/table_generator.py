@@ -51,7 +51,7 @@ class TableGenerator:
         :param generator:
         :return:
         """
-        raise DeprecationWarning
+        # raise DeprecationWarning
         self._agent_params.append((param_name, self.parse_generator(generator)))
 
     def add_environment_param(self, param_name, generator: Union[int, str, float, Callable[[int], Any]]):

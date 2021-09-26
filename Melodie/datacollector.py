@@ -53,10 +53,11 @@ class DataCollector:
         from .run import get_environment, get_agent_manager, current_scenario
         env = get_environment()
         agent_manager = get_agent_manager()
-        df_env = env.to_dataframe([prop.property_name for prop in self._environment_properties_to_collect])
 
-        df_env['scenario_id'] = current_scenario().id
+        df_env = env.to_dataframe([prop.property_name for prop in self._environment_properties_to_collect])
         df_env['step'] = step
+        df_env['scenario_id'] = current_scenario().id
+
 
         df_agent = agent_manager.to_dataframe([prop.property_name for prop in self._agent_properties_to_collect])
         df_agent['step'] = step
