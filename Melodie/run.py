@@ -94,7 +94,7 @@ def run(
     if scenario_manager_class is None:
         scenario_manager = None
     else:
-        scenario_manager: 'ScenarioManager' = scenario_manager_class()
+        scenario_manager: 'ScenarioManager' = scenario_manager_class(config)
 
     if scenario_manager is None:
         _model = model_class(config, environment_class, data_collector_class, table_generator_class)
@@ -109,5 +109,54 @@ def run(
                                  scenario)
             _model._setup()
             _model.run()
+            if analyzer_class is not None:
+                analyzer_class().run()
+
+
+def run_with_xls(
+        agent_class: ClassVar['Agent'],
+        environment_class: ClassVar['Environment'],
+        config: 'Config' = None,
+        data_collector_class: ClassVar['DataCollector'] = None,
+        model_class: ClassVar['Model'] = None,
+        scenario_class: ClassVar['Scenario'] = None,
+        scenario_manager_class: ClassVar['ScenarioManager'] = None,
+        table_generator_class: ClassVar['TableGenerator'] = None,
+        analyzer_class: ClassVar['Analyzer'] = None
+):
+    """
+    Main Model for running model!
+    If
+    """
+    global _model, _config
+    if config is None:
+        config = Config('Untitled')
+        _config = config
+    else:
+        _config = config
+        create_db_conn().reset()
+
+    if model_class is None:
+        model_class = Model
+
+    if scenario_manager_class is None:
+        scenario_manager = ScenarioManager(config, scenario_class)
+    else:
+        scenario_manager: 'ScenarioManager' = scenario_manager_class(config, scenario_class)
+
+    if scenario_manager is None:
+        _model = model_class(config, environment_class, data_collector_class, table_generator_class)
+        _model._setup()
+        _model.run()
+    else:
+        scenarios = scenario_manager.load_scenarios()
+        for scenario in scenarios:
+            _model = model_class(config, agent_class,
+                                 environment_class,
+                                 data_collector_class,
+                                 scenario=scenario)
+            _model._setup()
+            _model.run()
+
             if analyzer_class is not None:
                 analyzer_class().run()

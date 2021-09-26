@@ -1,9 +1,13 @@
-from typing import List, Optional, Union
+import os
+from typing import List, Optional, Union, ClassVar
 
 from Melodie.element import Element
 from Melodie.db import DB, create_db_conn
 from .basic.exceptions import MelodieExceptions
 import pandas as pd
+
+from .basic.fileio import load_excel
+from .config import Config
 
 
 class Scenario(Element):
@@ -35,15 +39,16 @@ class Scenario(Element):
 
 
 class ScenarioManager:
-    def __init__(self):
+    def __init__(self, config: Config, scenario_class: ClassVar['Scenario'] = None):
         # TODO : Load scenario from excel/csv/database.
         # TODO: 模型启动尽量只用scenarios一张表。也就是
         # TODO: 最好改成直接读excel表，将其变成dataframe.
         # TODO: 有的模型可能需要几张scenario表。现在的表还不够！有的表中，每个Agent的参数都要提前设置好。
         # TODO: scenario表的有一些参数，可能指向另一张表
-        self.file_name = ''
-        self.mode = 'from_file'  # 'generate','from_file' or 'from_database'
-        if self.mode == 'generate':
+
+        self.param_source = config.parameters_source  # 'generate','from_file' or 'from_database'
+        self.scenario_class = scenario_class
+        if self.param_source == 'generate':
             self._scenarios = self.gen_scenarios()
             if not isinstance(self._scenarios, list):
                 raise MelodieExceptions.Scenario.NoValidScenarioGenerated(self._scenarios)
@@ -51,11 +56,12 @@ class ScenarioManager:
                 raise MelodieExceptions.Scenario.ScenariosIsEmptyList()
             self.check_scenarios()
             self.save_scenarios()
-            self.save_scenarios()
-        elif self.mode == 'from_file':
-            pd.read_excel(self.file_name)
-            self.save_scenarios()
-        elif self.mode == 'from_database':
+        elif self.param_source == 'from_file':
+            self.xls_path = config.parameters_xls_file
+            assert os.path.exists(self.xls_path)
+            scenarios, agent_params = load_excel(self.xls_path)
+            self.save(scenarios, agent_params)
+        elif self.param_source == 'from_database':
             pass
         else:
             raise NotImplementedError
@@ -132,5 +138,19 @@ class ScenarioManager:
     def save_scenarios(self):
         create_db_conn().write_dataframe(DB.SCENARIO_TABLE, self.to_dataframe(), 'replace')
 
-    def load_scenario(self):
-        pass
+    def save(self, scenario_df: pd.DataFrame, agent_param_df: pd.DataFrame):
+        create_db_conn().write_dataframe(DB.SCENARIO_TABLE, scenario_df, 'replace')
+        create_db_conn().write_dataframe(DB.AGENT_PARAM_TABLE, agent_param_df, 'replace')
+
+    def load_scenarios(self) -> List[Scenario]:
+        table = create_db_conn().read_dataframe(DB.SCENARIO_TABLE)
+        cols = [col for col in table.columns]
+        scenarios: List[Scenario] = []
+        for i in range(table.shape[0]):
+            scenario = self.scenario_class()
+            for col_name in cols:
+                assert col_name in scenario.__dict__.keys()
+                scenario.__dict__[col_name] = table.loc[i, col_name]
+            scenarios.append(scenario)
+        assert len(scenarios) != 0
+        return scenarios
