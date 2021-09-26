@@ -51,6 +51,7 @@ class TableGenerator:
         :param generator:
         :return:
         """
+        raise DeprecationWarning
         self._agent_params.append((param_name, self.parse_generator(generator)))
 
     def add_environment_param(self, param_name, generator: Union[int, str, float, Callable[[int], Any]]):
@@ -88,3 +89,36 @@ class TableGenerator:
 
     def setup(self):
         pass
+
+
+    def set_agent_params(self):
+        # TODO: 这种方法可能也不够通用
+        # TODO: 有没有更好的方法？
+        # TODO: 更复杂的情况可以使用读取表的方法。举例：每个企业的技术水平不一样，生产规模不一样。这种需要读excel表。
+        a = random.randint()
+        b = a ** 2
+        return {'a': a, 'b': b}
+
+    def read_param_table(self):
+        """
+        TODO
+        做一个判断。
+        如果用scenario里面的一行，里面要么是和环境有关的参数，要么是和Agent有关的参数。
+        TODO 优先做这个:从Excel读取环境数据的时候，不用跑table generator.
+
+        含有一个名为scenarios的表，保存所有的scenario
+        每一个scenario的agent table分开，分为多个工作表。 工作表名称和scenario_id一样。
+
+        最好也生成一个环境的参数表、
+
+        准备Agent的参数时，有两种方案。
+        - 第一种使用set_agent_params自动生成
+        - 第二种是直接读进来完整的agent表。表名可以做一个区分。
+             1、scenarios表+所有scenarios的表。
+             2、只有一个Agent参数表，那么所有的情况都用同样的agent参数
+        环境参数表，表名为environment_parameter。
+        保存的是对应scenario中的环境参数。
+
+        giniscenario表
+        :return:
+        """

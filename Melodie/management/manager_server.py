@@ -5,7 +5,9 @@
 # @File: server.py
 # copy static files: scp -r hzy@192.168.50.211:/home/hzy/Documents/Developing/web/melodie-fe/build/* ./Melodie/static
 import json
+import math
 import os
+import random
 import tempfile
 import sqlite3
 from flask import Flask, request
@@ -59,11 +61,24 @@ def handle_data():
     current_table_name = request.args.get('table_name')
     return read_sql(db_path, f'select * from {current_table_name}')
 
+
+@app.route('/space')
+def handle_space_data():
+    import json
+    return json.dumps([{'id': i, 'x': random.randint(10, 590), 'y': random.randint(10, 590)} for i in range(100)])
+    # return
+
+
 @app.route('/')
 def handle_root():
     # 永久重定向到新网址到百度
-    return redirect('http://localhost:8089/index.html',code=301)
+    return redirect('http://localhost:8089/index.html', code=301)
 
 
 def run():
+    app.run(host='0.0.0.0', port=8089)
+
+
+if __name__ == '__main__':
+    # run()
     app.run(host='0.0.0.0', port=8089)

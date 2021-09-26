@@ -10,6 +10,9 @@ if TYPE_CHECKING:
 
 
 class AgentManager:
+    """
+    TODO:建议改成AgentList(相对不太紧要)
+    """
     def __init__(self, agent_class: ClassVar['Agent'], length: int) -> None:
         self._iter_index = 0
         self.agent_class: ClassVar['Agent'] = agent_class

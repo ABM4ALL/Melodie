@@ -45,6 +45,7 @@ class Model:
         # Read agent parameters from database
         db_conn = create_db_conn()
         agent_para_data_frame = db_conn.read_dataframe(db_conn.AGENT_PARAM_TABLE)
+
         # Create agent manager
 
         reserved_param_names = ['id']
