@@ -27,3 +27,4 @@ if __name__ == "__main__":
         table_generator_class=GiniTableGenerator,
         analyzer_class=Analyzer
     )
+#     test
