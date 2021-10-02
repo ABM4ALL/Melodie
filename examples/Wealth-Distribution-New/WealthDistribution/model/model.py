@@ -19,3 +19,4 @@ class GiniModel(Model):
             self.environment.calc_wealth_and_gini(agent_manager)
             dc.collect(t)
         dc.save()
+
