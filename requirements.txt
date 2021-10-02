@@ -3,3 +3,5 @@ numpy
 pandas
 flask
 flask-cors
+openpyxl
+networkx
