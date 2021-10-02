@@ -6,7 +6,7 @@ from Melodie.db import DB, create_db_conn
 from .basic.exceptions import MelodieExceptions
 import pandas as pd
 
-from .basic.fileio import load_excel
+from .basic.fileio import load_excel, batch_load_tables
 from .config import Config
 
 
@@ -21,6 +21,7 @@ class Scenario(Element):
             raise MelodieExceptions.Scenario.ScenarioIDTypeError(id_scenario)
         self.id = id_scenario
         self.agent_num = agent_num
+        self.number_of_run = 1
         self.setup()
         assert self.agent_num > 0
 
@@ -28,7 +29,6 @@ class Scenario(Element):
         pass
 
     def toDict(self):
-        # print(self.__dict__)
         d = {}
         for k in self.params:
             d[k] = self.__dict__[k]
@@ -63,6 +63,9 @@ class ScenarioManager:
             assert os.path.exists(self.xls_path)
             scenarios, agent_params = load_excel(self.xls_path)
             self.save(scenarios, agent_params)
+            tables = batch_load_tables(config.static_xls_files, DB.RESERVED_TABLES)
+            for table_name, table in tables.items():
+                create_db_conn().write_dataframe(table_name, table, 'replace')
         elif self.param_source == 'from_database':
             raise NotImplementedError
         else:

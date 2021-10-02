@@ -10,15 +10,33 @@ import os
 import random
 import tempfile
 import sqlite3
-from flask import Flask, request
+from flask import Flask, request, make_response
 import pandas as pd
 
 from flask_cors import CORS
 from werkzeug.utils import redirect
 
+from .project_structure import list_all_files, get_all_function_cfgs, to_mermaid, get_all_funcdefs
+
 app = Flask(__name__, static_folder='../static', static_url_path='', )
 
 CORS(app, resources=r'/*')  # 注册CORS, "/*" 允许访问所有api
+
+
+@app.after_request
+def after(resp):
+    '''
+    被after_request钩子函数装饰过的视图函数
+    ，会在请求得到响应后返回给用户前调用，也就是说，这个时候，
+    请求已经被app.route装饰的函数响应过了，已经形成了response，这个时
+    候我们可以对response进行一些列操作，我们在这个钩子函数中添加headers，所有的url跨域请求都会允许！！！
+    '''
+    resp = make_response(resp)
+    resp.headers['Access-Control-Allow-Origin'] = '*'
+    resp.headers['Access-Control-Allow-Methods'] = 'GET,POST'
+    # resp.headers['Access-Control-Allow-Headers'] = 'x-requested-with,content-type,x-custom-header'
+    resp.headers['Access-Control-Allow-Headers'] = '*'
+    return resp
 
 
 def read_sql(db_path, sql):
@@ -55,6 +73,21 @@ def browse_sqlite():
     return ret
 
 
+@app.route('/all_func_defs')
+def get_all_defs():
+    files = list_all_files(os.getcwd(), {'.py'})
+    res = []
+    for file in files:
+        res.append({'title': file,
+                    'key': file,
+                    'children': [
+                        {'title': f.name,
+                         'key': f.name,
+                         } for f in get_all_funcdefs(file)
+                    ]})
+    return json.dumps(res)
+
+
 @app.route('/data')
 def handle_data():
     db_path = request.args.get('db_path')
@@ -69,10 +102,24 @@ def handle_space_data():
     # return
 
 
+@app.route('/code', methods=['POST'])
+def handle_code():
+    code_files = json.loads(request.data)
+    for file in code_files:
+        with open(os.path.join(os.path.dirname(__file__), 'files', file), 'w') as f:
+            f.write(code_files[file])
+    return ''
+
+
+@app.route('/get_code', methods=['GET'])
+def handle_get_code():
+    with open(os.path.join(os.path.dirname(__file__), 'files', 'test.xml'), 'r') as f:
+        return f.read()
+
+
 @app.route('/')
 def handle_root():
-    # 永久重定向到新网址到百度
-    return redirect('http://localhost:8089/index.html', code=301)
+    return redirect('http://localhost:8090/index.html', code=301)
 
 
 def run():
@@ -80,5 +127,4 @@ def run():
 
 
 if __name__ == '__main__':
-    # run()
     app.run(host='0.0.0.0', port=8089)

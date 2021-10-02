@@ -3,7 +3,8 @@
 # @Author: Zhanyi Hou
 # @Email: 1295752786@qq.com
 # @File: excel_loader.py
-from typing import List, Tuple
+import os
+from typing import List, Tuple, Set, Dict
 
 import pandas as pd
 
@@ -66,3 +67,18 @@ def load_excel(file_name: str) -> Tuple[pd.DataFrame, pd.DataFrame]:
     else:
         agent_params_sheet_df: pd.DataFrame = load_agent_params_from_excel(scenarios, f)
         return scenarios, agent_params_sheet_df
+
+
+def batch_load_tables(files: List[str], existed_table_names: Set[str]) -> Dict[str, pd.DataFrame]:
+    for file in files:
+        if not os.path.exists(file):
+            raise FileNotFoundError(file)
+    excel_files_list: List[pd.ExcelFile] = [pd.ExcelFile(file) for file in files]
+    tables: Dict[str, pd.DataFrame] = {}
+    for excel_file in excel_files_list:
+        all_sheet_names = excel_file.sheet_names
+        for table_name in all_sheet_names:
+            if table_name in existed_table_names:
+                raise MelodieExceptions.Data.TableNameAlreadyExists(table_name, existed_table_names)
+            tables[table_name] = pd.read_excel(excel_file, table_name)
+    return tables

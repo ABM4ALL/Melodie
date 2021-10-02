@@ -5,24 +5,32 @@ import os
 import matplotlib.pyplot as plt
 
 from Melodie.db import create_db_conn
-from Melodie.run import get_config, current_scenario
+from Melodie.run import get_config, current_scenario, get_run_id
 
 
 class Analyzer:
 
     def analyze_AgentWealth(self, id_agent):
-
+        # df[(df['实发工资'] > 1000) & (df['性别'] == '男')]
+        scenario_id = current_scenario().id
+        run_id = get_run_id()
         AgentResult = create_db_conn().query_agent_results()
-        AgentWealth = AgentResult.loc[AgentResult["id"] == id_agent]["account"].values
+        AgentWealth = \
+            AgentResult.loc[(AgentResult["id"] == id_agent) &
+                            (AgentResult['scenario_id'] == scenario_id) &
+                            (AgentResult['run_id'] == run_id)]["account"].values
         self.plot_AgentWealth(AgentWealth, id_agent, get_config().output_folder, current_scenario().id)
 
         return None
 
     def analyze_WealthAndGini(self):
-
+        scenario_id = current_scenario().id
+        run_id = get_run_id()
         EnvironmentResult = create_db_conn().query_env_results()
-        TotalWealth = EnvironmentResult["total_wealth"].values
-        Gini = EnvironmentResult["gini"].values
+        envs = EnvironmentResult.loc[(EnvironmentResult['run_id'] == run_id) &
+                                     (EnvironmentResult['scenario_id'] == scenario_id)]
+        TotalWealth = envs["total_wealth"].values
+        Gini = envs["gini"].values
         self.plot_WealthAndGini(TotalWealth, Gini, get_config().output_folder, current_scenario().id)
 
         return None
@@ -47,7 +55,7 @@ class Analyzer:
         for tick in ax_1.yaxis.get_major_ticks():
             tick.label1.set_fontsize(20)
 
-        fig_name = "S" + str(id_scenario) + "_WealthAgent_" + str(id_agent)
+        fig_name = f"S_{id_scenario}_R_{get_run_id()}_WealthAgent_{id_agent}"
         figure.savefig(os.path.join(figure_folder, fig_name + ".png"), dpi=200, format='PNG')
         plt.close(figure)
 
@@ -85,7 +93,8 @@ class Analyzer:
         for tick in ax_2.yaxis.get_major_ticks():
             tick.label2.set_fontsize(20)
 
-        fig_name = "S" + str(id_scenario) + "_WealthAndGini"
+        # fig_name = "S" + str(id_scenario) + "_WealthAndGini"
+        fig_name = f"S_{id_scenario}_R_{get_run_id()}_WealthAndGini"
         figure.savefig(os.path.join(figure_folder, fig_name + ".png"), dpi=200, format='PNG')
         plt.close(figure)
 

@@ -14,6 +14,8 @@ class DB:
     AGENT_RESULT_TABLE = 'agent_result'
     ENVIRONMENT_RESULT_TABLE = 'env_result'
 
+    RESERVED_TABLES = {'scenarios', 'agent_params', 'agent_result', 'env_result'}
+
     def __init__(self, db_name: str, db_type: str = 'sqlite', conn_params: Dict[str, str] = None):
         self.db_name = db_name
         assert db_type in {'sqlite'}

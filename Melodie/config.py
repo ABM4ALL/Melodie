@@ -1,4 +1,5 @@
 import os
+from typing import List
 
 
 class Config:
@@ -9,7 +10,8 @@ class Config:
                  output_folder: str = '_output',
                  with_db: bool = True,
                  parameters_source: str = 'generate',
-                 parameters_xls_file: str = ''
+                 parameters_xls_file: str = '',
+                 static_xls_files: List[str] = None
                  ):
         self.project_name = project_name
         assert self.project_name.isidentifier(), 'project_name should be a valid identifier'
@@ -30,3 +32,4 @@ class Config:
         if parameters_source == 'from_file':
             assert os.path.exists(parameters_xls_file), f'File {parameters_xls_file} does not exist!'
             self.parameters_xls_file = parameters_xls_file
+            self.static_xls_files = [] if static_xls_files is None else static_xls_files

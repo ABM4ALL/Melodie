@@ -12,7 +12,7 @@ class GiniModel(Model):
         dc = self.data_collector
 
         for t in range(0, simulation_periods):
-            print("ID_Scenario = " + str(self.scenario.id) + ", period = " + str(t))
+            # print("ID_Scenario = " + str(self.scenario.id) + ", period = " + str(t))
 
             self.environment.go_money_produce(agent_manager)
             self.environment.go_money_transfer(agent_manager)

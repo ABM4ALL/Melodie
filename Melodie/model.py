@@ -18,6 +18,7 @@ class Model:
                  data_collector_class: ClassVar[DataCollector] = None,
                  table_generator_class: ClassVar[TableGenerator] = None,
                  scenario: Scenario = None,
+                 run_id_in_scenraio: int = 0
                  ):
         self.proj_name = config.project_name
         self.agent_class = agent_class
@@ -28,6 +29,7 @@ class Model:
         self.table_generator_class = table_generator_class
         self.data_collector: Optional[DataCollector] = None
         self.table_generator: Optional[TableGenerator] = None
+        self.run_id_in_scenraio = run_id_in_scenraio
 
     def setup_agent_manager(self):
         """
@@ -74,6 +76,12 @@ class Model:
         self.data_collector = data_collector
 
     def setup_table_generator(self, table_generator_class):
+        """
+        TODO table generator should be set up before model creates.
+        :param table_generator_class:
+        :return:
+        """
+        # raise DeprecationWarning('table generator should be set up before model creates.')
         if table_generator_class is not None:
             self.table_generator: TableGenerator = table_generator_class(self.scenario)
             self.table_generator.setup()

@@ -128,3 +128,11 @@ class MelodieExceptions:
         def NoAgentManagerDefined(environment):
             return MelodieException(1401,
                                     f'Environment {environment} has no AgentManager defined, which is not allowed!')
+
+    class Data:
+        ID = 1500
+
+        @staticmethod
+        def TableNameAlreadyExists(table_name: str, existed: str):
+            return MelodieException(1501,
+                                    f'Table Named {table_name} does not exist. All existed tables are: {existed}')
