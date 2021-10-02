@@ -102,7 +102,6 @@ class ScenarioManager:
 
     def to_dataframe(self) -> pd.DataFrame:
         """
-
         :return:
         """
         data_list = []
