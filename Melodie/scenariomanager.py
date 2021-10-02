@@ -9,7 +9,6 @@ import pandas as pd
 class Scenario(Element):
     def __init__(self, id_scenario: Optional[Union[int, str]] = None, agent_num=0):
         """
-
         :param id_scenario: the id of scenario. if None, this will be self-increment from 0 to scenarios_number-1
         """
         super().__init__()
@@ -56,7 +55,6 @@ class ScenarioManager:
         1. Mixing int and string into the ids, such as [1, 2, 'a', 'b']
         2. Mixing None and not-None values, such as [1, 2, None]
         3. Using float, tuple or Mutable objects for id value, such as [123.456, 234.567].
-
 
         :return:
         """
