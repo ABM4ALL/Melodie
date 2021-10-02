@@ -18,17 +18,18 @@ class Model:
                  data_collector_class: ClassVar[DataCollector] = None,
                  table_generator_class: ClassVar[TableGenerator] = None,
                  scenario: Scenario = None,
+                 run_id_in_scenraio: int = 0
                  ):
         self.proj_name = config.project_name
         self.agent_class = agent_class
         self.scenario = scenario
         self.environment = environment_class()
         self.agent_manager: AgentManager = None
-
         self.data_collector_class = data_collector_class
         self.table_generator_class = table_generator_class
-        self.data_collector:Optional[DataCollector] = None
+        self.data_collector: Optional[DataCollector] = None
         self.table_generator: Optional[TableGenerator] = None
+        self.run_id_in_scenraio = run_id_in_scenraio
 
     def setup_agent_manager(self):
         """
@@ -39,8 +40,6 @@ class Model:
         :return:
         """
         self.agent_manager = AgentManager(self.agent_class, self.scenario.agent_num)
-        if self.table_generator is None:
-            return
 
         # Read agent parameters from database
         db_conn = create_db_conn()
@@ -48,7 +47,8 @@ class Model:
         # Create agent manager
 
         reserved_param_names = ['id']
-        param_names = reserved_param_names + [param[0] for param in self.table_generator.agent_params]
+        param_names = reserved_param_names + [param for param in agent_para_data_frame.columns if param not in
+                                              {'scenario_id', 'id'}]
 
         # Assign parameters to properties for each agent.
         for i, agent in enumerate(self.agent_manager.agents):
@@ -76,14 +76,29 @@ class Model:
         self.data_collector = data_collector
 
     def setup_table_generator(self, table_generator_class):
+        """
+        TODO table generator should be set up before model creates.
+        :param table_generator_class:
+        :return:
+        """
+        # raise DeprecationWarning('table generator should be set up before model creates.')
         if table_generator_class is not None:
             self.table_generator: TableGenerator = table_generator_class(self.scenario)
             self.table_generator.setup()
+            # self.table_generator.run()
+        # else:
+
+    def get_agent_param(self):
+        if self.table_generator is not None:
             self.table_generator.run()
+        else:
+            table = ''
 
     def _setup(self):
+
         self.setup_data_collector(self.data_collector_class)
         self.setup_table_generator(self.table_generator_class)
+        self.get_agent_param()
         self.setup_environment()
         self.setup_agent_manager()
 

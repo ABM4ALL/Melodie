@@ -1,7 +1,15 @@
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, List, Callable
 
 if TYPE_CHECKING:
     from Melodie.agent import Agent
+
+
+def assert_exc_occurs(exc_id: int, func: Callable):
+    try:
+        func()
+        assert False
+    except MelodieException as e:
+        assert e.id == exc_id
 
 
 class MelodieException(Exception):
@@ -45,7 +53,7 @@ class MelodieExceptions:
         @staticmethod
         def ScenarioIDTypeError(scenario_id):
             return MelodieException(1202,
-                                    f'Scenario id {scenario_id} should be None, int or str. However its type was {type(scenario_id)}.')
+                                    f'Scenario id {scenario_id} should be int or str. However its type was {type(scenario_id)}.')
 
         @staticmethod
         def ScenarioIDNotAllNoneError(scenario_id_nones: int, scenario_nums: int):
@@ -77,6 +85,30 @@ class MelodieExceptions:
             return MelodieException(1207,
                                     f'Scenario list elements are not Scenario() but a {type(item)} object with value {item}')
 
+        @staticmethod
+        def NoScenarioSheetInExcel(file_name: str):
+            return MelodieException(1208, f'Melodie excel file {file_name} should have a sheet named \'scenarios\' ')
+
+        # @staticmethod
+        # def UnusedTableInExcel(excel_file_name: str, other_sheets: List[str]):
+        #     return MelodieException(1209,
+        #                             f'Melodie detected you used \'agent_params\' sheet to assign same parameter to agents in '
+        #                             f'despite scenario changes. However in this case there is/are other sheet(s) {other_sheets} '
+        #                             f'in the excel file {excel_file_name} which is not allowed in Melodie.')
+
+        @staticmethod
+        def ExcelAgentParamsRecordCountNotConsistentToScneario(scenario_id, scenario_agents_num: int, param_table_name,
+                                                               param_num: int):
+            return MelodieException(1209,
+                                    f'Agent parameter sheet `{param_table_name}` contains {param_num} agents\' parameter records.\n'
+                                    f'However `scenarios` sheet says there should be {scenario_agents_num}  agents '
+                                    f'initially in the scenario {scenario_id}.')
+
+        @staticmethod
+        def ExcelLackAgentParamsSheet(agent_param_sheet_name, ):
+            return MelodieException(1210,
+                                    f"Excel file lacks agent parameter sheet `{agent_param_sheet_name}`")
+
     class Agents:
         ID = 1300
 
@@ -96,3 +128,11 @@ class MelodieExceptions:
         def NoAgentManagerDefined(environment):
             return MelodieException(1401,
                                     f'Environment {environment} has no AgentManager defined, which is not allowed!')
+
+    class Data:
+        ID = 1500
+
+        @staticmethod
+        def TableNameAlreadyExists(table_name: str, existed: str):
+            return MelodieException(1501,
+                                    f'Table Named {table_name} does not exist. All existed tables are: {existed}')
