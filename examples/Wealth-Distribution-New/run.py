@@ -14,10 +14,10 @@ from WealthDistribution.model.model import GiniModel
 from WealthDistribution.model.analyzer import Analyzer
 from WealthDistribution.modules.environment import GiniEnvironment
 from WealthDistribution.modules.data_collector import GiniDataCollector
-from Melodie.run import run_with_xls
+from Melodie.run import run
 
 if __name__ == "__main__":
-    run_with_xls(
+    run(
         GINIAgent,
         GiniEnvironment,
         Config('WealthDistribution', os.path.dirname(__file__)),
@@ -27,4 +27,3 @@ if __name__ == "__main__":
         table_generator_class=GiniTableGenerator,
         analyzer_class=Analyzer
     )
-#     test

@@ -39,9 +39,11 @@ class Model:
 
         :return:
         """
+        from .run import get_config
         self.agent_manager = AgentManager(self.agent_class, self.scenario.agent_num)
-
-        # Read agent parameters from database
+        if get_config().with_db == False:
+            return
+            # Read agent parameters from database
         db_conn = create_db_conn()
         agent_para_data_frame = db_conn.read_dataframe(db_conn.AGENT_PARAM_TABLE)
         # Create agent manager

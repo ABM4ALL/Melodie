@@ -2,6 +2,7 @@ import pytest
 import random
 
 import Melodie.basic
+from Melodie.config import Config
 from Melodie.db import DB
 from Melodie.scenariomanager import Scenario, ScenarioManager
 
@@ -55,47 +56,47 @@ class TestScenarioManagerError1207(ScenarioManager):
 
 
 def test_errors():
+    config = Config('Untitled')
     try:
-        TestScenarioManagerError1201()
+        TestScenarioManagerError1201(config)
         raise Exception
     except Melodie.basic.MelodieException as e:
         assert e.id == 1201
     try:
-        TestScenarioManagerError1202()
+        TestScenarioManagerError1202(config)
         raise Exception
     except Melodie.basic.MelodieException as e:
         assert e.id == 1202
 
     try:
-        TestScenarioManagerError1203()
+        TestScenarioManagerError1203(config)
         raise Exception
     except Melodie.basic.MelodieException as e:
         assert e.id == 1203
 
     try:
-        TestScenarioManagerError1204()
+        TestScenarioManagerError1204(config)
         raise Exception
     except Melodie.basic.MelodieException as e:
         assert e.id == 1204
 
     try:
-        t = TestScenarioManagerError1205()
+        t = TestScenarioManagerError1205(config)
         raise Exception
     except Melodie.basic.MelodieException as e:
         assert e.id == 1205
 
     try:
-        TestScenarioManagerError1206()
+        TestScenarioManagerError1206(config)
         raise Exception
     except Melodie.basic.MelodieException as e:
         assert e.id == 1206
 
     try:
-        TestScenarioManagerError1207()
+        TestScenarioManagerError1207(config)
         raise Exception
     except Melodie.basic.MelodieException as e:
         assert e.id == 1207
-
 
 # def test_scenario():
 #     tsm = TestScenarioManager()

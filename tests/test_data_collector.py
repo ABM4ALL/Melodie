@@ -10,6 +10,7 @@ from typing import ClassVar
 
 from Melodie.agent import Agent
 from Melodie.agent_manager import AgentManager
+from Melodie.config import Config
 from Melodie.datacollector import DataCollector
 from Melodie.environment import Environment
 
@@ -48,6 +49,7 @@ class DataCollector1(DataCollector):
 def test_model_run():
     run(TestAgent,
         TestEnv,
+        config=Config('Untitled',with_db=False),
         scenario_manager_class=TestScenarioManager,
         data_collector_class=DataCollector1
         )
@@ -56,4 +58,3 @@ def test_model_run():
     agent_df, env_df = get_data_collector().collect(1)
     assert env_df.shape[0] == 2
     assert agent_df.shape[0] == 200
-

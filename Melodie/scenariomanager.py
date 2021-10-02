@@ -1,4 +1,5 @@
 import os
+import logging
 from typing import List, Optional, Union, ClassVar
 
 from Melodie.element import Element
@@ -8,6 +9,8 @@ import pandas as pd
 
 from .basic.fileio import load_excel, batch_load_tables
 from .config import Config
+
+logger = logging.getLogger(__name__)
 
 
 class Scenario(Element):
@@ -57,6 +60,7 @@ class ScenarioManager:
             self.scenario_class = self._scenarios[0].__class__
             self.check_scenarios()
             self.save_scenarios()
+
         elif self.param_source == 'from_file':
             self.xls_path = config.parameters_xls_file
             assert os.path.exists(self.xls_path)
@@ -139,11 +143,19 @@ class ScenarioManager:
         return df
 
     def save_scenarios(self):
-        create_db_conn().write_dataframe(DB.SCENARIO_TABLE, self.to_dataframe(), 'replace')
+        from .run import get_config
+        if get_config().with_db:
+            create_db_conn().write_dataframe(DB.SCENARIO_TABLE, self.to_dataframe(), 'replace')
+        else:
+            logger.warning('Config.with_db was False, scenarios will not be created and nothing will be saved.')
 
     def save(self, scenario_df: pd.DataFrame, agent_param_df: pd.DataFrame):
-        create_db_conn().write_dataframe(DB.SCENARIO_TABLE, scenario_df, 'replace')
-        create_db_conn().write_dataframe(DB.AGENT_PARAM_TABLE, agent_param_df, 'replace')
+        from .run import get_config
+        if get_config().with_db:
+            create_db_conn().write_dataframe(DB.SCENARIO_TABLE, scenario_df, 'replace')
+            create_db_conn().write_dataframe(DB.AGENT_PARAM_TABLE, agent_param_df, 'replace')
+        else:
+            logger.warning('Config.with_db was False, scenarios and agent parameters will not be saved.')
 
     def load_scenarios(self) -> List[Scenario]:
         table = create_db_conn().read_dataframe(DB.SCENARIO_TABLE)

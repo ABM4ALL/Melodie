@@ -122,7 +122,7 @@ def get_run_id() -> int:
 #                 analyzer_class().run()
 
 
-def run_with_xls(
+def run(
         agent_class: ClassVar['Agent'],
         environment_class: ClassVar['Environment'],
         config: 'Config' = None,
@@ -137,13 +137,16 @@ def run_with_xls(
     Main Model for running model!
     If
     """
+    from .model import Model
+
     global _model, _config
     if config is None:
         config = Config('Untitled')
         _config = config
     else:
         _config = config
-        create_db_conn().reset()
+        if _config.with_db:
+            create_db_conn().reset()
 
     if model_class is None:
         model_class = Model
@@ -159,8 +162,10 @@ def run_with_xls(
         _model._setup()
         _model.run()
     else:
-        scenarios = scenario_manager.load_scenarios()
-
+        if config.with_db:
+            scenarios = scenario_manager.load_scenarios()
+        else:
+            scenarios = scenario_manager.gen_scenarios()
         for scenario_index, scenario in enumerate(scenarios):
             for run_id in range(scenario.number_of_run):
                 logger.info(f'Running {run_id + 1} times in scenario {scenario.id}.')

@@ -13,19 +13,10 @@ from WealthDistribution.model.model import GiniModel
 from WealthDistribution.model.analyzer import Analyzer
 from WealthDistribution.modules.environment import GiniEnvironment
 from WealthDistribution.modules.data_collector import GiniDataCollector
-from Melodie.run import run_with_xls
-
-import time
+from Melodie.run import run
 
 if __name__ == "__main__":
-    # for i in range(100):
-    #     # time.sleep(1)
-    #     print('+++', end='')
-    #     time.sleep(0.1)
-    #     if i % 10 == 0:
-    #         print('\r', end='')
-    # sys.exit()
-    run_with_xls(
+    run(
         GINIAgent,
         GiniEnvironment,
         Config('WealthDistribution', os.path.dirname(__file__),

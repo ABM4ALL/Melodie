@@ -8,6 +8,7 @@ from typing import ClassVar
 
 from Melodie.agent import Agent
 from Melodie.agent_manager import AgentManager
+from Melodie.config import Config
 from Melodie.environment import Environment
 
 from Melodie.run import run, current_scenario
@@ -39,4 +40,5 @@ class TestScenarioManager(ScenarioManager):
 def test_model_run():
     run(TestAgent,
         TestEnv,
+        config=Config('Untitled', with_db=False),
         scenario_manager_class=TestScenarioManager)

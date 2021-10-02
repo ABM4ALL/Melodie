@@ -11,7 +11,6 @@ from Melodie.run import get_config, current_scenario, get_run_id
 class Analyzer:
 
     def analyze_AgentWealth(self, id_agent):
-        # df[(df['实发工资'] > 1000) & (df['性别'] == '男')]
         scenario_id = current_scenario().id
         run_id = get_run_id()
         AgentResult = create_db_conn().query_agent_results()
