@@ -2,6 +2,7 @@ from typing import Dict, Any
 
 
 class Element:
+
     def set_params(self, params: Dict[str, Any]):
         """
         Set property which was declared at Element.params
