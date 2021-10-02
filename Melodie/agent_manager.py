@@ -12,6 +12,7 @@ if TYPE_CHECKING:
 class AgentManager:
     """
     TODO:建议改成AgentList(相对不太紧要)
+    Songmin: 如果不想跟agentpy重名的话，或者叫AgentContainer也行？主要是Manager给人一种要“组织agent干点儿啥”的感觉，那个是environment的事儿。
     """
     def __init__(self, agent_class: ClassVar['Agent'], length: int) -> None:
         self._iter_index = 0

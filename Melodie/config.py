@@ -33,3 +33,5 @@ class Config:
             assert os.path.exists(parameters_xls_file), f'File {parameters_xls_file} does not exist!'
             self.parameters_xls_file = parameters_xls_file
             self.static_xls_files = [] if static_xls_files is None else static_xls_files
+
+
