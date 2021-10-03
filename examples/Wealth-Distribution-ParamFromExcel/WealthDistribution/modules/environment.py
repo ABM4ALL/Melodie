@@ -4,8 +4,6 @@ __author__ = 'Songmin'
 import random
 from typing import TYPE_CHECKING
 
-import numpy as np
-
 from Melodie.agent_manager import AgentManager
 from Melodie.environment import Environment
 from Melodie.run import current_scenario
@@ -46,7 +44,7 @@ class GiniEnvironment(Environment):
             [agent_1, agent_2] = agent_list.random_sample(2)
 
             who_win = 0
-            rand = np.random.uniform(0, 1)
+            rand = random.random()
             if rand <= self.win_prob:
                 who_win = "Rich"
             else:
@@ -79,8 +77,7 @@ class GiniEnvironment(Environment):
         for agent in AgentList:
             account_list.append(agent.account)
 
-        account_array = np.array(account_list)
-        self.total_wealth = account_array.sum()
+        self.total_wealth = sum(account_list)
         self.gini = self.calc_gini(account_list)
 
         return None

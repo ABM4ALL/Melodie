@@ -1,11 +1,9 @@
 from Melodie.element import Element
 
 
-
 class Agent(Element):
     def __init__(self, agent_id: int):
         self.id = agent_id
-        pass
 
     def setup(self):
         pass
@@ -14,7 +12,6 @@ class Agent(Element):
         d = {k: v for k, v in self.__dict__.items() if
              not k.startswith("_")}
         return "<%s %s>" % (self.__class__.__name__, d)
-
 
 # class StateAgent(Agent):
 #     _state_funcs: Dict[str, Dict[Tuple[ALLOWED_STATE_TYPES, ALLOWED_STATE_TYPES], Callable]] = {}

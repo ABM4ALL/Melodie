@@ -1,9 +1,6 @@
-from typing import Tuple, List
+from typing import Tuple, List, Dict
 
 import pandas as pd
-
-from Melodie.agent_manager import AgentManager
-from Melodie.basic import MelodieExceptions
 
 
 class Environment:
@@ -15,15 +12,19 @@ class Environment:
     # def get_agent_manager(self) -> Tuple[str, AgentManager]:
     #     return self.agent_manager
 
+    def to_dict(self, properties: List[str]) -> Dict:
+        if properties is None:
+            properties = self.__dict__.keys()
+        d = {}
+        for property in properties:
+            d[property] = self.__dict__[property]
+        return d
+
     def to_dataframe(self, properties: List[str]):
         """
         Dump Environment to a one-row pd.DataFrame
         :param properties:
         :return:
         """
-        if properties is None:
-            properties = self.__dict__.keys()
-        d = {}
-        for property in properties:
-            d[property] = self.__dict__[property]
+        d = self.to_dict(properties)
         return pd.DataFrame([d])

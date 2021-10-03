@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 __author__ = 'Songmin'
 
-import numpy as np
+import random
 from Melodie.agent import Agent
 
 
@@ -14,7 +14,7 @@ class GINIAgent(Agent):
 
     def go_produce(self):
 
-        rand = np.random.uniform(0, 1)
+        rand = random.random()
         if rand <= self.productivity:
             self.account += 1
         else:

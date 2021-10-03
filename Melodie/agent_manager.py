@@ -2,7 +2,7 @@ import random
 
 import pandas as pd
 
-from typing import TYPE_CHECKING, ClassVar, List
+from typing import TYPE_CHECKING, ClassVar, List, Dict
 from .basic import IndexedAgentList, MelodieExceptions
 
 if TYPE_CHECKING:
@@ -13,6 +13,7 @@ class AgentManager:
     """
     TODO:建议改成AgentList(相对不太紧要)
     """
+
     def __init__(self, agent_class: ClassVar['Agent'], length: int) -> None:
         self._iter_index = 0
         self.agent_class: ClassVar['Agent'] = agent_class
@@ -61,14 +62,7 @@ class AgentManager:
     def add(self, agent: 'Agent'):
         self.agents.add(agent)
 
-    def to_dataframe(self, column_names: List[str] = None) -> pd.DataFrame:
-        """
-        Store all agent values to dataframe.
-        This method is always called by the data collector.
-
-        :param column_names: property names to store
-        :return:
-        """
+    def to_list(self, column_names: List[str] = None) -> List[Dict]:
         protected_columns = ['id']
         data_list = []
         if len(self.agents) == 0:
@@ -84,6 +78,17 @@ class AgentManager:
         for agent in self.agents:
             d = {k: agent.__dict__[k] for k in column_names}
             data_list.append(d)
+        return data_list
+
+    def to_dataframe(self, column_names: List[str] = None) -> pd.DataFrame:
+        """
+        Store all agent values to dataframe.
+        This method is always called by the data collector.
+
+        :param column_names: property names to store
+        :return:
+        """
+        data_list = self.to_list(column_names)
         df = pd.DataFrame(data_list)
         df['id'] = df['id'].astype(int)
         return df

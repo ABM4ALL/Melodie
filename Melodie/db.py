@@ -1,8 +1,10 @@
 import os
 import sqlite3
-from typing import Union, Dict, TYPE_CHECKING
+from typing import Union, Dict, TYPE_CHECKING, List
 from Melodie.config import Config
 import pandas as pd
+
+import numpy as np
 
 if TYPE_CHECKING:
     from Melodie.scenariomanager import Scenario
@@ -51,6 +53,77 @@ class DB:
         self.drop_table(DB.AGENT_RESULT_TABLE)
         self.drop_table(DB.AGENT_PARAM_TABLE)
         self.drop_table(DB.ENVIRONMENT_RESULT_TABLE)
+
+    def table_exists(self, table_name: str) -> bool:
+        sql = f"""SELECT * FROM sqlite_master WHERE type="table" AND name = '{table_name}'; """
+        self.connection.execute(sql)
+        self.connection.commit()
+        res = self.connection.cursor().fetchall()
+        return len(res) > 0
+
+    def _dtype(self, a) -> str:
+        if isinstance(a, int):
+            return 'INTEGER'
+        elif isinstance(a, float):
+            return 'REAL'
+        elif isinstance(a, str):
+            return 'TEXT'
+        elif np.issubdtype(a, np.integer):
+            return 'INTEGER'
+        elif np.issubdtype(a, np.floating):
+            return 'REAL'
+        else:
+            raise ValueError(f'{a},type {type(a)} not recognized!')
+
+    def auto_convert(self, a: np.float) -> str:
+        if isinstance(a, (int, float, str)):
+            return a
+        elif np.issubdtype(a, np.integer):
+            return a.item()
+        elif np.issubdtype(a, np.floating):
+            return a.item()
+        else:
+            raise TypeError(f'{a},type {type(a)} not recognized!')
+
+    def create_table_if_not_exists(self, table_name: str, dtypes: Dict[str, str]) -> bool:
+        s = ''
+        for key, dtype in dtypes.items():
+            s += f'{key} {dtype},'
+        s = s.strip(',')
+        sql = f"""create table {table_name} ({s});"""
+        try:
+            self.connection.execute(sql)
+            self.connection.commit()
+            return True
+        except sqlite3.OperationalError:  # Table exists, unable to create
+            return False
+
+    def batch_insert(self, table: str, records: List[Dict[str, Union[int, str, float]]]):
+        """
+        Batch insert records into sqlite database!
+        :param records:
+        :return:
+        """
+        records_to_insert = []
+        key_names_list = list(records[0].keys())
+        assert len(records) > 0
+        key_names = ''
+        value_names = ''
+        for key in key_names_list:
+            key_names += f'{key},'
+            value_names += '?,'
+        key_names = key_names.strip(',')
+        value_names = value_names.strip(',')
+        sql = f'insert into {table} ({key_names}) values ({value_names})'
+        for record in records:
+            records_to_insert.append([self.auto_convert(record[k]) for k in key_names_list])
+
+        dtypes = {k: self._dtype(records[0][k]) for k in key_names_list}
+        self.create_table_if_not_exists(table, dtypes)
+        cursor = self.connection.cursor()
+        cursor.executemany(sql, records_to_insert)
+        self.connection.commit()
+        self.connection.close()
 
     def write_dataframe(self, table_name: str, data_frame: pd.DataFrame, if_exists='append'):
         """
@@ -102,7 +175,6 @@ class DB:
         return self.query(sql)
 
     def query_scenarios(self, id: int = None):
-
         sql = f"select * from {self.SCENARIO_TABLE} "
         if id is not None:
             sql += f"where id={id}"

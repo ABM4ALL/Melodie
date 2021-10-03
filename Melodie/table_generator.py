@@ -8,7 +8,8 @@
 __author__ = 'Songmin'
 
 import logging
-from typing import Callable, Any, Union
+import random
+from typing import Callable, Any, Union, Tuple, List
 
 import pandas as pd
 
@@ -29,8 +30,8 @@ class TableGenerator:
         """
 
         self.scenario = scenario
-        self._agent_params = []
-        self._environment_params = []
+        self._agent_params: List[Tuple[str, Callable]] = []
+        self._environment_params: List[Tuple[str, Callable]] = []
 
     def parse_generator(self, generator) -> Callable[[], Any]:
         if callable(generator):
@@ -51,10 +52,18 @@ class TableGenerator:
         :param generator:
         :return:
         """
-        # raise DeprecationWarning
+        logger.warning('<Developer Notice>: Table generator needs to be called before model created.')
         self._agent_params.append((param_name, self.parse_generator(generator)))
 
     def add_environment_param(self, param_name, generator: Union[int, str, float, Callable[[int], Any]]):
+        """
+        Add parameters to assign to environment properties.
+        Generator is a function
+        :param param_name:
+        :param generator:
+        :return:
+        """
+        logger.warning('<Developer Notice>: Table generator needs to be called before model created.')
         self._environment_params.append((param_name, self.parse_generator(generator)))
 
     @property
@@ -89,7 +98,6 @@ class TableGenerator:
 
     def setup(self):
         pass
-
 
     def set_agent_params(self):
         # TODO: 这种方法可能也不够通用

@@ -189,10 +189,13 @@ def run(
                 model_setup_time = t1 - t0
                 model_run_time = t2 - t1
                 analyzer_run_time = t3 - t2
+                data_collect_time = _model.data_collector._time_elapsed
+                model_run_time -= data_collect_time
 
                 logger.info(f'Running {run_id + 1} in scenario {scenario.id} completed with time elapsed(seconds):\n'
                             f'    model-setup   \t {round(model_setup_time, 6)}\n'
                             f'    model-run     \t {round(model_run_time, 6)}\n'
+                            f'    data-collect  \t {round(data_collect_time, 6)}\n'
                             f'    the analyzer  \t {round(analyzer_run_time, 6)}'
                             )
 
