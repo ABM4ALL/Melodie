@@ -1,0 +1,42 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2021, open source
+# This file is distributed under the same license as the Melodie package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2021.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Melodie \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-10-05 15:03+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.9.1\n"
+
+#: ../../source/index_backup.rst:14
+msgid "Contents"
+msgstr ""
+
+#: ../../source/index_backup.rst:4
+msgid "Welcome to Melodie's documentation!"
+msgstr ""
+
+#: ../../source/index_backup.rst:6
+msgid ""
+"*Melodie* is a general framework that can be used to establish agent-"
+"based models for specific uses. This name comes from the most beautiful "
+"metaphor I have ever heard about \\\"Complexity System\": Melody is not "
+"about single notes, but emerges from their interaction."
+msgstr ""
+
+#: ../../source/index_backup.rst:10
+msgid ""
+"Since \\\"Melody\" is already taken by other projects, here I take its "
+"German translation: \\\"Melodie\". While writing down this paragraph, I "
+"am in Karlsruhe, Germany."
+msgstr ""
+

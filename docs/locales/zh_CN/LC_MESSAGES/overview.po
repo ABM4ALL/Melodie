@@ -1,0 +1,320 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2021, open source
+# This file is distributed under the same license as the Melodie package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2021.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Melodie \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-10-05 15:03+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.9.1\n"
+
+#: ../../source/overview.rst:4
+msgid "Overview"
+msgstr ""
+
+#: ../../source/overview.rst:6
+msgid ""
+"A reinforcement learning experiment in Abmarl contains two interacting "
+"components: a Simulation and a Trainer."
+msgstr ""
+
+#: ../../source/overview.rst:9
+msgid ""
+"The Simulation contains agent(s) who can observe the state (or a "
+"substate) of the Simulation and whose actions affect the state of the "
+"simulation. The simulation is discrete in time, and at each time step "
+"agents can provide actions. The simulation also produces rewards for each"
+" agent that the Trainer can use to train optimal behaviors. The Agent-"
+"Simulation interaction produces state-action-reward tuples (SARs), which "
+"can be collected in *rollout fragments* and used to optimize agent "
+"behaviors."
+msgstr ""
+
+#: ../../source/overview.rst:16
+msgid ""
+"The Trainer contains policies that map agents' observations to actions. "
+"Policies are one-to-many with agents, meaning that there can be multiple "
+"agents using the same policy. Policies may be heuristic (i.e. coded by "
+"the researcher) or trainable by the RL algorithm."
+msgstr ""
+
+#: ../../source/overview.rst:21
+msgid ""
+"In Abmarl, the Simulation and Trainer are specified in a single Python "
+"configuration file. Once these components are set up, they are passed as "
+"parameters to RLlib's tune command, which will launch the RLlib "
+"application and begin the training process. The training process will "
+"save checkpoints to an output directory, from which the user can "
+"visualize and analyze results. The following diagram demonstrates this "
+"workflow."
+msgstr ""
+
+#: ../../source/overview.rst:32
+msgid "Abmarl usage workflow"
+msgstr ""
+
+#: ../../source/overview.rst:32
+msgid ""
+"Abmarl's usage workflow. An experiment configuration is used to train "
+"agents' behaviors. The policies and simulation are saved to an output "
+"directory. Behaviors can then be analyzed or visualized from the output "
+"directory."
+msgstr ""
+
+#: ../../source/overview.rst:38
+msgid "Creating Agents and Simulations"
+msgstr ""
+
+#: ../../source/overview.rst:40
+msgid ""
+"Abmarl provides three interfaces for setting up an agent-based "
+"simulations."
+msgstr ""
+
+#: ../../source/overview.rst:45
+msgid "Agent"
+msgstr ""
+
+#: ../../source/overview.rst:47
+msgid ""
+"First, we have :ref:`Agents <api_agent>`. An agent is an object with an "
+"observation and action space. Many practitioners may be accustomed to "
+"gym.Env's interface, which defines the observation and action space for "
+"the *simulation*. However, in heterogeneous multiagent settings, each "
+"*agent* can have different spaces; thus we assign these spaces to the "
+"agents and not the simulation."
+msgstr ""
+
+#: ../../source/overview.rst:53
+msgid "An agent can be created like so:"
+msgstr ""
+
+#: ../../source/overview.rst:65
+msgid ""
+"At this level, the Agent is basically a dataclass. We have left it open "
+"for our users to extend its features as they see fit."
+msgstr ""
+
+#: ../../source/overview.rst:71
+msgid "Agent Based Simulation"
+msgstr ""
+
+#: ../../source/overview.rst:72
+msgid ""
+"Next, we define an :ref:`Agent Based Simulation <api_abs>`, or ABS for "
+"short, with the ususal ``reset`` and ``step`` functions that we are used "
+"to seeing in RL simulations. These functions, however, do not return "
+"anything; the state information must be obtained from the getters: "
+"``get_obs``, ``get_reward``, ``get_done``, ``get_all_done``, and "
+"``get_info``. The getters take an agent's id as input and return the "
+"respective information from the simulation's state. The ABS also contains"
+" a dictionary of agents that \"live\" in the simulation."
+msgstr ""
+
+#: ../../source/overview.rst:80
+msgid "An Agent Based Simulation can be created and used like so:"
+msgstr ""
+
+#: ../../source/overview.rst:103
+msgid ""
+"Implementations of AgentBasedSimulation should call ``finalize`` at the "
+"end of its ``__init__``. Finalize ensures that all agents are configured "
+"and ready to be used for training."
+msgstr ""
+
+#: ../../source/overview.rst:108
+msgid ""
+"Instead of treating agents as dataclasses, we could have included the "
+"relevant information in the Agent Based Simulation with various "
+"dictionaries. For example, we could have ``action_spaces`` and "
+"``observation_spaces`` that maps agents' ids to their action spaces and "
+"observation spaces, respectively. In Abmarl, we favor the dataclass "
+"approach and use it throughout the package and documentation."
+msgstr ""
+
+#: ../../source/overview.rst:118
+msgid "Simulation Managers"
+msgstr ""
+
+#: ../../source/overview.rst:120
+msgid ""
+"The Agent Based Simulation interface does not specify an ordering for "
+"agents' interactions with the simulation. This is left open to give our "
+"users maximal flexibility. However, in order to interace with RLlib's "
+"learning library, we provide a :ref:`Simulation Manager <api_sim>` which "
+"specifies the output from ``reset`` and ``step`` as RLlib expects it. "
+"Specifically,"
+msgstr ""
+
+#: ../../source/overview.rst:125
+msgid ""
+"Agents that appear in the output dictionary will provide actions at the "
+"next step."
+msgstr ""
+
+#: ../../source/overview.rst:126
+msgid ""
+"Agents that are done on this step will not provide actions on the next "
+"step."
+msgstr ""
+
+#: ../../source/overview.rst:128
+msgid ""
+"Simulation managers are open-ended requiring only ``reset`` and ``step`` "
+"with output described above. For convenience, we have provided two "
+"managers: :ref:`Turn Based <api_turn_based>`, which implements turn-based"
+" games; and :ref:`All Step <api_all_step>`, which has every non-done "
+"agent provide actions at each step."
+msgstr ""
+
+#: ../../source/overview.rst:133
+msgid "Simluation Managers \"wrap\" simulations, and they can be used like so:"
+msgstr ""
+
+#: ../../source/overview.rst:156
+msgid "External Integration"
+msgstr ""
+
+#: ../../source/overview.rst:158
+msgid ""
+"In order to train agents in a Simulation Manager using RLlib, we must "
+"wrap the simulation with either a :ref:`GymWrapper <api_gym_wrapper>` for"
+" single-agent simulations (i.e. only a single entry in the `agents` dict)"
+" or a :ref:`MultiAgentWrapper <api_ma_wrapper>` for multiagent "
+"simulations."
+msgstr ""
+
+#: ../../source/overview.rst:166
+msgid "Training with an Experiment Configuration"
+msgstr ""
+
+#: ../../source/overview.rst:167
+msgid ""
+"In order to run experiments, we must define a configuration file that "
+"specifies Simulation and Trainer parameters. Here is the configuration "
+"file from the :ref:`Corridor tutorial<tutorial_multi_corridor>` that "
+"demonstrates a simple corridor simulation with multiple agents."
+msgstr ""
+
+#: ../../source/overview.rst:231
+msgid ""
+"The simulation must be a :ref:`Simulation Manager <sim-man>` or an "
+":ref:`External Wrapper <external>` as described above."
+msgstr ""
+
+#: ../../source/overview.rst:235
+msgid ""
+"This example has ``num_workers`` set to 7 for a computer with 8 CPU's. "
+"You may need to adjust this for your computer to be `<cpu count> - 1`."
+msgstr ""
+
+#: ../../source/overview.rst:239
+msgid "Experiment Parameters"
+msgstr ""
+
+#: ../../source/overview.rst:240
+msgid ""
+"The strucutre of the parameters dictionary is very important. It *must* "
+"have an `experiment` key which contains both the `title` of the "
+"experiment and the `sim_creator` function. This function should receive a"
+" config and, if appropriate, pass it to the simulation constructor. In "
+"the example configuration above, we just retrun the already-configured "
+"simulation. Without the title and simulation creator, Abmarl may not "
+"behave as expected."
+msgstr ""
+
+#: ../../source/overview.rst:247
+msgid ""
+"The experiment parameters also contains information that will be passed "
+"directly to RLlib via the `ray_tune` parameter. See RLlib's documentation"
+" for a `list of common configuration parameters "
+"<https://docs.ray.io/en/releases-1.2.0/rllib-training.html#common-"
+"parameters>`_."
+msgstr ""
+
+#: ../../source/overview.rst:252
+msgid "Command Line"
+msgstr ""
+
+#: ../../source/overview.rst:253
+msgid ""
+"With the configuration file complete, we can utilize the command line "
+"interface to train our agents. We simply type ``abmarl train "
+"multi_corridor_example.py``, where `multi_corridor_example.py` is the "
+"name of our configuration file. This will launch Abmarl, which will "
+"process the file and launch RLlib according to the specified parameters. "
+"This particular example should take 1-10 minutes to train, depending on "
+"your compute capabilities. You can view the performance in real time in "
+"tensorboard with ``tensorboard --logdir ~/abmarl_results``."
+msgstr ""
+
+#: ../../source/overview.rst:263
+msgid ""
+"By default, the \"base\" of the output directory is the home directory, "
+"and Abmarl will create the `abmarl_results` directory there. The base "
+"directory can by configured in the `params` under `ray_tune` using the "
+"`local_dir` parameter. This value should be a full path. For example, "
+"``'local_dir': '/usr/local/scratch'``."
+msgstr ""
+
+#: ../../source/overview.rst:270
+msgid "Visualizing"
+msgstr ""
+
+#: ../../source/overview.rst:271
+msgid ""
+"We can visualize the agents' learned behavior with the ``visualize`` "
+"command, which takes as argument the output directory from the training "
+"session stored in ``~/abmarl_results``. For example, the command"
+msgstr ""
+
+#: ../../source/overview.rst:279
+msgid ""
+"will load the experiment (notice that the directory name is the "
+"experiment title from the configuration file appended with a timestamp) "
+"and display an animation of 5 episodes. The ``--record`` flag will save "
+"the animations as `.mp4` videos in the training directory."
+msgstr ""
+
+#: ../../source/overview.rst:287
+msgid "Analyzing"
+msgstr ""
+
+#: ../../source/overview.rst:289
+msgid ""
+"The simulation and trainer can also be loaded into an analysis script for"
+" post-processing via the ``analyze`` command. The analysis script must "
+"implement the following `run` function. Below is an example that can "
+"serve as a starting point."
+msgstr ""
+
+#: ../../source/overview.rst:326
+msgid "Analysis can then be performed using the command line interface:"
+msgstr ""
+
+#: ../../source/overview.rst:332
+msgid ""
+"See the :ref:`Predator Prey tutorial <tutorial_predator_prey>` for an "
+"example of analyzing trained agent behavior."
+msgstr ""
+
+#: ../../source/overview.rst:336
+msgid "Running at scale with HPC"
+msgstr ""
+
+#: ../../source/overview.rst:338
+msgid ""
+"Abmarl also supports some functionality for training at scale. See the "
+":ref:`magpie tutorial <tutorial_magpie>`, which provides a walkthrough "
+"for launching a training experiment on multiple compute nodes with slurm."
+msgstr ""
+

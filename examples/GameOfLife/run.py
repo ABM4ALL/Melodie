@@ -76,8 +76,8 @@ def numba_interact(arr):
     return new_arr
 
 
-XM = 600
-YM = 600
+XM = 200
+YM = 200
 
 pure_py_lst = [[PurePyCell() for i in range(YM)] for j in range(XM)]
 lst = pure_py_lst

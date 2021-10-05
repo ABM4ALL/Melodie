@@ -49,5 +49,16 @@ several rows instead of rendering them all. So in most cases there will be no wo
 about performance.
 
 ![img.png](docs/source/.images/melodiemanager-sqliteview.png)
+#### Build Cython extension
+```shell
+pip install Cython
+python.exe setup.py build_ext --inplace
+```
 
+#### Build docs
+```shell
+cd docs
+sphinx-autobuild source build/html
+# click the link appeared in the console to view the documentation website.
+```
 
