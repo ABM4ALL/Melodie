@@ -14,7 +14,7 @@ cimport cython
 cimport numpy as np
 import numpy as np
 
-ctypedef np.int_t DTYPE_t
+ctypedef np.int64_t DTYPE_t
 ctypedef np.float64_t DTYPE_FLOAT
 
 cpdef gather_int(object lst, object attr):
@@ -119,7 +119,6 @@ cpdef broadcast_float(object lst, object attr, np.ndarray new_attr):
     cdef Py_ssize_t dim1_size
     cdef Py_ssize_t dim2_size
 
-    # cdef np.ndarray[DTYPE_t, ndim=2] ret
     cdef DTYPE_FLOAT[:,:] new_attr_view
 
     cdef object attr_val
