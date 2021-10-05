@@ -1,3 +1,6 @@
 [build-system]
 requires = ["Cython", "numpy", "setuptools"]
 build-backend = "setuptools.build_meta:__legacy__"
+
+[project]
+requires-python = ">=3.6"
