@@ -4,7 +4,7 @@
 # @Email: 1295752786@qq.com
 # @File: test_lib.py
 
-from Melodie.boost import py_broadcast_2d, py_gather_2d, broadcast_2d, gather_2d, broadcast_int
+from Melodie.boost import py_broadcast_2d, py_gather_2d, broadcast_2d, gather_2d
 import time
 
 
@@ -56,4 +56,7 @@ def compare_collect_attribute_time():
 
 
 def test_benchmark():
+    compare_collect_attribute_time()
+
+if __name__=='__main__':
     compare_collect_attribute_time()

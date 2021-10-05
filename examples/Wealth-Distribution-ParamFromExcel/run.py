@@ -26,5 +26,5 @@ if __name__ == "__main__":
         model_class=GiniModel,
         data_collector_class=GiniDataCollector,
         scenario_class=GiniScenario,
-        analyzer_class=Analyzer
+        # analyzer_class=Analyzer
     )
