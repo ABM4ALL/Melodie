@@ -15,7 +15,6 @@ author = 'Songmin Yu'
 # The full version, including alpha/beta/rc tags
 release = '0.1'
 
-
 # -- General configuration ---------------------------------------------------
 
 # Add any Sphinx extension module names here, as strings. They can be
@@ -25,6 +24,9 @@ extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.napoleon',
     'sphinx_rtd_theme',
+    'recommonmark',
+    'sphinxcontrib.mermaid',
+    'sphinx_markdown_tables'
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -34,7 +36,6 @@ templates_path = ['_templates']
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
 exclude_patterns = []
-
 
 # -- Options for HTML output -------------------------------------------------
 
@@ -60,3 +61,6 @@ StandaloneHTMLBuilder.supported_image_types = [
     'image/png',
     'image/jpeg',
 ]
+
+language = 'en_US'  # language supported
+local_dirs = 'locale/'

@@ -6,13 +6,7 @@
 import random
 from typing import ClassVar
 
-from Melodie.agent import Agent
-from Melodie.agent_manager import AgentManager
-from Melodie.config import Config
-from Melodie.environment import Environment
-
-from Melodie.run import run, current_scenario
-from Melodie.scenariomanager import Scenario, ScenarioManager
+from Melodie import Agent, Config, Environment, run, current_scenario, Scenario, ScenarioManager
 
 
 class TestAgent(Agent):

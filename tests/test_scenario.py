@@ -2,9 +2,7 @@ import pytest
 import random
 
 import Melodie.basic
-from Melodie.config import Config
-from Melodie.db import DB
-from Melodie.scenariomanager import Scenario, ScenarioManager
+from Melodie import Config, DB, Scenario, ScenarioManager
 
 
 class TestScenario(Scenario):

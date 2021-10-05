@@ -6,7 +6,7 @@ import random
 
 import numpy as np
 
-from Melodie.table_generator import TableGenerator
+from Melodie import TableGenerator
 
 logger = logging.getLogger(__name__)
 

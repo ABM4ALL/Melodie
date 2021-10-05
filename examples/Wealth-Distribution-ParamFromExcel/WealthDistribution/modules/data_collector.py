@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 __author__ = 'Songmin'
 
-from Melodie.datacollector import DataCollector
+from Melodie import DataCollector
 
 
 class GiniDataCollector(DataCollector):

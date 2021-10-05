@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 __author__ = 'Songmin'
 
-from Melodie.model import Model
+from Melodie import Model
 
 
 class GiniModel(Model):

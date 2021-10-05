@@ -11,3 +11,18 @@ Since \"Melody" is already taken by other projects, here I take its German trans
 While writing down this paragraph, I am in Karlsruhe, Germany.
 
 
+.. toctree::
+    :maxdepth: 2
+    :caption: Advanced Tutorials
+
+    advancedtutorial/boost
+
+
+
+
+Indices and tables
+==================
+
+* :ref:`genindex`
+* :ref:`modindex`
+* :ref:`search`

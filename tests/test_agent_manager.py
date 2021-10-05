@@ -1,5 +1,4 @@
-from Melodie.agent import Agent
-from Melodie.agent_manager import AgentManager
+from Melodie import Agent, AgentManager
 
 
 class TestAgent(Agent):

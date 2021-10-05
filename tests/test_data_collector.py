@@ -8,14 +8,8 @@
 import random
 from typing import ClassVar
 
-from Melodie.agent import Agent
-from Melodie.agent_manager import AgentManager
-from Melodie.config import Config
-from Melodie.datacollector import DataCollector
-from Melodie.environment import Environment
-
-from Melodie.run import run, current_scenario, get_data_collector
-from Melodie.scenariomanager import Scenario, ScenarioManager
+from Melodie import Agent, Config, DataCollector, Environment, run, current_scenario, get_data_collector, Scenario, \
+    ScenarioManager
 
 
 class TestAgent(Agent):

@@ -5,7 +5,7 @@
 # @File: scenario.py.py
 from typing import List
 
-from Melodie.scenariomanager import ScenarioManager, Scenario
+from Melodie import ScenarioManager, Scenario
 
 
 class GiniScenario(Scenario):

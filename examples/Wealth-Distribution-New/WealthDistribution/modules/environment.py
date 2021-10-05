@@ -4,9 +4,7 @@ __author__ = 'Songmin'
 import random
 from typing import TYPE_CHECKING
 
-from Melodie.agent_manager import AgentManager
-from Melodie.environment import Environment
-from Melodie.run import current_scenario
+from Melodie import AgentManager, Environment, current_scenario
 from ..model.scenario import GiniScenario
 
 if TYPE_CHECKING:

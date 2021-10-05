@@ -2,7 +2,7 @@
 __author__ = 'Songmin'
 
 import numpy as np
-from Melodie.agent import Agent
+from Melodie import Agent
 
 
 class GINIAgent(Agent):

@@ -5,8 +5,7 @@
 # @File: test_db.py
 import os
 
-from Melodie.db import DB, create_db_conn
-from Melodie.config import Config
+from Melodie import DB, create_db_conn, Config
 
 # def test_create_db():
 #     db = DB('test')

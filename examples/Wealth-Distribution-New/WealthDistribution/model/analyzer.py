@@ -4,8 +4,7 @@ __author__ = 'Songmin'
 import os
 import matplotlib.pyplot as plt
 
-from Melodie.db import create_db_conn
-from Melodie.run import get_config, current_scenario
+from Melodie import create_db_conn, get_config, current_scenario
 
 
 class Analyzer:

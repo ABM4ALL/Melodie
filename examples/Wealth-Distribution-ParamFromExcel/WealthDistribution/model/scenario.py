@@ -3,9 +3,8 @@
 # @Author: Zhanyi Hou
 # @Email: 1295752786@qq.com
 # @File: scenario.py.py
-from typing import List
 
-from Melodie.scenariomanager import ScenarioManager, Scenario
+from Melodie import Scenario
 
 
 class GiniScenario(Scenario):

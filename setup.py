@@ -5,8 +5,8 @@ from distutils.extension import Extension
 try:
     from Cython.Distutils import build_ext
     ext_modules = [
-        Extension("Melodie.boost.hello",  # location of the resulting .so
-                  ["Melodie/boost/hello.pyx"], )]
+        Extension("Melodie.boost._vectorize",  # location of the resulting .so
+                  ["Melodie/boost/_vectorize.pyx"], )]
 except:
     import traceback
 
