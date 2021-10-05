@@ -1,5 +1,18 @@
 import setuptools
+import numpy as np
+from distutils.extension import Extension
 
+try:
+    from Cython.Distutils import build_ext
+    ext_modules = [
+        Extension("Melodie.boost.hello",  # location of the resulting .so
+                  ["Melodie/boost/hello.pyx"], )]
+except:
+    import traceback
+
+    traceback.print_exc()
+    ext_modules = None
+    build_ext = lambda _: print('Cython was not installed. With cython you may get better peformance boost!')
 with open('README.md', 'r') as fh:
     long_description = fh.read()
 
@@ -19,8 +32,13 @@ setuptools.setup(
         'License :: OSI Approved :: BSD License',
         'Natural Language :: English',
         'Operating System :: Unix',
+        'Operating System :: Microsoft :: Windows'
+        'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
+        'Programming Language :: Python :: 3.9',
+        'Programming Language :: Python :: 3.10',
         'Topic :: Scientific/Engineering :: Artificial Intelligence',
     ],
     project_urls={
@@ -33,6 +51,8 @@ setuptools.setup(
         'numpy',
         'pandas',
         'matplotlib',
+        'networkx',
+        'openpyxl'
     ],
     python_requires='>=3.5',
     entry_points={
@@ -40,5 +60,8 @@ setuptools.setup(
             'Melodie=Melodie.scripts.scripts:cli'
         ]
     },
-    include_package_data=True
+    include_package_data=True,
+    ext_modules=ext_modules,
+    cmdclass={'build_ext': build_ext},
+    include_dirs=[np.get_include()]
 )

@@ -49,12 +49,14 @@ class DataCollector1(DataCollector):
 def test_model_run():
     run(TestAgent,
         TestEnv,
-        config=Config('Untitled',with_db=False),
+        config=Config('Untitled', with_db=False),
         scenario_manager_class=TestScenarioManager,
         data_collector_class=DataCollector1
         )
-    agent_df, env_df = get_data_collector().collect(0)
-    assert agent_df.shape[0] == 100
-    agent_df, env_df = get_data_collector().collect(1)
-    assert env_df.shape[0] == 2
-    assert agent_df.shape[0] == 200
+    dc = get_data_collector()
+    dc.collect(0)
+    dc.agent_properties_list
+    assert len(dc.agent_properties_list) == 100
+    dc.collect(1)
+    assert len(dc.environment_properties_list) == 2
+    assert len(dc.agent_properties_list) == 200
