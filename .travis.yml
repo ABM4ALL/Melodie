@@ -5,7 +5,10 @@ python:
  - "3.7"
  - "3.8"
  - "3.9"
-
+os:
+  - linux
+  - osx
+  - windows
 script: pytest
 before_script:
  - python -m pip install setuptools cython numpy
