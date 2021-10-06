@@ -5,4 +5,5 @@ python:
 
 script: pytest
 before_script:
+ - python -m pip install setuptools cython numpy
  - python setup.py build_ext --inplace
