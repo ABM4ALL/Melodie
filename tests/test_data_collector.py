@@ -26,6 +26,8 @@ class TestEnv(Environment):
 
 class TestScenario(Scenario):
     def setup(self):
+        print(self.agent_num)
+        self.periods = 1
         self.productivity = random.random()
 
 
@@ -48,7 +50,7 @@ def test_model_run():
         data_collector_class=DataCollector1
         )
     dc = get_data_collector()
-    dc.collect(0)
+    # dc.collect(0)
     dc.agent_properties_list
     assert len(dc.agent_properties_list) == 100
     dc.collect(1)

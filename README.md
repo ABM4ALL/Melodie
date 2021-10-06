@@ -62,3 +62,11 @@ sphinx-autobuild source build/html
 # click the link appeared in the console to view the documentation website.
 ```
 
+#### Create a file by project template
+Run this command:
+```shell
+python -m Melodie create
+```
+This command will call a GUI template wizard (written by tkinter).
+Just follow the wizard to create the program.
+

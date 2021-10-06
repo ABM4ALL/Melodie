@@ -13,6 +13,7 @@ set_config(Config('Untitled', with_db=False))
 
 class Scene(Scenario):
     def setup(self):
+        self.periods = 100
         self.agent_num = 10
         self.agent_productivity = 1.0
         self.agent_account_min = 0

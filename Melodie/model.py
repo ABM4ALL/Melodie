@@ -20,7 +20,9 @@ class Model:
                  scenario: Scenario = None,
                  run_id_in_scenraio: int = 0
                  ):
+
         self.proj_name = config.project_name
+        self.config = config
         self.agent_class = agent_class
         self.scenario = scenario
         self.environment = environment_class()
@@ -104,5 +106,13 @@ class Model:
         self.setup_environment()
         self.setup_agent_manager()
 
-    def run(self):
+    def step(self):
         pass
+
+    def run(self):
+        for i in range(self.scenario.periods):
+            self.step()
+            if self.data_collector is not None:
+                self.data_collector.collect(i)
+        if self.data_collector is not None and self.config.with_db:
+            self.data_collector.save()

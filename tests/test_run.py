@@ -23,6 +23,7 @@ class TestEnv(Environment):
 
 class TestScenario(Scenario):
     def setup(self):
+        self.periods = 100
         self.productivity = random.random()
 
 

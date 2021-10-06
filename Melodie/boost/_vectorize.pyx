@@ -17,18 +17,15 @@ import numpy as np
 ctypedef np.int64_t DTYPE_t
 ctypedef np.float64_t DTYPE_FLOAT
 
-cpdef gather_int(object lst, object attr):
-    cdef int x
-    cdef int y
-    cdef object inner_list
+
+cpdef vectorize_int(object lst, object attr):
+    cdef int x, y
     cdef object obj2
-    # cdef Cell c
 
     cdef Py_ssize_t dim1_size
-    cdef Py_ssize_t dim2_size
 
-    cdef np.ndarray[DTYPE_t, ndim=2] ret
-    cdef DTYPE_t[:,:] result_view
+    cdef np.ndarray[DTYPE_t, ndim=1] ret
+    cdef DTYPE_t[:] result_view
 
     cdef object attr_val
     cdef PyObject* py_obj_ptr
@@ -36,30 +33,23 @@ cpdef gather_int(object lst, object attr):
     py_obj_ptr = <PyObject *>lst
     py_obj_ptr.ob_refcnt
 
-    dim1_size = PyList_Size(lst)
-    inner_list = <object> PyList_GetItem(lst, <Py_ssize_t> (0))
-    dim2_size = PyList_Size(inner_list)
-    ret = np.zeros([dim1_size, dim2_size], dtype=np.int64)
+    length = PyList_Size(lst)
+    ret = np.zeros(length, dtype=np.int64)
     result_view = ret
-    for i in range(dim1_size):
-        inner_list = <object> PyList_GetItem(lst, <Py_ssize_t> (i))
-        for j in range(dim2_size):
-            obj2 = <object> PyList_GetItem(inner_list, <Py_ssize_t> (j))
-            attr_val = <object> PyObject_GetAttr(obj2,attr)
-            result_view[i][j] = <DTYPE_t> attr_val
+    for i in range(length):
+        obj2 = <object> PyList_GetItem(lst, <Py_ssize_t> (i))
+        attr_val = <object> PyObject_GetAttr(obj2,attr)
+        result_view[i] = <DTYPE_t> attr_val
     return ret
 
-cpdef gather_float(object lst, object attr):
-    cdef int x
-    cdef int y
-    cdef object inner_list
+cpdef vectorize_float(object lst, object attr):
+    cdef int x, y
     cdef object obj2
 
     cdef Py_ssize_t dim1_size
-    cdef Py_ssize_t dim2_size
 
-    cdef np.ndarray[DTYPE_FLOAT, ndim=2] ret
-    cdef DTYPE_FLOAT[:,:] result_view
+    cdef np.ndarray[DTYPE_FLOAT, ndim=1] ret
+    cdef DTYPE_FLOAT[:] result_view
 
     cdef object attr_val
     cdef PyObject* py_obj_ptr
@@ -67,74 +57,44 @@ cpdef gather_float(object lst, object attr):
     py_obj_ptr = <PyObject *>lst
     py_obj_ptr.ob_refcnt
 
-    dim1_size = PyList_Size(lst)
-    inner_list = <object> PyList_GetItem(lst, <Py_ssize_t> (0))
-    dim2_size = PyList_Size(inner_list)
-    ret = np.zeros([dim1_size, dim2_size], dtype=np.float64)
+    length = PyList_Size(lst)
+    ret = np.zeros(length, dtype=np.float64)
     result_view = ret
-    for i in range(dim1_size):
-        inner_list = <object> PyList_GetItem(lst, <Py_ssize_t> (i))
-        for j in range(dim2_size):
-            obj2 = <object> PyList_GetItem(inner_list, <Py_ssize_t> (j))
-            attr_val = <object> PyObject_GetAttr(obj2,attr)
-            result_view[i][j] = <DTYPE_FLOAT> attr_val
+    for i in range(length):
+        obj2 = <object> PyList_GetItem(lst, <Py_ssize_t> (i))
+        attr_val = <object> PyObject_GetAttr(obj2,attr)
+        result_view[i] = <DTYPE_FLOAT> attr_val
     return ret
 
-# @cython.boundscheck(False)
-cpdef broadcast_int(object lst, object attr, np.ndarray new_attr):
+cpdef apply_int(object lst, object attr, np.ndarray new_attr):
     cdef int x
     cdef int y
-    cdef object inner_list
     cdef object obj2
 
     cdef Py_ssize_t dim1_size
-    cdef Py_ssize_t dim2_size
 
-    cdef DTYPE_t[:,:] new_attr_view
+    cdef DTYPE_t[:] new_attr_view
 
     cdef object attr_val
-    cdef PyObject* py_obj_ptr
 
     new_attr_view = new_attr
-    py_obj_ptr = <PyObject *>lst
-    py_obj_ptr.ob_refcnt
-
     dim1_size = PyList_Size(lst)
-    inner_list = <object> PyList_GetItem(lst, <Py_ssize_t> (0))
-    dim2_size = PyList_Size(inner_list)
-
-
     for i in range(dim1_size):
-        inner_list = <object> PyList_GetItem(lst, <Py_ssize_t> (i))
-        for j in range(dim2_size):
-            obj2 = <object> PyList_GetItem(inner_list, <Py_ssize_t> (j))
-            PyObject_SetAttr(obj2, attr, <object> new_attr_view[i][j])
+        obj2 = <object> PyList_GetItem(lst, <Py_ssize_t> (i))
+        PyObject_SetAttr(obj2, attr, <object> new_attr_view[i])
 
-cpdef broadcast_float(object lst, object attr, np.ndarray new_attr):
-    cdef int x
-    cdef int y
-    cdef object inner_list
+cpdef apply_float(object lst, object attr, np.ndarray new_attr):
+    cdef int x, y
     cdef object obj2
 
     cdef Py_ssize_t dim1_size
-    cdef Py_ssize_t dim2_size
 
-    cdef DTYPE_FLOAT[:,:] new_attr_view
+    cdef DTYPE_FLOAT[:] new_attr_view
 
     cdef object attr_val
-    cdef PyObject* py_obj_ptr
 
     new_attr_view = new_attr
-    py_obj_ptr = <PyObject *>lst
-    py_obj_ptr.ob_refcnt
-
     dim1_size = PyList_Size(lst)
-    inner_list = <object> PyList_GetItem(lst, <Py_ssize_t> (0))
-    dim2_size = PyList_Size(inner_list)
-
-
     for i in range(dim1_size):
-        inner_list = <object> PyList_GetItem(lst, <Py_ssize_t> (i))
-        for j in range(dim2_size):
-            obj2 = <object> PyList_GetItem(inner_list, <Py_ssize_t> (j))
-            PyObject_SetAttr(obj2,attr,<object> new_attr_view[i][j])
+        obj2 = <object> PyList_GetItem(lst, <Py_ssize_t> (i))
+        PyObject_SetAttr(obj2,attr,<object> new_attr_view[i])

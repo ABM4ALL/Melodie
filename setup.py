@@ -6,7 +6,10 @@ try:
     from Cython.Distutils import build_ext
     ext_modules = [
         Extension("Melodie.boost._vectorize",  # location of the resulting .so
-                  ["Melodie/boost/_vectorize.pyx"], )]
+                  ["Melodie/boost/_vectorize.pyx"], ),
+        Extension("Melodie.boost._vectorize2d",  # location of the resulting .so
+                  ["Melodie/boost/_vectorize2d.pyx"], )
+    ]
 except:
     import traceback
 

@@ -10,6 +10,7 @@ class TestScenario(Scenario):
         super().__init__(id, 10)
 
     def setup(self):
+        self.periods = 1
         self.productivity = random.random()
 
 

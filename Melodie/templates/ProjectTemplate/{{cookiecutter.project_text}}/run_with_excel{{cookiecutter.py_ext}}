@@ -1,0 +1,27 @@
+# -*- coding:utf-8 -*-
+# @Time: {{cookiecutter.created_at}}
+# @Author: {{cookiecutter.author}}
+# @Email: {{cookiecutter.email}}
+
+import os
+
+from Melodie import Config, run
+from {{cookiecutter.project_name}}.agent import {{cookiecutter.project_alias}}Agent
+from {{cookiecutter.project_name}}.analyzer import {{cookiecutter.project_alias}}Analyzer
+from {{cookiecutter.project_name}}.datacollector import {{cookiecutter.project_alias}}DataCollector
+from {{cookiecutter.project_name}}.environment import {{cookiecutter.project_alias}}Environment
+from {{cookiecutter.project_name}}.model import {{cookiecutter.project_alias}}Model
+from {{cookiecutter.project_name}}.scenario import {{cookiecutter.project_alias}}Scenario
+
+run(
+    {{cookiecutter.project_alias}}Agent,
+    {{cookiecutter.project_alias}}Environment,
+    Config('{{cookiecutter.project_name}}',
+           os.path.dirname(__file__),
+           parameters_source='from_file',
+           parameters_xls_file='params.xlsx'),
+    model_class={{cookiecutter.project_alias}}Model,
+    scenario_class={{cookiecutter.project_alias}}Scenario,
+    data_collector_class={{cookiecutter.project_alias}}DataCollector,
+    analyzer_class={{cookiecutter.project_alias}}Analyzer
+)

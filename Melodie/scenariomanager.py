@@ -24,8 +24,10 @@ class Scenario(Element):
         self.id = id_scenario
         self.agent_num = agent_num
         self.number_of_run = 1
+        self.periods = 0
         self.setup()
-        assert self.agent_num > 0
+        # assert self.agent_num > 0
+        # assert self.periods > 0
 
     def setup(self):
         pass
