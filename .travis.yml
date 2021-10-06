@@ -4,3 +4,5 @@ python:
  - "3.8"
 
 script: pytest
+before_script:
+ - python setup.py build_ext --inplace
