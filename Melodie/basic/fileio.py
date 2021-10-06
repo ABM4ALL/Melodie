@@ -55,13 +55,22 @@ def load_agent_params_from_excel(scenario_df: int, excel_file: pd.ExcelFile):
 
 
 def load_excel(file_name: str) -> Tuple[pd.DataFrame, pd.DataFrame]:
-    f = pd.ExcelFile(file_name, engine='openpyxl')
+    """
+    Load excel
+
+    Notice: In Python 3.6 and 3.7, pandas prefers to use xlrd rather than use openpyxl.
+        If use openpyxl at version <=3.7, Python might raise several errors for float digit conversion.
+
+    :param file_name:
+    :return:
+    """
+    f = pd.ExcelFile(file_name)
     sheet_names: List[str] = f.sheet_names
     if 'scenarios' not in sheet_names:
         raise MelodieExceptions.Scenario.NoScenarioSheetInExcel(file_name)
-    scenarios: pd.DataFrame = pd.read_excel(f, sheet_name='scenarios', engine='openpyxl').dropna(axis=1, how="all")
+    scenarios: pd.DataFrame = pd.read_excel(f, sheet_name='scenarios').dropna(axis=1, how="all")
     if 'agent_params' in sheet_names:
-        agent_params_sheet_df: pd.DataFrame = pd.read_excel(f, sheet_name='agent_params', engine='openpyxl').dropna(
+        agent_params_sheet_df: pd.DataFrame = pd.read_excel(f, sheet_name='agent_params').dropna(
             axis=1,
             how='all')
         return scenarios, gen_agent_params_for_all_scenario(scenarios, agent_params_sheet_df)
@@ -74,12 +83,12 @@ def batch_load_tables(files: List[str], existed_table_names: Set[str]) -> Dict[s
     for file in files:
         if not os.path.exists(file):
             raise FileNotFoundError(file)
-    excel_files_list: List[pd.ExcelFile] = [pd.ExcelFile(file, engine='openpyxl') for file in files]
+    excel_files_list: List[pd.ExcelFile] = [pd.ExcelFile(file) for file in files]
     tables: Dict[str, pd.DataFrame] = {}
     for excel_file in excel_files_list:
         all_sheet_names = excel_file.sheet_names
         for table_name in all_sheet_names:
             if table_name in existed_table_names:
                 raise MelodieExceptions.Data.TableNameAlreadyExists(table_name, existed_table_names)
-            tables[table_name] = pd.read_excel(excel_file, table_name, engine='openpyxl')
+            tables[table_name] = pd.read_excel(excel_file, table_name)
     return tables
