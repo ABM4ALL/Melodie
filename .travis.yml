@@ -7,7 +7,6 @@ python:
  - "3.9"
 os:
   - linux
-  - osx
 
 script: pytest
 before_script:
