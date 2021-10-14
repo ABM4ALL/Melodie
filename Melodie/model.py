@@ -6,7 +6,7 @@ from .agent_manager import AgentManager
 from .config import Config
 from .datacollector import DataCollector
 from .environment import Environment
-from .scenariomanager import Scenario
+from .scenario_manager import Scenario
 from .table_generator import TableGenerator
 from .db import create_db_conn
 
@@ -21,7 +21,7 @@ class Model:
                  run_id_in_scenraio: int = 0
                  ):
 
-        self.proj_name = config.project_name
+        self.project_name = config.project_name
         self.config = config
         self.agent_class = agent_class
         self.scenario = scenario

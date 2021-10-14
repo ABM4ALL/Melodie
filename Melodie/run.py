@@ -19,11 +19,11 @@ logger = logging.getLogger(__name__)
 if TYPE_CHECKING:
     from .environment import Environment
     from .model import Model
-    from .scenariomanager import ScenarioManager, Scenario
+    from .scenario_manager import ScenarioManager, Scenario
     from .datacollector import DataCollector
     from .config import Config
 else:
-    from .scenariomanager import ScenarioManager
+    from .scenario_manager import ScenarioManager
     from .config import Config
     from .db import create_db_conn
 

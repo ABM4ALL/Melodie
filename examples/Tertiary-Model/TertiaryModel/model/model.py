@@ -4,7 +4,7 @@ __author__ = 'Songmin'
 from Melodie import Model
 
 
-class GiniModel(Model):
+class TertiaryModel(Model):
 
     def run(self):
         simulation_periods = self.scenario.periods

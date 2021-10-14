@@ -1,14 +1,12 @@
-# -*- coding:utf-8 -*-
-# @Time: 2021/9/21 10:28
-# @Author: Zhanyi Hou
-# @Email: 1295752786@qq.com
-# @File: scenario.py.py
+# -*- coding: utf-8 -*-
+__author__ = 'Songmin'
+
 from typing import List
 
 from Melodie import ScenarioManager, Scenario
 
 
-class GiniScenario(Scenario):
+class TertiaryScenario(Scenario):
     def setup(self):
         self.periods = 200
         self.agent_num = 100
@@ -19,14 +17,17 @@ class GiniScenario(Scenario):
         self.rich_win_prob = 0.8
 
 
-class GiniScenarioManager(ScenarioManager):
+class TertiaryScenarioManager(ScenarioManager):
     def gen_scenarios(self) -> List[Scenario]:
         """
         Only generate one scenario here.
         :return:
         """
 
-        scenarios = [GiniScenario() for i in range(3)]
+        scenarios = [TertiaryScenario() for i in range(3)]
         for i, scenario in enumerate(scenarios):
             scenario.rich_win_prob = 0.1 * (i + 1) + 0.5  # 0.1,0.2,...0.9
         return scenarios
+
+
+

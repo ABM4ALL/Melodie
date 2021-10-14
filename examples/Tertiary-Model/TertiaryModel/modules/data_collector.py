@@ -4,7 +4,7 @@ __author__ = 'Songmin'
 from Melodie import DataCollector
 
 
-class GiniDataCollector(DataCollector):
+class TertiaryDataCollector(DataCollector):
     def setup(self):
         self.add_agent_property('account')
         self.add_environment_property('trade_num')

@@ -7,7 +7,7 @@ import pandas as pd
 import numpy as np
 
 if TYPE_CHECKING:
-    from Melodie.scenariomanager import Scenario
+    from Melodie.scenario_manager import Scenario
 
 
 class DB:

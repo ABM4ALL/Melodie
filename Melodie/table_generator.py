@@ -14,7 +14,7 @@ from typing import Callable, Any, Union, Tuple, List
 import pandas as pd
 
 from Melodie.db import create_db_conn
-from Melodie.scenariomanager import Scenario
+from Melodie.scenario_manager import Scenario
 
 logger = logging.getLogger(__name__)
 
