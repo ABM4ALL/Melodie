@@ -35,7 +35,7 @@ class DB:
 
 
 
-db_path = "C:\\Users\yus\Dropbox\ABM4ALL\Melodie\examples\TertiaryModel\_database\Tertiary.sqlite"
+db_path = "C:\\Users\yus\Dropbox\ABM4ALL\Melodie\examples\TertiaryModel\_data\Tertiary.sqlite"
 conn = DB().create_Connection(db_path)
 table_1 = DB().read_DataFrame("SharedEndUse", conn)
 table_2 = DB().read_DataFrame("Sheet1", conn)

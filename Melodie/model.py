@@ -12,13 +12,14 @@ from .db import create_db_conn
 
 
 class Model:
-    def __init__(self, config: 'Config',
+    def __init__(self,
+                 config: 'Config',
                  agent_class: ClassVar[Agent],
                  environment_class: ClassVar[Environment],
                  data_collector_class: ClassVar[DataCollector] = None,
                  table_generator_class: ClassVar[TableGenerator] = None,
                  scenario: Scenario = None,
-                 run_id_in_scenraio: int = 0
+                 run_id_in_scenario: int = 0
                  ):
 
         self.project_name = config.project_name
@@ -31,7 +32,7 @@ class Model:
         self.table_generator_class = table_generator_class
         self.data_collector: Optional[DataCollector] = None
         self.table_generator: Optional[TableGenerator] = None
-        self.run_id_in_scenraio = run_id_in_scenraio
+        self.run_id_in_scenario = run_id_in_scenario
 
     def setup_agent_manager(self):
         """
@@ -45,7 +46,7 @@ class Model:
         self.agent_manager = AgentManager(self.agent_class, self.scenario.agent_num)
         if get_config().with_db == False:
             return
-            # Read agent parameters from database
+            # Read agent parameters from data
         db_conn = create_db_conn()
         agent_para_data_frame = db_conn.read_dataframe(db_conn.AGENT_PARAM_TABLE)
         # Create agent manager
@@ -116,3 +117,7 @@ class Model:
                 self.data_collector.collect(i)
         if self.data_collector is not None and self.config.with_db:
             self.data_collector.save()
+
+
+
+

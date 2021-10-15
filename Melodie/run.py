@@ -1,5 +1,5 @@
 """
-This file stores the run function for model running, storing global variables and other services.
+This data stores the run function for model running, storing global variables and other services.
 """
 import time
 from typing import ClassVar, TYPE_CHECKING, Optional
@@ -29,7 +29,6 @@ else:
 
 _model: Optional['Model'] = None
 _config: Optional['Config'] = None
-
 
 def get_environment() -> 'Environment':
     """
@@ -73,7 +72,7 @@ def set_config(config: "Config"):
 
 def get_run_id() -> int:
     global _model
-    return _model.run_id_in_scenraio
+    return _model.run_id_in_scenario
 
 
 # def run(
@@ -158,7 +157,11 @@ def run(
         scenario_manager: 'ScenarioManager' = scenario_manager_class(config, scenario_class)
 
     if scenario_manager is None:
-        _model = model_class(config, environment_class, data_collector_class, table_generator_class)
+        _model = model_class(config,
+                             agent_class, # 新加的
+                             environment_class,
+                             data_collector_class,
+                             table_generator_class)
         _model._setup()
         _model.run()
     else:
@@ -176,7 +179,7 @@ def run(
                                      data_collector_class,
                                      table_generator_class=table_generator_class,
                                      scenario=scenario,
-                                     run_id_in_scenraio=run_id)
+                                     run_id_in_scenario=run_id)
 
                 _model._setup()
                 t1 = time.time()

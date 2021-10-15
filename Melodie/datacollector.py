@@ -28,7 +28,7 @@ class DataCollector:
     At the beginning of simulation scenario, the DataCollector creates;
     User could customize when to dump data to dataframe.
     By simulation scenario exits, the DataCollector dumps the data to dataframe, and save to
-    database or datafile.
+    data or datafile.
     """
 
     def __init__(self, target='sqlite'):
@@ -96,4 +96,4 @@ class DataCollector:
         create_db_conn().write_dataframe(DB.ENVIRONMENT_RESULT_TABLE, self.environment_properties_df)
         t1 = time.time()
         self._time_elapsed += time.time() - t0
-        logger.info(f'datacollector took {t1 - t0}s to format dataframe and write it to database.')
+        logger.info(f'datacollector took {t1 - t0}s to format dataframe and write it to data.')

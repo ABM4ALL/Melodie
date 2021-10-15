@@ -7,8 +7,8 @@ class Config:
                  project_name: str,
                  project_root: str = '',
                  db_folder: str = '_database',
-                 output_folder: str = '_output',
-                 with_db: bool = True, # if false, Melodie will never create or connect to a database
+                 output_folder: str = 'output',
+                 with_db: bool = True, # if false, Melodie will never create or connect to a data
                  parameters_source: str = 'generate',
                  parameters_xls_file: str = '',
                  static_xls_files: List[str] = None

@@ -94,7 +94,7 @@ class MelodieExceptions:
         #     return MelodieException(1209,
         #                             f'Melodie detected you used \'agent_params\' sheet to assign same parameter to agents in '
         #                             f'despite scenario changes. However in this case there is/are other sheet(s) {other_sheets} '
-        #                             f'in the excel file {excel_file_name} which is not allowed in Melodie.')
+        #                             f'in the excel data {excel_file_name} which is not allowed in Melodie.')
 
         @staticmethod
         def ExcelAgentParamsRecordCountNotConsistentToScneario(scenario_id, scenario_agents_num: int, param_table_name,

@@ -1,6 +1,6 @@
-# Configuration file for the Sphinx documentation builder.
+# Configuration data for the Sphinx documentation builder.
 #
-# This file only contains a selection of the most common options. For a full
+# This data only contains a selection of the most common options. For a full
 # list see the documentation:
 # https://www.sphinx-doc.org/en/master/usage/configuration.html
 
@@ -9,7 +9,7 @@ from sphinx.builders.html import StandaloneHTMLBuilder
 # -- Project information -----------------------------------------------------
 
 project = 'Melodie'
-copyright = '2021, open source'
+copyright = '2021, open excel_source'
 author = 'Songmin Yu'
 
 # The full version, including alpha/beta/rc tags
@@ -32,8 +32,8 @@ extensions = [
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
 
-# List of patterns, relative to source directory, that match files and
-# directories to ignore when looking for source files.
+# List of patterns, relative to excel_source directory, that match files and
+# directories to ignore when looking for excel_source files.
 # This pattern also affects html_static_path and html_extra_path.
 exclude_patterns = []
 
@@ -46,7 +46,7 @@ html_theme = 'sphinx_rtd_theme'
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
-# so a file named "default.css" will overwrite the builtin "default.css".
+# so a data named "default.css" will overwrite the builtin "default.css".
 html_static_path = []
 
 # This allows us to dynamically pick between gif and png images based on the build.

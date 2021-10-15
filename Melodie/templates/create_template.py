@@ -38,16 +38,16 @@ def remove_unused_files(root, file_status):
             prev_name = os.path.join(root, name)
             post_name = os.path.join(root, status)
             os.rename(prev_name, post_name)
-            print('renamed file', prev_name, 'to', post_name)
+            print('renamed data', prev_name, 'to', post_name)
         else:
             raise TypeError(status)
 
     for path in paths_to_del:
         if os.path.exists(path):
-            print('removed file,', path)
+            print('removed data,', path)
             os.remove(path)
         else:
-            print('file ', path, ' should be removed but it was not exist! ')
+            print('data ', path, ' should be removed but it was not exist! ')
 
 
 def create_routine(directory: str, extra_context):
@@ -64,7 +64,7 @@ def create_routine(directory: str, extra_context):
             "table_generator.py": False
         },
         "model": True,
-        'run_with_excel.py': 'run.py',
+        'run_with_excel.py': 'run_setup.py',
         "run_advanced.py": False
     }
     cookiecutter((os.path.join(os.path.dirname(__file__), 'ProjectTemplate')),
@@ -92,7 +92,7 @@ if __name__ == "__main__":
             "table_generator.py": False
         },
         "model": True,
-        'run_with_excel.py': 'run.py',
+        'run_with_excel.py': 'run_setup.py',
         "run_advanced.py": False
     }
     create_routine(directory, context, file_status_with_excel)

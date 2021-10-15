@@ -475,7 +475,7 @@ def slurp(f):
 #         if v.calls:
 #             g[at]['calls'] = v.calls
 #         g[at]['function'] = cfg.functions_node[v.lineno()]
-#         g[at]['source'] = cache[k].source()
+#         g[at]['excel_source'] = cache[k].excel_source()
 #     return g
 
 def parse_graph(cfg: PyCFG, cache: Dict[str, Dict[str, Union[str, int]]]) -> Dict:
@@ -497,7 +497,7 @@ def parse_graph(cfg: PyCFG, cache: Dict[str, Dict[str, Union[str, int]]]) -> Dic
         if v.calls:
             g[node_id]['calls'] = v.calls
         g[node_id]['function'] = cfg.functions_node[v.lineno()]
-        g[node_id]['source'] = cache[k].source()
+        g[node_id]['excel_source'] = cache[k].source()
     return g
 
 
@@ -542,7 +542,7 @@ def get_cfg(pythonfile):
         if v.calls:
             g[at]['calls'] = v.calls
         g[at]['function'] = cfg.functions_node[v.lineno()]
-        g[at]['source'] = cache[k].source()
+        g[at]['excel_source'] = cache[k].source()
     return (g, cfg.founder.ast_node.lineno, cfg.last_node.ast_node.lineno)
 
 
@@ -557,11 +557,11 @@ if __name__ == '__main__':
     import argparse
 
     parser = argparse.ArgumentParser()
-    parser.add_argument('pythonfile', help='The python file to be analyzed')
-    parser.add_argument('-d', '--dots', action='store_true', help='generate a dot file')
+    parser.add_argument('pythonfile', help='The python data to be analyzed')
+    parser.add_argument('-d', '--dots', action='store_true', help='generate a dot data')
     parser.add_argument('-c', '--cfg', action='store_true', help='print cfg')
-    parser.add_argument('-x', '--coverage', action='store', dest='coverage', type=str, help='branch coverage file')
-    parser.add_argument('-y', '--ccoverage', action='store', dest='ccoverage', type=str, help='custom coverage file')
+    parser.add_argument('-x', '--coverage', action='store', dest='coverage', type=str, help='branch coverage data')
+    parser.add_argument('-y', '--ccoverage', action='store', dest='ccoverage', type=str, help='custom coverage data')
     args = parser.parse_args()
     if args.dots:
         arcs = None
