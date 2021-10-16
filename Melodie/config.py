@@ -8,7 +8,7 @@ class Config:
                  project_root: str = '',
                  db_folder: str = '_database',
                  output_folder: str = 'output',
-                 with_db: bool = True, # if false, Melodie will never create or connect to a data
+                 with_db: bool = True,  # if false, Melodie will never create or connect to a data
                  parameters_source: str = 'generate',
                  parameters_xls_file: str = '',
                  static_xls_files: List[str] = None
@@ -33,5 +33,3 @@ class Config:
             assert os.path.exists(parameters_xls_file), f'File {parameters_xls_file} does not exist!'
             self.parameters_xls_file = parameters_xls_file
             self.static_xls_files = [] if static_xls_files is None else static_xls_files
-
-

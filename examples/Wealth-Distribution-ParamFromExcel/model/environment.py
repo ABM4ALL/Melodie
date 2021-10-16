@@ -5,7 +5,7 @@ import random
 from typing import TYPE_CHECKING
 
 from Melodie import AgentManager, Environment, current_scenario
-from ..model.scenario import GiniScenario
+from .scenario import GiniScenario
 
 if TYPE_CHECKING:
     from .agent import GINIAgent

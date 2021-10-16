@@ -6,15 +6,11 @@ sys.path.append("../..")
 # Appending project root to "sys.path" makes Melody package accessible to the interpreter.
 # This code will be removed as soon as we release the first distribution onto pip.
 
-# from Melodie.config import Config
-from WealthDistribution.model.scenario import GiniScenario
-from WealthDistribution.modules.agent import GINIAgent
-from WealthDistribution.model.model import GiniModel
-from WealthDistribution.model.analyzer import Analyzer
-from WealthDistribution.modules.environment import GiniEnvironment
-from WealthDistribution.modules.data_collector import GiniDataCollector
+from model.scenario import GiniScenario
+from model.model import GiniModel
+from analyzer.analyzer import Analyzer
 from Melodie.run import run, run_new
-from config import GiniConfig,config
+from config import config
 
 if __name__ == "__main__":
     run_new(

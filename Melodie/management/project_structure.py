@@ -75,13 +75,9 @@ def to_digraph(cfg: Dict, edge_tags: dict) -> nx.DiGraph:
     return g
 
 
-<<<<<<< HEAD
-def to_mermaid(g: nx.DiGraph) -> str:
-    sources: Dict[int, str] = nx.get_node_attributes(g, 'source')
-=======
 def to_mermaid(g: nx.DiGraph) -> None:
-    sources: Dict[int, str] = nx.get_node_attributes(g, 'excel_source')
->>>>>>> c94552f90be81aa1cf2059b2fc3923f22111a1c8
+    sources: Dict[int, str] = nx.get_node_attributes(g, 'source')
+
     generated: List[str] = ['graph TD']
     for node in g.nodes:
         source = sources[node].replace('\"', "\'")

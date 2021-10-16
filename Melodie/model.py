@@ -13,20 +13,18 @@ from .db import create_db_conn
 
 class Model:
     def __init__(self,
-                 config: 'Config',
-                 agent_class: ClassVar[Agent],
-                 environment_class: ClassVar[Environment],
+                 config: 'Config' = None,
+                 agent_class: ClassVar[Agent] = None,
+                 environment_class: ClassVar[Environment] = None,
                  data_collector_class: ClassVar[DataCollector] = None,
                  table_generator_class: ClassVar[TableGenerator] = None,
-                 scenario: Scenario = None,
                  run_id_in_scenario: int = 0
                  ):
 
         self.project_name = config.project_name
         self.config = config
         self.agent_class = agent_class
-        self.scenario = scenario
-        self.environment = environment_class()
+        self.environment_class = environment_class
         self.agent_manager: AgentManager = None
         self.data_collector_class = data_collector_class
         self.table_generator_class = table_generator_class
@@ -34,6 +32,7 @@ class Model:
         self.table_generator: Optional[TableGenerator] = None
         self.run_id_in_scenario = run_id_in_scenario
         self.setup()
+        assert self.environment_class is not None
         self._setup()
 
     def setup(self):
@@ -47,8 +46,9 @@ class Model:
 
         :return:
         """
-        from .run import get_config
-        self.agent_manager = AgentManager(self.agent_class, self.scenario.agent_num)
+        from .run import get_config, current_scenario
+        scenario = current_scenario()
+        self.agent_manager = AgentManager(self.agent_class, scenario.agent_num)
         if get_config().with_db == False:
             return
             # Read agent parameters from data
@@ -72,6 +72,7 @@ class Model:
         return self.agent_manager
 
     def setup_environment(self):
+        self.environment = self.environment_class()
         self.environment.setup()
 
     def setup_data_collector(self):
@@ -115,7 +116,9 @@ class Model:
         pass
 
     def run(self):
-        for i in range(self.scenario.periods):
+        from .run import current_scenario
+        scenario = current_scenario()
+        for i in range(scenario.periods):
             self.step()
             if self.data_collector is not None:
                 self.data_collector.collect(i)

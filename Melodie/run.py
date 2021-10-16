@@ -29,6 +29,7 @@ else:
 
 _model: Optional['Model'] = None
 _config: Optional['Config'] = None
+_current_scenario: Optional['Scenario'] = None
 
 
 def get_environment() -> 'Environment':
@@ -52,8 +53,8 @@ def current_scenario() -> 'Scenario':
     Get current scenario.
     :return:
     """
-    assert _model is not None
-    return _model.scenario
+    assert _current_scenario is not None
+    return _current_scenario
 
 
 def get_data_collector() -> 'DataCollector':
@@ -86,7 +87,7 @@ def run_new(config: ClassVar['Config'],
     Main Model for running model!
     If
     """
-    global _model, _config
+    global _model, _config, _current_scenario
     if config is None:
         config = Config('Untitled')
         _config = config
@@ -100,21 +101,22 @@ def run_new(config: ClassVar['Config'],
     scenario_manager = ScenarioManager(config, scenario_class)
 
     if scenario_manager is None:
-        _model = model_class()
+        _model = model_class(config, run_id_in_scenario=0)
         _model._setup()
         _model.run()
     else:
+
         if config.with_db:
             scenarios = scenario_manager.load_scenarios()
         else:
             scenarios = scenario_manager.gen_scenarios()
+        # print(scenarios)
         for scenario_index, scenario in enumerate(scenarios):
+            _current_scenario = scenario
             for run_id in range(scenario.number_of_run):
                 logger.info(f'Running {run_id + 1} times in scenario {scenario.id}.')
                 t0 = time.time()
-                _model = model_class()
-
-                _model._setup()
+                _model = model_class(config, run_id_in_scenario=run_id)
                 t1 = time.time()
                 _model.run()
                 t2 = time.time()
@@ -157,7 +159,7 @@ def run(
     """
     from .model import Model
 
-    global _model, _config
+    global _model, _config,_current_scenario
     if config is None:
         config = Config('Untitled')
         _config = config
@@ -189,6 +191,7 @@ def run(
         else:
             scenarios = scenario_manager.gen_scenarios()
         for scenario_index, scenario in enumerate(scenarios):
+            _current_scenario = scenario
             for run_id in range(scenario.number_of_run):
                 logger.info(f'Running {run_id + 1} times in scenario {scenario.id}.')
                 t0 = time.time()
@@ -197,7 +200,6 @@ def run(
                                      environment_class,
                                      data_collector_class,
                                      table_generator_class=table_generator_class,
-                                     scenario=scenario,
                                      run_id_in_scenario=run_id)
 
                 _model._setup()
