@@ -7,7 +7,7 @@ import pandas as pd
 import numpy as np
 
 if TYPE_CHECKING:
-    from Melodie.scenariomanager import Scenario
+    from Melodie.scenario_manager import Scenario
 
 
 class DB:
@@ -73,7 +73,7 @@ class DB:
         elif np.issubdtype(a, np.floating):
             return 'REAL'
         else:
-            raise ValueError(f'{a},type {type(a)} not recognized!')
+            raise ValueError(f'{a}, type {type(a)} not recognized!')
 
     def auto_convert(self, a: np.float) -> str:
         if isinstance(a, (int, float, str)):
@@ -100,7 +100,7 @@ class DB:
 
     def batch_insert(self, table: str, records: List[Dict[str, Union[int, str, float]]]):
         """
-        Batch insert records into sqlite database!
+        Batch insert records into sqlite data!
         :param records:
         :return:
         """
@@ -127,7 +127,7 @@ class DB:
 
     def write_dataframe(self, table_name: str, data_frame: pd.DataFrame, if_exists='append'):
         """
-        Write a dataframe to database table.
+        Write a dataframe to data table.
         :param table_name:
         :param data_frame:
         :param if_exists:

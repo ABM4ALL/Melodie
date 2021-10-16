@@ -4,9 +4,6 @@
 # @Email: 1295752786@qq.com
 # @File: table_generator.py
 
-# -*- coding: utf-8 -*-
-__author__ = 'Songmin'
-
 import logging
 import random
 from typing import Callable, Any, Union, Tuple, List
@@ -14,7 +11,7 @@ from typing import Callable, Any, Union, Tuple, List
 import pandas as pd
 
 from Melodie.db import create_db_conn
-from Melodie.scenariomanager import Scenario
+from Melodie.scenario_manager import Scenario
 
 logger = logging.getLogger(__name__)
 
@@ -23,7 +20,7 @@ class TableGenerator:
 
     def __init__(self, scenario: 'Scenario'):
         """
-        Pass the class of agent, to get the data type that how the properties are saved into database.
+        Pass the class of agent, to get the data type that how the properties are saved into data.
         :param conn:
         :param scenario:
         :param agentClass:

@@ -44,7 +44,7 @@ class Scenario(Element):
 
 class ScenarioManager:
     def __init__(self, config: Config, scenario_class: ClassVar['Scenario'] = None):
-        # TODO : Load scenario from excel/csv/database.
+        # TODO: Load scenario from excel/csv/data.
         # TODO: 模型启动尽量只用scenarios一张表。也就是
         # TODO: 最好改成直接读excel表，将其变成dataframe.
         # TODO: 有的模型可能需要几张scenario表。现在的表还不够！有的表中，每个Agent的参数都要提前设置好。
@@ -71,6 +71,7 @@ class ScenarioManager:
             tables = batch_load_tables(config.static_xls_files, DB.RESERVED_TABLES)
             for table_name, table in tables.items():
                 create_db_conn().write_dataframe(table_name, table, 'replace')
+
         elif self.param_source == 'from_database':
             raise NotImplementedError
         else:

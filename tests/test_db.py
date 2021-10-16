@@ -19,7 +19,7 @@ from Melodie import DB, create_db_conn, Config
 #     # os.remove('resources/test.sqlite')
 
 cfg = Config('test', project_root=os.path.dirname(__file__), db_folder='resources/db',
-             output_folder='resources/_output')
+             output_folder='resources/output')
 
 
 def test_get_scenarios():
@@ -48,5 +48,5 @@ def test_get_env_results():
     assert env_df['step'][0] == 1
 
     # scenario_2 = create_db_conn(
-    #     Config('test', db_folder='resources/db', output_folder='resources/_output')).query_scenarios(id=2)
+    #     Config('test', db_folder='resources/db', output_folder='resources/output')).query_scenarios(id=2)
     # assert scenario_2['id'][0] == 2

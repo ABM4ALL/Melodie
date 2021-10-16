@@ -64,7 +64,7 @@ def list_all_files(parent_dir: str, ext_filter: Optional[Set[str]] = None) -> Li
 def to_digraph(cfg: Dict, edge_tags: dict) -> nx.DiGraph:
     g = nx.DiGraph()
     for k, v in cfg.items():
-        g.add_node(k, source=v['source'])
+        g.add_node(k, source=v['excel_source'])
         for child in v['children']:
 
             if (k, child) in edge_tags.keys():
@@ -75,8 +75,13 @@ def to_digraph(cfg: Dict, edge_tags: dict) -> nx.DiGraph:
     return g
 
 
+<<<<<<< HEAD
 def to_mermaid(g: nx.DiGraph) -> str:
     sources: Dict[int, str] = nx.get_node_attributes(g, 'source')
+=======
+def to_mermaid(g: nx.DiGraph) -> None:
+    sources: Dict[int, str] = nx.get_node_attributes(g, 'excel_source')
+>>>>>>> c94552f90be81aa1cf2059b2fc3923f22111a1c8
     generated: List[str] = ['graph TD']
     for node in g.nodes:
         source = sources[node].replace('\"', "\'")

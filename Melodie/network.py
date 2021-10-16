@@ -1,10 +1,12 @@
 
-class Network:
-    pass
 
 # network是定义在agent上的，不像grid那么独立。没有人，地球上依然有土地。但是，没有人，也有不存在“人和人之间的关系”了。
-# 一段“关系”即network里的一条边，可以：
-# 带方向或不带方向；
-# 单向或双向；
-# （每个方向）有自己的强弱；
-# 可以形成、更强、更弱，也可以断开
+# 用一张矩阵记录agent之间的【关系】，关系又可以有多个属性，方向、每个方向的强弱等。
+# agent和env都可以访问network并修改agent之间的【关系】
+# network是run_model的可选项，如果选了，就初始化到model里
+
+class Relation:
+    pass
+
+class Network:
+    pass

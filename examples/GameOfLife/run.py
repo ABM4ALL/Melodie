@@ -10,8 +10,8 @@
 
 import numba
 
-from Melodie.boost import broadcast_2d, gather_2d  # 导入了hello.so
-
+from Melodie.boost.vectorize import broadcast_2d, gather_2d  # 导入了hello.so
+import PyQt6
 from pyqtgraph.Qt import QtCore, QtGui
 import numpy as np
 import pyqtgraph as pg

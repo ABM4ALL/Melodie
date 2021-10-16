@@ -4,5 +4,5 @@
 # @Email: 1295752786@qq.com
 # @File: test_read_scenarios.py
 
-from Melodie.scenariomanager import ScenarioManager
+from Melodie.scenario_manager import ScenarioManager
 
