@@ -13,11 +13,14 @@ class Config:
                  parameters_xls_file: str = '',
                  static_xls_files: List[str] = None
                  ):
+
         self.project_name = project_name
         assert self.project_name.isidentifier(), 'project_name should be a valid identifier'
+
         self.project_root = project_root
         if self.project_root != '':
             assert os.path.exists(project_root)
+
         self.with_db = with_db
         if with_db:
             self.db_folder = os.path.join(self.project_root, db_folder)
@@ -33,3 +36,14 @@ class Config:
             assert os.path.exists(parameters_xls_file), f'File {parameters_xls_file} does not exist!'
             self.parameters_xls_file = parameters_xls_file
             self.static_xls_files = [] if static_xls_files is None else static_xls_files
+
+
+
+class NewConfig:
+    def __init__(self,
+                 project_name: str,
+                 project_root: str,
+                 sqlite_folder: str,
+                 excel_source_folder: str,
+                 output_folder: str):
+        pass

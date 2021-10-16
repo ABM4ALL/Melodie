@@ -10,6 +10,9 @@ from .agent_manager import AgentManager
 from .analyzer import Analyzer
 from .table_generator import TableGenerator
 
+
+# 拆分为几个run：simulator, analyzer, calibrator
+
 logging.basicConfig(level=logging.INFO,
                     format='%(asctime)s %(filename)s [line:%(lineno)d] %(levelname)s %(message)s',
                     datefmt='%a, %d %b %Y %H:%M:%S',
@@ -77,11 +80,10 @@ def get_run_id() -> int:
     return _model.run_id_in_scenario
 
 
-def run_new(config: ClassVar['Config'],
+def run_new(config: ClassVar['Config'], # 这个传入的应该是实例吧？
             model_class: ClassVar['Model'],
             scenario_class=None,
-            analyzer_class: ClassVar[
-                'Analyzer'] = None
+            analyzer_class: ClassVar['Analyzer'] = None
             ):
     """
     Main Model for running model!

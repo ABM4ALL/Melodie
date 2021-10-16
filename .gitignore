@@ -204,7 +204,7 @@ elegant*-en.pdf
 *.pdfsync
 
 ## Auxiliary and intermediate files from other packages:
-# algorithms
+# modules
 *.alg
 *.loa
 

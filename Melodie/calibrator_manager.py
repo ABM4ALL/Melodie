@@ -1,5 +1,5 @@
 
-class Calibrator:
+class CalibratorManager:
     pass
 
 

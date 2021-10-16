@@ -1,6 +1,6 @@
 from typing import Callable, Dict, List, TYPE_CHECKING, Union, Tuple, Any
 
-# from .algorithms import binary_search
+# from .modules import binary_search
 
 if TYPE_CHECKING:
     from ..agent import Agent

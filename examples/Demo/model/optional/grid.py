@@ -1,4 +1,8 @@
 
+# --------
+# optional
+# --------
+
 # 每个spot是一个格子，很多个spot构成一个grid。
 # 每个spot可以有多个属性。
 # grid记录每个agent的站立的位置。

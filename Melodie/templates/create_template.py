@@ -55,16 +55,16 @@ def create_routine(directory: str, extra_context):
         "README.md": True,
         extra_context["project_name"]: {
             "agent.py": True,
-            "analyzer.py": True,
+            "validation.py": True,
             "datacollector.py": True,
             "environment.py": True,
             "model.True": True,
-            "scenario_manager.py": False,
-            "scenario.py": True,
+            "simulator_manager.py": False,
+            "simulator_manager.py": True,
             "table_generator.py": False
         },
         "model": True,
-        'run_with_excel.py': 'run_setup.py',
+        'run_with_excel.py': 'run.py',
         "run_advanced.py": False
     }
     cookiecutter((os.path.join(os.path.dirname(__file__), 'ProjectTemplate')),
@@ -83,16 +83,16 @@ if __name__ == "__main__":
         "README.md": True,
         context["project_name"]: {
             "agent.py": True,
-            "analyzer.py": True,
+            "validation.py": True,
             "datacollector.py": True,
             "environment.py": True,
             "model.True": True,
-            "scenario_manager.py": False,
-            "scenario.py": True,
+            "simulator_manager.py": False,
+            "simulator_manager.py": True,
             "table_generator.py": False
         },
         "model": True,
-        'run_with_excel.py': 'run_setup.py',
+        'run_with_excel.py': 'run.py',
         "run_advanced.py": False
     }
     create_routine(directory, context, file_status_with_excel)
