@@ -33,6 +33,11 @@ class Model:
         self.data_collector: Optional[DataCollector] = None
         self.table_generator: Optional[TableGenerator] = None
         self.run_id_in_scenario = run_id_in_scenario
+        self.setup()
+        self._setup()
+
+    def setup(self):
+        pass
 
     def setup_agent_manager(self):
         """
@@ -69,7 +74,8 @@ class Model:
     def setup_environment(self):
         self.environment.setup()
 
-    def setup_data_collector(self, data_collector_class):
+    def setup_data_collector(self):
+        data_collector_class = self.data_collector_class
         if callable(data_collector_class) and issubclass(data_collector_class, DataCollector):
             data_collector = data_collector_class()
             data_collector.setup()
@@ -80,18 +86,18 @@ class Model:
 
         self.data_collector = data_collector
 
-    def setup_table_generator(self, table_generator_class):
-        """
-        TODO table generator should be set up before model creates.
-        :param table_generator_class:
-        :return:
-        """
-        # raise DeprecationWarning('table generator should be set up before model creates.')
-        if table_generator_class is not None:
-            self.table_generator: TableGenerator = table_generator_class(self.scenario)
-            self.table_generator.setup()
-            # self.table_generator.run()
-        # else:
+    # def setup_table_generator(self, table_generator_class):
+    #     """
+    #     TODO table generator should be set up before model creates.
+    #     :param table_generator_class:
+    #     :return:
+    #     """
+    #     # raise DeprecationWarning('table generator should be set up before model creates.')
+    #     if table_generator_class is not None:
+    #         self.table_generator: TableGenerator = table_generator_class(self.scenario)
+    #         self.table_generator.setup()
+    #         # self.table_generator.run()
+    #     # else:
 
     def get_agent_param(self):
         if self.table_generator is not None:
@@ -100,9 +106,7 @@ class Model:
             table = ''
 
     def _setup(self):
-
-        self.setup_data_collector(self.data_collector_class)
-        self.setup_table_generator(self.table_generator_class)
+        self.setup_data_collector()
         self.get_agent_param()
         self.setup_environment()
         self.setup_agent_manager()
@@ -117,7 +121,3 @@ class Model:
                 self.data_collector.collect(i)
         if self.data_collector is not None and self.config.with_db:
             self.data_collector.save()
-
-
-
-

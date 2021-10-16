@@ -30,6 +30,7 @@ else:
 _model: Optional['Model'] = None
 _config: Optional['Config'] = None
 
+
 def get_environment() -> 'Environment':
     """
     get environment from the global variable
@@ -75,50 +76,68 @@ def get_run_id() -> int:
     return _model.run_id_in_scenario
 
 
-# def run(
-#         agent_class: ClassVar['Agent'],
-#         environment_class: ClassVar['Environment'],
-#         config: 'Config' = None,
-#         data_collector_class: ClassVar['DataCollector'] = None,
-#         model_class: ClassVar['Model'] = None,
-#         scenario_manager_class: ClassVar['ScenarioManager'] = None,
-#         table_generator_class: ClassVar['TableGenerator'] = None,
-#         analyzer_class: ClassVar['Analyzer'] = None
-# ):
-#     """
-#     Main Model for running model!
-#     If
-#     """
-#     global _model, _config
-#     if config is None:
-#         config = Config('Untitled')
-#         _config = config
-#     else:
-#         _config = config
-#         create_db_conn().reset()
-#
-#     if model_class is None:
-#         model_class = Model
-#     if scenario_manager_class is None:
-#         scenario_manager = None
-#     else:
-#         scenario_manager: 'ScenarioManager' = scenario_manager_class(config)
-#
-#     if scenario_manager is None:
-#         _model = model_class(config, environment_class, data_collector_class, table_generator_class)
-#         _model._setup()
-#         _model.run()
-#     else:
-#         for scenario in scenario_manager._scenarios:
-#             _model = model_class(config, agent_class,
-#                                  environment_class,
-#                                  data_collector_class,
-#                                  table_generator_class,
-#                                  scenario)
-#             _model._setup()
-#             _model.run()
-#             if analyzer_class is not None:
-#                 analyzer_class().run()
+def run_new(config: ClassVar['Config'],
+            model_class: ClassVar['Model'],
+            scenario_class=None,
+            analyzer_class: ClassVar[
+                'Analyzer'] = None
+            ):
+    """
+    Main Model for running model!
+    If
+    """
+    global _model, _config
+    if config is None:
+        config = Config('Untitled')
+        _config = config
+    else:
+        _config = config
+        if _config.with_db:
+            create_db_conn().reset()
+
+    logger.info('Loading scenarios and static tables...')
+
+    scenario_manager = ScenarioManager(config, scenario_class)
+
+    if scenario_manager is None:
+        _model = model_class()
+        _model._setup()
+        _model.run()
+    else:
+        if config.with_db:
+            scenarios = scenario_manager.load_scenarios()
+        else:
+            scenarios = scenario_manager.gen_scenarios()
+        for scenario_index, scenario in enumerate(scenarios):
+            for run_id in range(scenario.number_of_run):
+                logger.info(f'Running {run_id + 1} times in scenario {scenario.id}.')
+                t0 = time.time()
+                _model = model_class()
+
+                _model._setup()
+                t1 = time.time()
+                _model.run()
+                t2 = time.time()
+
+                if analyzer_class is not None:
+                    analyzer_class().run()
+                t3 = time.time()
+
+                model_setup_time = t1 - t0
+                model_run_time = t2 - t1
+                analyzer_run_time = t3 - t2
+                if _model.data_collector is not None:
+                    data_collect_time = _model.data_collector._time_elapsed
+                    model_run_time -= data_collect_time
+                info = (f'Running {run_id + 1} in scenario {scenario.id} completed with time elapsed(seconds):\n'
+                        f'    model-setup   \t {round(model_setup_time, 6)}\n'
+                        f'    model-run     \t {round(model_run_time, 6)}\n')
+                if _model.data_collector is not None:
+                    info += f'    data-collect  \t {round(data_collect_time, 6)}\n'
+                info += f'    the analyzer  \t {round(analyzer_run_time, 6)}'
+                logger.info(info)
+
+            logger.info(f'{scenario_index + 1} of {len(scenarios)} scenarios has completed.')
 
 
 def run(
@@ -158,7 +177,7 @@ def run(
 
     if scenario_manager is None:
         _model = model_class(config,
-                             agent_class, # 新加的
+                             agent_class,  # 新加的
                              environment_class,
                              data_collector_class,
                              table_generator_class)

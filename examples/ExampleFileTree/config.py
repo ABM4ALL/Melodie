@@ -3,5 +3,10 @@
 # 设置项目名字、文件路径等
 # agent参数是从sqlite读入还是生成：agent_params_source = "AgentParams" or "generate"。
 
+from Melodie import Config
+
+config = Config(
+
+)
 
 

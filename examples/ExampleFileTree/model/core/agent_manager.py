@@ -1,6 +1,3 @@
-
-
-
 # 现在这个类好像主要就是用来初始化agent的了 --> 替代了原来的table_generator的作用。
 # 如果同时有agent和agent_manager，感觉有点儿重复。
 
@@ -13,7 +10,9 @@
 #     最后都是生成一张dataframe表，存到数据库里，同时初始化所有agent的attributes。这样就跟从数据库里读AgentParams是一样的，
 #     用一个dataframe设置所有agent的参数，column_name就是agent的attribute名字。这张表也需要存，因为最后分析结果可能会用到AgentParams。
 # 2.3 对于模拟过程中用到的参数/AgentVar，比如每期的收益，虽然不用初始化，但也放到这里一起，初始化为0就好了。
+from Melodie import AgentManager
 
 
-
-
+class DemoAgentManager(AgentManager):
+    def setup(self):
+        pass
