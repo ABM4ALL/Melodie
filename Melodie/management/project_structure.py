@@ -5,15 +5,14 @@
 # @File: test.py.py
 import ast
 import os
-import sys
-from typing import Dict, List, Set, Optional
+from typing import Dict, List, Set, Optional, Tuple
 
 import networkx as nx
-from Melodie.management.pycfg import get_cfg, get_all_function_cfgs
+from Melodie.management.pycfg import get_cfg, get_all_function_cfgs, get_function_cfg
 
 
 def get_all_funcdefs(python_file: str) -> List[ast.FunctionDef]:
-    f = open(python_file)
+    f = open(python_file, encoding='utf8', errors='replace')
     source = f.read()
     f.close()
     root = ast.parse(source)
@@ -22,6 +21,24 @@ def get_all_funcdefs(python_file: str) -> List[ast.FunctionDef]:
         if type(node) == ast.FunctionDef:
             function_defs.append(node)
     return function_defs
+
+
+def get_flow(python_file: str, func_name: str) -> Tuple[dict, dict]:
+    f = open(python_file, encoding='utf8', errors='replace')
+    source = f.read()
+    f.close()
+    root = ast.parse(source)
+    function_def: ast.FunctionDef = None
+    for node in ast.walk(root):
+        # print(ast.FunctionDef.name)
+        if type(node) == ast.FunctionDef:
+            if hasattr(node, 'name') and node.name == func_name:
+                function_def = node
+    if function_def is not None:
+        return get_function_cfg(function_def)
+    else:
+        raise ValueError(f'Function {func_name} definition not in file {python_file}')
+    return function_def
 
 
 def list_all_files(parent_dir: str, ext_filter: Optional[Set[str]] = None) -> List[str]:
@@ -44,29 +61,36 @@ def list_all_files(parent_dir: str, ext_filter: Optional[Set[str]] = None) -> Li
     return all_files
 
 
-def to_digraph(cfg: Dict) -> nx.DiGraph:
+def to_digraph(cfg: Dict, edge_tags: dict) -> nx.DiGraph:
     g = nx.DiGraph()
     for k, v in cfg.items():
         g.add_node(k, source=v['source'])
         for child in v['children']:
-            g.add_edge(k, child)
+
+            if (k, child) in edge_tags.keys():
+                g.add_edge(k, child, tag=edge_tags[(k, child)])
+            else:
+                g.add_edge(k, child)
+
     return g
 
 
-def to_mermaid(g: nx.DiGraph) -> None:
+def to_mermaid(g: nx.DiGraph) -> str:
     sources: Dict[int, str] = nx.get_node_attributes(g, 'source')
     generated: List[str] = ['graph TD']
     for node in g.nodes:
         source = sources[node].replace('\"', "\'")
+        source = source.replace('\n', "<br>")
         generated.append(f"{node}[\"{source}\"]")
 
     for edge in g.edges:
-        generated.append(f'{edge[0]}-->{edge[1]}')
+        tag = g.get_edge_data(edge[0], edge[1]).get('tag')
+        if tag is not None:
+            generated.append(f'{edge[0]}-->|{tag}|{edge[1]}')
+        else:
+            generated.append(f'{edge[0]}-->{edge[1]}')
     mermaid = '\n'.join(generated)
-
-    with open('generated.html', 'w') as f_out:
-        with open('../static/mermaid.html', 'r') as f:
-            f_out.write(f.read().replace('TEMPLATE', mermaid))
+    return mermaid
 
 
 if __name__ == '__main__':

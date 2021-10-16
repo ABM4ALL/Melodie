@@ -1,3 +1,2 @@
-cd ../..
-python.exe setup.py build_ext --inplace
-cd Melodie/boost
+python.exe setupfortest.py build_ext --inplace
+python testfeatures.py

@@ -6,7 +6,7 @@
 
 import ast
 import re
-from typing import List, Dict, Union
+from typing import List, Dict, Union, Tuple
 
 import astunparse
 
@@ -15,6 +15,7 @@ class CFGNode(dict):
     registry = 0
     cache = {}
     stack = []
+    tagged_edges: Dict[Tuple[int, int], str] = {}
 
     def __init__(self, parents=[], ast=None):
         assert type(parents) is list
@@ -23,6 +24,7 @@ class CFGNode(dict):
         self.children = []
         self.ast_node = ast
         self.rid = CFGNode.registry
+        # self.entry_status = None
         CFGNode.cache[self.rid] = self
         CFGNode.registry += 1
 
@@ -65,7 +67,8 @@ class CFGNode(dict):
 
     def to_json(self):
         return {'id': self.rid, 'parents': [p.rid for p in self.parents], 'children': [c.rid for c in self.children],
-                'calls': self.calls, 'at': self.lineno(), 'ast': self.source()}
+                'calls': self.calls, 'at': self.lineno(), 'ast': self.source(),
+                }
 
     @classmethod
     def to_graph(cls, arcs=[]):
@@ -133,7 +136,12 @@ class PyCFG:
             v = fn(node, myparents)
             return v
         else:
-            return myparents
+            if fname[3:] in {'constant', 'name', 'attribute',
+                             'tuple', 'list', 'set', 'dict'}:
+                return myparents
+            else:
+                print(fname, ast.dump(node))
+                return myparents
 
     def on_module(self, node, myparents):
         """
@@ -149,11 +157,28 @@ class PyCFG:
     def on_assign(self, node, myparents):
         """
         Assign(expr* targets, expr value)
-        TODO: AugAssign(expr target, operator op, expr value)
+
+        It seems that parallel assignment was not implemented in Python 3.8
+
         -- 'simple' indicates that we annotate simple name without parens
         TODO: AnnAssign(expr target, expr annotation, expr? value, int simple)
         """
-        if len(node.targets) > 1: raise NotImplemented('Parallel assignments')
+        # if len(node.targets) > 1: raise NotImplemented('Parallel assignments')
+
+        p = [CFGNode(parents=myparents, ast=node)]
+        p = self.walk(node.value, p)
+
+        return p
+
+    def on_augassign(self, node, myparents):
+        """
+        ast.AugAssign
+        AugAssign(expr target, operator op, expr value)
+        :param node:
+        :param myparents:
+        :return:
+        """
+        # if len(node.target) > 1: raise NotImplemented('Parallel assignments')
 
         p = [CFGNode(parents=myparents, ast=node)]
         p = self.walk(node.value, p)
@@ -245,12 +270,22 @@ class PyCFG:
                              ast=ast.parse('_if: %s' % astunparse.unparse(node.test).strip()).body[0])
         ast.copy_location(_test_node.ast_node, node.test)
         test_node = self.walk(node.test, [_test_node])
-        g1 = test_node
-        for n in node.body:
+        g1: List[CFGNode] = test_node
+        saved = False
+        for i, n in enumerate(node.body):
             g1 = self.walk(n, g1)
+            if i == 0 and len(g1) > 0 and (not saved):
+                parent: CFGNode = _test_node
+                if parent.rid != g1[0].rid:
+                    CFGNode.tagged_edges[(parent.rid, g1[0].rid)] = 'true'
+                    saved = True
+
         g2 = test_node
-        for n in node.orelse:
+        for i, n in enumerate(node.orelse):
             g2 = self.walk(n, g2)
+            if i == 0 and len(g2) > 0:
+                parent: CFGNode = g2[0].parents[0]
+                CFGNode.tagged_edges[(parent.rid, g2[0].rid)] = 'false'
 
         return g1 + g2
 
@@ -482,6 +517,7 @@ def parse_graph(cfg: PyCFG, cache: Dict[str, Dict[str, Union[str, int]]]) -> Dic
     g = {}
     for k, v in cache.items():
         j = v.to_json()
+        # print(j)
         at = j['at']
         node_id = j['id']
 
@@ -501,6 +537,22 @@ def parse_graph(cfg: PyCFG, cache: Dict[str, Dict[str, Union[str, int]]]) -> Dic
     return g
 
 
+def get_function_cfg(function: ast.FunctionDef) -> Tuple[Dict, Dict]:
+    cfg = PyCFG()
+    # graph: Dict = {}
+    CFGNode.cache = {}
+    CFGNode.stack = []
+    CFGNode.registry = 0
+    CFGNode.tagged_edges = {}
+    # print(CFGNode.registry)
+    cfg = PyCFG()
+    cfg.gen_cfg_from_function_ast(function)
+    # print(CFGNode.registry)
+    print(CFGNode.tagged_edges)
+    g = parse_graph(cfg, CFGNode.cache)
+    return g, CFGNode.tagged_edges
+
+
 def get_all_function_cfgs(pythonfile):
     cfg = PyCFG()
     functions = cfg.get_all_function_asts(slurp(pythonfile).strip())
@@ -508,6 +560,7 @@ def get_all_function_cfgs(pythonfile):
     for func_ast in functions:
         CFGNode.cache = {}
         CFGNode.stack = []
+        CFGNode.tagged_edges = {}
         CFGNode.registry = 0
         print(CFGNode.registry)
         cfg = PyCFG()
@@ -526,6 +579,7 @@ def get_cfg(pythonfile):
     cache = CFGNode.cache
     print(cache)
     g = {}
+    g['edge_tags'] = CFGNode.tagged_edges
     for k, v in cache.items():
         j = v.to_json()
         at = j['at']

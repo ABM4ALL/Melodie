@@ -5,9 +5,9 @@ from distutils.extension import Extension
 try:
     from Cython.Distutils import build_ext
     ext_modules = [
-        Extension("Melodie.boost._vectorize",  # location of the resulting .so
+        Extension("Melodie.boost._vectorize",
                   ["Melodie/boost/_vectorize.pyx"], ),
-        Extension("Melodie.boost._vectorize2d",  # location of the resulting .so
+        Extension("Melodie.boost._vectorize2d",
                   ["Melodie/boost/_vectorize2d.pyx"], )
     ]
 except:

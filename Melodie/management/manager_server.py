@@ -16,7 +16,8 @@ import pandas as pd
 from flask_cors import CORS
 from werkzeug.utils import redirect
 
-from .project_structure import list_all_files, get_all_function_cfgs, to_mermaid, get_all_funcdefs
+from Melodie.management.project_structure import list_all_files, get_all_function_cfgs, to_mermaid, get_all_funcdefs, \
+    get_flow, to_digraph
 
 app = Flask(__name__, static_folder='../static', static_url_path='', )
 
@@ -78,14 +79,33 @@ def get_all_defs():
     files = list_all_files(os.getcwd(), {'.py'})
     res = []
     for file in files:
-        res.append({'title': file,
+        res.append({'title': os.path.basename(file),
                     'key': file,
                     'children': [
                         {'title': f.name,
-                         'key': f.name,
+                         'key': file + f.name,
+                         'file': file,
+                         'func_name': f.name
                          } for f in get_all_funcdefs(file)
                     ]})
     return json.dumps(res)
+
+
+def get_mermaid(file, func_name):
+    flow, edge_tags = get_flow(file, func_name)
+    dig = to_digraph(flow,edge_tags)
+    mermaid = to_mermaid(dig)
+    return mermaid
+
+
+@app.route('/get_mermaid')
+def handle_mermaid():
+    file = request.args.get('file')
+    func_name = request.args.get('func_name')
+
+    return json.dumps({
+        'mermaid': get_mermaid(file, func_name)
+    })
 
 
 @app.route('/data')
