@@ -1,0 +1,23 @@
+# -*- coding:utf-8 -*-
+# @Time: {{cookiecutter.created_at}}
+# @Author: {{cookiecutter.author}}
+# @Email: {{cookiecutter.email}}
+import os
+import matplotlib.pyplot as plt
+
+
+from Melodie import Analyzer, create_db_conn, current_scenario, get_config
+
+
+class {{cookiecutter.project_alias}}Analyzer(Analyzer):
+    def setup(self):
+        pass
+
+    def run(self):
+        agent_id = 0
+        agent_results = create_db_conn().query_agent_results(id=agent_id, scenario_id=current_scenario().id)
+        fig_file_name = os.path.join(get_config().output_folder, f'scenario_{current_scenario().id}_agent_{agent_id}')
+        plt.figure()
+        plt.plot(agent_results['step'], agent_results['a'])
+        plt.title(f'scenario_{current_scenario().id}_agent_{agent_id}')
+        plt.savefig(fig_file_name)

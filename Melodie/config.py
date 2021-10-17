@@ -11,9 +11,11 @@ class Config:
                  with_db: bool = True,  # if false, Melodie will never create or connect to a data
                  parameters_source: str = 'generate',
                  parameters_xls_file: str = '',
+                 excel_source_folder: str = '',
                  static_xls_files: List[str] = None
                  ):
-
+        self.excel_source_folder = os.path.abspath(excel_source_folder)
+        assert os.path.exists(self.excel_source_folder)
         self.project_name = project_name
         assert self.project_name.isidentifier(), 'project_name should be a valid identifier'
 
@@ -33,10 +35,10 @@ class Config:
         assert parameters_source in {'generate', 'from_file', 'from_database'}
         self.parameters_source = parameters_source
         if parameters_source == 'from_file':
-            assert os.path.exists(parameters_xls_file), f'File {parameters_xls_file} does not exist!'
-            self.parameters_xls_file = parameters_xls_file
-            self.static_xls_files = [] if static_xls_files is None else static_xls_files
-
+            pass
+            # assert os.path.exists(parameters_xls_file), f'File {parameters_xls_file} does not exist!'
+            # self.parameters_xls_file = parameters_xls_file
+            # self.static_xls_files = [] if static_xls_files is None else static_xls_files
 
 
 class NewConfig:

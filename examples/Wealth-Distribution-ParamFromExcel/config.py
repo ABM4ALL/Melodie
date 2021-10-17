@@ -9,5 +9,7 @@ from Melodie import Config
 
 config = Config('WealthDistribution', os.path.dirname(__file__),
                 parameters_source='from_file',
-                parameters_xls_file='params.xlsx',
-                static_xls_files=['static1.xlsx', 'static2.xlsx'])
+                excel_source_folder='data/excel_source'
+                # parameters_xls_file='params.xlsx',
+                # static_xls_files=['static1.xlsx', 'static2.xlsx'
+                )

@@ -1,4 +1,5 @@
-from typing import TYPE_CHECKING, Any, List, Callable
+import json
+from typing import TYPE_CHECKING, Any, List, Callable, Dict
 
 if TYPE_CHECKING:
     from Melodie.agent import Agent
@@ -105,9 +106,17 @@ class MelodieExceptions:
                                     f'initially in the scenario {scenario_id}.')
 
         @staticmethod
-        def ExcelLackAgentParamsSheet(agent_param_sheet_name, ):
+        def ExcelLackAgentParamsSheet(agent_param_sheet_name, supposed_sheets=''):
             return MelodieException(1210,
-                                    f"Excel file lacks agent parameter sheet `{agent_param_sheet_name}`")
+                                    f"There was no excel sheet named \'agent_params\', so there is supposed to be "
+                                    f"sheets named {supposed_sheets} containing agent parameters for each scenario."
+                                    f" However parameter sheet `{agent_param_sheet_name}` was not found in any excel file.")
+
+        @staticmethod
+        def NoExcelFileContainsScenario(sheet_names: Dict[str, List[str]]):
+            return MelodieException(1211,
+                                    f'No excel file contains a sheet named \'scenarios\'. All files and their sheetnames '
+                                    f'are: {json.dumps(sheet_names, indent=4)} ')
 
     class Agents:
         ID = 1300

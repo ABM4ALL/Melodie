@@ -1,0 +1,11 @@
+# -*- coding:utf-8 -*-
+# @Time: {{cookiecutter.created_at}}
+# @Author: {{cookiecutter.author}}
+# @Email: {{cookiecutter.email}}
+
+from Melodie import ScenarioManager
+
+
+class {{cookiecutter.project_alias}}ScenarioManager(ScenarioManager):
+    def setup(self):
+        pass

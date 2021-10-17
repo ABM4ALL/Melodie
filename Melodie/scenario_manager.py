@@ -7,15 +7,13 @@ from Melodie.db import DB, create_db_conn
 from .basic.exceptions import MelodieExceptions
 import pandas as pd
 
-from .basic.fileio import load_excel, batch_load_tables
+from .basic.fileio import load_excel, batch_load_tables, load_all_excel_file
 from .config import Config
 
 logger = logging.getLogger(__name__)
 
 
-
 # 拆成Melodie.scenario + Melodie.simulator_manager
-
 
 
 class Scenario(Element):
@@ -49,12 +47,6 @@ class Scenario(Element):
 
 class ScenarioManager:
     def __init__(self, config: Config, scenario_class: ClassVar['Scenario'] = None):
-        # TODO: Load scenario from excel/csv/data.
-        # TODO: 模型启动尽量只用scenarios一张表。也就是
-        # TODO: 最好改成直接读excel表，将其变成dataframe.
-        # TODO: 有的模型可能需要几张scenario表。现在的表还不够！有的表中，每个Agent的参数都要提前设置好。
-        # TODO: scenario表的有一些参数，可能指向另一张表
-
         self.param_source = config.parameters_source
         self.scenario_class = scenario_class
 
@@ -69,11 +61,13 @@ class ScenarioManager:
             self.save_scenarios()
 
         elif self.param_source == 'from_file':
-            self.xls_path = config.parameters_xls_file
-            assert os.path.exists(self.xls_path)
-            scenarios, agent_params = load_excel(self.xls_path)
+            self.xls_folder = config.excel_source_folder
+            assert os.path.exists(self.xls_folder)
+            scenarios, agent_params,tables = load_all_excel_file([os.path.join(self.xls_folder, file) for file in os.listdir(self.xls_folder)],
+                                DB.RESERVED_TABLES)
+            # scenarios, agent_params = load_excel(self.xls_path)
             self.save(scenarios, agent_params)
-            tables = batch_load_tables(config.static_xls_files, DB.RESERVED_TABLES)
+            # tables = batch_load_tables(config.static_xls_files, DB.RESERVED_TABLES)
             for table_name, table in tables.items():
                 create_db_conn().write_dataframe(table_name, table, 'replace')
 
