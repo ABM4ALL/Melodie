@@ -57,11 +57,10 @@ class Model:
         """
         scenario = self.scenario
         self.agent_manager = AgentManager(self.agent_class, scenario.agent_num, self)
-        if self.config.with_db == False:
-            return
+
             # Read agent parameters from data
-        db_conn = create_db_conn(self.config)
-        agent_para_data_frame = db_conn.read_dataframe(db_conn.AGENT_PARAM_TABLE)
+        # db_conn = create_db_conn(self.config)
+        agent_para_data_frame = scenario.get_agent_params_table() #db_conn.read_dataframe(db_conn.AGENT_PARAM_TABLE)
         # Create agent manager
 
         reserved_param_names = ['id']

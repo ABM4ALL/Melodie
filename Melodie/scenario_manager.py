@@ -1,6 +1,6 @@
 import os
 import logging
-from typing import List, Optional, Union, ClassVar
+from typing import List, Optional, Union, ClassVar, TYPE_CHECKING
 
 from Melodie.element import Element
 from Melodie.db import DB, create_db_conn
@@ -10,6 +10,8 @@ import pandas as pd
 from .basic.fileio import load_excel, batch_load_tables, load_all_excel_file
 from .config import Config
 
+if TYPE_CHECKING:
+    from Melodie import Calibrator, Simulator
 logger = logging.getLogger(__name__)
 
 
@@ -24,13 +26,12 @@ class Scenario(Element):
         super().__init__()
         if (id_scenario is not None) and (not isinstance(id_scenario, (int, str))):
             raise MelodieExceptions.Scenario.ScenarioIDTypeError(id_scenario)
+        self.manager: Union['Calibrator', 'Simulator', None] = None
         self.id = id_scenario
         self.agent_num = agent_num
         self.number_of_run = 1
         self.periods = 0
         self.setup()
-        # assert self.agent_num > 0
-        # assert self.periods > 0
 
     def setup(self):
         pass
@@ -43,6 +44,19 @@ class Scenario(Element):
 
     def __repr__(self):
         return str(self.__dict__)
+
+    def get_static_table(self, table_name) -> pd.DataFrame:
+        assert self.manager is not None
+        return self.manager.get_static_table(table_name)
+
+    def get_agent_params_table(self) -> pd.DataFrame:
+
+        assert self.manager is not None
+        return self.manager.agent_params_dataframe
+
+    def get_scenarios_table(self) -> pd.DataFrame:
+        assert self.manager is not None
+        return self.manager.scenarios_dataframe
 
 
 class ScenarioManager:
@@ -64,8 +78,9 @@ class ScenarioManager:
         elif self.param_source == 'from_file':
             self.xls_folder = config.excel_source_folder
             assert os.path.exists(self.xls_folder)
-            scenarios, agent_params,tables = load_all_excel_file([os.path.join(self.xls_folder, file) for file in os.listdir(self.xls_folder)],
-                                DB.RESERVED_TABLES)
+            scenarios, agent_params, tables = load_all_excel_file(
+                [os.path.join(self.xls_folder, file) for file in os.listdir(self.xls_folder)],
+                DB.RESERVED_TABLES)
             # scenarios, agent_params = load_excel(self.xls_path)
             self.save(scenarios, agent_params)
             # tables = batch_load_tables(config.static_xls_files, DB.RESERVED_TABLES)

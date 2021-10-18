@@ -1,3 +1,5 @@
+import mmap
+import pickle
 import time
 from typing import List, ClassVar, TYPE_CHECKING
 
@@ -89,13 +91,26 @@ class DataCollector:
 
     def save(self):
         t0 = time.time()
-        self.agent_properties_df = pd.DataFrame(self.agent_properties_list)
-        self.environment_properties_df = pd.DataFrame(self.environment_properties_list)
+        # self.agent_properties_df = pd.DataFrame(self.agent_properties_list)
+        # self.environment_properties_df = pd.DataFrame(self.environment_properties_list)
+        # self.model.create_db_conn().write_dataframe(DB.AGENT_RESULT_TABLE, self.agent_properties_df)
+        # self.model.create_db_conn().write_dataframe(DB.ENVIRONMENT_RESULT_TABLE, self.environment_properties_df)
 
-        # create_db_conn().batch_insert(DB.AGENT_RESULT_TABLE, self.agent_properties_list)
-        # create_db_conn().batch_insert(DB.ENVIRONMENT_RESULT_TABLE, self.environment_properties_list)
-        self.model.create_db_conn().write_dataframe(DB.AGENT_RESULT_TABLE, self.agent_properties_df)
-        self.model.create_db_conn().write_dataframe(DB.ENVIRONMENT_RESULT_TABLE, self.environment_properties_df)
+        with open('agent.pkl', 'wb', buffering=4096) as f:
+            # mm = mmap.mmap(f.fileno(), 4096)
+
+            pickle.dump(self.agent_properties_list, f)
+
+        with open('env.pkl', 'wb', buffering=4096) as f:
+            pickle.dump(self.environment_properties_list, f)
+        # self.agent_properties_df.to_pickle('agent.csv')
+        # self.environment_properties_df.to_pickle('env.csv')
+        # self.model.create_db_conn().batch_insert(DB.AGENT_RESULT_TABLE, self.agent_properties_list)
+        # self.model.create_db_conn().batch_insert(DB.ENVIRONMENT_RESULT_TABLE, self.environment_properties_list)
+
         t1 = time.time()
+        collect_time = self._time_elapsed
+        db_wrote_time = t1 - t0
         self._time_elapsed += time.time() - t0
-        logger.info(f'datacollector took {t1 - t0}s to format dataframe and write it to data.')
+        logger.info(f'datacollector took {t1 - t0}s to format dataframe and write it to data.\n'
+                    f'    {db_wrote_time} for writing into database, and {collect_time} for collect data.')

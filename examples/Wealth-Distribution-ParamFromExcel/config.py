@@ -5,11 +5,12 @@
 # @File: simulator_config.py.py
 import os
 
-from Melodie import Config
+from Melodie import NewConfig
 
-config = Config('WealthDistribution', os.path.dirname(__file__),
-                parameters_source='from_file',
-                excel_source_folder='data/excel_source'
-                # parameters_xls_file='params.xlsx',
-                # static_xls_files=['static1.xlsx', 'static2.xlsx'
-                )
+config = NewConfig(
+    'WealthDistribution',
+    os.path.dirname(__file__),
+    'data/sqlite',
+    'data/excel_source',
+    'data/csv',
+)

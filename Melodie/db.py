@@ -1,6 +1,9 @@
 import os
 import sqlite3
+import time
 from typing import Union, Dict, TYPE_CHECKING, List
+
+from Melodie import NewConfig
 from Melodie.config import Config
 import pandas as pd
 
@@ -36,6 +39,9 @@ class DB:
 
     def create_connection(self, database_name) -> sqlite3.Connection:
         conn = sqlite3.connect(os.path.join(self.db_path, database_name + ".sqlite"))
+        # conn.execute("PRAGMA synchronize = OFF")
+        # conn.execute("PRAGMA jorunal_mode = MEMORY")
+        conn.commit()
         return conn
 
     def close(self):
@@ -104,6 +110,7 @@ class DB:
         :param records:
         :return:
         """
+        t0 = time.time()
         records_to_insert = []
         key_names_list = list(records[0].keys())
         assert len(records) > 0
@@ -119,7 +126,10 @@ class DB:
             records_to_insert.append([self.auto_convert(record[k]) for k in key_names_list])
 
         dtypes = {k: self._dtype(records[0][k]) for k in key_names_list}
+        t1 = time.time()
+        print(t1 - t0)
         self.create_table_if_not_exists(table, dtypes)
+
         cursor = self.connection.cursor()
         cursor.executemany(sql, records_to_insert)
         self.connection.commit()
@@ -133,7 +143,9 @@ class DB:
         :param if_exists:
         :return:
         """
-        data_frame.to_sql(table_name, self.connection, index=False, if_exists=if_exists, chunksize=1000)
+
+        data_frame.to_sql(table_name,self.connection, index=False, if_exists=if_exists,
+                          )  # , chunksize=1000)
 
     def read_dataframe(self, table_name: str) -> pd.DataFrame:
         """
@@ -189,14 +201,14 @@ class DB:
         return self.paramed_query(self.ENVIRONMENT_RESULT_TABLE, conditions)
 
 
-def create_db_conn(config: 'Config' = None) -> DB:
+def create_db_conn(config: 'NewConfig' = None) -> DB:
     """
     create a Database by current config
     :return:
     """
     assert config is not None
 
-    return DB(config.project_name, conn_params={'db_path': config.db_folder})
+    return DB(config.project_name, conn_params={'db_path': config.sqlite_folder})
 
 # def create_db_conn(config: 'Config' = None) -> DB:
 #     """

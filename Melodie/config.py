@@ -48,4 +48,9 @@ class NewConfig:
                  output_folder: str,
                  csv_source_folder: str = ''
                  ):
-        pass
+        self.project_name = project_name
+        self.project_root = project_root
+        self.sqlite_folder = sqlite_folder
+        self.excel_source_folder = excel_source_folder
+        self.output_folder = output_folder
+        self.csv_source_folder = csv_source_folder
