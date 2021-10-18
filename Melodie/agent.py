@@ -6,6 +6,14 @@ class Agent(Element):
         self.id = agent_id
 
     def setup(self):
+        """
+        The initialization method, declare properties here.
+        The `set_params(params:dict)` method was called when parameters was set.
+
+        If you would like to do initialize special properties after parameters were set, please
+        override `set_params`.
+        :return:
+        """
         pass
 
     def __repr__(self) -> str:

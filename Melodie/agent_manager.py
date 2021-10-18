@@ -3,10 +3,12 @@ import random
 import pandas as pd
 
 from typing import TYPE_CHECKING, ClassVar, List, Dict
+
 from .basic import IndexedAgentList, MelodieExceptions
 
 if TYPE_CHECKING:
     from .agent import Agent
+    from .model import Model
 
 
 class AgentManager:
@@ -15,13 +17,12 @@ class AgentManager:
     Songmin: 如果不想跟agentpy重名的话，或者叫AgentContainer也行？主要是Manager给人一种要“组织agent干点儿啥”的感觉，那个是environment的事儿。
     """
 
-    def __init__(self, agent_class: ClassVar['Agent'], length: int) -> None:
+    def __init__(self, agent_class: ClassVar['Agent'], length: int, model: 'Model') -> None:
         self._iter_index = 0
         self.agent_class: ClassVar['Agent'] = agent_class
         self.initial_agent_num: int = length
-        self.agents = self.setup_agents()
-
-        self.setup()
+        self.model = model
+        self.agents = self.init_agents()
 
     def __len__(self):
         return len(self.agents)
@@ -42,12 +43,14 @@ class AgentManager:
         else:
             raise StopIteration
 
-    def setup(self):
-        pass
+    # def setup(self):
+    #     pass
 
-    def setup_agents(self) -> IndexedAgentList:
-        agents = [self.agent_class(i) for i in range(self.initial_agent_num)]
+    def init_agents(self) -> IndexedAgentList:
+        agents: List['Agent'] = [self.agent_class(i) for i in range(self.initial_agent_num)]
+        scenario = self.model.scenario
         for agent in agents:
+            agent._scenario = scenario
             agent.setup()
         return IndexedAgentList(agents)
 

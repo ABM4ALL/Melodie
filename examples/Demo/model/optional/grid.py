@@ -18,3 +18,4 @@ class Spot:
 
 class Grid:
     pass
+

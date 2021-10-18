@@ -3,12 +3,14 @@ from typing import List, ClassVar, TYPE_CHECKING
 
 import pandas as pd
 import logging
-from Melodie.db import DB, create_db_conn
+
+from Melodie.db import DB
 
 logger = logging.getLogger(__name__)
 
 if TYPE_CHECKING:
     from Melodie.agent import Agent
+    from Melodie import Model
 
 
 class PropertyToCollect:
@@ -31,9 +33,10 @@ class DataCollector:
     data or datafile.
     """
 
-    def __init__(self, target='sqlite'):
+    def __init__(self, model: 'Model', target='sqlite'):
         assert target in {'sqlite', None}
         self.target = target
+        self.model = model
         self._agent_properties_to_collect: List[PropertyToCollect] = []
         self._environment_properties_to_collect: List[PropertyToCollect] = []
 
@@ -63,20 +66,20 @@ class DataCollector:
 
     def collect(self, step: int):
         t0 = time.time()
-        from .run import get_environment, get_agent_manager, current_scenario, get_run_id
-        env = get_environment()
-        agent_manager = get_agent_manager()
-        run_id = get_run_id()
+        env = self.model.environment
+        agent_manager = self.model.agent_manager
+        scenario = self.model.current_scenario()
+        run_id = self.model.run_id_in_scenario
         env_dic = env.to_dict(self.env_property_names())
         env_dic['step'] = step
-        env_dic['scenario_id'] = current_scenario().id
+        env_dic['scenario_id'] = scenario.id
         env_dic['run_id'] = run_id
 
         agent_prop_list = agent_manager.to_list(self.agent_property_names())
         for agent_prop in agent_prop_list:
             agent_prop['step'] = step
             agent_prop['run_id'] = run_id
-            agent_prop['scenario_id'] = current_scenario().id
+            agent_prop['scenario_id'] = scenario.id
 
         self.agent_properties_list.extend(agent_prop_list)
         self.environment_properties_list.append(env_dic)
@@ -91,9 +94,8 @@ class DataCollector:
 
         # create_db_conn().batch_insert(DB.AGENT_RESULT_TABLE, self.agent_properties_list)
         # create_db_conn().batch_insert(DB.ENVIRONMENT_RESULT_TABLE, self.environment_properties_list)
-
-        create_db_conn().write_dataframe(DB.AGENT_RESULT_TABLE, self.agent_properties_df)
-        create_db_conn().write_dataframe(DB.ENVIRONMENT_RESULT_TABLE, self.environment_properties_df)
+        self.model.create_db_conn().write_dataframe(DB.AGENT_RESULT_TABLE, self.agent_properties_df)
+        self.model.create_db_conn().write_dataframe(DB.ENVIRONMENT_RESULT_TABLE, self.environment_properties_df)
         t1 = time.time()
         self._time_elapsed += time.time() - t0
         logger.info(f'datacollector took {t1 - t0}s to format dataframe and write it to data.')

@@ -16,3 +16,5 @@ class GiniScenario(Scenario):
         self.agent_productivity = 0.5
         self.trade_num = 100
         self.rich_win_prob = 0.8
+
+

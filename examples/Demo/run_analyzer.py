@@ -1,6 +1,6 @@
 
-from .config import config
-from .analyzer.analyzer_manager import DemoAnalyzerManager
+from config import config
+from analyzer.analyzer_manager import DemoAnalyzerManager
 from Melodie import run_analyzer
 
 if __name__ == "__main__":

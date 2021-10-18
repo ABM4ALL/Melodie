@@ -47,6 +47,7 @@ class Scenario(Element):
 
 class ScenarioManager:
     def __init__(self, config: Config, scenario_class: ClassVar['Scenario'] = None):
+        self.config = config
         self.param_source = config.parameters_source
         self.scenario_class = scenario_class
 
@@ -69,7 +70,7 @@ class ScenarioManager:
             self.save(scenarios, agent_params)
             # tables = batch_load_tables(config.static_xls_files, DB.RESERVED_TABLES)
             for table_name, table in tables.items():
-                create_db_conn().write_dataframe(table_name, table, 'replace')
+                create_db_conn(self.config).write_dataframe(table_name, table, 'replace')
 
         elif self.param_source == 'from_database':
             raise NotImplementedError
@@ -144,22 +145,20 @@ class ScenarioManager:
         return df
 
     def save_scenarios(self):
-        from .run import get_config
-        if get_config().with_db:
-            create_db_conn().write_dataframe(DB.SCENARIO_TABLE, self.to_dataframe(), 'replace')
+        if self.config.with_db:
+            create_db_conn(self.config).write_dataframe(DB.SCENARIO_TABLE, self.to_dataframe(), 'replace')
         else:
             logger.warning('Config.with_db was False, scenarios will not be created and nothing will be saved.')
 
     def save(self, scenario_df: pd.DataFrame, agent_param_df: pd.DataFrame):
-        from .run import get_config
-        if get_config().with_db:
-            create_db_conn().write_dataframe(DB.SCENARIO_TABLE, scenario_df, 'replace')
-            create_db_conn().write_dataframe(DB.AGENT_PARAM_TABLE, agent_param_df, 'replace')
+        if self.config.with_db:
+            create_db_conn(self.config).write_dataframe(DB.SCENARIO_TABLE, scenario_df, 'replace')
+            create_db_conn(self.config).write_dataframe(DB.AGENT_PARAM_TABLE, agent_param_df, 'replace')
         else:
             logger.warning('Config.with_db was False, scenarios and agent parameters will not be saved.')
 
     def load_scenarios(self) -> List[Scenario]:
-        table = create_db_conn().read_dataframe(DB.SCENARIO_TABLE)
+        table = create_db_conn(self.config).read_dataframe(DB.SCENARIO_TABLE)
         cols = [col for col in table.columns]
         scenarios: List[Scenario] = []
         for i in range(table.shape[0]):

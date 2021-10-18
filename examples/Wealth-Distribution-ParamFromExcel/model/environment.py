@@ -4,7 +4,7 @@ __author__ = 'Songmin'
 import random
 from typing import TYPE_CHECKING
 
-from Melodie import AgentManager, Environment, current_scenario
+from Melodie import AgentManager, Environment
 from .scenario import GiniScenario
 
 if TYPE_CHECKING:
@@ -14,7 +14,7 @@ if TYPE_CHECKING:
 class GiniEnvironment(Environment):
 
     def setup(self):
-        scenario: GiniScenario = current_scenario()
+        scenario: GiniScenario = self.current_scenario()
         self.trade_num = scenario.trade_num
         self.win_prob = scenario.rich_win_prob
         self.total_wealth = 0

@@ -1,9 +1,19 @@
-from typing import Tuple, List, Dict
+from typing import Tuple, List, Dict, Optional, TYPE_CHECKING
 
 import pandas as pd
 
+if TYPE_CHECKING:
+    from Melodie import Model
+
 
 class Environment:
+    def __init__(self):
+        self.model: Optional['Model'] = None
+
+    def current_scenario(self):
+        assert self.model.scenario is not None
+        return self.model.scenario
+
     def setup(self):
         pass
         # agent_class: ClassVar['Agent'], initial_agents: int

@@ -10,9 +10,7 @@ class Config:
                  output_folder: str = 'output',
                  with_db: bool = True,  # if false, Melodie will never create or connect to a data
                  parameters_source: str = 'generate',
-                 parameters_xls_file: str = '',
-                 excel_source_folder: str = '',
-                 static_xls_files: List[str] = None
+                 excel_source_folder: str = ''
                  ):
         self.excel_source_folder = os.path.abspath(excel_source_folder)
         assert os.path.exists(self.excel_source_folder)
@@ -47,5 +45,7 @@ class NewConfig:
                  project_root: str,
                  sqlite_folder: str,
                  excel_source_folder: str,
-                 output_folder: str):
+                 output_folder: str,
+                 csv_source_folder: str = ''
+                 ):
         pass

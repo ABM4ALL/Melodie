@@ -13,7 +13,7 @@ from .scenario_manager import Scenario, ScenarioManager
 from .table_generator import TableGenerator
 
 from .scenario import NewScenario
-from .simulator_manager import SimulatorManager
+from .simulator_manager import Simulator
 from .run_simulator import run_simulator
 from .calibrator_manager import CalibratorManager
 from .run_calibrator import run_calibrator

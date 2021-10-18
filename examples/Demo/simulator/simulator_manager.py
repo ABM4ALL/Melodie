@@ -2,7 +2,7 @@
 from typing import List, Optional
 import pandas as pd
 
-from Melodie import NewScenario, SimulatorManager
+from Melodie import NewScenario, Simulator
 
 
 
@@ -14,10 +14,10 @@ class DemoScenario(NewScenario):
     # 1. scenario_series = scenario_id +
     #    1.1 env_params: number_of_run, number_of_period, number_of_agent, rich_win_prob等
     #    1.2 [optional] agent_params: parameters that are used to generate agent_params_dataframe
-    # 2. [optional] static_tables, including:
-    #    2.1 agent_params_dataframe --> assert len(AgentParams) == number_of_agent
-    #    2.2 other static_table
+
     # 以上所有一开始都存在excel_source文件夹里，之后导入sqlite数据库。
+    # 静态文件由Scenario的统一的共享方法来访问。
+
 
     pass
 
@@ -25,10 +25,10 @@ class DemoScenario(NewScenario):
 
 
 
-class DemoSimulatorManager(SimulatorManager):
+class DemoSimulatorManager(Simulator):
 
     def register_static_tables(self):
-        # 这个函数必须写：注册每一张excel_source文件夹里的表，包括：变量名、表名、列名、列数据类型。
+        # 这个函数必须写：注册每一张excel_source文件夹里的表，包括：变量名、excel表名、列名、列数据类型。
         # 1. 注册Scenarios.xlsx
         # 2. 注册其他的static_table
         #  - assert以上写对了 --> 虽然麻烦，但可以帮助用户少犯错。

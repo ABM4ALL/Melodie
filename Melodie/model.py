@@ -1,6 +1,7 @@
 import sys
 from typing import ClassVar, Optional
 
+from . import DB
 from .agent import Agent
 from .agent_manager import AgentManager
 from .config import Config
@@ -14,13 +15,14 @@ from .db import create_db_conn
 class Model:
     def __init__(self,
                  config: 'Config' = None,
+                 scenario: 'Scenario' = None,
                  agent_class: ClassVar[Agent] = None,
                  environment_class: ClassVar[Environment] = None,
                  data_collector_class: ClassVar[DataCollector] = None,
                  table_generator_class: ClassVar[TableGenerator] = None,
                  run_id_in_scenario: int = 0
                  ):
-
+        self.scenario = scenario
         self.project_name = config.project_name
         self.config = config
         self.agent_class = agent_class
@@ -31,12 +33,19 @@ class Model:
         self.data_collector: Optional[DataCollector] = None
         self.table_generator: Optional[TableGenerator] = None
         self.run_id_in_scenario = run_id_in_scenario
-        self.setup()
-        assert self.environment_class is not None
-        self._setup()
+        # self.setup()
+        # assert self.environment_class is not None
+        # self._setup()
 
     def setup(self):
         pass
+
+    def current_scenario(self) -> 'Scenario':
+        assert self.scenario != None
+        return self.scenario
+
+    def create_db_conn(self) -> 'DB':
+        return create_db_conn(self.config)
 
     def setup_agent_manager(self):
         """
@@ -46,13 +55,12 @@ class Model:
 
         :return:
         """
-        from .run import get_config, current_scenario
-        scenario = current_scenario()
-        self.agent_manager = AgentManager(self.agent_class, scenario.agent_num)
-        if get_config().with_db == False:
+        scenario = self.scenario
+        self.agent_manager = AgentManager(self.agent_class, scenario.agent_num, self)
+        if self.config.with_db == False:
             return
             # Read agent parameters from data
-        db_conn = create_db_conn()
+        db_conn = create_db_conn(self.config)
         agent_para_data_frame = db_conn.read_dataframe(db_conn.AGENT_PARAM_TABLE)
         # Create agent manager
 
@@ -73,12 +81,13 @@ class Model:
 
     def setup_environment(self):
         self.environment = self.environment_class()
+        self.environment.model = self
         self.environment.setup()
 
     def setup_data_collector(self):
         data_collector_class = self.data_collector_class
         if callable(data_collector_class) and issubclass(data_collector_class, DataCollector):
-            data_collector = data_collector_class()
+            data_collector = data_collector_class(self)
             data_collector.setup()
         elif data_collector_class is None:
             data_collector = None

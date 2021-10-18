@@ -194,10 +194,19 @@ def create_db_conn(config: 'Config' = None) -> DB:
     create a Database by current config
     :return:
     """
-    if config is None:
-        from .run import get_config
-        config = get_config()
-    elif not isinstance(config, Config):
-        raise TypeError
+    assert config is not None
 
     return DB(config.project_name, conn_params={'db_path': config.db_folder})
+
+# def create_db_conn(config: 'Config' = None) -> DB:
+#     """
+#     create a Database by current config
+#     :return:
+#     """
+#     if config is None:
+#         from .run import get_config
+#         config = get_config()
+#     elif not isinstance(config, Config):
+#         raise TypeError
+#
+#     return DB(config.project_name, conn_params={'db_path': config.db_folder})

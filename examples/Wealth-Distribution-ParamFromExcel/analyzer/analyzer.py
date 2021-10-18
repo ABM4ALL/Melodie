@@ -8,7 +8,6 @@ from Melodie import create_db_conn, get_config, current_scenario, get_run_id
 
 
 class Analyzer:
-
     def analyze_AgentWealth(self, id_agent):
         scenario_id = current_scenario().id
         run_id = get_run_id()
