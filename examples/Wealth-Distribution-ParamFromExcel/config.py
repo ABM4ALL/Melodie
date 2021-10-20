@@ -8,11 +8,9 @@ import os
 from Melodie import NewConfig
 
 config = NewConfig(
-    project_name='WealthDistribution',
-    project_root=os.path.dirname(__file__),
-    sqlite_folder='data/sqlite',
-    excel_source_folder='data/excel_source',
-    output_folder='data/output',
-    csv_source_folder='data/csv',
+    'WealthDistribution',
+    os.path.dirname(__file__),
+    'data/sqlite',
+    'data/excel_source',
+    'output',
 )
-
