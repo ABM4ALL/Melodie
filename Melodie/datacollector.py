@@ -1,4 +1,8 @@
+import csv
+import io
+import json
 import mmap
+import os.path
 import pickle
 import time
 from typing import List, ClassVar, TYPE_CHECKING
@@ -91,18 +95,45 @@ class DataCollector:
 
     def save(self):
         t0 = time.time()
+        # for item in self.agent_properties_list:
+        #     str(item)
+        #     pass
+        # info =
+        # with open('test4.csv', 'w',buffering=1000) as csvfile:
+        #     pass
+        # with io.StringIO() as csvfile:
+        #     json.dumps(self.agent_properties_list)
+        #     writer = csv.DictWriter(csvfile, fieldnames=['step', 'run_id', 'scenario_id','id'] + self.agent_property_names())
+        #     writer.writeheader()
+        #     writer.writerows(self.agent_properties_list)
+        # pickle.dumps(self.agent_properties_list)
+        # json.dumps(self.agent_properties_list)
+
+        pid = os.getpid()
+        #
+        self.agent_properties_df = pd.DataFrame(self.agent_properties_list)
+        self.environment_properties_df = pd.DataFrame(self.environment_properties_list)
+        if os.path.exists(f'temp/a_{pid}.csv'):
+            self.agent_properties_df.to_csv(f'temp/a_{pid}.csv', mode='a', header=False)
+            self.environment_properties_df.to_csv(f'temp/e_{pid}.csv', mode='a', header=False)
+        else:
+            self.agent_properties_df.to_csv(f'temp/a_{pid}.csv', mode='w', header=True)
+            self.environment_properties_df.to_csv(f'temp/e_{pid}.csv', mode='w', header=True)
+
+        # self.agent_properties_df.to_feather('p.feather')
+
         # self.agent_properties_df = pd.DataFrame(self.agent_properties_list)
         # self.environment_properties_df = pd.DataFrame(self.environment_properties_list)
-        # self.model.create_db_conn().write_dataframe(DB.AGENT_RESULT_TABLE, self.agent_properties_df)
-        # self.model.create_db_conn().write_dataframe(DB.ENVIRONMENT_RESULT_TABLE, self.environment_properties_df)
+        # self.model.create_db_conn()#.write_dataframe(DB.AGENT_RESULT_TABLE, self.agent_properties_df)
+        # self.model.create_db_conn()#.write_dataframe(DB.ENVIRONMENT_RESULT_TABLE, self.environment_properties_df)
 
-        with open('agent.pkl', 'wb', buffering=4096) as f:
-            # mm = mmap.mmap(f.fileno(), 4096)
-
-            pickle.dump(self.agent_properties_list, f)
-
-        with open('env.pkl', 'wb', buffering=4096) as f:
-            pickle.dump(self.environment_properties_list, f)
+        # with open('agent.pkl', 'wb', buffering=4096) as f:
+        #     # mm = mmap.mmap(f.fileno(), 4096)
+        #
+        #     pickle.dump(self.agent_properties_list, f)
+        #
+        # with open('env.pkl', 'wb', buffering=4096) as f:
+        #     pickle.dump(self.environment_properties_list, f)
         # self.agent_properties_df.to_pickle('agent.csv')
         # self.environment_properties_df.to_pickle('env.csv')
         # self.model.create_db_conn().batch_insert(DB.AGENT_RESULT_TABLE, self.agent_properties_list)
@@ -111,6 +142,6 @@ class DataCollector:
         t1 = time.time()
         collect_time = self._time_elapsed
         db_wrote_time = t1 - t0
-        self._time_elapsed += time.time() - t0
+        self._time_elapsed += db_wrote_time
         logger.info(f'datacollector took {t1 - t0}s to format dataframe and write it to data.\n'
                     f'    {db_wrote_time} for writing into database, and {collect_time} for collect data.')

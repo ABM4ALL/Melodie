@@ -7,16 +7,18 @@
 import ast
 from typing import List
 
-path = '../../examples/Wealth-Distribution-New/WealthDistribution/modules/agent.py'
-with open(path) as f:
-    res = ast.parse(f.read())
+# path = '../../examples/Wealth-Distribution-New/WealthDistribution/modules/agent.py'
+# with open(path) as f:
+#     res = ast.parse(f.read())
 
 
-def find_class_def(res):
-    for i in ast.walk(res):
+def find_class_defs(res)->List[ast.ClassDef]:
+    classes = []
+    for node in ast.walk(res):
         # if type()
-        if type(i) == ast.ClassDef:
-            return i
+        if type(node) == ast.ClassDef:
+            classes.append(node)
+    return classes
         # print(i,ast.FunctionDef, type(i))
     # return
 
@@ -51,10 +53,10 @@ def parse_setup_function(setup_function: ast.FunctionDef) -> List[str]:
     print(names)
 
 
-res = find_class_def(res)
-methods = find_class_methods(res)
-parse_setup_function(methods[0])
-print(methods)
-from pprintast import pprintast
-
-pprintast(res)
+# res = find_class_def(res)
+# methods = find_class_methods(res)
+# parse_setup_function(methods[0])
+# print(methods)
+# from pprintast import pprintast
+#
+# pprintast(res)
