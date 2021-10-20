@@ -12,5 +12,5 @@ config = NewConfig(
     os.path.dirname(__file__),
     'data/sqlite',
     'data/excel_source',
-    'data/csv',
+    'output',
 )

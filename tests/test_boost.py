@@ -6,7 +6,7 @@
 
 import time
 from Melodie.boost import vectorize, apply, vectorize_2d, apply_2d, py_vectorize_2d
-from Melodie import Agent, AgentManager
+from Melodie import Agent, AgentManager, Model, Scenario, Config
 
 
 class MyAgent(Agent):
@@ -24,6 +24,12 @@ class PurePyCell():
         self.b = 0.1
 
 
+class MyModel(Model):
+    def setup(self):
+        self.scenario = Scenario()
+
+
+
 XM = 100
 YM = 100
 
@@ -31,7 +37,7 @@ agents = [Agent]
 pure_py_lst = [[PurePyCell() for i in range(XM)] for j in range(YM)]
 lst = pure_py_lst
 
-agent_manager = AgentManager(MyAgent, 200)
+agent_manager = AgentManager(MyAgent, 200, MyModel(config=Config('Untitled')))
 
 
 def python_step():
