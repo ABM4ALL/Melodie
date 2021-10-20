@@ -1,5 +1,5 @@
 _database
 _output/*
 output/*
-data/sqlite
+data/sqlite/*
 temp
