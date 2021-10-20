@@ -13,12 +13,9 @@ from .scenario_manager import Scenario, ScenarioManager
 from .table_generator import TableGenerator
 
 from .scenario import NewScenario
-from .simulator_manager import Simulator
-from .run_simulator import run_simulator
-from .calibrator_manager import Calibrator
-from .run_calibrator import run_calibrator
-from .analyzer_manager import AnalyzerManager
-from .run_analyzer import run_analyzer
+from .simulator import Simulator
+from .calibrator import Calibrator
+from .analyzer import Analyzer
 
 import logging
 

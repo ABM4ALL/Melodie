@@ -1,7 +1,7 @@
 
-from Melodie import AnalyzerManager
+from Melodie import Analyzer
 
-class _ALIAS_AnalyzerManager(AnalyzerManager):
+class _ALIAS_Analyzer(Analyzer):
 
     def __init__(self, config):
         self.config = config

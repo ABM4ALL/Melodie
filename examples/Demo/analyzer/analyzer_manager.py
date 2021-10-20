@@ -1,7 +1,7 @@
 
-from Melodie import AnalyzerManager
+from Melodie import Analyzer
 
-class DemoAnalyzerManager(AnalyzerManager):
+class DemoAnalyzer(Analyzer):
 
     def __init__(self, config):
         self.config = config

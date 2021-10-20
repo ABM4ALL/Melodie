@@ -59,8 +59,8 @@ def create_routine(directory: str, extra_context):
             "datacollector.py": True,
             "environment.py": True,
             "model.True": True,
-            "simulator_manager.py": False,
-            "simulator_manager.py": True,
+            "simulator.py": False,
+            "simulator.py": True,
             "table_generator.py": False
         },
         "model": True,
@@ -87,8 +87,8 @@ if __name__ == "__main__":
             "datacollector.py": True,
             "environment.py": True,
             "model.True": True,
-            "simulator_manager.py": False,
-            "simulator_manager.py": True,
+            "simulator.py": False,
+            "simulator.py": True,
             "table_generator.py": False
         },
         "model": True,

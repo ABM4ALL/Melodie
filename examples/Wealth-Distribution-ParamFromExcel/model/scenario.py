@@ -2,7 +2,7 @@
 # @Time: 2021/9/21 10:28
 # @Author: Zhanyi Hou
 # @Email: 1295752786@qq.com
-# @File: simulator_manager.py.py
+# @File: simulator.py.py
 
 from Melodie import Scenario
 
