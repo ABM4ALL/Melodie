@@ -1,3 +1,4 @@
 *.csv
 _database
 _output
+resources/temp/*

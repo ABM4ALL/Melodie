@@ -109,23 +109,24 @@ class DataCollector:
         # pickle.dumps(self.agent_properties_list)
         # json.dumps(self.agent_properties_list)
 
-        pid = os.getpid()
+        # pid = os.getpid()
         #
-        self.agent_properties_df = pd.DataFrame(self.agent_properties_list)
-        self.environment_properties_df = pd.DataFrame(self.environment_properties_list)
-        if os.path.exists(f'temp/a_{pid}.csv'):
-            self.agent_properties_df.to_csv(f'temp/a_{pid}.csv', mode='a', header=False)
-            self.environment_properties_df.to_csv(f'temp/e_{pid}.csv', mode='a', header=False)
-        else:
-            self.agent_properties_df.to_csv(f'temp/a_{pid}.csv', mode='w', header=True)
-            self.environment_properties_df.to_csv(f'temp/e_{pid}.csv', mode='w', header=True)
+        # self.agent_properties_df = pd.DataFrame(self.agent_properties_list)
+        # self.environment_properties_df = pd.DataFrame(self.environment_properties_list)
+
+        # if os.path.exists(f'temp/a_{pid}.csv'):
+        #     self.agent_properties_df.to_csv(f'temp/a_{pid}.csv', mode='a', header=False)
+        #     self.environment_properties_df.to_csv(f'temp/e_{pid}.csv', mode='a', header=False)
+        # else:
+        #     self.agent_properties_df.to_csv(f'temp/a_{pid}.csv', mode='w', header=True)
+        #     self.environment_properties_df.to_csv(f'temp/e_{pid}.csv', mode='w', header=True)
 
         # self.agent_properties_df.to_feather('p.feather')
 
-        # self.agent_properties_df = pd.DataFrame(self.agent_properties_list)
-        # self.environment_properties_df = pd.DataFrame(self.environment_properties_list)
-        # self.model.create_db_conn()#.write_dataframe(DB.AGENT_RESULT_TABLE, self.agent_properties_df)
-        # self.model.create_db_conn()#.write_dataframe(DB.ENVIRONMENT_RESULT_TABLE, self.environment_properties_df)
+        self.agent_properties_df = pd.DataFrame(self.agent_properties_list)
+        self.environment_properties_df = pd.DataFrame(self.environment_properties_list)
+        self.model.create_db_conn().write_dataframe(DB.AGENT_RESULT_TABLE, self.agent_properties_df)
+        self.model.create_db_conn().write_dataframe(DB.ENVIRONMENT_RESULT_TABLE, self.environment_properties_df)
 
         # with open('agent.pkl', 'wb', buffering=4096) as f:
         #     # mm = mmap.mmap(f.fileno(), 4096)

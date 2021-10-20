@@ -124,11 +124,10 @@ class Model:
         pass
 
     def run(self):
-        from .run import current_scenario
-        scenario = current_scenario()
+        scenario = self.scenario
         for i in range(scenario.periods):
             self.step()
             if self.data_collector is not None:
                 self.data_collector.collect(i)
-        if self.data_collector is not None and self.config.with_db:
+        if self.data_collector is not None:
             self.data_collector.save()

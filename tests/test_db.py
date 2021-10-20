@@ -5,21 +5,10 @@
 # @File: test_db.py
 import os
 
-from Melodie import DB, create_db_conn, Config
+from Melodie import create_db_conn
+from .config import cfg
 
-# def test_create_db():
-#     db = DB('test')
-#     assert os.path.exists('test.sqlite')
-#     db.close()
-#     # os.remove('test.sqlite')
-#
-#     db = DB('test', conn_params={'db_path': 'resources'})
-#     assert os.path.exists('resources/test.sqlite')
-#     db.close()
-#     # os.remove('resources/test.sqlite')
-
-cfg = Config('test', project_root=os.path.dirname(__file__), db_folder='resources/db',
-             output_folder='resources/output')
+cfg = cfg
 
 
 def test_get_scenarios():

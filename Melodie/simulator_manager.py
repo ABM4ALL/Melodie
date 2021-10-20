@@ -245,7 +245,8 @@ class Simulator:
                      scenario_class: ClassVar['Scenario'] = None,
                      scenario_manager_class: ClassVar['ScenarioManager'] = None,
                      table_generator_class: ClassVar['TableGenerator'] = None,
-                     analyzer_class: ClassVar['Analyzer'] = None
+                     analyzer_class: ClassVar['Analyzer'] = None,
+                     cores: int = 2
                      ):
         """
         Parallel model running
@@ -262,9 +263,7 @@ class Simulator:
 
         t1 = time.time()
         logger.info('Loading scenarios and static tables...')
-        cores = 4
         pool = Pool(cores)
-
 
         parameters: List[Tuple] = []
         for scenario_index, scenario in enumerate(self.scenarios):
