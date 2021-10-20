@@ -168,7 +168,7 @@ class Simulator:
     def run_model(self, model_class, config, scenario, agent_class, environment_class,
                   data_collector_class, run_id):
         """
-        
+
         :return: 
         """
         logger.info(f'Running {run_id + 1} times in scenario {scenario.id}.')
@@ -187,8 +187,6 @@ class Simulator:
         model.run()
         t2 = time.time()
 
-        # if analyzer_class is not None:
-        # analyzer_class().run()
         t3 = time.time()
 
         model_setup_time = t1 - t0
@@ -251,8 +249,37 @@ class Simulator:
         """
         Parallel model running
 
-        Sqlite itself was thread-safe. However, pandas tries to create the table if table was not exist.
-        Pandas might try to create a table when other process has created it, so it might raise exception.
+        Melodie does not start subprocesses directly. For the first shot, which means running one of the runs out of
+        one scenario, it will be run by the main-thread to verify the model and initialize the database.
+        After the first shot, subprocesses will be created as many as the value of parameter `cores`.
+
+        :param cores
+          determines how many subprocesses will be created after the first shot.
+
+          - It is suggested that this parameter should be NO MORE THAN the 'physical cores' of your computer.
+          - Beside 'cores', You may found that your cpu has one more metric: threads, which means your CPU supports
+            hyper-threading. If so, use 'physical cores', not 'threads' as the upper limit.
+          - For example, an Intel® I5-8250U has 4 physical cores and 8 threads. If you use a computer equipped with
+            this CPU, this parameter cannot be larger than 4.
+          - In short, hyper-threading only improves performance in io intensive programs. As Melodie was computation
+            intensive, if there are more subprocess than physical cores, subprocesses will fight for CPU, costing
+            a lot of extra time.
+
+        Sqlite itself was thread-safe for writing. However, pandas tries to create the table if table was not exist, which
+        might trigger conflict condition.
+
+        For example:
+            p1, p2 stands for process 1 and 2 request writing to a table `test`;
+            db stands for database;
+            1. p1 --> db <found no table named 'test'>
+            2. p2 --> db <found no table named 'test'>
+            3. p1 --> db <request the db to create a table 'test'>
+            4. p2 --> db <request the db to create a table 'test'>
+            5. db --> p1 <created table named 'test'>
+            6. db --> p2 <table 'test' already exists!> ERROR!
+        For multiple-cores, if running modelthis might happen very frequently. To avoid this, Melodie makes the first
+        shot, which means running one of the runs out of one scenario, by main-process. If first shot completes, the
+        subprocesses will be launched.
 
         :return:
         """

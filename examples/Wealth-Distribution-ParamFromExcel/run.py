@@ -19,20 +19,17 @@ from config import config
 
 if __name__ == "__main__":
     simulator = GiniSimulator()
-    # simulator.run(
-    #     GINIAgent,
-    #     GiniEnvironment,
-    #     config,
-    #     # Config('WealthDistribution', os.path.dirname(__file__),
-    #     #        parameters_source='from_file',
-    #     #        parameters_xls_file='params.xlsx',
-    #     #        static_xls_files=['static1.xlsx', 'static2.xlsx']),
-    #     model_class=GiniModel,
-    #     data_collector_class=GiniDataCollector,
-    #     scenario_class=GiniScenario,
-    #     analyzer_class=Analyzer
-    # )
-
+    simulator.run(
+        GINIAgent,
+        GiniEnvironment,
+        config,
+        model_class=GiniModel,
+        data_collector_class=GiniDataCollector,
+        scenario_class=GiniScenario,
+        analyzer_class=Analyzer
+    )
+    # Parallel running a model. Use "cores" to determine how many cores should be used.
+    #
     simulator.run_parallel(
         GINIAgent,
         GiniEnvironment,
