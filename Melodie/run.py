@@ -21,7 +21,7 @@ if TYPE_CHECKING:
     from .environment import Environment
     from .model import Model
     from .scenario_manager import ScenarioManager, Scenario
-    from .datacollector import DataCollector
+    from .data_collector import DataCollector
     from .config import Config
 else:
     from .scenario_manager import ScenarioManager

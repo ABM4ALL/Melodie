@@ -56,7 +56,7 @@ def create_routine(directory: str, extra_context):
         extra_context["project_name"]: {
             "agent.py": True,
             "validation.py": True,
-            "datacollector.py": True,
+            "data_collector.py": True,
             "environment.py": True,
             "model.True": True,
             "simulator.py": False,
@@ -84,7 +84,7 @@ if __name__ == "__main__":
         context["project_name"]: {
             "agent.py": True,
             "validation.py": True,
-            "datacollector.py": True,
+            "data_collector.py": True,
             "environment.py": True,
             "model.True": True,
             "simulator.py": False,

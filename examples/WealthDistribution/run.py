@@ -12,13 +12,15 @@ from model.data_collector import GiniDataCollector
 from model.model import GiniModel
 from model.simulator import GiniSimulator
 from analyzer.analyzer import Analyzer
-# from Melodie import Simulator
-from Melodie.run import run, run_new
 
 from config import config
 
 if __name__ == "__main__":
     simulator = GiniSimulator()
+
+    """
+    Run the model with simulator
+    """
     simulator.run(
         GINIAgent,
         GiniEnvironment,
@@ -29,8 +31,10 @@ if __name__ == "__main__":
         analyzer_class=Analyzer
     )
 
-    # Parallel running a model. Use "cores" to determine how many cores should be used.
-    #
+    """
+    Run the model with simulator in parallel mode. 
+    Use "cores" to determine how many cores should be used.
+    """
     # simulator.run_parallel(
     #     GINIAgent,
     #     GiniEnvironment,
