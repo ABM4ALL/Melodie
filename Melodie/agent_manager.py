@@ -2,7 +2,7 @@ import random
 
 import pandas as pd
 
-from typing import TYPE_CHECKING, ClassVar, List, Dict
+from typing import TYPE_CHECKING, ClassVar, List, Dict, Union
 
 from .basic import IndexedAgentList, MelodieExceptions
 
@@ -54,7 +54,7 @@ class AgentManager:
             agent.setup()
         return IndexedAgentList(agents)
 
-    def random_sample(self, sample_num: int) -> 'Agent':
+    def random_sample(self, sample_num: int) -> List['Agent']:
         return random.sample(self.agents, sample_num)
 
     def remove(self, agent: 'Agent'):

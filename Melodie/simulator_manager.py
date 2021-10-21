@@ -102,9 +102,9 @@ class Simulator:
         """
         Generate dataframe for scenario parameters
 
-        If scenarios parameter table has been registered at `self.register_static_tables` method with
-        table name `scenarios`,
-        you could simply return a dataframe by `self.get_static_table("scenarios")`
+        If scenarios parameter table has been registered inside `self.register_static_tables`
+         method with its name `scenarios`, you could simply return a dataframe by calling
+          `self.get_static_table("scenarios")`
         :return:
         """
         # 对每个Scenario的实例，初始化三部分：
@@ -163,6 +163,7 @@ class Simulator:
         self.scenarios = self.generate_scenarios()
         assert self.scenarios is not None
         self.agent_params_dataframe = self.generate_agent_params_dataframe()
+
         create_db_conn(self.config).reset()
 
     def run_model(self, model_class, config, scenario, agent_class, environment_class,
@@ -309,3 +310,4 @@ class Simulator:
         pool.join()  #
         t2 = time.time()
         logger.info(f'Melodie completed all runs, time elapsed totally {t2 - t0}s, and {t2 - t1}s for running.')
+

@@ -1,8 +1,8 @@
-
 import random
 import numpy as np
 from Melodie.boost.compiler.boostlib import ___agent___manager___random_sample
 import numba
+
 
 @numba.jit
 def ___agent___go_produce(___agent):
@@ -36,9 +36,9 @@ def ___environment___go_give_money(___environment, agent_from: 'GINIAgent', agen
 def ___environment___go_money_transfer(___environment, agent_list: 'AgentManager'):
     trade_num = ___environment['trade_num']
     for sub_period in range(0, int(trade_num)):
-        agent_1: 'Agent' = None
-        agent_2: 'Agent' = None
-        (agent_1, agent_2) = ___agent___manager___random_sample(agent_list, 2)
+        agents = ___agent___manager___random_sample(agent_list, 2)
+        agent_1: 'Agent' = agents[0]
+        agent_2: 'Agent' = agents[1]
         who_win = 0
         rand = random.random()
         RICH = 0
@@ -82,8 +82,6 @@ def ___environment___calc_wealth_and_gini(___environment, AgentList: 'AgentManag
     ___environment['total_wealth'] = sum(account_list)
     ___environment['gini'] = ___environment___calc_gini(___environment, account_list)
     return None
-
-
 
 
 def ___model___run(___model):
