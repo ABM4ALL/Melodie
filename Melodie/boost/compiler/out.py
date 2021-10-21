@@ -1,8 +1,8 @@
+
 import random
 import numpy as np
 from Melodie.boost.compiler.boostlib import ___agent___manager___random_sample
 import numba
-
 
 @numba.jit
 def ___agent___go_produce(___agent):
@@ -82,6 +82,8 @@ def ___environment___calc_wealth_and_gini(___environment, AgentList: 'AgentManag
     ___environment['total_wealth'] = sum(account_list)
     ___environment['gini'] = ___environment___calc_gini(___environment, account_list)
     return None
+
+
 
 
 def ___model___run(___model):

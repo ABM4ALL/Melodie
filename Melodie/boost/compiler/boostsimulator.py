@@ -4,15 +4,22 @@
 # @Email: 1295752786@qq.com
 # @File: BoostSimulator.py
 import importlib
+import sys
 import time
-from typing import List, ClassVar
+import logging
+
+logging.basicConfig(stream=sys.stderr, level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+from typing import ClassVar
 
 import numpy as np
 import pandas as pd
 
 from Melodie import Simulator, NewConfig, Scenario
 from Melodie.boost.compiler.compiler import conv
-from Melodie.boost.compiler.src.ast_demo import GINIAgent, GiniEnvironment, GiniModel, GiniScenario
+from Melodie.boost.compiler.src.ast_demo import GiniEnvironment, GiniModel, GiniScenario
+from Melodie.boost.compiler.src.agent import GINIAgent
 
 
 class BoostModel:
@@ -23,7 +30,7 @@ class BoostModel:
                                            ('total_wealth', 'i4'),
                                            ('gini', 'f4')])[0]
 
-        self.agent_manager = np.array([(i, 0, 0.5) for i in range(100)],
+        self.agent_manager = np.array([(i, 0, 0.5) for i in range(300)],
                                       dtype=[('id', 'i4'),
                                              ('account', 'f4'),
                                              ('productivity', 'f4'),
@@ -35,7 +42,7 @@ class BoostModel:
 
 class BoostSimulator(Simulator):
     def create_scenarios_dataframe(self) -> pd.DataFrame:
-        return pd.DataFrame([{"win_prob": 0.4} for i in range(10)])
+        return pd.DataFrame([{"id": i, "win_prob": 0.4} for i in range(100)])
 
     def run_boost(self,
                   agent_class: ClassVar['Agent'],
@@ -47,32 +54,43 @@ class BoostSimulator(Simulator):
                   scenario_manager_class: ClassVar['ScenarioManager'] = None,
                   table_generator_class: ClassVar['TableGenerator'] = None,
                   analyzer_class: ClassVar['Analyzer'] = None):
-        # conv('src/ast_demo.py', 'out.py')
-
+        conv(agent_class, environment_class, model_class, 'out.py')
+        compiled = importlib.import_module('out')
+        model_run = compiled.__getattribute__('___model___run')
+        logger.info("Preprocess compilation finished, now running pre-run procedures.")
         self.config = config
         self.scenario_class = scenario_class
         self.register_static_tables()
         self.scenarios_dataframe = self.create_scenarios_dataframe()
         self.scenarios = self.generate_scenarios()
         assert self.scenarios is not None
+        logger.info("Pre-run procedures finished. Now simulation starts...")
 
-        compiled = importlib.import_module('out')
-        # print(dir(compiled))
-        model_run = compiled.__getattribute__('___model___run')
-        # self.agent_params_dataframe = self.generate_agent_params_dataframe()
-        # for scenario in self.scenarios:
-        # scenario = self.scenarios[0]
         t0 = time.time()
         t1 = time.time()
+        first_run = True
         for scenario in self.scenarios:
-            model = BoostModel(scenario)
-            model_run(model)
-            print(f"run %d, time elapsed: {time.time() - t1}s")
-            t1 = time.time()
-        print(f"totally time elapsed {time.time()-t0} s,"
-              f" {(time.time()-t0)/100}s per run")
+            for run_id in range(scenario.number_of_run):
+                if first_run:
+                    logger.info("Numba is now taking control of program. "
+                                "It may take a few seconds for compilation.")
+                model = BoostModel(scenario)
+                model_run(model)
+                if first_run:
+                    logger.info("The first run has completed, and numba has finished compilaiton. "
+                                "Your program will be speeded up greatly.")
+                    first_run = False
+                logger.info(f"Finished running <experiment {run_id}, scenario {scenario.id}>. "
+                            f"time elapsed: {time.time() - t1}s")
+                t1 = time.time()
+
+        logger.info(f"totally time elapsed {time.time() - t0} s,"
+                    f" {(time.time() - t0) / 100}s per run")
+
 
 if __name__ == "__main__":
     bs = BoostSimulator()
     bs.run_boost(GINIAgent, GiniEnvironment,
                  None, None, GiniModel, scenario_class=GiniScenario)
+    # bs.run_boost(GINIAgent, GiniEnvironment,
+    #              None, None, GiniModel, scenario_class=GiniScenario)

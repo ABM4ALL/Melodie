@@ -5,10 +5,11 @@
 # @File: ast_parse.py
 
 import ast
+import inspect
 import logging
 
 import sys
-from typing import List, Any, Dict, TypeVar
+from typing import List, Any, Dict, TypeVar, ClassVar
 
 import astunparse
 from pprintast import pprintast
@@ -278,12 +279,29 @@ def modify_ast_model(method, root_name):
     return r
 
 
-def conv(input: str, output: str):
-    with open(input) as f:
-        tree = ast.parse(f.read())
-    scenario_class, agent_class, env_class, model_class = find_class_defs(tree)
+def get_class_in_file(filename: str, cls_name) -> ast.ClassDef:
+    with open(filename) as f:
+        root = ast.parse(f.read())
+        for node in ast.walk(root):
+            if isinstance(node, ast.ClassDef) and node.name == cls_name:
+                return node
+    raise ValueError
+
+
+def get_ast(agent_class: ClassVar, environment_class, model_class):
+    agent_file = inspect.getfile(agent_class)
+    env_file = inspect.getfile(environment_class)
+    model_file = inspect.getfile(model_class)
+    return (get_class_in_file(agent_file, agent_class.__name__),
+            get_class_in_file(env_file, environment_class.__name__),
+            get_class_in_file(model_file, model_class.__name__))
+
+
+def conv(agent_class, environment_class, model_class, output):
+    agent_class, env_class, model_class = get_ast(agent_class, environment_class, model_class)
     f = open(output, 'w')
     f.write(prefix)
+
     for method in find_class_methods(agent_class):
         if method.name != 'setup':
             code = modify_ast_environment(method, '___agent')
