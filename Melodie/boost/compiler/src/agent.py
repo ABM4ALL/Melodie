@@ -3,6 +3,7 @@
 # @Author: Zhanyi Hou
 # @Email: 1295752786@qq.com
 # @File: agent.py.py
+import numpy as np
 
 from Melodie import Agent
 
