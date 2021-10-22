@@ -12,13 +12,15 @@ from model.data_collector import GiniDataCollector
 from model.model import GiniModel
 from model.simulator import GiniSimulator
 from analyzer.analyzer import Analyzer
-# from Melodie import Simulator
-from Melodie.run import run, run_new
 
 from config import config
 
 if __name__ == "__main__":
     simulator = GiniSimulator()
+
+    """
+    Run the model with simulator
+    """
     simulator.run(
         GINIAgent,
         GiniEnvironment,
@@ -28,19 +30,22 @@ if __name__ == "__main__":
         scenario_class=GiniScenario,
         analyzer_class=Analyzer
     )
-    # Parallel running a model. Use "cores" to determine how many cores should be used.
-    #
-    simulator.run_parallel(
-        GINIAgent,
-        GiniEnvironment,
-        config,
-        # Config('WealthDistribution', os.path.dirname(__file__),
-        #        parameters_source='from_file',
-        #        parameters_xls_file='params.xlsx',
-        #        static_xls_files=['static1.xlsx', 'static2.xlsx']),
-        model_class=GiniModel,
-        data_collector_class=GiniDataCollector,
-        scenario_class=GiniScenario,
-        analyzer_class=Analyzer,
-        cores=4
-    )
+
+    """
+    Run the model with simulator in parallel mode. 
+    Use "cores" to determine how many cores should be used.
+    """
+    # simulator.run_parallel(
+    #     GINIAgent,
+    #     GiniEnvironment,
+    #     config,
+    #     # Config('WealthDistribution', os.path.dirname(__file__),
+    #     #        parameters_source='from_file',
+    #     #        parameters_xls_file='params.xlsx',
+    #     #        static_xls_files=['static1.xlsx', 'static2.xlsx']),
+    #     model_class=GiniModel,
+    #     data_collector_class=GiniDataCollector,
+    #     scenario_class=GiniScenario,
+    #     analyzer_class=Analyzer,
+    #     cores=4
+    # )

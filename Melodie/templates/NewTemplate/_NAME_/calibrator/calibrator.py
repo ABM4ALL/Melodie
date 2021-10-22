@@ -1,7 +1,7 @@
 
-from Melodie import CalibratorManager
+from Melodie import Calibrator
 
-class _ALIAS_CalibratorManager(CalibratorManager):
+class _ALIAS_CalibratorManager(Calibrator):
     pass
 
 # calibrate分为两部分：

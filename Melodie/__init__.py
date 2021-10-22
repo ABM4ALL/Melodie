@@ -3,7 +3,7 @@ import sys
 from .agent import Agent
 from .agent_manager import AgentManager
 from .config import Config, NewConfig
-from .datacollector import DataCollector
+from .data_collector import DataCollector
 from .db import DB, create_db_conn
 from .environment import Environment
 from .model import Model
@@ -12,13 +12,9 @@ from .run import run, run_new, get_run_id, get_config, get_environment, get_data
 from .scenario_manager import Scenario, ScenarioManager
 from .table_generator import TableGenerator
 
-from .scenario import NewScenario
-from .simulator_manager import Simulator
-from .run_simulator import run_simulator
-from .calibrator_manager import Calibrator
-from .run_calibrator import run_calibrator
-from .analyzer_manager import AnalyzerManager
-from .run_analyzer import run_analyzer
+from .simulator import Simulator
+from .calibrator import Calibrator
+from .analyzer import Analyzer
 
 import logging
 

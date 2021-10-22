@@ -15,9 +15,6 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 
-# 拆成Melodie.scenario + Melodie.simulator_manager
-
-
 class Scenario(Element):
     def __init__(self, id_scenario: Optional[Union[int, str]] = None, agent_num=0):
         """

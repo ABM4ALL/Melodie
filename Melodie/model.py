@@ -5,7 +5,7 @@ from . import DB
 from .agent import Agent
 from .agent_manager import AgentManager
 from .config import Config
-from .datacollector import DataCollector
+from .data_collector import DataCollector
 from .environment import Environment
 from .scenario_manager import Scenario
 from .table_generator import TableGenerator
