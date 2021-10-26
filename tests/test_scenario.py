@@ -2,7 +2,7 @@ import pytest
 import random
 
 import Melodie.basic
-from Melodie import Config, DB, Scenario, ScenarioManager
+from Melodie import OldConfig, DB, Scenario, ScenarioManager
 
 
 class TestScenario(Scenario):
@@ -55,7 +55,7 @@ class TestScenarioManagerError1207(ScenarioManager):
 
 
 def test_errors():
-    config = Config('Untitled')
+    config = OldConfig('Untitled')
     try:
         TestScenarioManagerError1201(config)
         raise Exception

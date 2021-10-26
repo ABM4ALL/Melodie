@@ -3,8 +3,7 @@ import sqlite3
 import time
 from typing import Union, Dict, TYPE_CHECKING, List
 
-from Melodie import NewConfig
-from Melodie.config import Config
+from Melodie import Config
 import pandas as pd
 
 import numpy as np
@@ -15,7 +14,7 @@ if TYPE_CHECKING:
 
 class DB:
     SCENARIO_TABLE = 'scenarios'
-    AGENT_PARAM_TABLE = 'agent_param'
+    AGENT_PARAM_TABLE = 'agent_param' # 不必了
     AGENT_RESULT_TABLE = 'agent_result'
     ENVIRONMENT_RESULT_TABLE = 'env_result'
 
@@ -144,8 +143,7 @@ class DB:
         :return:
         """
 
-        data_frame.to_sql(table_name,self.connection, index=False, if_exists=if_exists,
-                          )  # , chunksize=1000)
+        data_frame.to_sql(table_name, self.connection, index=False, if_exists=if_exists)  # , chunksize=1000)
 
     def read_dataframe(self, table_name: str) -> pd.DataFrame:
         """
@@ -201,7 +199,7 @@ class DB:
         return self.paramed_query(self.ENVIRONMENT_RESULT_TABLE, conditions)
 
 
-def create_db_conn(config: 'NewConfig' = None) -> DB:
+def create_db_conn(config: 'Config' = None) -> DB:
     """
     create a Database by current config
     :return:

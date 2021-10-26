@@ -73,7 +73,7 @@ class DataCollector:
     def collect(self, step: int):
         t0 = time.time()
         env = self.model.environment
-        agent_manager = self.model.agent_manager
+        agent_manager = self.model.agent_list
         scenario = self.model.current_scenario()
         run_id = self.model.run_id_in_scenario
         env_dic = env.to_dict(self.env_property_names())

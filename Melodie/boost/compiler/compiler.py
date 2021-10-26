@@ -13,7 +13,7 @@ from typing import List, Any, Dict, TypeVar
 import astunparse
 from pprintast import pprintast
 
-from Melodie import Agent, AgentManager
+from Melodie import Agent, AgentList
 from Melodie.management.ast_parse import find_class_defs, find_class_methods
 import numpy as np
 
@@ -119,7 +119,7 @@ class TypeInferr(ast.NodeVisitor):
         assert isinstance(node.target, ast.Name), "当前只支持ast.Name型作为for循环的迭代变量"
         if isinstance(node.iter, ast.Name):  # "当前只支持ast.Name型作为for循环的迭代变量"
             if node.iter.id in self.types_inferred:
-                if issubclass(self.types_inferred[node.iter.id], AgentManager):
+                if issubclass(self.types_inferred[node.iter.id], AgentList):
                     self.types_inferred[node.target.id] = Agent
                     return
                 elif issubclass(self.types_inferred[node.iter.id], np.ndarray):
@@ -190,7 +190,7 @@ class RewriteCallEnv(ast.NodeTransformer):
                     node.func = ast.Name(id='___agent___' + attr.attr, )
                     node.args.insert(0, ast.Name(id=attr.value.id))
                     return node
-                elif issubclass(type_var, AgentManager):
+                elif issubclass(type_var, AgentList):
                     node.func = ast.Name(id='___agent___manager___' + attr.attr)
                     node.args.insert(0, ast.Name(id=attr.value.id))
                     return node

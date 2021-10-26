@@ -5,9 +5,9 @@
 # @File: config.py
 import os
 
-from Melodie import NewConfig, Model, Scenario
+from Melodie import Config, Model, Scenario
 
-cfg = NewConfig(
+cfg = Config(
     'test',
     os.path.dirname(__file__),
     excel_source_folder=os.path.join(os.path.dirname(__file__), 'resources', 'excels'),
@@ -15,7 +15,7 @@ cfg = NewConfig(
     output_folder=os.path.join(os.path.dirname(__file__), 'resources', 'output')
 )
 
-cfg_for_temp = NewConfig(
+cfg_for_temp = Config(
     'temp_db_created',
     os.path.dirname(__file__),
     excel_source_folder=os.path.join(os.path.dirname(__file__), 'resources', 'excels'),

@@ -88,6 +88,6 @@ def ___environment___calc_wealth_and_gini(___environment, AgentList: 'AgentManag
 
 def ___model___run(___model):
     for t in range(0, ___model.scenario.periods):
-        ___environment___go_money_produce(___model.environment, ___model.agent_manager)
-        ___environment___go_money_transfer(___model.environment, ___model.agent_manager)
-        ___environment___calc_wealth_and_gini(___model.environment, ___model.agent_manager)
+        ___environment___go_money_produce(___model.environment, ___model.agent_list)
+        ___environment___go_money_transfer(___model.environment, ___model.agent_list)
+        ___environment___calc_wealth_and_gini(___model.environment, ___model.agent_list)

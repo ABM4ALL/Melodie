@@ -1,4 +1,4 @@
-from Melodie import Agent, AgentManager
+from Melodie import Agent, AgentList
 
 from .config import model
 
@@ -21,7 +21,7 @@ def test_repr():
 def test_agent_manager_type_hinting():
     ta = TestAgent(0)
     ta.setup()
-    am = AgentManager(TestAgent, 0, model)
+    am = AgentList(TestAgent, 0, model)
     am.add(ta)
     ta_2 = TestAgent(1)
     ta_2.setup()

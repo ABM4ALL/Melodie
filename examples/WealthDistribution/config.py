@@ -5,9 +5,9 @@
 # @File: simulator_config.py.py
 import os
 
-from Melodie import NewConfig
+from Melodie import Config
 
-config = NewConfig(
+config = Config(
     project_name='WealthDistribution',
     project_root=os.path.dirname(__file__),
     sqlite_folder='data/sqlite',

@@ -1,8 +1,8 @@
 import sys
 
 from .agent import Agent
-from .agent_manager import AgentManager
-from .config import Config, NewConfig
+from .agent_list import AgentList
+from .config import Config
 from .data_collector import DataCollector
 from .db import DB, create_db_conn
 from .environment import Environment

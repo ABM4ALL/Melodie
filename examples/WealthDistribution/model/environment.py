@@ -4,7 +4,7 @@ __author__ = 'Songmin'
 import random
 from typing import TYPE_CHECKING
 
-from Melodie import AgentManager, Environment
+from Melodie import AgentList, Environment
 from .scenario import GiniScenario
 
 if TYPE_CHECKING:
@@ -20,9 +20,9 @@ class GiniEnvironment(Environment):
         self.total_wealth = 0
         self.gini = 0
 
-    def go_money_produce(self, AgentList):
+    def go_money_produce(self, agent_list):
 
-        for agent in AgentList:
+        for agent in agent_list:
             agent.go_produce()
 
         return None
@@ -37,7 +37,7 @@ class GiniEnvironment(Environment):
 
         return None
 
-    def go_money_transfer(self, agent_list: 'AgentManager'):
+    def go_money_transfer(self, agent_list: 'AgentList'):
         for sub_period in range(0, self.trade_num):
             [agent_1, agent_2] = agent_list.random_sample(2)
 

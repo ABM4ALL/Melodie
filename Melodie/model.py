@@ -3,7 +3,7 @@ from typing import ClassVar, Optional
 
 from . import DB
 from .agent import Agent
-from .agent_manager import AgentManager
+from .agent_list import AgentList
 from .config import Config
 from .data_collector import DataCollector
 from .environment import Environment
@@ -14,12 +14,11 @@ from .db import create_db_conn
 
 class Model:
     def __init__(self,
-                 config: 'Config' = None,
-                 scenario: 'Scenario' = None,
-                 agent_class: ClassVar[Agent] = None,
-                 environment_class: ClassVar[Environment] = None,
-                 data_collector_class: ClassVar[DataCollector] = None,
-                 table_generator_class: ClassVar[TableGenerator] = None,
+                 config: 'Config',
+                 scenario: 'Scenario',
+                 agent_class: ClassVar[Agent],
+                 environment_class: ClassVar[Environment],
+                 data_collector_class: ClassVar[DataCollector],
                  run_id_in_scenario: int = 0
                  ):
         self.scenario = scenario
@@ -27,15 +26,12 @@ class Model:
         self.config = config
         self.agent_class = agent_class
         self.environment_class = environment_class
-        self.agent_manager: AgentManager = None
         self.data_collector_class = data_collector_class
-        self.table_generator_class = table_generator_class
+        self.agent_list: AgentList
+        self.environment: Environment
         self.data_collector: Optional[DataCollector] = None
         self.table_generator: Optional[TableGenerator] = None
         self.run_id_in_scenario = run_id_in_scenario
-        # self.setup()
-        # assert self.environment_class is not None
-        # self._setup()
 
     def setup(self):
         pass
@@ -47,16 +43,62 @@ class Model:
     def create_db_conn(self) -> 'DB':
         return create_db_conn(self.config)
 
-    def setup_agent_manager(self):
+
+
+
+
+
+
+
+
+
+    def get_agent_param(self):
+        # 之后就没用了，统一用get_registered_table
+        if self.table_generator is not None:
+            self.table_generator.run()
+        else:
+            table = ''
+
+    def new_setup_agent_list(self, agent_para_data_frame):
+        # 新增函数，替代下面的setup_agent_list，方便用户自己初始化模型中的agent_list
+
         """
         Setup the agent manager. The steps included:
-        1. Create the self.agent_manager;
+        1. Create the self.agent_list;
         2. Set parameters of all agents generated in current scenario;
 
         :return:
         """
         scenario = self.scenario
-        self.agent_manager = AgentManager(self.agent_class, scenario.agent_num, self)
+        self.agent_list = AgentList(self.agent_class, scenario.agent_num, self)
+
+        # Create agent manager
+
+        reserved_param_names = ['id']
+        param_names = reserved_param_names + [param for param in agent_para_data_frame.columns if param not in
+                                              {'scenario_id', 'id'}]
+
+        # Assign parameters to properties for each agent.
+        for i, agent in enumerate(self.agent_list.agents):
+            params = {}
+            for agent_param_name in param_names:
+                # .item() was applied to convert pandas/numpy data into python-builtin types.
+                params[agent_param_name] = agent_para_data_frame.loc[i, agent_param_name].item()
+
+            agent.set_params(params)
+
+        return self.agent_list
+
+    def setup_agent_list(self):
+        """
+        Setup the agent manager. The steps included:
+        1. Create the self.agent_list;
+        2. Set parameters of all agents generated in current scenario;
+
+        :return:
+        """
+        scenario = self.scenario
+        self.agent_list = AgentList(self.agent_class, scenario.agent_num, self)
 
             # Read agent parameters from data
         # db_conn = create_db_conn(self.config)
@@ -68,7 +110,7 @@ class Model:
                                               {'scenario_id', 'id'}]
 
         # Assign parameters to properties for each agent.
-        for i, agent in enumerate(self.agent_manager.agents):
+        for i, agent in enumerate(self.agent_list.agents):
             params = {}
             for agent_param_name in param_names:
                 # .item() was applied to convert pandas/numpy data into python-builtin types.
@@ -76,7 +118,15 @@ class Model:
 
             agent.set_params(params)
 
-        return self.agent_manager
+        return self.agent_list
+
+
+
+
+
+
+
+
 
     def setup_environment(self):
         self.environment = self.environment_class()
@@ -88,46 +138,15 @@ class Model:
         if callable(data_collector_class) and issubclass(data_collector_class, DataCollector):
             data_collector = data_collector_class(self)
             data_collector.setup()
-        elif data_collector_class is None:
-            data_collector = None
         else:
             raise TypeError(data_collector_class)
-
         self.data_collector = data_collector
 
-    # def setup_table_generator(self, table_generator_class):
-    #     """
-    #     TODO table generator should be set up before model creates.
-    #     :param table_generator_class:
-    #     :return:
-    #     """
-    #     # raise DeprecationWarning('table generator should be set up before model creates.')
-    #     if table_generator_class is not None:
-    #         self.table_generator: TableGenerator = table_generator_class(self.scenario)
-    #         self.table_generator.setup()
-    #         # self.table_generator.run()
-    #     # else:
 
-    def get_agent_param(self):
-        if self.table_generator is not None:
-            self.table_generator.run()
-        else:
-            table = ''
 
     def _setup(self):
-        self.setup_data_collector()
         self.get_agent_param()
+        self.setup_agent_list()
         self.setup_environment()
-        self.setup_agent_manager()
+        self.setup_data_collector()
 
-    def step(self):
-        pass
-
-    def run(self):
-        scenario = self.scenario
-        for i in range(scenario.periods):
-            self.step()
-            if self.data_collector is not None:
-                self.data_collector.collect(i)
-        if self.data_collector is not None:
-            self.data_collector.save()

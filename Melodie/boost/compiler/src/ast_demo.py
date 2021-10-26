@@ -10,7 +10,7 @@ __author__ = 'Songmin'
 import random
 import numpy as np
 
-from Melodie import Agent, Model, Environment, AgentManager
+from Melodie import Agent, Model, Environment, AgentList
 
 
 class GINIAgent(Agent):
@@ -39,7 +39,7 @@ class GiniEnvironment(Environment):
         self.total_wealth = 0
         self.gini = 0
 
-    def go_money_produce(self, agent_list: "AgentManager"):
+    def go_money_produce(self, agent_list: "AgentList"):
 
         al = agent_list
         for agent in al:
@@ -57,7 +57,7 @@ class GiniEnvironment(Environment):
 
         return None
 
-    def go_money_transfer(self, agent_list: 'AgentManager'):
+    def go_money_transfer(self, agent_list: 'AgentList'):
         trade_num = self.trade_num
         for sub_period in range(0, int(trade_num)):
             agent_1: 'Agent' = None
@@ -98,7 +98,7 @@ class GiniEnvironment(Environment):
 
         return (1 + (1 / N) - 2 * B)
 
-    def calc_wealth_and_gini(self, AgentList: 'AgentManager'):
+    def calc_wealth_and_gini(self, AgentList: 'AgentList'):
 
         account_list: "np.ndarray" = np.zeros(len(AgentList))
         i = 0
@@ -117,8 +117,8 @@ class GiniModel(Model):
     def run(self):
         # dc = self.data_collector
         for t in range(0, self.scenario.periods):
-            self.environment.go_money_produce(self.agent_manager)
-            self.environment.go_money_transfer(self.agent_manager)
-            self.environment.calc_wealth_and_gini(self.agent_manager)
+            self.environment.go_money_produce(self.agent_list)
+            self.environment.go_money_transfer(self.agent_list)
+            self.environment.calc_wealth_and_gini(self.agent_list)
         #     dc.collect(t)
         # dc.save()

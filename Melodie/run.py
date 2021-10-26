@@ -6,7 +6,7 @@ from typing import ClassVar, TYPE_CHECKING, Optional
 import logging
 
 from .agent import Agent
-from .agent_manager import AgentManager
+from .agent_list import AgentList
 from .table_generator import TableGenerator
 
 # 拆分为几个run：simulator, analyzer, calibrator
@@ -43,10 +43,10 @@ def get_environment() -> 'Environment':
     return _model.environment
 
 
-def get_agent_manager() -> 'AgentManager':
+def get_agent_manager() -> 'AgentList':
     global _model
     assert _model is not None
-    return _model.agent_manager
+    return _model.agent_list
 
 
 def current_scenario() -> 'Scenario':

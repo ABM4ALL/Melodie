@@ -5,7 +5,7 @@
 
 import os
 
-from Melodie import Config, run_new
+from Melodie import OldConfig, run_new
 from config import config
 from model.core.agent import _ALIAS_Agent
 # from model.core.analyzer import _ALIAS_Analyzer

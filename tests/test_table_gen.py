@@ -5,10 +5,10 @@
 # @File: test_table_gen.py.py
 import numpy as np
 
-from Melodie import Config, ScenarioManager, Scenario, TableGenerator
+from Melodie import OldConfig, ScenarioManager, Scenario, TableGenerator
 from Melodie.run import set_config
 
-set_config(Config('Untitled', with_db=False))
+set_config(OldConfig('Untitled', with_db=False))
 
 
 class Scene(Scenario):
