@@ -15,6 +15,7 @@ import astunparse
 from pprintast import pprintast
 
 from Melodie import Agent, AgentManager
+from Melodie.network import Network
 from Melodie.management.ast_parse import find_class_defs, find_class_methods
 import numpy as np
 
@@ -85,6 +86,8 @@ class RewriteCallEnv(ast.NodeTransformer):
                 elif issubclass(type_var, AgentManager):
                     node.func = ast.Name(id='___agent___manager___' + attr.attr)
                     node.args.insert(0, ast.Name(id=attr.value.id))
+                    return node
+                elif issubclass(type_var, Network):  # Network已经会传入jitclass.
                     return node
                 else:
                     raise TypeError(ast.dump(node.func))
@@ -265,12 +268,6 @@ def modify_ast_model(method, root_name):
     rce.visit(method)
     method.args.args[0].arg = root_name
     method.name = root_name + '___' + method.name
-
-    # method.args.args = [
-    #     ast.arg(arg='___scenario', annotation=None),
-    #     ast.arg(arg='___environment', annotation=None),
-    #     ast.arg(arg='___agent_manager', annotation=None)
-    # ]  # .args.insert(0, ast.Name(id="___" + attr_name_chain[-1]))
 
     print('+++++++++++++++++++++++++++++++++')
     # print(pprintast(method))

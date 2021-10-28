@@ -53,8 +53,12 @@ class BoostSimulator(Simulator):
                   scenario_class: ClassVar['Scenario'] = None,
                   scenario_manager_class: ClassVar['ScenarioManager'] = None,
                   table_generator_class: ClassVar['TableGenerator'] = None,
-                  analyzer_class: ClassVar['Analyzer'] = None):
+                  analyzer_class: ClassVar['Analyzer'] = None,
+                  boost_model_class=None,
+                  ):
         conv(agent_class, environment_class, model_class, 'out.py')
+        logger.warning("Testing. compilation finished, program exits")
+        # return
         compiled = importlib.import_module('out')
         model_run = compiled.__getattribute__('___model___run')
         logger.info("Preprocess compilation finished, now running pre-run procedures.")
@@ -74,12 +78,14 @@ class BoostSimulator(Simulator):
                 if first_run:
                     logger.info("Numba is now taking control of program. "
                                 "It may take a few seconds for compilation.")
-                model = BoostModel(scenario)
+                model = boost_model_class(scenario)
                 model_run(model)
                 if first_run:
                     logger.info("The first run has completed, and numba has finished compilaiton. "
                                 "Your program will be speeded up greatly.")
                     first_run = False
+                if model.agent_manager[0]['status'] == 1:
+                    print(model.agent_manager)
                 logger.info(f"Finished running <experiment {run_id}, scenario {scenario.id}>. "
                             f"time elapsed: {time.time() - t1}s")
                 t1 = time.time()
@@ -91,6 +97,6 @@ class BoostSimulator(Simulator):
 if __name__ == "__main__":
     bs = BoostSimulator()
     bs.run_boost(GINIAgent, GiniEnvironment,
-                 None, None, GiniModel, scenario_class=GiniScenario)
+                 None, None, GiniModel, scenario_class=GiniScenario, boost_model_class=BoostModel)
     # bs.run_boost(GINIAgent, GiniEnvironment,
     #              None, None, GiniModel, scenario_class=GiniScenario)

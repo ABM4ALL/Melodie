@@ -3,3 +3,5 @@
 # @Author: Zhanyi Hou
 # @Email: 1295752786@qq.com
 # @File: __init__.py
+
+from .manager_server import run_server

@@ -3,6 +3,7 @@ This data stores the run function for model running, storing global variables an
 """
 import abc
 import os.path
+import threading
 import time
 from multiprocessing import Pool
 from typing import ClassVar, TYPE_CHECKING, Optional, List, Dict, Tuple
@@ -13,6 +14,7 @@ import pandas as pd
 from . import DB
 from .agent import Agent
 from .agent_manager import AgentManager
+from .management import run_server
 from .table_generator import TableGenerator
 
 # 拆分为几个run：simulator, analyzer, calibrator
@@ -35,10 +37,10 @@ else:
     from .db import create_db_conn
 
 
-class Simulator:
+class Simulator(metaclass=abc.ABCMeta):
     def __init__(self):
         self.config: Optional[Config] = None
-
+        self.server_thread: threading.Thread = None
         self.scenario_class: Optional[ClassVar['Scenario']] = None
 
         self.scenarios_dataframe: Optional[pd.DataFrame] = None
@@ -98,6 +100,7 @@ class Simulator:
         #  - assert以上写对了 --> 虽然麻烦，但可以帮助用户少犯错。
         # 把这些表导入sqlite数据库。
 
+    @abc.abstractmethod
     def create_scenarios_dataframe(self) -> pd.DataFrame:
         """
         Generate dataframe for scenario parameters
@@ -114,6 +117,7 @@ class Simulator:
         # 之后，在agent和env里面，可以直接用scenario.name访问这些attributes和表。
         pass
 
+    @abc.abstractmethod
     def generate_scenarios(self) -> List['Scenario']:
         """
         Generate scenario objects by the parameter from static tables or scenarios_dataframe.
@@ -140,6 +144,7 @@ class Simulator:
         assert len(scenarios) != 0
         return scenarios
 
+    @abc.abstractmethod
     def generate_agent_params_dataframe(self) -> pd.DataFrame:
         # generate the parameter dataframe for agents.g
         # 这个函数必须写，分两种情况
@@ -149,6 +154,16 @@ class Simulator:
         #     (B2) 复杂一点，比如参数之间有依赖关系、用到1.2和2.1，让用户自己写函数生成agent_params_dataframe。
         # 补充：有些参数无关启动模型，属于中间结果（比如每期的收益），此处初始化为0。
         pass
+
+    def run_server(self):
+        """
+        Run the server.
+        :return:
+        """
+        assert self.server_thread is None
+        self.server_thread = threading.Thread(target=run_server)
+        self.server_thread.setDaemon(True)
+        self.server_thread.start()
 
     def pre_run(self):
         """
@@ -165,6 +180,7 @@ class Simulator:
         self.agent_params_dataframe = self.generate_agent_params_dataframe()
 
         create_db_conn(self.config).reset()
+        self.run_server()
 
     def run_model(self, model_class, config, scenario, agent_class, environment_class,
                   data_collector_class, run_id):
@@ -229,6 +245,8 @@ class Simulator:
             for run_id in range(scenario.number_of_run):
                 self.run_model(model_class, config, scenario, agent_class, environment_class, data_collector_class,
                                run_id)
+            logger.warning("正在测试，在此处开启静态服务600s后退出")
+            time.sleep(600)
 
             logger.info(f'{scenario_index + 1} of {len(self.scenarios)} scenarios has completed.')
 
@@ -310,4 +328,3 @@ class Simulator:
         pool.join()  #
         t2 = time.time()
         logger.info(f'Melodie completed all runs, time elapsed totally {t2 - t0}s, and {t2 - t1}s for running.')
-
