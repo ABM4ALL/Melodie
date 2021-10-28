@@ -9,7 +9,9 @@ from .environment import GiniEnvironment
 
 class GiniModel(Model):
 
-    # 让用户自己setup agent_list --> self.new_setup_agent_list(scenario.get_registered_table(agent_params))
+    # 让用户自己setup agent_list -->
+    # self.wolf_list = self.setup_agent_list(scenario.get_registered_table("wolf_params")[id_scenario == scenario.id])
+    # self.sheep_list = self.setup_agent_list(scenario.get_registered_table("sheep_params"))
 
     def run(self):
 
@@ -19,3 +21,4 @@ class GiniModel(Model):
             self.environment.calc_wealth_and_gini(self.agent_list)
             self.data_collector.collect(t)
         self.data_collector.save()
+

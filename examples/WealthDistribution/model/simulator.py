@@ -13,10 +13,29 @@ class GiniSimulator(Simulator):
 
     def register_static_tables(self):
         # 需要补充注册表中各列数据的变量类型
-        self.register_table('scenarios', 'scenarios.xlsx')
+        # scenarios_dict = {"periods": int, }
+        self.register_table('scenarios', 'scenarios.xlsx') #, scenarios_dict)
         self.register_table('agent_params', 'agent_params.xlsx')
 
     def register_generated_tables(self):
+
+        # a lot
+        # of code
+        # to generate wolf_params_df
+        # self.register_table('wolf_params', wolf_params_df, wolf_data_type: dict)
+
+        # a lot
+        # of code
+        # to generate sheep_params_df
+        # self.register_table('sheep_params', sheep_params_df, sheep_data_type: dict)
+
+
+
+
+
+
+
+
         # 新加的函数
 
         # 如果在这里生成并注册 --> agent_params，那么，要看生成过程是否跟scenarios有依赖关系。

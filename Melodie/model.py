@@ -146,7 +146,7 @@ class Model:
 
     def _setup(self):
         self.get_agent_param()
-        self.setup_agent_list()
+        # self.setup_agent_list()
         self.setup_environment()
         self.setup_data_collector()
 
