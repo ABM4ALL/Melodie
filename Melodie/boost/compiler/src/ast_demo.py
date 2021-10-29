@@ -8,26 +8,16 @@
 __author__ = 'Songmin'
 
 import random
+from typing import List
+
+from Melodie import Agent, Model, Environment, AgentList, Scenario
 import numpy as np
 
-from Melodie import Agent, Model, Environment, AgentList
 
-
-class GINIAgent(Agent):
-
+class GiniScenario(Scenario):
     def setup(self):
-        self.id = 0
-        self.account = 0.0
-        self.productivity = 0.0
-
-    def go_produce(self):
-        rand = np.random.random()
-        if rand <= self.productivity:
-            self.account += 1
-        else:
-            pass
-
-        return None
+        self.periods = 200
+        self.win_prob = 0.1
 
 
 class GiniEnvironment(Environment):
@@ -60,9 +50,9 @@ class GiniEnvironment(Environment):
     def go_money_transfer(self, agent_list: 'AgentList'):
         trade_num = self.trade_num
         for sub_period in range(0, int(trade_num)):
-            agent_1: 'Agent' = None
-            agent_2: 'Agent' = None
-            agent_1, agent_2 = agent_list.random_sample(2)
+            agents = agent_list.random_sample(2)
+            agent_1: 'Agent' = agents[0]
+            agent_2: 'Agent' = agents[1]
 
             who_win = 0
             rand = random.random()

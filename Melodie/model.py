@@ -33,6 +33,11 @@ class Model:
         self.table_generator: Optional[TableGenerator] = None
         self.run_id_in_scenario = run_id_in_scenario
 
+        self.network = None
+        self.setup()
+        # assert self.environment_class is not None
+        # self._setup()
+
     def setup(self):
         pass
 
@@ -100,9 +105,10 @@ class Model:
         scenario = self.scenario
         self.agent_list = AgentList(self.agent_class, scenario.agent_num, self)
 
-            # Read agent parameters from data
+        # Read agent parameters from data
         # db_conn = create_db_conn(self.config)
-        agent_para_data_frame = scenario.get_agent_params_table() #db_conn.read_dataframe(db_conn.AGENT_PARAM_TABLE)
+        agent_para_data_frame = scenario.get_agent_params_table()  # db_conn.read_dataframe(db_conn.AGENT_PARAM_TABLE)
+        assert agent_para_data_frame is not None
         # Create agent manager
 
         reserved_param_names = ['id']

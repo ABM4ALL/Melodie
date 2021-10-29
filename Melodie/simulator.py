@@ -3,6 +3,7 @@ This data stores the run function for model running, storing global variables an
 """
 import abc
 import os.path
+import threading
 import time
 from multiprocessing import Pool
 from typing import ClassVar, TYPE_CHECKING, Optional, List, Dict, Tuple
@@ -12,7 +13,10 @@ import pandas as pd
 
 from . import DB
 from .agent import Agent
+
 from .agent_list import AgentList
+from .management import run_server
+
 from .table_generator import TableGenerator
 
 
@@ -34,9 +38,10 @@ else:
     from .db import create_db_conn
 
 
-class Simulator:
+class Simulator(metaclass=abc.ABCMeta):
     def __init__(self):
         self.config: Optional[Config] = None
+        self.server_thread: threading.Thread = None
         self.scenario_class: Optional[ClassVar['Scenario']] = None
         self.scenarios_dataframe: Optional[pd.DataFrame] = None
         self.agent_params_dataframe: Optional[pd.DataFrame] = None
@@ -109,6 +114,8 @@ class Simulator:
 
         return self.registered_tables[table_name]
 
+
+    @abc.abstractmethod
     def generate_scenarios(self) -> List['Scenario']:
         """
         Generate scenario objects by the parameter from static tables or scenarios_dataframe.
@@ -130,9 +137,20 @@ class Simulator:
         assert len(scenarios) != 0
         return scenarios
 
+    @abc.abstractmethod
     def generate_agent_params_dataframe(self) -> pd.DataFrame:
         # 修改后被register_generated_tables替代了。
         pass
+
+    def run_server(self):
+        """
+        Run the server.
+        :return:
+        """
+        assert self.server_thread is None
+        self.server_thread = threading.Thread(target=run_server)
+        self.server_thread.setDaemon(True)
+        self.server_thread.start()
 
     def pre_run(self):
         """
@@ -147,7 +165,9 @@ class Simulator:
         self.scenarios = self.generate_scenarios()
         assert self.scenarios is not None
         self.agent_params_dataframe = self.generate_agent_params_dataframe()
+
         create_db_conn(self.config).reset()
+        self.run_server()
 
     def run_model(self, config, scenario, model_class, agent_class, environment_class,
                   data_collector_class, run_id):
@@ -202,6 +222,8 @@ class Simulator:
             for run_id in range(scenario.number_of_run):
                 self.run_model(config, scenario, model_class, agent_class, environment_class, data_collector_class,
                                run_id)
+            logger.warning("正在测试，在此处开启静态服务600s后退出")
+            time.sleep(600)
 
             logger.info(f'{scenario_index + 1} of {len(self.scenarios)} scenarios has completed.')
 

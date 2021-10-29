@@ -16,6 +16,7 @@ import pandas as pd
 from flask_cors import CORS
 from werkzeug.utils import redirect
 
+from Melodie.management.experiment_status import ExperimentStatus
 from Melodie.management.project_structure import list_all_files, get_all_function_cfgs, to_mermaid, get_all_funcdefs, \
     get_flow, to_digraph
 
@@ -93,7 +94,7 @@ def get_all_defs():
 
 def get_mermaid(file, func_name):
     flow, edge_tags = get_flow(file, func_name)
-    dig = to_digraph(flow,edge_tags)
+    dig = to_digraph(flow, edge_tags)
     mermaid = to_mermaid(dig)
     return mermaid
 
@@ -137,9 +138,37 @@ def handle_get_code():
         return f.read()
 
 
+@app.route('/simulation-status', methods=['GET'])
+def handle_get_simulation_status():
+    return ExperimentStatus(
+        finished_run_ids=[(0, 1), (0, 2)],
+        current_run_ids=[(0, 3), (1, 1)],
+        waiting_run_ids=[(1, 2), (1, 3)]
+    ).to_json()
+
+
+with open(os.path.join(os.path.dirname(__file__), "files", "graph-demo-with-layout.json")) as f:
+    graph = json.load(f)
+
+
+@app.route("/network-demo", methods=['GET'])
+def handle_graph():
+    nodes = len(graph["series"]["data"])
+    for i in range(nodes):
+        if random.random() > 0.5:
+            graph['series']['data'][i]['category'] = 1
+        else:
+            graph['series']['data'][i]['category'] = 0
+    return json.dumps(graph)
+
+
 @app.route('/')
 def handle_root():
     return redirect('http://localhost:8090/index.html', code=301)
+
+
+def run_server():
+    app.run(host='0.0.0.0', port=8089)
 
 
 def run():

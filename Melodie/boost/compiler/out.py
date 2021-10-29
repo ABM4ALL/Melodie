@@ -36,9 +36,9 @@ def ___environment___go_give_money(___environment, agent_from: 'GINIAgent', agen
 def ___environment___go_money_transfer(___environment, agent_list: 'AgentManager'):
     trade_num = ___environment['trade_num']
     for sub_period in range(0, int(trade_num)):
-        agent_1: 'Agent' = None
-        agent_2: 'Agent' = None
-        (agent_1, agent_2) = ___agent___manager___random_sample(agent_list, 2)
+        agents = ___agent___manager___random_sample(agent_list, 2)
+        agent_1: 'Agent' = agents[0]
+        agent_2: 'Agent' = agents[1]
         who_win = 0
         rand = random.random()
         RICH = 0
