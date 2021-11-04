@@ -11,8 +11,8 @@ class FuncAgent(Agent):
     """
 
     def setup(self):
-        self.id = 0
-        self.reliability = 0
+        # self.id = 0
+        self.reliability = 0.99
         self.status = 0 # 0 for normal, 1 for breakdown
 
     def go_produce(self):

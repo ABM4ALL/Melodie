@@ -16,7 +16,7 @@ from typing import ClassVar
 import numpy as np
 import pandas as pd
 
-from Melodie import Simulator, NewConfig, Scenario
+from Melodie import Simulator, Config, Scenario
 from Melodie.boost.compiler.compiler import conv
 from Melodie.boost.compiler.src.ast_demo import GiniEnvironment, GiniModel, GiniScenario
 from Melodie.boost.compiler.src.agent import GINIAgent
@@ -72,6 +72,7 @@ class BoostSimulator(Simulator):
 
         t0 = time.time()
         t1 = time.time()
+        first_run_finished_at = time.time()
         first_run = True
         for scenario in self.scenarios:
             for run_id in range(scenario.number_of_run):
@@ -83,15 +84,15 @@ class BoostSimulator(Simulator):
                 if first_run:
                     logger.info("The first run has completed, and numba has finished compilaiton. "
                                 "Your program will be speeded up greatly.")
+                    first_run_finished_at = time.time()
                     first_run = False
-                if model.agent_manager[0]['status'] == 1:
-                    print(model.agent_manager)
+
                 logger.info(f"Finished running <experiment {run_id}, scenario {scenario.id}>. "
                             f"time elapsed: {time.time() - t1}s")
                 t1 = time.time()
 
         logger.info(f"totally time elapsed {time.time() - t0} s,"
-                    f" {(time.time() - t0) / 100}s per run")
+                    f" {(time.time() - t0) / 100}s per run, {(time.time() - first_run_finished_at) / (100 - 1)}s per run after compilation")
 
 
 if __name__ == "__main__":

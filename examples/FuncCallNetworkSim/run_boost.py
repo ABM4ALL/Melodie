@@ -29,14 +29,15 @@ with open("./data/json_source/lua_call_graph.json") as f:
     edges = network_json['series']['links']
     node_names = set()
     for link in edges:
-        node_names.add(link['from'])
-        node_names.add(link['to'])
+        node_names.add(link['source'])
+        node_names.add(link['target'])
     for i, node_name in enumerate(node_names):
         node_names_map[node_name] = i
     for edge in edges:
-        edges_with_num.append((node_names_map[edge['from']], node_names_map[edge['to']]))
+        edges_with_num.append((node_names_map[edge['source']], node_names_map[edge['target']]))
         # if link[0] not in edge_names:
         #     edge_names[link[0]]
+edges_array = np.array(edges_with_num, dtype=np.int64)
 
 
 class BoostModel:
@@ -49,21 +50,22 @@ class BoostModel:
                                            ('total_wealth', 'i4'),
                                            ('gini', 'f4')])[0]
 
-        self.agent_manager = np.array([(i, 0.99, 0) for i in range(node_num)],
-                                      dtype=[('id', 'i4'),
-                                             ('reliability', 'f4'),
-                                             ('status', 'i4'),
-                                             ])
+        self.agent_list = np.array([(i, 0.99, 0) for i in range(node_num)],
+                                   dtype=[('id', 'i4'),
+                                          ('reliability', 'f4'),
+                                          ('status', 'i4'),
+                                          ])
 
         self.scenario = scenario
         nodes = np.array([(i,)
                           for i in range(node_num)
                           ], dtype=[('id', 'i8')])
 
-        node_arr = [node for node in nodes]
+        # node_arr = [node for node in nodes]
         t0 = time.time()
-        n = build_jit_class(node_arr[0]['id'], self.agent_manager[0]['id'])
+        n = build_jit_class(nodes[0]['id'], self.agent_list[0]['id'])
 
+        # n.add_edges(edges_array[:, 0], edges_array[:, 1])
         for e in edges_with_num:
             n.add_edge(e[0], e[1])
         t1 = time.time()

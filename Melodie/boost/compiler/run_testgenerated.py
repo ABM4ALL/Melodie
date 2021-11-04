@@ -5,7 +5,7 @@ import numpy as np
 from Melodie import Scenario
 from out import ___model___run
 
-N = 300
+N = 100
 
 
 class Model1:
@@ -16,7 +16,7 @@ class Model1:
                                            ('total_wealth', 'i4'),
                                            ('gini', 'f4')])[0]
 
-        self.agent_manager = np.array([(i, 0, 0.5) for i in range(300)],
+        self.agent_list = np.array([(i, 0, 0.5) for i in range(300)],
                                       dtype=[('id', 'i4'),
                                              ('account', 'f4'),
                                              ('productivity', 'f4'),
@@ -25,7 +25,8 @@ class Model1:
         self.scenario = Scenario()
         self.scenario.periods = 200
 
-
+model1 = Model1()
+___model___run(model1)
 t0 = time.time()
 for i in range(N):
     model1 = Model1()

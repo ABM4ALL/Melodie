@@ -6,15 +6,20 @@
 import pandas as pd
 from typing import List
 
+from Melodie import Scenario
 from Melodie.boost.compiler.boostsimulator import BoostSimulator
 
 
 class FuncSimulator(BoostSimulator):
     def register_static_tables(self):
+        self.registered_tables['scenarios'] = pd.DataFrame(
+            [{"id": i, "reliability": 0.99, "number_of_run": 1, "periods": 100} for i in range(100)])
+
+    def register_generated_tables(self):
         pass
 
-    def create_scenarios_dataframe(self) -> pd.DataFrame:
-        return pd.DataFrame([{"id": i, "reliability": 0.99} for i in range(1)])
+    # def create_scenarios_dataframe(self) -> pd.DataFrame:
+    #     return pd.DataFrame([{"id": i, "reliability": 0.99, "number_of_run": 1} for i in range(100)])
 
     def generate_scenarios(self) -> List['Scenario']:
         return super(BoostSimulator, self).generate_scenarios()

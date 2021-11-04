@@ -10,6 +10,10 @@ import os
 import random
 import tempfile
 import sqlite3
+import threading
+from queue import Queue
+from typing import Tuple, Callable
+
 from flask import Flask, request, make_response
 import pandas as pd
 
@@ -20,7 +24,17 @@ from Melodie.management.experiment_status import ExperimentStatus
 from Melodie.management.project_structure import list_all_files, get_all_function_cfgs, to_mermaid, get_all_funcdefs, \
     get_flow, to_digraph
 
-app = Flask(__name__, static_folder='../static', static_url_path='', )
+visualize_condition_queue_main = Queue(1)
+visualize_condition_queue_server = Queue(1)
+
+
+class MelodieFlask(Flask):
+    def __init__(self, *args, **kwargs):
+        super(MelodieFlask, self).__init__(*args, **kwargs)
+
+
+# app = Flask(__name__, static_folder='../static', static_url_path='', )
+app = MelodieFlask(__name__, static_folder='../static', static_url_path='', )
 
 CORS(app, resources=r'/*')  # 注册CORS, "/*" 允许访问所有api
 
@@ -169,6 +183,21 @@ def handle_root():
 
 def run_server():
     app.run(host='0.0.0.0', port=8089)
+
+
+server_thread: None = None
+
+
+def run_visualize(step_handler: Callable) -> Tuple[threading.Thread, MelodieFlask]:
+    global server_thread
+    if server_thread is None:
+        if step_handler is not None:
+            app.add_url_rule('/visualize-step', view_func=step_handler)
+        th = threading.Thread(target=app.run, kwargs={"host": "0.0.0.0", 'port': 8089})
+        th.setDaemon(True)
+        th.start()
+        server_thread = th
+    return server_thread, app
 
 
 def run():

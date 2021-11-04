@@ -34,7 +34,7 @@ class Model:
         self.run_id_in_scenario = run_id_in_scenario
 
         self.network = None
-        self.setup()
+        # self.setup()
         # assert self.environment_class is not None
         # self._setup()
 

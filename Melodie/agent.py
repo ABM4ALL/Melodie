@@ -26,13 +26,13 @@ class Agent(Element):
 #     _state_watch: Dict[str, Dict[str, Set[str]]] = {}
 #     _state_trigger_attrs: Dict[str, List[Callable]] = {}  # {'attr': [lambda agent:agent.attr==1,]}
 #
-#     def __init__(self, agent_manager: Optional['AgentManager']):
+#     def __init__(self, agent_manager: Optional['AgentList']):
 #         """
 #         This method would not be exposed to user.
 #         """
 #         self.__dict__['_indiced_watch'] = {}
 #         self.__dict__['_mapped_watch'] = {}
-#         self._agent_list: 'AgentManager' = agent_manager
+#         self._agent_list: 'AgentList' = agent_manager
 #         self.indiced: Dict[Tuple[str], Callable[['Agent'], int]] = {}  # indiced only for numerical property
 #         self.mapped: Dict[Tuple[str], Callable[['Agent'], int]] = {}  # mapped can be for any computational standards
 #         self._indiced_watch: Dict[str, Tuple[Tuple[str], List[Callable[['Agent'], int]]]] = {}

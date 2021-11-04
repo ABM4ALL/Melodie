@@ -15,7 +15,6 @@ from . import DB
 from .agent import Agent
 
 from .agent_list import AgentList
-from .management import run_server
 
 from .table_generator import TableGenerator
 
@@ -142,15 +141,6 @@ class Simulator(metaclass=abc.ABCMeta):
         # 修改后被register_generated_tables替代了。
         pass
 
-    def run_server(self):
-        """
-        Run the server.
-        :return:
-        """
-        assert self.server_thread is None
-        self.server_thread = threading.Thread(target=run_server)
-        self.server_thread.setDaemon(True)
-        self.server_thread.start()
 
     def pre_run(self):
         """
@@ -165,9 +155,8 @@ class Simulator(metaclass=abc.ABCMeta):
         self.scenarios = self.generate_scenarios()
         assert self.scenarios is not None
         self.agent_params_dataframe = self.generate_agent_params_dataframe()
-
+        print(self.agent_params_dataframe)
         create_db_conn(self.config).reset()
-        self.run_server()
 
     def run_model(self, config, scenario, model_class, agent_class, environment_class,
                   data_collector_class, run_id):
@@ -222,8 +211,7 @@ class Simulator(metaclass=abc.ABCMeta):
             for run_id in range(scenario.number_of_run):
                 self.run_model(config, scenario, model_class, agent_class, environment_class, data_collector_class,
                                run_id)
-            logger.warning("正在测试，在此处开启静态服务600s后退出")
-            time.sleep(600)
+            # logger.warning("正在测试，在此处开启静态服务600s后退出")
 
             logger.info(f'{scenario_index + 1} of {len(self.scenarios)} scenarios has completed.')
 
@@ -302,3 +290,5 @@ class Simulator(metaclass=abc.ABCMeta):
         pool.join()  #
         t2 = time.time()
         logger.info(f'Melodie completed all runs, time elapsed totally {t2 - t0}s, and {t2 - t1}s for running.')
+
+

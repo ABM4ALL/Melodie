@@ -288,7 +288,7 @@ class RewriteCallModel(ast.NodeTransformer):
             #         node.func = ast.Name(id='___agent___' + attr.attr, )
             #         node.args.insert(0, ast.Name(id=attr.value.id))
             #         return node
-            #     elif issubclass(type_var, AgentManager):
+            #     elif issubclass(type_var, AgentList):
             #         node.func = ast.Name(id='___agent___manager___' + attr.attr)
             #         node.args.insert(0, ast.Name(id=attr.value.id))
             #         return node
@@ -388,7 +388,7 @@ def modify_ast_model(method, root_name):
 
 
 def get_class_in_file(filename: str, cls_name) -> ast.ClassDef:
-    with open(filename) as f:
+    with open(filename,encoding="utf8") as f:
         root = ast.parse(f.read())
         for node in ast.walk(root):
             if isinstance(node, ast.ClassDef) and node.name == cls_name:

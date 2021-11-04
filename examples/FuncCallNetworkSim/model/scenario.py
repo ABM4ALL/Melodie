@@ -10,6 +10,5 @@ from Melodie import Scenario
 class FuncScenario(Scenario):
     def setup(self):
         self.agent_num = 652
-        self.periods = 100
         self.reliability = 0.99
 

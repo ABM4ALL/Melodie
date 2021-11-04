@@ -17,9 +17,9 @@ class Environment:
     def setup(self):
         pass
         # agent_class: ClassVar['Agent'], initial_agents: int
-        # self.agent_manager = AgentManager(agent_class, initial_agents)
+        # self.agent_manager = AgentList(agent_class, initial_agents)
 
-    # def get_agent_manager(self) -> Tuple[str, AgentManager]:
+    # def get_agent_manager(self) -> Tuple[str, AgentList]:
     #     return self.agent_manager
 
     def to_dict(self, properties: List[str]) -> Dict:

@@ -30,24 +30,24 @@ tg-.->db
 model-->tg
 ```
 
-## Agent&AgentManager
+## Agent&AgentList
 Agent class in Melodie is the base agent class whose life cycle has several functions.
 ```mermaid
 graph TD
 init[Agent.__init__]-->setup[Agent.setup]
 ```
-- `Agent.__init__` was defined by Melodie framework and called by AgentManager.
+- `Agent.__init__` was defined by Melodie framework and called by AgentList.
 - `Agent.setup()` was defined by Melodie and overriden by user to add properties.
 
-AgentManager stores all agent instances.
+AgentList stores all agent instances.
 The developer need to pass Agent class (or subclass) and agent number into it.
 
 ```mermaid
 graph TD
-init[AgentManager.__init__]-->setup_agents[AgentManager.setup_agents]
+init[AgentList.__init__]-->setup_agents[AgentList.setup_agents]
 ```
 - `__init__` was defined by Melodie, called by Model
-- `setup_agents` was defined by Melodie, called in `AgentManager.__init__`.
+- `setup_agents` was defined by Melodie, called in `AgentList.__init__`.
 
 ## Scenario&ScenarioManager
 
@@ -129,7 +129,7 @@ env[Set up Environment]
 dc[Set up DataCollector]
 tg[Set up TableGenerator]
 
-am[Set up AgentManager]
+am[Set up AgentList]
 subgraph model[Set up Model]
 dc-->tg-->env-->am
 end

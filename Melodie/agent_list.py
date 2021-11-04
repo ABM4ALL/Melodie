@@ -66,7 +66,7 @@ class AgentList:
         protected_columns = ['id']
         data_list = []
         if len(self.agents) == 0:
-            raise MelodieExceptions.Agents.AgentManagerEmpty(self)
+            raise MelodieExceptions.Agents.AgentListEmpty(self)
 
         if column_names is None:
             column_names = list(self.__dict__.keys())

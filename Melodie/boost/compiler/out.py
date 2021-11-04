@@ -15,7 +15,7 @@ def ___agent___go_produce(___agent):
 
 
 @numba.jit
-def ___environment___go_money_produce(___environment, agent_list: 'AgentManager'):
+def ___environment___go_money_produce(___environment, agent_list: 'AgentList'):
     al = agent_list
     for agent in al:
         ___agent___go_produce(agent)
@@ -33,7 +33,7 @@ def ___environment___go_give_money(___environment, agent_from: 'GINIAgent', agen
 
 
 @numba.jit
-def ___environment___go_money_transfer(___environment, agent_list: 'AgentManager'):
+def ___environment___go_money_transfer(___environment, agent_list: 'AgentList'):
     trade_num = ___environment['trade_num']
     for sub_period in range(0, int(trade_num)):
         agents = ___agent___manager___random_sample(agent_list, 2)
@@ -73,7 +73,7 @@ def ___environment___calc_gini(___environment, account_list: 'np.ndarray'):
 
 
 @numba.jit
-def ___environment___calc_wealth_and_gini(___environment, AgentList: 'AgentManager'):
+def ___environment___calc_wealth_and_gini(___environment, AgentList: 'AgentList'):
     account_list: 'np.ndarray' = np.zeros(len(AgentList))
     i = 0
     for agent in AgentList:

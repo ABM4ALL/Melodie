@@ -10,7 +10,7 @@ from numba.typed import Dict as NumbaDict
 from numba.typed import List as NumbaList
 from numba.core import types
 from Melodie.agent import Agent
-from Melodie.agent_manager import AgentManager
+from Melodie.agent_manager import AgentList
 import logging
 
 logging.basicConfig(level=logging.DEBUG)

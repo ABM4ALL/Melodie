@@ -9,7 +9,6 @@ import random
 import cython
 cimport basicmath
 import numpy as np
-
 def myfunction(x, y=2):
     a = x - y
     return a + x * y
@@ -62,6 +61,7 @@ class A:
 @cython.locals(s=cython.int, r=cython.double, max=cython.double)
 def _benchmark():
     s = 0
+
     array_of_child = np.array([A() for i in range(100)], dtype=np.object_)
     # a = A()
 

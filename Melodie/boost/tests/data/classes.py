@@ -17,7 +17,7 @@ class ClsTest:
         self.a = self.b
         self.c = self.b
 
-    def go_money_transfer(self, agent_list: 'AgentManager'):
+    def go_money_transfer(self, agent_list: 'AgentList'):
         trade_num = self.trade_num
         for sub_period in range(0, int(trade_num)):
             # agents: "Tuple[Agent]" = agent_list.random_sample(2)

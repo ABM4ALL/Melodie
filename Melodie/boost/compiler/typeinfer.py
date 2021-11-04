@@ -9,7 +9,7 @@ import logging
 import sys
 from typing import List, Any, Dict, TypeVar, Union, Tuple
 
-from Melodie import Agent, AgentManager
+from Melodie import Agent, AgentList
 
 import numpy as np
 from .typeinferlib import assign, registered_types, attribute, ArrayOfAgents
@@ -105,7 +105,7 @@ class TypeInferr(ast.NodeVisitor):
         assert isinstance(node.target, ast.Name), "当前只支持ast.Name型作为for循环的迭代变量"
         if isinstance(node.iter, ast.Name):  # "当前只支持ast.Name型作为for循环的迭代变量"
             if node.iter.id in self.types_inferred:
-                if issubclass(self.types_inferred[node.iter.id], AgentManager):
+                if issubclass(self.types_inferred[node.iter.id], AgentList):
                     self.types_inferred[node.target.id] = Agent
                     return
                 elif issubclass(self.types_inferred[node.iter.id], np.ndarray):

@@ -122,7 +122,7 @@ class MelodieExceptions:
         ID = 1300
 
         @staticmethod
-        def AgentManagerEmpty(agent_manager):
+        def AgentListEmpty(agent_manager):
             return MelodieException(1301, f'Agent manager {agent_manager} contains no agents!')
 
         @staticmethod
@@ -134,9 +134,9 @@ class MelodieExceptions:
         ID = 1400
 
         @staticmethod
-        def NoAgentManagerDefined(environment):
+        def NoAgentListDefined(environment):
             return MelodieException(1401,
-                                    f'Environment {environment} has no AgentManager defined, which is not allowed!')
+                                    f'Environment {environment} has no AgentList defined, which is not allowed!')
 
     class Data:
         ID = 1500

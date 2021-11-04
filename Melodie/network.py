@@ -2,8 +2,11 @@
 # 用一张矩阵记录agent之间的【关系】，关系又可以有多个属性，方向、每个方向的强弱等。
 # agent和env都可以访问network并修改agent之间的【关系】
 # network是run_model的可选项，如果选了，就初始化到model里
+import json
+import threading
 import time
-from typing import Dict, Set, Union, List
+from queue import Queue
+from typing import Dict, Set, Union, List, Tuple, Callable, Any
 
 import networkx
 import numba
@@ -15,12 +18,102 @@ from numba.core import types
 from Melodie.agent import Agent
 import logging
 
+from Melodie.management.manager_server import run_visualize, visualize_condition_queue_main, \
+    visualize_condition_queue_server
+
 logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger(__name__)
 
 
 class Node(Agent):
     def __init__(self, node_id: int):
         super(Node, self).__init__(node_id)
+
+
+class NetworkVisualizer():
+    def __init__(self):
+
+        def f123123():
+            t0 = time.time()
+            visualize_condition_queue_main.put(True)
+            ret = visualize_condition_queue_server.get()
+            t1 = time.time()
+
+            return json.dumps(ret, indent=4)  # f"{t1 - t0}"
+
+        self.server_thread, self.visualize_server = run_visualize(f123123)
+
+        logger.info("Network visualizer server is starting...")
+        self.vertex_positions: Dict[str, Tuple[int, int]] = {}
+        self.vertex_roles: Dict[str, int] = {}
+
+        self.edge_roles: Dict[Tuple[int, int], int] = {}
+
+    def parse_edges(self, edges: List[Any], parser: Callable):
+
+        for edge in edges:
+            edge, pos = parser(edge)
+            self.edge_roles[edge] = pos
+
+    def parse_layout(self, node_info: List[Any],
+                     parser: Callable[[Any], Tuple[Union[str, int], Tuple[float, float]]] = None):
+        """
+
+        :param node_info: A list contains a series of node information.
+        :return:
+        """
+        if parser is None:
+            parser = lambda node: (node['name'], (node['x'], node['y']))
+        for node in node_info:
+            node_name, pos = parser(node)
+            self.vertex_positions[node_name] = pos
+
+    def parse_role(self, node_info: List[Any],
+                   parser: Callable[[Any], int] = None):
+        """
+
+        :param node_info: A list contains a series of node information.
+        :return:
+        """
+        assert parser is not None
+        for node in node_info:
+            node_name, role = parser(node)
+            print(node_name, role, node)
+            assert isinstance(role, int), "The role of node should be an int."
+            self.vertex_roles[node_name] = role
+
+    def format(self):
+        lst = []
+        for name, pos in self.vertex_positions.items():
+            lst.append(
+                {
+                    "name": name,
+                    "x": pos[0],
+                    "y": pos[1],
+                    "category": self.vertex_roles[name]
+                }
+            )
+        lst_edges = []
+        for edge, role in self.edge_roles.items():
+            lst_edges.append({
+                "source": edge[0],
+                "target": edge[1]
+            })
+        data = {
+            "series": {
+                "data": lst,
+                "links": lst_edges
+            }
+        }
+        return data
+
+    def wait(self):
+        # print("主线程等待！", visualize_condition_queue_main)
+        visualize_condition_queue_main.get()
+        # print("主线程开始执行！")
+        formatted = self.format()
+        visualize_condition_queue_server.put(formatted)
+        # print("主线程执行完成！")
 
 
 class Network:
@@ -48,9 +141,9 @@ class Network:
         self._adj[source.id].add(target.id)
         self._adj[target.id].add(source.id)
 
-    def get_neighbor_ids(self, node: Node) -> List[int]:
-        assert node.id in self._nodes
-        neighbor_ids = self._adj.get(node.id)
+    def get_neighbor_ids(self, node_id: Node) -> List[int]:
+        assert node_id in self._nodes
+        neighbor_ids = self._adj.get(node_id)
         if neighbor_ids is None:
             return []
         else:
@@ -187,6 +280,14 @@ def build_jit_class(node_elem, agent_elem):
             self._edges["target"][self.edge_count] = target_id
             self.edge_count += 1
 
+        def add_edges(self, source_ids, target_ids):
+            assert len(source_ids) == len(target_ids)
+            length = len(source_ids)
+            for i in range(length):
+                self._edges["source"][self.edge_count] = source_ids[i]
+                self._edges["target"][self.edge_count] = target_ids[i]
+                self.edge_count += 1
+
         def get_neighbor_ids(self, node_id: TYPE_NODE):
             if self.edge_count == 0:
                 return np.array([-1], dtype=np.int64)
@@ -199,7 +300,7 @@ def build_jit_class(node_elem, agent_elem):
                     bs = self.binsearch(edges, node_id)
                     # print(bs,self.edge_count)
                     if bs[0] < 0:  # no neighbor!
-                        return None
+                        return np.zeros(0, dtype=np.int64)
 
                     self._neighbors_cache[node_id][0] = bs[0]
                     self._neighbors_cache[node_id][1] = bs[1]
@@ -209,6 +310,9 @@ def build_jit_class(node_elem, agent_elem):
                 for i in range(bs[0], bs[1]):
                     res[i] = self._edges["target"][i]
                 return res
+
+        def get_node_by_id(self, node_id: int):
+            return self._nodes[node_id]
 
         def get_neighbors(self, node):
             raise NotImplementedError
