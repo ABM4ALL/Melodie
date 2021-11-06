@@ -11,13 +11,13 @@ import logging
 
 import pandas as pd
 
+import Melodie.visualization
 from . import DB
 from .agent import Agent
 
 from .agent_list import AgentList
 
 from .table_generator import TableGenerator
-
 
 logging.basicConfig(level=logging.INFO,
                     format='%(asctime)s %(filename)s [line:%(lineno)d] %(levelname)s %(message)s',
@@ -31,8 +31,9 @@ if TYPE_CHECKING:
     from .scenario_manager import ScenarioManager, Scenario
     from .data_collector import DataCollector
     from .config import Config
+    from .visualization import NetworkVisualizer
 else:
-    from .scenario_manager import ScenarioManager
+    from .scenario_manager import ScenarioManager, Scenario
     from .config import Config
     from .db import create_db_conn
 
@@ -113,7 +114,6 @@ class Simulator(metaclass=abc.ABCMeta):
 
         return self.registered_tables[table_name]
 
-
     @abc.abstractmethod
     def generate_scenarios(self) -> List['Scenario']:
         """
@@ -141,7 +141,6 @@ class Simulator(metaclass=abc.ABCMeta):
         # 修改后被register_generated_tables替代了。
         pass
 
-
     def pre_run(self):
         """
         `pre_run` means this function should be executed before `run` or `run_parallel`, to initialize the scenarios
@@ -158,8 +157,8 @@ class Simulator(metaclass=abc.ABCMeta):
         print(self.agent_params_dataframe)
         create_db_conn(self.config).reset()
 
-    def run_model(self, config, scenario, model_class, agent_class, environment_class,
-                  data_collector_class, run_id):
+    def run_model(self, config, scenario, model_class: ClassVar['Model'], agent_class, environment_class,
+                  data_collector_class, run_id, visualizer=None):
         """
 
         :return: 
@@ -171,7 +170,8 @@ class Simulator(metaclass=abc.ABCMeta):
                             agent_class,
                             environment_class,
                             data_collector_class,
-                            run_id_in_scenario=run_id)
+                            run_id_in_scenario=run_id,
+                            visualizer=visualizer)
 
         model.setup()
         model._setup()
@@ -211,9 +211,44 @@ class Simulator(metaclass=abc.ABCMeta):
             for run_id in range(scenario.number_of_run):
                 self.run_model(config, scenario, model_class, agent_class, environment_class, data_collector_class,
                                run_id)
-            # logger.warning("正在测试，在此处开启静态服务600s后退出")
 
             logger.info(f'{scenario_index + 1} of {len(self.scenarios)} scenarios has completed.')
+
+        t2 = time.time()
+        logger.info(f'Melodie completed all runs, time elapsed totally {t2 - t0}s, and {t2 - t1}s for running.')
+
+    def run_visual(self,
+                   config: 'Config',
+                   scenario_class: ClassVar['Scenario'],
+                   model_class: ClassVar['Model'],
+                   agent_class: ClassVar['Agent'],
+                   environment_class: ClassVar['Environment'],
+                   data_collector_class: ClassVar['DataCollector'],
+                   visualizer_class: ClassVar['Visualizer'],
+                   ):
+        """
+        Main function for running model!
+        """
+        t0 = time.time()
+        self.config = config
+        self.scenario_class = scenario_class
+        self.pre_run()
+        visualizer: NetworkVisualizer = visualizer_class()
+
+        logger.info('Loading scenarios and static tables...')
+        t1 = time.time()
+        while True:
+            try:
+                scenario = self.scenarios[0]
+                self.run_model(config, scenario, model_class, agent_class, environment_class, data_collector_class,
+                               run_id=0, visualizer=visualizer)
+            except Melodie.visualization.MelodieModelReset as e:
+                ws = e.ws
+                # reset the visualizer
+                visualizer.reset()
+                # visualizer
+                import traceback
+                traceback.print_exc()
 
         t2 = time.time()
         logger.info(f'Melodie completed all runs, time elapsed totally {t2 - t0}s, and {t2 - t1}s for running.')
@@ -290,5 +325,3 @@ class Simulator(metaclass=abc.ABCMeta):
         pool.join()  #
         t2 = time.time()
         logger.info(f'Melodie completed all runs, time elapsed totally {t2 - t0}s, and {t2 - t1}s for running.')
-
-

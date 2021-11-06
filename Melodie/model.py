@@ -19,7 +19,8 @@ class Model:
                  agent_class: ClassVar[Agent],
                  environment_class: ClassVar[Environment],
                  data_collector_class: ClassVar[DataCollector],
-                 run_id_in_scenario: int = 0
+                 run_id_in_scenario: int = 0,
+                 visualizer=None
                  ):
         self.scenario = scenario
         self.project_name = config.project_name
@@ -34,9 +35,7 @@ class Model:
         self.run_id_in_scenario = run_id_in_scenario
 
         self.network = None
-        # self.setup()
-        # assert self.environment_class is not None
-        # self._setup()
+        self.visualizer = visualizer
 
     def setup(self):
         pass
@@ -47,15 +46,6 @@ class Model:
 
     def create_db_conn(self) -> 'DB':
         return create_db_conn(self.config)
-
-
-
-
-
-
-
-
-
 
     def get_agent_param(self):
         # 之后就没用了，统一用get_registered_table
@@ -126,14 +116,6 @@ class Model:
 
         return self.agent_list
 
-
-
-
-
-
-
-
-
     def setup_environment(self):
         self.environment = self.environment_class()
         self.environment.model = self
@@ -148,11 +130,8 @@ class Model:
             raise TypeError(data_collector_class)
         self.data_collector = data_collector
 
-
-
     def _setup(self):
         self.get_agent_param()
         # self.setup_agent_list()
         self.setup_environment()
         self.setup_data_collector()
-

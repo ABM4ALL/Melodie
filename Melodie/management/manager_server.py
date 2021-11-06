@@ -188,11 +188,13 @@ def run_server():
 server_thread: None = None
 
 
-def run_visualize(step_handler: Callable) -> Tuple[threading.Thread, MelodieFlask]:
+def run_visualize(step_handler: Callable, reset_handler: Callable) -> Tuple[threading.Thread, MelodieFlask]:
     global server_thread
     if server_thread is None:
-        if step_handler is not None:
-            app.add_url_rule('/visualize-step', view_func=step_handler)
+        # if step_handler is not None:
+        app.add_url_rule('/visualize-step', view_func=step_handler)
+        app.add_url_rule('/visualize-reset', view_func=reset_handler)
+
         th = threading.Thread(target=app.run, kwargs={"host": "0.0.0.0", 'port': 8089})
         th.setDaemon(True)
         th.start()

@@ -18,8 +18,7 @@ from numba.core import types
 from Melodie.agent import Agent
 import logging
 
-from Melodie.management.manager_server import run_visualize, visualize_condition_queue_main, \
-    visualize_condition_queue_server
+
 
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
@@ -30,90 +29,90 @@ class Node(Agent):
         super(Node, self).__init__(node_id)
 
 
-class NetworkVisualizer():
-    def __init__(self):
-
-        def f123123():
-            t0 = time.time()
-            visualize_condition_queue_main.put(True)
-            ret = visualize_condition_queue_server.get()
-            t1 = time.time()
-
-            return json.dumps(ret, indent=4)  # f"{t1 - t0}"
-
-        self.server_thread, self.visualize_server = run_visualize(f123123)
-
-        logger.info("Network visualizer server is starting...")
-        self.vertex_positions: Dict[str, Tuple[int, int]] = {}
-        self.vertex_roles: Dict[str, int] = {}
-
-        self.edge_roles: Dict[Tuple[int, int], int] = {}
-
-    def parse_edges(self, edges: List[Any], parser: Callable):
-
-        for edge in edges:
-            edge, pos = parser(edge)
-            self.edge_roles[edge] = pos
-
-    def parse_layout(self, node_info: List[Any],
-                     parser: Callable[[Any], Tuple[Union[str, int], Tuple[float, float]]] = None):
-        """
-
-        :param node_info: A list contains a series of node information.
-        :return:
-        """
-        if parser is None:
-            parser = lambda node: (node['name'], (node['x'], node['y']))
-        for node in node_info:
-            node_name, pos = parser(node)
-            self.vertex_positions[node_name] = pos
-
-    def parse_role(self, node_info: List[Any],
-                   parser: Callable[[Any], int] = None):
-        """
-
-        :param node_info: A list contains a series of node information.
-        :return:
-        """
-        assert parser is not None
-        for node in node_info:
-            node_name, role = parser(node)
-            print(node_name, role, node)
-            assert isinstance(role, int), "The role of node should be an int."
-            self.vertex_roles[node_name] = role
-
-    def format(self):
-        lst = []
-        for name, pos in self.vertex_positions.items():
-            lst.append(
-                {
-                    "name": name,
-                    "x": pos[0],
-                    "y": pos[1],
-                    "category": self.vertex_roles[name]
-                }
-            )
-        lst_edges = []
-        for edge, role in self.edge_roles.items():
-            lst_edges.append({
-                "source": edge[0],
-                "target": edge[1]
-            })
-        data = {
-            "series": {
-                "data": lst,
-                "links": lst_edges
-            }
-        }
-        return data
-
-    def wait(self):
-        # print("主线程等待！", visualize_condition_queue_main)
-        visualize_condition_queue_main.get()
-        # print("主线程开始执行！")
-        formatted = self.format()
-        visualize_condition_queue_server.put(formatted)
-        # print("主线程执行完成！")
+# class NetworkVisualizer():
+#     def __init__(self):
+#
+#         def f123123():
+#             t0 = time.time()
+#             visualize_condition_queue_main.put(True)
+#             ret = visualize_condition_queue_server.get()
+#             t1 = time.time()
+#
+#             return json.dumps(ret, indent=4)  # f"{t1 - t0}"
+#
+#         self.server_thread, self.visualize_server = run_visualize(f123123)
+#
+#         logger.info("Network visualizer server is starting...")
+#         self.vertex_positions: Dict[str, Tuple[int, int]] = {}
+#         self.vertex_roles: Dict[str, int] = {}
+#
+#         self.edge_roles: Dict[Tuple[int, int], int] = {}
+#
+#     def parse_edges(self, edges: List[Any], parser: Callable):
+#
+#         for edge in edges:
+#             edge, pos = parser(edge)
+#             self.edge_roles[edge] = pos
+#
+#     def parse_layout(self, node_info: List[Any],
+#                      parser: Callable[[Any], Tuple[Union[str, int], Tuple[float, float]]] = None):
+#         """
+#
+#         :param node_info: A list contains a series of node information.
+#         :return:
+#         """
+#         if parser is None:
+#             parser = lambda node: (node['name'], (node['x'], node['y']))
+#         for node in node_info:
+#             node_name, pos = parser(node)
+#             self.vertex_positions[node_name] = pos
+#
+#     def parse_role(self, node_info: List[Any],
+#                    parser: Callable[[Any], int] = None):
+#         """
+#
+#         :param node_info: A list contains a series of node information.
+#         :return:
+#         """
+#         assert parser is not None
+#         for node in node_info:
+#             node_name, role = parser(node)
+#             print(node_name, role, node)
+#             assert isinstance(role, int), "The role of node should be an int."
+#             self.vertex_roles[node_name] = role
+#
+#     def format(self):
+#         lst = []
+#         for name, pos in self.vertex_positions.items():
+#             lst.append(
+#                 {
+#                     "name": name,
+#                     "x": pos[0],
+#                     "y": pos[1],
+#                     "category": self.vertex_roles[name]
+#                 }
+#             )
+#         lst_edges = []
+#         for edge, role in self.edge_roles.items():
+#             lst_edges.append({
+#                 "source": edge[0],
+#                 "target": edge[1]
+#             })
+#         data = {
+#             "series": {
+#                 "data": lst,
+#                 "links": lst_edges
+#             }
+#         }
+#         return data
+#
+#     def wait(self):
+#         # print("主线程等待！", visualize_condition_queue_main)
+#         visualize_condition_queue_main.get()
+#         # print("主线程开始执行！")
+#         formatted = self.format()
+#         visualize_condition_queue_server.put(formatted)
+#         # print("主线程执行完成！")
 
 
 class Network:

@@ -8,7 +8,7 @@ from typing import Dict, List, Tuple
 import numpy as np
 
 from Melodie import Model, AgentList
-from Melodie.network import Network, Node, NetworkVisualizer
+from Melodie.network import Network, Node
 from examples.FuncCallNetworkSim.model.agent import FuncAgent
 
 
@@ -20,7 +20,6 @@ class FuncNode(Node):
 class FuncModel(Model):
     def setup(self):
         self.network = Network()
-        self.visualizer = NetworkVisualizer()
         node_names_map: Dict[str, int] = {}
         node_id_to_name_map: Dict[str, int] = {}
         edges_with_num: List[Tuple[int, int]] = []
@@ -44,7 +43,6 @@ class FuncModel(Model):
             network_json = json.load(f)
             vertices = network_json['series']['data']
             self.visualizer.parse_layout(vertices, lambda vertex: (vertex['id'], (vertex['x'], vertex['y'])))
-            # self.visualizer.parse_role(vertices, lambda vertex: (vertex['id'], 1))
             self.visualizer.parse_edges(network_json['series']['links'],
                                         lambda edge: ((edge['source'], edge['target']), 1))
         self.agent_list = AgentList(FuncAgent, 652, self, )
@@ -57,15 +55,15 @@ class FuncModel(Model):
             a.id = i
 
         def f(agent):
-            # print(agent.status)
             return self.node_id_to_name_map[agent.id], agent.status
+
+        self.visualizer.parse_role(self.agent_list.agents, f)
+        self.visualizer.start()
 
         for t in range(0, self.scenario.periods):
             self.environment.step(agent_manager, self.network)
-
             self.visualizer.parse_role(self.agent_list.agents, f)
-            print(self.agent_list.agents)
-            print(self.visualizer.vertex_roles)
-            self.visualizer.wait()
+            self.visualizer.step()
+
+        self.visualizer.finish()
         self.environment.get_agents_statistic(agent_manager)
-        # print(agent_manager)
