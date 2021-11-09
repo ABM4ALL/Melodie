@@ -18,6 +18,7 @@ from .agent import Agent
 from .agent_list import AgentList
 
 from .table_generator import TableGenerator
+from .basic.exceptions import MelodieExceptions
 
 logging.basicConfig(level=logging.INFO,
                     format='%(asctime)s %(filename)s [line:%(lineno)d] %(levelname)s %(message)s',
@@ -45,11 +46,11 @@ class Simulator(metaclass=abc.ABCMeta):
         self.scenario_class: Optional[ClassVar['Scenario']] = None
         self.scenarios_dataframe: Optional[pd.DataFrame] = None
         self.agent_params_dataframe: Optional[pd.DataFrame] = None
-        self.registered_tables: Optional[Dict[str, pd.DataFrame]] = {}
+        self.registered_dataframes: Optional[Dict[str, pd.DataFrame]] = {}
         self.scenarios: Optional[List['Scenario']] = None
 
     @abc.abstractmethod
-    def register_static_tables(self):
+    def register_static_dataframes(self):
         """
         This method must be overriden.
 
@@ -61,15 +62,15 @@ class Simulator(metaclass=abc.ABCMeta):
         pass
 
     @abc.abstractmethod
-    def register_generated_tables(self):
+    def register_generated_dataframes(self):
         # 新加的函数，不一定需要写。
         # 但是，考虑到agent_params大概率跟scenarios有依赖关系，所以这个函数也大概率要写。
         pass
 
-    def register_table(self, table_name: str, file_name: str):
-        # register_table(self, table_name: str, file_name: str, data_type: dict, storage_type: Optional[Union["RAM", "ROM"]]="RAM"):
+    def register_dataframe(self, table_name: str, file_name: str):
+        # register_dataframe(self, table_name: str, file_name: str, data_type: dict, storage_type: Optional[Union["RAM", "ROM"]]="RAM"):
         """
-        Register static table, saving it to `self.registered_tables`.
+        Register static table, saving it to `self.registered_dataframes`.
         The static table will be copied into database.
 
         If the scenarios/agents parameter tables can also be registered by this method.
@@ -81,7 +82,7 @@ class Simulator(metaclass=abc.ABCMeta):
         :return:
         """
         _, ext = os.path.splitext(file_name)
-        table = Optional[pd.DataFrame]
+        table: Optional[pd.DataFrame]
         assert table_name.isidentifier(), f"table_name `{table_name}` was not an identifier!"
         if ext in {'.xls', '.xlsx'}:
             file_path_abs = os.path.join(self.config.excel_source_folder, file_name)
@@ -91,36 +92,42 @@ class Simulator(metaclass=abc.ABCMeta):
 
         # 修改后的步骤：
         # 1. 把table按照data_type存入数据库 --> 每张被注册的表必须存到数据库里，因为跑完Simulator再跑Analyzer的时候可能会用。
-        # 2. 根据storage_type赋给self.registered_tables
+        # 2. 根据storage_type赋给self.registered_dataframes
         #    if storage_type == "RAM":
-        #        self.registered_tables[table_name] = table.astype(data_type)
+        #        self.registered_dataframes[table_name] = table.astype(data_type)
         #    elif storage_type == "ROM":
-        #        self.registered_tables[table_name] = None
+        #        self.registered_dataframes[table_name] = None
         #    else: pass
 
-        self.registered_tables[table_name] = table
+        self.registered_dataframes[table_name] = table
+        create_db_conn(self.config).write_dataframe(table_name, table, "replace")
 
-    def get_registered_table(self, table_name) -> pd.DataFrame:
+    def get_registered_dataframe(self, table_name) -> pd.DataFrame:
         """
         Get a static table.
         :param table_name:
         :return:
         """
 
-        # if registered_tables[table_name] != None:
-        #     return self.registered_tables[table_name]
-        # elif registered_tables[table_name] == None:
+        # if registered_dataframes[table_name] != None:
+        #     return self.registered_dataframes[table_name]
+        # elif registered_dataframes[table_name] == None:
+        #     return db.read_dataframe(table_name)
+        if table_name not in self.registered_dataframes:
+            raise MelodieExceptions.Data.StaticTableNotRegistered(table_name, list(self.registered_dataframes.keys()))
+        # if registered_dataframes[table_name] != None:
+        #     return self.registered_dataframes[table_name]
+        # elif registered_dataframes[table_name] == None:
         #     return db.read_dataframe(table_name)
 
-        return self.registered_tables[table_name]
+        return self.registered_dataframes[table_name]
 
-    @abc.abstractmethod
-    def generate_scenarios(self) -> List['Scenario']:
+    def generate_scenarios_from_dataframe(self, df_name: str) -> List['Scenario']:
         """
-        Generate scenario objects by the parameter from static tables or scenarios_dataframe.
+        Generate scenario objects by the parameter from static tables
         :return:
         """
-        self.scenarios_dataframe = self.get_registered_table('scenarios')
+        self.scenarios_dataframe = self.get_registered_dataframe(df_name)
         assert self.scenarios_dataframe is not None
         assert self.scenario_class is not None
         table = self.scenarios_dataframe
@@ -137,25 +144,25 @@ class Simulator(metaclass=abc.ABCMeta):
         return scenarios
 
     @abc.abstractmethod
-    def generate_agent_params_dataframe(self) -> pd.DataFrame:
-        # 修改后被register_generated_tables替代了。
-        pass
+    def generate_scenarios(self) -> List['Scenario']:
+        """
+        Generate scenario objects by the parameter from static tables or scenarios_dataframe.
+        :return:
+        """
 
     def pre_run(self):
         """
-        `pre_run` means this function should be executed before `run` or `run_parallel`, to initialize the scenarios
-        and agent parameters.
+        `pre_run` means this function should be executed before `run`, to initialize the scenario
+        parameters.
 
         This method also clears database.
         :return:
         """
-        self.register_static_tables()
-        self.register_generated_tables()
+        self.register_static_dataframes()
+        self.register_generated_dataframes()
+
         self.scenarios = self.generate_scenarios()
         assert self.scenarios is not None
-        self.agent_params_dataframe = self.generate_agent_params_dataframe()
-        print(self.agent_params_dataframe)
-        create_db_conn(self.config).reset()
 
     def run_model(self, config, scenario, model_class: ClassVar['Model'], agent_class, environment_class,
                   data_collector_class, run_id, visualizer=None):

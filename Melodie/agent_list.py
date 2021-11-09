@@ -1,20 +1,65 @@
 import random
+import time
 
 import pandas as pd
 
-from typing import TYPE_CHECKING, ClassVar, List, Dict, Union
+from typing import TYPE_CHECKING, ClassVar, List, Dict, Union, Set, Optional
 
 from .basic import IndexedAgentList, MelodieExceptions
 
 if TYPE_CHECKING:
     from .agent import Agent
     from .model import Model
+    from .scenario_manager import Scenario
 
 
-class AgentList:
+class BaseAgentContainer:
+    def __init__(self):
+        self.scenario: Union['Scenario', None] = None
+        self.agents: Union[List['Agent'], Set['Agent'], None] = None
+
+    def to_list(self, column_names: List[str] = None) -> List[Dict]:
+        """
+        Convert all agent properties to a list of dict.
+        :param column_names:  property names
+        :return:
+        """
+
+    def set_properties(self, props_df: pd.DataFrame):
+        """
+        Set parameters of all agents generated in current scenario;
+
+        :return:
+        """
+
+        assert props_df is not None
+
+        param_names = [param for param in props_df.columns if param not in
+                       {'scenario_id', 'id'}]
+        props_df_cpy: Optional[pd.DataFrame] = None
+        if "scenario_id" in props_df.columns:
+            props_df_cpy = props_df.query(f"scenario_id == {self.scenario.id}").copy(True)
+        else:
+            props_df_cpy = props_df.copy()  # deep copy this dataframe.
+        props_df_cpy.set_index("id", inplace=True)
+        # Assign parameters to properties for each agent.
+        for i, agent in enumerate(self.agents):
+            params = {}
+            for agent_param_name in param_names:
+                # .item() method was applied to convert pandas/numpy data into python-builtin types.
+                params[agent_param_name] = props_df_cpy.loc[i, agent_param_name].item()
+
+            agent.set_params(params)
+        # t1 = time.time()
+        # print(t1 - t0)
+
+
+class AgentList(BaseAgentContainer):
 
     def __init__(self, agent_class: ClassVar['Agent'], length: int, model: 'Model') -> None:
+        super(AgentList, self).__init__()
         self._iter_index = 0
+        self.scenario = model.scenario
         self.agent_class: ClassVar['Agent'] = agent_class
         self.initial_agent_num: int = length
         self.model = model
@@ -38,9 +83,6 @@ class AgentList:
             return elem
         else:
             raise StopIteration
-
-    # def setup(self):
-    #     pass
 
     def init_agents(self) -> IndexedAgentList:
         agents: List['Agent'] = [self.agent_class(i) for i in range(self.initial_agent_num)]

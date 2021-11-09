@@ -27,7 +27,7 @@ class _ALIAS_Scenario(NewScenario):
 
 class DemoSimulatorManager(SimulatorManager):
 
-    def register_static_tables(self):
+    def register_static_dataframes(self):
         # 这个函数必须写：注册每一张excel_source文件夹里的表，包括：变量名、表名、列名、列数据类型。
         # 1. 注册Scenarios.xlsx
         # 2. 注册其他的static_table
@@ -35,14 +35,6 @@ class DemoSimulatorManager(SimulatorManager):
         # 把这些表导入sqlite数据库。
         pass
 
-    def generate_agent_params_dataframe(self):
-        # 这个函数必须写，分两种情况
-        # (A) 最简单的，直接让agent_params_dataframe等于某张static_table。
-        # (B) 自己写函数，基于1.2和2.1生成agent_params_dataframe
-        #     (B1) 最简单的情况，是直接用类似于现在的add方法，基于1.2生成agent_params_dataframe。
-        #     (B2) 复杂一点，比如参数之间有依赖关系、用到1.2和2.1，让用户自己写函数生成agent_params_dataframe。
-        # 补充：有些参数无关启动模型，属于中间结果（比如每期的收益），此处初始化为0。
-        pass
 
     def generate_scenarios(self) -> List[DemoScenario]:
         # 对每个Scenario的实例，初始化三部分：

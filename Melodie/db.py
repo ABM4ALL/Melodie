@@ -1,7 +1,7 @@
 import os
 import sqlite3
 import time
-from typing import Union, Dict, TYPE_CHECKING, List
+from typing import Union, Dict, TYPE_CHECKING, List, Tuple
 
 from Melodie import Config
 import pandas as pd
@@ -13,12 +13,11 @@ if TYPE_CHECKING:
 
 
 class DB:
+    EXPERIMENTS_TABLE = 'melodie_experiments'
     SCENARIO_TABLE = 'scenarios'
-    AGENT_PARAM_TABLE = 'agent_param' # 不必了
-    AGENT_RESULT_TABLE = 'agent_result'
     ENVIRONMENT_RESULT_TABLE = 'env_result'
 
-    RESERVED_TABLES = {'scenarios', 'agent_params', 'agent_result', 'env_result'}
+    RESERVED_TABLES = {'scenarios', 'env_result'}
 
     def __init__(self, db_name: str, db_type: str = 'sqlite', conn_params: Dict[str, str] = None):
         self.db_name = db_name
@@ -50,14 +49,15 @@ class DB:
         """
         self.connection.close()
 
-    def reset(self):
-        """
-        Drop all tables.
-        :return:
-        """
-        self.drop_table(DB.AGENT_RESULT_TABLE)
-        self.drop_table(DB.AGENT_PARAM_TABLE)
-        self.drop_table(DB.ENVIRONMENT_RESULT_TABLE)
+    # def init_experiment(self, run_id_list: List[Tuple[int, int]]):
+    #     self.drop_table(self.EXPERIMENTS_TABLE)
+    #     self.create_table_if_not_exists(self.EXPERIMENTS_TABLE,
+    #                                     {"run_id": "INTEGER", "scenario_id": "INTEGER", "status": "TEXT"})
+    #     cur = self.connection.cursor()
+    #     runs_list = []
+    #     for run in run_id_list:
+    #         runs_list.append((run[0], run[1], "BEFORE RUN"))
+    #     cur.executemany("insert into")
 
     def table_exists(self, table_name: str) -> bool:
         sql = f"""SELECT * FROM sqlite_master WHERE type="table" AND name = '{table_name}'; """
@@ -139,7 +139,7 @@ class DB:
         Write a dataframe to data table.
         :param table_name:
         :param data_frame:
-        :param if_exists:
+        :param if_exists: {'replace', 'fail', 'append'}
         :return:
         """
 
@@ -198,6 +198,25 @@ class DB:
         conditions = {'scenario_id': scenario_id, 'step': step}
         return self.paramed_query(self.ENVIRONMENT_RESULT_TABLE, conditions)
 
+    def delete_env_record(self, scenario_id: int, run_id: int):
+        try:
+            cur = self.connection.cursor()
+            cur.execute(
+                f"delete from {self.ENVIRONMENT_RESULT_TABLE} where scenario_id={scenario_id} and run_id={run_id}")
+        except sqlite3.OperationalError:
+            import traceback
+            traceback.print_exc()
+
+    def delete_agent_records(self, table_name: str, scenario_id: int, run_id: int):
+        try:
+            cur = self.connection.cursor()
+            cur.execute(
+                f"delete from {table_name} where scenario_id={scenario_id} and run_id={run_id}")
+            self.connection.commit()
+        except sqlite3.OperationalError:
+            import traceback
+            traceback.print_exc()
+
 
 def create_db_conn(config: 'Config' = None) -> DB:
     """
@@ -207,16 +226,3 @@ def create_db_conn(config: 'Config' = None) -> DB:
     assert config is not None
 
     return DB(config.project_name, conn_params={'db_path': config.sqlite_folder})
-
-# def create_db_conn(config: 'Config' = None) -> DB:
-#     """
-#     create a Database by current config
-#     :return:
-#     """
-#     if config is None:
-#         from .run import get_config
-#         config = get_config()
-#     elif not isinstance(config, Config):
-#         raise TypeError
-#
-#     return DB(config.project_name, conn_params={'db_path': config.db_folder})

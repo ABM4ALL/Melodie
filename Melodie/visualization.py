@@ -72,12 +72,6 @@ async def send_message(sock: WebSocketServerProtocol, msg):
     await sock.send(msg)
 
 
-start_server = websockets.serve(handler, 'localhost', 8765)
-
-asyncio.get_event_loop().run_until_complete(start_server)
-asyncio_serve = asyncio.get_event_loop().run_forever
-
-
 class MelodieModelReset(BaseException):
     def __init__(self, ws: WebSocketServerProtocol = None):
         self.ws = ws
@@ -90,6 +84,10 @@ class NetworkVisualizer():
 
         self.current_websocket: WebSocketServerProtocol = None
 
+        start_server = websockets.serve(handler, 'localhost', 8765)
+
+        asyncio.get_event_loop().run_until_complete(start_server)
+        asyncio_serve = asyncio.get_event_loop().run_forever
         self.th = threading.Thread(target=asyncio_serve)
         self.th.setDaemon(True)
         self.th.start()
@@ -215,10 +213,11 @@ class NetworkVisualizer():
         while 1:
             flag, ws = visualize_condition_queue_main.get()
             self.current_websocket = ws
-            if flag in {START, CURRENT_DATA}:
+            if flag in {STEP, CURRENT_DATA}:
                 self.send_current_data()
-                if flag == START:
+                if flag == STEP:  # If the flag was step,
                     self.model_state = RUNNING
+                    visualize_condition_queue_main.put((flag, ws))
                     break
             elif flag == RESET:
                 raise MelodieModelReset

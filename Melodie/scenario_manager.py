@@ -42,14 +42,9 @@ class Scenario(Element):
     def __repr__(self):
         return str(self.__dict__)
 
-    def get_static_table(self, table_name) -> pd.DataFrame:
+    def get_registered_dataframe(self, table_name) -> pd.DataFrame:
         assert self.manager is not None
-        return self.manager.get_registered_table(table_name)
-
-    def get_agent_params_table(self) -> pd.DataFrame:
-        # 因为除了scenarios，不区分agent_params和其他表了，这个函数可以去掉了。要用这个表，也通过get_table(table_name)访问。
-        assert self.manager is not None
-        return self.manager.agent_params_dataframe
+        return self.manager.get_registered_dataframe(table_name)
 
     def get_scenarios_table(self) -> pd.DataFrame:
         assert self.manager is not None

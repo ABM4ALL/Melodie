@@ -11,7 +11,7 @@ import logging
 logging.basicConfig(stream=sys.stderr, level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-from typing import ClassVar
+from typing import ClassVar, List
 
 import numpy as np
 import pandas as pd
@@ -44,6 +44,15 @@ class BoostSimulator(Simulator):
     def create_scenarios_dataframe(self) -> pd.DataFrame:
         return pd.DataFrame([{"id": i, "win_prob": 0.4} for i in range(100)])
 
+    def generate_scenarios(self) -> List['Scenario']:
+        pass
+
+    def register_generated_dataframes(self):
+        return
+
+    def register_static_dataframes(self):
+        return
+
     def run_boost(self,
                   agent_class: ClassVar['Agent'],
                   environment_class: ClassVar['Environment'],
@@ -64,7 +73,7 @@ class BoostSimulator(Simulator):
         logger.info("Preprocess compilation finished, now running pre-run procedures.")
         self.config = config
         self.scenario_class = scenario_class
-        self.register_static_tables()
+        self.register_static_dataframes()
         self.scenarios_dataframe = self.create_scenarios_dataframe()
         self.scenarios = self.generate_scenarios()
         assert self.scenarios is not None

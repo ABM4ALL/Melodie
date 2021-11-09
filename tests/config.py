@@ -23,4 +23,4 @@ cfg_for_temp = Config(
     output_folder=os.path.join(os.path.dirname(__file__), 'resources', 'output')
 )
 
-model = Model(cfg, Scenario())
+model = Model(cfg, Scenario(id_scenario=100), )

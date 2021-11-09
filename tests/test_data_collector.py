@@ -8,12 +8,11 @@
 import random
 from typing import List
 
-import pandas as pd
-
-from Melodie import Agent, DataCollector, Environment, Scenario, Simulator, Model
+from Melodie import Agent, DataCollector, Environment, Scenario, Simulator, Model, AgentList
 from .config import cfg_for_temp
 
-AGENT_NUM = 100
+AGENT_NUM_1 = 10
+AGENT_NUM_2 = 20
 
 
 class TestAgent(Agent):
@@ -35,14 +34,21 @@ class TestScenario(Scenario):
         self.productivity = random.random()
 
 
+class DCTestModel(Model):
+    def setup(self):
+        self.agent_list1 = self.create_agent_container(TestAgent, 10)
+        self.agent_list2 = self.create_agent_container(TestAgent, 20)
+
+
 class Simulator4Test(Simulator):
-    def generate_agent_params_dataframe(self) -> pd.DataFrame:
-        df = pd.DataFrame([{'productivity': random.random(), 'id': i} for i in range(AGENT_NUM)])
-        print(df)
-        return df
+    def register_generated_dataframes(self):
+        return
+
+    def register_static_dataframes(self):
+        return
 
     def generate_scenarios(self) -> List['Scenario']:
-        scenarios = [TestScenario(agent_num=AGENT_NUM) for i in range(1)]
+        scenarios = [TestScenario() for i in range(1)]
         for s in scenarios:
             s.manager = self
         return scenarios
@@ -54,22 +60,23 @@ data_collector = None
 class DataCollector1(DataCollector):
     def setup(self):
         global data_collector
-        self.add_agent_property('a')
-        self.add_agent_property('b')
         data_collector = self
+        self.add_agent_property("agent_list1", 'a')
+        self.add_agent_property("agent_list2", 'b')
 
 
 def test_model_run():
-    Simulator4Test().run(TestAgent,
-                         TestEnv,
+    Simulator4Test().run(agent_class=TestAgent,
+                         environment_class=TestEnv,
                          config=cfg_for_temp,
-                         model_class=Model,
+                         model_class=DCTestModel,
+                         scenario_class=TestScenario,
                          data_collector_class=DataCollector1
                          )
-    dc = data_collector
-    # dc.collect(0)
-    dc.agent_properties_list
-    assert len(dc.agent_properties_list) == AGENT_NUM
+    dc: DataCollector = data_collector
+    dc.collect(0)
+    assert len(dc.agent_properties_dict['agent_list1']) == AGENT_NUM_1
+    assert len(dc.agent_properties_dict['agent_list2']) == AGENT_NUM_2
     dc.collect(1)
-    assert len(dc.environment_properties_list) == 2
-    assert len(dc.agent_properties_list) == AGENT_NUM * 2
+    assert len(dc.agent_properties_dict['agent_list1']) == AGENT_NUM_1 * 2
+    assert len(dc.agent_properties_dict['agent_list2']) == AGENT_NUM_2 * 2

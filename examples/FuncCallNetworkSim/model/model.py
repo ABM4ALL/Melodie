@@ -58,10 +58,12 @@ class FuncModel(Model):
             return self.node_id_to_name_map[agent.id], agent.status
 
         self.visualizer.parse_role(self.agent_list.agents, f)
+
         self.visualizer.start()
 
         for t in range(0, self.scenario.periods):
             self.environment.step(agent_manager, self.network)
+
             self.visualizer.parse_role(self.agent_list.agents, f)
             self.visualizer.step()
 

@@ -139,9 +139,17 @@ class MelodieExceptions:
                                     f'Environment {environment} has no AgentList defined, which is not allowed!')
 
     class Data:
+        """
+        This class is used when external data is imported or exported.
+        """
         ID = 1500
 
         @staticmethod
         def TableNameAlreadyExists(table_name: str, existed: str):
             return MelodieException(1501,
                                     f'Table Named {table_name} does not exist. All existed tables are: {existed}')
+
+        @staticmethod
+        def StaticTableNotRegistered(table_name: str, all_table_names: str):
+            return MelodieException(1502,
+                                    f"Table {table_name} is not registered. All registered tables are: {all_table_names}.")
