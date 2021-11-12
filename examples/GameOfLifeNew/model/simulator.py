@@ -13,7 +13,7 @@ from Melodie.boost.compiler.boostsimulator import BoostSimulator
 class FuncSimulator(BoostSimulator):
     def register_static_dataframes(self):
         self.registered_dataframes['scenarios'] = pd.DataFrame(
-            [{"id": i, "periods": 100} for i in range(100)])
+            [{"id": i, "periods": 10000} for i in range(1)])
 
     def register_generated_dataframes(self):
         pass

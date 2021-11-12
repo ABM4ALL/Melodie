@@ -13,6 +13,7 @@
 # 2. spot的属性。
 
 # grid是run_model的可选项，如果选了，就初始化到model里
+import functools
 import sys
 import time
 from typing import ClassVar, Set
@@ -72,6 +73,7 @@ class Grid:
     def coords_wrap(self, x, y):
         return x % self.width, y % self.height
 
+    @functools.lru_cache(maxsize=100000)
     def get_neighbors(self, x, y, radius: int = 1, moore=True, except_self=True):
         x, y = self._bound_check(x, y)
         neighbors = []

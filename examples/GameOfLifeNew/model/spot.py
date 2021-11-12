@@ -3,12 +3,14 @@
 # @Author: Zhanyi Hou
 # @Email: 1295752786@qq.com
 # @File: spot.py
+import random
+
 from Melodie.grid import Spot
 
 
 class GameOfLifeSpot(Spot):
     def setup(self):
-        self.alive = False
+        self.alive = random.random() > 0.5
 
     def alive_on_next_tick(self, surround_alive_count: int) -> bool:
         if self.alive:

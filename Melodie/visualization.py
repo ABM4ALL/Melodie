@@ -35,7 +35,8 @@ ERROR = 1
 
 QUEUE_ELEM = Tuple[int, WebSocketServerProtocol]
 
-visualize_condition_queue_main = Queue(1)
+visualize_condition_queue_main = Queue(10)
+visualize_result_queue_main = Queue(10)
 
 socks: List[WebSocketServerProtocol] = list()
 
@@ -60,14 +61,31 @@ async def handler(websocket: WebSocketServerProtocol, path):
     socks = new_socks
     socks.append(websocket)
     while 1:
-        content = await websocket.recv()
-        rec = json.loads(content)
-        cmd = rec['cmd']
-        data = rec['data']
-        if 0 <= cmd <= 5:
-            visualize_condition_queue_main.put((cmd, data, websocket))
-        else:
-            raise NotImplementedError(cmd)
+        try:
+            content = await asyncio.wait_for(websocket.recv(), timeout=0.05)
+            print(content)
+            rec = json.loads(content)
+            cmd = rec['cmd']
+            data = rec['data']
+            if 0 <= cmd <= 5:
+                try:
+                    visualize_condition_queue_main.put((cmd, data, websocket), timeout=1)
+                except:
+                    import traceback
+                    traceback.print_exc()
+                    print("last_cmd_content", content)
+            else:
+                raise NotImplementedError(cmd)
+        except (asyncio.TimeoutError, ConnectionRefusedError):
+            # print('timeout')
+            pass
+
+        try:
+            while 1:
+                res = visualize_result_queue_main.get(False)
+                await websocket.send(res)
+        except queue.Empty:
+            pass
 
 
 async def send_message(sock: WebSocketServerProtocol, msg):
@@ -79,7 +97,7 @@ class MelodieModelReset(BaseException):
         self.ws = ws
 
 
-class Visualizer():
+class Visualizer:
     def __init__(self):
         self.current_step = 0
         self.model_state = UNCONFIGURED
@@ -88,9 +106,12 @@ class Visualizer():
 
         self.current_websocket: WebSocketServerProtocol = None
 
+        # asyncio.get_event_loop().run_until_complete(main())
+
         start_server = websockets.serve(handler, 'localhost', 8765)
         asyncio.get_event_loop().run_until_complete(start_server)
         asyncio_serve = asyncio.get_event_loop().run_forever
+
         self.th = threading.Thread(target=asyncio_serve)
 
         self.th.setDaemon(True)
@@ -104,27 +125,10 @@ class Visualizer():
 
     def send_initial_msg(self, ws: WebSocketServerProtocol):
         formatted = self.format()
-        loop = asyncio.new_event_loop()
-        asyncio.set_event_loop(loop)
-        loop.run_until_complete(send_message(ws, json.dumps(formatted)))
-        loop.close()
-
-    async def _send_message(self, msg: str):
-        assert self.current_websocket is not None
-        if self.current_websocket.closed:
-            logger.fatal("Current websocket was closed!")
-            return
-        else:
-            await self.current_websocket.send(msg)
+        self.send_message(json.dumps(formatted))
 
     def send_message(self, msg):
-        # asyncio.run(self._send_message(msg))
-        # asyncio.get_event_loop()
-        loop = asyncio.new_event_loop()
-        asyncio.set_event_loop(loop)
-        loop.run_until_complete(
-            self._send_message(msg))
-        loop.close()
+        visualize_result_queue_main.put(msg)
 
     def send_scenario_params(self, params_list: List[Scenario.BaseParameter]):
         param_models = []
@@ -147,14 +151,11 @@ class Visualizer():
 
     def send_current_data(self):
         formatted = self.format()
-        # try:
+
         self.send_message(
             json.dumps(
                 {"type": "data", "step": self.current_step, "data": formatted, "modelState": self.model_state,
                  "status": OK}))
-        # except:
-        #     import traceback
-        #     traceback.print_exc()
 
     def send_error(self, err_msg):
         self.send_message(

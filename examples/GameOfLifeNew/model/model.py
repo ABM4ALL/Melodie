@@ -22,12 +22,10 @@ class FuncNode(Node):
 
 class GameOfLifeModel(Model):
     def setup(self):
-        self.grid = Grid(GameOfLifeSpot, 50, 50)
-        # self.visualizer = GridVisualizer()
+        self.grid = Grid(GameOfLifeSpot, 100, 100)
 
     def run(self):
 
-        # self.visualizer.parse_role(self.agent_list.agents, f)
         def spot_role(spot: GameOfLifeSpot):
             if spot.alive:
                 return 1
@@ -38,10 +36,12 @@ class GameOfLifeModel(Model):
         self.visualizer.start()
 
         for i in range(self.scenario.periods):
+            t0 = time.time()
             self.environment.step(self.grid)
-
+            t1 = time.time()
+            print(t1 - t0)
             self.visualizer.parse_grid_roles(self.grid, spot_role)
-            self.visualizer.start()
+            self.visualizer.step()
 
         self.visualizer.parse_grid_roles(self.grid, spot_role)
         self.visualizer.finish()
