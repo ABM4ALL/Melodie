@@ -218,6 +218,7 @@ class Simulator(metaclass=abc.ABCMeta):
             for run_id in range(scenario.number_of_run):
                 self.run_model(config, scenario, model_class, agent_class, environment_class, data_collector_class,
                                run_id)
+            create_db_conn(self.config).save_experiment_meta(scenario)
 
             logger.info(f'{scenario_index + 1} of {len(self.scenarios)} scenarios has completed.')
 
@@ -247,13 +248,13 @@ class Simulator(metaclass=abc.ABCMeta):
         while True:
             try:
                 scenario = self.scenarios[0]
+                visualizer.current_scenario = scenario  # set visualizer scenario.
                 self.run_model(config, scenario, model_class, agent_class, environment_class, data_collector_class,
                                run_id=0, visualizer=visualizer)
             except Melodie.visualization.MelodieModelReset as e:
-                ws = e.ws
-                # reset the visualizer
+
                 visualizer.reset()
-                # visualizer
+
                 import traceback
                 traceback.print_exc()
 
@@ -329,6 +330,6 @@ class Simulator(metaclass=abc.ABCMeta):
         pool.starmap(self.run_model, parameters)
 
         pool.close()  # 关闭进程池，不再接受新的进程
-        pool.join()  #
+        pool.join()
         t2 = time.time()
         logger.info(f'Melodie completed all runs, time elapsed totally {t2 - t0}s, and {t2 - t1}s for running.')

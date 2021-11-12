@@ -35,7 +35,7 @@ class DataCollector:
     """
     Data Collector collects data for each scenario.
     At the beginning of simulation scenario, the DataCollector creates;
-    User could customize when to dump data to dataframe.
+    User could customize which data should be dumped to dataframe.
     By simulation scenario exits, the DataCollector dumps the data to dataframe, and save to
     data or datafile.
     """

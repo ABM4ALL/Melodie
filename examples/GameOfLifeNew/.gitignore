@@ -1,0 +1,5 @@
+_database
+_output/*
+output/*
+data/sqlite/*
+temp

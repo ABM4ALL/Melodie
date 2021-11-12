@@ -1,6 +1,9 @@
 import os
 import logging
-from typing import List, Optional, Union, ClassVar, TYPE_CHECKING
+from typing import List, Optional, Union, ClassVar, TYPE_CHECKING, Dict
+
+import numpy
+import numpy as np
 
 from Melodie.element import Element
 from Melodie.db import DB, create_db_conn
@@ -16,6 +19,31 @@ logger = logging.getLogger(__name__)
 
 
 class Scenario(Element):
+    class BaseParameter():
+        def __init__(self, name, type, init):
+            self.name = name
+            self.type = type
+            self.init = init
+
+        def to_dict(self):
+            return self.__dict__
+
+    class NumberParameter(BaseParameter):
+        def __init__(self, name, init_value: Union[int, float], min_val: Optional[Union[int, float]] = None,
+                     max_val: Optional[Union[int, float]] = None,
+                     step: Optional[Union[int, float]] = None):
+            super().__init__(name, "number", init_value)
+            if min_val is None or max_val is None or step is None:
+                raise NotImplementedError("This version of melodie does not support free bound or step yet")
+            self.min = min_val
+            self.max = max_val
+            self.step = step
+
+    class SelectionParameter(BaseParameter):
+        def __init__(self, name, init_value: Union[int, str, bool], selections: List[Union[int, str, bool]]):
+            super().__init__(name, "selection", init_value)
+            self.selections = selections
+
     def __init__(self, id_scenario: Optional[Union[int, str]] = None, agent_num=0):
         """
         :param id_scenario: the id of scenario. if None, this will be self-increment from 0 to scenarios_number-1
@@ -35,9 +63,16 @@ class Scenario(Element):
 
     def toDict(self):
         d = {}
-        for k in self.params:
-            d[k] = self.__dict__[k]
+        for k in self.__dict__.keys():
+            v = self.__dict__[k]
+            if np.isscalar(v):
+                d[k] = v
+            else:
+                print(type(self.__dict__[k]))
         return d
+
+    def properties_as_parameters(self) -> List[BaseParameter]:
+        return []
 
     def __repr__(self):
         return str(self.__dict__)

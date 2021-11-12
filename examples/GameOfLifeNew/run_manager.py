@@ -4,6 +4,6 @@
 # @Email: 1295752786@qq.com
 # @File: run_manager.py.py
 
-from Melodie.management.manager_server import run
+from Melodie.management.manager_server import run_server
 
-run()
+run_server()

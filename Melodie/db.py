@@ -217,6 +217,14 @@ class DB:
             import traceback
             traceback.print_exc()
 
+    def save_experiment_meta(self, scenario: 'Scenario'):
+        d = scenario.toDict()
+        d['finished_at'] = time.time()
+        df = pd.DataFrame([
+            d
+        ])
+        self.write_dataframe(self.EXPERIMENTS_TABLE, df, "append")
+
 
 def create_db_conn(config: 'Config' = None) -> DB:
     """
