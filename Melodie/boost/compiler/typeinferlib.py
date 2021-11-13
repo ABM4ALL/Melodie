@@ -8,12 +8,15 @@ import ast
 import random
 import sys
 import logging
+import time
+
 import numpy as np
 from typing import List, Dict, ClassVar, Set, Generic, TypeVar, Tuple
 
 import pandas
 
 from Melodie import Agent
+from Melodie.grid import Grid
 
 logging.basicConfig(level=logging.WARNING, stream=sys.stderr)
 logger = logging.getLogger(__name__)
@@ -24,14 +27,15 @@ registered_types = {  # 保留类型或者可以直接求值的类型
     'str': str,
     'bool': bool,
 
-    'Agent': Agent
-
+    'Agent': Agent,
+    'Grid': Grid,
 }
 
 global_names = {  # 导入的包名
     'np': np,
     'pd': pandas,
-    'random': random
+    'random': random,
+    'time': time,
 }
 
 function_types = {  # 函数的返回类型
@@ -98,7 +102,7 @@ class assign:
                     types_inferred[target_id] = called.__annotations__['return']
                 else:
                     raise TypeError(f"[Line: {node_value.lineno}]Cannot infer return value of function {called}. "
-                                    f"Please register this function.")
+                                    f"Please register this function or type the left variable.")
             else:
                 raise NotImplementedError(ast.dump(node_value))
 
@@ -143,7 +147,7 @@ class attribute:
     @staticmethod
     def get_out_type_from_attribute_chain(chain: List[str], types_inferred):
         assert len(chain) > 1, chain
-        if chain[0] in types_inferred:
+        if chain[0] in types_inferred:  # 寻找根对象。根对象可能是被注册的，或者已经被扫描过。
             value = types_inferred[chain[0]]
         elif chain[0] in global_names:
             value = global_names[chain[0]]
@@ -154,3 +158,8 @@ class attribute:
             value = getattr(value, chain[index])
             index += 1
         return value
+
+
+def register_type(cls_var: ClassVar):
+    registered_types[cls_var.__name__] = cls_var
+    print(cls_var.__name__)

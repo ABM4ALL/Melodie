@@ -18,7 +18,7 @@ from model.environment import FuncEnvironment
 from model.scenario import FuncScenario
 from model.model import FuncModel
 from model.simulator import FuncSimulator
-from Melodie.visualization import NetworkVisualizer
+from model.visualizer import FuncCallSimVisualizer
 from config import config
 
 if __name__ == "__main__":
@@ -34,5 +34,5 @@ if __name__ == "__main__":
         model_class=FuncModel,
         scenario_class=FuncScenario,
         data_collector_class=DataCollector,
-        visualizer_class=NetworkVisualizer
+        visualizer_class=FuncCallSimVisualizer
     )

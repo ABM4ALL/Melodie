@@ -15,8 +15,10 @@ import astunparse
 from pprintast import pprintast
 
 from Melodie import Agent, AgentList
+from Melodie.boost.compiler.typeinferlib import registered_types
 
 from Melodie.network import Network
+from Melodie.grid import Grid
 from Melodie.management.ast_parse import find_class_defs, find_class_methods
 import numpy as np
 
@@ -38,114 +40,115 @@ class RewriteName(ast.NodeTransformer):
         return node
 
 
-class TypeInferr(ast.NodeVisitor):
-    def __init__(self, initial_types: Dict[str, TypeVar]):
-        self.types_inferred: Dict[str, TypeVar] = initial_types.copy()
-
-    def visit_AnnAssign(self, node: ast.AnnAssign) -> Any:
-        target = node.target
-        assert isinstance(target, ast.Name), "Assert could only be to a single variable"
-        if isinstance(node.value, ast.Constant):
-            if node.value.value is None:
-                assert isinstance(node.annotation, ast.Constant)
-                self.types_inferred[target.id] = eval(node.annotation.value)
-                # raise NotImplementedError
-            else:
-                self.types_inferred[target.id] = type(node.value.value)
-        else:
-            logger.warning(f"skipping annassign {ast.dump(node)}")
-            assert isinstance(node.annotation, ast.Constant)
-            annotated_type = eval(node.annotation.value)
-            if target.id in self.types_inferred:
-                inferred_type = self.types_inferred[target.id]
-                assert issubclass(annotated_type, inferred_type)
-            else:
-                self.types_inferred[target.id] = annotated_type
-
-    def visit_Assign(self, node: ast.Assign) -> Any:
-        assert len(node.targets) == 1
-        target = node.targets[0]
-        if isinstance(target, ast.Name):
-            if isinstance(node.value, ast.Constant):
-                if node.value is None:
-                    raise NotImplementedError
-                    pass
-                else:
-                    self.types_inferred[target.id] = type(node.value.value)
-            elif isinstance(node.value, ast.Name):
-                assert node.value.id in self.types_inferred, node.value.id
-                self.types_inferred[target.id] = self.types_inferred[node.value.id]
-            elif isinstance(node.value, ast.Call):
-                func = node.value.func
-                if isinstance(func, ast.Name):
-                    func_name = func.id
-                    if func_name in {'len', 'sum'}:
-                        self.types_inferred[target.id] = int
-                    else:
-                        raise NotImplementedError(func_name)
-                elif isinstance(func, ast.Attribute):
-                    logger.warning('found assignment in a special way')
-                    return
-                else:
-                    raise NotImplementedError(ast.dump(node.value))
-            elif isinstance(node.value, ast.BinOp):
-                self.types_inferred[target.id] = np.float
-                logger.warning(f'Found binop at {ast.dump(node.value)}. Assigning the left value to np.float')
-                return
-            else:
-                self.types_inferred[target.id] = int
-                logger.warning(f'ignored {ast.dump(node.value)}')
-        elif isinstance(target, ast.Tuple):
-            names = target.elts
-            for name in names:
-                if name.id not in self.types_inferred:
-                    raise TypeError(f'Vars in Tuple assigning should be annotated declared '
-                                    f'before.')
-            return
-        elif isinstance(target, ast.Attribute):
-            logger.warning(f'Skipping the assigning to attribute {ast.dump(target)}')
-            return
-        elif isinstance(target, ast.Subscript):
-            logger.warning(f'Skipping the assigning to subscript {ast.dump(target)}')
-            return
-        else:
-
-            raise NotImplementedError(ast.dump(target))
-
-    def visit_For(self, node: ast.For) -> Any:
-        self._visit_For(node)
-        # self.visit(node.iter)
-        for child in node.body:
-            self.visit(child)
-
-    def _visit_For(self, node: ast.For) -> Any:
-
-        assert isinstance(node.target, ast.Name), "当前只支持ast.Name型作为for循环的迭代变量"
-        if isinstance(node.iter, ast.Name):  # "当前只支持ast.Name型作为for循环的迭代变量"
-            if node.iter.id in self.types_inferred:
-                if issubclass(self.types_inferred[node.iter.id], AgentList):
-                    self.types_inferred[node.target.id] = Agent
-                    return
-                elif issubclass(self.types_inferred[node.iter.id], np.ndarray):
-                    self.types_inferred[node.target.id] = np.ndarray
-                    return
-                else:
-                    raise NotImplementedError
-            else:
-                raise TypeError(f"node.iter was {ast.dump(node.iter)}, which has not been type-inferred.")
-        elif isinstance(node.iter, ast.Call):
-            func_name = node.iter.func.id
-            if func_name == 'range':
-                self.types_inferred[node.target.id] = int
-                return
-            else:
-
-                raise NotImplementedError(ast.dump(node))
-        else:
-            raise ValueError(ast.dump(node))
-        # pprintast(node)/
-        raise NotImplementedError(ast.dump(node))
-        # return node
+#
+# class TypeInferr(ast.NodeVisitor):
+#     def __init__(self, initial_types: Dict[str, TypeVar]):
+#         self.types_inferred: Dict[str, TypeVar] = initial_types.copy()
+#
+#     def visit_AnnAssign(self, node: ast.AnnAssign) -> Any:
+#         target = node.target
+#         assert isinstance(target, ast.Name), "Assert could only be to a single variable"
+#         if isinstance(node.value, ast.Constant):
+#             if node.value.value is None:
+#                 assert isinstance(node.annotation, ast.Constant)
+#                 self.types_inferred[target.id] = eval(node.annotation.value)
+#                 # raise NotImplementedError
+#             else:
+#                 self.types_inferred[target.id] = type(node.value.value)
+#         else:
+#             logger.warning(f"skipping annassign {ast.dump(node)}")
+#             assert isinstance(node.annotation, ast.Constant)
+#             annotated_type = eval(node.annotation.value)
+#             if target.id in self.types_inferred:
+#                 inferred_type = self.types_inferred[target.id]
+#                 assert issubclass(annotated_type, inferred_type)
+#             else:
+#                 self.types_inferred[target.id] = annotated_type
+#
+#     def visit_Assign(self, node: ast.Assign) -> Any:
+#         assert len(node.targets) == 1
+#         target = node.targets[0]
+#         if isinstance(target, ast.Name):
+#             if isinstance(node.value, ast.Constant):
+#                 if node.value is None:
+#                     raise NotImplementedError
+#                     pass
+#                 else:
+#                     self.types_inferred[target.id] = type(node.value.value)
+#             elif isinstance(node.value, ast.Name):
+#                 assert node.value.id in self.types_inferred, node.value.id
+#                 self.types_inferred[target.id] = self.types_inferred[node.value.id]
+#             elif isinstance(node.value, ast.Call):
+#                 func = node.value.func
+#                 if isinstance(func, ast.Name):
+#                     func_name = func.id
+#                     if func_name in {'len', 'sum'}:
+#                         self.types_inferred[target.id] = int
+#                     else:
+#                         raise NotImplementedError(func_name)
+#                 elif isinstance(func, ast.Attribute):
+#                     logger.warning('found assignment in a special way')
+#                     return
+#                 else:
+#                     raise NotImplementedError(ast.dump(node.value))
+#             elif isinstance(node.value, ast.BinOp):
+#                 self.types_inferred[target.id] = np.float
+#                 logger.warning(f'Found binop at {ast.dump(node.value)}. Assigning the left value to np.float')
+#                 return
+#             else:
+#                 self.types_inferred[target.id] = int
+#                 logger.warning(f'ignored {ast.dump(node.value)}')
+#         elif isinstance(target, ast.Tuple):
+#             names = target.elts
+#             for name in names:
+#                 if name.id not in self.types_inferred:
+#                     raise TypeError(f'Vars in Tuple assigning should be annotated declared '
+#                                     f'before.')
+#             return
+#         elif isinstance(target, ast.Attribute):
+#             logger.warning(f'Skipping the assigning to attribute {ast.dump(target)}')
+#             return
+#         elif isinstance(target, ast.Subscript):
+#             logger.warning(f'Skipping the assigning to subscript {ast.dump(target)}')
+#             return
+#         else:
+#
+#             raise NotImplementedError(ast.dump(target))
+#
+#     def visit_For(self, node: ast.For) -> Any:
+#         self._visit_For(node)
+#         # self.visit(node.iter)
+#         for child in node.body:
+#             self.visit(child)
+#
+#     def _visit_For(self, node: ast.For) -> Any:
+#
+#         assert isinstance(node.target, ast.Name), "当前只支持ast.Name型作为for循环的迭代变量"
+#         if isinstance(node.iter, ast.Name):  # "当前只支持ast.Name型作为for循环的迭代变量"
+#             if node.iter.id in self.types_inferred:
+#                 if issubclass(self.types_inferred[node.iter.id], AgentList):
+#                     self.types_inferred[node.target.id] = Agent
+#                     return
+#                 elif issubclass(self.types_inferred[node.iter.id], np.ndarray):
+#                     self.types_inferred[node.target.id] = np.ndarray
+#                     return
+#                 else:
+#                     raise NotImplementedError
+#             else:
+#                 raise TypeError(f"node.iter was {ast.dump(node.iter)}, which has not been type-inferred.")
+#         elif isinstance(node.iter, ast.Call):
+#             func_name = node.iter.func.id
+#             if func_name == 'range':
+#                 self.types_inferred[node.target.id] = int
+#                 return
+#             else:
+#
+#                 raise NotImplementedError(ast.dump(node))
+#         else:
+#             raise ValueError(ast.dump(node))
+#         # pprintast(node)/
+#         raise NotImplementedError(ast.dump(node))
+#         # return node
 
 
 class RewriteCallEnv(ast.NodeTransformer):
@@ -198,7 +201,7 @@ class RewriteCallEnv(ast.NodeTransformer):
                     node.func = ast.Name(id='___agent___manager___' + attr.attr)
                     node.args.insert(0, ast.Name(id=attr.value.id))
                     return node
-                elif issubclass(type_var, Network):  # Network已经会传入jitclass.
+                elif issubclass(type_var, (Network, Grid)):  # Network已经会传入jitclass.
                     return node
                 else:
                     raise TypeError(ast.dump(node.func))
@@ -210,18 +213,17 @@ class RewriteCallEnv(ast.NodeTransformer):
 
 
 class RewriteCallModel(ast.NodeTransformer):
-    def __init__(self, root_name: str, initial_types: Dict[str, TypeVar]):
+    def __init__(self, root_name: str, initial_types: Dict[str, TypeVar], sub_components=None):
         super().__init__()
         self.root_name = root_name
 
         self.types_inferred: Dict[str, TypeVar] = initial_types.copy()
-        self.sub_components = {'environment', 'agent_manager'}
 
-    # def visit_For(self, node: ast.For) -> Any:
-    #
-    #     for expr in node.body:
-    #         self.visit(expr)
-    #     return node
+        self.sub_components = {"environment"}
+
+        if sub_components is not None:
+            assert isinstance(sub_components, set)
+            self.sub_components.update(sub_components)
 
     def visit_Attribute(self, node: ast.Attribute) -> ast.Name:
         print(ast.dump(node))
@@ -264,7 +266,6 @@ class RewriteCallModel(ast.NodeTransformer):
             while isinstance(attr.value, ast.Attribute):
                 attr = attr.value
                 attr_name_chain.append(attr.attr)
-            print(attr_name_chain)
             assert isinstance(attr.value, ast.Name)
             if attr.value.id == self.root_name:
                 if attr_name_chain[-1] in self.sub_components:  # 调用了agent_manager或者environment等
@@ -274,9 +275,12 @@ class RewriteCallModel(ast.NodeTransformer):
                     node.args.insert(0, ast.Name(id="___model." + attr_name_chain[-1]))
                     # raise NotImplementedError
                 else:
-                    raise NotImplementedError
+                    logger.warning(f"Ignored model `self.` call: {attr_name_chain}")
+                    pass
+                    # raise NotImplementedError
             else:
-                raise NotImplementedError
+                logger.warning(f"Ignored call: {ast.dump(node)} at line {node.lineno}")
+
             # if attr.value.id == self.root_name:
             #     name = ast.Name(id=self.root_name + "___" + attr.attr)
             #     node.func = name
@@ -322,6 +326,7 @@ class GINIAgent(Agent):
 
 
 prefix = """
+import time
 import random
 import numpy as np
 from Melodie.boost.compiler.boostlib import ___agent___manager___random_sample
@@ -337,8 +342,11 @@ def modify_ast_environment(method: ast.FunctionDef, root_name: str):
         annotations[arg.arg] = arg.annotation
         if i > 0:
             assert arg.annotation is not None
-            annotations[arg.arg] = eval(arg.annotation.value)
-
+            annotation = arg.annotation
+            if isinstance(annotation, ast.Constant):
+                annotations[arg.arg] = eval(arg.annotation.value)
+            elif isinstance(annotation, ast.Name):
+                annotations[arg.arg] = eval(annotation.id)
     RewriteName(root_name, {}).visit(method)
 
     ti = TypeInferr(annotations)
@@ -359,14 +367,17 @@ def modify_ast_environment(method: ast.FunctionDef, root_name: str):
     return r
 
 
-def modify_ast_model(method, root_name):
+def modify_ast_model(method, root_name, model_components):
     annotations = {}
     for i, arg in enumerate(method.args.args):
 
         annotations[arg.arg] = arg.annotation
         if i > 0:
             assert arg.annotation is not None
-            annotations[arg.arg] = eval(arg.annotation.value)
+            if arg.annotation.value in registered_types:
+                annotations[arg.arg] = registered_types[arg.annotation.value]
+            else:
+                annotations[arg.arg] = eval(arg.annotation.value)
 
     RewriteName(root_name, {}).visit(method)
 
@@ -375,20 +386,20 @@ def modify_ast_model(method, root_name):
 
     print('types inferred:', ti.types_inferred)
     pprintast(method)
-    rce = RewriteCallModel(root_name, ti.types_inferred)
+    rce = RewriteCallModel(root_name, ti.types_inferred, sub_components=model_components)
     rce.visit(method)
     method.args.args[0].arg = root_name
     method.name = root_name + '___' + method.name
 
     print('+++++++++++++++++++++++++++++++++')
-    # print(pprintast(method))
+    print(pprintast(method))
     r = astunparse.unparse(method)
 
     return r
 
 
 def get_class_in_file(filename: str, cls_name) -> ast.ClassDef:
-    with open(filename,encoding="utf8") as f:
+    with open(filename, encoding="utf8") as f:
         root = ast.parse(f.read())
         for node in ast.walk(root):
             if isinstance(node, ast.ClassDef) and node.name == cls_name:
@@ -405,7 +416,7 @@ def get_ast(agent_class: ClassVar, environment_class, model_class):
             get_class_in_file(model_file, model_class.__name__))
 
 
-def conv(agent_class, environment_class, model_class, output):
+def conv(agent_class, environment_class, model_class, output, model_components=None):
     agent_class, env_class, model_class = get_ast(agent_class, environment_class, model_class)
     f = open(output, 'w')
     f.write(prefix)
@@ -423,7 +434,7 @@ def conv(agent_class, environment_class, model_class, output):
 
     for method in find_class_methods(model_class):
         if method.name != 'setup':  # and method.name == 'go_money_transfer':
-            code = modify_ast_model(method, '___model')
+            code = modify_ast_model(method, '___model', model_components)
             print(code)
             f.write(code)
 

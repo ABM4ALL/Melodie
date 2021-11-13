@@ -1,48 +1,72 @@
 
+import time
 import random
 import numpy as np
 from Melodie.boost.compiler.boostlib import ___agent___manager___random_sample
 import numba
 
 @numba.jit
-def ___agent___go_produce(___agent):
-    rand = random.random()
-    if (rand <= ___agent['productivity']):
-        ___agent['account'] += 1
+def ___agent___alive_on_next_tick(___agent, surround_alive_count: int) -> bool:
+    if ___agent['alive']:
+        if ((surround_alive_count == 2) or (surround_alive_count == 3)):
+            return True
+        else:
+            return False
+    elif (surround_alive_count == 3):
+        return True
     else:
-        pass
-    return None
+        return False
 
 
 @numba.jit
-def ___environment___step(___environment, agents: 'AgentList', network: 'Network'):
-    for agent in agents:
-        if (agent['status'] == 0):
-            if (random.random() > agent['reliability']):
-                agent['status'] = 1
-        elif (random.random() > 0.6):
-            agent['status'] = 0
-        if (agent['status'] == 1):
-            node = network.get_node_by_id(agent.id)
-            neighbor_ids: 'np.ndarray' = network.get_neighbor_ids(node.id)
-            for neighbor_id in neighbor_ids:
-                if (random.random() > 0.97):
-                    agents[neighbor_id].status = 1
+def ___environment___step(___environment, grid: 'Grid'):
+    buffer_status_next_tick: 'np.ndarray' = np.zeros((grid.width, grid.height), dtype=np.int64)
+    for x in range(grid.width):
+        for y in range(grid.height):
+            neighbor_positions: 'np.ndarray' = grid.get_neighbors(x, y)
+            count: int = ___environment___count_neighbor_alives(___environment, grid, neighbor_positions)
+            current_spot: 'GameOfLifeSpot' = grid.get_spot(x, y)
+            buffer_status_next_tick[y][x] = ___agent___alive_on_next_tick(current_spot, count)
+    for x in range(grid.width):
+        for y in range(grid.height):
+            spot: 'GameOfLifeSpot' = grid.get_spot(x, y)
+            if (buffer_status_next_tick[y][x] == 0):
+                spot['alive'] = False
+            else:
+                spot['alive'] = True
 
 
 @numba.jit
-def ___environment___get_agents_statistic(___environment, agents: 'AgentList'):
-    s = 0
-    agent: 'Agent' = None
-    for agent in agents:
-        s += agent['status']
-    print((s / 652))
+def ___environment___count_neighbor_alives(___environment, grid: 'Grid', neighbor_positions: 'np.ndarray'):
+    alive_count = 0
+    for neighbor_pos in neighbor_positions:
+        spot: 'GameOfLifeSpot' = grid.get_spot(neighbor_pos[0], neighbor_pos[1])
+        if spot['alive']:
+            alive_count += 1
+    return alive_count
 
 
+
+
+def ___model___setup_boost(___model):
+    ___model.environment = None
+    ___model.grid = build_jit_class(100, 100)
+    ___model.visualizer.grid = ___model.grid
 
 
 def ___model___run(___model):
-    agent_manager: 'AgentList' = ___model.agent_list
-    for t in range(0, ___model.scenario.periods):
-        ___environment___step(___model.environment, agent_manager, ___model.network)
-    ___environment___get_agents_statistic(___model.environment, agent_manager)
+    ___model.visualizer.parse(___model.grid)
+    ___model.visualizer.start()
+    for i in range(___model.scenario.periods):
+        t0: float = time.time()
+        ___environment___step(___model.environment, ___model.grid)
+        t1: float = time.time()
+        print((t1 - t0))
+        t0: float = time.time()
+        ___model.visualizer.parse(___model.grid)
+        t1: float = time.time()
+        print('parsing time', (t1 - t0))
+        ___model.visualizer.step()
+    print(___model.grid._spots)
+    ___model.visualizer.parse(___model.grid)
+    ___model.visualizer.finish()

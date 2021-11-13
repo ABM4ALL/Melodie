@@ -12,6 +12,6 @@ class GameOfLifeScenario(Scenario):
     def setup(self):
         pass
 
-    # def properties_as_parameters(self) -> List[Scenario.BaseParameter]:
-    #     return [Scenario.NumberParameter("reliability", 0.99, 0, 1, 0.001),
-    #             Scenario.NumberParameter("recover_rate", 0.8, 0, 1, 0.001)]
+    def properties_as_parameters(self) -> List[Scenario.BaseParameter]:
+        return [Scenario.NumberParameter("reliability", 0.99, 0, 1, 0.001),
+                Scenario.NumberParameter("recover_rate", 0.8, 0, 1, 0.001)]

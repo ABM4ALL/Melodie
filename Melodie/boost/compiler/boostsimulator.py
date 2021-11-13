@@ -8,6 +8,8 @@ import sys
 import time
 import logging
 
+from Melodie.visualization import Visualizer
+
 logging.basicConfig(stream=sys.stderr, level=logging.INFO)
 logger = logging.getLogger(__name__)
 
@@ -16,7 +18,7 @@ from typing import ClassVar, List
 import numpy as np
 import pandas as pd
 
-from Melodie import Simulator, Config, Scenario
+from Melodie import Simulator, Config, Scenario, Model
 from Melodie.boost.compiler.compiler import conv
 from Melodie.boost.compiler.src.ast_demo import GiniEnvironment, GiniModel, GiniScenario
 from Melodie.boost.compiler.src.agent import GINIAgent
@@ -63,14 +65,17 @@ class BoostSimulator(Simulator):
                   scenario_manager_class: ClassVar['ScenarioManager'] = None,
                   table_generator_class: ClassVar['TableGenerator'] = None,
                   analyzer_class: ClassVar['Analyzer'] = None,
-                  boost_model_class=None,
+                  visualizer_class: ClassVar['Visualizer'] = None,
+                  boost_model_class: ClassVar['Model'] = None,
+                  model_components=None
                   ):
-        conv(agent_class, environment_class, model_class, 'out.py')
+        conv(agent_class, environment_class, model_class, 'out.py', model_components=model_components)
         logger.warning("Testing. compilation finished, program exits")
         # return
         compiled = importlib.import_module('out')
         model_run = compiled.__getattribute__('___model___run')
         logger.info("Preprocess compilation finished, now running pre-run procedures.")
+
         self.config = config
         self.scenario_class = scenario_class
         self.register_static_dataframes()
@@ -88,7 +93,14 @@ class BoostSimulator(Simulator):
                 if first_run:
                     logger.info("Numba is now taking control of program. "
                                 "It may take a few seconds for compilation.")
-                model = boost_model_class(scenario)
+                visualizer = visualizer_class()
+                visualizer.setup()
+                visualizer.current_scenario = scenario
+                model = boost_model_class(self.config,
+                                          scenario,
+                                          visualizer=visualizer
+                                          )
+                model.setup_boost()
                 model_run(model)
                 if first_run:
                     logger.info("The first run has completed, and numba has finished compilaiton. "

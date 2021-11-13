@@ -18,15 +18,16 @@ class FuncEnvironment(Environment):
 
     def setup(self):
         scenario: FuncScenario = self.current_scenario()
+        self.reliability = scenario.reliability
+        self.recover_rate = scenario.recover_rate
 
     def step(self, agents: "AgentList", network: "Network"):
         for agent in agents:
-            # for i in range(100): 这个循环没有意义，可以将这个io密集的仿真变成CPU密集。
             if agent.status == 0:
-                if random.random() > agent.reliability:
+                if random.random() > self.reliability:
                     agent.status = 1
             else:
-                if random.random() > 0.6:  # 故障恢复率0.4
+                if random.random() < self.recover_rate:  # 故障恢复率
                     agent.status = 0
             if agent.status == 1:
                 node = network.get_node_by_id(agent.id)

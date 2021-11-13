@@ -66,7 +66,10 @@ class TypeInferr(ast.NodeVisitor):
             logger.warning(f"skipping annassign {ast.dump(node)}")
             print(f"skipping annassign {ast.dump(node)}")
             assert isinstance(node.annotation, ast.Constant)
-            annotated_type = eval(node.annotation.value)
+            if node.annotation.value in registered_types:
+                annotated_type = registered_types[node.annotation.value]
+            else:
+                annotated_type = eval(node.annotation.value)
             if target.id in self.types_inferred:
                 inferred_type = self.types_inferred[target.id]
                 assert issubclass(annotated_type, inferred_type)

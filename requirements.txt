@@ -7,3 +7,5 @@ openpyxl
 xlrd==1.2.0
 networkx
 chardet
+numba
+websockets

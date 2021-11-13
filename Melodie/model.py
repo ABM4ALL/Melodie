@@ -39,6 +39,17 @@ class Model:
         self.visualizer = visualizer
 
     def setup(self):
+        """
+        general method for setting up the model.
+        :return:
+        """
+        pass
+
+    def setup_boost(self):
+        """
+        setup method for boosting.
+        :return:
+        """
         pass
 
     def current_scenario(self) -> 'Scenario':
@@ -119,4 +130,7 @@ class Model:
         return container
 
     def run(self):
+        pass
+
+    def run_boost(self):
         pass

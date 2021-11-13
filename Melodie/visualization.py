@@ -7,8 +7,7 @@ import time
 import websockets
 import json
 from queue import Queue
-from typing import Dict, Tuple, List, Any, Callable, Union
-from signal import SIGINT, SIGTERM
+from typing import Dict, Tuple, List, Any, Callable, Union, Set
 from websockets.legacy.server import WebSocketServerProtocol
 
 from Melodie import Scenario
@@ -17,12 +16,14 @@ from Melodie.grid import Grid, Spot
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
+# Command code
 STEP = 0
 RESET = 1
 CURRENT_DATA = 2
 START = 3
 GET_PARAMS = 4
 SET_PARAMS = 5
+INIT_OPTIONS = 6
 
 UNCONFIGURED = 0
 READY = 1
@@ -35,41 +36,36 @@ ERROR = 1
 
 QUEUE_ELEM = Tuple[int, WebSocketServerProtocol]
 
+MAX_ACTIVE_CONNECTIONS = 8
 visualize_condition_queue_main = Queue(10)
-visualize_result_queue_main = Queue(10)
+visualize_result_queues: Dict[WebSocketServerProtocol, Queue] = {}
 
-socks: List[WebSocketServerProtocol] = list()
-
-
-def on_close():
-    print("closed!")
-    pass
+socks: Set[WebSocketServerProtocol] = set()
 
 
-# 一旦websocket 改变，则应当测试已有的ws。如果已有的ws出现问题，则应该？？？
-# 如果连接已经下线，则？
-
-
-async def handler(websocket: WebSocketServerProtocol, path):
+async def handler(ws: WebSocketServerProtocol, path):
     global socks
-    new_socks = []
-    for sock in socks:
-        if not sock.closed:
-            new_socks.append(sock)
-        print(sock.closed)
-    print("this-ws", websocket.closed)
-    socks = new_socks
-    socks.append(websocket)
+    if len(socks) >= MAX_ACTIVE_CONNECTIONS:
+        await ws.send(
+            json.dumps(
+                {"type": "error", "step": 0,
+                 "data": f"The number of connections exceeds the upper limit {MAX_ACTIVE_CONNECTIONS}. "
+                         f"Please shutdown unused webpage or modify the limit.", "modelState": UNCONFIGURED,
+                 "status": ERROR})
+        )
+        return
+    socks.add(ws)
+    visualize_result_queues[ws] = Queue(10)
     while 1:
         try:
-            content = await asyncio.wait_for(websocket.recv(), timeout=0.05)
+            content = await asyncio.wait_for(ws.recv(), timeout=0.05)
             print(content)
             rec = json.loads(content)
             cmd = rec['cmd']
             data = rec['data']
-            if 0 <= cmd <= 5:
+            if 0 <= cmd <= 6:
                 try:
-                    visualize_condition_queue_main.put((cmd, data, websocket), timeout=1)
+                    visualize_condition_queue_main.put((cmd, data, ws), timeout=1)
                 except:
                     import traceback
                     traceback.print_exc()
@@ -77,13 +73,16 @@ async def handler(websocket: WebSocketServerProtocol, path):
             else:
                 raise NotImplementedError(cmd)
         except (asyncio.TimeoutError, ConnectionRefusedError):
-            # print('timeout')
             pass
-
+        if ws.closed:
+            socks.remove(ws)
+            visualize_result_queues.pop(ws)
+            logger.info(f"websocket connection {ws} is going offline...")
+            return
         try:
             while 1:
-                res = visualize_result_queue_main.get(False)
-                await websocket.send(res)
+                res = visualize_result_queues[ws].get(False)
+                await ws.send(res)
         except queue.Empty:
             pass
 
@@ -103,10 +102,9 @@ class Visualizer:
         self.model_state = UNCONFIGURED
         self.current_scenario: 'Scenario' = None
         self.scenario_param: Dict[str, Union[int, str, float]] = {}
+        self.chart_options: Dict[str, Any] = {}
 
         self.current_websocket: WebSocketServerProtocol = None
-
-        # asyncio.get_event_loop().run_until_complete(main())
 
         start_server = websockets.serve(handler, 'localhost', 8765)
         asyncio.get_event_loop().run_until_complete(start_server)
@@ -116,6 +114,9 @@ class Visualizer:
 
         self.th.setDaemon(True)
         self.th.start()
+
+    def setup(self):
+        pass
 
     def reset(self):
         pass
@@ -128,7 +129,33 @@ class Visualizer:
         self.send_message(json.dumps(formatted))
 
     def send_message(self, msg):
-        visualize_result_queue_main.put(msg)
+        """
+        Put message to the message queues of all active websocket connections.
+        If the target queue is full, the message will be discarded.
+
+        :param msg:
+        :return:
+        """
+        closed_websockets: Set[WebSocketServerProtocol] = set()
+        for ws, q in visualize_result_queues.items():
+            if ws.closed:
+                closed_websockets.add(ws)
+                continue
+            try:
+                q.put(msg, timeout=1)
+            except queue.Full:
+                if ws.closed:
+                    closed_websockets.add(ws)
+        for closed_ws in closed_websockets:
+            socks.remove(closed_ws)
+            visualize_result_queues.pop(closed_ws)
+
+    def send_chart_options(self):
+        self.send_message(
+            json.dumps(
+                {"type": "initOption", "step": 0, "data": self.chart_options,
+                 "modelState": self.model_state,
+                 "status": OK}))
 
     def send_scenario_params(self, params_list: List[Scenario.BaseParameter]):
         param_models = []
@@ -150,12 +177,15 @@ class Visualizer:
             indent=4))
 
     def send_current_data(self):
+        t0 = time.time()
         formatted = self.format()
 
-        self.send_message(
-            json.dumps(
-                {"type": "data", "step": self.current_step, "data": formatted, "modelState": self.model_state,
-                 "status": OK}))
+        dumped = json.dumps(
+            {"type": "data", "step": self.current_step, "data": formatted, "modelState": self.model_state,
+             "status": OK})
+        t1 = time.time()
+        logger.debug(f"Formatting current data takes:{t1 - t0} seconds")
+        self.send_message(dumped)
 
     def send_error(self, err_msg):
         self.send_message(
@@ -170,11 +200,13 @@ class Visualizer:
             try:
                 res = visualize_condition_queue_main.get(timeout=1)
                 handled = self.generic_handler(*res)
+                assert isinstance(handled, bool)
                 if not handled:
                     return res
                 else:
                     pass
             except queue.Empty:
+                logger.info("queue empty")
                 pass
 
     def generic_handler(self, cmd_type: int, data: Dict[str, Any], ws: WebSocketServerProtocol) -> bool:
@@ -189,6 +221,12 @@ class Visualizer:
         if cmd_type == GET_PARAMS:
             self.send_scenario_params(self.current_scenario.properties_as_parameters())
             return True
+        elif cmd_type == RESET:
+            self.scenario_param = {k: v['value'] for k, v in data['params'].items()}  #
+            raise MelodieModelReset
+        elif cmd_type == INIT_OPTIONS:
+            self.send_chart_options()
+            return True
         else:
             return False
 
@@ -202,6 +240,7 @@ class Visualizer:
             traceback.print_exc()
 
         while 1:
+            logger.info("in start")
             flag, data, ws = self.get_in_queue()
             if flag in {STEP, CURRENT_DATA}:
                 self.send_current_data()
@@ -210,8 +249,6 @@ class Visualizer:
                     self.model_state = RUNNING
                     visualize_condition_queue_main.put((flag, {}, ws))
                     break
-            elif flag == RESET:
-                raise MelodieModelReset
             else:
                 self.send_error(f"Invalid command flag {flag} for function 'start'. ")
 
@@ -222,14 +259,13 @@ class Visualizer:
         else:
             self.current_step += 1
         while 1:
+            logger.info("in step")
             flag, data, ws = self.get_in_queue()
             if flag == STEP:
                 self.send_current_data()
                 break
             elif flag == CURRENT_DATA:
                 self.send_current_data()
-            elif flag == RESET:
-                raise MelodieModelReset
             else:
                 self.send_error(f"Invalid command flag {flag} for function 'step'. ")
 
@@ -237,10 +273,9 @@ class Visualizer:
         self.model_state = FINISHED
         self.send_current_data()
         while 1:
+            logger.info("in finish")
             flag, data, ws = self.get_in_queue()
-            if flag == RESET:
-                raise MelodieModelReset(ws)
-            elif flag == CURRENT_DATA:
+            if flag == CURRENT_DATA:
                 self.send_current_data()
             else:
                 self.send_error(f"Invalid command flag {flag} for function 'finish'. ")
@@ -275,7 +310,14 @@ class GridVisualizer(Visualizer):
                     else:
                         self.grid_roles[self.convert_to_1d(x, y)] = [x, y, 1, role]
         else:
-            raise NotImplementedError
+            for x in range(grid.width):
+                for y in range(grid.height):
+                    spot = grid.get_spot(x, y)
+                    role = parser(spot)
+                    if role < 0:
+                        self.grid_roles[self.convert_to_1d(x, y)] = [x, y, "-", 0]
+                    else:
+                        self.grid_roles[self.convert_to_1d(x, y)] = [x, y, 1, role]
 
     def format(self):
         data = {
@@ -295,6 +337,22 @@ class NetworkVisualizer(Visualizer):
         self.vertex_positions: Dict[str, Tuple[int, int]] = {}
         self.vertex_roles: Dict[str, int] = {}
         self.edge_roles: Dict[Tuple[int, int], int] = {}
+
+        self.chart_options = {"title": {"text": "Graph"},
+                              "tooltip": {},
+                              "series": [
+                                  {"type": "graphGL",
+                                   "layout": "none",
+                                   "animation": False,
+                                   "symbolSize": 10,
+                                   "symbol": "circle", "roam": True,
+                                   "edgeSymbol": ["circle", "arrow"], "edgeSymbolSize": [4, 5],
+                                   "itemStyle": {"opacity": 1},
+                                   "categories": [
+                                       {"name": 0, "itemStyle": {"color": "#67c23a"}},
+                                       {"name": 1, "itemStyle": {"color": "#f56c6c"}}
+                                   ]}]
+                              }
 
     def reset(self):
         self.edge_roles = {}

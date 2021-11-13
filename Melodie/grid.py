@@ -14,6 +14,7 @@
 
 # grid是run_model的可选项，如果选了，就初始化到model里
 import functools
+import random
 import sys
 import time
 from typing import ClassVar, Set
@@ -24,10 +25,12 @@ from numba import typeof, types
 from numba.experimental import jitclass
 from numba import typed
 
+from .agent import Agent
 
-class Spot:
+
+class Spot(Agent):
     def __init__(self, spot_id: int, x: int, y: int):
-        self.id = spot_id
+        super(Spot, self).__init__(spot_id)
         self.x = x
         self.y = y
 
@@ -128,8 +131,8 @@ def build_jit_class(width, height):
     agent_num = 100
     node_num = 2000
     edge_num = 8000
-    spots = np.array([[(x * height + y, x, y) for x in range(width)] for y in range(height)],
-                     dtype=[('id', "i8"), ('x', 'i8'), ('y', 'i8')])
+    spots = np.array([[(x * height + y, x, y, random.randint(0, 1)) for x in range(width)] for y in range(height)],
+                     dtype=[('id', "i8"), ('x', 'i8'), ('y', 'i8'), ("alive", "i8")])
 
     agent_ids = typed.List()  # .empty_list(types.ListType)
     for i in range(width):

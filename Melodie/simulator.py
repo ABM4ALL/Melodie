@@ -32,7 +32,7 @@ if TYPE_CHECKING:
     from .scenario_manager import ScenarioManager, Scenario
     from .data_collector import DataCollector
     from .config import Config
-    from .visualization import NetworkVisualizer
+    from .visualization import Visualizer
 else:
     from .scenario_manager import ScenarioManager, Scenario
     from .config import Config
@@ -235,19 +235,25 @@ class Simulator(metaclass=abc.ABCMeta):
                    visualizer_class: ClassVar['Visualizer'],
                    ):
         """
-        Main function for running model!
+        Main function for running model with visualizer.
         """
         t0 = time.time()
         self.config = config
         self.scenario_class = scenario_class
         self.pre_run()
-        visualizer: NetworkVisualizer = visualizer_class()
-
+        visualizer: Visualizer = visualizer_class()
+        visualizer.setup()
         logger.info('Loading scenarios and static tables...')
         t1 = time.time()
         while True:
+            logger.info(f"Visualizer interactive paramerters for this scenario are: {visualizer.scenario_param}")
+            scenario = scenario_class()
+            scenario.setup()
+            scenario.periods = 99999
+            for k, v in visualizer.scenario_param.items():
+                scenario.__setattr__(k, v)
+            logger.info(f"Scenario parameters: {scenario.toDict()}")
             try:
-                scenario = self.scenarios[0]
                 visualizer.current_scenario = scenario  # set visualizer scenario.
                 self.run_model(config, scenario, model_class, agent_class, environment_class, data_collector_class,
                                run_id=0, visualizer=visualizer)
