@@ -1,5 +1,6 @@
 import json
 from typing import TYPE_CHECKING, Any, List, Callable, Dict
+from collections import Counter
 
 if TYPE_CHECKING:
     from Melodie.agent import Agent
@@ -127,8 +128,16 @@ class MelodieExceptions:
 
         @staticmethod
         def AgentPropertyNameNotExist(property_name, agent):
-            return MelodieException(1301,
+            return MelodieException(1302,
                                     f'Agent {agent} does not have property {property_name}. All properties are:{list(agent.__dict__.keys())}')
+
+        @staticmethod
+        def AgentIDConflict(agent_container_name: str, agent_ids: List[int]):
+            c = Counter(agent_ids)
+            duplicated_ids = [agent_id for agent_id, times in c.most_common() if times > 1 ]
+
+            return MelodieException(1303,
+                                    f'Agent container `{agent_container_name}` has duplicated agent IDs: {duplicated_ids}.')
 
     class Environment:
         ID = 1400

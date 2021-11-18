@@ -1,6 +1,7 @@
 import logging
 import asyncio
 import queue
+import random
 import threading
 import time
 
@@ -102,7 +103,10 @@ class Visualizer:
         self.model_state = UNCONFIGURED
         self.current_scenario: 'Scenario' = None
         self.scenario_param: Dict[str, Union[int, str, float]] = {}
+
         self.chart_options: Dict[str, Any] = {}
+
+        self.plot_charts: Dict[str, List[Dict[str, str]]] = {}  # {<chartName>: [{name: series1}, {name: series2}]}
 
         self.current_websocket: WebSocketServerProtocol = None
 
@@ -123,6 +127,12 @@ class Visualizer:
 
     def format(self):
         pass
+
+    def add_plot_chart(self, chart_name: str, series_names: List[str]):
+        if chart_name not in self.plot_charts.keys():
+            self.plot_charts[chart_name] = [{"seriesName": name} for name in series_names]
+        else:
+            raise ValueError(f"chart name '{chart_name}' already existed!")
 
     def send_initial_msg(self, ws: WebSocketServerProtocol):
         formatted = self.format()
@@ -154,6 +164,13 @@ class Visualizer:
         self.send_message(
             json.dumps(
                 {"type": "initOption", "step": 0, "data": self.chart_options,
+                 "modelState": self.model_state,
+                 "status": OK}))
+
+    def send_plot_series(self):
+        self.send_message(
+            json.dumps(
+                {"type": "initPlotSeries", "step": 0, "data": self.plot_charts,
                  "modelState": self.model_state,
                  "status": OK}))
 
@@ -206,7 +223,6 @@ class Visualizer:
                 else:
                     pass
             except queue.Empty:
-                logger.info("queue empty")
                 pass
 
     def generic_handler(self, cmd_type: int, data: Dict[str, Any], ws: WebSocketServerProtocol) -> bool:
@@ -226,6 +242,7 @@ class Visualizer:
             raise MelodieModelReset
         elif cmd_type == INIT_OPTIONS:
             self.send_chart_options()
+            self.send_plot_series()
             return True
         else:
             return False
@@ -288,6 +305,14 @@ class GridVisualizer(Visualizer):
         self.width = 0
         self.grid_roles = []
         self.grid_params = {}
+
+        self.chart_options = {"animation": False, "progressiveThreshold": 100000, "tooltip": {"position": "top"},
+                              "grid": {"height": "80%", "top": "10%"},
+                              "xAxis": {"type": "category", "splitArea": {"show": True}},
+                              "yAxis": {"type": "category", "splitArea": {"show": True}},
+                              "visualMap": {"min": 1, "max": 3, "calculable": True, "orient": "horizontal",
+                                            "left": "center", "color": ["#e33e33", "#fec42c", "#409eff"]}, "series": [
+                {"universalTransition": {"enabled": False}, "name": "Punch Card", "type": "heatmap"}]}
 
     def reset(self):
         self.grid_roles = []
@@ -409,9 +434,15 @@ class NetworkVisualizer(Visualizer):
                 "target": edge[1]
             })
         data = {
-            "series": {
-                "data": lst,
-                "links": lst_edges
-            }
+            "visualizer": {
+                "series": {
+                    "data": lst,
+                    "links": lst_edges
+                }
+            },
+            "plots": [{"chartName": name,
+                       "series": [{"name": self.plot_charts[name][i]['seriesName'], "value": random.random()} for i in
+                                  range(len(self.plot_charts[name]))]} for name in
+                      self.plot_charts.keys()]
         }
         return data

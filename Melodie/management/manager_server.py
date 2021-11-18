@@ -161,21 +161,6 @@ def handle_get_simulation_status():
     ).to_json()
 
 
-with open(os.path.join(os.path.dirname(__file__), "files", "graph-demo-with-layout.json")) as f:
-    graph = json.load(f)
-
-
-@app.route("/network-demo", methods=['GET'])
-def handle_graph():
-    nodes = len(graph["series"]["data"])
-    for i in range(nodes):
-        if random.random() > 0.5:
-            graph['series']['data'][i]['category'] = 1
-        else:
-            graph['series']['data'][i]['category'] = 0
-    return json.dumps(graph)
-
-
 @app.route('/')
 def handle_root():
     return redirect('http://localhost:8090/index.html', code=301)

@@ -9,3 +9,4 @@ from Melodie.visualization import NetworkVisualizer
 class FuncCallSimVisualizer(NetworkVisualizer):
     def setup(self):
         self.chart_options['title']['text'] = "Function Call Graph"
+        self.add_plot_chart('chart1', ["series1", "series2"])

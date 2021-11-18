@@ -113,11 +113,11 @@ class assign:
 
         elif isinstance(node_value, (ast.List, ast.Set, ast.Dict)):
             if isinstance(node_value, ast.List):
-                types_inferred[target_id] = List
+                types_inferred[target_id] = list
             elif isinstance(node_value, ast.Set):
-                types_inferred[target_id] = Set
+                types_inferred[target_id] = set
             elif isinstance(node_value, ast.Dict):
-                types_inferred[target_id] = Dict
+                types_inferred[target_id] = dict
             else:
                 raise NotImplementedError
 

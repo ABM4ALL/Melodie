@@ -20,9 +20,9 @@ def test_get_scenarios():
 
 
 def test_get_agent_results():
-    agents_df = create_db_conn(cfg).query_agent_results(scenario_id=0, id=1)
+    agents_df = create_db_conn(cfg).query_agent_results("agent_result", scenario_id=0, id=1)
     assert agents_df.shape[0] == 200
-    agents_df = create_db_conn(cfg).query_agent_results(scenario_id=0, step=1)
+    agents_df = create_db_conn(cfg).query_agent_results("agent_result", scenario_id=0, step=1)
     assert agents_df.shape[0] == 100
 
 

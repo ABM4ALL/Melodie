@@ -106,8 +106,8 @@ def test_agents():
     except:
         raise Exception(f"Test failed for locals: {locals()}")
 
-    # try:
-    #     routine(jit_grid, width, height)
-    #     neighbors(jit_grid)
-    # except:
-    #     raise Exception(f"Test failed for locals: {locals()}")
+    try:
+        routine(jit_grid, width, height)
+        neighbors(jit_grid)
+    except:
+        raise Exception(f"Test failed for locals: {locals()}")

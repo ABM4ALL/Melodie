@@ -60,7 +60,7 @@ def test_properties():
 
 
 def test_properties_with_scenario():
-    n = random.randint(10,10)
+    n = random.randint(10, 10)
     assert isinstance(model.scenario.id, int)
     al = AgentList(TestAgent, n, model)
     l = [j for j in range(n)]

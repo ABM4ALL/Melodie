@@ -14,9 +14,28 @@ if TYPE_CHECKING:
 
 
 class BaseAgentContainer:
+    _ID_OFFSET = -1
+    _agent_ids = set()
+
     def __init__(self):
         self.scenario: Union['Scenario', None] = None
         self.agents: Union[List['Agent'], Set['Agent'], None] = None
+
+    @staticmethod
+    def new_id():
+        """
+        Create a new ID
+        :return:
+        """
+        BaseAgentContainer._ID_OFFSET += 1
+        return BaseAgentContainer._ID_OFFSET
+
+    def all_agent_ids(self) -> List[int]:
+        """
+        Get id of all agents.
+        :return:
+        """
+        return [agent.id for agent in self.agents]
 
     def to_list(self, column_names: List[str] = None) -> List[Dict]:
         """
@@ -27,7 +46,7 @@ class BaseAgentContainer:
 
     def set_properties(self, props_df: pd.DataFrame):
         """
-        Set parameters of all agents generated in current scenario;
+        Set parameters of all agents in current scenario.
 
         :return:
         """
@@ -35,14 +54,16 @@ class BaseAgentContainer:
         assert props_df is not None
 
         param_names = [param for param in props_df.columns if param not in
-                       {'scenario_id', 'id'}]
-        props_df_cpy: Optional[pd.DataFrame] = None
+                       {'scenario_id'}]
+        # props_df_cpy: Optional[pd.DataFrame] = None
         if "scenario_id" in props_df.columns:
             props_df_cpy = props_df.query(f"scenario_id == {self.scenario.id}").copy(True)
         else:
             props_df_cpy = props_df.copy()  # deep copy this dataframe.
-        props_df_cpy.set_index("id", inplace=True)
-        # Assign parameters to properties for each agent.
+        props_df_cpy.reset_index(drop=True, inplace=True)
+
+        # props_df_cpy.set_index("id", inplace=True)
+        # # Assign parameters to properties for each agent.
         for i, agent in enumerate(self.agents):
             params = {}
             for agent_param_name in param_names:
@@ -50,8 +71,6 @@ class BaseAgentContainer:
                 params[agent_param_name] = props_df_cpy.loc[i, agent_param_name].item()
 
             agent.set_params(params)
-        # t1 = time.time()
-        # print(t1 - t0)
 
 
 class AgentList(BaseAgentContainer):
@@ -76,7 +95,6 @@ class AgentList(BaseAgentContainer):
         return self
 
     def __next__(self):
-        # print(len(self.agents),self._iter_index)
         if self._iter_index < len(self.agents):
             elem = self.agents[self._iter_index]
             self._iter_index += 1
@@ -85,7 +103,8 @@ class AgentList(BaseAgentContainer):
             raise StopIteration
 
     def init_agents(self) -> IndexedAgentList:
-        agents: List['Agent'] = [self.agent_class(i) for i in range(self.initial_agent_num)]
+        agents: List['Agent'] = [self.agent_class(BaseAgentContainer.new_id()) for i in
+                                 range(self.initial_agent_num)]
         scenario = self.model.scenario
         for agent in agents:
             agent._scenario = scenario

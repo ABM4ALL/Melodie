@@ -21,8 +21,10 @@ args = parser.parse_args()
 assert args.action in {'run', 'serve', 'create'}
 if args.action == 'serve':
     from Melodie.management.manager_server import run
-
     run()
+elif args.action == 'studio':
+    from Melodie.studio.main import studio_main
+    studio_main()
 elif args.action == 'create':
     root = os.getcwd()
     import tkinter as tk

@@ -190,9 +190,9 @@ class DB:
             sql += f"where id={id}"
         return self.query(sql)
 
-    def query_agent_results(self, scenario_id: int = None, id: int = None, step: int = None):
+    def query_agent_results(self, agent_list_name: str, scenario_id: int = None, id: int = None, step: int = None):
         conditions = {'scenario_id': scenario_id, 'id': id, 'step': step}
-        return self.paramed_query(self.AGENT_RESULT_TABLE, conditions)
+        return self.paramed_query(agent_list_name, conditions)
 
     def query_env_results(self, scenario_id: int = None, step: int = None):
         conditions = {'scenario_id': scenario_id, 'step': step}

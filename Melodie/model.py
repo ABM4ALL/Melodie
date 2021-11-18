@@ -5,7 +5,8 @@ import pandas as pd
 
 from . import DB
 from .agent import Agent
-from .agent_list import AgentList
+from .agent_list import AgentList, BaseAgentContainer
+from .basic import MelodieExceptions
 from .config import Config
 from .data_collector import DataCollector
 from .environment import Environment
@@ -24,10 +25,13 @@ class Model:
                  run_id_in_scenario: int = 0,
                  visualizer=None
                  ):
+
         self.scenario = scenario
         self.project_name = config.project_name
         self.config = config
+
         self.agent_class = agent_class
+
         self.environment_class = environment_class
         self.data_collector_class = data_collector_class
         self.environment: Environment
@@ -127,7 +131,22 @@ class Model:
         container = agent_container_class(agent_class, length, model=self)
         if params_df is not None:
             container.set_properties(params_df)
+
         return container
+
+    def check_agent_containers(self):
+        """
+        Check the agent containers in the model.
+        Check list is:
+        - Each agent, no matter which container it was in, should have a unique id.
+
+        :return:
+        """
+        for prop_name, prop in self.__dict__.items():
+            if isinstance(prop, BaseAgentContainer):
+                all_ids = prop.all_agent_ids()
+                if len(set(all_ids)) < len(all_ids):
+                    raise MelodieExceptions.Agents.AgentIDConflict(prop_name, all_ids)
 
     def run(self):
         pass
