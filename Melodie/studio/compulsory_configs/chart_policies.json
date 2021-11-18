@@ -1,0 +1,51 @@
+{
+    "lineChart": {
+        "selectionItems": {
+            "root-tooltip-trigger": [
+                "axis",
+                "item",
+                "none"
+            ],
+            "root-legend-orient": [
+                "vertical",
+                "horizontal"
+            ],
+            "root-xAxis-type": [
+                "value",
+                "category",
+                "time",
+                "log"
+            ],
+            "root-yAxis-type": [
+                "value",
+                "category",
+                "time",
+                "log"
+            ],
+            "root-series-*-lineStyle-type": [
+                "solid",
+                "dashed",
+                "dotted"
+            ],
+            "root-series-*-itemStyle-borderType": [
+                "solid",
+                "dashed",
+                "dotted"
+            ],
+            "root-series-*-symbol": [
+                "circle",
+                "rect",
+                "roundRect",
+                "triangle",
+                "diamond",
+                "pin",
+                "arrow",
+                "none"
+            ]
+        },
+        "unChangeableItems": {
+            "root-series-*-data": false,
+            "root-series-*-name": false
+        }
+    }
+}
