@@ -1,4 +1,4 @@
 *.csv
 _database
 _output
-resources/temp/*
+resources/temp/*.sqlite
