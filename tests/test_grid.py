@@ -13,7 +13,6 @@ import numpy as np
 
 from Melodie.grid import Grid, Spot, build_jit_class
 import logging
-import orjson
 logger = logging.getLogger(__name__)
 
 N = 10000_000
