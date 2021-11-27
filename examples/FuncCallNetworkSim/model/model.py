@@ -19,7 +19,7 @@ class FuncNode(Node):
 
 class FuncModel(Model):
     def setup(self):
-        self.network = Network()
+        self.network = Network(FuncNode)
         node_names_map: Dict[str, int] = {}
         node_id_to_name_map: Dict[str, int] = {}
         edges_with_num: List[Tuple[int, int]] = []
@@ -37,7 +37,7 @@ class FuncModel(Model):
             for edge in edges:
                 edges_with_num.append((node_names_map[edge['source']], node_names_map[edge['target']]))
         for e in edges_with_num:
-            self.network.add_edge(Node(e[0]), Node(e[1]))
+            self.network.add_edge(e[0], e[1])
 
         with open("./data/json_source/graph-demo-with-layout.json") as f:
             network_json = json.load(f)
@@ -45,7 +45,7 @@ class FuncModel(Model):
             self.visualizer.parse_layout(vertices, lambda vertex: (vertex['id'], (vertex['x'], vertex['y'])))
             self.visualizer.parse_edges(network_json['series']['links'],
                                         lambda edge: ((edge['source'], edge['target']), 1))
-        self.agent_list = AgentList(FuncAgent, 652, self, )
+        self.agent_list = AgentList(FuncAgent, 652, self)
         self.node_name_map = node_names_map
         self.node_id_to_name_map = node_id_to_name_map
 
@@ -58,14 +58,17 @@ class FuncModel(Model):
             return self.node_id_to_name_map[agent.id], agent.status
 
         self.visualizer.parse_role(self.agent_list.agents, f)
-
+        v = 0
+        self.visualizer.set_plot_data(0, 'chart1', {'series1': v, 'series2': 1 - v})
         self.visualizer.start()
 
         for t in range(0, self.scenario.periods):
             self.environment.step(agent_manager, self.network)
+            v = self.environment.get_agents_statistic(self.agent_list)
+            self.visualizer.set_plot_data(t, 'chart1', {'series1': v, 'series2': 1 - v})
 
             self.visualizer.parse_role(self.agent_list.agents, f)
-            self.visualizer.step()
+            self.visualizer.step(t)
 
         self.visualizer.finish()
         self.environment.get_agents_statistic(agent_manager)

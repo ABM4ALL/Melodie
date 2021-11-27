@@ -6,7 +6,7 @@ import json
 import threading
 import time
 from queue import Queue
-from typing import Dict, Set, Union, List, Tuple, Callable, Any
+from typing import Dict, Set, Union, List, Tuple, Callable, Any, ClassVar
 
 import networkx
 import numba
@@ -28,8 +28,9 @@ class Node(Agent):
 
 
 class Network:
-    def __init__(self):
+    def __init__(self, node_cls: ClassVar['Node']):
         self.simple = True
+        self._node_cls = node_cls
         self._nodes: Dict[int, Node] = {}
         self._adj: Dict[int, Union[Set[int], List[int]]] = {}
 
@@ -40,30 +41,31 @@ class Network:
         assert node.id not in self._nodes
         self._nodes[node.id] = node
 
-    def add_edge(self, source: Node, target: Node):
-        assert isinstance(source, Node) and isinstance(target, Node)
-        self._nodes[source.id] = source
-        self._nodes[target.id] = target
+    def add_edge(self, source: int, target: int):
+        assert isinstance(source, int)
+        assert isinstance(target, int)
+        self._nodes[source] = source
+        self._nodes[target] = target
 
-        if source.id not in self._adj.keys():
-            self._adj[source.id] = set() if self.simple else list()
-        if target.id not in self._adj.keys():
-            self._adj[target.id] = set() if self.simple else list()
-        self._adj[source.id].add(target.id)
-        self._adj[target.id].add(source.id)
+        if source not in self._adj.keys():
+            self._adj[source] = set() if self.simple else list()
+        if target not in self._adj.keys():
+            self._adj[target] = set() if self.simple else list()
+        self._adj[source].add(target)
+        self._adj[target].add(source)
 
-    def get_neighbor_ids(self, node_id: Node) -> List[int]:
-        assert node_id in self._nodes
-        neighbor_ids = self._adj.get(node_id)
+    def get_neighbors(self, node: int) -> List[int]:
+
+        neighbor_ids = self._adj.get(node)
         if neighbor_ids is None:
             return []
         else:
             return neighbor_ids
 
-    def get_neighbors(self, node: Node) -> List[Node]:
-        assert isinstance(node, Node)
-        neighbor_ids = self.get_neighbor_ids(node)
-        return [self._nodes[neighbor_id] for neighbor_id in neighbor_ids]
+    # def get_neighbors(self, node: Node) -> List[Node]:
+    #     assert isinstance(node, Node)
+    #     neighbor_ids = self.get_neighbor_ids(node)
+    #     return [self._nodes[neighbor_id] for neighbor_id in neighbor_ids]
 
 
 class NetworkDirected(Network):

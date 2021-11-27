@@ -8,13 +8,13 @@ from Melodie import Agent
 class FuncAgent(Agent):
     """
     FuncAgent acts as the node from the
-    TODO:Forbid user rewriting id and other reserved properties in setup() function!
+    TODO: Forbid user rewriting id and other reserved properties in setup() function!
     """
 
     def setup(self):
 
         self.reliability = 0.99
-        self.status = 0  # 0 for normal, 1 for breakdown
+        self.status = 0
 
     def go_produce(self):
 

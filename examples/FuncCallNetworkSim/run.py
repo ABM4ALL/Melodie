@@ -1,11 +1,7 @@
 import logging
-import os
 import sys
-import time
 import json
 from typing import Dict, Tuple, List
-
-import numpy as np
 
 from Melodie import DataCollector
 
@@ -18,8 +14,6 @@ from model.environment import FuncEnvironment
 from model.scenario import FuncScenario
 from model.model import FuncModel
 from model.simulator import FuncSimulator
-from analyzer.analyzer import Analyzer
-from Melodie.network import build_jit_class
 from config import config
 
 logger = logging.getLogger(__name__)
@@ -37,39 +31,6 @@ with open("./data/json_source/lua_call_graph.json") as f:
         node_names_map[node_name] = i
     for edge in edges:
         edges_with_num.append((node_names_map[edge['source']], node_names_map[edge['target']]))
-
-
-class BoostModel:
-    def __init__(self, scenario):
-        node_num = len(list(node_names))
-
-        self.environment = np.array([(100, 0.6, 0, 0)],
-                                    dtype=[('trade_num', 'i4'),
-                                           ('win_prob', 'f4'),
-                                           ('total_wealth', 'i4'),
-                                           ('gini', 'f4')])[0]
-
-        self.agent_manager = np.array([(i, 0.99, 0) for i in range(node_num)],
-                                      dtype=[('id', 'i4'),
-                                             ('reliability', 'f4'),
-                                             ('status', 'i4'),
-                                             ])
-
-        self.scenario = scenario
-        nodes = np.array([(i,)
-                          for i in range(node_num)
-                          ], dtype=[('id', 'i8')])
-
-        node_arr = [node for node in nodes]
-        t0 = time.time()
-        n = build_jit_class(node_arr[0]['id'], self.agent_manager[0]['id'])
-
-        for e in edges_with_num:
-            n.add_edge(e[0], e[1])
-        t1 = time.time()
-        self.network = n
-        logger.info(f"Initializing the graph. Time elapsed:{t1 - t0}")
-
 
 if __name__ == "__main__":
     simulator = FuncSimulator()

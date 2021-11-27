@@ -8,12 +8,13 @@ import time
 import websockets
 import json
 from queue import Queue
-from typing import Dict, Tuple, List, Any, Callable, Union, Set
+from typing import Dict, Tuple, List, Any, Callable, Union, Set, TYPE_CHECKING
 from websockets.legacy.server import WebSocketServerProtocol
 
-from Melodie import Scenario
 from Melodie.grid import Grid, Spot
 
+if TYPE_CHECKING:
+    from Melodie import Scenario
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
@@ -107,7 +108,7 @@ class Visualizer:
         self.chart_options: Dict[str, Any] = {}
 
         self.plot_charts: Dict[str, List[Dict[str, str]]] = {}  # {<chartName>: [{name: series1}, {name: series2}]}
-
+        self.chart_data: Dict[str, Dict[str, Dict[int, Any]]] = {}  # {"chart_name": {<series>: { <step>: value} } }
         self.current_websocket: WebSocketServerProtocol = None
 
         start_server = websockets.serve(handler, 'localhost', 8765)
@@ -131,8 +132,21 @@ class Visualizer:
     def add_plot_chart(self, chart_name: str, series_names: List[str]):
         if chart_name not in self.plot_charts.keys():
             self.plot_charts[chart_name] = [{"seriesName": name} for name in series_names]
+            self.chart_data[chart_name] = {name: {} for name in series_names}
         else:
             raise ValueError(f"chart name '{chart_name}' already existed!")
+
+    def set_plot_data(self, current_step: int, chart_name: str, series_values: Dict):
+        """
+        Set plot data
+        :param chart_name:
+        :param series_values:
+        :return:
+        """
+        assert chart_name in self.plot_charts.keys()
+        for series_name, series_value in series_values.items():
+            self.chart_data[chart_name][series_name][current_step] = series_value
+        print(self.chart_data)
 
     def send_initial_msg(self, ws: WebSocketServerProtocol):
         formatted = self.format()
@@ -174,7 +188,7 @@ class Visualizer:
                  "modelState": self.model_state,
                  "status": OK}))
 
-    def send_scenario_params(self, params_list: List[Scenario.BaseParameter]):
+    def send_scenario_params(self, params_list: List['Scenario.BaseParameter']):
         param_models = []
         initial_params = {}
         for param in params_list:
@@ -269,12 +283,10 @@ class Visualizer:
             else:
                 self.send_error(f"Invalid command flag {flag} for function 'start'. ")
 
-    def step(self, current_step=-1):
+    def step(self, current_step):
         self.model_state = RUNNING
-        if current_step >= 0:
-            self.current_step = current_step
-        else:
-            self.current_step += 1
+        self.current_step = current_step
+
         while 1:
             logger.info("in step")
             flag, data, ws = self.get_in_queue()
@@ -441,8 +453,12 @@ class NetworkVisualizer(Visualizer):
                 }
             },
             "plots": [{"chartName": name,
-                       "series": [{"name": self.plot_charts[name][i]['seriesName'], "value": random.random()} for i in
-                                  range(len(self.plot_charts[name]))]} for name in
-                      self.plot_charts.keys()]
+                       "series": [
+                           {
+                               "name": self.plot_charts[name][i]['seriesName'],
+                               "value": self.chart_data[name][self.plot_charts[name][i]['seriesName']][
+                                   self.current_step]} for i in
+                           range(len(self.plot_charts[name]))]} for name in self.plot_charts.keys()
+                      ]
         }
         return data

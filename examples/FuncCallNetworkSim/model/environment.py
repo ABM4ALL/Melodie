@@ -31,9 +31,8 @@ class FuncEnvironment(Environment):
                     agent.status = 0
             if agent.status == 1:
                 node = network.get_node_by_id(agent.id)
-                neighbor_ids: "np.ndarray" = network.get_neighbor_ids(node.id)
+                neighbor_ids: "np.ndarray" = network.get_neighbors(node)
                 for neighbor_id in neighbor_ids:
-                    # if random.random() > 0.97:  # 故障传播概率 0.03
                     agents[neighbor_id].status = 1
 
         # for agent in agents:
@@ -57,3 +56,4 @@ class FuncEnvironment(Environment):
         for agent in agents:
             s += agent.status
         print(s / 652)
+        return s / 652.0

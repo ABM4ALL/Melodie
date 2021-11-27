@@ -1,18 +1,17 @@
-### Example 1 - Wealth Distribution
+### Example - Function call network simulation
 
 ---
 
-This example explores how "Gini index" can be influenced by the productivity and equality of people. After initialization, each agents get some money in their account. Then, in each period, all the agents go through following two processes:
+This example explores how failure propagate in a software.
 
-- MoneyProduce: randomly receive some money.
-- MoneyTransfer: in each period, there are multiple rounds. In each round, two agents are randomly selected and they play a game. The winner will take 1 dollar from the loser.
+A software can be abstracted as a complex network. We regard each function as a node,
+and function calls as edges. 
 
-The system calculates the "total wealth" and "gini index" in each period.
+In this model, the graph structure comes from the software of **Lua** Interpreter.
 
-There are two key parameters to discuss in the example:
+Scenario parameters:
 
-- Productivity: the probability of agents to successfully produce some money at the beginning of each period.
-- Winning probability of richer player: in each game between two randomly selected players, the result is probabilistically decided by a pre-defined parameter, i.e. the probability that the richer player will win the game. With this parameter, we introduce "allocation equality" in the model
+- reliability: The reliability of a function.
+- recover_rate: The probability if the failed function could recover.
 
-By changing these two parameters, we can explore the following question: how is the "Gini index" influenced by the productivity and equality in the society.
 

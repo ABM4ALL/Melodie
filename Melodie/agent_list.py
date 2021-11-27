@@ -83,7 +83,8 @@ class AgentList(BaseAgentContainer):
         self.initial_agent_num: int = length
         self.model = model
         self.agents = self.init_agents()
-
+    def __repr__(self):
+        return f"<AgentList {self.agents}>"
     def __len__(self):
         return len(self.agents)
 

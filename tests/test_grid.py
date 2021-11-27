@@ -11,8 +11,12 @@ import time
 import numba
 import numpy as np
 
+from Melodie import AgentList, Agent
 from Melodie.grid import Grid, Spot, build_jit_class
 import logging
+
+from .config import model
+
 logger = logging.getLogger(__name__)
 
 N = 10000_000
@@ -64,7 +68,7 @@ def routine(grid, width, height):
 def neighbors(grid):
     px, py = int(grid.width / 2), int(grid.height / 2)
     neighbor_ids = grid.get_neighbors(px, py, 1)
-    if not isinstance(grid, Grid):
+    if not isinstance(grid, Grid):  # convert jit data types
         print(neighbor_ids)
         l = [(neighbor_ids[i][0], neighbor_ids[i][1]) for i in range(neighbor_ids.shape[0])]
         print(l)
@@ -91,7 +95,26 @@ def test_to_json():
     t1 = time.time()
     s = json.dumps(l)
     t2 = time.time()
+
     print(t2 - t0, t2 - t1, sys.getsizeof(s))
+
+
+def test_agent_list():
+    grid = build_jit_class( 5, 5)
+    al1 = AgentList(Agent, 10, model)
+    al2 = AgentList(Agent, 10, model)
+    grid.add_agent(al1[0].id, 3, 3)
+    grid.add_agent(al1[1].id, 2, 3)
+    grid.add_agent(al1[2].id, 3, 3)
+    grid.add_agent(al1[3].id, 4, 3)
+    grid.add_agent(al2[3].id, 4, 3)
+    print(al2)
+    print(al1)
+    n = grid.get_neighbors(3, 3)
+    print(n)
+    ids = grid.get_agent_ids(4, 3)
+    print(ids)
+    print(grid._agent_categories)
 
 
 def test_agents():

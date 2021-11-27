@@ -13,6 +13,7 @@ from .environment import Environment
 from .scenario_manager import Scenario
 from .table_generator import TableGenerator
 from .db import create_db_conn
+from .visualization import Visualizer
 
 
 class Model:
@@ -23,7 +24,7 @@ class Model:
                  environment_class: ClassVar[Environment] = None,
                  data_collector_class: ClassVar[DataCollector] = None,
                  run_id_in_scenario: int = 0,
-                 visualizer=None
+                 visualizer: Visualizer = None
                  ):
 
         self.scenario = scenario

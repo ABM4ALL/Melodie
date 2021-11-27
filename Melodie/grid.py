@@ -149,7 +149,8 @@ def build_jit_class(width, height):
         ('height', numba.typeof(1)),
         ('_spots', numba.typeof(spots)),
         ('_agent_ids', numba.typeof(agent_ids)),
-        ('_existed_agents', types.DictType(types.int64, types.int64))
+        ('_existed_agents', types.DictType(types.int64, types.int64)),
+        ('_agent_categories', types.DictType(types.int64, types.unicode_type))
     ])
     class GridJIT:
         def __init__(self, spots_array, agent_id_list, wrap: bool = True):
@@ -159,13 +160,22 @@ def build_jit_class(width, height):
             self._spots = spots_array
             self._agent_ids = agent_id_list
             self._existed_agents = typed.Dict.empty(types.int64, types.int64)
+            self._agent_categories = typed.Dict.empty(types.int64, types.unicode_type)
 
         def get_spot(self, x, y):
             x, y = self._bound_check(x, y)
             return self._spots[y][x]
 
-        def get_agent_ids(self, x: int, y: int):
-            return self._agent_ids[self._convert_to_1d(x, y)]
+        def get_agent_ids(self, x: int, y: int, categories="all"):
+
+            if categories == "all":
+                return self._agent_ids[self._convert_to_1d(x, y)]
+            else:
+                ids = typed.List()
+                for agent_id in self._agent_ids[self._convert_to_1d(x, y)]:
+                    if self._agent_categories.get(agent_id) == categories:
+                        ids.append(agent_id)
+                return ids
 
         def _convert_to_1d(self, x, y):
             return x * self.height + y
@@ -230,7 +240,7 @@ def build_jit_class(width, height):
 
             return neighbors
 
-        def add_agent(self, agent_id: int, x: int, y: int):
+        def add_agent(self, agent_id: int, x: int, y: int, category=''):
             x, y = self._bound_check(x, y)
             if self._existed_agents.get(agent_id) is not None:
                 raise ValueError("Agent already existed!")
@@ -239,6 +249,7 @@ def build_jit_class(width, height):
                     return
             self._existed_agents[agent_id] = 0
             self._agent_ids[self._convert_to_1d(x, y)].append(agent_id)
+            self._agent_categories[agent_id] = category
 
         def remove_agent(self, agent_id: int, x: int, y: int):
             x, y = self._bound_check(x, y)
