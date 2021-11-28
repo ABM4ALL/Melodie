@@ -3,3 +3,4 @@ _output/*
 output/*
 data/sqlite/*
 temp
+.melodieconfig
