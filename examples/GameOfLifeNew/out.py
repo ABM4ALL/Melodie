@@ -49,24 +49,24 @@ def ___environment___count_neighbor_alives(___environment, grid: 'Grid', neighbo
 
 
 def ___model___setup_boost(___model):
+    from Melodie.boost import JITGrid
     ___model.environment = None
-    ___model.grid = build_jit_class(100, 100)
+    ___model.grid = JITGrid(100, 100, GameOfLifeSpot)
     ___model.visualizer.grid = ___model.grid
 
 
 def ___model___run(___model):
-    ___model.visualizer.parse(___model.grid)
-    ___model.visualizer.start()
+    import matplotlib.pyplot as plt
+    plt.figure()
+    plt.ion()
     for i in range(___model.scenario.periods):
+        plt.cla()
         t0: float = time.time()
         ___environment___step(___model.environment, ___model.grid)
         t1: float = time.time()
-        print((t1 - t0))
-        t0: float = time.time()
-        ___model.visualizer.parse(___model.grid)
-        t1: float = time.time()
-        print('parsing time', (t1 - t0))
-        ___model.visualizer.step()
+        arr: 'np.ndarray' = ___model.grid.get_2d_array()['alive']
+        t2: float = time.time()
+        print(f'step {i}, {(t1 - t0)}s for step and {(t2 - t1)}s for conversion.')
+        plt.imshow(arr, cmap='hot')
+        plt.pause(0.01)
     print(___model.grid._spots)
-    ___model.visualizer.parse(___model.grid)
-    ___model.visualizer.finish()

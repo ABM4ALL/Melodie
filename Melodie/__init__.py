@@ -16,6 +16,9 @@ from .simulator import Simulator
 from .calibrator import Calibrator
 from .analyzer import Analyzer
 
+from .network import Network, Node
+from .grid import Grid, Spot
+
 import logging
 
 logging.basicConfig(stream=sys.stderr, level=logging.INFO)

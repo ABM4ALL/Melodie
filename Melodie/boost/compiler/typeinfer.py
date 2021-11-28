@@ -7,7 +7,7 @@ import ast
 import logging
 
 import sys
-from typing import List, Any, Dict, TypeVar, Union, Tuple
+from typing import List, Any, Dict, TypeVar, Union, Tuple, ClassVar
 
 from Melodie import Agent, AgentList
 
@@ -33,8 +33,8 @@ def parse_annotation_type(anno: Union[ast.Name]):
 
 
 class TypeInferr(ast.NodeVisitor):
-    def __init__(self, initial_types: Dict[str, TypeVar]):
-        self.types_inferred: Dict[str, TypeVar] = initial_types.copy()
+    def __init__(self, initial_types: Dict[str, Any]):
+        self.types_inferred: Dict[str, Any] = initial_types.copy()
 
     def visit_FunctionDef(self, func_def: ast.FunctionDef) -> Any:
         argument: ast.arg = None

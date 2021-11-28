@@ -14,18 +14,12 @@
 
 # grid是run_model的可选项，如果选了，就初始化到model里
 import functools
-import random
-import sys
-import time
-from typing import ClassVar, Set
+from typing import ClassVar, Set, Dict, List, Tuple
 
-import numba
 import numpy as np
-from numba import typeof, types
-from numba.experimental import jitclass
-from numba import typed
 
 from .agent import Agent
+from .boost.vectorize import vectorize_2d
 
 
 class Spot(Agent):
@@ -39,29 +33,78 @@ class Spot(Agent):
 
 
 class Grid:
-    def __init__(self, spot_cls: ClassVar[Spot], width: int, height: int, wrap=True):
+    """
+    Grid is a widely-used discrete space for ABM.
+    Grid contains many `Spot`s, each `Spot` could contain several agents.
+
+    """
+    def __init__(self, spot_cls: ClassVar[Spot], width: int, height: int, wrap=True, caching=True):
+        """
+
+        :param spot_cls: The class of Spot
+        :param width: The width of Grid
+        :param height: The height of Grid
+        :param wrap: If true, the coordinate overflow will be mapped to another end.
+        :param caching: If true, the neighbors and bound check results will be cached to avoid re-computing.
+
+        """
         self.width = width
         self.height = height
         self.wrap = wrap
-        self._existed_agents: Set[int] = set()
+        self._existed_agents: Dict[str, Dict[int, Tuple[int, int]]] = {}
         self._spots = [[spot_cls(self._convert_to_1d(x, y), x, y) for x in range(width)] for y in range(height)]
         for x in range(self.width):
             for y in range(self.height):
                 self._spots[y][x].setup()
-        self._agent_ids = [set() for i in range(width * height)]
+        self._agent_ids: Dict[str, List[Set[int]]] = {}  # [set() for i in range(width * height)]
+
+        if caching:
+            self.get_neighbors = functools.lru_cache(self.width * self.height)(self.get_neighbors)
+            self._bound_check = functools.lru_cache(self.width * self.height)(self._bound_check)
+
+    def add_category(self, category_name: str):
+        """
+        Add agent category
+        :param category_name:
+        :return:
+        """
+        self._agent_ids[category_name] = [set() for i in range(self.width * self.height)]
+        self._existed_agents[category_name] = {}
 
     def get_spot(self, x, y) -> "Spot":
+        """
+        Get a spot at position (x, y)
+        :param x:
+        :param y:
+        :return:
+        """
         x, y = self._bound_check(x, y)
         return self._spots[y][x]
 
-    def get_agent_ids(self, x: int, y: int):
-        return self._agent_ids[self._convert_to_1d(x, y)]
+    def get_agent_ids(self, category: str, x: int, y: int) -> Set[int]:
+        """
+        Get all agent of a specific category from the spot at (x, y)
+        :param category:
+        :param x:
+        :param y:
+        :return: A set of int, the agent ids.
+        """
+        agent_ids = self._agent_ids[category][self._convert_to_1d(x, y)]
+        if agent_ids is None:
+            raise KeyError(f'Category {category} not registered!')
+        return agent_ids
 
     def _convert_to_1d(self, x, y):
         return x * self.height + y
 
     def _in_bounds(self, x, y):
         return (0 <= x < self.width) and (0 <= y <= self.height)
+
+    def _get_category_of_agents(self, category_name: str):
+        category = self._existed_agents.get(category_name)
+        if category is None:
+            raise ValueError(f"Category {category_name} is not registered!")
+        return category
 
     def _bound_check(self, x, y):
         if self.wrap:
@@ -74,10 +117,24 @@ class Grid:
             return x, y
 
     def coords_wrap(self, x, y):
+        """
+        Wrap the coordination
+        :param x:
+        :param y:
+        :return:
+        """
         return x % self.width, y % self.height
 
-    @functools.lru_cache(maxsize=100000)
     def get_neighbors(self, x, y, radius: int = 1, moore=True, except_self=True):
+        """
+        Get the neighbors of some spot.
+        :param x:
+        :param y:
+        :param radius:
+        :param moore:
+        :param except_self:
+        :return:
+        """
         x, y = self._bound_check(x, y)
         neighbors = []
         for dx in range(-radius, radius + 1):
@@ -91,218 +148,125 @@ class Grid:
                 neighbors.append((x + dx, y + dy))
         return neighbors
 
-    def add_agent(self, agent_id: int, x: int, y: int):
+    def add_agent(self, agent_id: int, category: str, x: int, y: int):
+        """
+        Add agent onto the grid
+        :param agent_id:
+        :param category:
+        :param x:
+        :param y:
+        :return:
+        """
         x, y = self._bound_check(x, y)
-        if agent_id in self._existed_agents:
-            raise ValueError(f"Agent with id: {agent_id} already exists on grid!")
-        if agent_id in self._agent_ids[self._convert_to_1d(x, y)]:
-            return
-        else:
-            self._agent_ids[self._convert_to_1d(x, y)].add(agent_id)
-            self._existed_agents.add(agent_id)
 
-    def remove_agent(self, agent_id: int, x: int, y: int):
+        category_of_agents = self._get_category_of_agents(category)
+
+        if agent_id in category_of_agents.keys():
+            raise ValueError(f"Agent with id: {agent_id} already exists on grid!")
+
+        if agent_id in self._agent_ids[category][self._convert_to_1d(x, y)]:
+            raise ValueError(f"Agent with id: {agent_id} already exists at position {(x, y)}!")
+        else:
+            self._agent_ids[category][self._convert_to_1d(x, y)].add(agent_id)
+            self._existed_agents[category][agent_id] = (x, y)
+
+    def _remove_agent(self, agent_id: int, category: str, x: int, y: int):
         x, y = self._bound_check(x, y)
-        if agent_id not in self._existed_agents:
+
+        category_of_agents = self._get_category_of_agents(category)
+
+        if agent_id not in category_of_agents.keys():
+            raise ValueError(f"Agent with id: {agent_id} does not exist on grid!")
+
+        if agent_id not in self._existed_agents[category]:
             raise ValueError("Agent does not exist on the grid!")
-        if agent_id not in self._agent_ids[self._convert_to_1d(x, y)]:
+        if agent_id not in self._agent_ids[category][self._convert_to_1d(x, y)]:
             print("Melodie-boost error occured. agent_id:", agent_id, "x:", x, "y:",
                   y)
             raise IndexError("agent_id does not exist on such coordinate.")
         else:
-            self._agent_ids[self._convert_to_1d(x, y)].remove(agent_id)
-            self._existed_agents.remove(agent_id)
+            self._agent_ids[category][self._convert_to_1d(x, y)].remove(agent_id)
+            self._existed_agents[category].pop(agent_id)
 
-    def move_agent(self, agent_id, source_x, source_y, target_x, target_y, ):
-        self.remove_agent(agent_id, source_x, source_y)
-        self.add_agent(agent_id, target_x, target_y)
+    def remove_agent(self, agent_id: int, category: str):
+        """
+        Remove agent from the grid
+        :param agent_id:
+        :param category:
+        :return:
+        """
+        source_x, source_y = self.get_agent_pos(agent_id, category)
+        self._remove_agent(agent_id, category, source_x, source_y)
 
+    def move_agent(self, agent_id, category: str, target_x, target_y):
+        """
+        Move agent to target position.
+        :param agent_id:
+        :param category:
+        :param target_x:
+        :param target_y:
+        :return:
+        """
+        source_x, source_y = self.get_agent_pos(agent_id, category)
+        self._remove_agent(agent_id, category, source_x, source_y)
+        self.add_agent(agent_id, category, target_x, target_y)
 
-_jit_grid_cls = None
+    def get_agent_pos(self, agent_id: int, category: str) -> Tuple[int, int]:
+        """
+        Get the agent position at the grid.
+        :param agent_id:
+        :param category:
+        :return:
+        """
+        return self._existed_agents[category][agent_id]
 
+    def to_2d_array(self, attr_name: str) -> np.ndarray:
+        """
+        Collect attribute of each spot and write the attribute value into an 2d np.array.
+        Notice:
+        - The attribute to collect should be float/int/bool, not other types such as str.
+        - If you would like to get an element from the returned array, please write like this:
+         ```python
+         arr = self.to_2d_array('some_attr')
+         y = 10
+         x = 5
+         spot_at_x_5_y_10 = arr[y][x] # CORRECT. Get the some_attr value of spot at `x = 5, y = 10`
+         spot_at_x_5_y_10 = arr[x][y] # INCORRECT. You will get the value of spot at `x = 10, y = 5`
+         ```
 
-def build_jit_class(width, height):
-    global _jit_grid_cls
+        :param attr_name: the attribute name to collect for this model.
+        :return:
+        """
+        return vectorize_2d(self._spots, attr_name)
 
-    # _adj = NumbaDict.empty(key_type=types.int64, value_type=types.DictType(types.int64, types.int64))
-    # _nodes = NumbaDict.empty(key_type=types.int64, value_type=numba.typeof(node_elem))
-    # _agents = NumbaDict.empty(key_type=types.int64, value_type=types.DictType(types.int64, types.int64))
-    # _agent_pos = NumbaDict.empty(key_type=types.int64, value_type=numba.typeof(agent_elem))
-    agent_num = 100
-    node_num = 2000
-    edge_num = 8000
-    spots = np.array([[(x * height + y, x, y, random.randint(0, 1)) for x in range(width)] for y in range(height)],
-                     dtype=[('id', "i8"), ('x', 'i8'), ('y', 'i8'), ("alive", "i8")])
-
-    agent_ids = typed.List()  # .empty_list(types.ListType)
-    for i in range(width):
-        for j in range(height):
-            sub_ids = typed.List.empty_list(types.int64)
-            agent_ids.append(sub_ids)
-
-    if _jit_grid_cls is not None:
-        return _jit_grid_cls(spots, agent_ids)
-
-    @jitclass([
-        ('wrap', numba.typeof(True)),
-        ('width', numba.typeof(1)),
-        ('height', numba.typeof(1)),
-        ('_spots', numba.typeof(spots)),
-        ('_agent_ids', numba.typeof(agent_ids)),
-        ('_existed_agents', types.DictType(types.int64, types.int64)),
-        ('_agent_categories', types.DictType(types.int64, types.unicode_type))
-    ])
-    class GridJIT:
-        def __init__(self, spots_array, agent_id_list, wrap: bool = True):
-            self.wrap = wrap
-            self.width = width
-            self.height = height
-            self._spots = spots_array
-            self._agent_ids = agent_id_list
-            self._existed_agents = typed.Dict.empty(types.int64, types.int64)
-            self._agent_categories = typed.Dict.empty(types.int64, types.unicode_type)
-
-        def get_spot(self, x, y):
-            x, y = self._bound_check(x, y)
-            return self._spots[y][x]
-
-        def get_agent_ids(self, x: int, y: int, categories="all"):
-
-            if categories == "all":
-                return self._agent_ids[self._convert_to_1d(x, y)]
-            else:
-                ids = typed.List()
-                for agent_id in self._agent_ids[self._convert_to_1d(x, y)]:
-                    if self._agent_categories.get(agent_id) == categories:
-                        ids.append(agent_id)
-                return ids
-
-        def _convert_to_1d(self, x, y):
-            return x * self.height + y
-
-        def _in_bounds(self, x, y):
-            return (0 <= x < self.width) and (0 <= y <= self.height)
-
-        def _bound_check(self, x, y):
-            if self.wrap:
-                return self.coords_wrap(x, y)
-            if not (0 <= x < self.width):
-                raise IndexError("grid index x was out of range")
-            elif not (0 <= y <= self.height):
-                raise IndexError("grid index y was out of range")
-            else:
-                return x, y
-
-        def coords_wrap(self, x, y):
-            return x % self.width, y % self.height
-
-        def get_neighbors(self, x, y, radius: int = 1, moore=True, except_self=True):
-            """
-
-
-            Using fix-sized numpy ndarray can be a lot (about 3 times) faster than using numba List.
-
-            :param x:
-            :param y:
-            :param radius:
-            :param moore:
-            :param except_self:
-            :return:
-            """
-            x, y = self._bound_check(x, y)
-
-            length = 0
-            if moore:
-                length = (radius * 2 + 1) ** 2
-            else:
-                length = 2 * radius * (radius + 1) + 1
-            if except_self:
-                length -= 1
-
-            # pre-allocate memory by creating an empty array
-            neighbors = np.zeros((length, 2), dtype=np.int64)
-
-            if not moore:
-                raise NotImplementedError
-            index = 0
-            for dx in range(-radius, radius + 1):
-                for dy in range(-radius, radius + 1):
-                    if not moore and abs(dx) + abs(dy) > radius:
-                        continue
-                    if not self.wrap and not self._in_bounds(x + dx, y + dy):
-                        continue
-                    if dx == 0 and dy == 0 and except_self:
-                        continue
-
-                    neighbors[index][0] = x + dx
-                    neighbors[index][1] = y + dy
-                    index += 1
-
-            return neighbors
-
-        def add_agent(self, agent_id: int, x: int, y: int, category=''):
-            x, y = self._bound_check(x, y)
-            if self._existed_agents.get(agent_id) is not None:
-                raise ValueError("Agent already existed!")
-            for agent_id_existed in self._agent_ids[self._convert_to_1d(x, y)]:
-                if agent_id_existed == agent_id:
-                    return
-            self._existed_agents[agent_id] = 0
-            self._agent_ids[self._convert_to_1d(x, y)].append(agent_id)
-            self._agent_categories[agent_id] = category
-
-        def remove_agent(self, agent_id: int, x: int, y: int):
-            x, y = self._bound_check(x, y)
-            if self._existed_agents.get(agent_id) is None:
-                raise ValueError("Agent does not exist on the grid!")
-            exist = False
-            for agent_id_existed in self._agent_ids[self._convert_to_1d(x, y)]:
-                if agent_id_existed == agent_id:
-                    exist = True
-                    break
-            if not exist:
-                print("Melodie-boost error occured. agent_id:", agent_id, "x:", x, "y:",
-                      y)
-                raise IndexError("agent_id does not exist on such coordinate.")
-            self._agent_ids[self._convert_to_1d(x, y)].remove(agent_id_existed)
-            self._existed_agents.pop(agent_id)
-
-        def move_agent(self, agent_id, source_x, source_y, target_x, target_y, ):
-            self.remove_agent(agent_id, source_x, source_y)
-            self.add_agent(agent_id, target_x, target_y)
-            pass
-
-    _jit_grid_cls = GridJIT
-    return _jit_grid_cls(spots, agent_ids)
-
-
-if __name__ == "__main__":
-    grid = Grid(Spot, 10, 10)
-    jit_grid = build_jit_class(10, 10)
-    N = 100_000
-
-
-    @numba.njit
-    def jitrun(g):
-        spot = None
-        for i in range(N):
-            neighbor_positions = g.get_neighbors(1, 1)
-            for neighbor_pos in neighbor_positions:
-                spot = g.get_spot(neighbor_pos[0], neighbor_pos[1])
-        return spot
-
-
-    def normal(g):
-        for i in range(N):
-            neighbor_positions = g.get_neighbors(1, 1)
-            for neighbor_pos in neighbor_positions:
-                spot = g.get_spot(neighbor_pos[0], neighbor_pos[1])
-
-
-    jitrun(jit_grid)
-    t0 = time.time()
-    jitrun(jit_grid)
-    t1 = time.time()
-    normal(grid)
-    t2 = time.time()
-    print(f'jit:{t1 - t0},normal:{t2 - t1}, jit could speed up: {(t2 - t1) / (t1 - t0)} times')
+#
+# if __name__ == "__main__":
+#     grid = Grid(Spot, 10, 10)
+#     jit_grid = build_jit_class(10, 10)
+#     N = 100_000
+#
+#
+#     @numba.njit
+#     def jitrun(g):
+#         spot = None
+#         for i in range(N):
+#             neighbor_positions = g.get_neighbors(1, 1)
+#             for neighbor_pos in neighbor_positions:
+#                 spot = g.get_spot(neighbor_pos[0], neighbor_pos[1])
+#         return spot
+#
+#
+#     def normal(g):
+#         for i in range(N):
+#             neighbor_positions = g.get_neighbors(1, 1)
+#             for neighbor_pos in neighbor_positions:
+#                 spot = g.get_spot(neighbor_pos[0], neighbor_pos[1])
+#
+#
+#     jitrun(jit_grid)
+#     t0 = time.time()
+#     jitrun(jit_grid)
+#     t1 = time.time()
+#     normal(grid)
+#     t2 = time.time()
+#     print(f'jit:{t1 - t0},normal:{t2 - t1}, jit could speed up: {(t2 - t1) / (t1 - t0)} times')
