@@ -2,7 +2,7 @@
 # @Time: 2021/9/28 14:00
 # @Author: Zhanyi Hou
 # @Email: 1295752786@qq.com
-# @File: test.py.py
+# @File: add_sector_id.py.py
 import ast
 import os
 from typing import Dict, List, Set, Optional, Tuple

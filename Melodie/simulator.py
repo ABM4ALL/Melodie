@@ -50,25 +50,23 @@ class Simulator(metaclass=abc.ABCMeta):
         self.scenarios: Optional[List['Scenario']] = None
 
     @abc.abstractmethod
-    def register_static_dataframes(self):
+    def register_static_dataframes(self) -> None:
         """
         This method must be overriden.
-
-        The scenarios/agents parameter tables can also be registered in this method.
-
-        :return:
+        The "scenarios" table will be registered in this method.
         """
-        # 必须有，因为至少要注册scenarios这张表
         pass
 
     @abc.abstractmethod
-    def register_generated_dataframes(self):
-        # 新加的函数，不一定需要写。
-        # 但是，考虑到agent_params大概率跟scenarios有依赖关系，所以这个函数也大概率要写。
+    def register_generated_dataframes(self) -> None:
+        """
+        This method must be overriden.
+        The "agent_params" table will be registered in this method.
+        """
         pass
 
-    def register_dataframe(self, table_name: str, file_name: str):
-        # register_dataframe(self, table_name: str, file_name: str, data_type: dict, storage_type: Optional[Union["RAM", "ROM"]]="RAM"):
+    def register_dataframe(self, table_name: str, file_name: str, data_type: dict) -> None:
+
         """
         Register static table, saving it to `self.registered_dataframes`.
         The static table will be copied into database.
@@ -90,17 +88,11 @@ class Simulator(metaclass=abc.ABCMeta):
         else:
             raise NotImplemented(file_name)
 
-        # 修改后的步骤：
-        # 1. 把table按照data_type存入数据库 --> 每张被注册的表必须存到数据库里，因为跑完Simulator再跑Analyzer的时候可能会用。
-        # 2. 根据storage_type赋给self.registered_dataframes
-        #    if storage_type == "RAM":
-        #        self.registered_dataframes[table_name] = table.astype(data_type)
-        #    elif storage_type == "ROM":
-        #        self.registered_dataframes[table_name] = None
-        #    else: pass
-
+        # 注册步骤：
+        # 1. 把dataframe按照data_type存入数据库，因为跑完Simulator再跑Analyzer的时候可能会用。
+        create_db_conn(self.config).write_dataframe(table_name, table, data_type, if_exists="replace") # --> 加上data_type
+        # 2. 把dataframe放到registered_dataframes里。
         self.registered_dataframes[table_name] = table
-        create_db_conn(self.config).write_dataframe(table_name, table, "replace")
 
     def get_registered_dataframe(self, table_name) -> pd.DataFrame:
         """

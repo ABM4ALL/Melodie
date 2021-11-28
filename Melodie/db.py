@@ -134,7 +134,7 @@ class DB:
         self.connection.commit()
         self.connection.close()
 
-    def write_dataframe(self, table_name: str, data_frame: pd.DataFrame, if_exists='append'):
+    def write_dataframe(self, table_name: str, data_frame: pd.DataFrame, data_type: dict, if_exists='append'):
         """
         Write a dataframe to data table.
         :param table_name:
@@ -142,8 +142,7 @@ class DB:
         :param if_exists: {'replace', 'fail', 'append'}
         :return:
         """
-
-        data_frame.to_sql(table_name, self.connection, index=False, if_exists=if_exists)  # , chunksize=1000)
+        data_frame.to_sql(table_name, self.connection, index=False, dtype=data_type, if_exists=if_exists)
 
     def read_dataframe(self, table_name: str) -> pd.DataFrame:
         """
