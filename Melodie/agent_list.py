@@ -1,16 +1,19 @@
+import logging
 import random
 import time
 
 import pandas as pd
-
+from pandas.api.types import is_numeric_dtype, is_integer_dtype, is_float_dtype, is_string_dtype
 from typing import TYPE_CHECKING, ClassVar, List, Dict, Union, Set, Optional
 
-from .basic import IndexedAgentList, MelodieExceptions
+from .basic import IndexedAgentList, MelodieExceptions, MelodieException
 
 if TYPE_CHECKING:
     from .agent import Agent
     from .model import Model
     from .scenario_manager import Scenario
+
+logger = logging.getLogger(__name__)
 
 
 class BaseAgentContainer:
@@ -44,6 +47,35 @@ class BaseAgentContainer:
         :return:
         """
 
+    def type_check(self, param_names: List[str], agent_params_df: pd.DataFrame):
+        """
+        Check if the agent is
+        :param agent_sample:
+        :param param_names:
+        :param agent_params_df:
+        :return:
+        """
+        dtypes = agent_params_df.dtypes
+        dataframe_dtypes = {}
+        for col, dtype in dtypes.items():
+            if is_integer_dtype(dtype):
+                dataframe_dtypes[col] = int
+            elif is_float_dtype(dtype):
+                dataframe_dtypes[col] = float
+            elif is_string_dtype(dtype):
+                dataframe_dtypes[col] = str
+            else:
+                logger.warning(f"Cannot tell the type of column {col}.")
+                dataframe_dtypes[col] = None
+        for agent in self.agents:
+            for param_name in param_names:
+                param_type = type(getattr(agent, param_name))
+                if param_type == dataframe_dtypes[param_name] or param_type is None:
+                    continue
+                else:
+                    raise MelodieExceptions.Data.ObjectPropertyTypeUnMatchTheDataFrameError(param_name, param_type,
+                                                                                            dataframe_dtypes, agent)
+
     def set_properties(self, props_df: pd.DataFrame):
         """
         Set parameters of all agents in current scenario.
@@ -55,19 +87,21 @@ class BaseAgentContainer:
 
         param_names = [param for param in props_df.columns if param not in
                        {'scenario_id'}]
+
         # props_df_cpy: Optional[pd.DataFrame] = None
         if "scenario_id" in props_df.columns:
             props_df_cpy = props_df.query(f"scenario_id == {self.scenario.id}").copy(True)
         else:
             props_df_cpy = props_df.copy()  # deep copy this dataframe.
         props_df_cpy.reset_index(drop=True, inplace=True)
-
+        self.type_check(param_names, props_df_cpy)
         # props_df_cpy.set_index("id", inplace=True)
         # # Assign parameters to properties for each agent.
         for i, agent in enumerate(self.agents):
             params = {}
             for agent_param_name in param_names:
                 # .item() method was applied to convert pandas/numpy data into python-builtin types.
+                # 加一步判断，判断属性名称在Agent中存在，并且类型与setup()方法中定义的一致。
                 params[agent_param_name] = props_df_cpy.loc[i, agent_param_name].item()
 
             agent.set_params(params)
@@ -83,8 +117,10 @@ class AgentList(BaseAgentContainer):
         self.initial_agent_num: int = length
         self.model = model
         self.agents = self.init_agents()
+
     def __repr__(self):
         return f"<AgentList {self.agents}>"
+
     def __len__(self):
         return len(self.agents)
 

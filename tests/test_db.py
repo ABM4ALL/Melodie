@@ -5,10 +5,52 @@
 # @File: test_db.py
 import os
 
-from Melodie import create_db_conn
+import Melodie.basic
+from Melodie import create_db_conn, DB
+import pandas as pd
+from pandas.api.types import is_string_dtype
+from pandas.api.types import is_numeric_dtype, is_integer_dtype, is_float_dtype
+import numpy as np
+from sqlalchemy.types import Integer
+
+from Melodie.basic import MelodieException
 from .config import cfg
 
 cfg = cfg
+
+
+def test_sqlalchemy_data_types():
+    """
+    In-memory sqlite testcase.
+    :return:
+    """
+    from sqlalchemy import create_engine
+    # engine = create_engine('sqlite://', echo=False)
+    db = DB('test_db')
+    db.register_dtypes('df_with_dtypes', {'A': Integer(), 'B': Integer()})
+    df = pd.DataFrame({"A": [1, None, 2], "B": [1, 3, 2]})
+
+    db.write_dataframe('df_default_dtypes', df)
+    try:
+        db.read_dataframe('unexisted_table')
+        assert False, "Code should raise exception above"
+    except MelodieException as e:
+        assert e.id == 1503  # Assert error 1503 occurs
+    got_df = db.read_dataframe('df_default_dtypes')
+
+    # As column `A` contains a None value, it will be converted to float64 with a NaN.
+    # At the same time `B` is still integer.
+    assert is_float_dtype(got_df.dtypes['A'])
+    assert is_integer_dtype(got_df.dtypes['B'])
+
+    # db.write_dataframe('df_with_dtypes', df, data_type={'A': Integer(), 'B': Integer()})
+    db.write_dataframe('df_with_dtypes', df)
+    # df.to_sql('df_with_dtypes', engine, index=False, dtype={'A': Integer(), 'B': Integer()})
+    data_with_types = db.get_engine().execute('select * from df_with_dtypes').fetchall()
+    print(data_with_types)
+    assert isinstance(data_with_types[0][1], int)
+    db.close()
+    os.remove('test_db.sqlite')
 
 
 def test_get_scenarios():

@@ -1,18 +1,29 @@
+import logging
 import os
 import sqlite3
+import sqlalchemy
 import time
-from typing import Union, Dict, TYPE_CHECKING, List, Tuple
+from typing import Union, Dict, TYPE_CHECKING, List, Tuple, Type, Hashable, Optional
+
+from sqlalchemy.exc import OperationalError
 
 from Melodie import Config
 import pandas as pd
 
 import numpy as np
 
+from Melodie.basic import MelodieExceptions
+
 if TYPE_CHECKING:
     from Melodie.scenario_manager import Scenario
 
+TABLE_DTYPES = Dict[str, Union[str, Type[str], Type[float], Type[int], Type[complex], Type[bool], Type[object]]]
+
+logger = logging.getLogger(__name__)
+
 
 class DB:
+    table_dtypes: Dict[str, TABLE_DTYPES] = {}
     EXPERIMENTS_TABLE = 'melodie_experiments'
     SCENARIO_TABLE = 'scenarios'
     ENVIRONMENT_RESULT_TABLE = 'env_result'
@@ -21,6 +32,7 @@ class DB:
 
     def __init__(self, db_name: str, db_type: str = 'sqlite', conn_params: Dict[str, str] = None):
         self.db_name = db_name
+
         assert db_type in {'sqlite'}
         if db_type == 'sqlite':
             if conn_params is None:
@@ -31,23 +43,70 @@ class DB:
                 conn_params['db_path'] = ''
 
             self.db_path = conn_params['db_path']
-            self.connection: sqlite3.Connection = self.create_connection(db_name)
+            self.connection = self.create_connection(db_name)
+            # self.connection
         else:
             raise NotImplementedError
 
-    def create_connection(self, database_name) -> sqlite3.Connection:
-        conn = sqlite3.connect(os.path.join(self.db_path, database_name + ".sqlite"))
+    def get_engine(self):
+        return self.connection
+
+    def create_connection(self, database_name) -> sqlalchemy.engine.Engine:
+
+        # conn = sqlite3.connect(os.path.join(self.db_path, database_name + ".sqlite"))
+        # if database_name == "":
+        #     return sqlalchemy.create_engine(f'sqlite://', echo=False)
+        # else:
+        return sqlalchemy.create_engine(f'sqlite:///{os.path.join(self.db_path, database_name + ".sqlite")}')
+        # engine.
         # conn.execute("PRAGMA synchronize = OFF")
         # conn.execute("PRAGMA jorunal_mode = MEMORY")
-        conn.commit()
-        return conn
+        # conn.commit()
+        # return engine
+
+    @classmethod
+    def register_dtypes(cls, table_name: str, dtypes: TABLE_DTYPES):
+        """
+        Register data types of a table for sqlalchemy.
+
+        :return:
+        """
+        assert isinstance(dtypes, dict)
+        if table_name in cls.table_dtypes:
+            raise ValueError(f"Table dtypes of '{table_name}' has been already defined!")
+        cls.table_dtypes[table_name] = dtypes
+
+    @classmethod
+    def get_table_dtypes(cls, table_name: str) -> TABLE_DTYPES:
+        """
+        Get the data type of a table.
+        If table data type is not specified, return an empty dict.
+        :param table_name:
+        :return:
+        """
+        if table_name in cls.table_dtypes:
+            return cls.table_dtypes[table_name]
+        else:
+            return {}
 
     def close(self):
         """
         Close DB connection.
         :return:
         """
-        self.connection.close()
+        self.connection.dispose()
+
+    def clear_database(self):
+        """
+        Clear the database, deleting all tables.
+        :return:
+        """
+        logger.info(f"Database contains tables: {self.connection.table_names()}")
+
+        for table_name in self.connection.table_names():
+            self.connection.execute(f"drop table {table_name}")
+            logger.info(f"Table '{table_name}' in database has been droped!")
+
 
     # def init_experiment(self, run_id_list: List[Tuple[int, int]]):
     #     self.drop_table(self.EXPERIMENTS_TABLE)
@@ -134,14 +193,21 @@ class DB:
         self.connection.commit()
         self.connection.close()
 
-    def write_dataframe(self, table_name: str, data_frame: pd.DataFrame, data_type: dict, if_exists='append'):
+    def write_dataframe(self, table_name: str, data_frame: pd.DataFrame,
+                        data_type: Optional[TABLE_DTYPES] = None,
+                        if_exists='append'):
         """
-        Write a dataframe to data table.
-        :param table_name:
+        Write a dataframe to database.
+
+        :param table_name: table_name
         :param data_frame:
+        :param data_type: The data type for columns.
         :param if_exists: {'replace', 'fail', 'append'}
         :return:
         """
+        if data_type is None:
+            data_type = DB.get_table_dtypes(table_name)
+        logger.info(f"datatype of table `{table_name}` is: {data_type}")
         data_frame.to_sql(table_name, self.connection, index=False, dtype=data_type, if_exists=if_exists)
 
     def read_dataframe(self, table_name: str) -> pd.DataFrame:
@@ -150,7 +216,10 @@ class DB:
         :param table_name:
         :return:
         """
-        return pd.read_sql(f'select * from {table_name}', self.connection)
+        try:
+            return pd.read_sql(f'select * from {table_name}', self.connection)
+        except OperationalError as e:
+            raise MelodieExceptions.Data.AttemptingReadingFromUnexistedTable(table_name)
 
     def drop_table(self, table_name: str):
         """
@@ -199,8 +268,8 @@ class DB:
 
     def delete_env_record(self, scenario_id: int, run_id: int):
         try:
-            cur = self.connection.cursor()
-            cur.execute(
+            # cur = self.connection.cursor()
+            self.connection.execute(
                 f"delete from {self.ENVIRONMENT_RESULT_TABLE} where scenario_id={scenario_id} and run_id={run_id}")
         except sqlite3.OperationalError:
             import traceback
@@ -208,21 +277,21 @@ class DB:
 
     def delete_agent_records(self, table_name: str, scenario_id: int, run_id: int):
         try:
-            cur = self.connection.cursor()
+            cur = self.connection
             cur.execute(
                 f"delete from {table_name} where scenario_id={scenario_id} and run_id={run_id}")
-            self.connection.commit()
+            # self.connection.commit()
         except sqlite3.OperationalError:
             import traceback
             traceback.print_exc()
 
-    def save_experiment_meta(self, scenario: 'Scenario'):
-        d = scenario.toDict()
-        d['finished_at'] = time.time()
-        df = pd.DataFrame([
-            d
-        ])
-        self.write_dataframe(self.EXPERIMENTS_TABLE, df, "append")
+    # def save_experiment_meta(self, scenario: 'Scenario'):
+    #     d = scenario.toDict()
+    #     d['finished_at'] = time.time()
+    #     df = pd.DataFrame([
+    #         d
+    #     ])
+    #     self.write_dataframe(self.EXPERIMENTS_TABLE, df, {}, "append")
 
 
 def create_db_conn(config: 'Config' = None) -> DB:

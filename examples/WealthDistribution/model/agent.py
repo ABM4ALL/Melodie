@@ -2,14 +2,18 @@
 __author__ = 'Songmin'
 
 import random
+from typing import Optional
+
 from Melodie import Agent
+
 
 
 class GINIAgent(Agent):
 
     def setup(self):
-        self.account = 0.0
-        self.productivity = 0.0
+        self.account = 0
+        # self.productivity: Optional[float] = None
+        self.productivity = .0
 
     def go_produce(self):
         rand = random.random()

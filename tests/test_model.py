@@ -3,6 +3,8 @@
 # @Author: Zhanyi Hou
 # @Email: 1295752786@qq.com
 # @File: test_model.py
+import pandas as pd
+
 from Melodie.basic import MelodieException
 from Melodie import Agent, Model, Scenario
 from .config import cfg
@@ -12,12 +14,14 @@ class TestAgent(Agent):
     def setup(self):
         self.a = 123
         self.b = 456
-        self.productivity = 0
+        self.productivity = 0.0
 
 
 class TestModel(Model):
     def setup(self):
-        self.agent_list1 = self.create_agent_container(TestAgent, 10)
+        N = 10
+        params_df = pd.DataFrame([{'a': 123, 'b': 456, 'productivity': 0.0} for i in range(N)])
+        self.agent_list1 = self.create_agent_container(TestAgent, N, params_df)
         self.agent_list1[2].id = 1
         self.agent_list1[3].id = 1
 

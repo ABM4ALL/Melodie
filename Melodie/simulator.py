@@ -29,12 +29,12 @@ logger = logging.getLogger(__name__)
 if TYPE_CHECKING:
     from .environment import Environment
     from .model import Model
-    from .scenario_manager import ScenarioManager, Scenario
+    from .scenario_manager import Scenario
     from .data_collector import DataCollector
     from .config import Config
     from .visualization import Visualizer
 else:
-    from .scenario_manager import ScenarioManager, Scenario
+    from .scenario_manager import Scenario
     from .config import Config
     from .db import create_db_conn
 
@@ -90,7 +90,13 @@ class Simulator(metaclass=abc.ABCMeta):
 
         # 注册步骤：
         # 1. 把dataframe按照data_type存入数据库，因为跑完Simulator再跑Analyzer的时候可能会用。
-        create_db_conn(self.config).write_dataframe(table_name, table, data_type, if_exists="replace") # --> 加上data_type
+
+        # data_type作为DB的类属性，注册进DB
+        DB.register_dtypes(table_name, data_type)
+        # 无需指定data_type即可按照data_type来存储table_name
+        create_db_conn(self.config).write_dataframe(table_name, table, data_type=data_type, if_exists="replace",
+                                                    )  # --> 加上data_type
+
         # 2. 把dataframe放到registered_dataframes里。
         self.registered_dataframes[table_name] = table
 
@@ -150,6 +156,7 @@ class Simulator(metaclass=abc.ABCMeta):
         This method also clears database.
         :return:
         """
+        create_db_conn(self.config).clear_database()
         self.register_static_dataframes()
         self.register_generated_dataframes()
 
@@ -210,7 +217,6 @@ class Simulator(metaclass=abc.ABCMeta):
             for run_id in range(scenario.number_of_run):
                 self.run_model(config, scenario, model_class, agent_class, environment_class, data_collector_class,
                                run_id)
-            create_db_conn(self.config).save_experiment_meta(scenario)
 
             logger.info(f'{scenario_index + 1} of {len(self.scenarios)} scenarios has completed.')
 

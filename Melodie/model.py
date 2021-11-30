@@ -120,18 +120,25 @@ class Model:
         self.setup_environment()
         self.setup_data_collector()
 
-    def create_agent_container(self, agent_class: ClassVar['Agent'], length: int,
-                               params_df: pd.DataFrame = None,
+    def create_agent_container(self, agent_class: ClassVar['Agent'], initial_num: int,
+                               params_df: pd.DataFrame ,
                                container_type: str = "list") -> Union[AgentList]:
+        """
+        Create a container for agents
+        :param agent_class:
+        :param initial_num: Initial number of agents
+        :param params_df:
+        :param container_type:
+        :return:
+        """
         agent_container_class: Union[ClassVar[AgentList], None] = None
         if container_type == "list":
             agent_container_class = AgentList
         else:
-            raise NotImplementedError
+            raise NotImplementedError(f"Container type '{container_type}' is not valid!")
 
-        container = agent_container_class(agent_class, length, model=self)
-        if params_df is not None:
-            container.set_properties(params_df)
+        container = agent_container_class(agent_class, initial_num, model=self)
+        container.set_properties(params_df)
 
         return container
 

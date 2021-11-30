@@ -11,7 +11,6 @@ from model.scenario import GiniScenario
 from model.data_collector import GiniDataCollector
 from model.model import GiniModel
 from model.simulator import GiniSimulator
-from analyzer.analyzer import Analyzer
 
 from config import config
 

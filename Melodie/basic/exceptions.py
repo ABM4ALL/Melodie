@@ -134,7 +134,7 @@ class MelodieExceptions:
         @staticmethod
         def AgentIDConflict(agent_container_name: str, agent_ids: List[int]):
             c = Counter(agent_ids)
-            duplicated_ids = [agent_id for agent_id, times in c.most_common() if times > 1 ]
+            duplicated_ids = [agent_id for agent_id, times in c.most_common() if times > 1]
 
             return MelodieException(1303,
                                     f'Agent container `{agent_container_name}` has duplicated agent IDs: {duplicated_ids}.')
@@ -162,3 +162,15 @@ class MelodieExceptions:
         def StaticTableNotRegistered(table_name: str, all_table_names: str):
             return MelodieException(1502,
                                     f"Table {table_name} is not registered. All registered tables are: {all_table_names}.")
+
+        @staticmethod
+        def AttemptingReadingFromUnexistedTable(table_name):
+            return MelodieException(1503, f"Table '{table_name}' does not in database.")
+
+        @staticmethod
+        def ObjectPropertyTypeUnMatchTheDataFrameError(param_name: str, param_type: type,
+                                                       dataframe_dtypes: Dict[str, type], agent: 'Agent'):
+            return MelodieException(1504,
+                                    f"The Agent property '{param_name}' is of type {param_type}, but the corresponding column "
+                                    f"of the dataframe is of type {dataframe_dtypes[param_name]}.\n"
+                                    f"The agent that offended is: {agent}")

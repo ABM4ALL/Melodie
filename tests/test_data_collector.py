@@ -8,7 +8,10 @@
 import random
 from typing import List
 
+import pandas as pd
+
 from Melodie import Agent, DataCollector, Environment, Scenario, Simulator, Model, AgentList
+from Melodie.basic import MelodieException
 from .config import cfg_for_temp
 
 AGENT_NUM_1 = 10
@@ -36,8 +39,17 @@ class TestScenario(Scenario):
 
 class DCTestModel(Model):
     def setup(self):
-        self.agent_list1 = self.create_agent_container(TestAgent, 10)
-        self.agent_list2 = self.create_agent_container(TestAgent, 20)
+        params_df_1 = pd.DataFrame([{"a": 1, "b": 1, 'productivity': 0} for i in range(10)])
+        params_df_2 = pd.DataFrame([{"a": 1, "b": 1, 'productivity': 0} for i in range(20)])
+        self.agent_list1 = self.create_agent_container(TestAgent, 10, params_df_1)
+        self.agent_list2 = self.create_agent_container(TestAgent, 20, params_df_2)
+
+        params_df_3 = pd.DataFrame([{"a": 1.0, "b": 1, 'productivity': 0} for i in range(20)])
+        try:
+            self.create_agent_container(TestAgent, 20, params_df_3)
+            assert False, "Above code should have raised an exception."
+        except MelodieException as e:
+            assert e.id == 1504
 
 
 class Simulator4Test(Simulator):
