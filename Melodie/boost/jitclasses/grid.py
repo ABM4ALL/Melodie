@@ -12,6 +12,8 @@ from numba import types
 from numba.experimental import jitclass
 from numba import typed
 
+from .utils import dtype_detect
+
 if TYPE_CHECKING:
     from Melodie import Spot
 
@@ -19,19 +21,20 @@ _jit_grid_cls = None
 
 
 def create_spots(spot_cls: ClassVar['Spot'], width: int, height: int):
-    spot = spot_cls(0, 0, 0)
-    spot.setup()
-
-    dtypes: List[Tuple[str, str]] = []
-    user_defined_spot_attr_names: List[str] = []
-    for attr_name, attr_value in spot.__dict__.items():
-        user_defined_spot_attr_names.append(attr_name)
-        if isinstance(attr_value, (int, bool)):
-            dtypes.append((attr_name, 'i8'))
-        elif isinstance(attr_value, float):
-            dtypes.append((attr_name, 'f8'))
-        else:
-            raise f'Unsupported Spot attribute "{attr_name}" with value {attr_value} '
+    # spot = spot_cls(0, 0, 0)
+    # spot.setup()
+    #
+    # dtypes: List[Tuple[str, str]] = []
+    # user_defined_spot_attr_names: List[str] = []
+    # for attr_name, attr_value in spot.__dict__.items():
+    #     user_defined_spot_attr_names.append(attr_name)
+    #     if isinstance(attr_value, (int, bool)):
+    #         dtypes.append((attr_name, 'i8'))
+    #     elif isinstance(attr_value, float):
+    #         dtypes.append((attr_name, 'f8'))
+    #     else:
+    #         raise f'Unsupported Spot attribute "{attr_name}" with value {attr_value} '
+    dtypes = dtype_detect(spot_cls, (0, 0, 0))
     spots = np.zeros((height, width), dtype=dtypes)
     for y in range(height):
         for x in range(width):
@@ -40,7 +43,7 @@ def create_spots(spot_cls: ClassVar['Spot'], width: int, height: int):
             spots[y][x]['id'] = x * height + y
             spots[y][x]['x'] = x
             spots[y][x]['y'] = y
-            for attr_name in user_defined_spot_attr_names:
+            for attr_name, _ in dtypes:
                 spots[y][x][attr_name] = getattr(spot, attr_name)
 
     return spots
@@ -65,6 +68,8 @@ def JITGrid(width: int, height: int, spot_cls: ClassVar['Spot'], wrap=True):
         ('height', numba.typeof(1)),
         ('_category_ptr', numba.typeof(0)),
         ('_spots', numba.typeof(spots)),
+        # A list of agent ids on each spot.
+        # 每一个Spot包含的Agent的ID的列表
         ('_agent_ids', numba.typeof(agent_ids)),
         ('_existed_agents', types.DictType(types.unicode_type, types.DictType(types.int64, types.int64))),
         ('_all_categories', types.DictType(types.unicode_type, types.int64))
@@ -76,6 +81,11 @@ def JITGrid(width: int, height: int, spot_cls: ClassVar['Spot'], wrap=True):
             self.width = width
             self.height = height
             self._spots = spots_array
+
+            # agent_ids长度为width*height的整倍数，用来存储从1~n个category中的agent
+            # 取相应category时，先将二维坐标转为一维，然后加上相应系列序号的偏移。
+            # 这个地方应当可以进行优化！
+
             self._agent_ids = agent_id_list
 
             self._existed_agents = typed.Dict.empty(types.unicode_type, typed.Dict.empty(types.int64, types.int64))
