@@ -19,7 +19,8 @@ class FuncNode(Node):
 
 class FuncModel(Model):
     def setup(self):
-        self.network = Network(FuncNode)
+        self.network = Network()
+        self.network.add_category('func')
         node_names_map: Dict[str, int] = {}
         node_id_to_name_map: Dict[str, int] = {}
         edges_with_num: List[Tuple[int, int]] = []
@@ -46,6 +47,8 @@ class FuncModel(Model):
             self.visualizer.parse_edges(network_json['series']['links'],
                                         lambda edge: ((edge['source'], edge['target']), 1))
         self.agent_list = AgentList(FuncAgent, 652, self)
+        for i, agent in enumerate(self.agent_list):
+            self.network.add_agent(agent.id, 'func', i)
         self.node_name_map = node_names_map
         self.node_id_to_name_map = node_id_to_name_map
 

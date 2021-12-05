@@ -11,7 +11,7 @@ from model.environment import GameOfLifeEnvironment
 from model.scenario import GameOfLifeScenario
 from model.model import GameOfLifeModel
 from model.simulator import FuncSimulator
-from Melodie.visualization import GridVisualizer
+from model.visualizer import GameOfLifeVisualizer
 from config import config
 
 if __name__ == "__main__":
@@ -27,5 +27,5 @@ if __name__ == "__main__":
         model_class=GameOfLifeModel,
         scenario_class=GameOfLifeScenario,
         data_collector_class=DataCollector,
-        visualizer_class=GridVisualizer
+        visualizer_class=GameOfLifeVisualizer
     )
