@@ -50,18 +50,22 @@ class Simulator(metaclass=abc.ABCMeta):
         self.scenarios: Optional[List['Scenario']] = None
 
     @abc.abstractmethod
-    def register_static_dataframes(self) -> None:
+    def register_scenario_dataframe(self) -> None:
         """
         This method must be overriden.
         The "scenarios" table will be registered in this method.
         """
         pass
 
-    @abc.abstractmethod
+    def register_static_dataframes(self) -> None:
+        """
+        The "agent_params" table can be registered in this method.
+        """
+        pass
+
     def register_generated_dataframes(self) -> None:
         """
-        This method must be overriden.
-        The "agent_params" table will be registered in this method.
+        The "agent_params" table can be registered in this method.
         """
         pass
 
@@ -90,12 +94,10 @@ class Simulator(metaclass=abc.ABCMeta):
 
         # 注册步骤：
         # 1. 把dataframe按照data_type存入数据库，因为跑完Simulator再跑Analyzer的时候可能会用。
-
-        # data_type作为DB的类属性，注册进DB
+        # 1.1 data_type作为DB的类属性，注册进DB
         DB.register_dtypes(table_name, data_type)
-        # 无需指定data_type即可按照data_type来存储table_name
-        create_db_conn(self.config).write_dataframe(table_name, table, data_type=data_type, if_exists="replace",
-                                                    )  # --> 加上data_type
+        # 1.2 无需指定data_type即可按照data_type来存储table_name
+        create_db_conn(self.config).write_dataframe(table_name, table, data_type=data_type, if_exists="replace", )  # --> 加上data_type
 
         # 2. 把dataframe放到registered_dataframes里。
         self.registered_dataframes[table_name] = table

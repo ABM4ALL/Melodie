@@ -4,12 +4,11 @@ from abc import ABC, abstractmethod
 import pandas as pd
 import numpy as np
 
-db_path = "C:\\Users\yus\Dropbox\ABM4ALL\Melodie\examples\TertiaryModel\_data\Tertiary.sqlite"
+db_path = "C:\\Users\yus\Dropbox\ABM4ALL\Melodie\examples\TertiaryModel\data\Tertiary.sqlite"
 db = DB()
 conn = db.create_Connection(db_path)
 survey_data = db.read_DataFrame("SharedEndUse_RawData_SectorAdded", conn)
-sector_list = db.read_DataFrame("Sector", conn)
-
+sector_list = list(db.read_DataFrame("Sector", conn)["SECTOR_NAME"])
 def print_columns_to_dict():
     columns_list = list(survey_data.columns)
     for column in columns_list:
@@ -42,6 +41,14 @@ def calculate_mean_power_positive_values(value_array):
             list_calc.append(item/1000)
     value_mean = np.array(list_calc).mean()
     return value_mean
+def transform_X_to_value(value_list, X_string, X_value) -> np.array:
+    value_update = []
+    for item in value_list:
+        if item == X_string:
+            value_update.append(X_value)
+        else:
+            value_update.append(0)
+    return np.array(value_update)
 
 basic = {
     "id_firm": "ID_FIRM",
@@ -627,10 +634,10 @@ end_use = {
     "canteen_freezer_chest_lighting_usage": "CANTEEN_FREEZER_CHEST_LIGHTING_USAGE",
 
     # canteen: referigerating room
-    "canteen_referigerating_room_count": "CANTEEN_REFERIGERATING_ROOM_COUNT",
-    "canteen_referigerating_room_total_area_m2": "CANTEEN_REFERIGERATING_ROOM_TOTAL_AREA_M2",
-    "canteen_referigerating_room_temperature": "CANTEEN_REFERIGERATING_ROOM_TEMPERATURE",
-    "canteen_referigerating_room_capacity_kw": "CANTEEN_REFERIGERATING_ROOM_CAPACITY_KW",
+    "canteen_refrigerating_room_count": "CANTEEN_REFRIGERATING_ROOM_COUNT",
+    "canteen_refrigerating_room_total_area_m2": "CANTEEN_REFRIGERATING_ROOM_TOTAL_AREA_M2",
+    "canteen_refrigerating_room_temperature": "CANTEEN_REFRIGERATING_ROOM_TEMPERATURE",
+    "canteen_refrigerating_room_capacity_kw": "CANTEEN_REFRIGERATING_ROOM_CAPACITY_KW",
 
     # canteen: freezing room
     "canteen_freezing_room_count": "CANTEEN_FREEZING_ROOM_COUNT",
@@ -645,6 +652,10 @@ class EndUseAnalyzer(ABC):
     def __init__(self, id_sector=None):
 
         self.id_sector: int = id_sector
+        self.sector_name = sector_list[self.id_sector - 1]
+        self.end_use: str = ""
+        self.adoption_unit: str = ""
+        self.duration_unit: str = ""
         self.sector_sample: pd.DataFrame = self.set_sector_sample()
         self.sector_sample_size: int = len(self.sector_sample)
         self.sector_sample_selected: pd.DataFrame = self.sector_sample_selection()
@@ -687,13 +698,19 @@ class EndUseAnalyzer(ABC):
         employee = self.sector_sample_selected[basic["employee_count"]].values
         [self.adoption_employee_cons_coef, self.adoption_employee_employee_coef,
          self.adoption_employee_cons_pvalue, self.adoption_employee_employee_pvalue] = run_regression(self.adoption, employee)
-        self.adoption_employee_average = self.adoption.sum() / employee.sum()
+        try:
+            self.adoption_employee_average = round(self.adoption.sum() / employee.sum())
+        except ValueError:
+            self.adoption_employee_average = self.adoption.sum() / employee.sum()
 
     def adoption_floorarea_analyzer(self) -> None:
         floorarea = self.sector_sample_selected[building["total_operating_area_m2"]].values
         [self.adoption_floorarea_cons_coef, self.adoption_floorarea_floorarea_coef,
          self.adoption_floorarea_cons_pvalue, self.adoption_floorarea_floorarea_pvalue] = run_regression(self.adoption, floorarea)
-        self.adoption_floorarea_average = self.adoption.sum() / floorarea.sum()
+        try:
+            self.adoption_floorarea_average = round(self.adoption.sum() / floorarea.sum(), 3)
+        except ValueError:
+            self.adoption_floorarea_average = self.adoption.sum() / floorarea.sum()
 
     def print_info(self):
         print("sector_sample_size = " + str(analyzer.sector_sample_size))
@@ -718,6 +735,9 @@ class EndUseAnalyzer(ABC):
 class VehicleAnalyzer(EndUseAnalyzer):
 
     def sector_sample_selection(self) -> pd.DataFrame:
+        self.end_use: str = "vehicle"
+        self.adoption_unit: str = "count"
+        self.duration_unit: str = "km/year"
         sector_sample_selected = self.sector_sample.loc[(self.sector_sample[end_use["car_number"]] > 0) |
                                                         (self.sector_sample[end_use["delivery_van_number"]] > 0) |
                                                         (self.sector_sample[end_use["truck_number"]] > 0)]
@@ -738,6 +758,9 @@ class VehicleAnalyzer(EndUseAnalyzer):
 class LightingAnalyzer(EndUseAnalyzer):
 
     def sector_sample_selection(self) -> pd.DataFrame:
+        self.end_use: str = "lighting"
+        self.adoption_unit = "count"
+        self.duration_unit = "hour"
         sector_sample_selected = self.sector_sample.loc[(self.sector_sample[end_use["lighting_total_capacity_kw"]] > 0)]
         return sector_sample_selected
 
@@ -809,72 +832,116 @@ class LightingAnalyzer(EndUseAnalyzer):
 class ServerAnalyzer(EndUseAnalyzer):
 
     def sector_sample_selection(self) -> pd.DataFrame:
-        pass
+        self.end_use: str = "server"
+        self.adoption_unit = "count"
+        self.duration_unit = "hour/day"
+        sector_sample_selected = self.sector_sample.loc[(self.sector_sample[end_use["server_total_count"]] > 0)]
+        return sector_sample_selected
 
     def set_adoption(self) -> np.array:
-        pass
+        adoption = self.sector_sample_selected[end_use["server_total_count"]].values
+        return adoption
 
     def set_duration(self) -> float:
-        pass
+        duration = (self.sector_sample_selected[end_use["server_upto300w_count"]].values * self.sector_sample_selected[end_use["server_upto300w_hours_per_day"]].values +
+                    self.sector_sample_selected[end_use["server_300to2000w_count"]].values * self.sector_sample_selected[end_use["server_300to2000w_hours_per_day"]].values +
+                    self.sector_sample_selected[end_use["server_over2000w_count"]].values * self.sector_sample_selected[end_use["server_over2000w_hours_per_day"]].values).sum()
+        return round(duration / self.adoption.sum(), 3)
 
 class ComputerAnalyzer(EndUseAnalyzer):
 
     def sector_sample_selection(self) -> pd.DataFrame:
-        pass
+        self.end_use: str = "computer"
+        self.adoption_unit = "count"
+        self.duration_unit = "hour/day"
+        sector_sample_selected = self.sector_sample.loc[(self.sector_sample[end_use["computer_total_count"]] > 0)]
+        return sector_sample_selected
 
     def set_adoption(self) -> np.array:
-        pass
+        adoption = self.sector_sample_selected[end_use["computer_total_count"]].values
+        return adoption
 
     def set_duration(self) -> float:
-        pass
+        duration = (self.sector_sample_selected[end_use["computer_notebook_count"]].values * self.sector_sample_selected[end_use["computer_notebook_hours_per_day"]].values +
+                    self.sector_sample_selected[end_use["computer_pc_count"]].values * self.sector_sample_selected[end_use["computer_pc_hours_per_day"]].values).sum()
+        return round(duration / self.adoption.sum(), 3)
 
 class MonitorAnalyzer(EndUseAnalyzer):
 
     def sector_sample_selection(self) -> pd.DataFrame:
-        pass
+        self.end_use: str = "monitor"
+        self.adoption_unit = "count"
+        self.duration_unit = "hour/day"
+        sector_sample_selected = self.sector_sample.loc[(self.sector_sample[end_use["monitor_total_count"]] > 0)]
+        return sector_sample_selected
 
     def set_adoption(self) -> np.array:
-        pass
+        adoption = self.sector_sample_selected[end_use["monitor_total_count"]].values
+        return adoption
 
     def set_duration(self) -> float:
-        pass
+        duration = (self.sector_sample_selected[end_use["monitor_lcd_count"]].values * self.sector_sample_selected[end_use["monitor_lcd_hours_per_day"]].values +
+                    self.sector_sample_selected[end_use["monitor_other_count"]].values * self.sector_sample_selected[end_use["monitor_other_hours_per_day"]].values).sum()
+        return round(duration / self.adoption.sum(), 3)
 
 class PrinterAnalyzer(EndUseAnalyzer):
 
     def sector_sample_selection(self) -> pd.DataFrame:
-        pass
+        self.end_use: str = "printer"
+        self.adoption_unit = "count"
+        self.duration_unit = "hour/day"
+        sector_sample_selected = self.sector_sample.loc[(self.sector_sample[end_use["printer_total_count"]] > 0)]
+        return sector_sample_selected
 
     def set_adoption(self) -> np.array:
-        pass
+        adoption = self.sector_sample_selected[end_use["printer_total_count"]].values
+        return adoption
 
     def set_duration(self) -> float:
-        pass
+        duration = (self.sector_sample_selected[end_use["printer_inkjet_count"]].values * self.sector_sample_selected[end_use["printer_inkjet_hours_per_day"]].values +
+                    self.sector_sample_selected[end_use["printer_combination_count"]].values * self.sector_sample_selected[end_use["printer_combination_hours_per_day"]].values +
+                    self.sector_sample_selected[end_use["printer_laser_count"]].values * self.sector_sample_selected[end_use["printer_laser_hours_per_day"]].values).sum()
+        return round(duration / self.adoption.sum(), 3)
 
 class CopierAnalyzer(EndUseAnalyzer):
 
     def sector_sample_selection(self) -> pd.DataFrame:
-        pass
+        self.end_use: str = "copier"
+        self.adoption_unit = "count"
+        self.duration_unit = "hour/day"
+        sector_sample_selected = self.sector_sample.loc[(self.sector_sample[end_use["copier_total_count"]] > 0)]
+        return sector_sample_selected
 
     def set_adoption(self) -> np.array:
-        pass
+        adoption = self.sector_sample_selected[end_use["copier_total_count"]].values
+        return adoption
 
     def set_duration(self) -> float:
-        pass
+        duration = (self.sector_sample_selected[end_use["copier_large_count"]].values * self.sector_sample_selected[end_use["copier_large_hours_per_day"]].values +
+                    self.sector_sample_selected[end_use["copier_other_count"]].values * self.sector_sample_selected[end_use["copier_other_hours_per_day"]].values).sum()
+        return round(duration / self.adoption.sum(), 3)
 
 class ProjectorAnalyzer(EndUseAnalyzer):
 
     def sector_sample_selection(self) -> pd.DataFrame:
-        pass
+        self.end_use: str = "projector"
+        self.adoption_unit = "count"
+        self.duration_unit = "hour/day"
+        sector_sample_selected = self.sector_sample.loc[(self.sector_sample[end_use["projector_count"]] > 0)]
+        return sector_sample_selected
 
     def set_adoption(self) -> np.array:
-        pass
+        adoption = self.sector_sample_selected[end_use["projector_count"]].values
+        return adoption
 
     def set_duration(self) -> float:
-        pass
+        duration = (self.sector_sample_selected[end_use["projector_count"]].values * self.sector_sample_selected[end_use["projector_hours_per_day"]].values).sum()
+        return round(duration / self.adoption.sum(), 3)
 
 class InternetConnectionAnalyzer(EndUseAnalyzer):
-
+    # not sure if this end-use needs to be calculated
     def sector_sample_selection(self) -> pd.DataFrame:
+        self.end_use: str = "internet_connection"
         pass
 
     def set_adoption(self) -> np.array:
@@ -884,8 +951,9 @@ class InternetConnectionAnalyzer(EndUseAnalyzer):
         pass
 
 class ICTCoolingAnalyzer(EndUseAnalyzer):
-
+    # not sure if this end-use needs to be calculated
     def sector_sample_selection(self) -> pd.DataFrame:
+        self.end_use: str = "ICT_cooling"
         pass
 
     def set_adoption(self) -> np.array:
@@ -897,136 +965,314 @@ class ICTCoolingAnalyzer(EndUseAnalyzer):
 class InfoScreenAnalyzer(EndUseAnalyzer):
 
     def sector_sample_selection(self) -> pd.DataFrame:
-        pass
+        self.end_use: str = "info_screen"
+        self.adoption_unit = "count"
+        self.duration_unit = "hour/day"
+        sector_sample_selected = self.sector_sample.loc[(self.sector_sample[end_use["info_screen_upto38cm_count"]] > 0) |
+                                                        (self.sector_sample[end_use["info_screen_38to76cm_count"]] > 0) |
+                                                        (self.sector_sample[end_use["info_screen_over76cm_count"]] > 0)]
+        return sector_sample_selected
 
     def set_adoption(self) -> np.array:
-        pass
+        adoption = (self.sector_sample_selected[end_use["info_screen_upto38cm_count"]].values +
+                    self.sector_sample_selected[end_use["info_screen_38to76cm_count"]].values +
+                    self.sector_sample_selected[end_use["info_screen_over76cm_count"]].values)
+        return adoption
 
     def set_duration(self) -> float:
-        pass
+        duration = (self.sector_sample_selected[end_use["info_screen_upto38cm_count"]].values * self.sector_sample_selected[end_use["info_screen_upto38cm_hours_per_day"]].values +
+                    self.sector_sample_selected[end_use["info_screen_38to76cm_count"]].values * self.sector_sample_selected[end_use["info_screen_38to76cm_hours_per_day"]].values +
+                    self.sector_sample_selected[end_use["info_screen_over76cm_count"]].values * self.sector_sample_selected[end_use["info_screen_over76cm_hours_per_day"]].values).sum()
+        return round(duration / self.adoption.sum(), 3)
 
 class CoffeeRoomDishWasherAnalyzer(EndUseAnalyzer):
 
     def sector_sample_selection(self) -> pd.DataFrame:
-        pass
+        self.end_use: str = "coffee_room_dish_washer"
+        self.adoption_unit = "count"
+        self.duration_unit = "cycle/day"
+        sector_sample_selected = self.sector_sample.loc[(self.sector_sample[end_use["coffee_room_household_dishwasher_count"]] > 0)]
+        return sector_sample_selected
 
     def set_adoption(self) -> np.array:
-        pass
+        adoption = self.sector_sample_selected[end_use["coffee_room_household_dishwasher_count"]].values
+        return adoption
 
     def set_duration(self) -> float:
-        pass
+        duration = (self.sector_sample_selected[end_use["coffee_room_household_dishwasher_count"]].values *
+                    self.sector_sample_selected[end_use["coffee_room_household_dishwasher_total_cycles_per_day"]].values).sum()
+        return round(duration / self.adoption.sum(), 3)
 
 class CoffeeRoomRefrigeratorAnalyzer(EndUseAnalyzer):
 
     def sector_sample_selection(self) -> pd.DataFrame:
-        pass
+        self.end_use: str = "coffee_room_refrigerator"
+        self.adoption_unit = "count"
+        self.duration_unit = "hour/day"
+        sector_sample_selected = self.sector_sample.loc[(self.sector_sample[end_use["coffee_room_household_refrigerator_count"]] > 0)]
+        return sector_sample_selected
 
     def set_adoption(self) -> np.array:
-        pass
+        adoption = self.sector_sample_selected[end_use["coffee_room_household_refrigerator_count"]].values
+        return adoption
 
     def set_duration(self) -> float:
-        pass
+        duration = 24
+        return duration
 
 class CoffeeRoomFreezerAnalyzer(EndUseAnalyzer):
 
     def sector_sample_selection(self) -> pd.DataFrame:
-        pass
+        self.end_use: str = "coffee_room_freezer"
+        self.adoption_unit = "count"
+        self.duration_unit = "hour/day"
+        sector_sample_selected = self.sector_sample.loc[(self.sector_sample[end_use["coffee_room_household_freezer_count"]] > 0)]
+        return sector_sample_selected
 
     def set_adoption(self) -> np.array:
-        pass
+        adoption = self.sector_sample_selected[end_use["coffee_room_household_freezer_count"]].values
+        return adoption
 
     def set_duration(self) -> float:
-        pass
+        duration = 24
+        return duration
 
 class CoffeeRoomAutoSellingMachineAnalyzer(EndUseAnalyzer):
 
     def sector_sample_selection(self) -> pd.DataFrame:
-        pass
+        self.end_use: str = "coffee_room_auto_selling_machine"
+        self.adoption_unit = "count"
+        self.duration_unit = "hour/day"
+        sector_sample_selected = self.sector_sample.loc[(self.sector_sample[end_use["coffee_room_drink_auto_machine_count"]] > 0) |
+                                                        (self.sector_sample[end_use["coffee_room_snack_auto_machine_count"]] > 0)]
+        return sector_sample_selected
 
     def set_adoption(self) -> np.array:
-        pass
+        adoption = self.sector_sample_selected[end_use["coffee_room_drink_auto_machine_count"]].values + \
+                   self.sector_sample_selected[end_use["coffee_room_snack_auto_machine_count"]].values
+        return adoption
 
     def set_duration(self) -> float:
-        pass
+        duration = 24
+        return duration
 
 class CoffeeRoomCoffeeTeaMachineAnalyzer(EndUseAnalyzer):
 
     def sector_sample_selection(self) -> pd.DataFrame:
-        pass
+        self.end_use: str = "coffee_room_coffee_or_tea_machine"
+        self.adoption_unit = "count"
+        self.duration_unit = "cup/day"
+        sector_sample_selected = self.sector_sample.loc[self.sector_sample[end_use["coffee_or_tea_machine_usage"]] == "JA"]
+        return sector_sample_selected
 
     def set_adoption(self) -> np.array:
-        pass
+        adoption = self.sector_sample_selected[end_use["coffee_or_tea_machine_auto_kitchen_area_count"]].values + \
+                   self.sector_sample_selected[end_use["coffee_or_tea_machine_not_auto_kitchen_area_count"]].values + \
+                   self.sector_sample_selected[end_use["coffee_or_tea_machine_auto_among_employee_count"]].values + \
+                   self.sector_sample_selected[end_use["coffee_or_tea_machine_not_auto_among_employee_count"]].values
+        return adoption
 
     def set_duration(self) -> float:
-        pass
+        duration = (self.sector_sample_selected[end_use["coffee_or_tea_total_cups_per_year"]].values).sum()
+        return round(duration / self.adoption.sum(), 3)
 
 class CanteenCookingAnalyzer(EndUseAnalyzer):
 
     def sector_sample_selection(self) -> pd.DataFrame:
-        pass
+        self.end_use: str = "canteen_cooking"
+        self.adoption_unit = "meal/day"
+        self.duration_unit = "day/year"
+        sector_sample_selected = self.sector_sample.loc[self.sector_sample[end_use["canteen_cooking_usage"]] == "WIRDZUBEREITET"]
+        return sector_sample_selected
 
     def set_adoption(self) -> np.array:
-        pass
+        adoption = self.sector_sample_selected[end_use["canteen_meal_served_count_per_day"]].values
+        return adoption
 
     def set_duration(self) -> float:
-        pass
+        duration = (self.sector_sample_selected[end_use["canteen_open_days_per_week"]].values *
+                    (52.14 - self.sector_sample_selected[end_use["canteen_closed_weeks_per_year"]].values)).sum()
+        return round(duration, 3)
 
 class CanteenDishGlassWasherAnalyzer(EndUseAnalyzer):
 
     def sector_sample_selection(self) -> pd.DataFrame:
-        pass
+        self.end_use: str = "canteen_dish_glass_washer"
+        self.adoption_unit = "count"
+        self.duration_unit = "cycle/year"
+        sector_sample_selected = self.sector_sample.loc[(self.sector_sample[end_use["canteen_glass_washer_count"]] > 0) |
+                                                        (self.sector_sample[end_use["canteen_dish_and_glass_washer_count"]] > 0) |
+                                                        (self.sector_sample[end_use["canteen_continuous_flow_glass_washer_count"]] > 0) |
+                                                        (self.sector_sample[end_use["canteen_continuous_flow_dish_washer_count"]] > 0)]
+        return sector_sample_selected
 
     def set_adoption(self) -> np.array:
-        pass
+        adoption = (self.sector_sample_selected[end_use["canteen_glass_washer_count"]].values +
+                    self.sector_sample_selected[end_use["canteen_dish_and_glass_washer_count"]].values +
+                    self.sector_sample_selected[end_use["canteen_continuous_flow_glass_washer_count"]].values +
+                    self.sector_sample_selected[end_use["canteen_continuous_flow_dish_washer_count"]].values)
+        return adoption
 
     def set_duration(self) -> float:
-        pass
+        duration = ((self.sector_sample_selected[end_use["canteen_glass_washer_total_cycle_per_day"]].values +
+                     self.sector_sample_selected[end_use["canteen_dish_and_glass_washer_total_cycle_per_day"]].values +
+                     self.sector_sample_selected[end_use["canteen_continuous_flow_glass_washer_total_cycle_per_day"]].values +
+                     self.sector_sample_selected[end_use["canteen_continuous_flow_dish_washer_total_cycle_per_day"]].values) *
+                    (self.sector_sample_selected[end_use["canteen_open_days_per_week"]].values *
+                     (52.14 - self.sector_sample_selected[end_use["canteen_closed_weeks_per_year"]].values))).sum()
+        return round(duration / self.adoption.sum(), 3)
 
 class CanteenRefrigeratorAnalyzer(EndUseAnalyzer):
 
     def sector_sample_selection(self) -> pd.DataFrame:
-        pass
+        self.end_use: str = "canteen_refrigerator"
+        self.adoption_unit = "count"
+        self.duration_unit = "hour/day"
+        sector_sample_selected = self.sector_sample.loc[self.sector_sample[end_use["canteen_refrigerator_count"]] > 0]
+        return sector_sample_selected
 
     def set_adoption(self) -> np.array:
-        pass
+        adoption = self.sector_sample_selected[end_use["canteen_refrigerator_count"]].values
+        return adoption
 
     def set_duration(self) -> float:
-        pass
+        duration = 24.0
+        return duration
 
-class CanteenFreezerAnalyzer(EndUseAnalyzer):
+class CanteenRefrigeratorOtherAnalyzer(EndUseAnalyzer):
 
     def sector_sample_selection(self) -> pd.DataFrame:
-        pass
+        self.end_use: str = "canteen_refrigerator_other"
+        self.adoption_unit = "count"
+        self.duration_unit = "hour/day"
+        sector_sample_selected = self.sector_sample.loc[(self.sector_sample[end_use["canteen_refrigerator_shelf_count"]] > 0) |
+                                                        (self.sector_sample[end_use["canteen_refrigerator_chest_count"]] > 0) |
+                                                        (self.sector_sample[end_use["canteen_refrigerator_counter_count"]] > 0)]
+        return sector_sample_selected
 
     def set_adoption(self) -> np.array:
-        pass
+        adoption = (self.sector_sample_selected[end_use["canteen_refrigerator_shelf_count"]].values +
+                    self.sector_sample_selected[end_use["canteen_refrigerator_chest_count"]].values +
+                    self.sector_sample_selected[end_use["canteen_refrigerator_counter_count"]].values)
+        return adoption
 
     def set_duration(self) -> float:
-        pass
+        shelf_hours = transform_X_to_value(self.sector_sample_selected[end_use["canteen_refrigerator_shelf_day_usage"]].to_list(), "X", 12) + \
+                      transform_X_to_value(self.sector_sample_selected[end_use["canteen_refrigerator_shelf_night_usage"]].to_list(), "X", 12)
+        chest_hours = transform_X_to_value(self.sector_sample_selected[end_use["canteen_refrigerator_chest_day_usage"]].to_list(), "X", 12) + \
+                      transform_X_to_value(self.sector_sample_selected[end_use["canteen_refrigerator_chest_night_usage"]].to_list(), "X", 12)
+        counter_hours = transform_X_to_value(self.sector_sample_selected[end_use["canteen_refrigerator_counter_day_usage"]].to_list(), "X", 12) + \
+                        transform_X_to_value(self.sector_sample_selected[end_use["canteen_refrigerator_counter_night_usage"]].to_list(), "X", 12)
+        try:
+            duration = (self.sector_sample_selected[end_use["canteen_refrigerator_shelf_count"]].values * shelf_hours +
+                        self.sector_sample_selected[end_use["canteen_refrigerator_chest_count"]].values * chest_hours +
+                        self.sector_sample_selected[end_use["canteen_refrigerator_counter_count"]].values * counter_hours).sum()
+        except ValueError:
+            duration = 0
+        return round(duration / self.adoption.sum(), 3)
 
 class CanteenRefrigeratingRoomAnalyzer(EndUseAnalyzer):
 
     def sector_sample_selection(self) -> pd.DataFrame:
-        pass
+        self.end_use: str = "canteen_refrigerating_room"
+        self.adoption_unit = "count"
+        self.duration_unit = "hour/day"
+        sector_sample_selected = self.sector_sample.loc[self.sector_sample[end_use["canteen_refrigerating_room_count"]] > 0]
+        return sector_sample_selected
 
     def set_adoption(self) -> np.array:
-        pass
+        adoption = self.sector_sample_selected[end_use["canteen_refrigerating_room_count"]].values
+        return adoption
 
     def set_duration(self) -> float:
-        pass
+        duration = 24.0
+        return duration
+
+class CanteenFreezerAnalyzer(EndUseAnalyzer):
+
+    def sector_sample_selection(self) -> pd.DataFrame:
+        self.end_use: str = "canteen_freezer"
+        self.adoption_unit = "count"
+        self.duration_unit = "hour/day"
+        sector_sample_selected = self.sector_sample.loc[self.sector_sample[end_use["canteen_freezer_count"]] > 0]
+        return sector_sample_selected
+
+    def set_adoption(self) -> np.array:
+        adoption = self.sector_sample_selected[end_use["canteen_freezer_count"]].values
+        return adoption
+
+    def set_duration(self) -> float:
+        duration = 24.0
+        return duration
+
+class CanteenFreezerOtherAnalyzer(EndUseAnalyzer):
+
+    def sector_sample_selection(self) -> pd.DataFrame:
+        self.end_use: str = "canteen_freezer_other"
+        self.adoption_unit = "count"
+        self.duration_unit = "hour/day"
+        sector_sample_selected = self.sector_sample.loc[self.sector_sample[end_use["canteen_freezer_chest_count"]] > 0]
+        return sector_sample_selected
+
+    def set_adoption(self) -> np.array:
+        adoption = self.sector_sample_selected[end_use["canteen_freezer_chest_count"]].values
+        return adoption
+
+    def set_duration(self) -> float:
+        chest_hours = transform_X_to_value(self.sector_sample_selected[end_use["canteen_freezer_chest_day_usage"]].to_list(), "X", 12) + \
+                      transform_X_to_value(self.sector_sample_selected[end_use["canteen_freezer_chest_night_usage"]].to_list(), "X", 12)
+        try:
+            duration = (self.sector_sample_selected[end_use["canteen_freezer_chest_count"]].values * chest_hours).sum()
+        except ValueError:
+            duration = 0
+        return round(duration / self.adoption.sum(), 3)
 
 class CanteenFreezingRoomAnalyzer(EndUseAnalyzer):
 
     def sector_sample_selection(self) -> pd.DataFrame:
-        pass
+        self.end_use: str = "canteen_freezing_room"
+        self.adoption_unit = "count"
+        self.duration_unit = "hour/day"
+        sector_sample_selected = self.sector_sample.loc[self.sector_sample[end_use["canteen_freezing_room_count"]] > 0]
+        return sector_sample_selected
 
     def set_adoption(self) -> np.array:
-        pass
+        adoption = self.sector_sample_selected[end_use["canteen_freezing_room_count"]].values
+        return adoption
 
     def set_duration(self) -> float:
-        pass
+        duration = 24.0
+        return duration
 
+class DataCollector:
 
+    def __init__(self):
+        self.result = []
+        self.result_columns = ["SECTOR_ID", "SECTOR",
+                               "END_USE", "ADOPTION_UNIT", "DURATION_UNIT",
+                               "SECTOR_SAMPLE_SIZE", "SECTOR_SAMPLE_SELECTED_SIZE", "PENETRATION_RATE",
+                               "ADOPTION_EMPLOYEE_CONS_COEF", "ADOPTION_EMPLOYEE_EMPLOYEE_COEF",
+                               "ADOPTION_EMPLOYEE_CONS_PVALUE", "ADOPTION_EMPLOYEE_EMPLOYEE_PVALUE",
+                               "ADOPTION_PER_EMPLOYEE",
+                               "ADOPTION_FLOORAREA_CONS_COEF", "ADOPTION_FLOORAREA_FLOORAREA_COEF",
+                               "ADOPTION_FLOORAREA_CONS_PVALUE", "ADOPTION_FLOORAREA_FLOORAREA_PVALUE",
+                               "ADOPTION_PER_FLOORAREA",
+                               "DURATION"]
+
+    def collect_result(self, analyzer: EndUseAnalyzer) -> None:
+        self.result.append([analyzer.id_sector, analyzer.sector_name,
+                            analyzer.end_use, analyzer.adoption_unit, analyzer.duration_unit,
+                            analyzer.sector_sample_size, analyzer.sector_sample_selected_size, analyzer.penetration_rate,
+                            analyzer.adoption_employee_cons_coef, analyzer.adoption_employee_employee_coef,
+                            analyzer.adoption_employee_cons_pvalue, analyzer.adoption_employee_employee_pvalue,
+                            analyzer.adoption_employee_average,
+                            analyzer.adoption_floorarea_cons_coef, analyzer.adoption_floorarea_floorarea_coef,
+                            analyzer.adoption_floorarea_cons_pvalue, analyzer.adoption_floorarea_floorarea_pvalue,
+                            analyzer.adoption_floorarea_average,
+                            analyzer.duration])
+
+    def save_result(self, db:DB, conn):
+        db.write_DataFrame(self.result, "Regression", self.result_columns, conn)
 
 
 
@@ -1035,14 +1281,25 @@ class CanteenFreezingRoomAnalyzer(EndUseAnalyzer):
 
 if __name__ == "__main__":
     # print_columns_to_dict()
-    id_sector_list = [i + 1 for i in range(0, 17)]
+    # print(sector_list)
+    id_sector_list = [i + 1 for i in range(0, 17)] # total sector: 17
+    analyzer_list: [EndUseAnalyzer] = [VehicleAnalyzer, LightingAnalyzer, ServerAnalyzer, ComputerAnalyzer, MonitorAnalyzer,
+                                       PrinterAnalyzer, CopierAnalyzer, ProjectorAnalyzer, InfoScreenAnalyzer,
+                                       CoffeeRoomDishWasherAnalyzer, CoffeeRoomRefrigeratorAnalyzer, CoffeeRoomFreezerAnalyzer,
+                                       CoffeeRoomAutoSellingMachineAnalyzer, CoffeeRoomCoffeeTeaMachineAnalyzer,
+                                       CanteenCookingAnalyzer, CanteenDishGlassWasherAnalyzer,
+                                       CanteenRefrigeratorAnalyzer, CanteenRefrigeratorOtherAnalyzer, CanteenRefrigeratingRoomAnalyzer,
+                                       CanteenFreezerAnalyzer, CanteenFreezerOtherAnalyzer, CanteenFreezingRoomAnalyzer]
+    # id_sector_list = [14] # total sector: 17
+    # analyzer_list: [EndUseAnalyzer] = [CanteenFreezerOtherAnalyzer]
+    dc = DataCollector()
     for id_sector in id_sector_list:
-        print("id_sector = " + str(id_sector))
-        analyzer = VehicleAnalyzer(id_sector)
-        analyzer.adoption_employee_analyzer()
-        analyzer.adoption_floorarea_analyzer()
-        analyzer.print_info()
-    pass
+        for analyzer in analyzer_list:
+            ana = analyzer(id_sector)
+            ana.adoption_employee_analyzer()
+            ana.adoption_floorarea_analyzer()
+            dc.collect_result(ana)
+    dc.save_result(db, conn)
 
 
 
@@ -1051,17 +1308,3 @@ if __name__ == "__main__":
 
 
 
-
-
-
-# adoption_analysis_result = []
-# adoption_analysis_columns = ["SECTOR_ID", "END_USE", "SAMPLE", "PENETRATION_RATE", "SAMPLE_SELECTED",
-#                              "EMPLOYEE_CONS_COEF", "EMPLOYEE_COEF", "EMPLOYEE_CONS_PVALUE", "EMPLOYEE_PVALUE", "AVE_EMPLOYEE",
-#                              "FLOORAREA_CONS_COEF", "FLOORAREA_COEF", "FLOORAREA_CONS_PVALUE", "FLOORAREA_PVALUE", "AVE_FLOORAREA"]
-#
-# for sector_id in range(1, len(sector_list) + 1):
-#     for end_use in end_use_list:
-#         print(f'sector_id = {sector_id}, and end-use = {end_use}')
-#         adoption_analyzer = AdoptionAnalyzer(sector_id, end_use)
-#         adoption_analysis_result.append(adoption_analyzer.adoption_analysis())
-# db.write_DataFrame(adoption_analysis_result, "AdoptionAnalysis", adoption_analysis_columns, conn)
