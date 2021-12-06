@@ -322,9 +322,14 @@ class GridVisualizer(Visualizer):
                               "grid": {"height": "80%", "top": "10%"},
                               "xAxis": {"type": "category", "splitArea": {"show": True}},
                               "yAxis": {"type": "category", "splitArea": {"show": True}},
-                              "visualMap": {"min": 1, "max": 3, "calculable": True, "orient": "horizontal",
-                                            "left": "center", "color": ["#e33e33", "#fec42c", "#409eff"]}, "series": [
-                {"universalTransition": {"enabled": False}, "name": "Punch Card", "type": "heatmap"}]}
+                              "visualMap": {
+                                  "min": 1, "max": 3, "calculable": True, "orient": "horizontal",
+                                  "left": "center", "color": ["#e33e33", "#fec42c", "#409eff"],
+                                  "seriesIndex": [0]
+                              },
+                              "series": [
+                                  {"universalTransition": {"enabled": False}, "name": "Punch Card", "type": "heatmap"}]
+                              }
 
     def reset(self):
         self.grid_roles = []
@@ -334,6 +339,13 @@ class GridVisualizer(Visualizer):
         return x * self.height + y
 
     def parse_grid_roles(self, grid: Grid, parser: Callable[['Spot'], int]):
+        """
+        Parse the role of each spot on the grid.
+
+        :param grid: The grid object to parse
+        :param parser: A function computes roles of each cell, returning an integer.
+        :return:
+        """
         self.width = grid.width
         self.height = grid.height
         self.grid_roles = [None for i in range(grid.height * grid.width)]
@@ -358,9 +370,48 @@ class GridVisualizer(Visualizer):
 
     def format(self):
         data = {
-            "series": {
-                "data": self.grid_roles,
-            }
+            "visualizer":
+                {
+                    "series":
+                        [
+                            {
+                                "data": self.grid_roles,
+                            },
+                            {
+                                "data":
+                                    [
+                                        {"category": "sheep",
+                                         "id": i,
+                                         "value": [random.randint(0, 100), random.randint(0, 100)]}
+                                        for i in range(100)
+                                    ],
+                                "itemStyle":
+                                    {
+                                        "color": "#bbbbbb",
+                                    },
+                                "symbol": "rect",
+                                "type": "scatter",
+                                "name": "sheep",
+                            },
+                            {
+                                "data":
+                                    [
+                                        {"category": "wolf",
+                                         "id": i,
+                                         "value": [random.randint(0, 100), random.randint(0, 100)]}
+                                        for i in range(100)
+                                    ],
+                                "itemStyle": {
+                                    "color": "#666666",
+                                },
+                                "symbol": "rect",
+                                "type": "scatter",
+                                "name": "wolves",
+                            },
+                        ]
+                },
+            "plots": []
+
         }
         return data
 
@@ -447,18 +498,19 @@ class NetworkVisualizer(Visualizer):
             })
         data = {
             "visualizer": {
-                "series": {
+                "series": [{
                     "data": lst,
                     "links": lst_edges
-                }
+                }]
             },
-            "plots": [{"chartName": name,
-                       "series": [
-                           {
-                               "name": self.plot_charts[name][i]['seriesName'],
-                               "value": self.chart_data[name][self.plot_charts[name][i]['seriesName']][
-                                   self.current_step]} for i in
-                           range(len(self.plot_charts[name]))]} for name in self.plot_charts.keys()
-                      ]
+            "plots": [{
+                "chartName": name,
+                "series": [
+                    {
+                        "name": self.plot_charts[name][i]['seriesName'],
+                        "value": self.chart_data[name][self.plot_charts[name][i]['seriesName']][
+                            self.current_step]} for i in
+                    range(len(self.plot_charts[name]))]} for name in self.plot_charts.keys()
+            ]
         }
         return data

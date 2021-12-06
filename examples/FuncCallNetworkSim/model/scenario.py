@@ -12,7 +12,7 @@ class FuncScenario(Scenario):
     def setup(self):
         self.agent_num = 652
         self.reliability = 0.99
-        self.recover_rate = 0.97
+        self.recover_rate = 0.0
 
     def properties_as_parameters(self) -> List[Scenario.BaseParameter]:
         return [Scenario.NumberParameter("reliability", self.reliability, 0, 1, 0.001),

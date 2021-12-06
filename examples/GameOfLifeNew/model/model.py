@@ -21,30 +21,52 @@ class GameOfLifeModel(Model):
         self.visualizer.grid = self.grid
 
     def run(self):
-        import matplotlib.pyplot as plt
-        # self.visualizer.parse(self.grid)
-        # self.visualizer.start()
-        plt.figure()
-        plt.ion()
+        self.visualizer.parse(self.grid)
+        self.visualizer.start()
 
         for i in range(self.scenario.periods):
-            plt.cla()
             t0: float = time.time()
             self.environment.step(self.grid)
 
             t1: float = time.time()
 
-            arr: 'np.ndarray' = self.grid.get_2d_array()['alive']
+            # arr: 'np.ndarray' = self.grid.to_2d_array() # get_2d_array()['alive']
 
-            # self.visualizer.parse(self.grid)
-            # self.visualizer.step()
+            self.visualizer.parse(self.grid)
+            self.visualizer.step(i)
 
             t2: float = time.time()
 
             print(f"step {i}, {t1 - t0}s for step and {t2 - t1}s for conversion.")
-            plt.imshow(arr, cmap='hot')
-            plt.pause(0.01)
+
 
         print(self.grid._spots)
-        # self.visualizer.parse(self.grid)
-        # self.visualizer.finish()
+
+    # def run_with_matplotlib(self):
+    #     import matplotlib.pyplot as plt
+    #     # self.visualizer.parse(self.grid)
+    #     # self.visualizer.start()
+    #     plt.figure()
+    #     plt.ion()
+    #
+    #     for i in range(self.scenario.periods):
+    #         plt.cla()
+    #         t0: float = time.time()
+    #         self.environment.step(self.grid)
+    #
+    #         t1: float = time.time()
+    #
+    #         arr: 'np.ndarray' = self.grid.get_2d_array()['alive']
+    #
+    #         # self.visualizer.parse(self.grid)
+    #         # self.visualizer.step()
+    #
+    #         t2: float = time.time()
+    #
+    #         print(f"step {i}, {t1 - t0}s for step and {t2 - t1}s for conversion.")
+    #         plt.imshow(arr, cmap='hot')
+    #         plt.pause(0.01)
+    #
+    #     print(self.grid._spots)
+    # self.visualizer.parse(self.grid)
+    # self.visualizer.finish()

@@ -12,16 +12,23 @@ class FuncAgent(Agent):
     """
 
     def setup(self):
-
         self.reliability = 0.99
         self.status = 0
+        self._status_next = 0
 
-    def go_produce(self):
+    def update(self):
+        self.status = self._status_next
 
-        rand = random.random()
-        if rand <= self.productivity:
-            self.account += 1
-        else:
-            pass
+    def recover(self):
+        """
+        Recover from failure
+        :return:
+        """
+        self._status_next = 0
 
-        return None
+    def fail(self):
+        """
+
+        :return:
+        """
+        self._status_next = 1

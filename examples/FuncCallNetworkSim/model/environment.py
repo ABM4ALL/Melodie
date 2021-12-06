@@ -25,16 +25,22 @@ class FuncEnvironment(Environment):
         for agent in agents:
             if agent.status == 0:
                 if random.random() > self.reliability:
-                    agent.status = 1
+                    agent.fail()
             else:
                 if random.random() < self.recover_rate:  # 故障恢复率
-                    agent.status = 0
-            if agent.status == 1:
-                node = network.get_node_by_id(agent.id)
-                neighbor_ids: "np.ndarray" = network.get_neighbors(node)
-                for neighbor_id in neighbor_ids:
-                    agents[neighbor_id].status = 1
+                    agent.recover()
 
+        # Propagate fault to next node
+        for agent in agents:
+            current_node = network.agent_pos(agent.id, 'func')
+            if agent.status == 1:
+                neighbors: "np.ndarray" = network.get_neighbors(current_node)
+                for neighbor_id in neighbors:
+                    # There is only one agent at each node, so we could get the agent within an [0] index.
+                    agent_on_neighbor_id = list(network.get_agents('func', neighbor_id))[0]
+                    agents[agent_on_neighbor_id].fail()
+
+        self.update(agents)
         # for agent in agents:
         #     # for i in range(100): 这个循环没有意义，可以将这个io密集的仿真变成CPU密集。
         #     if agent.status == 0:
@@ -49,6 +55,14 @@ class FuncEnvironment(Environment):
         #         for neighbor_id in neighbor_ids:
         #             if random.random() > 0.97:  # 故障传播概率 0.03
         #                 agents[neighbor_id].status = 1
+
+    def update(self, agents: "AgentList"):
+        """
+        Update status
+        :return:
+        """
+        for agent in agents:
+            agent.update()
 
     def get_agents_statistic(self, agents: "AgentList"):
         s = 0

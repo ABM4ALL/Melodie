@@ -39,8 +39,8 @@ class Network:
         self._agent_ids[category_name] = {}
         self._agent_pos[category_name] = {}
 
-    def get_node_by_id(self, node_id: int) -> Node:
-        return self._nodes[node_id]
+    # def get_node_by_id(self, node_id: int) -> Node:
+    #     return self._nodes[node_id]
 
     def add_node(self, node: int):
         assert node not in self._nodes
@@ -133,6 +133,9 @@ class Network:
             return set()
         else:
             return self._agent_ids[category][node_id]
+
+    def agent_pos(self, agent_id: int, category: str):
+        return self._agent_pos[category][agent_id]
 
 
 class NetworkDirected(Network):
