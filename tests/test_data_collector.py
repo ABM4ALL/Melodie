@@ -32,7 +32,6 @@ class TestEnv(Environment):
 
 class TestScenario(Scenario):
     def setup(self):
-        print(self.agent_num)
         self.periods = 1
         self.productivity = random.random()
 
@@ -53,6 +52,9 @@ class DCTestModel(Model):
 
 
 class Simulator4Test(Simulator):
+    def register_scenario_dataframe(self) -> None:
+        pass
+
     def register_generated_dataframes(self):
         return
 

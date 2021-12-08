@@ -6,124 +6,113 @@
 
 import logging
 import random
-from typing import Callable, Any, Union, Tuple, List
+from typing import Callable, Any, Union, Tuple, List, TYPE_CHECKING, Optional
 
 import pandas as pd
 
 from Melodie.db import create_db_conn
 from Melodie.scenario_manager import Scenario
 
+if TYPE_CHECKING:
+    from Melodie import Simulator
+
 logger = logging.getLogger(__name__)
 
 
 class TableGenerator:
+    def __enter__(self):
+        return self
 
-    def __init__(self, scenario: 'Scenario'):
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        new_df = self.gen_agent_param_table_each_scenario()
+        self.simulator.register_dataframe(self.table_name, new_df, self.data_types)
+        return
+
+    def __init__(self, simulator: "Simulator", table_name: str, num_generator: Union[int, Callable[[Scenario], int]]):
         """
-        Pass the class of agent, to get the data type that how the properties are saved into data.
-        :param conn:
-        :param scenario:
-        :param agentClass:
+
+        :param table_name:
         """
 
-        self.scenario = scenario
-        self._agent_params: List[Tuple[str, Callable]] = []
-        self._environment_params: List[Tuple[str, Callable]] = []
+        self.num_generator = self.convert_to_num_generator(num_generator)
+        self.table_name = table_name
+        self._self_incremental_value = -1
+        self.simulator = simulator
+        self.data_types = {}
+        self._row_generator: Optional[Callable[[Scenario], Union[dict, object]]] = None
 
-    def parse_generator(self, generator) -> Callable[[], Any]:
-        if callable(generator):
-            if generator.__code__.co_argcount == 0:
-                return lambda x: generator()
-            elif generator.__code__.co_argcount == 1:
-                return generator
-        elif isinstance(generator, (int, float, str)):
-            return lambda x: generator
+    def increment(self):
+        """
+        Get increment value.
+        :return:
+        """
+        self._self_incremental_value += 1
+        return self._self_incremental_value
+
+    def reset_increment(self):
+        """
+        Reset increment
+        :return:
+        """
+        self._self_incremental_value = -1
+
+    def set_column_data_types(self, data_types: dict):
+        """
+        Set data types of each column
+        :param data_types:
+        :return:
+        """
+        assert len(self.data_types) == 0, "Data types has been already defined!"
+        self.data_types = data_types
+
+    def convert_to_num_generator(self, num_generator: Union[int, Callable[[Scenario], int]]):
+        if isinstance(num_generator, int):
+            return lambda _: num_generator
+        elif callable(num_generator):
+            assert num_generator.__code__.co_argcount == 1
+            return num_generator
         else:
-            raise TypeError(generator)
+            raise TypeError
 
-    def add_agent_param(self, param_name, generator: Union[int, str, float, Callable[[int], Any]]):
+    def set_row_generator(self, row_generator: Callable[[Scenario], Union[dict, object]]):
         """
-        Add parameters to assign to agent properties.
-        Generator is a function
-        :param param_name:
-        :param generator:
+
+        :param row_generator:
         :return:
         """
-        logger.warning('<Developer Notice>: Table generator needs to be called before model created.')
-        self._agent_params.append((param_name, self.parse_generator(generator)))
+        assert row_generator.__code__.co_argcount == 1
+        self._row_generator = row_generator
 
-    def add_environment_param(self, param_name, generator: Union[int, str, float, Callable[[int], Any]]):
+    def gen_agent_param_table_each_scenario(self):
         """
-        Add parameters to assign to environment properties.
-        Generator is a function
-        :param param_name:
-        :param generator:
+
         :return:
         """
-        logger.warning('<Developer Notice>: Table generator needs to be called before model created.')
-        self._environment_params.append((param_name, self.parse_generator(generator)))
-
-    @property
-    def agent_params(self):
-        return self._agent_params
-
-    def gen_agent_param_table(self):
-        agent_num = self.scenario.agent_num
+        scenarios = self.simulator.generate_scenarios()
         data_list = []
-        for agent_id in range(0, agent_num):
-            d = {}
-            d['scenario_id'] = self.scenario.id
-            d['id'] = agent_id
-            d.update({k: g(agent_id) for k, g in self._agent_params})
-
-            data_list.append(d)
-
+        for scenario in scenarios:
+            data_list.extend(self.gen_agent_params(scenario))
+            self.reset_increment()
         return pd.DataFrame(data_list)
 
-    def gen_environment_param_table(self):
-        d = {'scenario_id': self.scenario.id}
-        d.update({k: g() for k, g in self._environment_params})
-
-    def run(self):
-        from Melodie.run import get_config
-        df = self.gen_agent_param_table()
-        config = get_config()
-        if config.with_db:
-            db_conn = create_db_conn()
-            db_conn.write_dataframe(db_conn.AGENT_PARAM_TABLE, df)
-        return df
-
-    def setup(self):
-        pass
-
-    def set_agent_params(self):
-        # TODO: 这种方法可能也不够通用
-        # TODO: 有没有更好的方法？
-        # TODO: 更复杂的情况可以使用读取表的方法。举例：每个企业的技术水平不一样，生产规模不一样。这种需要读excel表。
-        a = random.randint()
-        b = a ** 2
-        return {'a': a, 'b': b}
-
-    def read_param_table(self):
+    def gen_agent_params(self, scenario: Scenario):
         """
-        TODO
-        做一个判断。
-        如果用scenario里面的一行，里面要么是和环境有关的参数，要么是和Agent有关的参数。
-        TODO 优先做这个:从Excel读取环境数据的时候，不用跑table generator.
 
-        含有一个名为scenarios的表，保存所有的scenario
-        每一个scenario的agent table分开，分为多个工作表。 工作表名称和scenario_id一样。
-
-        最好也生成一个环境的参数表、
-
-        准备Agent的参数时，有两种方案。
-        - 第一种使用set_agent_params自动生成
-        - 第二种是直接读进来完整的agent表。表名可以做一个区分。
-             1、scenarios表+所有scenarios的表。
-             2、只有一个Agent参数表，那么所有的情况都用同样的agent参数
-        环境参数表，表名为environment_parameter。
-        保存的是对应scenario中的环境参数。
-
-        giniscenario表
+        :param scenario:
         :return:
         """
+        data_list = []
+        for agent_id in range(0, self.num_generator(scenario)):
+            d = {}
+            d['scenario_id'] = scenario.id
+            d['id'] = agent_id
+            generated = self._row_generator(scenario)
+            if isinstance(generated, dict):
+                d.update(generated)
+            elif not type(generated).__module__ == "__builtin__":
+                d.update(generated.__dict__)
+            else:
+                raise TypeError(
+                    f"Builtin type {type(generated)} (value: {generated}) cannot be converted to table row.")
+            data_list.append(d)
+        return data_list

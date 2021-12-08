@@ -8,6 +8,7 @@ from typing import List
 import sqlalchemy
 from Melodie import TableGenerator
 from Melodie import Simulator
+from .scenario import GiniScenario
 
 
 class GiniSimulator(Simulator):
@@ -22,34 +23,42 @@ class GiniSimulator(Simulator):
     # 4. 注册表里的变量类型
 
     def register_scenario_dataframe(self):
-        pass
+        scenarios_dict = {}
+        self.load_dataframe('scenarios', 'scenarios.xlsx', scenarios_dict)
 
     def register_static_dataframes(self):
-        scenarios_dict = {}
-        self.register_dataframe('scenarios', 'scenarios.xlsx', scenarios_dict)
+        pass
+        # 由于已经写进了scenario表中，所以这里不需要任何注册操作了
 
     def register_generated_dataframes(self):
         """
+
         :return:
         """
-        agent_list_1_generator = TableGenerator()
-        agent_list_1_generator.add_param("productivity", scenario.productivity)
+        # 使用了一个上下文管理器，在with中方便地管理表的生成。
+
+        with self.new_table_generator('agent_params', lambda scenario: scenario.agent_num) as g:
+            # 生成器。
+            # 对于每一个scenario,生成scenario.agent_num行数据。
+            def generator_func(scenario: GiniScenario):
+                return {'id': g.increment(), 'productivity': scenario.agent_productivity, 'account': 0.0}
+
+            g.set_row_generator(generator_func)
+            g.set_column_data_types({'productivity': sqlalchemy.Float()})
+        # 无需调用g的生成表、存储表方法，因为在退出with语句的时候，会自动完成表的生成和存储！
 
 
 
-        # 保证Simulator管理的所有pandas数据集dataframe的数据类型，与对应数据集的data_type参数指定的数据类型相同
-        # 同时保证存入数据库时数据类型一致
 
-        # 对实际对象如Agent\Scenario赋值的时候，应该直接报错，还是尝试自动类型转换？
-        # 例如1：agent_params的数据集和数据库表中的字段account为float类型，但是Agent对象为int类型，那么之间自动类型转换？报错？
-        # 例如2：agent_params的数据集和数据库表中的字段time为pd.Datetime类型，但是Agent对象为int类型(Unix时间戳)
-        # 方案：自动类型转换并且出warning.
-        # 数据库： sqlite [integer, REAL, text, date, 二进制]
+# 保证Simulator管理的所有pandas数据集dataframe的数据类型，与对应数据集的data_type参数指定的数据类型相同
+# 同时保证存入数据库时数据类型一致
 
-        agent_params_dict = {'productivity': sqlalchemy.Integer(), 'account': sqlalchemy.Float()}
+# 对实际对象如Agent\Scenario赋值的时候，应该直接报错，还是尝试自动类型转换？
+# 例如1：agent_params的数据集和数据库表中的字段account为float类型，但是Agent对象为int类型，那么之间自动类型转换？报错？
+# 例如2：agent_params的数据集和数据库表中的字段time为pd.Datetime类型，但是Agent对象为int类型(Unix时间戳)
+# 方案：自动类型转换并且出warning.
+# 数据库： sqlite [integer, REAL, text, date, 二进制]
 
-        self.register_dataframe('agent_params', agent_params_list, agent_params_dict)
-
-    def generate_scenarios(self) -> List['Scenario']:
-        # 这个函数在用户端去掉，隐藏在Melodie.simulator里
-        return self.generate_scenarios_from_dataframe('scenarios')
+# agent_params_dict = {'productivity': sqlalchemy.Integer(), 'account': sqlalchemy.Float()}
+#
+# self.register_dataframe('agent_params', agent_params_list, agent_params_dict)

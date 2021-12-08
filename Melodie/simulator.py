@@ -2,11 +2,12 @@
 This data stores the run function for model running, storing global variables and other services.
 """
 import abc
+import contextlib
 import os.path
 import threading
 import time
 from multiprocessing import Pool
-from typing import ClassVar, TYPE_CHECKING, Optional, List, Dict, Tuple
+from typing import ClassVar, TYPE_CHECKING, Optional, List, Dict, Tuple, Callable, Union
 import logging
 
 import pandas as pd
@@ -69,7 +70,22 @@ class Simulator(metaclass=abc.ABCMeta):
         """
         pass
 
-    def register_dataframe(self, table_name: str, file_name: str, data_type: dict) -> None:
+    def register_dataframe(self, table_name: str, data_frame: pd.DataFrame, data_types: dict = None) -> None:
+        """
+
+        :param table_name:
+        :param data_frame:
+        :param data_types:
+        :return:
+        """
+        if data_types is None:
+            data_types = {}
+        DB.register_dtypes(table_name, data_types)
+        create_db_conn(self.config).write_dataframe(table_name, data_frame, data_types=data_types,
+                                                    if_exists="replace", )  # --> 加上data_type
+        self.registered_dataframes[table_name] = data_frame
+
+    def load_dataframe(self, table_name: str, file_name: str, data_types: dict) -> None:
 
         """
         Register static table, saving it to `self.registered_dataframes`.
@@ -95,9 +111,10 @@ class Simulator(metaclass=abc.ABCMeta):
         # 注册步骤：
         # 1. 把dataframe按照data_type存入数据库，因为跑完Simulator再跑Analyzer的时候可能会用。
         # 1.1 data_type作为DB的类属性，注册进DB
-        DB.register_dtypes(table_name, data_type)
+        DB.register_dtypes(table_name, data_types)
         # 1.2 无需指定data_type即可按照data_type来存储table_name
-        create_db_conn(self.config).write_dataframe(table_name, table, data_type=data_type, if_exists="replace", )  # --> 加上data_type
+        create_db_conn(self.config).write_dataframe(table_name, table, data_types=data_types,
+                                                    if_exists="replace", )  # --> 加上data_type
 
         # 2. 把dataframe放到registered_dataframes里。
         self.registered_dataframes[table_name] = table
@@ -109,16 +126,8 @@ class Simulator(metaclass=abc.ABCMeta):
         :return:
         """
 
-        # if registered_dataframes[table_name] != None:
-        #     return self.registered_dataframes[table_name]
-        # elif registered_dataframes[table_name] == None:
-        #     return db.read_dataframe(table_name)
         if table_name not in self.registered_dataframes:
             raise MelodieExceptions.Data.StaticTableNotRegistered(table_name, list(self.registered_dataframes.keys()))
-        # if registered_dataframes[table_name] != None:
-        #     return self.registered_dataframes[table_name]
-        # elif registered_dataframes[table_name] == None:
-        #     return db.read_dataframe(table_name)
 
         return self.registered_dataframes[table_name]
 
@@ -137,18 +146,30 @@ class Simulator(metaclass=abc.ABCMeta):
             scenario = self.scenario_class()
             scenario.manager = self
             for col_name in cols:
-                assert col_name in scenario.__dict__.keys()
+                assert col_name in scenario.__dict__.keys(), f"col_name: '{col_name}', scenario: {scenario}"
                 scenario.__dict__[col_name] = table.loc[i, col_name]
             scenarios.append(scenario)
         assert len(scenarios) != 0
         return scenarios
 
-    @abc.abstractmethod
+    def new_table_generator(self, table_name: str, rows_in_scenario: Union[int, Callable[[Scenario], int]]):
+        """
+        Create a new generator
+        :param table_name:
+        :param rows_in_scenario:
+            How many rows will be generated for a specific scenario.
+            This argument should be an integer as number of rows for each scenario, or a function with a parameter typed
+            `Scenario` and return an integer for how many rows to generate for this scenario .
+        :return:
+        """
+        return TableGenerator(self, table_name, rows_in_scenario)
+
     def generate_scenarios(self) -> List['Scenario']:
         """
         Generate scenario objects by the parameter from static tables or scenarios_dataframe.
         :return:
         """
+        return self.generate_scenarios_from_dataframe('scenarios')
 
     def pre_run(self):
         """
@@ -159,6 +180,7 @@ class Simulator(metaclass=abc.ABCMeta):
         :return:
         """
         create_db_conn(self.config).clear_database()
+        self.register_scenario_dataframe()
         self.register_static_dataframes()
         self.register_generated_dataframes()
 
@@ -339,3 +361,83 @@ class Simulator(metaclass=abc.ABCMeta):
         pool.join()
         t2 = time.time()
         logger.info(f'Melodie completed all runs, time elapsed totally {t2 - t0}s, and {t2 - t1}s for running.')
+
+    def run_boost(self,
+                  agent_class: ClassVar['Agent'],
+                  environment_class: ClassVar['Environment'],
+                  config: 'Config' = None,
+                  data_collector_class: ClassVar['DataCollector'] = None,
+                  model_class: ClassVar['Model'] = None,
+                  scenario_class: ClassVar['Scenario'] = None,
+                  scenario_manager_class: ClassVar['ScenarioManager'] = None,
+                  table_generator_class: ClassVar['TableGenerator'] = None,
+                  analyzer_class: ClassVar['Analyzer'] = None,
+                  visualizer_class: ClassVar['Visualizer'] = None,
+                  boost_model_class: ClassVar['Model'] = None,
+                  model_components=None
+                  ):
+        """
+        Boost.
+        :param agent_class:
+        :param environment_class:
+        :param config:
+        :param data_collector_class:
+        :param model_class:
+        :param scenario_class:
+        :param scenario_manager_class:
+        :param table_generator_class:
+        :param analyzer_class:
+        :param visualizer_class:
+        :param boost_model_class:
+        :param model_components:
+        :return:
+        """
+        from Melodie.boost.compiler.compiler import conv
+        import importlib
+        conv(agent_class, environment_class, model_class, 'out.py', model_components=model_components)
+        logger.warning("Testing. compilation finished, program exits")
+        # return
+        compiled = importlib.import_module('out')
+        model_run = compiled.__getattribute__('___model___run')
+        logger.info("Preprocess compilation finished, now running pre-run procedures.")
+
+        self.config = config
+        self.scenario_class = scenario_class
+        self.register_scenario_dataframe()
+        self.register_static_dataframes()
+
+        # self.scenarios_dataframe = self.create_scenarios_dataframe()
+        self.scenarios = self.generate_scenarios()
+        assert self.scenarios is not None
+        logger.info("Pre-run procedures finished. Now simulation starts...")
+
+        t0 = time.time()
+        t1 = time.time()
+        first_run_finished_at = time.time()
+        first_run = True
+        for scenario in self.scenarios:
+            for run_id in range(scenario.number_of_run):
+                if first_run:
+                    logger.info("Numba is now taking control of program. "
+                                "It may take a few seconds for compilation.")
+                visualizer = visualizer_class()
+                visualizer.setup()
+                visualizer.current_scenario = scenario
+                model = boost_model_class(self.config,
+                                          scenario,
+                                          visualizer=visualizer
+                                          )
+                model.setup_boost()
+                model_run(model)
+                if first_run:
+                    logger.info("The first run has completed, and numba has finished compilaiton. "
+                                "Your program will be speeded up greatly.")
+                    first_run_finished_at = time.time()
+                    first_run = False
+
+                logger.info(f"Finished running <experiment {run_id}, scenario {scenario.id}>. "
+                            f"time elapsed: {time.time() - t1}s")
+                t1 = time.time()
+
+        logger.info(f"totally time elapsed {time.time() - t0} s,"
+                    f" {(time.time() - t0) / 100}s per run, {(time.time() - first_run_finished_at) / (100 - 1)}s per run after compilation")

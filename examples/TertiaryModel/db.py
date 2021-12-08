@@ -28,8 +28,8 @@ class DB:
             table_DataFrame.to_sql(table_name, conn, index=False, if_exists='replace', chunksize=1000)
         return None
 
-    def revise_DataType(self, table_name, data_type, conn):
+    def revise_DataType(self, table_name, data_types, conn):
         table_DataFrame = self.read_DataFrame(table_name, conn)
         table_DataFrame.to_sql(table_name, conn, index=False, if_exists='replace', chunksize=1000,
-                               dtype=data_type)
+                               dtype=data_types)
 

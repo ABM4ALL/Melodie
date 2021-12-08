@@ -3,7 +3,8 @@
 # @Author: Zhanyi Hou
 # @Email: 1295752786@qq.com
 # @File: run_manager.py.py
+import os.path
 
-from Melodie.management.manager_server import run_server
+from Melodie.studio.main import studio_main
 
-run_server()
+studio_main(os.path.join(os.getcwd(), ".melodieconfig"))

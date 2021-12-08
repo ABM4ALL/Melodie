@@ -7,11 +7,10 @@ from typing import Optional
 from Melodie import Agent
 
 
-
 class GINIAgent(Agent):
 
     def setup(self):
-        self.account = 0
+        self.account = .0
         # self.productivity: Optional[float] = None
         self.productivity = .0
 

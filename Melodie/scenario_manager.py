@@ -53,7 +53,6 @@ class Scenario(Element):
             raise MelodieExceptions.Scenario.ScenarioIDTypeError(id_scenario)
         self.manager: Union['Calibrator', 'Simulator', None] = None
         self.id = id_scenario
-        self.agent_num = agent_num
         self.number_of_run = 1
         self.periods = 0
         self.setup()

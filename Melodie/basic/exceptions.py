@@ -161,7 +161,7 @@ class MelodieExceptions:
         @staticmethod
         def StaticTableNotRegistered(table_name: str, all_table_names: str):
             return MelodieException(1502,
-                                    f"Table {table_name} is not registered. All registered tables are: {all_table_names}.")
+                                    f"Table '{table_name}' is not registered. All registered tables are: {all_table_names}.")
 
         @staticmethod
         def AttemptingReadingFromUnexistedTable(table_name):

@@ -56,17 +56,14 @@ def ___model___setup_boost(___model):
 
 
 def ___model___run(___model):
-    import matplotlib.pyplot as plt
-    plt.figure()
-    plt.ion()
+    ___model.visualizer.parse(___model.grid)
+    ___model.visualizer.start()
     for i in range(___model.scenario.periods):
-        plt.cla()
         t0: float = time.time()
         ___environment___step(___model.environment, ___model.grid)
         t1: float = time.time()
-        arr: 'np.ndarray' = ___model.grid.get_2d_array()['alive']
+        ___model.visualizer.parse(___model.grid)
+        ___model.visualizer.step(i)
         t2: float = time.time()
         print(f'step {i}, {(t1 - t0)}s for step and {(t2 - t1)}s for conversion.')
-        plt.imshow(arr, cmap='hot')
-        plt.pause(0.01)
     print(___model.grid._spots)

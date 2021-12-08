@@ -194,21 +194,21 @@ class DB:
         self.connection.close()
 
     def write_dataframe(self, table_name: str, data_frame: pd.DataFrame,
-                        data_type: Optional[TABLE_DTYPES] = None,
+                        data_types: Optional[TABLE_DTYPES] = None,
                         if_exists='append'):
         """
         Write a dataframe to database.
 
         :param table_name: table_name
         :param data_frame:
-        :param data_type: The data type for columns.
+        :param data_types: The data type for columns.
         :param if_exists: {'replace', 'fail', 'append'}
         :return:
         """
-        if data_type is None:
-            data_type = DB.get_table_dtypes(table_name)
-        logger.info(f"datatype of table `{table_name}` is: {data_type}")
-        data_frame.to_sql(table_name, self.connection, index=False, dtype=data_type, if_exists=if_exists)
+        if data_types is None:
+            data_types = DB.get_table_dtypes(table_name)
+        logger.info(f"datatype of table `{table_name}` is: {data_types}")
+        data_frame.to_sql(table_name, self.connection, index=False, dtype=data_types, if_exists=if_exists)
 
     def read_dataframe(self, table_name: str) -> pd.DataFrame:
         """

@@ -43,7 +43,7 @@ def test_sqlalchemy_data_types():
     assert is_float_dtype(got_df.dtypes['A'])
     assert is_integer_dtype(got_df.dtypes['B'])
 
-    # db.write_dataframe('df_with_dtypes', df, data_type={'A': Integer(), 'B': Integer()})
+    # db.write_dataframe('df_with_dtypes', df, data_types={'A': Integer(), 'B': Integer()})
     db.write_dataframe('df_with_dtypes', df)
     # df.to_sql('df_with_dtypes', engine, index=False, dtype={'A': Integer(), 'B': Integer()})
     data_with_types = db.get_engine().execute('select * from df_with_dtypes').fetchall()
