@@ -41,7 +41,7 @@ class GiniEnvironment(Environment):
         for sub_period in range(0, self.trade_num):
             [agent_1, agent_2] = agent_list.random_sample(2)
 
-            who_win = 0
+            who_win = ''
             rand = random.random()
             if rand <= self.win_prob:
                 who_win = "Rich"
