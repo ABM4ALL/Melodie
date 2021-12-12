@@ -34,16 +34,16 @@ class AspirationSimulator(Simulator):
             def generator_func(scenario: AspirationScenario):
                 return {'id': g.increment(),
                         'technology': scenario.initial_technology,
-                        'aspiration_level': 0.0,
+                        'aspiration_level': scenario.initial_technology + scenario.market_profit_mean,
                         'aspiration_update_strategy': scenario.aspiration_update_strategy,
                         'historical_aspiration_update_param': scenario.historical_aspiration_update_param,
                         'social_aspiration_update_param': scenario.social_aspiration_update_param,
                         'profit': 0.0,
                         'account': 0.0,
                         'profit_aspiration_difference': 0.0,
-                        'strategy_param_1': np.random.uniform(0, 100),
-                        'strategy_param_2': np.random.uniform(0, 100),
-                        'strategy_param_3': np.random.uniform(0, 100),
+                        'strategy_param_1': np.random.uniform(0, 100), # 待改：应该是从trainer生成的表里读出来
+                        'strategy_param_2': np.random.uniform(0, 100), # 待改：应该是从trainer生成的表里读出来
+                        'strategy_param_3': np.random.uniform(0, 100), # 待改：应该是从trainer生成的表里读出来
                         'sleep_count': 0,
                         'exploration_count': 0,
                         'exploitation_count': 0,

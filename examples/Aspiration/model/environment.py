@@ -1,12 +1,9 @@
 
 import numpy as np
-from typing import Type, List, TYPE_CHECKING
-from Melodie import Environment
+from typing import Type
+from Melodie import Environment, AgentList
 from .scenario import AspirationScenario
 from .market_strategy import MarketStrategy, NonCompetitiveMarketStrategy
-
-if TYPE_CHECKING:
-    from .agent import AspirationAgent
 
 
 class AspirationEnvironment(Environment):
@@ -29,25 +26,25 @@ class AspirationEnvironment(Environment):
         else:
             pass
 
-    def market_process(self, agent_list: 'List[AspirationAgent]') -> None:
+    def market_process(self, agent_list: 'AgentList') -> None:
         market_strategy = self.market_strategy_choice()(agent_list, self)
         for agent in agent_list:
             market_strategy.calculate_profit(agent)
         pass
 
-    def aspiration_update_process(self, agent_list: 'List[AspirationAgent]') -> None:
+    def aspiration_update_process(self, agent_list: 'AgentList') -> None:
         for agent in agent_list:
             aspiration_update_strategy = agent.aspiration_update_strategy_choice()
             aspiration_update_strategy(agent_list, self).aspiration_update(agent)
         pass
 
-    def technology_search_process(self, agent_list: 'List[AspirationAgent]') -> None:
+    def technology_search_process(self, agent_list: 'AgentList') -> None:
         for agent in agent_list:
             technology_search_strategy = agent.technology_search_strategy_choice()
             technology_search_strategy(agent_list, self).technology_search(agent)
         pass
 
-    def calculate_environment_result(self, agent_list: 'List[AspirationAgent]') -> None:
+    def calculate_environment_result(self, agent_list: 'AgentList') -> None:
         self.average_technology = np.array([agent.technology for agent in agent_list]).mean()
 
 

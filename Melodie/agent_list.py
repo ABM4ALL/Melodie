@@ -111,7 +111,6 @@ class BaseAgentContainer:
         for i, agent in enumerate(self.agents):
             agent.post_setup()
 
-
 class AgentList(BaseAgentContainer, Sequence):
 
     def __init__(self, agent_class: ClassVar['Agent'], length: int, model: 'Model') -> None:
