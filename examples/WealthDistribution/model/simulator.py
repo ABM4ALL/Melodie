@@ -39,7 +39,7 @@ class GiniSimulator(Simulator):
 
         with self.new_table_generator('agent_params', lambda scenario: scenario.agent_num) as g:
             # 生成器。
-            # 对于每一个scenario,生成scenario.agent_num行数据。
+            # 对于每一个scenario, 生成scenario.agent_num行数据。
             def generator_func(scenario: GiniScenario):
                 return {'id': g.increment(), 'productivity': scenario.agent_productivity, 'account': 0.0}
 

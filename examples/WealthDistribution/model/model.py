@@ -2,7 +2,7 @@
 __author__ = 'Songmin'
 
 from Melodie import Model
-from .agent import GINIAgent
+from .agent import GiniAgent
 from .data_collector import GiniDataCollector
 from .environment import GiniEnvironment
 
@@ -18,7 +18,7 @@ class GiniModel(Model):
         # 写多个agent_list，不能仅仅是一个agent_list。
         # datacollector也会跟着改变。有多个
         # 如果用户已经注册了
-        self.agent_list = self.create_agent_container(GINIAgent, self.scenario.agent_num,
+        self.agent_list = self.create_agent_container(GiniAgent, self.scenario.agent_num,
                                                       self.scenario.get_registered_dataframe('agent_params'))
 
 
