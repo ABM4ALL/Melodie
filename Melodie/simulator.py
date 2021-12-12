@@ -82,8 +82,8 @@ class Simulator(metaclass=abc.ABCMeta):
             data_types = {}
         DB.register_dtypes(table_name, data_types)
         create_db_conn(self.config).write_dataframe(table_name, data_frame, data_types=data_types,
-                                                    if_exists="replace", )  # --> 加上data_type
-        self.registered_dataframes[table_name] = data_frame
+                                                    if_exists="replace")
+        self.registered_dataframes[table_name] = create_db_conn(self.config).read_dataframe(table_name)
 
     def load_dataframe(self, table_name: str, file_name: str, data_types: dict) -> None:
 
@@ -346,7 +346,7 @@ class Simulator(metaclass=abc.ABCMeta):
         parameters: List[Tuple] = []
         for scenario_index, scenario in enumerate(self.scenarios):
             for run_id in range(scenario.number_of_run):
-                params = (model_class, config, scenario, agent_class, environment_class, data_collector_class,
+                params = (config, scenario, model_class, agent_class, environment_class, data_collector_class,
                           run_id)
                 parameters.append(params)
 

@@ -7,6 +7,7 @@ from pandas.api.types import is_numeric_dtype, is_integer_dtype, is_float_dtype,
 from typing import TYPE_CHECKING, ClassVar, List, Dict, Union, Set, Optional
 
 from .basic import IndexedAgentList, MelodieExceptions, MelodieException
+from collections.abc import Sequence
 
 if TYPE_CHECKING:
     from .agent import Agent
@@ -106,8 +107,12 @@ class BaseAgentContainer:
 
             agent.set_params(params)
 
+    def post_setup(self):
+        for i, agent in enumerate(self.agents):
+            agent.post_setup()
 
-class AgentList(BaseAgentContainer):
+
+class AgentList(BaseAgentContainer, Sequence):
 
     def __init__(self, agent_class: ClassVar['Agent'], length: int, model: 'Model') -> None:
         super(AgentList, self).__init__()

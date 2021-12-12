@@ -1,14 +1,13 @@
-
 import random
 import numpy as np
 from typing import Type
 
 from Melodie import Agent
 from .aspiration_update_strategy import AspirationUpdateStrategy, \
-                                        HistoricalAspirationUpdateStrategy, SocialAspirationUpdateStrategy
+    HistoricalAspirationUpdateStrategy, SocialAspirationUpdateStrategy
 from .technology_search_strategy import TechnologySearchStrategy, \
-                                        SleepTechnologySearchStrategy, ExploitationTechnologySearchStrategy, \
-                                        ExplorationTechnologySearchStrategy, ImitationTechnologySearchStrategy
+    SleepTechnologySearchStrategy, ExploitationTechnologySearchStrategy, \
+    ExplorationTechnologySearchStrategy, ImitationTechnologySearchStrategy
 
 
 class AspirationAgent(Agent):
@@ -30,6 +29,12 @@ class AspirationAgent(Agent):
         self.exploitation_count = 0
         self.imitation_count = 0
 
+    def post_setup(self):
+        weight_sum = np.array([self.strategy_param_1, self.strategy_param_2, self.strategy_param_3]).sum()
+
+        self.prob_exploitation = self.strategy_param_1 / weight_sum
+        self.prob_exploration = self.strategy_param_2 / weight_sum
+
     def aspiration_update_strategy_choice(self) -> Type[AspirationUpdateStrategy]:
         if self.aspiration_update_strategy == 0:
             return HistoricalAspirationUpdateStrategy
@@ -40,25 +45,10 @@ class AspirationAgent(Agent):
         if self.profit_aspiration_difference >= 0:
             return SleepTechnologySearchStrategy
         else:
-            # 前三行可以挪到setup里
-            weight_sum = np.array([self.strategy_param_1, self.strategy_param_2, self.strategy_param_3]).sum()
-            prob_exploitation = self.strategy_param_1/weight_sum
-            prob_exploration = self.strategy_param_2/weight_sum
-
             rand = np.random.uniform(0, 1)
-            if rand <= prob_exploitation:
+            if rand <= self.prob_exploitation:
                 return ExploitationTechnologySearchStrategy
-            elif prob_exploitation < rand <= prob_exploitation + prob_exploration:
+            elif self.prob_exploitation < rand <= self.prob_exploitation + self.prob_exploration:
                 return ExplorationTechnologySearchStrategy
             else:
                 return ImitationTechnologySearchStrategy
-
-
-
-
-
-
-
-
-
-

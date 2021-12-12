@@ -128,7 +128,10 @@ class DataCollector:
 
         for container_name in self.agent_properties_dict.keys():
             agent_properties_df = pd.DataFrame(self.agent_properties_dict[container_name])
-            self.model.create_db_conn().write_dataframe(container_name, agent_properties_df, {})
+            self.model.create_db_conn().write_dataframe(container_name + "_result", agent_properties_df, {})
+
+        # pickle or feather format are faster than sqlite.
+
 
         # with open('agent.pkl', 'wb', buffering=4096) as f:
         #     # mm = mmap.mmap(f.fileno(), 4096)

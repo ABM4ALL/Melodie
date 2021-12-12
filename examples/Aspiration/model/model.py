@@ -8,6 +8,7 @@ from .environment import AspirationEnvironment
 
 
 class AspirationModel(Model):
+    environment: AspirationEnvironment
 
     def setup(self):
         self.agent_list = self.create_agent_container(AspirationAgent,
@@ -19,6 +20,6 @@ class AspirationModel(Model):
             self.environment.market_process(self.agent_list)
             self.environment.aspiration_update_process(self.agent_list)
             self.environment.technology_search_process(self.agent_list)
-            self.environment.calculate_environment_result()
+            self.environment.calculate_environment_result(self.agent_list)
             self.data_collector.collect(t)
         self.data_collector.save()

@@ -139,7 +139,7 @@ class Model:
 
         container = agent_container_class(agent_class, initial_num, model=self)
         container.set_properties(params_df)
-
+        container.post_setup()
         return container
 
     def check_agent_containers(self):
