@@ -1,4 +1,4 @@
-recursive-include Melodie/static *.html *.js *.png *.jpg *.ico *.css *.json
+recursive-include Melodie/static *.html *.js *.png *.jpg *.ico *.css *.json *.woff *.ttf
 include requirements.txt
 include pyproject.toml
 exclude Melodie/boost *.c

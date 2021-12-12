@@ -155,9 +155,6 @@ def JITNetworkBackup(node_elem_cls):
                     res[i] = self._edges["target"][i]
                 return res
 
-        def get_node_by_id(self, node_id: int):
-            return self._nodes[node_id]
-
         def get_neighbors(self, node):
             raise NotImplementedError
 
@@ -172,17 +169,13 @@ def JITNetworkBackup(node_elem_cls):
     return _jit_network_cls(nodes, edges, agents_pos, agents_on_node, neighbors_cache)
 
 
-def JITNetwork(node_elem_cls):
+def JITNetwork(cache=True):
     global _jit_network_cls
-    node_dtypes = dtype_detect(node_elem_cls, (0,))
-    # _adj = NumbaDict.empty(key_type=types.int64, value_type=types.DictType(types.int64, types.int64))
-    # _nodes = NumbaDict.empty(key_type=types.int64, value_type=numba.typeof(node_elem))
-    # _agents = NumbaDict.empty(key_type=types.int64, value_type=types.DictType(types.int64, types.int64))
-    # _agent_pos = NumbaDict.empty(key_type=types.int64, value_type=numba.typeof(agent_elem))
+
     agent_num = 100
     node_num = 2000
     edge_num = 8000
-    nodes = np.zeros(node_num, dtype=node_dtypes)
+
     edges = np.array([(0, 0, 0) for i in range(edge_num)], dtype=[
         ('source', 'i8'),
         ('target', 'i8'),
@@ -191,25 +184,19 @@ def JITNetwork(node_elem_cls):
 
     agents_pos = np.array([-1 for i in range(agent_num)], dtype=np.int64)
 
-    # 这个是一个缓存，用来存储临近的节点ID。
-    # index_left: 左侧索引
-    # index_right: 右侧索引
-    neighbors_cache = np.array([(-1, -1) for i in range(edge_num)], dtype=[
-        ('index_left', 'i8'),
-        ('index_right', 'i8'),
-    ])
     agents_on_node = -1 * np.ones((node_num, agent_num), dtype=np.int64)
     if _jit_network_cls is not None:
-        return _jit_network_cls(nodes, edges, agents_pos, agents_on_node, neighbors_cache)
+        return _jit_network_cls(edges, agents_pos, agents_on_node, cache=cache)
 
     @jitclass([
-        ('_nodes', numba.typeof(nodes)),
+        # ('_nodes', numba.typeof(nodes)),
         ('_edges', numba.typeof(edges)),
-        ('_neighbors_cache', numba.typeof(neighbors_cache)),
+        # ('_neighbors_cache', numba.typeof(neighbors_cache)),
 
         ('_agents_on_node', numba.typeof(agents_on_node)),
         ('node_count', types.int64),
         ('edge_count', types.int64),
+        ('with_cache', types.boolean),
 
         # index代表节点属性数组_nodes的索引。
         # 同时也是_agent_ids的索引
@@ -219,14 +206,15 @@ def JITNetwork(node_elem_cls):
         ('_agent_ids', types.DictType(types.unicode_type, types.DictType(types.int64, types.ListType(types.int64)))),
         # 根据agent的category和id，反查agent的位置
         ('_agents_pos', types.DictType(types.unicode_type, types.DictType(types.int64, types.int64))),
+        ('_neighbors_cache', types.DictType(types.int64, numba.typeof(np.array([1, 2, 3], dtype=np.int64)))),
     ])
     class NetworkJIT:
-        def __init__(self, nodes, edges, agents_pos, agents_on_node, neighbors_cache):
-            self._nodes = nodes
+        def __init__(self, edges, agents_pos, agents_on_node, cache=True):
+            # self._nodes = nodes
             self._edges = edges
 
             self._agents_on_node = agents_on_node
-            self._neighbors_cache = neighbors_cache
+
             self.node_count = 0
             self.edge_count = 0
 
@@ -235,6 +223,10 @@ def JITNetwork(node_elem_cls):
             self._agent_ids = typed.Dict.empty(types.unicode_type,
                                                typed.Dict.empty(types.int64, typed.List.empty_list(types.int64)))
             self._agents_pos = typed.Dict.empty(types.unicode_type, typed.Dict.empty(types.int64, types.int64))
+
+            self.with_cache = cache
+
+            self._neighbors_cache = typed.Dict.empty(types.int64, np.array([1, 2, 3], dtype=np.int64))
 
         def add_category(self, category_name: str):
             """
@@ -258,6 +250,9 @@ def JITNetwork(node_elem_cls):
             assert self._adj[target_id].get(source_id) is not None
 
             self._adj[target_id].pop(source_id)
+
+        def nodes(self):
+            return self._adj.keys()
 
         def add_edge(self, source_id, target_id):
             if self._adj.get(source_id) is None:
@@ -341,14 +336,24 @@ def JITNetwork(node_elem_cls):
                 self.add_edge(ids_arr[i][0], ids_arr[i][1])
 
         def get_neighbors(self, node_id: int) -> np.ndarray:
-            length = len(self._adj[node_id])
-            neighbor_ids = np.zeros(length, dtype=np.int64)
-            for i, target_id in enumerate(self._adj[node_id].keys()):
-                neighbor_ids[i] = target_id
-            return neighbor_ids
+            if self.with_cache:
+                neighbor_ids = self._neighbors_cache.get(node_id)
+                if neighbor_ids is None:
 
-        def get_node_by_id(self, node_id: int):
-            return self._nodes[node_id]
+                    length = len(self._adj[node_id])
+
+                    neighbor_ids = np.zeros(length, dtype=np.int64)
+                    for i, target_id in enumerate(self._adj[node_id].keys()):
+                        neighbor_ids[i] = target_id
+                    self._neighbors_cache[node_id] = neighbor_ids
+                return neighbor_ids
+            else:
+                length = len(self._adj[node_id])
+                neighbor_ids = np.zeros(length, dtype=np.int64)
+                for i, target_id in enumerate(self._adj[node_id].keys()):
+                    neighbor_ids[i] = target_id
+                self._neighbors_cache[node_id] = neighbor_ids
+                return neighbor_ids
 
         @property
         def edges(self):
@@ -358,4 +363,4 @@ def JITNetwork(node_elem_cls):
             pass
 
     _jit_network_cls = NetworkJIT
-    return _jit_network_cls(nodes, edges, agents_pos, agents_on_node, neighbors_cache)
+    return _jit_network_cls(edges, agents_pos, agents_on_node, cache=cache)
