@@ -96,7 +96,6 @@ class Simulator(metaclass=abc.ABCMeta):
         :param table_name: The table name, and same the name of table in database.
         :param file_name: The excel filename.
             if ends with `.xls` or `.xlsx`, This file will be searched at Config.excel_folder
-            else if ends with `.csv`, This file will be searched at Config.csv_folder
         :return:
         """
         _, ext = os.path.splitext(file_name)

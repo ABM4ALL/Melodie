@@ -18,6 +18,7 @@ from .analyzer import Analyzer
 
 from .network import Network, Node
 from .grid import Grid, Spot
+from .trainer import AbstractTrainer, GeneticAlgorithmTrainer, ParticleOptimizationTrainer
 
 import logging
 

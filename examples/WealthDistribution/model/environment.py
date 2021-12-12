@@ -8,7 +8,7 @@ from Melodie import AgentList, Environment
 from .scenario import GiniScenario
 
 if TYPE_CHECKING:
-    from .agent import GINIAgent
+    from .agent import GiniAgent
 
 
 class GiniEnvironment(Environment):
@@ -27,7 +27,7 @@ class GiniEnvironment(Environment):
 
         return None
 
-    def go_give_money(self, agent_from: 'GINIAgent', agent_to: 'GINIAgent'):
+    def go_give_money(self, agent_from: 'GiniAgent', agent_to: 'GiniAgent'):
 
         if agent_from.account == 0:
             pass

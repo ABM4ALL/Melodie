@@ -16,3 +16,9 @@
 #         return 0
 #     else:
 #         return -1  # 如果循环结束，左边大于了右边，代表没有找到
+
+class GeneticAlgorithm:
+    pass
+
+class ParticleOptimization:
+    pass
