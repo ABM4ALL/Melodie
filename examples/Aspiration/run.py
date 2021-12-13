@@ -16,19 +16,19 @@ if __name__ == "__main__":
     """
     Run the model with simulator
     """
-    # simulator.run(
-    #     config=config,
-    #     scenario_class=AspirationScenario,
-    #     model_class=AspirationModel,
-    # )
+    simulator.run(
+        config=config,
+        scenario_class=AspirationScenario,
+        model_class=AspirationModel,
+    )
 
     """
     Run the model with simulator in parallel mode. 
     Use "cores" to determine how many cores should be used.
     """
-    simulator.run_parallel(
-        config=config,
-        scenario_class=AspirationScenario,
-        model_class=AspirationModel,
-        cores=4
-    )
+    # simulator.run_parallel(
+    #     config=config,
+    #     scenario_class=AspirationScenario,
+    #     model_class=AspirationModel,
+    #     cores=4
+    # )
