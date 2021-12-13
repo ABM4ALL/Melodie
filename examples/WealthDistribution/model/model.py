@@ -20,7 +20,9 @@ class GiniModel(Model):
         # 如果用户已经注册了
         self.agent_list = self.create_agent_container(GiniAgent, self.scenario.agent_num,
                                                       self.scenario.get_registered_dataframe('agent_params'))
-
+        with self.define_basic_components():
+            self.environment = GiniEnvironment()
+            self.data_collector = GiniDataCollector()
 
 
     def run(self):

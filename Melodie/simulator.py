@@ -2,7 +2,6 @@
 This data stores the run function for model running, storing global variables and other services.
 """
 import abc
-import contextlib
 import os.path
 import threading
 import time
@@ -186,8 +185,7 @@ class Simulator(metaclass=abc.ABCMeta):
         self.scenarios = self.generate_scenarios()
         assert self.scenarios is not None
 
-    def run_model(self, config, scenario, model_class: ClassVar['Model'], agent_class, environment_class,
-                  data_collector_class, run_id, visualizer=None):
+    def run_model(self, config, scenario, run_id, model_class: ClassVar['Model'], visualizer=None):
         """
 
         :return: 
@@ -196,21 +194,20 @@ class Simulator(metaclass=abc.ABCMeta):
         t0 = time.time()
         model = model_class(config,
                             scenario,
-                            agent_class,
-                            environment_class,
-                            data_collector_class,
                             run_id_in_scenario=run_id,
                             visualizer=visualizer)
 
         model.setup()
-        model._setup()
         t1 = time.time()
         model.run()
         t2 = time.time()
 
         model_setup_time = t1 - t0
         model_run_time = t2 - t1
-        data_collect_time = model.data_collector._time_elapsed
+        if model.data_collector is not None:
+            data_collect_time = model.data_collector._time_elapsed
+        else:
+            data_collect_time = 0.0
         model_run_time -= data_collect_time
         info = (f'Running {run_id + 1} in scenario {scenario.id} completed with time elapsed(seconds):\n'
                 f'    model-setup   \t {round(model_setup_time, 6)}\n'
@@ -222,9 +219,6 @@ class Simulator(metaclass=abc.ABCMeta):
             config: 'Config',
             scenario_class: ClassVar['Scenario'],
             model_class: ClassVar['Model'],
-            agent_class: ClassVar['Agent'],
-            environment_class: ClassVar['Environment'],
-            data_collector_class: ClassVar['DataCollector'],
             ):
         """
         Main function for running model!
@@ -238,8 +232,7 @@ class Simulator(metaclass=abc.ABCMeta):
         t1 = time.time()
         for scenario_index, scenario in enumerate(self.scenarios):
             for run_id in range(scenario.number_of_run):
-                self.run_model(config, scenario, model_class, agent_class, environment_class, data_collector_class,
-                               run_id)
+                self.run_model(config, scenario, run_id, model_class, )
 
             logger.info(f'{scenario_index + 1} of {len(self.scenarios)} scenarios has completed.')
 
@@ -292,9 +285,6 @@ class Simulator(metaclass=abc.ABCMeta):
                      config: 'Config',
                      scenario_class: ClassVar['Scenario'],
                      model_class: ClassVar['Model'],
-                     agent_class: ClassVar['Agent'],
-                     environment_class: ClassVar['Environment'],
-                     data_collector_class: ClassVar['DataCollector'],
                      cores: int = 2
                      ):
         """
@@ -346,8 +336,7 @@ class Simulator(metaclass=abc.ABCMeta):
         parameters: List[Tuple] = []
         for scenario_index, scenario in enumerate(self.scenarios):
             for run_id in range(scenario.number_of_run):
-                params = (config, scenario, model_class, agent_class, environment_class, data_collector_class,
-                          run_id)
+                params = (config, scenario, run_id, model_class,)
                 parameters.append(params)
 
         logger.info(f'Melodie will run totally {len(parameters)} times!.')

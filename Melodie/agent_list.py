@@ -4,26 +4,28 @@ import time
 
 import pandas as pd
 from pandas.api.types import is_numeric_dtype, is_integer_dtype, is_float_dtype, is_string_dtype
-from typing import TYPE_CHECKING, ClassVar, List, Dict, Union, Set, Optional
+import typing
+from typing import TYPE_CHECKING, ClassVar, List, Dict, Union, Set, Optional, TypeVar, Type, Generic
 
 from .basic import IndexedAgentList, MelodieExceptions, MelodieException
 from collections.abc import Sequence
+from .agent import Agent
 
+AgentGeneric = TypeVar('AgentGeneric')
 if TYPE_CHECKING:
-    from .agent import Agent
     from .model import Model
     from .scenario_manager import Scenario
 
 logger = logging.getLogger(__name__)
 
 
-class BaseAgentContainer:
+class BaseAgentContainer(Generic[AgentGeneric]):
     _ID_OFFSET = -1
     _agent_ids = set()
 
     def __init__(self):
         self.scenario: Union['Scenario', None] = None
-        self.agents: Union[List['Agent'], Set['Agent'], None] = None
+        self.agents: Union[List['AgentGeneric'], Set['AgentGeneric'], None] = None
 
     @staticmethod
     def new_id():
@@ -111,16 +113,17 @@ class BaseAgentContainer:
         for i, agent in enumerate(self.agents):
             agent.post_setup()
 
-class AgentList(BaseAgentContainer, Sequence):
 
-    def __init__(self, agent_class: ClassVar['Agent'], length: int, model: 'Model') -> None:
+class AgentList(BaseAgentContainer, Sequence, typing.Sequence[AgentGeneric]):
+
+    def __init__(self, agent_class: ClassVar[AgentGeneric], length: int, model: 'Model') -> None:
         super(AgentList, self).__init__()
         self._iter_index = 0
         self.scenario = model.scenario
-        self.agent_class: ClassVar['Agent'] = agent_class
+        self.agent_class: ClassVar[AgentGeneric] = agent_class
         self.initial_agent_num: int = length
         self.model = model
-        self.agents = self.init_agents()
+        self.agents: List[AgentGeneric] = self.init_agents()
 
     def __repr__(self):
         return f"<AgentList {self.agents}>"
@@ -128,14 +131,14 @@ class AgentList(BaseAgentContainer, Sequence):
     def __len__(self):
         return len(self.agents)
 
-    def __getitem__(self, item):
+    def __getitem__(self, item) -> AgentGeneric:
         return self.agents.__getitem__(item)
 
     def __iter__(self):
         self._iter_index = 0
         return self
 
-    def __next__(self):
+    def __next__(self) -> AgentGeneric:
         if self._iter_index < len(self.agents):
             elem = self.agents[self._iter_index]
             self._iter_index += 1
@@ -143,25 +146,25 @@ class AgentList(BaseAgentContainer, Sequence):
         else:
             raise StopIteration
 
-    def init_agents(self) -> IndexedAgentList:
-        agents: List['Agent'] = [self.agent_class(BaseAgentContainer.new_id()) for i in
-                                 range(self.initial_agent_num)]
+    def init_agents(self) -> List[AgentGeneric]:
+        agents: List['AgentGeneric'] = [self.agent_class(BaseAgentContainer.new_id()) for i in
+                                        range(self.initial_agent_num)]
         scenario = self.model.scenario
         for agent in agents:
             agent._scenario = scenario
             agent.setup()
         return IndexedAgentList(agents)
 
-    def random_sample(self, sample_num: int) -> List['Agent']:
+    def random_sample(self, sample_num: int) -> List['AgentGeneric']:
         return random.sample(self.agents, sample_num)
 
-    def remove(self, agent: 'Agent'):
+    def remove(self, agent: 'AgentGeneric'):
         for i, a in enumerate(self.agents):
             if a is agent:
                 self.agents.pop(i)
                 break
 
-    def add(self, agent: 'Agent'):
+    def add(self, agent: 'AgentGeneric'):
         self.agents.add(agent)
 
     def to_list(self, column_names: List[str] = None) -> List[Dict]:
