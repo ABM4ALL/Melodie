@@ -43,6 +43,7 @@ function_types = {  # 函数的返回类型
     np.array: np.ndarray,
     np.random.random: np.ndarray,
     np.random.randint: np.ndarray,
+    np.random.uniform: np.ndarray,
     np.sin: np.ndarray,
 
     random.random: float,
@@ -98,7 +99,7 @@ class assign:
                     types_inferred[target_id] = called
                 elif called in function_types:
                     types_inferred[target_id] = function_types[called]
-                elif "return" in called.__annotations__:
+                elif hasattr(called, '__annotations__') and "return" in called.__annotations__:
                     types_inferred[target_id] = called.__annotations__['return']
                 else:
                     raise TypeError(f"[Line: {node_value.lineno}]Cannot infer return value of function {called}. "

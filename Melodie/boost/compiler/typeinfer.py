@@ -9,6 +9,8 @@ import logging
 import sys
 from typing import List, Any, Dict, TypeVar, Union, Tuple, ClassVar
 
+import astunparse
+
 from Melodie import Agent, AgentList
 
 import numpy as np
@@ -33,12 +35,15 @@ def parse_annotation_type(anno: Union[ast.Name]):
 
 
 class TypeInferr(ast.NodeVisitor):
-    def __init__(self, initial_types: Dict[str, Any]):
+    def __init__(self, initial_types: Dict[str, Any], parsing_class_method=False):
+        self.parsing_class_method = parsing_class_method
         self.types_inferred: Dict[str, Any] = initial_types.copy()
 
     def visit_FunctionDef(self, func_def: ast.FunctionDef) -> Any:
         argument: ast.arg = None
-        for argument in func_def.args.args:
+        for i, argument in enumerate(func_def.args.args):
+            if i == 0 and self.parsing_class_method:
+                continue
             if argument.arg not in self.types_inferred:
                 self.types_inferred[argument.arg] = parse_annotation_type(argument.annotation)
         if len(func_def.args.kw_defaults) != 0:  # kw args are not supported!
@@ -90,7 +95,7 @@ class TypeInferr(ast.NodeVisitor):
                                     f'before.')
             return
         elif isinstance(target, ast.Attribute):
-            logger.warning(f'Skipping the assigning to attribute {ast.dump(target)}')
+            assign.infer_from_value(astunparse.unparse(target).strip(), node.value, self.types_inferred)
             return
         elif isinstance(target, ast.Subscript):
             logger.warning(f'Skipping the assigning to subscript {ast.dump(target)}')

@@ -5,7 +5,7 @@ import mmap
 import os.path
 import pickle
 import time
-from typing import List, ClassVar, TYPE_CHECKING, Dict, Tuple, Any
+from typing import List, ClassVar, TYPE_CHECKING, Dict, Tuple, Any, Optional
 
 import pandas as pd
 import logging
@@ -40,10 +40,10 @@ class DataCollector:
     data or datafile.
     """
 
-    def __init__(self, model: 'Model', target='sqlite'):
+    def __init__(self, target='sqlite'):
         assert target in {'sqlite', None}
         self.target = target
-        self.model = model
+        self.model: Optional[Model] = None
         self._agent_properties_to_collect: Dict[str, List[PropertyToCollect]] = {}
         self._environment_properties_to_collect: List[PropertyToCollect] = []
 
@@ -52,7 +52,6 @@ class DataCollector:
 
         self.agent_properties_dict: Dict[str, List[Any]] = {}
         self.environment_properties_list = []
-        self.setup()
 
         self._time_elapsed = 0
 
@@ -61,7 +60,7 @@ class DataCollector:
 
     def add_agent_property(self, container_name: str, property_name: str, as_type: ClassVar = None):
         if not hasattr(self.model, container_name):
-            raise AttributeError(f"Model has no attribute {container_name}")
+            raise AttributeError(f"Model has no agent container '{container_name}'")
         if container_name not in self._agent_properties_to_collect.keys():
             self._agent_properties_to_collect[container_name] = []
         self._agent_properties_to_collect[container_name].append(PropertyToCollect(property_name, as_type))
@@ -131,7 +130,6 @@ class DataCollector:
             self.model.create_db_conn().write_dataframe(container_name + "_result", agent_properties_df, {})
 
         # pickle or feather format are faster than sqlite.
-
 
         # with open('agent.pkl', 'wb', buffering=4096) as f:
         #     # mm = mmap.mmap(f.fileno(), 4096)

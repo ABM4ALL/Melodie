@@ -5,10 +5,7 @@ sys.path.append("../..")
 # Melody package is not available on pip yet, so this example has to import Melody package placed at project root.
 # Appending project root to "sys.path" makes Melody package accessible to the interpreter.
 # This code will be removed as soon as we release the first distribution onto pip.
-from model.agent import GINIAgent
-from model.environment import GiniEnvironment
 from model.scenario import GiniScenario
-from model.data_collector import GiniDataCollector
 from model.model import GiniModel
 from model.simulator import GiniSimulator
 
@@ -24,9 +21,6 @@ if __name__ == "__main__":
         config=config,
         scenario_class=GiniScenario,
         model_class=GiniModel,
-        agent_class=GINIAgent,
-        environment_class=GiniEnvironment,
-        data_collector_class=GiniDataCollector,
     )
 
     """
