@@ -2,7 +2,8 @@
 import random
 import numpy as np
 from abc import ABC, abstractmethod
-from typing import List, TYPE_CHECKING
+from typing import TYPE_CHECKING
+from Melodie import AgentList
 
 if TYPE_CHECKING:
     from.agent import AspirationAgent
@@ -11,7 +12,7 @@ if TYPE_CHECKING:
 
 class TechnologySearchStrategy(ABC):
 
-    def __init__(self, agent_list: 'List[AspirationAgent]', environment: 'AspirationEnvironment'):
+    def __init__(self, agent_list: 'AgentList', environment: 'AspirationEnvironment'):
         self.agent_list = agent_list
         self.environment = environment
 

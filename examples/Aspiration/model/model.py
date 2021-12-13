@@ -2,13 +2,14 @@
 __author__ = 'Songmin'
 
 from Melodie import Model
+from .scenario import AspirationScenario
 from .agent import AspirationAgent
-from .data_collector import AspirationDataCollector
 from .environment import AspirationEnvironment
 
 
 class AspirationModel(Model):
-    environment: AspirationEnvironment
+    environment: AspirationEnvironment # 有点儿奇怪，为什么没有self也可以hint type？
+    scenario: AspirationScenario
 
     def setup(self):
         self.agent_list = self.create_agent_container(AspirationAgent,

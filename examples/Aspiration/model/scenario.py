@@ -12,7 +12,7 @@ class AspirationScenario(Scenario):
         self.aspiration_update_strategy = 1
         self.historical_aspiration_update_param = 0.5
         self.social_aspiration_update_param = 1.0
-        self.initial_technology = 1
+        self.initial_technology = 1.0
         self.sigma_exploitation = 0.1
         self.mean_exploration = 0
         self.sigma_exploration = 0.7

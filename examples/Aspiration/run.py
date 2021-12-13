@@ -36,5 +36,5 @@ if __name__ == "__main__":
     #     agent_class=AspirationAgent,
     #     environment_class=AspirationEnvironment,
     #     data_collector_class=AspirationDataCollector,
-    #     cores=2
+    #     cores=4
     # )
