@@ -6,7 +6,7 @@ import os.path
 import threading
 import time
 from multiprocessing import Pool
-from typing import ClassVar, TYPE_CHECKING, Optional, List, Dict, Tuple, Callable, Union
+from typing import ClassVar, TYPE_CHECKING, Optional, List, Dict, Tuple, Callable, Union, Type
 import logging
 
 import pandas as pd
@@ -351,7 +351,7 @@ class Simulator(metaclass=abc.ABCMeta):
         logger.info(f'Melodie completed all runs, time elapsed totally {t2 - t0}s, and {t2 - t1}s for running.')
 
     def run_boost(self,
-                  agent_class: ClassVar['Agent'],
+                  agent_classes: List[Type['Agent']],
                   environment_class: ClassVar['Environment'],
                   config: 'Config' = None,
                   data_collector_class: ClassVar['DataCollector'] = None,
@@ -366,7 +366,7 @@ class Simulator(metaclass=abc.ABCMeta):
                   ):
         """
         Boost.
-        :param agent_class:
+        :param agent_classes:
         :param environment_class:
         :param config:
         :param data_collector_class:
@@ -382,7 +382,9 @@ class Simulator(metaclass=abc.ABCMeta):
         """
         from Melodie.boost.compiler.compiler import conv
         import importlib
-        conv(agent_class, environment_class, model_class, 'out.py', model_components=model_components)
+
+        conv(agent_classes, environment_class, model_class, 'out.py', model_components=model_components)
+
         logger.warning("Testing. compilation finished, program exits")
         # return
         compiled = importlib.import_module('out')

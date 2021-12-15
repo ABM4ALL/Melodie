@@ -15,6 +15,9 @@ from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING
 from Melodie import AgentList
 
+if 1 < 0:
+    from .ast_demo import Agent
+
 
 class TechnologySearchStrategy(ABC):
 
@@ -70,6 +73,12 @@ class ImitationTechnologySearchStrategy(TechnologySearchStrategy):
 
 from Melodie.boost.compiler.class_compiler import compile_general_class
 from Melodie.boost.compiler.typeinferlib import register_type
+from Melodie.boost.compiler.import_scanner import scan_imports, import_statements_to_str
 
-register_type(TechnologySearchStrategy)
-compile_general_class(ImitationTechnologySearchStrategy)
+# from
+# register_type(TechnologySearchStrategy)
+# compile_general_class(ImitationTechnologySearchStrategy)
+
+imports = scan_imports(__file__)
+print(imports)
+print(import_statements_to_str(imports))

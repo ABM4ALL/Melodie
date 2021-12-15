@@ -8,8 +8,15 @@ from typing import Tuple
 
 from Melodie import Agent
 
+
 class NewAgent(Agent):
     pass
+
+
+def a():
+    d = 123
+    v = 123
+    agent_list: 'AgentList[NewAgent]' = []
 
 class ClsTest:
     def __init__(self):

@@ -11,7 +11,8 @@ import astunparse
 from pprintast import pprintast
 
 from .typeinfer import TypeInferr
-from .typeinferlib import registered_types
+from .typeinferlib import registered_types, BoostTypeModel
+from ... import AgentList, Environment
 from ...management.ast_parse import find_class_methods
 
 _expected_to_compile_classes = {
@@ -22,19 +23,27 @@ dtype_map = {
     int: "numba.int64",
     float: "numba.float64",
     bool: "numba.boolean",
-    str: "numba.unicode"
-
+    str: "numba.unicode",
 }
 
 
-def add_jit_class(cls: ClassVar[Any]):
+def add_dtype_map(cls, s):
+    dtype_map[cls] = s
+
+
+def add_custom_jit_class(cls: ClassVar[Any]):
     _expected_to_compile_classes[cls.__name__] = cls
 
 
-def generate_jitclass_annotation(types):
+def generate_jitclass_annotation(types: Dict[str, BoostTypeModel]):
     s = "@jitclass(["
-    for k, dtype in types.items():
-        s += f"({k}, {dtype_map[dtype]}),"
+    for k, btm in types.items():
+        if btm.root in dtype_map.keys():
+            s += f"('{k}', {dtype_map[btm.root]}),"
+        elif btm.root == AgentList:
+            s += f"('{k}', numba.typeof(_{btm.child_types()[0].__name__}_ARRAY)), "
+        else:
+            raise NotImplementedError
     s += "])"
     return s
 
@@ -55,22 +64,27 @@ def compile_general_class(cls: ClassVar[Any]) -> str:
             base_cls_name: ast.Name = cls_ast.bases[0]
             base_cls_id = base_cls_name.id
             print(base_cls_id)
-            current_cls = registered_types[base_cls_id]
+            current_cls = registered_types[base_cls_id].root
     print(cls_ast_list)
     string = ""
     inferred = {}
     cls_ast_list.reverse()
+    _init_method_defined = False
     for i, cls_ast in enumerate(cls_ast_list):
+
         for method in find_class_methods(cls_ast):
             if method.name == '__init__':
+                _init_method_defined = True
                 inferr = TypeInferr({}, True)
                 inferr.visit(method)
-                inferred.update({k.split('.')[1]: v for k, v in inferr.types_inferred.items()})
+                inferred.update({k.split('.')[1]: v for k, v in inferr.types_inferred.items() if k.startswith('self.')})
                 break
+
         if cls_ast.name == cls.__name__:
             string += generate_jitclass_annotation(inferred) + "\n"
         string += astunparse.unparse(cls_ast).strip() + "\n"
         # print(astunparse.unparse(cls_ast))
+    assert _init_method_defined, f"No '__init__' method defined for custom class {cls}."
     print(string)
     return string
 

@@ -23,7 +23,7 @@ from .boost.vectorize import vectorize_2d
 
 
 class Spot(Agent):
-    def __init__(self, spot_id: int, x: int, y: int):
+    def __init__(self, spot_id: int, x: int = 0, y: int = 0):
         super(Spot, self).__init__(spot_id)
         self.x = x
         self.y = y
@@ -37,6 +37,7 @@ class Grid:
     Grid is a widely-used discrete space for ABM.
     Grid contains many `Spot`s, each `Spot` could contain several agents.
     """
+
     def __init__(self, spot_cls: ClassVar[Spot], width: int, height: int, wrap=True, caching=True):
         """
 
@@ -269,4 +270,3 @@ class Grid:
 #     normal(grid)
 #     t2 = time.time()
 #     print(f'jit:{t1 - t0},normal:{t2 - t1}, jit could speed up: {(t2 - t1) / (t1 - t0)} times')
-

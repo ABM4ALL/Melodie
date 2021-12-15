@@ -15,7 +15,7 @@ import astunparse
 from pprintast import pprintast
 
 from Melodie import Agent, AgentList
-from Melodie.boost.compiler.typeinferlib import registered_types
+from Melodie.boost.compiler.typeinferlib import registered_types, BoostTypeModel, type_registered
 
 from Melodie.network import Network
 from Melodie.grid import Grid
@@ -26,6 +26,7 @@ logging.basicConfig(level=logging.WARNING, stream=sys.stderr)
 logger = logging.getLogger(__name__)
 from Melodie.boost.compiler.typeinfer import TypeInferr
 from .class_compiler import compile_to_jit_classes
+from .property_parser import generate_array
 
 
 class RewriteName(ast.NodeTransformer):
@@ -46,7 +47,7 @@ class RewriteCallEnv(ast.NodeTransformer):
         super().__init__()
         self.root_name = root_name
 
-        self.types_inferred: Dict[str, TypeVar] = initial_types.copy()
+        self.types_inferred: Dict[str, BoostTypeModel] = initial_types.copy()
 
     # def visit_For(self, node: ast.For) -> Any:
     #
@@ -75,7 +76,7 @@ class RewriteCallEnv(ast.NodeTransformer):
             attr: ast.Attribute = node.func
             while isinstance(attr.value, ast.Attribute):
                 attr = attr.value
-            assert isinstance(attr.value, ast.Name)
+            assert isinstance(attr.value, ast.Name), f"Cannot parse {node.func}, please write in separated lines"
             if attr.value.id == self.root_name:
                 name = ast.Name(id=self.root_name + "___" + attr.attr)
                 node.func = name
@@ -83,17 +84,18 @@ class RewriteCallEnv(ast.NodeTransformer):
                 return node
             elif attr.value.id in self.types_inferred:  # 如果调用的是agent的方法，则传入的第一个参数为agent
                 type_var = self.types_inferred[attr.value.id]
-                if issubclass(type_var, Agent):
+                if issubclass(type_var.root, Agent):
                     node.func = ast.Name(id='___agent___' + attr.attr, )
                     node.args.insert(0, ast.Name(id=attr.value.id))
                     return node
-                elif issubclass(type_var, AgentList):
+                elif issubclass(type_var.root, AgentList):
                     node.func = ast.Name(id='___agent___manager___' + attr.attr)
                     node.args.insert(0, ast.Name(id=attr.value.id))
                     return node
-                elif issubclass(type_var, (Network, Grid)):  # Network已经会传入jitclass.
+                elif type_registered(type_var.root):
                     return node
                 else:
+                    # return node
                     raise TypeError(ast.dump(node.func))
             else:
                 logger.warning(f"Skipping the unrecognized function:{ast.dump(attr)}")
@@ -122,31 +124,10 @@ class RewriteCallModel(ast.NodeTransformer):
         while isinstance(attr.value, ast.Attribute):
             attr = attr.value
             attr_name_chain.append(attr.attr)
-        # print(attr_name_chain)
         assert isinstance(attr.value, ast.Name)
-        # if attr.value.id.startswith(self.root_name):
-        #     # print(attr.value.id)
-        #     pass
-        # raise NotImplementedError
+
         node.value = self.visit(node.value)
         return node
-        # print(ast.dump(node))
-        # attribute_name = node.attr
-        # if isinstance(node.value, ast.Name):
-        #     if node.value.id.startswith('___'):
-        #         subs = ast.Subscript(value=node.value,
-        #                              slice=ast.Index(value=ast.Constant(value=attribute_name, kind=None)))
-        #         return subs
-        #     elif node.value.id in self.types_inferred:
-        #         subs = ast.Subscript(value=node.value,
-        #                              slice=ast.Index(value=ast.Constant(value=attribute_name, kind=None)))
-        #         return subs
-        #     else:
-        #         logger.warning(f"{ast.dump(node)}")
-        #         return node
-        # else:
-        #     raise NotImplementedError
-        # return node
 
     def visit_Call(self, node: ast.Call) -> Any:
         # print(ast.dump(node))
@@ -221,6 +202,7 @@ import random
 import numpy as np
 from Melodie.boost.compiler.boostlib import ___agent___manager___random_sample
 import numba
+from numba.experimental import jitclass
 
 """
 
@@ -234,18 +216,15 @@ def try_eval_type(s):
         return None
 
 
-def modify_ast_environment(method: ast.FunctionDef, root_name: str):
+def modify_ast_environment(method: ast.FunctionDef, root_name: str, self_cls: type):
     annotations = {}
-    for i, arg in enumerate(method.args.args):
 
-        annotations[arg.arg] = arg.annotation
-        if i > 0:
+    for i, arg in enumerate(method.args.args):
+        if i == 0:
+            annotations[arg.arg] = BoostTypeModel.from_type(self_cls)
+        else:
             assert arg.annotation is not None
-            annotation = arg.annotation
-            if isinstance(annotation, ast.Constant):
-                annotations[arg.arg] = eval(arg.annotation.value)
-            elif isinstance(annotation, ast.Name):
-                annotations[arg.arg] = eval(annotation.id)
+            annotations[arg.arg] = BoostTypeModel.from_annotation(arg.annotation)
     RewriteName(root_name, {}).visit(method)
 
     ti = TypeInferr(annotations)
@@ -266,18 +245,14 @@ def modify_ast_environment(method: ast.FunctionDef, root_name: str):
     return r
 
 
-def modify_ast_model(method, root_name, model_components):
+def modify_ast_model(method, root_name, model_components, self_cls: type):
     annotations = {}
     for i, arg in enumerate(method.args.args):
-
-        annotations[arg.arg] = arg.annotation
-        if i > 0:
+        if i == 0:
+            annotations[arg.arg] = BoostTypeModel.from_type(self_cls)
+        else:
             assert arg.annotation is not None
-            if arg.annotation.value in registered_types:
-                annotations[arg.arg] = registered_types[arg.annotation.value]
-            else:
-                annotations[arg.arg] = eval(arg.annotation.value)
-
+            annotations[arg.arg] = BoostTypeModel.from_annotation(arg.annotation)
     RewriteName(root_name, {}).visit(method)
 
     ti = TypeInferr(annotations)
@@ -306,36 +281,45 @@ def get_class_in_file(filename: str, cls_name) -> ast.ClassDef:
     raise ValueError
 
 
-def get_ast(agent_class: ClassVar, environment_class, model_class):
-    agent_file = inspect.getfile(agent_class)
+def get_ast(agent_classes: ClassVar, environment_class, model_class):
+    agent_files = [inspect.getfile(agent_class) for agent_class in agent_classes]
     env_file = inspect.getfile(environment_class)
     model_file = inspect.getfile(model_class)
-    return (get_class_in_file(agent_file, agent_class.__name__),
+    return ([get_class_in_file(agent_file, agent_classes[i].__name__) for i, agent_file in enumerate(agent_files)],
             get_class_in_file(env_file, environment_class.__name__),
             get_class_in_file(model_file, model_class.__name__))
 
 
-def conv(agent_class, environment_class, model_class, output, model_components=None):
-    agent_class, env_class, model_class = get_ast(agent_class, environment_class, model_class)
+def add_globals(globals_dict: Dict):
+    globals().update(globals_dict)
+
+
+def conv(agent_cls, environment_cls, model_cls, output, model_components=None):
+    agent_classes, env_class, model_class = get_ast(agent_cls, environment_cls, model_cls)
     f = open(output, 'w')
     f.write(prefix)
 
-    f.write(compile_to_jit_classes())
 
-    for method in find_class_methods(agent_class):
-        if method.name not in {'setup', 'post_setup'}:
-            code = modify_ast_environment(method, '___agent')
-            f.write(code)
+    for i, agent_class in enumerate(agent_classes):
+        f.write(generate_array(agent_cls[i], agent_class) + "\n")
+    f.write(generate_array(environment_cls, env_class) + "\n")
+    f.write(compile_to_jit_classes())
+    for i, agent_class in enumerate(agent_classes):
+        for method in find_class_methods(agent_class):
+            if method.name not in {'setup', 'post_setup'}:
+                code = modify_ast_environment(method, '___agent', agent_class)
+                f.write(code)
 
     for method in find_class_methods(env_class):
+
         if method.name != 'setup':
-            code = modify_ast_environment(method, '___environment')
+            code = modify_ast_environment(method, '___environment', env_class)
             print(code)
             f.write(code)
 
     for method in find_class_methods(model_class):
         if method.name != 'setup':
-            code = modify_ast_model(method, '___model', model_components)
+            code = modify_ast_model(method, '___model', model_components, model_class)
             print(code)
             f.write(code)
 

@@ -15,7 +15,7 @@ from Melodie.grid import Grid, Spot
 
 if TYPE_CHECKING:
     from Melodie import Scenario
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # Command code
@@ -215,7 +215,7 @@ class Visualizer:
             {"type": "data", "step": self.current_step, "data": formatted, "modelState": self.model_state,
              "status": OK})
         t1 = time.time()
-        logger.debug(f"Formatting current data takes:{t1 - t0} seconds")
+        logger.info(f"Formatting current data takes:{t1 - t0} seconds")
         self.send_message(dumped)
 
     def send_error(self, err_msg):

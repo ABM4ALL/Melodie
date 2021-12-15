@@ -15,12 +15,29 @@ if TYPE_CHECKING:
     from .spot import GameOfLifeSpot
 
 
+class Strategy():
+    def __init__(self, a: int, b: 'AgentList[GameOfLifeSpot]'):
+        self.a: int = a
+        self.al = b
+
+    pass
+
+
+class Strategy1(Strategy):
+    def f(self):
+        print(self.al)
+        return self.a
+
+
 class GameOfLifeEnvironment(Environment):
 
     def setup(self):
         scenario: GameOfLifeScenario = self.current_scenario()
 
-    def step(self, grid: "Grid"):
+    def step(self, grid: "Grid", al: "AgentList[GameOfLifeSpot]"):
+        c: Strategy1 = Strategy1(1, al)
+        d: int = c.f()
+        print(d)
         buffer_status_next_tick: "np.ndarray" = np.zeros((grid.width, grid.height), dtype=np.int64)
 
         for x in range(grid.width):

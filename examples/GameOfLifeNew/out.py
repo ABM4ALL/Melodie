@@ -4,7 +4,22 @@ import random
 import numpy as np
 from Melodie.boost.compiler.boostlib import ___agent___manager___random_sample
 import numba
+from numba.experimental import jitclass
 
+_GameOfLifeSpot_ARRAY = np.zeros((0,), dtype=[('alive', 'i8')])
+_GameOfLifeEnvironment_ARRAY = np.zeros(1, dtype=[])
+class Strategy():
+
+    def __init__(self, a: int, b: 'AgentList[GameOfLifeSpot]'):
+        self.a: int = a
+        self.al = b
+    pass
+@jitclass([('a', numba.int64),('al', numba.typeof(_GameOfLifeSpot_ARRAY)), ])
+class Strategy1(Strategy):
+
+    def f(self):
+        print(self.al)
+        return self.a
 @numba.jit
 def ___agent___alive_on_next_tick(___agent, surround_alive_count: int) -> bool:
     if ___agent['alive']:
@@ -19,7 +34,10 @@ def ___agent___alive_on_next_tick(___agent, surround_alive_count: int) -> bool:
 
 
 @numba.jit
-def ___environment___step(___environment, grid: 'Grid'):
+def ___environment___step(___environment, grid: 'Grid', al: 'AgentList[GameOfLifeSpot]'):
+    c: Strategy1 = Strategy1(1, al)
+    d: int = c.f()
+    print(d)
     buffer_status_next_tick: 'np.ndarray' = np.zeros((grid.width, grid.height), dtype=np.int64)
     for x in range(grid.width):
         for y in range(grid.height):
@@ -53,17 +71,16 @@ def ___model___setup_boost(___model):
     ___model.environment = None
     ___model.grid = JITGrid(100, 100, GameOfLifeSpot)
     ___model.visualizer.grid = ___model.grid
+    ___model.agent_list: 'AgentList[GameOfLifeSpot]' = np.zeros((10,), dtype=[('alive', 'i8')])
+    ___model.agent_list[0]['alive'] = True
 
 
 def ___model___run(___model):
     ___model.visualizer.parse(___model.grid)
-    ___model.visualizer.start()
     for i in range(___model.scenario.periods):
         t0: float = time.time()
-        ___environment___step(___model.environment, ___model.grid)
+        ___environment___step(___model.environment, ___model.grid, ___model.agent_list)
         t1: float = time.time()
-        ___model.visualizer.parse(___model.grid)
-        ___model.visualizer.step(i)
         t2: float = time.time()
         print(f'step {i}, {(t1 - t0)}s for step and {(t2 - t1)}s for conversion.')
     print(___model.grid._spots)

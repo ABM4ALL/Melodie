@@ -19,26 +19,27 @@ class GameOfLifeModel(Model):
         self.environment = None
         self.grid = JITGrid(100, 100, GameOfLifeSpot)
         self.visualizer.grid = self.grid
+        self.agent_list: "AgentList[GameOfLifeSpot]" = np.zeros((10,), dtype=[('alive', 'i8')])
+        self.agent_list[0]['alive'] = True
 
     def run(self):
         self.visualizer.parse(self.grid)
-        self.visualizer.start()
+        # self.visualizer.start()
 
         for i in range(self.scenario.periods):
             t0: float = time.time()
-            self.environment.step(self.grid)
+            self.environment.step(self.grid, self.agent_list)
 
             t1: float = time.time()
 
             # arr: 'np.ndarray' = self.grid.to_2d_array() # get_2d_array()['alive']
 
-            self.visualizer.parse(self.grid)
-            self.visualizer.step(i)
+            # self.visualizer.parse(self.grid)
+            # self.visualizer.step(i)
 
             t2: float = time.time()
 
             print(f"step {i}, {t1 - t0}s for step and {t2 - t1}s for conversion.")
-
 
         print(self.grid._spots)
 
