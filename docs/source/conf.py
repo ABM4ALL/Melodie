@@ -3,6 +3,7 @@
 # This data only contains a selection of the most common options. For a full
 # list see the documentation:
 # https://www.sphinx-doc.org/en/master/usage/configuration.html
+import os
 
 from sphinx.builders.html import StandaloneHTMLBuilder
 
@@ -62,5 +63,10 @@ StandaloneHTMLBuilder.supported_image_types = [
     'image/jpeg',
 ]
 
-language = 'en_US'  # language supported
-local_dirs = 'locale/'
+language = 'en'  # language supported
+local_dirs = ['../locales/']
+for dir in local_dirs:
+    assert os.path.exists(dir)
+print(os.getcwd())
+gettext_compact = True  # optional.
+gettext_uuid = True  # optional.

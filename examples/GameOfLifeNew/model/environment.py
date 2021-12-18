@@ -20,13 +20,23 @@ class Strategy():
         self.a: int = a
         self.al = b
 
-    pass
-
-
-class Strategy1(Strategy):
-    def f(self):
-        print(self.al)
+    def strategy1(self):
         return self.a
+
+    def strategy2(self):
+        return self.a + 1
+
+
+# class Strategy1(Strategy):
+#     def f(self):
+#         print(self.al)
+#         return self.a
+#
+#
+# class Strategy2(Strategy):
+#     def f(self):
+#         print(self.al)
+#         return self.a + 1
 
 
 class GameOfLifeEnvironment(Environment):
@@ -34,10 +44,20 @@ class GameOfLifeEnvironment(Environment):
     def setup(self):
         scenario: GameOfLifeScenario = self.current_scenario()
 
+    def choose_strategy(self, al: "AgentList[GameOfLifeSpot]"):
+        strategy = Strategy(1, al)
+        if random.random() > 0.5:
+            return strategy.strategy1()
+        else:
+            return strategy.strategy2()
+
     def step(self, grid: "Grid", al: "AgentList[GameOfLifeSpot]"):
-        c: Strategy1 = Strategy1(1, al)
-        d: int = c.f()
-        print(d)
+        strategy: int = self.choose_strategy(al)
+        # c: Strategy1 =
+        # d: int = c.f()
+        # c1: Strategy2 = Strategy2(1, al)
+        # d1: int = c1.f()
+        print(strategy)
         buffer_status_next_tick: "np.ndarray" = np.zeros((grid.width, grid.height), dtype=np.int64)
 
         for x in range(grid.width):

@@ -44,7 +44,7 @@ class Scenario(Element):
             super().__init__(name, "selection", init_value)
             self.selections = selections
 
-    def __init__(self, id_scenario: Optional[Union[int, str]] = None, agent_num=0):
+    def __init__(self, id_scenario: Optional[Union[int, str]] = None):
         """
         :param id_scenario: the id of scenario. if None, this will be self-increment from 0 to scenarios_number-1
         """

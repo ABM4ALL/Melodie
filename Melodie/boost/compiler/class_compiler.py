@@ -5,7 +5,7 @@
 # @File: class_compiler.py
 import ast
 import inspect
-from typing import Dict, ClassVar, Any
+from typing import Dict, ClassVar, Any, Tuple
 
 import astunparse
 from pprintast import pprintast
@@ -53,6 +53,7 @@ def compile_general_class(cls: ClassVar[Any]) -> str:
     current_cls = cls
     cls_ast: ast.ClassDef = None
     cls_ast_list = []
+    # 寻找当前类及其基类，暂时不允许多继承。
     while cls_ast is None or len(cls_ast.bases) > 0:
         file = inspect.getfile(current_cls)
         cls_ast: ast.ClassDef = get_class_in_file(file, current_cls.__name__)
@@ -66,12 +67,13 @@ def compile_general_class(cls: ClassVar[Any]) -> str:
             print(base_cls_id)
             current_cls = registered_types[base_cls_id].root
     print(cls_ast_list)
-    string = ""
+
     inferred = {}
     cls_ast_list.reverse()
     _init_method_defined = False
+    cls_strs: Dict[str, Tuple[int, str]] = {}
+    # 从基类开始往下找，扫描__init__方法里面的内容。
     for i, cls_ast in enumerate(cls_ast_list):
-
         for method in find_class_methods(cls_ast):
             if method.name == '__init__':
                 _init_method_defined = True
@@ -79,18 +81,29 @@ def compile_general_class(cls: ClassVar[Any]) -> str:
                 inferr.visit(method)
                 inferred.update({k.split('.')[1]: v for k, v in inferr.types_inferred.items() if k.startswith('self.')})
                 break
-
+        string = ""
         if cls_ast.name == cls.__name__:
             string += generate_jitclass_annotation(inferred) + "\n"
         string += astunparse.unparse(cls_ast).strip() + "\n"
+        cls_strs[cls_ast.name] = (i, string)
         # print(astunparse.unparse(cls_ast))
     assert _init_method_defined, f"No '__init__' method defined for custom class {cls}."
     print(string)
-    return string
+    return cls_strs
 
 
 def compile_to_jit_classes() -> str:
     s = ''
+    classes: Dict[str, Tuple[int, str]] = {}
     for name, cls in _expected_to_compile_classes.items():
-        s += compile_general_class(cls)
+        compiled = compile_general_class(cls)
+        classes.update(compiled)
+    layer = 0
+    print("aaaaa", classes)
+    while len(classes) > 0:
+        keys = list(classes.keys())
+        for k in keys:
+            if classes[k][0] == layer:
+                s += classes.pop(k)[1]
+        layer += 1
     return s

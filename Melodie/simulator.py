@@ -217,15 +217,15 @@ class Simulator(metaclass=abc.ABCMeta):
 
     def run(self,
             config: 'Config',
-            scenario_class: ClassVar['Scenario'],
             model_class: ClassVar['Model'],
+            scenario_class: ClassVar['Scenario'] = None
             ):
         """
         Main function for running model!
         """
         t0 = time.time()
         self.config = config
-        self.scenario_class = scenario_class
+        self.scenario_class = scenario_class if scenario_class is not None else Scenario
         self.pre_run()
 
         logger.info('Loading scenarios and static tables...')

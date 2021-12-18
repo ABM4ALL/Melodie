@@ -10,6 +10,21 @@ Melody is not about single notes, but emerges from their interaction.
 Since \"Melody" is already taken by other projects, here I take its German translation: \"Melodie".
 While writing down this paragraph, I am in Karlsruhe, Germany.
 
+This is a test phrase for translation
+
+.. toctree::
+    :maxdepth: 2
+    :caption: Introduction
+
+    introduction/intro_2_abm
+    introduction/about_melodie
+
+.. toctree::
+    :maxdepth: 2
+    :caption: Tutorials
+
+    tutorials/basic_tutorial
+    tutorials/tutorial_with_scenario
 
 .. toctree::
     :maxdepth: 2
