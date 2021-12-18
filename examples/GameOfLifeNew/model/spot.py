@@ -2,7 +2,7 @@
 # @Time: 2021/11/12 9:20
 # @Author: Zhanyi Hou
 # @Email: 1295752786@qq.com
-# @File: spot.py
+# @File: grid.py
 import random
 
 from Melodie.grid import Spot
