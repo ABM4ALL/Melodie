@@ -10,7 +10,7 @@ if TYPE_CHECKING:
 
 class MarketStrategy(ABC):
 
-    def __init__(self, agent_list: 'AgentList', environment: 'AspirationEnvironment'):
+    def __init__(self, agent_list: 'AgentList[AspirationAgent]', environment: 'AspirationEnvironment'):
         self.agent_list = agent_list
         self.environment = environment
 

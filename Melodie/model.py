@@ -73,7 +73,6 @@ class Model:
     @contextmanager
     def define_basic_components(self):
         """
-
         :return:
         """
         assert self.environment is None
