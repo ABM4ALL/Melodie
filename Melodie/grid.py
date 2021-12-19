@@ -145,7 +145,7 @@ class Grid:
                     continue
                 if dx == 0 and dy == 0 and except_self:
                     continue
-                neighbors.append((x + dx, y + dy))
+                neighbors.append(self._bound_check(x + dx, y + dy))
         return neighbors
 
     def add_agent(self, agent_id: int, category: str, x: int, y: int):

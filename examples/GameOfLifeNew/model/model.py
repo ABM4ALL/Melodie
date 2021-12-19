@@ -23,7 +23,7 @@ class GameOfLifeModel(Model):
         self.agent_list[0]['alive'] = True
 
     def run(self):
-        self.visualizer.parse(self.grid)
+        # self.visualizer.parse(self.grid)
         # self.visualizer.start()
 
         for i in range(self.scenario.periods):

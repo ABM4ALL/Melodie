@@ -174,9 +174,9 @@ def JITGrid(width: int, height: int, spot_cls: ClassVar['Spot'], wrap=True):
                         continue
                     if dx == 0 and dy == 0 and except_self:
                         continue
-
-                    neighbors[index][0] = x + dx
-                    neighbors[index][1] = y + dy
+                    coor_x, coor_y = self._bound_check(x + dx, y + dy)
+                    neighbors[index][0] = coor_x
+                    neighbors[index][1] = coor_y
                     index += 1
 
             return neighbors

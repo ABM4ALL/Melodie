@@ -1,7 +1,8 @@
+import random
 
 import numpy as np
-from typing import Type
-from Melodie import Environment, AgentList
+from typing import Type, List
+from Melodie import Environment, AgentList, Grid
 from .agent import CovidAgent
 from .scenario import CovidScenario
 
@@ -40,15 +41,29 @@ class CovidEnvironment(Environment):
         # 1. 记录传染链条
         pass
 
-    def agents_move(self, agent_list: 'AgentList[CovidAgent]') -> None:
+    def agents_move(self, agent_list: 'AgentList[CovidAgent]', grid: 'Grid') -> None:
         for agent in agent_list:
-            agent.move()
+            agent.move(grid)
 
-    def agents_infection(self, agent_list: 'AgentList[CovidAgent]') -> None:
+    def agents_infection(self, agent_list: 'AgentList[CovidAgent]', grid: "Grid") -> None:
         for agent in agent_list:
+            neighbors = grid.get_neighbors(agent.x_pos, agent.y_pos, 1, except_self=False)
             if agent.condition == 0:
                 # 从用grid返回附近agent列表，如果其中有已经感染的，则按照self.infection_probability感染
-                agent.condition = 1
-                self.accumulated_infection += 1
+                infected = self.infect_from_neighbor(agent.id, neighbors, grid, agent_list)
+                if infected == 1:
+                    agent.condition = infected
+                    self.accumulated_infection += 1
             else:
                 pass
+
+    def infect_from_neighbor(self, current_agent_id: int, neighbors: List[int], grid: 'Grid',
+                             agent_list: "AgentList[CovidAgent]"):
+        for neighbor in neighbors:
+            agent_ids = grid.get_agent_ids('agent_list', neighbor[0], neighbor[1])
+            for agent_id in agent_ids:
+                if agent_id == current_agent_id:
+                    continue
+                if agent_list[agent_id].condition == 1 and random.uniform(0, 1) < self.infection_probability:
+                    return 1
+        return 0

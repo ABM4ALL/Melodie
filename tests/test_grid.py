@@ -84,6 +84,8 @@ def neighbors(grid):
     else:
         assert x == grid.get_spot(x, y)['x']
         assert y == grid.get_spot(x, y)['y']
+    neighbor_ids = grid.get_neighbors(grid.width - 1, grid.height - 1, 1)
+    grid.get_spot(0, 0)
 
 
 def test_to_json():

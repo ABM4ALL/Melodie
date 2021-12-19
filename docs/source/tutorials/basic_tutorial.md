@@ -9,9 +9,9 @@ modelling in separate files.*
 
 In this model, we will build a virtual economy and simulate how the gini index changes when the economy develops.
 
-At the beginning, all agents has no money. Then ,this model will act following these rules:
+At the beginning, all agents has no money. Then, for each step, this model will act following these rules:
 
-1. Each agent produces 1 dollar in each step
+1. Each agent produces 1 dollar.
 2. Randomly select two Agents. For the probability `rich_win_prob`, the poorer agent will give 1 dollar to the richer.
    This rule is performed in each step for `trade_num` times.
 

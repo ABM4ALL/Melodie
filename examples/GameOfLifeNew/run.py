@@ -20,12 +20,14 @@ if __name__ == "__main__":
     """
     Run the model with simulator
     """
-    simulator.run_visual(
-        agent_class=None,
-        environment_class=GameOfLifeEnvironment,
-        config=config,
-        model_class=GameOfLifeModel,
-        scenario_class=GameOfLifeScenario,
-        data_collector_class=DataCollector,
-        visualizer_class=GridVisualizer
-    )
+    simulator.run(config, GameOfLifeModel, GameOfLifeScenario)
+
+    # simulator.run_visual(
+    #     # agent_class=None,
+    #     # environment_class=GameOfLifeEnvironment,
+    #     config=config,
+    #     model_class=GameOfLifeModel,
+    #     scenario_class=GameOfLifeScenario,
+    #     # data_collector_class=DataCollector,
+    #     visualizer_class=GridVisualizer
+    # )
