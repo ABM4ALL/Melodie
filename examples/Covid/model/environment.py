@@ -29,10 +29,12 @@ class CovidEnvironment(Environment):
         # 在这个例子里grid的作用
         # 1. 常用函数
         # 2. 加入“聚集点”，考虑人口分布
+
+        # self.grid = Grid()
         pass
 
     def setup_network(self):
-        # grid的作用
+        # network的作用
         # 1. 记录agent之间的“关系”，包括方向、强弱等 --> node就是agent，edge有可定义的属性？
         # 2. 提供一组常用函数，比如计算度什么的
         # 3. 初始化agent之间的网络结构，同一张网络可以连接不同类agent
