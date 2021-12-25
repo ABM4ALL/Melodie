@@ -29,7 +29,7 @@ class Model:
                  ):
 
         self.scenario = scenario
-        self.project_name = config.project_name
+        # self.project_name = config.project_name
         self.config = config
 
         # self.agent_class = agent_class
