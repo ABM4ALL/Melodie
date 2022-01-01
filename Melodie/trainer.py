@@ -27,6 +27,9 @@ class TrainingAlgorithm(ABC):
     def optimize(self):
         pass
 
+    def optimize_multi_agents(self):
+        pass
+
 
 class GeneticAlgorithm(TrainingAlgorithm):
     def __init__(self, training_generations: int,
@@ -155,6 +158,7 @@ class Trainer(Simulator, abc.ABC):
         self.config = config
         self.training_strategy: 'Optional[Type[TrainingAlgorithm]]' = None
         self.container_name: str = ''
+        self.property_name: str = ''
         self.properties: List[str] = []
         self.algorithm: Optional[Type[TrainingAlgorithm]] = None
         self.algorithm_instance: Iterator[List[float]] = {}
@@ -225,10 +229,7 @@ class Trainer(Simulator, abc.ABC):
             df_l.append(param_dict)
         df = pd.DataFrame(df_l)
         print(df)
-        # params = [
-        #     ()
-        #     for i in len(l[0])
-        # ]
+
         df.to_csv(f"agent_params.csv")
         import json
         with open("param_agents.json", 'w') as f:
@@ -266,16 +267,13 @@ class Trainer(Simulator, abc.ABC):
             for j, prop_name in enumerate(self.properties):
                 setattr(agent, prop_name, params[i * len(self.properties) + j])
         self.model.run()
-        accounts = []
+        fitness_list = []
         for agent in agents:
-            accounts.append(agent.account)
-        return np.array(accounts)
+            fitness_list.append(self.fitness_agent(agent))
+        return np.array(fitness_list)
 
     def fitness_agent(self, agent: Type[Agent]):
-        return -agent.account
-
-    # def fitness(self, loss) -> float:
-    #     return 10000 - loss
+        return agent.account
 
 
 if __name__ == "__main__":

@@ -3,6 +3,7 @@ import sqlalchemy
 
 from Melodie import Trainer
 from Melodie.trainer import GeneticAlgorithm
+from .agent import AspirationAgent
 from examples.Aspiration.model.scenario import AspirationScenario
 
 
@@ -77,8 +78,5 @@ class AspirationTrainer(Trainer):
                                      'exploitation_count': sqlalchemy.Integer(),
                                      'imitation_count': sqlalchemy.Integer()})
 
-    # def loss(self, param1, param2, param3):
-    #     return param1 + param2 + param3
-    #
-    # def fitness(self, loss):
-    #     return loss
+    def fitness_agent(self, agent: AspirationAgent):
+        return agent.account
