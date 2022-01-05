@@ -1,0 +1,71 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2021, open excel_source
+# This file is distributed under the same license as the Melodie package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2021.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Melodie \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-12-17 11:18+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.9.1\n"
+
+#: ../../source/install.rst:6 f7f61ede8e964dee8c74e71c97a1136b
+msgid "Installation"
+msgstr ""
+
+#: ../../source/install.rst:9 4798c49578a2443f8d23b7e051c7d595
+msgid "User Installation"
+msgstr ""
+
+#: ../../source/install.rst:10 8558b24587d347f9a0becde31266d451
+msgid "You can install Melodie via `pip`:"
+msgstr ""
+
+#: ../../source/install.rst:18 4789814f847d471e9fc72e9af8fb1f4c
+msgid "Developer Installation"
+msgstr ""
+
+#: ../../source/install.rst:19 5f0b2dd22b6848fbbe30b713ecec3e5d
+msgid ""
+"To install Melodie for development, first clone the repository and then "
+"install via pip's development mode."
+msgstr ""
+
+#: ../../source/install.rst:31 a5a8d1ef2f7c4f9da12e77e91dc454e7
+msgid ""
+"If you are using `conda` to manage your virtual environment, then you "
+"must also install ffmpeg."
+msgstr ""
+
+#: ../../source/install.rst:36 1a5763077fc4432784ab716554257812
+msgid "Dependency Note"
+msgstr ""
+
+#: ../../source/install.rst:37 6e33b328a13544dfb0c295a1aefd9ca3
+msgid "Melodie has the following dependencies"
+msgstr ""
+
+#: ../../source/install.rst:39 9388f57e26a94228a8ff9c8b5833ee8a
+msgid "Python 3.7 or Python3.8"
+msgstr ""
+
+#: ../../source/install.rst:40 779e8b6d67834e9aa4ddffef7483e67c
+msgid "numpy"
+msgstr ""
+
+#: ../../source/install.rst:41 852d5475c860428dab13113af89f1274
+msgid "pandas"
+msgstr ""
+
+#: ../../source/install.rst:42 a71586e9c89442a98f86e985f9eee348
+msgid "matplotlib"
+msgstr ""
+

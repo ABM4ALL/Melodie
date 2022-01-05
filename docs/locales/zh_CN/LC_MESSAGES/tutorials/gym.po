@@ -1,0 +1,74 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2021, open excel_source
+# This file is distributed under the same license as the Melodie package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2021.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Melodie \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-12-17 11:18+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.9.1\n"
+
+#: ../../source/tutorials/gym.rst:6 66d99fdf3c684cd3884b7a34d7ed2a95
+msgid "Gym Environment"
+msgstr ""
+
+#: ../../source/tutorials/gym.rst:8 d49dea562bb041dcada29acd22a2f097
+msgid ""
+"Abmarl can be used with OpenAI Gym environments. In this tutorial, we'll "
+"create a training configuration file that trains a gym environment. This "
+"tutorial uses the `gym configuration "
+"<https://github.com/LLNL/Abmarl/blob/main/examples/gym_example.py>`_."
+msgstr ""
+
+#: ../../source/tutorials/gym.rst:14 7867a674ec394da8897861bea76a7f8d
+msgid "Training a Gym Environment"
+msgstr ""
+
+#: ../../source/tutorials/gym.rst:17 37cced7ad7dd467880c767c62f4719e3
+msgid "Simulation Setup"
+msgstr ""
+
+#: ../../source/tutorials/gym.rst:19 83a4bff73461440398f186503b2b4624
+msgid "We'll start by creating gym's built-in guessing game."
+msgstr ""
+
+#: ../../source/tutorials/gym.rst:32 d0a7af727d9e43788011ac54c9838462
+msgid "Even gym's built-in environments need to be registered with RLlib."
+msgstr ""
+
+#: ../../source/tutorials/gym.rst:35 027d989d1d1e4084a9d365fc21db90e0
+msgid "Experiment Parameters"
+msgstr ""
+
+#: ../../source/tutorials/gym.rst:37 2073ead73d8a4fb9bb8cf0fc9c13f9d9
+msgid ""
+"All training configuration parameters are stored in a dictionary called "
+"`params`. Having setup the simualtion, we can now create the `params` "
+"dictionary that will be read by Abmarl and used to launch RLlib."
+msgstr ""
+
+#: ../../source/tutorials/gym.rst:72 558c7dea7a72419d807c321f6518b32a
+msgid "Command Line interface"
+msgstr ""
+
+#: ../../source/tutorials/gym.rst:73 319d6fb6c1f34e3f97e2ea498c46dd6c
+msgid ""
+"With the configuration file complete, we can utilize the command line "
+"interface to train our agents. We simply type ``abmarl train "
+"gym_example.py``, where `gym_example.py` is the name of our configuration"
+" file. This will launch Abmarl, which will process the file and launch "
+"RLlib according to the specified parameters. This particular example "
+"should take 1-10 minutes to train, depending on your compute "
+"capabilities. You can view the performance in real time in tensorboard "
+"with ``tensorboard --logdir ~/abmarl_results``."
+msgstr ""
+

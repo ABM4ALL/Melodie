@@ -1,0 +1,118 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2021, open excel_source
+# This file is distributed under the same license as the Melodie package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2021.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Melodie \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-12-17 11:18+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.9.1\n"
+
+#: ../../source/tutorials/magpie.rst:6 21b33871e1584744ac19df9e29cd53c3
+msgid "Magpie"
+msgstr ""
+
+#: ../../source/tutorials/magpie.rst:8 5c5e39afdcb34d00b61c85f1199a11ef
+msgid ""
+"The prospect of applying MuliAgent Reinforcement Learning algorithms on "
+"HPC systems is very attractive. As a first step, we demonstrate that "
+"abmarl can be used with `magpie <https://github.com/LLNL/magpie>`_ to "
+"create batch jobs for running on multiple compute nodes."
+msgstr ""
+
+#: ../../source/tutorials/magpie.rst:15 c48ac11f24874ea68518628cd4ea5035
+msgid "Installing Abmarl on HPC systems"
+msgstr ""
+
+#: ../../source/tutorials/magpie.rst:17 a772115356bd4970934fdeae9075a5b3
+msgid "Here we'll use conda to install on an HPC system:"
+msgstr ""
+
+#: ../../source/tutorials/magpie.rst:19 01e4d6219a2e4ce19ae4d7beccdf4ec2
+msgid "Create the conda virtual environment: `conda create --name abmarl`"
+msgstr ""
+
+#: ../../source/tutorials/magpie.rst:20 dcb98c624b5347d4b6b56abcdc12623b
+msgid "Activate it: `conda activate abmarl`"
+msgstr ""
+
+#: ../../source/tutorials/magpie.rst:21 4e2243414ae74edfa8e463958c2d1c4c
+msgid "Install pip installer: `conda install --name abmarl pip`"
+msgstr ""
+
+#: ../../source/tutorials/magpie.rst:22 902d2ae10d7441f086aeefe4665efff3
+msgid "Follow :ref:`installation instructions <installation>`"
+msgstr ""
+
+#: ../../source/tutorials/magpie.rst:25 f89869f0b32a4351b9ebc51399edfec2
+msgid "Usage"
+msgstr ""
+
+#: ../../source/tutorials/magpie.rst:27 c4c23fbb12ea4e8e8f69e2d5a0f6c1e2
+msgid ""
+"We demonstrate running the :ref:`PredatorPrey tutorial "
+"<tutorial_predator_prey>` using Mapgie."
+msgstr ""
+
+#: ../../source/tutorials/magpie.rst:31 bcabd43caacd4a50b877aacc7dc4a354
+msgid "make-runnable"
+msgstr ""
+
+#: ../../source/tutorials/magpie.rst:32 dad5b9ff24d446f4b62b3ecd513d08fb
+msgid ""
+"Abmarl's command line interface provides the `make-runnable` subcommand "
+"that converts the configuration script into a runnable script and saves "
+"it to the same directory."
+msgstr ""
+
+#: ../../source/tutorials/magpie.rst:40 6f8fa98315074b03aaef58777ae2a403
+msgid "This will create a file called `runnable_predator_prey_training.py`."
+msgstr ""
+
+#: ../../source/tutorials/magpie.rst:43 3fcb2a2f6af14252a19948ea2c01d606
+msgid "Magpie flag"
+msgstr ""
+
+#: ../../source/tutorials/magpie.rst:44 c449eb086f0a475ea8ca72348557bf69
+msgid ""
+"The full use of `make-runnable` is seen when it is run with the "
+"``--magpie`` flag. This will create a custom magpie script using "
+"`magpie's ray default script <https://github.com/LLNL/magpie/blob/master"
+"/submission-scripts/script-sbatch-srun/magpie.sbatch-srun-ray>`_ as a "
+"starting point. This also adds the correct initialization parameters to "
+"`ray.init()` in the `runnable_` script. For example,"
+msgstr ""
+
+#: ../../source/tutorials/magpie.rst:55 cdcc2d717fbc4e0e8be4f492810269ac
+msgid ""
+"will create the `runnable_` script with "
+"``ray.init(address=os.environ['MAGPIE_RAY_ADDRESS'])`` and will create a "
+"`magpie batch script "
+"<https://github.com/LLNL/Abmarl/blob/main/examples/predator_prey/PredatorPrey_magpie"
+".sbatch-srun-ray>`_ that is setup to run this example. To launch the "
+"batch job, we simply run it from the command line:"
+msgstr ""
+
+#: ../../source/tutorials/magpie.rst:65 017a97542f4747fc857e4e35bc42bfa4
+msgid ""
+"The script can be modified to adjust the job parameters, such as the "
+"number of compute nodes, the time limit for the job, etc. This can also "
+"be done through abmarl via the ``-n`` and ``-t`` options."
+msgstr ""
+
+#: ../../source/tutorials/magpie.rst:70 5dd675d682694fc58a07b282491f690e
+msgid ""
+"the `num_workers` parameter in the tune configuration is the number of "
+"processors to utilize per compute node, which is the different from the "
+"number of compute nodes you are requesting."
+msgstr ""
+

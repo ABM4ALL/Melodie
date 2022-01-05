@@ -1,0 +1,191 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2021, open excel_source
+# This file is distributed under the same license as the Melodie package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2021.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Melodie \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-12-17 11:18+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.9.1\n"
+
+#: ../../source/advancedtutorial/boost.md:1 e6a00e3248094cc0bc8a456144452c37
+msgid "Boost Python with vectorization"
+msgstr ""
+
+#: ../../source/advancedtutorial/boost.md:3 f4fa4e9e667b449584214a5e0c808bd3
+msgid ""
+"It is a well-known issue that pythoner always get speed penalties when "
+"enjoying speedy development. Melodie, based on python, was no exception."
+msgstr ""
+
+#: ../../source/advancedtutorial/boost.md:6 41e1e8c39a154f9e8e62bfcec718686c
+msgid "Introduction"
+msgstr ""
+
+#: ../../source/advancedtutorial/boost.md:8 5ffeb5231a1f4b2e94bb63c465e00ec8
+msgid "Why Python Slow"
+msgstr ""
+
+#: ../../source/advancedtutorial/boost.md:10 b1c7b9b51ba34544ba46d8d91ba269ec
+msgid ""
+"Interpretation. Comparing to C/C++, C#, Golang, Python is slower than "
+"them because it runs with a interpreter, not Native Code."
+msgstr ""
+
+#: ../../source/advancedtutorial/boost.md:13 a625861288ae4ee4ae3796d09541f057
+msgid ""
+"Lack of JIT. Comparing to Javascript, another famous interpretative "
+"language, the interpreter of Python lacks Just-In-Time compilation."
+msgstr ""
+
+#: ../../source/advancedtutorial/boost.md:16 ebb3eabddb734799a6167506eeb61427
+msgid ""
+"Dynamic Type. Comparing to Java, Python does not have a static type "
+"system for checking and optimization."
+msgstr ""
+
+#: ../../source/advancedtutorial/boost.md:18 17868e55cbe74c789c0cdb26fcb6a6e7
+msgid "Common ways to improve performance"
+msgstr ""
+
+#: ../../source/advancedtutorial/boost.md:20 4edfcc7a293a42b490349eae37d97949
+msgid "Cython."
+msgstr ""
+
+#: ../../source/advancedtutorial/boost.md:21 995d93191c844776a7ab11b73777085d
+msgid ""
+"As python has great affinity for C binding, cython was introduced for "
+"writing python-like code to generate C code. Well-compiled cython code "
+"runs as fast as C."
+msgstr ""
+
+#: ../../source/advancedtutorial/boost.md:23 166857b8f34c48dc9c0f2dfcc177b478
+msgid ""
+"However, writting cython code and bind python objects to it may not be a "
+"easy task."
+msgstr ""
+
+#: ../../source/advancedtutorial/boost.md:24 f79068a09197476bb0625b014fbf9332
+msgid "Numba."
+msgstr ""
+
+#: ../../source/advancedtutorial/boost.md:25 2729b60a32a94e58809256cd324c0152
+msgid ""
+"Numba was a python JIT compiler based on LLVM, compiling python code to "
+"native code at runtime. If JIT warms up, it will run as fast as C."
+msgstr ""
+
+#: ../../source/advancedtutorial/boost.md:27 8d3afceded59475aaaaa723afe38f7bf
+msgid ""
+"Numba needs some time to warm up. If the script is executed only once, "
+"the just-in-time compilation can be useless."
+msgstr ""
+
+#: ../../source/advancedtutorial/boost.md:29 78b53f59a80d41f58556cbe25aa4d0db
+msgid "Numba does not support Object-Oriented Programming in python."
+msgstr ""
+
+#: ../../source/advancedtutorial/boost.md:30 9c1cd1a9054b42f5bacc7194eb07c6bd
+msgid "PyPy"
+msgstr ""
+
+#: ../../source/advancedtutorial/boost.md:31 8c950cbe4e024d2f9aa3c2f4babf07a1
+msgid ""
+"PyPy is a brand-new interpreter with a Just-In-Time compiler. Developers "
+"need not change any code, just download this interpreter and then enjoy "
+"3~10 times speed up."
+msgstr ""
+
+#: ../../source/advancedtutorial/boost.md:33 14b434fb35bc4df8ba2d9d7745830557
+msgid ""
+"However, PyPy was not good at calling python-c interface. Manipulating "
+"numpy arrays or pandas dataframe could be annoying slow——even many times "
+"slower than CPython!"
+msgstr ""
+
+#: ../../source/advancedtutorial/boost.md:36 cfe4c69c24b64409bdb9cef7668e2d31
+msgid "Optimizations for ABM Frameworks"
+msgstr ""
+
+#: ../../source/advancedtutorial/boost.md:38 2e10939ec1fb4ae9b122b11eaa520ae5
+msgid ""
+"For Agent-Based Modelling Frameworks, on the one hand, they are Object-"
+"Oriented program, which makes it hard for adopting Cython or Numba for "
+"speed up. But on the other hand, we must use numpy, pandas and many other"
+" C-bound tools for data exploration, which are the weakness of PyPy "
+"interpreter."
+msgstr ""
+
+#: ../../source/advancedtutorial/boost.md:42 57379e65514a430e8218341a0eb0402b
+msgid ""
+"TO speed up, Mesa, another ABM framework, avoided using Python-C APIs(and"
+" third-party packages such as numpy, pandas) to ensure PyPy could do its "
+"best. But in contrary, Melodie decided to optimize the performance of "
+"CPython interpreter as much as possible."
+msgstr ""
+
+#: ../../source/advancedtutorial/boost.md:46 31f367c1db92409f81772739dd96ebd0
+msgid "Vectorization in Melodie"
+msgstr ""
+
+#: ../../source/advancedtutorial/boost.md:48 f32b792417af4f66a2b105e0aac2e600
+msgid "Principle"
+msgstr ""
+
+#: ../../source/advancedtutorial/boost.md:50 a3c5533291c74860852bd0c2814faa99
+msgid ""
+"Melodie uses cython to accelerate property access. At the cython layer, "
+"Melodie will gather property of all agents, returning a numpy array."
+msgstr ""
+
+#: ../../source/advancedtutorial/boost.md:53 bc14877928324a7483391e49c212d272
+msgid ""
+"Once we have got the array, we could use broadcast manipulations to speed"
+" up. Furthermore, to gain a extreme speed increase, we could use numba in"
+" a independent function."
+msgstr ""
+
+#: ../../source/advancedtutorial/boost.md:56 b5dd9402e36a421da2d6477a58addff8
+msgid ""
+"Notice that when you changed item value in the array, the corresponding "
+"property of the agent will not be changed. In order to gain better "
+"performance, we should call broadcast methods to apply the change."
+msgstr ""
+
+#: ../../source/advancedtutorial/boost.md:81 7afeb898006b4c43b5c56ab8fc116f3a
+msgid "A demo of Game of Life"
+msgstr ""
+
+#: ../../source/advancedtutorial/boost.md:83 f08505403e9c402b845373bc822149b5
+msgid "Think of a \"Game of Life\". If you are not familiar with it, hit here"
+msgstr ""
+
+#: ../../source/advancedtutorial/boost.md:86 ba0b851ecb9044afa66360085d9f489c
+msgid "All cells are on a grid, the simple rules are as follows:"
+msgstr ""
+
+#: ../../source/advancedtutorial/boost.md:88 1f59cbab4c1e4f188b4b063530d06419
+msgid ""
+"If the cell is alive, then it stays alive if it has either 2 or 3 live "
+"neighbors"
+msgstr ""
+
+#: ../../source/advancedtutorial/boost.md:89 7564cd1cfa1d4d26826da899d84b02e3
+msgid ""
+"If the cell is dead, then it springs to life only in the case that it has"
+" 3 live neighbors"
+msgstr ""
+
+#: ../../source/advancedtutorial/boost.md:95 1627549851c14e639db880cf1c9a9270
+msgid "(Not accomplished)"
+msgstr ""
+
