@@ -11,10 +11,11 @@ class AspirationModel(Model):
 
     def setup(self):
 
-        self.agent_list: AgentList[AspirationAgent] = self.create_agent_container(AspirationAgent,
-                                                                                  self.scenario.agent_num,
-                                                                                  self.scenario.get_registered_dataframe(
-                                                                                      'agent_params'))
+        self.agent_list: AgentList[AspirationAgent] = self.create_agent_container(
+            AspirationAgent,
+            self.scenario.agent_num,
+            self.scenario.get_registered_dataframe('agent_params')
+        )
 
         with self.define_basic_components():
             self.environment = AspirationEnvironment()

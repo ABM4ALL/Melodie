@@ -24,7 +24,7 @@ class TrainingAlgorithm(ABC):
     def set_parameters_agents(self, agent_num: int, agent_params: int):
         pass
 
-    def optimize(self):
+    def optimize(self, fitness: Callable):
         pass
 
     def optimize_multi_agents(self):
@@ -32,7 +32,8 @@ class TrainingAlgorithm(ABC):
 
 
 class GeneticAlgorithm(TrainingAlgorithm):
-    def __init__(self, training_generations: int,
+    def __init__(self,
+                 training_generations: int,
                  strategy_population_size: int,
                  mutation_prob: float,
                  strategy_param_code_length: int, ):
@@ -171,7 +172,7 @@ class Trainer(Simulator, abc.ABC):
     def setup(self):
         pass
 
-    def train(self, strategy: 'Type[TrainingAlgorithm]' = GeneticAlgorithm):
+    def train(self):
         self.register_scenario_dataframe()
         self.register_static_dataframes()
         self.register_generated_dataframes()

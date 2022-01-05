@@ -17,7 +17,7 @@ class AspirationEnvironment(Environment):
         self.mean_exploration = scenario.mean_exploration
         self.sigma_exploration = scenario.sigma_exploration
         self.imitation_share = scenario.imitation_share
-        self.imitation_success_rate = scenario.imitation_success_rate
+        self.imitation_fail_rate = scenario.imitation_fail_rate
         self.average_technology = 0.0
 
     def market_strategy_choice(self) -> Type[MarketStrategy]:
@@ -46,3 +46,4 @@ class AspirationEnvironment(Environment):
 
     def calculate_environment_result(self, agent_list: 'AgentList[AspirationAgent]') -> None:
         self.average_technology = np.array([agent.technology for agent in agent_list]).mean()
+
