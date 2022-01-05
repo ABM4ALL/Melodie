@@ -45,9 +45,11 @@ class AspirationAgent(Agent):
             return SleepTechnologySearchStrategy
         else:
             rand = np.random.uniform(0, 1)
-            if rand <= self.prob_exploitation:
-                return ExploitationTechnologySearchStrategy
-            elif self.prob_exploitation < rand <= self.prob_exploitation + self.prob_exploration:
+            if rand <= self.prob_exploration:
                 return ExplorationTechnologySearchStrategy
+            elif self.prob_exploration < rand <= self.prob_exploration + self.prob_exploitation:
+                return ExploitationTechnologySearchStrategy
             else:
                 return ImitationTechnologySearchStrategy
+
+

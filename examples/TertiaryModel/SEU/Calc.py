@@ -1,5 +1,5 @@
 from examples.TertiaryModel.db import DB
-from examples.TertiaryModel.SUE_analyzer import SEUAnalyzer, SUE_DataCollector, SUETech_DataCollector, \
+from examples.TertiaryModel.SEU.SEU_analyzer import SEUAnalyzer, SUE_DataCollector, SUETech_DataCollector, \
                                                 CarAnalyzer, DeliveryVanAnalyzer, TruckAnalyzer,\
                                                 LightingAnalyzer, ServerAnalyzer, ComputerAnalyzer, MonitorAnalyzer, \
                                                 PrinterAnalyzer, CopierAnalyzer, ProjectorAnalyzer, InternetConnectionAnalyzer, \
@@ -11,7 +11,7 @@ from examples.TertiaryModel.SUE_analyzer import SEUAnalyzer, SUE_DataCollector, 
                                                 CanteenRefrigeratorAnalyzer, CanteenRefrigeratorOtherAnalyzer, CanteenRefrigeratingRoomAnalyzer,\
                                                 CanteenFreezerAnalyzer, CanteenFreezerOtherAnalyzer, CanteenFreezingRoomAnalyzer
 
-db_path = "C:\\Users\yus\Dropbox\ABM4ALL\Melodie\examples\TertiaryModel\data\Tertiary.sqlite"
+db_path = "/examples/TertiaryModel/data/Tertiary.sqlite"
 db = DB()
 conn = db.create_Connection(db_path)
 survey_data = db.read_DataFrame("SharedEndUse_RawData_SectorAdded", conn)

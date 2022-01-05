@@ -4,7 +4,7 @@ from abc import ABC, abstractmethod
 import pandas as pd
 import numpy as np
 
-db_path = "C:\\Users\yus\Dropbox\ABM4ALL\Melodie\examples\TertiaryModel\data\Tertiary.sqlite"
+db_path = "/examples/TertiaryModel/data/Tertiary.sqlite"
 db = DB()
 conn = db.create_Connection(db_path)
 survey_data = db.read_DataFrame("SharedEndUse_RawData_SectorAdded", conn)

@@ -17,6 +17,6 @@ class AspirationScenario(Scenario):
         self.mean_exploration = 0
         self.sigma_exploration = 0.7
         self.imitation_share = 0.1
-        self.imitation_success_rate = 0.5
+        self.imitation_fail_rate = 0.5
 
 
