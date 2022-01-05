@@ -267,13 +267,21 @@ class Trainer(Simulator, abc.ABC):
             for j, prop_name in enumerate(self.properties):
                 setattr(agent, prop_name, params[i * len(self.properties) + j])
         self.model.run()
+
+        agents = self.model.__getattribute__(self.container_name)
         fitness_list = []
         for agent in agents:
             fitness_list.append(self.fitness_agent(agent))
         return np.array(fitness_list)
 
-    def fitness_agent(self, agent: Type[Agent]):
-        return agent.account
+    def fitness_agent(self, agent: Type[Agent])->float:
+        """
+        返回float，只要保证值越大、策略越好即可。
+        无需保证>=0
+        :param agent:
+        :return:
+        """
+        pass
 
 
 if __name__ == "__main__":

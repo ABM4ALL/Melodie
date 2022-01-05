@@ -10,3 +10,5 @@ config = Config(
     output_folder='data/output',
 )
 
+with config.dataframes_manager():
+    config.register_static_dataframe()

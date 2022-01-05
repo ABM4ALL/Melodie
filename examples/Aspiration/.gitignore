@@ -1,2 +1,5 @@
 data/sqlite/*.sqlite
 model/*.c
+./agent_params.csv
+./cov_agents.json
+./param_agents.json
