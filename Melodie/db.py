@@ -33,7 +33,7 @@ class DB:
     def __init__(self, db_name: str, db_type: str = 'sqlite', conn_params: Dict[str, str] = None):
         self.db_name = db_name
 
-        assert db_type in {'sqlite'}
+        assert db_type in {'sqlite'}, f"Database type '{db_type}' is not supported!"
         if db_type == 'sqlite':
             if conn_params is None:
                 conn_params = {'db_path': ''}
@@ -71,7 +71,7 @@ class DB:
 
         :return:
         """
-        assert isinstance(dtypes, dict)
+        MelodieExceptions.Assertions.Type('dtypes', dtypes, dict)
         if table_name in cls.table_dtypes:
             raise ValueError(f"Table dtypes of '{table_name}' has been already defined!")
         cls.table_dtypes[table_name] = dtypes
@@ -106,7 +106,6 @@ class DB:
         for table_name in self.connection.table_names():
             self.connection.execute(f"drop table {table_name}")
             logger.info(f"Table '{table_name}' in database has been droped!")
-
 
     # def init_experiment(self, run_id_list: List[Tuple[int, int]]):
     #     self.drop_table(self.EXPERIMENTS_TABLE)
@@ -162,36 +161,36 @@ class DB:
         except sqlite3.OperationalError:  # Table exists, unable to create
             return False
 
-    def batch_insert(self, table: str, records: List[Dict[str, Union[int, str, float]]]):
-        """
-        Batch insert records into sqlite data!
-        :param records:
-        :return:
-        """
-        t0 = time.time()
-        records_to_insert = []
-        key_names_list = list(records[0].keys())
-        assert len(records) > 0
-        key_names = ''
-        value_names = ''
-        for key in key_names_list:
-            key_names += f'{key},'
-            value_names += '?,'
-        key_names = key_names.strip(',')
-        value_names = value_names.strip(',')
-        sql = f'insert into {table} ({key_names}) values ({value_names})'
-        for record in records:
-            records_to_insert.append([self.auto_convert(record[k]) for k in key_names_list])
-
-        dtypes = {k: self._dtype(records[0][k]) for k in key_names_list}
-        t1 = time.time()
-        print(t1 - t0)
-        self.create_table_if_not_exists(table, dtypes)
-
-        cursor = self.connection.cursor()
-        cursor.executemany(sql, records_to_insert)
-        self.connection.commit()
-        self.connection.close()
+    # def batch_insert(self, table: str, records: List[Dict[str, Union[int, str, float]]]):
+    #     """
+    #     Batch insert records into sqlite data!
+    #     :param records:
+    #     :return:
+    #     """
+    #     t0 = time.time()
+    #     records_to_insert = []
+    #     key_names_list = list(records[0].keys())
+    #     assert len(records) > 0
+    #     key_names = ''
+    #     value_names = ''
+    #     for key in key_names_list:
+    #         key_names += f'{key},'
+    #         value_names += '?,'
+    #     key_names = key_names.strip(',')
+    #     value_names = value_names.strip(',')
+    #     sql = f'insert into {table} ({key_names}) values ({value_names})'
+    #     for record in records:
+    #         records_to_insert.append([self.auto_convert(record[k]) for k in key_names_list])
+    #
+    #     dtypes = {k: self._dtype(records[0][k]) for k in key_names_list}
+    #     t1 = time.time()
+    #     print(t1 - t0)
+    #     self.create_table_if_not_exists(table, dtypes)
+    #
+    #     cursor = self.connection.cursor()
+    #     cursor.executemany(sql, records_to_insert)
+    #     self.connection.commit()
+    #     self.connection.close()
 
     def write_dataframe(self, table_name: str, data_frame: pd.DataFrame,
                         data_types: Optional[TABLE_DTYPES] = None,
@@ -294,11 +293,10 @@ class DB:
     #     self.write_dataframe(self.EXPERIMENTS_TABLE, df, {}, "append")
 
 
-def create_db_conn(config: 'Config' = None) -> DB:
+def create_db_conn(config: 'Config') -> DB:
     """
     create a Database by current config
     :return:
     """
-    assert config is not None
 
     return DB(config.project_name, conn_params={'db_path': config.sqlite_folder})

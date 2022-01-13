@@ -1,4 +1,3 @@
-import numpy as np
 from typing import Type
 from Melodie import Environment, AgentList
 from .agent import AspirationAgent
@@ -45,5 +44,8 @@ class AspirationEnvironment(Environment):
         pass
 
     def calculate_environment_result(self, agent_list: 'AgentList[AspirationAgent]') -> None:
-        self.average_technology = np.array([agent.technology for agent in agent_list]).mean()
-
+        sum_tech = 0
+        for agent in agent_list:
+            sum_tech += agent.technology
+        # self.average_technology = sum([agent.technology for agent in agent_list]) / len(agent_list)
+        self.average_technology = sum_tech / len(agent_list)

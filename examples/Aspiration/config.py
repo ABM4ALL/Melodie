@@ -9,6 +9,3 @@ config = Config(
     excel_source_folder='data/excel_source',
     output_folder='data/output',
 )
-
-with config.dataframes_manager():
-    config.register_static_dataframe()

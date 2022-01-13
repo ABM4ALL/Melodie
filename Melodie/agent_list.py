@@ -86,7 +86,7 @@ class BaseAgentContainer(Generic[AgentGeneric]):
         :return:
         """
 
-        assert props_df is not None
+        MelodieExceptions.Assertions.Type('props_df', props_df, pd.DataFrame)
 
         param_names = [param for param in props_df.columns if param not in
                        {'scenario_id'}]

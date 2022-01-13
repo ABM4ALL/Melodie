@@ -1,13 +1,13 @@
 import random
-import numpy as np
+# import numpy as np
 from typing import Type
 
 from Melodie import Agent
 from .aspiration_update_strategy import AspirationUpdateStrategy, \
-                                        HistoricalAspirationUpdateStrategy, SocialAspirationUpdateStrategy
+    HistoricalAspirationUpdateStrategy, SocialAspirationUpdateStrategy
 from .technology_search_strategy import TechnologySearchStrategy, \
-                                        SleepTechnologySearchStrategy, ExploitationTechnologySearchStrategy, \
-                                        ExplorationTechnologySearchStrategy, ImitationTechnologySearchStrategy
+    SleepTechnologySearchStrategy, ExploitationTechnologySearchStrategy, \
+    ExplorationTechnologySearchStrategy, ImitationTechnologySearchStrategy
 
 
 class AspirationAgent(Agent):
@@ -30,7 +30,8 @@ class AspirationAgent(Agent):
         self.imitation_count = 0
 
     def post_setup(self):
-        weight_sum = np.array([self.strategy_param_1, self.strategy_param_2, self.strategy_param_3]).sum()
+        # weight_sum = np.array([self.strategy_param_1, self.strategy_param_2, self.strategy_param_3]).sum()
+        weight_sum = sum([self.strategy_param_1, self.strategy_param_2, self.strategy_param_3])
         self.prob_exploitation = self.strategy_param_1 / weight_sum
         self.prob_exploration = self.strategy_param_2 / weight_sum
 
@@ -44,12 +45,10 @@ class AspirationAgent(Agent):
         if self.profit_aspiration_difference >= 0:
             return SleepTechnologySearchStrategy
         else:
-            rand = np.random.uniform(0, 1)
+            rand = random.random() #np.random.uniform(0, 1)
             if rand <= self.prob_exploration:
                 return ExplorationTechnologySearchStrategy
             elif self.prob_exploration < rand <= self.prob_exploration + self.prob_exploitation:
                 return ExploitationTechnologySearchStrategy
             else:
                 return ImitationTechnologySearchStrategy
-
-

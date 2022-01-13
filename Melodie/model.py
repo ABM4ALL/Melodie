@@ -29,13 +29,8 @@ class Model:
                  ):
 
         self.scenario = scenario
-        # self.project_name = config.project_name
         self.config = config
 
-        # self.agent_class = agent_class
-
-        # self.environment_class = environment_class
-        # self.data_collector_class = data_collector_class
         self.environment: Optional[Environment] = None
         self.data_collector: Optional[DataCollector] = None
         self.table_generator: Optional[TableGenerator] = None
@@ -59,7 +54,7 @@ class Model:
         pass
 
     def current_scenario(self) -> 'Scenario':
-        assert self.scenario != None
+        MelodieExceptions.Assertions.Type("self.scenario", self.scenario, Scenario)
         return self.scenario
 
     def create_db_conn(self) -> 'DB':
@@ -73,16 +68,19 @@ class Model:
     @contextmanager
     def define_basic_components(self):
         """
+
+        Environment or DataCollector should not be defined more than once
         :return:
         """
-        assert self.environment is None
-        assert self.data_collector is None
+        MelodieExceptions.Assertions.IsNone('self.environment', self.environment)
+        MelodieExceptions.Assertions.IsNone('self.data_collector', self.data_collector)
+
         yield self
-        assert isinstance(self.environment, Environment)
+        MelodieExceptions.Assertions.Type('self.environment', self.environment, Environment)
         self.environment.model = self
         self.environment.setup()
         if self.data_collector is not None:
-            assert isinstance(self.data_collector, DataCollector)
+            MelodieExceptions.Assertions.Type('self.data_collector', self.data_collector, DataCollector)
             self.data_collector.model = self
             self.data_collector.setup()
 

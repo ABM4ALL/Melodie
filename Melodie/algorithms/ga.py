@@ -6,7 +6,6 @@
 import sys
 from typing import Callable
 
-import numba
 import numpy as np
 import random
 

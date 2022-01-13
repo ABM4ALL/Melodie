@@ -1,6 +1,6 @@
 import os
 import logging
-from typing import List, Optional, Union, ClassVar, TYPE_CHECKING, Dict
+from typing import List, Optional, Union, ClassVar, TYPE_CHECKING, Dict, Tuple
 
 import numpy
 import numpy as np
@@ -83,6 +83,49 @@ class Scenario(Element):
     def get_scenarios_table(self) -> pd.DataFrame:
         assert self.manager is not None
         return self.manager.scenarios_dataframe
+
+
+class LearningScenario(Scenario):
+    class Parameter():
+        def __init__(self, name: str, min: float, max: float):
+            self.name = name
+            self.min = min
+            self.max = max
+
+    def __init__(self, id: int, number_of_path: int):
+        self.id: int = id
+        self.number_of_path: int = number_of_path
+        self.parameters: List[LearningScenario.Parameter] = []
+
+    def get_parameters_range(self, agent_num) -> List[Tuple[float, float]]:
+        parameters = []
+        for agent_id in range(agent_num):
+            parameters.extend([(parameter.min, parameter.max) for parameter in self.parameters])
+        return parameters
+
+
+class GALearningScenario(LearningScenario):
+    def __init__(self, id: int, number_of_path: int, training_generation: int, strategy_population: int,
+                 mutation_prob: int, strategy_param_code_length: int):
+        super().__init__(id, number_of_path)
+        self.training_generation = training_generation
+        self.strategy_population = strategy_population
+        self.mutation_prob = mutation_prob
+        self.strategy_param_code_length = strategy_param_code_length
+
+
+    @staticmethod
+    def from_dataframe_record(record: Dict[str, Union[int, float]]) -> 'GALearningScenario':
+        s = GALearningScenario(record['id'], record['number_of_path'], record['training_generation'],
+                               record['strategy_population'], record['mutation_prob'],
+                               record['strategy_param_code_length'])
+        max_values = {name[:len(name) - len("_max")]: value for name, value in record.items() if name.endswith("_max")}
+        min_values = {name[:len(name) - len("_min")]: value for name, value in record.items() if name.endswith("_min")}
+        print(max_values, min_values)
+        assert len(max_values) == len(min_values)
+        for k in max_values.keys():
+            s.parameters.append(LearningScenario.Parameter(k, min_values[k], max_values[k]))
+        return s
 
 
 class ScenarioManager:

@@ -41,7 +41,7 @@ class DataCollector:
     """
 
     def __init__(self, target='sqlite'):
-        assert target in {'sqlite', None}
+        assert target in {'sqlite', None}, f"Invalid database type {target}"
         self.target = target
         self.model: Optional[Model] = None
         self._agent_properties_to_collect: Dict[str, List[PropertyToCollect]] = {}

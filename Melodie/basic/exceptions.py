@@ -22,6 +22,28 @@ class MelodieException(Exception):
 
 
 class MelodieExceptions:
+    class Assertions:
+        @staticmethod
+        def Type(name, obj, expected_type):
+            if not isinstance(obj, expected_type):
+                raise MelodieExceptions.General.TypeError(name, obj, expected_type)
+
+        @staticmethod
+        def IsNone(name, obj):
+            if obj is not None:
+                raise TypeError(f"{name} should be None, however it is not None.")
+
+        @staticmethod
+        def NotNone(name, obj):
+            if obj is None:
+                raise TypeError(f"{name} should not be None, however it is None.")
+
+    class General:
+        @staticmethod
+        def TypeError(name, obj, expected_type: type):
+            return TypeError(
+                f"{name} should be a {expected_type}, however it was {type(obj)}, value {obj}")
+
     class State:
         ID = 1100
 

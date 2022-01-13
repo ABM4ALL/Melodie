@@ -1,3 +1,4 @@
+import random
 
 import numpy as np
 from abc import ABC, abstractmethod
@@ -5,8 +6,9 @@ from typing import TYPE_CHECKING
 from Melodie import AgentList
 
 if TYPE_CHECKING:
-    from.agent import AspirationAgent
-    from.environment import AspirationEnvironment
+    from .agent import AspirationAgent
+    from .environment import AspirationEnvironment
+
 
 class MarketStrategy(ABC):
 
@@ -17,6 +19,7 @@ class MarketStrategy(ABC):
     @abstractmethod
     def calculate_profit(self, agent: 'AspirationAgent') -> None:
         pass
+
 
 class NonCompetitiveMarketStrategy(MarketStrategy):
 

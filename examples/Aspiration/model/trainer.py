@@ -22,27 +22,13 @@ class AspirationTrainer(Trainer):
     # 2. 自动计算一些behavior parameter的COV变化
     # 3. 自动计算一些宏观变量的收敛路径——每generation都是一个区间，因为有20次模拟
 
-
-
     def setup(self):
+        self.container_name = "agent_list"
         self.add_property('agent_list', 'strategy_param_1')
         self.add_property('agent_list', 'strategy_param_2')
         self.add_property('agent_list', 'strategy_param_3')
-        genes = 10
-        strategy_param_code_length = 10
-        algorithm = GeneticAlgorithm(100, genes, 0.02, strategy_param_code_length)
-        self.set_algorithm(algorithm)
-
-        # Melodie.trainer里面的self.fitness哪儿来的
-        # 需要给每类agent定义一个fitness，可能是某个参数的函数
-        # def fitness(self, params) -> float:
-        #     ...
-        #     accounts = []
-        #     for agent in agents:
-        #         accounts.append(agent.account) # 其他ABM未必是account作为fitness
-        #     return np.array(accounts)
-        # def fitness_agent(self, agent: Type[Agent]):
-        #     return -agent.account
+        self.environment_properties = ['average_technology']
+        # self.add_environment_parameter("")
 
     def register_scenario_dataframe(self):
         scenarios_dict = {"periods": sqlalchemy.Integer(),
@@ -60,6 +46,7 @@ class AspirationTrainer(Trainer):
                           "imitation_share": sqlalchemy.Float(),
                           "imitation_success_rate": sqlalchemy.Float()}
         self.load_dataframe('scenarios', 'scenarios.xlsx', scenarios_dict)
+        self.load_dataframe('learning_scenarios', 'GA_training_scenarios.xlsx', {})
 
     def register_static_dataframes(self) -> None:
         # load由trainer得到的表
