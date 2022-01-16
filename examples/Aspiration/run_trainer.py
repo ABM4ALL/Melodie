@@ -10,6 +10,6 @@ if __name__ == "__main__":
     trainer = AspirationTrainer(config, AspirationScenario, AspirationModel)
 
     """
-    Run the model with simulator
+    Run the model with register.rst
     """
     trainer.train()

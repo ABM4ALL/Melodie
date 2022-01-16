@@ -7,30 +7,28 @@ Welcome to Melodie's documentation!
 This name comes from the most beautiful metaphor I have ever heard about \"Complexity System":
 Melody is not about single notes, but emerges from their interaction.
 
-Since \"Melody" is already taken by other projects, here I take its German translation: \"Melodie".
+Since \"Melody" is already taken by other projects, here I take its translation in German: \"Melodie".
 While writing down this paragraph, I am in Karlsruhe, Germany.
 
-This is a test phrase for translation
+Quick orientation:
+
+Citation:
+
+
+Table of contents
 
 .. toctree::
     :maxdepth: 2
-    :caption: Introduction
 
-    introduction/intro_2_abm
-    introduction/about_melodie
+    installation/_main
+    introduction/_main
+    tutorial/_main
+    api/_main
+    gallery/_main
+    changelog/_main
+    contribution/_main
+    about/_main
 
-.. toctree::
-    :maxdepth: 2
-    :caption: Tutorials
-
-    tutorials/basic_tutorial
-    tutorials/tutorial_with_scenario
-
-.. toctree::
-    :maxdepth: 2
-    :caption: Advanced Tutorials
-
-    advancedtutorial/boost
 
 
 

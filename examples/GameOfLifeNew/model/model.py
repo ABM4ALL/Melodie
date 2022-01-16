@@ -23,8 +23,8 @@ class GameOfLifeModel(Model):
         self.agent_list[0]['alive'] = True
 
     def run(self):
-        # self.visualizer.parse(self.grid)
-        # self.visualizer.start()
+        # self.studio.parse(self.grid)
+        # self.studio.start()
 
         for i in range(self.scenario.periods):
             t0: float = time.time()
@@ -34,8 +34,8 @@ class GameOfLifeModel(Model):
 
             # arr: 'np.ndarray' = self.grid.to_2d_array() # get_2d_array()['alive']
 
-            # self.visualizer.parse(self.grid)
-            # self.visualizer.step(i)
+            # self.studio.parse(self.grid)
+            # self.studio.step(i)
 
             t2: float = time.time()
 
@@ -45,8 +45,8 @@ class GameOfLifeModel(Model):
 
     # def run_with_matplotlib(self):
     #     import matplotlib.pyplot as plt
-    #     # self.visualizer.parse(self.grid)
-    #     # self.visualizer.start()
+    #     # self.studio.parse(self.grid)
+    #     # self.studio.start()
     #     plt.figure()
     #     plt.ion()
     #
@@ -59,8 +59,8 @@ class GameOfLifeModel(Model):
     #
     #         arr: 'np.ndarray' = self.grid.get_2d_array()['alive']
     #
-    #         # self.visualizer.parse(self.grid)
-    #         # self.visualizer.step()
+    #         # self.studio.parse(self.grid)
+    #         # self.studio.step()
     #
     #         t2: float = time.time()
     #
@@ -69,5 +69,5 @@ class GameOfLifeModel(Model):
     #         plt.pause(0.01)
     #
     #     print(self.grid._spots)
-    # self.visualizer.parse(self.grid)
-    # self.visualizer.finish()
+    # self.studio.parse(self.grid)
+    # self.studio.finish()

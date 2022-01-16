@@ -2,7 +2,7 @@
 # @Time: 2021/11/12 18:51
 # @Author: Zhanyi Hou
 # @Email: 1295752786@qq.com
-# @File: visualizer.py
+# @File: studio.py
 import numba
 import numpy as np
 from numba import typed

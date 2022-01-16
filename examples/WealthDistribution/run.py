@@ -15,7 +15,7 @@ if __name__ == "__main__":
     simulator = GiniSimulator()
 
     """
-    Run the model with simulator
+    Run the model with register.rst
     """
     simulator.run(
         config=config,
@@ -24,10 +24,10 @@ if __name__ == "__main__":
     )
 
     """
-    Run the model with simulator in parallel mode. 
+    Run the model with register.rst in parallel mode. 
     Use "cores" to determine how many cores should be used.
     """
-    # simulator.run_parallel(
+    # register.rst.run_parallel(
     #     config=config,
     #     scenario_class=GiniScenario,
     #     model_class=GiniModel,

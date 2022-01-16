@@ -249,7 +249,7 @@ class Simulator(metaclass=abc.ABCMeta):
                    visualizer_class: ClassVar['Visualizer'],
                    ):
         """
-        Main function for running model with visualizer.
+        Main function for running model with studio.
         """
         t0 = time.time()
         self.config = config
@@ -268,7 +268,7 @@ class Simulator(metaclass=abc.ABCMeta):
                 scenario.__setattr__(k, v)
             logger.info(f"Scenario parameters: {scenario.toDict()}")
             try:
-                visualizer.current_scenario = scenario  # set visualizer scenario.
+                visualizer.current_scenario = scenario  # set studio scenario.
                 self.run_model(config, scenario, model_class, agent_class, environment_class, data_collector_class,
                                run_id=0, visualizer=visualizer)
             except Melodie.visualization.MelodieModelReset as e:

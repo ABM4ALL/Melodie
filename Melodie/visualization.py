@@ -370,7 +370,7 @@ class GridVisualizer(Visualizer):
 
     def format(self):
         data = {
-            "visualizer":
+            "studio":
                 {
                     "series":
                         [
@@ -420,7 +420,7 @@ class NetworkVisualizer(Visualizer):
     def __init__(self):
         super().__init__()
 
-        logger.info("Network visualizer server is starting...")
+        logger.info("Network studio server is starting...")
 
         self.vertex_positions: Dict[str, Tuple[int, int]] = {}
         self.vertex_roles: Dict[str, int] = {}
@@ -497,7 +497,7 @@ class NetworkVisualizer(Visualizer):
                 "target": edge[1]
             })
         data = {
-            "visualizer": {
+            "studio": {
                 "series": [{
                     "data": lst,
                     "links": lst_edges

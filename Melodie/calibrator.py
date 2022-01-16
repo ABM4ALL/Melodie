@@ -11,4 +11,4 @@ class Calibrator:
 # 第二，返回某个参数组合的“距离”后，怎么迭代搜索到下一组参数组合。
 
 
-# simulator, calibrator, trainer都涉及反复跑模型，也都涉及注册表。可能可以在它们三者之上定义一个父类，它们三者是不同的running mode。
+# register.rst, calibrator, trainer都涉及反复跑模型，也都涉及注册表。可能可以在它们三者之上定义一个父类，它们三者是不同的running mode。

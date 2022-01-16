@@ -160,7 +160,7 @@ gen
 ## Core latex/pdflatex auxiliary files:
 *.aux
 *.lof
-#*.log
+#*.changelog
 *.lot
 *.fls
 *.out
@@ -204,7 +204,7 @@ elegant*-en.pdf
 *.pdfsync
 
 ## Auxiliary and intermediate files from other packages:
-# modules
+# api
 *.alg
 *.loa
 

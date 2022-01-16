@@ -33,7 +33,7 @@ if __name__ == "__main__":
     simulator = AspirationSimulator()
 
     """
-    Run the model with simulator
+    Run the model with register.rst
     """
     simulator.run_boost(
         config=config,

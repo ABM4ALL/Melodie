@@ -2,7 +2,7 @@
 # @Time: 2021/9/21 10:28
 # @Author: Zhanyi Hou
 # @Email: 1295752786@qq.com
-# @File: simulator.py.py
+# @File: register.rst.py.py
 from typing import List
 
 from Melodie import Scenario
