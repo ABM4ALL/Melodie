@@ -1,7 +1,7 @@
 
 from Melodie import DataCollector
 
-class CovidDataCollector(DataCollector):
+class PandoraDataCollector(DataCollector):
 
     def setup(self):
 

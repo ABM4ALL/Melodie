@@ -1,7 +1,7 @@
 
 from Melodie import Scenario
 
-class CovidScenario(Scenario):
+class PandoraScenario(Scenario):
 
     def setup(self):
         self.periods = 0

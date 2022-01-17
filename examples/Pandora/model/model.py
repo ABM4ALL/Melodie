@@ -2,24 +2,24 @@
 __author__ = 'Songmin'
 
 from Melodie import Model, AgentList, Grid, Spot
-from .agent import CovidAgent
-from .environment import CovidEnvironment
-from .data_collector import CovidDataCollector
-from .scenario import CovidScenario
+from .agent import PandoraAgent
+from .environment import PandoraEnvironment
+from .data_collector import PandoraDataCollector
+from .scenario import PandoraScenario
 
 
-class CovidModel(Model):
-    scenario: CovidScenario
+class PandoraModel(Model):
+    scenario: PandoraScenario
 
     def setup(self):
-        self.agent_list: AgentList[CovidAgent] = self.create_agent_container(CovidAgent,
+        self.agent_list: AgentList[PandoraAgent] = self.create_agent_container(PandoraAgent,
                                                                              self.scenario.agent_num,
                                                                              self.scenario.get_registered_dataframe(
                                                                                  'agent_params'))
 
         with self.define_basic_components():
-            self.environment = CovidEnvironment()
-            self.data_collector = CovidDataCollector()
+            self.environment = PandoraEnvironment()
+            self.data_collector = PandoraDataCollector()
 
             self.grid = Grid(Spot, self.scenario.grid_x_size, self.scenario.grid_y_size, caching=False)
             self.grid.add_category('agent_list')

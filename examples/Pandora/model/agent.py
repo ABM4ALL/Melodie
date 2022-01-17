@@ -5,7 +5,7 @@ from typing import Type
 from Melodie import Agent, Grid
 
 
-class CovidAgent(Agent):
+class PandoraAgent(Agent):
 
     def setup(self):
         self.x_pos = 0

@@ -2,10 +2,10 @@
 import numpy as np
 import sqlalchemy
 from Melodie import Simulator
-from .scenario import CovidScenario
+from .scenario import PandoraScenario
 
 
-class CovidSimulator(Simulator):
+class PandoraSimulator(Simulator):
 
     def register_scenario_dataframe(self):
         scenarios_dict = {"periods": sqlalchemy.Integer(),
@@ -32,7 +32,7 @@ class CovidSimulator(Simulator):
             return condition
 
         with self.new_table_generator('agent_params', lambda scenario: scenario.agent_num) as g:
-            def generator_func(scenario: CovidScenario):
+            def generator_func(scenario: PandoraScenario):
                 return {'id': g.increment(),
                         'x_pos': np.random.randint(0, scenario.grid_x_size),
                         'y_pos': np.random.randint(0, scenario.grid_y_size),

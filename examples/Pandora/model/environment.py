@@ -3,14 +3,14 @@ import random
 import numpy as np
 from typing import Type, List
 from Melodie import Environment, AgentList, Grid
-from .agent import CovidAgent
-from .scenario import CovidScenario
+from .agent import PandoraAgent
+from .scenario import PandoraScenario
 
 
-class CovidEnvironment(Environment):
+class PandoraEnvironment(Environment):
 
     def setup(self):
-        scenario: CovidScenario = self.current_scenario()
+        scenario: PandoraScenario = self.current_scenario()
         self.grid_x_size = scenario.grid_x_size
         self.grid_y_size = scenario.grid_y_size
         self.infection_probability = scenario.infection_probability
@@ -43,11 +43,11 @@ class CovidEnvironment(Environment):
         # 1. 记录传染链条
         pass
 
-    def agents_move(self, agent_list: 'AgentList[CovidAgent]', grid: 'Grid') -> None:
+    def agents_move(self, agent_list: 'AgentList[PandoraAgent]', grid: 'Grid') -> None:
         for agent in agent_list:
             agent.move(grid)
 
-    def agents_infection(self, agent_list: 'AgentList[CovidAgent]', grid: "Grid") -> None:
+    def agents_infection(self, agent_list: 'AgentList[PandoraAgent]', grid: "Grid") -> None:
         for agent in agent_list:
             neighbors = grid.get_neighbors(agent.x_pos, agent.y_pos, 1, except_self=False)
             if agent.condition == 0:
@@ -60,7 +60,7 @@ class CovidEnvironment(Environment):
                 pass
 
     def infect_from_neighbor(self, current_agent_id: int, neighbors: List[int], grid: 'Grid',
-                             agent_list: "AgentList[CovidAgent]"):
+                             agent_list: "AgentList[PandoraAgent]"):
         for neighbor in neighbors:
             agent_ids = grid.get_agent_ids('agent_list', neighbor[0], neighbor[1])
             for agent_id in agent_ids:
