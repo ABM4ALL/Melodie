@@ -4,4 +4,4 @@
 # @Email: 1295752786@qq.com
 # @File: __init__.py
 
-# from .ga import GeneticAlgorithm
+from .ga import TrainingAlgorithm, GeneticAlgorithm

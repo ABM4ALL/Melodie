@@ -28,7 +28,6 @@ class AspirationTrainer(Trainer):
         self.add_property('agent_list', 'strategy_param_2')
         self.add_property('agent_list', 'strategy_param_3')
         self.environment_properties = ['average_technology']
-        # self.add_environment_parameter("")
 
     def register_scenario_dataframe(self):
         scenarios_dict = {"periods": sqlalchemy.Integer(),
@@ -45,8 +44,8 @@ class AspirationTrainer(Trainer):
                           "sigma_exploration": sqlalchemy.Float(),
                           "imitation_share": sqlalchemy.Float(),
                           "imitation_success_rate": sqlalchemy.Float()}
-        self.load_dataframe('scenarios', 'scenarios.xlsx', scenarios_dict)
-        self.load_dataframe('learning_scenarios', 'GA_training_scenarios.xlsx', {})
+        self.load_dataframe('scenarios', 'trainer_scenarios.xlsx', scenarios_dict)
+        self.load_dataframe('learning_scenarios', 'trainer_params_scenarios.xlsx', {})
 
     def register_static_dataframes(self) -> None:
         # load由trainer得到的表

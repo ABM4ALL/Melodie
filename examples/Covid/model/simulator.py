@@ -14,7 +14,7 @@ class CovidSimulator(Simulator):
                           "grid_y_size": sqlalchemy.Float(),
                           "initial_infected_percentage": sqlalchemy.Float(),
                           "infection_probability": sqlalchemy.Integer()}
-        self.load_dataframe('scenarios', 'scenarios.xlsx', scenarios_dict)
+        self.load_dataframe('scenarios', 'simulator_scenarios.xlsx', scenarios_dict)
 
     def register_static_dataframes(self) -> None:
         # load由calibrator得到的表

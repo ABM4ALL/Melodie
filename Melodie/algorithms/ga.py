@@ -3,8 +3,11 @@
 # @Author: Zhanyi Hou
 # @Email: 1295752786@qq.com
 # @File: ga.py
+import math
 import sys
-from typing import Callable
+import time
+from abc import ABC
+from typing import Callable, List, Type, Optional, TYPE_CHECKING
 
 import numpy as np
 import random
@@ -17,6 +20,8 @@ else:
     from Melodie.boost import fake_jit
 
     njit = fake_jit
+if TYPE_CHECKING:
+    from Melodie import Scenario
 
 
 @njit(cache=True)
@@ -115,28 +120,78 @@ def population_update(population, fitness_array, mutation_prob, population_scale
     return population_new
 
 
-class GeneticAlgorithm():
-    def __init__(self, training_generations: int,
+class TrainingAlgorithm(ABC):
+    def setup(self):
+        pass
+
+    def set_parameters(self, parameters_num: int):
+        pass
+
+    def set_parameters_agents(self, agent_num: int, agent_params: int):
+        pass
+
+    def optimize(self, fitness: Callable):
+        pass
+
+    def optimize_multi_agents(self, fitness, scenario):
+        pass
+
+
+class GeneticAlgorithm(TrainingAlgorithm):
+    def __init__(self,
+                 training_generations: int,
                  strategy_population_size: int,
                  mutation_prob: float,
-                 strategy_param_code_length: int):
+                 strategy_param_code_length: int, ):
         self.training_generations: int = training_generations
         self.strategy_population_size = strategy_population_size
         self.mutation_prob = mutation_prob  # 突变为了避免收敛到局部最优，但太大的导致搜索不稳定
         self.strategy_param_code_length = strategy_param_code_length  # 这个值越大解的精度越高 --> 把下面区间[strategy_param_min, strategy_param_max]分得越细
 
-        self.parameters_num = 2  # 参数的数量
-        self.parameters = [(-5, 5), (-5, 5)]
-        self.parameters_value = np.array([1, 1])
+        self.agent_num = 0
+        self.params_each_agent = 0
+        self.parameters_num = 0
+        self.parameters = []
+        self.parameters_value: Optional[np.ndarray] = None
+        self.parameter_names = []
+        self.env_property_names = []
 
-    def optimize(self, loss: Callable, fitness: Callable):
+    def set_parameters_agents(self, agent_num: int, agent_params: int, parameter_names: List[str],
+                              env_property_names: List[str]):
+        """
+
+        :param agent_num:
+        :param agent_params:
+        :param parameter_names:
+        :param env_property_names:
+        :return:
+        """
+        self.params_each_agent = agent_params
+        self.agent_num = agent_num
+        self.parameters_num = self.agent_num * self.params_each_agent  # 参数的数量
+        self.parameters = [(-5, 5) for i in range(self.parameters_num)]
+        self.parameters_value = np.array([1 for i in range(self.parameters_num)], dtype=np.float64)
+        self.parameter_names = parameter_names
+        self.env_property_names = env_property_names
+
+    def agent_params_convertion(self):
+        pass
+
+    def optimize(self, fitness: Callable, scenario):
+        """
+
+        :param fitness:
+        :return:
+        """
         strategy_population = np.random.randint(2,
                                                 size=(self.strategy_population_size,
                                                       self.strategy_param_code_length * self.parameters_num))
         for gen in range(0, self.training_generations):
-            strategy_fitness = np.zeros((self.strategy_population_size,))
-            parameter_sums = [0 for i in range(len(self.parameters))]
+            strategy_fitness = []
+            parameter_sums = [0 for _ in range(len(self.parameters))]
+            parameter_values: List[List[int]] = []
             for i, strategy in enumerate(strategy_population):
+                inner_parameters: List[int] = []
                 for param_index in range(self.parameters_num):
                     self.parameters_value[param_index] = translate_binary2real(
                         strategy[
@@ -145,16 +200,127 @@ class GeneticAlgorithm():
                         self.parameters[param_index][0],
                         self.parameters[param_index][1])
                     parameter_sums[param_index] += self.parameters_value[param_index]
-                # x_sum += x
-                strategy_fitness[i] = fitness(loss(*self.parameters_value))
+                    inner_parameters.append(self.parameters_value[param_index])
+                parameter_values.append(inner_parameters)
+
+                strategy_fitness.append(fitness(self.parameters_value, scenario, meta={"chromosome_id": i}))
+                assert np.isfinite(strategy_fitness).all(), f"Fitness contains infinite value {strategy_fitness}"
+            parameter_values_arr = np.array(parameter_values)
+            fitness_mean = np.mean(strategy_fitness)
+            fitness_cov = np.std(strategy_fitness) / np.mean(strategy_fitness)
+
+            env_params_mean = {self.parameter_names[index] + "_mean": float(np.mean(parameter_values_arr[:, index])) for
+                               index
+                               in range(parameter_values_arr.shape[1])}
+            env_params_cov = {self.parameter_names[index] + "_cov": float(
+                np.std(parameter_values_arr[:, index]) / np.mean(parameter_values_arr[:, index])) for
+                index in range(parameter_values_arr.shape[1])}
+            yield strategy_population, parameter_values, strategy_fitness, {'env_params_mean': env_params_mean,
+                                                                            'env_params_cov': env_params_cov,
+                                                                            'fitness_cov': fitness_cov,
+                                                                            'fitness_mean': fitness_mean}
+
+            strategy_population = population_update(strategy_population, np.array(strategy_fitness),
+                                                    self.mutation_prob, self.strategy_population_size)
+
+    def optimize_multi_agents(self, fitness: Callable, scenario: Type['Scenario']):
+        """
+        Optimization for multi-agent system.
+        :param fitness:
+        :param scenario:
+        :return:
+        """
+        strategy_population = np.random.randint(2,
+                                                size=(self.strategy_population_size,
+                                                      self.strategy_param_code_length * self.parameters_num))
+        for gen in range(0, self.training_generations):
+            strategy_fitness = []
+            parameter_sums = [0 for i in range(len(self.parameters))]
+            params: List[List[int]] = []
+            agent_parameters = [
+                [[0.0 for j in range(self.strategy_population_size)] for k in range(self.params_each_agent)] for i in
+                range(self.agent_num)]
+            env_parameters = {env_parameter_name: [0 for chromosome_id in strategy_population] for env_parameter_name in
+                              self.env_property_names}
+            for chromosome_id, strategy in enumerate(strategy_population):
+                inner_parameters: List[int] = []
+                for param_index in range(self.parameters_num):
+                    self.parameters_value[param_index] = translate_binary2real(
+                        strategy[
+                        param_index * self.strategy_param_code_length:
+                        (param_index + 1) * self.strategy_param_code_length],
+                        self.parameters[param_index][0],
+                        self.parameters[param_index][1])
+                    parameter_sums[param_index] += self.parameters_value[param_index]
+                    inner_parameters.append(self.parameters_value[param_index])
+                    agent_index = math.floor(param_index / self.params_each_agent)
+                    param_index_in_agent_params = param_index % self.params_each_agent
+
+                    agent_parameters[agent_index][param_index_in_agent_params][chromosome_id] = self.parameters_value[
+                        param_index]
+
+                params.append(inner_parameters)
+
+                t0 = time.time()
+                agents_fitness, env_params = fitness(self.parameters_value, scenario,
+                                                     meta={"chromosome_id": chromosome_id})
+
+                strategy_fitness.append(agents_fitness)
+
+                print("Model run once:", time.time() - t0, "param values:")
                 assert np.isfinite(strategy_fitness).all(), f"Fitness contains infinite value {strategy_fitness}"
 
-            print("(", end="")
-            for param_index in range(self.parameters_num):
-                print(str(round(parameter_sums[param_index] / self.strategy_population_size, 3)), end=", ")
-            print(")")
-            strategy_population = population_update(strategy_population, strategy_fitness,
-                                                    self.mutation_prob, self.strategy_population_size)
+                for param_name, param_value in env_params.items():
+                    env_parameters[param_name][chromosome_id] = param_value
+            print("env_parameters", env_parameters)
+            agent_parameters_mean = [
+                {self.parameter_names[j] + "_mean": np.mean(agent_parameters[i][j]) for j in
+                 range(self.params_each_agent)} for i
+                in
+                range(self.agent_num)
+            ]
+            agent_parameters_cov = [
+                {self.parameter_names[j] + "_cov": np.std(agent_parameters[i][j]) / np.mean(agent_parameters[i][j]) for
+                 j in
+                 range(self.params_each_agent)} for i in range(self.agent_num)]
+            strategy_fitness = np.array(strategy_fitness)
+
+            fitness_mean = [float(np.mean(strategy_fitness[:, agent_id])) for agent_id in range(self.agent_num)]
+            fitness_cov = [float(np.std(strategy_fitness[:, agent_id]) / np.mean(strategy_fitness[:, agent_id])) for
+                           agent_id in range(self.agent_num)]
+
+            env_params_mean = {param_name + "_mean": float(np.mean(param_value_list)) for param_name, param_value_list
+                               in env_parameters.items()}
+            env_params_cov = {param_name + "_cov": float(np.std(param_value_list) / np.mean(param_value_list)) for
+                              param_name, param_value_list in
+                              env_parameters.items()}
+            meta = []
+            for agent_id in range(self.agent_num):
+                d = {'fitness_mean': fitness_mean[agent_id], "fitness_cov": fitness_cov[agent_id]}
+                d.update(agent_parameters_mean[agent_id])
+                d.update(agent_parameters_cov[agent_id])
+
+                meta.append(d)
+            env_params_meta = {}
+            env_params_meta.update(env_params_mean)
+            env_params_meta.update(env_params_cov)
+            agents = yield strategy_population, params, strategy_fitness, {"agent_learning_cov": meta,
+                                                                           "env_learning_cov": env_params_meta}
+            for i in range(agents):
+                strategy_population[:,
+                i * self.strategy_param_code_length * self.params_each_agent:
+
+                i * self.params_each_agent * self.strategy_param_code_length + self.params_each_agent * self.strategy_param_code_length] \
+                    = population_update(
+                    strategy_population[:,
+                    i * self.strategy_param_code_length * self.params_each_agent:
+                    i * self.params_each_agent * self.strategy_param_code_length + self.params_each_agent * self.strategy_param_code_length],
+                    strategy_fitness[:, i],
+                    self.mutation_prob, self.strategy_population_size)
+
+
+class ParticleSwarmOptimization(TrainingAlgorithm):
+    pass
 
 
 if __name__ == "__main__":
