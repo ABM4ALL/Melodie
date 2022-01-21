@@ -266,7 +266,7 @@ class Simulator(metaclass=abc.ABCMeta):
             scenario.periods = 99999
             for k, v in visualizer.scenario_param.items():
                 scenario.__setattr__(k, v)
-            logger.info(f"Scenario parameters: {scenario.toDict()}")
+            logger.info(f"Scenario parameters: {scenario.to_dict()}")
             try:
                 visualizer.current_scenario = scenario  # set studio scenario.
                 self.run_model(config, scenario, model_class, agent_class, environment_class, data_collector_class,

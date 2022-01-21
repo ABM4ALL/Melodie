@@ -27,9 +27,6 @@ class CovidModel(Model):
             for agent in self.agent_list:
                 self.grid.add_agent(agent.id, "agent_list", agent.x_pos, agent.y_pos)
 
-            # self.grid.move_agent(0, "agent_list", 9, 0)
-            # self.grid.get_agent_pos(0, 'agent_list')  # 获取0号agent的位置。
-
     def run(self):
         for t in range(0, self.scenario.periods):
             self.environment.agents_move(self.agent_list, self.grid)

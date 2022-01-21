@@ -28,6 +28,9 @@ class Scenario(Element):
         def to_dict(self):
             return self.__dict__
 
+        def __repr__(self):
+            return f"<class {self.__class__.__name__}, name {self.name}, type {self.type}>"
+
     class NumberParameter(BaseParameter):
         def __init__(self, name, init_value: Union[int, float], min_val: Optional[Union[int, float]] = None,
                      max_val: Optional[Union[int, float]] = None,
@@ -60,21 +63,26 @@ class Scenario(Element):
     def setup(self):
         pass
 
-    def toDict(self):
+    def to_dict(self):
+        """
+
+        :return:
+        """
         d = {}
         for k in self.__dict__.keys():
             v = self.__dict__[k]
-            if np.isscalar(v):
-                d[k] = v
-            else:
-                print(type(self.__dict__[k]))
+            d[k] = v
+            # if np.isscalar(v):
+            #     d[k] = v
+            # else:
+            #     logger.warning("type(self.__dict__[k]) is not a scal")
         return d
 
     def properties_as_parameters(self) -> List[BaseParameter]:
         return []
 
     def __repr__(self):
-        return str(self.__dict__)
+        return f"<{self.__class__.__name__} {self.__dict__}>"
 
     def get_registered_dataframe(self, table_name) -> pd.DataFrame:
         assert self.manager is not None
@@ -91,6 +99,9 @@ class LearningScenario(Scenario):
             self.name = name
             self.min = min
             self.max = max
+
+        def __repr__(self):
+            return f"<{self.__class__.__name__} '{self.name}', range ({self.min}, {self.max})>"
 
     def __init__(self, id: int, number_of_path: int):
         self.id: int = id
@@ -139,8 +150,8 @@ class GACalibrationScenario(LearningScenario):
     @staticmethod
     def from_dataframe_record(record: Dict[str, Union[int, float]]) -> 'GACalibrationScenario':
         s = GACalibrationScenario(record['id'], record['number_of_path'], record['calibration_generation'],
-                               record['strategy_population'], record['mutation_prob'],
-                               record['strategy_param_code_length'])
+                                  record['strategy_population'], record['mutation_prob'],
+                                  record['strategy_param_code_length'])
         max_values = {name[:len(name) - len("_max")]: value for name, value in record.items() if name.endswith("_max")}
         min_values = {name[:len(name) - len("_min")]: value for name, value in record.items() if name.endswith("_min")}
         print(max_values, min_values)

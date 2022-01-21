@@ -114,7 +114,8 @@ class TypeInferr(ast.NodeVisitor):
 
     def check_type(self, inferred):
         for k in inferred.keys():
-            assert isinstance(inferred[k], BoostTypeModel)
+
+            assert isinstance(inferred[k], BoostTypeModel), (inferred[k], inferred)
 
     def __del__(self):
         self.check_type(self.types_inferred)

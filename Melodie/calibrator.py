@@ -11,9 +11,12 @@ from typing import Type, Callable, List, Optional, ClassVar, Iterator, Union, Tu
 import copy
 import numpy as np
 import pandas as pd
-
+import logging
 from Melodie import Model, Scenario, Simulator, Config, Agent, create_db_conn, GACalibrationScenario
 from Melodie.algorithms import GeneticAlgorithm, TrainingAlgorithm
+from Melodie.basic import MelodieExceptions
+
+logger = logging.getLogger(__name__)
 
 
 class Calibrator(Simulator, abc.ABC):
@@ -84,27 +87,23 @@ class Calibrator(Simulator, abc.ABC):
                                           calibration_scenario.mutation_prob,
                                           calibration_scenario.strategy_param_code_length)
         self.algorithm.parameter_names = self.properties
-        self.algorithm.parameters = [(0, 1), (0, 1)]
-        self.algorithm.strategy_param_code_length = 5
-        self.algorithm.parameters_num = 2
-        self.algorithm.parameters_value = [scenario.__getattribute__(name) for name in self.properties]
+        self.algorithm.parameters = [(parameter.min, parameter.max) for parameter in calibration_scenario.parameters]
+        self.algorithm.parameters_num = len(self.algorithm.parameters)
 
         self.algorithm_instance = self.algorithm.optimize(self.fitness, scenario)
 
         for i in range(calibration_scenario.calibration_generation):
             self.current_algorithm_meta['generation_id'] = i
-            print(f"===================Training step {i + 1}=====================")
+            logger.info(f"===================Training step {i + 1}=====================")
             strategy_population, params, fitness, meta = self.algorithm_instance.__next__()
 
-            # agent_learning_cov = copy.deepcopy(meta['agent_learning_cov'])
             calibrator_result_cov = copy.deepcopy(meta['env_params_cov'])
             calibrator_result_cov.update(meta['env_params_mean'])
             calibrator_result_cov['fitness_mean'] = meta['fitness_mean']
             calibrator_result_cov['fitness_cov'] = meta['fitness_cov']
 
             calibrator_result_cov.update(self.current_algorithm_meta)
-            # create_db_conn(self.config).write_dataframe('agent_learning_cov', pd.DataFrame(agent_learning_cov))
-            create_db_conn(self.config).write_dataframe('calibrator_result_details',
+            create_db_conn(self.config).write_dataframe('calibrator_result_cov',
                                                         pd.DataFrame([calibrator_result_cov]))
 
     def set_algorithm(self, algorithm: Type[TrainingAlgorithm]):
@@ -127,28 +126,34 @@ class Calibrator(Simulator, abc.ABC):
         self.properties.append(prop)
 
     def fitness(self, params, scenario: Union[Type[Scenario], Scenario], **kwargs) -> float:
+        for i, prop_name in enumerate(self.properties):
+            assert scenario.__getattribute__(prop_name) is not None
+            scenario.__setattr__(prop_name, params[i])
+        scenario_properties_dict = {prop_name: scenario.__dict__[prop_name] for prop_name in self.properties}
         self.model = self.model_class(self.config, scenario)
         self.model.setup()
         meta = kwargs['meta']
         environment_record_dict = {}
         environment_record_dict.update(self.current_algorithm_meta)
 
-        for i, prop_name in enumerate(self.properties):
-            self.model.environment.__setattr__(prop_name, params[i])
         self.model.run()
 
         env = self.model.environment
-        environment_properties_dict = {prop_name: env.__dict__[prop_name] for prop_name in self.properties}
-        environment_record_dict.update(environment_properties_dict)
+
+        fitness = self.convert_distance_to_fitness(self.distance(env))
+        MelodieExceptions.Assertions.NotNone('fitness', fitness)
+        environment_record_dict.update(scenario_properties_dict)
         environment_record_dict['chromosome_id'] = meta['chromosome_id']
         environment_record_dict.update({
             prop: env.__dict__[prop] for prop in self.watched_env_properties
         })
+        environment_record_dict['fitness'] = fitness
+
         create_db_conn(self.config). \
             write_dataframe('calibrator_result',
                             pd.DataFrame([environment_record_dict]),
                             if_exists="append")
-        return self.convert_distance_to_fitness(self.distance(env))
+        return fitness
 
     @abc.abstractmethod
     def distance(self, environment) -> float:

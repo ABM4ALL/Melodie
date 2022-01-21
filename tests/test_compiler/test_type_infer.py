@@ -98,12 +98,12 @@ def money_transfer():
     # assert defs['x'] == set
     print(defs)
 
-def test_annotations():
-    ClsTest.b = 0
-    print(ClsTest.__dict__)
-    defs = get_inferred_types("annotations.py", 'a', {"self": ClsTest})
-    # assert defs['x'] == set
-    print(defs)
+# def test_annotations():
+#     ClsTest.b = 0
+#     print(ClsTest.__dict__)
+#     defs = get_inferred_types("annotations.py", 'a', )#{"self": ClsTest})
+#     # assert defs['x'] == set
+#     print(defs)
 
 
 @pytest.mark.skipif(sys.version_info.minor < 8, reason="python Version <=3.8 will skip type inference check!")

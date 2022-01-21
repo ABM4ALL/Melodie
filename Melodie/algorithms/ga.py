@@ -3,6 +3,7 @@
 # @Author: Zhanyi Hou
 # @Email: 1295752786@qq.com
 # @File: ga.py
+import logging
 import math
 import sys
 import time
@@ -14,6 +15,7 @@ import random
 
 from Melodie.boost import JIT_AVAILABLE
 
+logger = logging.getLogger(__name__)
 if JIT_AVAILABLE:
     from numba import njit
 else:
@@ -188,22 +190,21 @@ class GeneticAlgorithm(TrainingAlgorithm):
                                                       self.strategy_param_code_length * self.parameters_num))
         for gen in range(0, self.training_generations):
             strategy_fitness = []
-            parameter_sums = [0 for _ in range(len(self.parameters))]
             parameter_values: List[List[int]] = []
             for i, strategy in enumerate(strategy_population):
                 inner_parameters: List[int] = []
+                parameters_value = [0 for i in range(self.parameters_num)]
                 for param_index in range(self.parameters_num):
-                    self.parameters_value[param_index] = translate_binary2real(
-                        strategy[
-                        param_index * self.strategy_param_code_length:
-                        (param_index + 1) * self.strategy_param_code_length],
+                    parameters_value[param_index] = translate_binary2real(
+                        strategy[param_index * self.strategy_param_code_length:
+                                 (param_index + 1) * self.strategy_param_code_length],
                         self.parameters[param_index][0],
-                        self.parameters[param_index][1])
-                    parameter_sums[param_index] += self.parameters_value[param_index]
-                    inner_parameters.append(self.parameters_value[param_index])
+                        self.parameters[param_index][1]
+                    )
+                    inner_parameters.append(parameters_value[param_index])
                 parameter_values.append(inner_parameters)
 
-                strategy_fitness.append(fitness(self.parameters_value, scenario, meta={"chromosome_id": i}))
+                strategy_fitness.append(fitness(parameters_value, scenario, meta={"chromosome_id": i}))
                 assert np.isfinite(strategy_fitness).all(), f"Fitness contains infinite value {strategy_fitness}"
             parameter_values_arr = np.array(parameter_values)
             fitness_mean = np.mean(strategy_fitness)
@@ -267,12 +268,12 @@ class GeneticAlgorithm(TrainingAlgorithm):
 
                 strategy_fitness.append(agents_fitness)
 
-                print("Model run once:", time.time() - t0, "param values:")
+                logger.info("Model run once:", time.time() - t0, "param values:")
                 assert np.isfinite(strategy_fitness).all(), f"Fitness contains infinite value {strategy_fitness}"
 
                 for param_name, param_value in env_params.items():
                     env_parameters[param_name][chromosome_id] = param_value
-            print("env_parameters", env_parameters)
+
             agent_parameters_mean = [
                 {self.parameter_names[j] + "_mean": np.mean(agent_parameters[i][j]) for j in
                  range(self.params_each_agent)} for i

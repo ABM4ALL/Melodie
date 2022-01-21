@@ -1,7 +1,7 @@
 import abc
 import math
 import time
-from typing import Type, Callable, List, Optional, ClassVar, Iterator, Union, Tuple
+from typing import Type, List, Optional, ClassVar, Iterator, Union, Tuple
 from abc import ABC
 import copy
 import numpy as np
@@ -15,6 +15,7 @@ class Trainer(Simulator, abc.ABC):
     """
     Individually calibrate agents' parameters
     """
+
     # 用来
     # 只考虑针对strategy中参数的off-line learning。online-learning的部分千奇百怪，暂时交给用户自己来吧。
     def __init__(self, config: 'Config', scenario_class: 'Optional[ClassVar[Scenario]]',
@@ -36,19 +37,30 @@ class Trainer(Simulator, abc.ABC):
         self.scenario_class: Optional[ClassVar[Scenario]] = scenario_class
 
         self.agent_result_columns = [
-            "scenario_id", "learning_scenario_id", "learning_path_id", "generation_id", "chromosome_id", "agent_id",
+            "scenario_id", "learning_scenario_id",
+            "learning_path_id", "generation_id",
+            "chromosome_id",
+            "agent_id",
             "para_1", "para_2", "para_3", "fitness"
         ]
         self.agent_result = []
 
         self.current_algorithm_meta = {
             "scenario_id": 0,
-            "learning_scenario_id": 1, "learning_path_id": 0, "generation_id": 0}
+            "learning_scenario_id": 1,
+            "learning_path_id": 0,
+            "generation_id": 0}
 
     def setup(self):
         pass
 
     def train(self):
+        """
+        The main method of Trainer.
+
+
+        :return:
+        """
         self.setup()
         self.pre_run()
         learning_scenarios_table = self.get_registered_dataframe('learning_scenarios')
@@ -101,16 +113,6 @@ class Trainer(Simulator, abc.ABC):
             env_learning_cov.update(self.current_algorithm_meta)
             create_db_conn(self.config).write_dataframe('agent_learning_cov', pd.DataFrame(agent_learning_cov))
             create_db_conn(self.config).write_dataframe('env_learning_cov', pd.DataFrame([env_learning_cov]))
-
-            # params = np.sum(params, 0) / self.algorithm.strategy_population_size
-        # df_l = []
-        # for i in range(len(agents)):
-        #     param_dict = {"agent_id": i}
-        #     for j in range(len(self.properties)):
-        #         param_dict[j] = params[len(self.properties) * i + j]
-        #     df_l.append(param_dict)
-        # df = pd.DataFrame(df_l)
-        #
 
     def set_algorithm(self, algorithm: Type[TrainingAlgorithm]):
         """

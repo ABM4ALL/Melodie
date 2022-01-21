@@ -40,15 +40,18 @@ class DCTestModel(Model):
     def setup(self):
         params_df_1 = pd.DataFrame([{"a": 1, "b": 1, 'productivity': 0} for i in range(10)])
         params_df_2 = pd.DataFrame([{"a": 1, "b": 1, 'productivity': 0} for i in range(20)])
-        self.agent_list1 = self.create_agent_container(TestAgent, 10, params_df_1)
-        self.agent_list2 = self.create_agent_container(TestAgent, 20, params_df_2)
-
         params_df_3 = pd.DataFrame([{"a": 1.0, "b": 1, 'productivity': 0} for i in range(20)])
-        try:
-            self.create_agent_container(TestAgent, 20, params_df_3)
-            assert False, "Above code should have raised an exception."
-        except MelodieException as e:
-            assert e.id == 1504
+
+        with self.define_basic_components():
+            self.agent_list1 = self.create_agent_container(TestAgent, 10, params_df_1)
+            self.agent_list2 = self.create_agent_container(TestAgent, 20, params_df_2)
+            self.environment = TestEnv()
+            self.data_collector = DataCollector1()
+            try:
+                self.create_agent_container(TestAgent, 20, params_df_3)
+                assert False, "Above code should have raised an exception."
+            except MelodieException as e:
+                assert e.id == 1504
 
 
 class Simulator4Test(Simulator):
@@ -80,13 +83,11 @@ class DataCollector1(DataCollector):
 
 
 def test_model_run():
-    Simulator4Test().run(agent_class=TestAgent,
-                         environment_class=TestEnv,
-                         config=cfg_for_temp,
-                         model_class=DCTestModel,
-                         scenario_class=TestScenario,
-                         data_collector_class=DataCollector1
-                         )
+    Simulator4Test().run(
+        config=cfg_for_temp,
+        model_class=DCTestModel,
+        scenario_class=TestScenario,
+    )
     dc: DataCollector = data_collector
     dc.collect(0)
     assert len(dc.agent_properties_dict['agent_list1']) == AGENT_NUM_1
