@@ -32,6 +32,15 @@ This project is supposed to be developed as a general framework that can be used
 
 #### 4 Manager
 
+### Supported Python Versions
+
+Python from 3.7~3.9
+
+PyPy interpreter is also supported. But Melodie is not designed 
+for PyPy interpreter, so the performance may not be improved significantly.
+
+
+
 run this command in project root:
 ```cmd
 python -m Melodie serve
