@@ -11,6 +11,7 @@ if TYPE_CHECKING:
 class Environment:
     def __init__(self):
         self.model: Optional['Model'] = None
+        self.scenario = self.current_scenario()
 
     def current_scenario(self):
         from Melodie import Scenario

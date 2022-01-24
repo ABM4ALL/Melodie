@@ -106,16 +106,11 @@ class Simulator(metaclass=abc.ABCMeta):
         else:
             raise NotImplemented(file_name)
 
-        # 注册步骤：
-        # 1. 把dataframe按照data_type存入数据库，因为跑完Simulator再跑Analyzer的时候可能会用。
-        # 1.1 data_type作为DB的类属性，注册进DB
         DB.register_dtypes(table_name, data_types)
-        # 1.2 无需指定data_type即可按照data_type来存储table_name
         create_db_conn(self.config).write_dataframe(table_name, table, data_types=data_types,
-                                                    if_exists="replace", )  # --> 加上data_type
+                                                    if_exists="replace", )
 
-        # 2. 把dataframe放到registered_dataframes里。
-        self.registered_dataframes[table_name] = table
+        self.registered_dataframes[table_name] = create_db_conn(self.config).read_dataframe(table_name)
 
     def get_registered_dataframe(self, table_name) -> pd.DataFrame:
         """
