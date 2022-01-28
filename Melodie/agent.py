@@ -1,23 +1,43 @@
+from typing import Optional, TYPE_CHECKING
+
 from Melodie.element import Element
+
+if TYPE_CHECKING:
+    from Melodie.scenario_manager import Scenario
 
 
 class Agent(Element):
     def __init__(self, agent_id: int):
         self.id = agent_id
+        self.scenario: Optional['Scenario'] = None
 
     def setup(self):
         """
-        The initialization method, declare properties here.
-        The `set_params(params:dict)` method was called when parameters was set.
+        This is the initialization method, declare properties here.
 
-        If you would like to do initialize special properties after parameters were set, please
-        override `set_params`.
+        Here, "Declare" is to define properties with zero as initial value, such as:
+
+        ```python
+        class NewAgent(Agent)
+            def setup(self):
+                self.int_property = 0
+                self.float_property = 0.0
+                self.str_property = ""
+        ```
+
+        It is also fine to define properties with complex data structure such as dict/list/set, but the values in the
+        complex data structure is hard to be recorded by the `DataCollector`
+
+
+        This method is executed at the end of the `__init__` method of the corresponding agent container.
+
         :return:
         """
         pass
 
     def post_setup(self):
         """
+        This method will be executed after the properties are set from the dataframe.
 
         :return:
         """

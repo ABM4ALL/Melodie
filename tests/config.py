@@ -7,6 +7,8 @@ import os
 
 from Melodie import Config, Model, Scenario
 
+resources_path = os.path.join(os.path.dirname(__file__), 'resources')
+
 cfg = Config(
     'test',
     os.path.dirname(__file__),

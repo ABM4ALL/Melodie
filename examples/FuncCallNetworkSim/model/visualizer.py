@@ -2,7 +2,7 @@
 # @Time: 2021/11/13 18:16
 # @Author: Zhanyi Hou
 # @Email: 1295752786@qq.com
-# @File: studio.py
+# @File: run_studio.py
 from Melodie.visualization import NetworkVisualizer
 
 

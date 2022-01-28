@@ -19,6 +19,7 @@ from .agent_list import AgentList
 
 from .table_generator import TableGenerator
 from .basic.exceptions import MelodieExceptions
+from .dataframe_loader import DataFrameLoader
 
 logging.basicConfig(level=logging.INFO,
                     format='%(asctime)s %(filename)s [line:%(lineno)d] %(levelname)s %(message)s',
@@ -39,78 +40,19 @@ else:
     from .db import create_db_conn
 
 
-class Simulator(metaclass=abc.ABCMeta):
-    def __init__(self):
-        self.config: Optional[Config] = None
-        self.server_thread: threading.Thread = None
-        self.scenario_class: Optional[ClassVar['Scenario']] = None
-        self.scenarios_dataframe: Optional[pd.DataFrame] = None
-        self.agent_params_dataframe: Optional[pd.DataFrame] = None
-        self.registered_dataframes: Optional[Dict[str, pd.DataFrame]] = {}
+class BaseModellingManager:
+    def __init__(self, config: Config,
+                 scenario_cls: ClassVar['Scenario'],
+                 model_cls: ClassVar['Model'],
+                 table_loader_cls: ClassVar[DataFrameLoader] = None):
+        self.config: Optional[Config] = config
+        self.scenario_class = scenario_cls
+        self.model_cls = model_cls
+        # self.scenarios_dataframe: Optional[pd.DataFrame] = None
+
         self.scenarios: Optional[List['Scenario']] = None
-
-    @abc.abstractmethod
-    def register_scenario_dataframe(self) -> None:
-        """
-        This method must be overriden.
-        The "scenarios" table will be registered in this method.
-        """
-        pass
-
-    def register_static_dataframes(self) -> None:
-        """
-        The "agent_params" table can be registered in this method.
-        """
-        pass
-
-    def register_generated_dataframes(self) -> None:
-        """
-        The "agent_params" table can be registered in this method.
-        """
-        pass
-
-    def register_dataframe(self, table_name: str, data_frame: pd.DataFrame, data_types: dict = None) -> None:
-        """
-
-        :param table_name:
-        :param data_frame:
-        :param data_types:
-        :return:
-        """
-        if data_types is None:
-            data_types = {}
-        DB.register_dtypes(table_name, data_types)
-        create_db_conn(self.config).write_dataframe(table_name, data_frame, data_types=data_types,
-                                                    if_exists="replace")
-        self.registered_dataframes[table_name] = create_db_conn(self.config).read_dataframe(table_name)
-
-    def load_dataframe(self, table_name: str, file_name: str, data_types: dict) -> None:
-
-        """
-        Register static table, saving it to `self.registered_dataframes`.
-        The static table will be copied into database.
-
-        If the scenarios/agents parameter tables can also be registered by this method.
-
-        :param table_name: The table name, and same the name of table in database.
-        :param file_name: The excel filename.
-            if ends with `.xls` or `.xlsx`, This file will be searched at Config.excel_folder
-        :return:
-        """
-        _, ext = os.path.splitext(file_name)
-        table: Optional[pd.DataFrame]
-        assert table_name.isidentifier(), f"table_name `{table_name}` was not an identifier!"
-        if ext in {'.xls', '.xlsx'}:
-            file_path_abs = os.path.join(self.config.excel_source_folder, file_name)
-            table = pd.read_excel(file_path_abs)
-        else:
-            raise NotImplemented(file_name)
-
-        DB.register_dtypes(table_name, data_types)
-        create_db_conn(self.config).write_dataframe(table_name, table, data_types=data_types,
-                                                    if_exists="replace", )
-
-        self.registered_dataframes[table_name] = create_db_conn(self.config).read_dataframe(table_name)
+        self.table_loader_cls: Optional[ClassVar[DataFrameLoader]] = table_loader_cls
+        self.table_loader: Optional[DataFrameLoader] = None
 
     def get_registered_dataframe(self, table_name) -> pd.DataFrame:
         """
@@ -118,51 +60,12 @@ class Simulator(metaclass=abc.ABCMeta):
         :param table_name:
         :return:
         """
+        assert self.table_loader is not None
+        if table_name not in self.table_loader.registered_dataframes:
+            raise MelodieExceptions.Data.StaticTableNotRegistered(table_name,
+                                                                  list(self.table_loader.registered_dataframes.keys()))
 
-        if table_name not in self.registered_dataframes:
-            raise MelodieExceptions.Data.StaticTableNotRegistered(table_name, list(self.registered_dataframes.keys()))
-
-        return self.registered_dataframes[table_name]
-
-    def generate_scenarios_from_dataframe(self, df_name: str) -> List['Scenario']:
-        """
-        Generate scenario objects by the parameter from static tables
-        :return:
-        """
-        self.scenarios_dataframe = self.get_registered_dataframe(df_name)
-        assert self.scenarios_dataframe is not None
-        assert self.scenario_class is not None
-        table = self.scenarios_dataframe
-        cols = [col for col in table.columns]
-        scenarios: List[Scenario] = []
-        for i in range(table.shape[0]):
-            scenario = self.scenario_class()
-            scenario.manager = self
-            for col_name in cols:
-                assert col_name in scenario.__dict__.keys(), f"col_name: '{col_name}', scenario: {scenario}"
-                scenario.__dict__[col_name] = table.loc[i, col_name]
-            scenarios.append(scenario)
-        assert len(scenarios) != 0
-        return scenarios
-
-    def new_table_generator(self, table_name: str, rows_in_scenario: Union[int, Callable[[Scenario], int]]):
-        """
-        Create a new generator
-        :param table_name:
-        :param rows_in_scenario:
-            How many rows will be generated for a specific scenario.
-            This argument should be an integer as number of rows for each scenario, or a function with a parameter typed
-            `Scenario` and return an integer for how many rows to generate for this scenario .
-        :return:
-        """
-        return TableGenerator(self, table_name, rows_in_scenario)
-
-    def generate_scenarios(self) -> List['Scenario']:
-        """
-        Generate scenario objects by the parameter from static tables or scenarios_dataframe.
-        :return:
-        """
-        return self.generate_scenarios_from_dataframe('scenarios')
+        return self.table_loader.registered_dataframes[table_name]
 
     def pre_run(self):
         """
@@ -173,12 +76,31 @@ class Simulator(metaclass=abc.ABCMeta):
         :return:
         """
         create_db_conn(self.config).clear_database()
-        self.register_scenario_dataframe()
-        self.register_static_dataframes()
-        self.register_generated_dataframes()
+        if self.table_loader_cls is not None:
+            self.table_loader = self.table_loader_cls(self, self.config, self.scenario_class)
+            self.table_loader.register_scenario_dataframe()
+            self.table_loader.register_static_dataframes()
+            self.table_loader.register_generated_dataframes()
 
         self.scenarios = self.generate_scenarios()
+
         assert self.scenarios is not None
+
+    def generate_scenarios(self):
+        assert self.table_loader is not None
+        return self.table_loader.generate_scenarios()
+
+
+class Simulator(BaseModellingManager):
+    def __init__(self, config: Config,
+                 scenario_cls: 'ClassVar[Scenario]',
+                 model_cls: 'ClassVar[Model]',
+                 table_loader_cls: 'ClassVar[DataFrameLoader]' = None):
+        super(Simulator, self).__init__(config=config,
+                                        scenario_cls=scenario_cls,
+                                        model_cls=model_cls,
+                                        table_loader_cls=table_loader_cls)
+        self.server_thread: threading.Thread = None
 
     def run_model(self, config, scenario, run_id, model_class: ClassVar['Model'], visualizer=None):
         """
@@ -210,24 +132,18 @@ class Simulator(metaclass=abc.ABCMeta):
                 f'    data-collect  \t {round(data_collect_time, 6)}\n')
         logger.info(info)
 
-    def run(self,
-            config: 'Config',
-            model_class: ClassVar['Model'],
-            scenario_class: ClassVar['Scenario'] = None
-            ):
+    def run(self):
         """
         Main function for running model!
         """
         t0 = time.time()
-        self.config = config
-        self.scenario_class = scenario_class if scenario_class is not None else Scenario
         self.pre_run()
 
         logger.info('Loading scenarios and static tables...')
         t1 = time.time()
         for scenario_index, scenario in enumerate(self.scenarios):
             for run_id in range(scenario.number_of_run):
-                self.run_model(config, scenario, run_id, model_class, )
+                self.run_model(self.config, scenario, run_id, self.model_cls)
 
             logger.info(f'{scenario_index + 1} of {len(self.scenarios)} scenarios has completed.')
 

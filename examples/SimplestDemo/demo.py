@@ -108,7 +108,7 @@ class GiniSimulator(Simulator):
     def generate_scenarios(self) -> List['Scenario']:
         scenario = Scenario(0)
         scenario.manager = self
-        scenario.periods = 200  # The model will be executed by 100 steps.
+        scenario.periods = 100  # The model will be executed by 100 steps.
         return [scenario]
 
 

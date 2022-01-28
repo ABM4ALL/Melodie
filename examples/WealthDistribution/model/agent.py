@@ -2,12 +2,13 @@
 __author__ = 'Songmin'
 
 import random
-from typing import Optional
 
 from Melodie import Agent
+from .scenario import GiniScenario
 
 
 class GiniAgent(Agent):
+    scenario: GiniScenario
 
     def setup(self):
         self.account = .0

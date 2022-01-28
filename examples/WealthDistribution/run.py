@@ -8,11 +8,11 @@ sys.path.append("../..")
 from model.scenario import GiniScenario
 from model.model import GiniModel
 from model.simulator import GiniSimulator
-
+from model.dataframe_loader import GiniDataframeLoader
 from config import config
 
 if __name__ == "__main__":
-    simulator = GiniSimulator()
+    simulator = GiniSimulator(GiniDataframeLoader)
 
     """
     Run the model with register.rst

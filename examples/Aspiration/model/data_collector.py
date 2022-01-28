@@ -1,10 +1,9 @@
-
 from Melodie import DataCollector
+
 
 class AspirationDataCollector(DataCollector):
 
     def setup(self):
-
         self.add_agent_property("agent_list", 'technology')
         self.add_agent_property("agent_list", 'aspiration_level')
         self.add_agent_property("agent_list", 'profit')

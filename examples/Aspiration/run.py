@@ -1,29 +1,26 @@
 import sys
 
 sys.path.append("../..")
-from model.agent import AspirationAgent
-from model.environment import AspirationEnvironment
+
 from model.scenario import AspirationScenario
-from model.data_collector import AspirationDataCollector
 from model.model import AspirationModel
 from model.simulator import AspirationSimulator
 from config import config
+from model.table_loader import AspirationDataFrameLoader
 
 if __name__ == "__main__":
-
-    simulator = AspirationSimulator()
-
-    """
-    Run the model with register.rst
-    """
-    simulator.run(
-        config=config,
-        scenario_class=AspirationScenario,
-        model_class=AspirationModel,
-    )
+    simulator = AspirationSimulator(config=config,
+                                    scenario_cls=AspirationScenario,
+                                    model_cls=AspirationModel,
+                                    table_loader_cls=AspirationDataFrameLoader)
 
     """
-    Run the model with register.rst in parallel mode. 
+    Run the model with simulator
+    """
+    simulator.run()
+
+    """
+    Run the model with simulator in parallel mode. 
     Use "cores" to determine how many cores should be used.
     """
     # register.rst.run_parallel(

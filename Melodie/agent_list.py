@@ -1,15 +1,13 @@
 import logging
 import random
-import time
 
 import pandas as pd
-from pandas.api.types import is_numeric_dtype, is_integer_dtype, is_float_dtype, is_string_dtype
+from pandas.api.types import is_integer_dtype, is_float_dtype, is_string_dtype
 import typing
 from typing import TYPE_CHECKING, ClassVar, List, Dict, Union, Set, Optional, TypeVar, Type, Generic
 
 from .basic import IndexedAgentList, MelodieExceptions, MelodieException
 from collections.abc import Sequence
-from .agent import Agent
 
 AgentGeneric = TypeVar('AgentGeneric')
 if TYPE_CHECKING:
@@ -151,7 +149,7 @@ class AgentList(BaseAgentContainer, Sequence, typing.Sequence[AgentGeneric]):
                                         range(self.initial_agent_num)]
         scenario = self.model.scenario
         for agent in agents:
-            agent._scenario = scenario
+            agent.scenario = scenario
             agent.setup()
         return IndexedAgentList(agents)
 

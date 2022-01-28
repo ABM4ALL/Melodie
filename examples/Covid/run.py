@@ -1,26 +1,23 @@
 import sys
 
 sys.path.append("../..")
-from model.agent import CovidAgent
-from model.environment import CovidEnvironment
 from model.scenario import CovidScenario
-from model.data_collector import CovidDataCollector
 from model.model import CovidModel
 from model.simulator import CovidSimulator
+from model.table_loader import CovidDataFrameLoader
 from config import config
 
 if __name__ == "__main__":
-
-    simulator = CovidSimulator()
+    simulator = CovidSimulator(
+        config=config,
+        scenario_cls=CovidScenario,
+        model_cls=CovidModel,
+        table_loader_cls=CovidDataFrameLoader)
 
     """
     Run the model with register.rst
     """
-    simulator.run(
-        config=config,
-        scenario_class=CovidScenario,
-        model_class=CovidModel,
-    )
+    simulator.run()
 
     """
     Run the model with register.rst in parallel mode. 

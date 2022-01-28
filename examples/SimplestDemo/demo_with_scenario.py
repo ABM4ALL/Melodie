@@ -103,9 +103,6 @@ class GiniDataCollector(DataCollector):
 
 
 class GiniSimulator(Simulator):
-    def register_scenario_dataframe(self):
-        scenarios_dict = {}
-
     def generate_scenarios(self) -> List['Scenario']:
         scenario = Scenario(0)
         scenario.manager = self

@@ -1,4 +1,3 @@
-
 import random
 import numpy as np
 from abc import ABC, abstractmethod
@@ -6,8 +5,8 @@ from typing import TYPE_CHECKING
 from Melodie import AgentList
 
 if TYPE_CHECKING:
-    from.agent import AspirationAgent
-    from.environment import AspirationEnvironment
+    from .agent import AspirationAgent
+    from .environment import AspirationEnvironment
 
 
 class TechnologySearchStrategy(ABC):
@@ -20,11 +19,13 @@ class TechnologySearchStrategy(ABC):
     def technology_search(self, agent: 'AspirationAgent') -> None:
         pass
 
+
 class SleepTechnologySearchStrategy(TechnologySearchStrategy):
 
     def technology_search(self, agent: 'AspirationAgent') -> None:
         agent.sleep_count += 1
         pass
+
 
 class ExplorationTechnologySearchStrategy(TechnologySearchStrategy):
 
@@ -36,6 +37,7 @@ class ExplorationTechnologySearchStrategy(TechnologySearchStrategy):
         agent.exploration_count += 1
         pass
 
+
 class ExploitationTechnologySearchStrategy(TechnologySearchStrategy):
 
     def technology_search(self, agent: 'AspirationAgent') -> None:
@@ -44,6 +46,7 @@ class ExploitationTechnologySearchStrategy(TechnologySearchStrategy):
         agent.technology = max(agent.technology, technology_search_result)
         agent.exploitation_count += 1
         pass
+
 
 class ImitationTechnologySearchStrategy(TechnologySearchStrategy):
 

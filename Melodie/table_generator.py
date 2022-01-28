@@ -116,3 +116,5 @@ class TableGenerator:
                     f"Builtin type {type(generated)} (value: {generated}) cannot be converted to table row.")
             data_list.append(d)
         return data_list
+
+

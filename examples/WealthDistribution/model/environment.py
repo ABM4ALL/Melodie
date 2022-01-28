@@ -12,11 +12,11 @@ if TYPE_CHECKING:
 
 
 class GiniEnvironment(Environment):
+    scenario: GiniScenario
 
     def setup(self):
-        scenario: GiniScenario = self.current_scenario()
-        self.trade_num = scenario.trade_num
-        self.win_prob = scenario.rich_win_prob
+        self.trade_num = self.scenario.trade_num
+        self.win_prob = self.scenario.rich_win_prob
         self.total_wealth = 0
         self.gini = 0
 
@@ -44,17 +44,17 @@ class GiniEnvironment(Environment):
             who_win = ''
             rand = random.random()
             if rand <= self.win_prob:
-                who_win = "Rich"
+                who_win = 'Rich'
             else:
-                who_win = "Poor"
+                who_win = 'Poor'
 
-            if agent_1.account >= agent_2.account and who_win == "Rich":
+            if agent_1.account >= agent_2.account and who_win == 'Rich':
                 self.go_give_money(agent_2, agent_1)
-            elif agent_1.account < agent_2.account and who_win == "Rich":
+            elif agent_1.account < agent_2.account and who_win == 'Rich':
                 self.go_give_money(agent_1, agent_2)
-            elif agent_1.account >= agent_2.account and who_win == "Poor":
+            elif agent_1.account >= agent_2.account and who_win == 'Poor':
                 self.go_give_money(agent_1, agent_2)
-            elif agent_1.account < agent_2.account and who_win == "Poor":
+            elif agent_1.account < agent_2.account and who_win == 'Poor':
                 self.go_give_money(agent_2, agent_1)
             else:
                 pass

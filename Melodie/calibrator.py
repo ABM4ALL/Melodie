@@ -12,24 +12,31 @@ import copy
 import numpy as np
 import pandas as pd
 import logging
-from Melodie import Model, Scenario, Simulator, Config, Agent, create_db_conn, GACalibrationScenario
+from Melodie import Model, Scenario, Config, Agent, create_db_conn, GACalibrationScenario, DataFrameLoader
 from Melodie.algorithms import GeneticAlgorithm, TrainingAlgorithm
 from Melodie.basic import MelodieExceptions
+from .simulator import BaseModellingManager
 
 logger = logging.getLogger(__name__)
 
 
-class Calibrator(Simulator, abc.ABC):
+class Calibrator(BaseModellingManager):
     """
     Calibrator
     """
 
     # 用来individually calibrate agents' parameters，
     # 只考虑针对strategy中参数的off-line learning。online-learning的部分千奇百怪，暂时交给用户自己来吧。
-    def __init__(self, config: 'Config', scenario_class: 'Optional[ClassVar[Scenario]]',
-                 model_class: 'Optional[ClassVar[Model]]'):
-        super().__init__()
-        self.config = config
+    def __init__(self, config: 'Config',
+                 scenario_cls: 'Optional[ClassVar[Scenario]]',
+                 table_loader_cls: ClassVar['DataFrameLoader'],
+                 model_cls: 'Optional[ClassVar[Model]]'):
+        super().__init__(
+            config=config,
+            scenario_cls=scenario_cls,
+            model_cls=model_cls,
+            table_loader_cls=table_loader_cls)
+        # self.config = config
         self.training_strategy: 'Optional[Type[TrainingAlgorithm]]' = None
         self.container_name: str = ''
 
@@ -38,9 +45,9 @@ class Calibrator(Simulator, abc.ABC):
         self.algorithm: Optional[Type[TrainingAlgorithm]] = None
         self.algorithm_instance: Iterator[List[float]] = {}
 
-        self.model_class: Optional[ClassVar[Model]] = model_class
+        # self.model_cls: Optional[ClassVar[Model]] = model_cls
         self.model: Optional[Model] = None
-        self.scenario_class: Optional[ClassVar[Scenario]] = scenario_class
+        # self.scenario_cls: Optional[ClassVar[Scenario]] = scenario_cls
 
         self.current_algorithm_meta = {
             "scenario_id": 0,
@@ -48,6 +55,8 @@ class Calibrator(Simulator, abc.ABC):
             "learning_path_id": 0,
             "generation_id": 0
         }
+        self.table_loader: Optional['DataFrameLoader'] = None
+        self.table_loader_cls = table_loader_cls
 
     def setup(self):
         pass
@@ -57,7 +66,7 @@ class Calibrator(Simulator, abc.ABC):
         Generate scenario objects by the parameter from static tables or scenarios_dataframe.
         :return:
         """
-        return self.generate_scenarios_from_dataframe('calibrator_scenarios')
+        return self.table_loader.generate_scenarios_from_dataframe('calibrator_scenarios')
 
     def calibrate(self):
         self.setup()
@@ -79,7 +88,7 @@ class Calibrator(Simulator, abc.ABC):
     def learn_once(self, scenario, calibration_scenario: GACalibrationScenario):
 
         scenario.manager = self
-        self.model = self.model_class(self.config, scenario)
+        self.model = self.model_cls(self.config, scenario)
         self.model.setup()
 
         self.algorithm = GeneticAlgorithm(calibration_scenario.calibration_generation,
@@ -130,7 +139,7 @@ class Calibrator(Simulator, abc.ABC):
             assert scenario.__getattribute__(prop_name) is not None
             scenario.__setattr__(prop_name, params[i])
         scenario_properties_dict = {prop_name: scenario.__dict__[prop_name] for prop_name in self.properties}
-        self.model = self.model_class(self.config, scenario)
+        self.model = self.model_cls(self.config, scenario)
         self.model.setup()
         meta = kwargs['meta']
         environment_record_dict = {}

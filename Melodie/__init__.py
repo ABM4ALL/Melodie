@@ -9,7 +9,7 @@ from .environment import Environment
 from .model import Model
 from .scenario_manager import Scenario, ScenarioManager, GALearningScenario,GACalibrationScenario
 from .table_generator import TableGenerator
-
+from .dataframe_loader import DataFrameLoader
 from .simulator import Simulator
 from .calibrator import Calibrator
 from .analyzer import Analyzer

@@ -1,6 +1,4 @@
 import random
-import numpy as np
-from typing import Type
 
 from Melodie import Agent, Grid
 

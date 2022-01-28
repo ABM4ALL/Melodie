@@ -4,95 +4,50 @@
 # @Email: 1295752786@qq.com
 # @File: cookiecutter.py.py
 import os.path
-import datetime
+import shutil
 
-from cookiecutter.main import cookiecutter
+import chardet
 
-directory = os.path.dirname(__file__)
-context = {
-    "author": "Anonymous",
-    "email": "AnonymousUser@never.contact.me.com",
-    "created_at": datetime.time(),
-
-    "project_name": "MyProject",
-    "project_alias": "My",
-    "project_text": "我的项目",
-    "file_name": "Howdy",
-    "greeting_recipient": "Andy",
+properties = {
+    '_NAME_': 'Demostration',
+    '_ALIAS_': 'Demo',
+    '_CREATED_AT_': '',
+    '_AUTHOR_': "",
+    '_EMAIL_': ''
 }
 
+new_project_config_default = {
+    'alias': 'Demo',
+    'name': 'Demonstration',
+    'path': '',  # create project folder at this folder. for example: if 'path'=c:\users\username\desktop, then
+    # all project files will be placed at c:\users\username\desktop\Demonstration
 
-def remove_unused_files(root, file_status):
-    paths_to_del = []
-    for name, status in file_status.items():
-        if isinstance(status, bool):
-            path = os.path.join(root, name)
-            if not status:
-                paths_to_del.append(path)
-        elif isinstance(status, dict):
-            for file_name, sub_stat in status.items():
-                if not status[file_name]:
-                    path = os.path.join(root, name, file_name)
-                    paths_to_del.append(path)
-        elif isinstance(status, str):
-            prev_name = os.path.join(root, name)
-            post_name = os.path.join(root, status)
-            os.rename(prev_name, post_name)
-            print('renamed data', prev_name, 'to', post_name)
-        else:
-            raise TypeError(status)
-
-    for path in paths_to_del:
-        if os.path.exists(path):
-            print('removed data,', path)
-            os.remove(path)
-        else:
-            print('data ', path, ' should be removed but it was not exist! ')
+}
+_d = os.path.dirname
+TEMPLATE_ROOT = os.path.join(_d(__file__), 'NewTemplate', '_NAME_')
 
 
-def create_routine(directory: str, extra_context):
-    file_status_with_excel = {
-        "README.md": True,
-        extra_context["project_name"]: {
-            "agent.py": True,
-            "validation.py": True,
-            "data_collector.py": True,
-            "environment.py": True,
-            "model.True": True,
-            "register.rst.py": False,
-            "register.rst.py": True,
-            "table_generator.py": False
-        },
-        "model": True,
-        'run_with_excel.py': 'run.py',
-        "run_advanced.py": False
-    }
-    cookiecutter((os.path.join(os.path.dirname(__file__), 'ProjectTemplate')),
-                 no_input=True,
-                 extra_context=extra_context, output_dir=directory)
-
-    os.chdir(os.path.join(directory, extra_context['project_text']))
-    root = os.getcwd()
-
-    remove_unused_files(root, file_status_with_excel)
-    pass
+def create_project(project_config):
+    assert os.path.exists(project_config['path']), f'The directory {project_config["path"]} was not found!'
+    project_root = os.path.join(project_config['path'], project_config['name'])
+    shutil.copytree(TEMPLATE_ROOT, project_root)
+    for root, dirs, files in os.walk(project_root):
+        for file in files:
+            if file.endswith(('.py', '.md', '.txt')):
+                file_abs_path = os.path.join(root, file)
+                with open(file_abs_path, 'rb') as f:
+                    bs = f.read()
+                print(file, chardet.detect(bs))
+                encoding = chardet.detect(bs)['encoding']
+                if encoding is not None:
+                    b_formatted = bs.decode(encoding).replace('_ALIAS_', project_config['alias']).encode(encoding)
+                    b_formatted = b_formatted.decode(encoding).replace('_NAME_', project_config['name']).encode(encoding)
+                    with open(file_abs_path, 'wb') as f:
+                            f.write(b_formatted)
 
 
-if __name__ == "__main__":
-    file_status_with_excel = {
-        "README.md": True,
-        context["project_name"]: {
-            "agent.py": True,
-            "validation.py": True,
-            "data_collector.py": True,
-            "environment.py": True,
-            "model.True": True,
-            "register.rst.py": False,
-            "register.rst.py": True,
-            "table_generator.py": False
-        },
-        "model": True,
-        'run_with_excel.py': 'run.py',
-        "run_advanced.py": False
-    }
-    create_routine(directory, context, file_status_with_excel)
+if __name__ == '__main__':
+    EXAMPLE_ROOT = os.path.join(_d(_d(_d(__file__))), 'examples')
+    new_project_config = new_project_config_default.copy()
+    new_project_config['path'] = EXAMPLE_ROOT
+    create_project(new_project_config)

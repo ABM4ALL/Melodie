@@ -9,9 +9,11 @@ import pandas as pd
 
 from Melodie import Model, Scenario, Simulator, Config, Agent, create_db_conn, GALearningScenario
 from Melodie.algorithms import GeneticAlgorithm, TrainingAlgorithm
+from .simulator import BaseModellingManager
+from .dataframe_loader import DataFrameLoader
 
 
-class Trainer(Simulator, abc.ABC):
+class Trainer(BaseModellingManager):
     """
     Individually calibrate agents' parameters
     """
@@ -19,9 +21,12 @@ class Trainer(Simulator, abc.ABC):
     # 用来
     # 只考虑针对strategy中参数的off-line learning。online-learning的部分千奇百怪，暂时交给用户自己来吧。
     def __init__(self, config: 'Config', scenario_class: 'Optional[ClassVar[Scenario]]',
-                 model_class: 'Optional[ClassVar[Model]]'):
-        super().__init__()
-        self.config = config
+                 model_cls: 'Optional[ClassVar[Model]]', table_loader_cls: 'Optional[ClassVar[DataFrameLoader]]'):
+        super().__init__(config=config,
+                         scenario_cls=scenario_class,
+                         model_cls=model_cls,
+                         table_loader_cls=table_loader_cls)
+
         self.training_strategy: 'Optional[Type[TrainingAlgorithm]]' = None
         self.container_name: str = ''
         self.property_name: str = ''
@@ -32,9 +37,7 @@ class Trainer(Simulator, abc.ABC):
         self.algorithm: Optional[Type[TrainingAlgorithm]] = None
         self.algorithm_instance: Iterator[List[float]] = {}
 
-        self.model_class: Optional[ClassVar[Model]] = model_class
         self.model: Optional[Model] = None
-        self.scenario_class: Optional[ClassVar[Scenario]] = scenario_class
 
         self.agent_result_columns = [
             "scenario_id", "learning_scenario_id",
@@ -80,7 +83,7 @@ class Trainer(Simulator, abc.ABC):
     def learn_once(self, scenario, learning_scenario: GALearningScenario):
 
         scenario.manager = self
-        self.model = self.model_class(self.config, scenario)
+        self.model = self.model_cls(self.config, scenario)
         self.model.setup()
         agents_num = len(self.model.__getattribute__(self.container_name))
         agents = self.model.__getattribute__(self.container_name)
@@ -141,7 +144,7 @@ class Trainer(Simulator, abc.ABC):
         return agent_params
 
     def fitness(self, params, scenario: Union[Type[Scenario], Scenario], **kwargs) -> Tuple[np.ndarray, dict]:
-        self.model = self.model_class(self.config, scenario)
+        self.model = self.model_cls(self.config, scenario)
         self.model.setup()
         agents = self.model.__getattribute__(self.container_name)
         agents_params_list = []

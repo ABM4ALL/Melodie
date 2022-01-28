@@ -1,5 +1,5 @@
-
 from Melodie import Scenario
+
 
 class AspirationScenario(Scenario):
 
@@ -18,5 +18,3 @@ class AspirationScenario(Scenario):
         self.sigma_exploration = 0.7
         self.imitation_share = 0.1
         self.imitation_fail_rate = 0.5
-
-

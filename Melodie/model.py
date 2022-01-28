@@ -78,6 +78,7 @@ class Model:
         yield self
         MelodieExceptions.Assertions.Type('self.environment', self.environment, Environment)
         self.environment.model = self
+        self.environment.scenario = self.scenario
         self.environment.setup()
         if self.data_collector is not None:
             MelodieExceptions.Assertions.Type('self.data_collector', self.data_collector, DataCollector)

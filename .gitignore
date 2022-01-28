@@ -410,3 +410,4 @@ _database
 _output
 
 Melodie/static/*
+.melodieconfig

@@ -1,7 +1,6 @@
 import random
 
-import numpy as np
-from typing import Type, List
+from typing import Type, List, TYPE_CHECKING
 from Melodie import Environment, AgentList, Grid
 from .agent import CovidAgent
 from .scenario import CovidScenario
@@ -20,7 +19,7 @@ class CovidEnvironment(Environment):
     # 1. 概念上更清晰
     # 2. 算的一些macro variable可以被data_collector收集起来（暂时不考虑记录每个spot/node的数据）
 
-    def setup_gird(self):
+    def setup_grid(self):
         # grid的作用
         # 1. 提供一组常用函数，比如返回邻居什么的 --> agent的坐标自动对应到spot上
         # 2. 必要的话接入丰富的背景，比如街道、桥梁，比如草原及其生长规律

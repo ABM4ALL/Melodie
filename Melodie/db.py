@@ -7,7 +7,7 @@ from typing import Union, Dict, TYPE_CHECKING, List, Tuple, Type, Hashable, Opti
 
 from sqlalchemy.exc import OperationalError
 
-from Melodie import Config
+
 import pandas as pd
 
 import numpy as np
@@ -16,6 +16,7 @@ from Melodie.basic import MelodieExceptions
 
 if TYPE_CHECKING:
     from Melodie.scenario_manager import Scenario
+    from Melodie.config import Config
 
 TABLE_DTYPES = Dict[str, Union[str, Type[str], Type[float], Type[int], Type[complex], Type[bool], Type[object]]]
 
