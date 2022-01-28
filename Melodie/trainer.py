@@ -18,8 +18,6 @@ class Trainer(BaseModellingManager):
     Individually calibrate agents' parameters
     """
 
-    # 用来
-    # 只考虑针对strategy中参数的off-line learning。online-learning的部分千奇百怪，暂时交给用户自己来吧。
     def __init__(self, config: 'Config', scenario_class: 'Optional[ClassVar[Scenario]]',
                  model_cls: 'Optional[ClassVar[Model]]', table_loader_cls: 'Optional[ClassVar[DataFrameLoader]]'):
         super().__init__(config=config,
@@ -128,7 +126,6 @@ class Trainer(BaseModellingManager):
 
     def add_property(self, container: str, prop: str):
         """
-        添加一个属性
         :param container:
         :param prop:
         :return:

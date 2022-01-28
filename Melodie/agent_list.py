@@ -97,12 +97,11 @@ class BaseAgentContainer(Generic[AgentGeneric]):
         props_df_cpy.reset_index(drop=True, inplace=True)
         self.type_check(param_names, props_df_cpy)
         # props_df_cpy.set_index("id", inplace=True)
-        # # Assign parameters to properties for each agent.
+        # Assign parameters to properties for each agent.
         for i, agent in enumerate(self.agents):
             params = {}
             for agent_param_name in param_names:
                 # .item() method was applied to convert pandas/numpy data into python-builtin types.
-                # 加一步判断，判断属性名称在Agent中存在，并且类型与setup()方法中定义的一致。
                 params[agent_param_name] = props_df_cpy.loc[i, agent_param_name].item()
 
             agent.set_params(params)

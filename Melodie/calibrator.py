@@ -1,10 +1,3 @@
-# Calibrator是用simulation-based calibration的方法校准【选出的一部分】enviornment parameters
-# 先对所有参数做敏感性分析，找出重要的calibrate，
-# 给要calibrate的参数设定空间，然后sampling，再搜索。
-# 搜索的时候涉及两部分：
-# 第一，定义simulated output和real data之间的距离，这个有不同度量方法；
-# 第二，返回某个参数组合的“距离”后，怎么迭代搜索到下一组参数组合。
-# register.rst, calibrator, trainer都涉及反复跑模型，也都涉及注册表。可能可以在它们三者之上定义一个父类，它们三者是不同的running mode。
 
 import abc
 from typing import Type, Callable, List, Optional, ClassVar, Iterator, Union, Tuple, Dict
@@ -24,9 +17,6 @@ class Calibrator(BaseModellingManager):
     """
     Calibrator
     """
-
-    # 用来individually calibrate agents' parameters，
-    # 只考虑针对strategy中参数的off-line learning。online-learning的部分千奇百怪，暂时交给用户自己来吧。
     def __init__(self, config: 'Config',
                  scenario_cls: 'Optional[ClassVar[Scenario]]',
                  table_loader_cls: ClassVar['DataFrameLoader'],
@@ -117,7 +107,6 @@ class Calibrator(BaseModellingManager):
 
     def set_algorithm(self, algorithm: Type[TrainingAlgorithm]):
         """
-
         :param algorithm:
         :return:
         """

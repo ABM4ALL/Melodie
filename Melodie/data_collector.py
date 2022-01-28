@@ -108,40 +108,18 @@ class DataCollector:
         self.environment_properties_list.append(env_dic)
 
         self.collect_agent_properties(step, run_id, scenario.id)
-        # print(self.agent_properties_dict)
         t1 = time.time()
         self._time_elapsed += (t1 - t0)
-
-    # def remove_duplicate_records(self, scenario_id: int, run_id: int):
-    #     connection = create_db_conn(self.model.config)
-    #     for table_name in self._agent_properties_to_collect.keys():
-    #         connection.delete_agent_records(table_name, scenario_id, run_id)
-    #     connection.delete_env_record(scenario_id, run_id)
 
     def save(self):
         t0 = time.time()
 
         environment_properties_df = pd.DataFrame(self.environment_properties_list)
-        # self.remove_duplicate_records(self.model.scenario.id, self.model.run_id_in_scenario)
         self.model.create_db_conn().write_dataframe(DB.ENVIRONMENT_RESULT_TABLE, environment_properties_df, {})
 
         for container_name in self.agent_properties_dict.keys():
             agent_properties_df = pd.DataFrame(self.agent_properties_dict[container_name])
             self.model.create_db_conn().write_dataframe(container_name + "_result", agent_properties_df, {})
-
-        # pickle or feather format are faster than sqlite.
-
-        # with open('agent.pkl', 'wb', buffering=4096) as f:
-        #     # mm = mmap.mmap(f.fileno(), 4096)
-        #
-        #     pickle.dump(self.agent_properties_dict, f)
-        #
-        # with open('env.pkl', 'wb', buffering=4096) as f:
-        #     pickle.dump(self.environment_properties_list, f)
-        # self.agent_properties_df.to_pickle('agent.csv')
-        # self.environment_properties_df.to_pickle('env.csv')
-        # self.model.create_db_conn().batch_insert(DB.AGENT_RESULT_TABLE, self.agent_properties_dict)
-        # self.model.create_db_conn().batch_insert(DB.ENVIRONMENT_RESULT_TABLE, self.environment_properties_list)
 
         t1 = time.time()
         collect_time = self._time_elapsed

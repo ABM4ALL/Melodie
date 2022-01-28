@@ -1,7 +1,4 @@
-# network是定义在agent上的，不像grid那么独立。没有人，地球上依然有土地。但是，没有人，也有不存在“人和人之间的关系”了。
-# 用一张矩阵记录agent之间的【关系】，关系又可以有多个属性，方向、每个方向的强弱等。
-# agent和env都可以访问network并修改agent之间的【关系】
-# network是run_model的可选项，如果选了，就初始化到model里
+
 import json
 import threading
 import time
@@ -17,10 +14,10 @@ logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
 
-class Node(Agent):
-    def __init__(self, node_id: int):
-        super(Node, self).__init__(node_id)
-
+class Edge:
+    # 单项/双向
+    # 道路限速
+    pass
 
 class Network:
     def __init__(self):
@@ -39,10 +36,8 @@ class Network:
         self._agent_ids[category_name] = {}
         self._agent_pos[category_name] = {}
 
-    # def get_node_by_id(self, node_id: int) -> Node:
-    #     return self._nodes[node_id]
-
     def add_node(self, node: int):
+        # 可以删掉，只用add_agent，因为agent就是node
         assert node not in self._nodes
 
     def add_edge(self, source_id: int, target_id: int):
@@ -137,6 +132,16 @@ class Network:
     def agent_pos(self, agent_id: int, category: str):
         return self._agent_pos[category][agent_id]
 
+    def create_edge(self,
+                    category_1: str, agent_1_id: int,
+                    category_2: str, agent_2_id: int,
+                    **edge_properties):
+        edge = Edge(category_1, agent_1_id,
+                    category_2, agent_2_id,
+                    edge_properties)
+        self.add_edge(edge)
+
+
 
 class NetworkDirected(Network):
     def __init__(self):
@@ -147,3 +152,22 @@ class NetworkDirected(Network):
 
     def get_neighbors(self, node):
         pass
+
+
+
+class SomeModel:
+
+    def setup_agent_list(self):
+        self.persons = []
+        self.medias = []
+
+    def setup_network(self):
+        self.network = Network()
+        self.network.add_category("persons")
+        self.network.add_category("medias")
+        self.network.add_agent("persons", self.persons[0])
+        self.network.add_agent("persons", self.persons[1])
+        self.network.create_edge("persons", self.persons[0], "persons", self.persons[1], )
+
+        pass
+    pass
