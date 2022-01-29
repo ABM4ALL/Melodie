@@ -14,36 +14,26 @@ from model.environment import FuncEnvironment
 from model.scenario import FuncScenario
 from model.model import FuncModel
 from model.simulator import FuncSimulator
+from model.dataframe_loader import FuncDataframeLoader
 from config import config
 
 logger = logging.getLogger(__name__)
 
-node_names_map: Dict[str, int] = {}
-edges_with_num: List[Tuple[int, int]] = []
-with open("./data/json_source/lua_call_graph.json") as f:
-    network_json = json.load(f)
-    edges = network_json['series']['links']
-    node_names = set()
-    for link in edges:
-        node_names.add(link['source'])
-        node_names.add(link['target'])
-    for i, node_name in enumerate(node_names):
-        node_names_map[node_name] = i
-    for edge in edges:
-        edges_with_num.append((node_names_map[edge['source']], node_names_map[edge['target']]))
+# node_names_map: Dict[str, int] = {}
+# edges_with_num: List[Tuple[int, int]] = []
+# with open("./data/json_source/lua_call_graph.json") as f:
+#     network_json = json.load(f)
+#     edges = network_json['series']['links']
+#     node_names = set()
+#     for link in edges:
+#         node_names.add(link['source'])
+#         node_names.add(link['target'])
+#     for i, node_name in enumerate(node_names):
+#         node_names_map[node_name] = i
+#     for edge in edges:
+#         edges_with_num.append((node_names_map[edge['source']], node_names_map[edge['target']]))
 
 if __name__ == "__main__":
-    simulator = FuncSimulator()
+    simulator = FuncSimulator(config, FuncScenario, FuncModel, FuncDataframeLoader)
 
-    """
-    Run the model with register.rst
-    """
-    simulator.run(
-        agent_class=FuncAgent,
-        environment_class=FuncEnvironment,
-        config=config,
-        model_class=FuncModel,
-        scenario_class=FuncScenario,
-        data_collector_class=DataCollector
-        # analyzer_class=Analyzer
-    )
+    simulator.run_visual()

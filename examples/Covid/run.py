@@ -12,7 +12,7 @@ if __name__ == "__main__":
         config=config,
         scenario_cls=CovidScenario,
         model_cls=CovidModel,
-        table_loader_cls=CovidDataFrameLoader)
+        df_loader_cls=CovidDataFrameLoader)
 
     """
     Run the model with register.rst

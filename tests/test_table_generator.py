@@ -5,19 +5,23 @@
 # @File: test_table_generator.py
 import pandas as pd
 
-from Melodie import Simulator, Scenario, create_db_conn
+from Melodie import Simulator, Scenario, create_db_conn, Model, DataFrameLoader
 from .config import cfg_for_temp
 
 
-class TestSimulator(Simulator):
+class TestModel(Model):
+    pass
 
-    def register_static_dataframes(self) -> None:
-        self.registered_dataframes["scenarios"] = pd.DataFrame([
+
+class TestDataframeLoader(DataFrameLoader):
+    def register_scenario_dataframe(self) -> None:
+        self.registered_dataframes["simulator_scenarios"] = pd.DataFrame([
             {"id": 1, "periods": 1, 'agent_num': 100}
         ])
 
-    def register_scenario_dataframe(self) -> None:
-        pass
+
+class TestSimulator(Simulator):
+    pass
 
 
 class obj1():
@@ -30,14 +34,14 @@ class TestScenario(Scenario):
 
 
 def test_table_generator():
-    simulator = TestSimulator()
-    simulator.config = cfg_for_temp
-    simulator.register_static_dataframes()
-    simulator.scenario_class = TestScenario
-    print(simulator.registered_dataframes)
-    with simulator.new_table_generator('aaa', 100) as g:
+    simulator = TestSimulator(cfg_for_temp, TestScenario, TestModel, TestDataframeLoader)
+
+    simulator.setup()
+    simulator.pre_run()
+    with simulator.table_loader.new_table_generator('aaa', 100) as g:
+        print(g.simulator)
         g.set_row_generator(lambda scenario: {"id": g.increment(), "productivity": 0.5})
-    with simulator.new_table_generator('bbb', lambda _: 200) as g:
+    with simulator.table_loader.new_table_generator('bbb', lambda _: 200) as g:
         def f(s):
             o = obj1()
             o.id = g.increment()
@@ -49,5 +53,5 @@ def test_table_generator():
     print(df)
     df = create_db_conn(cfg_for_temp).read_dataframe('bbb')
     print(df)
-    df = simulator.registered_dataframes['bbb']
+    df = simulator.table_loader.registered_dataframes['bbb']
     print(df)

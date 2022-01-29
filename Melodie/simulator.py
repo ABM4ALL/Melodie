@@ -40,19 +40,21 @@ else:
     from .db import create_db_conn
 
 
-class BaseModellingManager:
+class BaseModellingManager(abc.ABC):
     def __init__(self, config: Config,
                  scenario_cls: ClassVar['Scenario'],
                  model_cls: ClassVar['Model'],
-                 table_loader_cls: ClassVar[DataFrameLoader] = None):
+                 df_loader_cls: ClassVar[DataFrameLoader] = None):
         self.config: Optional[Config] = config
         self.scenario_class = scenario_cls
         self.model_cls = model_cls
         # self.scenarios_dataframe: Optional[pd.DataFrame] = None
 
         self.scenarios: Optional[List['Scenario']] = None
-        self.table_loader_cls: Optional[ClassVar[DataFrameLoader]] = table_loader_cls
+        self.df_loader_cls: Optional[ClassVar[DataFrameLoader]] = df_loader_cls
         self.table_loader: Optional[DataFrameLoader] = None
+        if df_loader_cls is not None:
+            assert issubclass(df_loader_cls, DataFrameLoader), df_loader_cls
 
     def get_registered_dataframe(self, table_name) -> pd.DataFrame:
         """
@@ -76,8 +78,8 @@ class BaseModellingManager:
         :return:
         """
         create_db_conn(self.config).clear_database()
-        if self.table_loader_cls is not None:
-            self.table_loader = self.table_loader_cls(self, self.config, self.scenario_class)
+        if self.df_loader_cls is not None:
+            self.table_loader = self.df_loader_cls(self, self.config, self.scenario_class)
             self.table_loader.register_scenario_dataframe()
             self.table_loader.register_static_dataframes()
             self.table_loader.register_generated_dataframes()
@@ -86,21 +88,26 @@ class BaseModellingManager:
 
         assert self.scenarios is not None
 
+    @abc.abstractmethod
     def generate_scenarios(self):
-        assert self.table_loader is not None
-        return self.table_loader.generate_scenarios()
+        pass
 
 
 class Simulator(BaseModellingManager):
     def __init__(self, config: Config,
                  scenario_cls: 'ClassVar[Scenario]',
                  model_cls: 'ClassVar[Model]',
-                 table_loader_cls: 'ClassVar[DataFrameLoader]' = None):
+                 df_loader_cls: 'ClassVar[DataFrameLoader]' = None):
         super(Simulator, self).__init__(config=config,
                                         scenario_cls=scenario_cls,
                                         model_cls=model_cls,
-                                        table_loader_cls=table_loader_cls)
+                                        df_loader_cls=df_loader_cls)
         self.server_thread: threading.Thread = None
+        self.visualizer: Optional[Visualizer] = None
+
+    def generate_scenarios(self):
+        assert self.table_loader is not None
+        return self.table_loader.generate_scenarios('simulator')
 
     def run_model(self, config, scenario, run_id, model_class: ClassVar['Model'], visualizer=None):
         """
@@ -109,6 +116,7 @@ class Simulator(BaseModellingManager):
         """
         logger.info(f'Running {run_id + 1} times in scenario {scenario.id}.')
         t0 = time.time()
+
         model = model_class(config,
                             scenario,
                             run_id_in_scenario=run_id,
@@ -132,18 +140,23 @@ class Simulator(BaseModellingManager):
                 f'    data-collect  \t {round(data_collect_time, 6)}\n')
         logger.info(info)
 
+    def setup(self):
+        pass
+
     def run(self):
         """
         Main function for running model!
         """
         t0 = time.time()
-        self.pre_run()
+        self.setup()
 
+        self.pre_run()
+        print('simulator started!')
         logger.info('Loading scenarios and static tables...')
         t1 = time.time()
         for scenario_index, scenario in enumerate(self.scenarios):
             for run_id in range(scenario.number_of_run):
-                self.run_model(self.config, scenario, run_id, self.model_cls)
+                self.run_model(self.config, scenario, run_id, self.model_cls, visualizer=self.visualizer)
 
             logger.info(f'{scenario_index + 1} of {len(self.scenarios)} scenarios has completed.')
 
@@ -151,40 +164,38 @@ class Simulator(BaseModellingManager):
         logger.info(f'Melodie completed all runs, time elapsed totally {t2 - t0}s, and {t2 - t1}s for running.')
 
     def run_visual(self,
-                   config: 'Config',
-                   scenario_class: ClassVar['Scenario'],
-                   model_class: ClassVar['Model'],
-                   agent_class: ClassVar['Agent'],
-                   environment_class: ClassVar['Environment'],
-                   data_collector_class: ClassVar['DataCollector'],
-                   visualizer_class: ClassVar['Visualizer'],
+                   # config: 'Config',
+                   # scenario_class: ClassVar['Scenario'],
+                   # model_class: ClassVar['Model'],
+                   # agent_class: ClassVar['Agent'],
+                   # environment_class: ClassVar['Environment'],
+                   # data_collector_class: ClassVar['DataCollector'],
+                   # visualizer_class: ClassVar['Visualizer'],
                    ):
         """
         Main function for running model with studio.
         """
         t0 = time.time()
-        self.config = config
-        self.scenario_class = scenario_class
+
+        self.setup()
         self.pre_run()
-        visualizer: Visualizer = visualizer_class()
-        visualizer.setup()
+
         logger.info('Loading scenarios and static tables...')
         t1 = time.time()
         while True:
-            logger.info(f"Visualizer interactive paramerters for this scenario are: {visualizer.scenario_param}")
-            scenario = scenario_class()
+            logger.info(f"Visualizer interactive paramerters for this scenario are: {self.visualizer.scenario_param}")
+            scenario = self.scenario_class()
             scenario.setup()
             scenario.periods = 99999
-            for k, v in visualizer.scenario_param.items():
+            for k, v in self.visualizer.scenario_param.items():
                 scenario.__setattr__(k, v)
             logger.info(f"Scenario parameters: {scenario.to_dict()}")
             try:
-                visualizer.current_scenario = scenario  # set studio scenario.
-                self.run_model(config, scenario, model_class, agent_class, environment_class, data_collector_class,
-                               run_id=0, visualizer=visualizer)
+                self.visualizer.current_scenario = scenario  # set studio scenario.
+                self.run_model(self.config, scenario, 0, self.model_cls, visualizer=self.visualizer)
             except Melodie.visualization.MelodieModelReset as e:
 
-                visualizer.reset()
+                self.visualizer.reset()
 
                 import traceback
                 traceback.print_exc()

@@ -18,12 +18,12 @@ class Trainer(BaseModellingManager):
     Individually calibrate agents' parameters
     """
 
-    def __init__(self, config: 'Config', scenario_class: 'Optional[ClassVar[Scenario]]',
-                 model_cls: 'Optional[ClassVar[Model]]', table_loader_cls: 'Optional[ClassVar[DataFrameLoader]]'):
+    def __init__(self, config: 'Config', scenario_cls: 'Optional[ClassVar[Scenario]]',
+                 model_cls: 'Optional[ClassVar[Model]]', df_loader_cls: 'Optional[ClassVar[DataFrameLoader]]'):
         super().__init__(config=config,
-                         scenario_cls=scenario_class,
+                         scenario_cls=scenario_cls,
                          model_cls=model_cls,
-                         table_loader_cls=table_loader_cls)
+                         df_loader_cls=df_loader_cls)
 
         self.training_strategy: 'Optional[Type[TrainingAlgorithm]]' = None
         self.container_name: str = ''
@@ -64,7 +64,7 @@ class Trainer(BaseModellingManager):
         """
         self.setup()
         self.pre_run()
-        learning_scenarios_table = self.get_registered_dataframe('learning_scenarios')
+        learning_scenarios_table = self.get_registered_dataframe('trainer_params_scenarios')
         assert isinstance(learning_scenarios_table, pd.DataFrame), "No learning scenarios table specified!"
 
         for scenario in self.scenarios:
@@ -185,3 +185,7 @@ class Trainer(BaseModellingManager):
         :return:
         """
         pass
+
+    def generate_scenarios(self):
+        assert self.table_loader is not None
+        return self.table_loader.generate_scenarios('trainer')

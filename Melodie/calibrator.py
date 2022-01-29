@@ -1,4 +1,3 @@
-
 import abc
 from typing import Type, Callable, List, Optional, ClassVar, Iterator, Union, Tuple, Dict
 import copy
@@ -17,15 +16,16 @@ class Calibrator(BaseModellingManager):
     """
     Calibrator
     """
+
     def __init__(self, config: 'Config',
                  scenario_cls: 'Optional[ClassVar[Scenario]]',
-                 table_loader_cls: ClassVar['DataFrameLoader'],
-                 model_cls: 'Optional[ClassVar[Model]]'):
+                 model_cls: 'Optional[ClassVar[Model]]',
+                 df_loader_cls: ClassVar['DataFrameLoader'], ):
         super().__init__(
             config=config,
             scenario_cls=scenario_cls,
             model_cls=model_cls,
-            table_loader_cls=table_loader_cls)
+            df_loader_cls=df_loader_cls)
         # self.config = config
         self.training_strategy: 'Optional[Type[TrainingAlgorithm]]' = None
         self.container_name: str = ''
@@ -35,9 +35,7 @@ class Calibrator(BaseModellingManager):
         self.algorithm: Optional[Type[TrainingAlgorithm]] = None
         self.algorithm_instance: Iterator[List[float]] = {}
 
-        # self.model_cls: Optional[ClassVar[Model]] = model_cls
         self.model: Optional[Model] = None
-        # self.scenario_cls: Optional[ClassVar[Scenario]] = scenario_cls
 
         self.current_algorithm_meta = {
             "scenario_id": 0,
@@ -46,7 +44,7 @@ class Calibrator(BaseModellingManager):
             "generation_id": 0
         }
         self.table_loader: Optional['DataFrameLoader'] = None
-        self.table_loader_cls = table_loader_cls
+        self.df_loader_cls = df_loader_cls
 
     def setup(self):
         pass

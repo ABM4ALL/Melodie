@@ -12,15 +12,16 @@ from model.dataframe_loader import GiniDataframeLoader
 from config import config
 
 if __name__ == "__main__":
-    simulator = GiniSimulator(GiniDataframeLoader)
+    simulator = GiniSimulator(config=config,
+                              scenario_cls=GiniScenario,
+                              model_cls=GiniModel,
+                              df_loader_cls=GiniDataframeLoader)
 
     """
     Run the model with register.rst
     """
     simulator.run(
-        config=config,
-        scenario_class=GiniScenario,
-        model_class=GiniModel,
+
     )
 
     """

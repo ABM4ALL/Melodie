@@ -18,21 +18,22 @@ logger = logging.getLogger(__name__)
 
 
 class BaseAgentContainer(Generic[AgentGeneric]):
-    _ID_OFFSET = -1
+    # _ID_OFFSET = -1
     _agent_ids = set()
 
     def __init__(self):
+        self._id_offset = -1
         self.scenario: Union['Scenario', None] = None
         self.agents: Union[List['AgentGeneric'], Set['AgentGeneric'], None] = None
 
-    @staticmethod
-    def new_id():
+    # @staticmethod
+    def new_id(self):
         """
         Create a new ID
         :return:
         """
-        BaseAgentContainer._ID_OFFSET += 1
-        return BaseAgentContainer._ID_OFFSET
+        self._id_offset += 1
+        return self._id_offset
 
     def all_agent_ids(self) -> List[int]:
         """
@@ -144,7 +145,7 @@ class AgentList(BaseAgentContainer, Sequence, typing.Sequence[AgentGeneric]):
             raise StopIteration
 
     def init_agents(self) -> List[AgentGeneric]:
-        agents: List['AgentGeneric'] = [self.agent_class(BaseAgentContainer.new_id()) for i in
+        agents: List['AgentGeneric'] = [self.agent_class(self.new_id()) for i in
                                         range(self.initial_agent_num)]
         scenario = self.model.scenario
         for agent in agents:

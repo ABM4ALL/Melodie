@@ -12,7 +12,7 @@ if __name__ == "__main__":
     simulator = AspirationSimulator(config=config,
                                     scenario_cls=AspirationScenario,
                                     model_cls=AspirationModel,
-                                    table_loader_cls=AspirationDataFrameLoader)
+                                    df_loader_cls=AspirationDataFrameLoader)
 
     """
     Run the model with simulator

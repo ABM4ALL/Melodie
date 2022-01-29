@@ -8,7 +8,7 @@ from config import config
 from model.table_loader import CovidDataFrameLoader
 
 if __name__ == "__main__":
-    calibrator = CovidCalibrator(config, CovidScenario, CovidDataFrameLoader, CovidModel)
+    calibrator = CovidCalibrator(config, CovidScenario, CovidModel, CovidDataFrameLoader)
 
     """
     Run the model with register.rst

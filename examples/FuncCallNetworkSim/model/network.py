@@ -1,4 +1,7 @@
+from Melodie.network import Edge
 
 
 class FuncEdge(Edge):
-    pass
+
+    def setup(self):
+        self.a = 0

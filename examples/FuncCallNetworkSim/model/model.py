@@ -8,19 +8,18 @@ from typing import Dict, List, Tuple
 import numpy as np
 
 from Melodie import Model, AgentList
-from Melodie.network import Network, Node
+from Melodie.network import Network
+from .visualizer import FuncCallSimVisualizer
+from .environment import FuncEnvironment
 from examples.FuncCallNetworkSim.model.agent import FuncAgent
-
-
-class FuncNode(Node):
-    def setup(self):
-        pass
 
 
 class FuncModel(Model):
     def setup(self):
         self.network = Network()
         self.network.add_category('func')
+        with self.define_basic_components():
+            self.environment = FuncEnvironment()
         node_names_map: Dict[str, int] = {}
         node_id_to_name_map: Dict[str, int] = {}
         edges_with_num: List[Tuple[int, int]] = []

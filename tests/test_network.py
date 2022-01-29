@@ -9,7 +9,7 @@ import time
 import numpy as np
 
 from Melodie import AgentList, Agent
-from Melodie import Network, Node
+from Melodie import Network
 from Melodie.boost import JIT_AVAILABLE
 import logging
 
@@ -18,12 +18,6 @@ from .config import model
 logger = logging.getLogger(__name__)
 
 N = 10000_000
-
-
-class TestNode(Node):
-    def setup(self):
-        self.a = 123.0
-        self.b = 456
 
 
 def run_jit(network):

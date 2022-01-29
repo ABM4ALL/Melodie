@@ -83,11 +83,11 @@ class DataCollector1(DataCollector):
 
 
 def test_model_run():
-    Simulator4Test().run(
-        config=cfg_for_temp,
-        model_class=DCTestModel,
-        scenario_class=TestScenario,
-    )
+    global data_collector
+    sim = Simulator4Test(config=cfg_for_temp,
+                         model_cls=DCTestModel,
+                         scenario_cls=TestScenario, )
+    sim.run()
     dc: DataCollector = data_collector
     dc.collect(0)
     assert len(dc.agent_properties_dict['agent_list1']) == AGENT_NUM_1

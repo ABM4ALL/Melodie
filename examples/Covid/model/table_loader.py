@@ -12,7 +12,7 @@ class CovidDataFrameLoader(DataFrameLoader):
                           "grid_y_size": sqlalchemy.Integer(),
                           "initial_infected_percentage": sqlalchemy.Float(),
                           "infection_probability": sqlalchemy.Integer()}
-        self.load_dataframe('scenarios', 'simulator_scenarios.xlsx', scenarios_dict)
+        self.load_dataframe('simulator_scenarios', 'simulator_scenarios.xlsx', scenarios_dict)
         self.load_dataframe('calibrator_scenarios', 'calibrator_scenarios.xlsx', {})
         self.load_dataframe('calibrator_params_scenarios', 'calibrator_params_scenarios.xlsx', {})
 

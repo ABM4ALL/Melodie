@@ -14,7 +14,7 @@ from Melodie.db import create_db_conn
 from Melodie.scenario_manager import Scenario
 
 if TYPE_CHECKING:
-    from Melodie import Simulator
+    from Melodie import Simulator, DataFrameLoader, Calibrator, Trainer
 
 logger = logging.getLogger(__name__)
 
@@ -28,7 +28,10 @@ class TableGenerator:
         self.simulator.register_dataframe(self.table_name, new_df, self.data_types)
         return
 
-    def __init__(self, simulator: "Simulator", table_name: str, num_generator: Union[int, Callable[[Scenario], int]]):
+    def __init__(self,
+                 simulator: "DataFrameLoader",
+                 table_name: str,
+                 num_generator: Union[int, Callable[[Scenario], int]]):
         """
 
         :param table_name:
@@ -38,6 +41,9 @@ class TableGenerator:
         self.table_name = table_name
         self._self_incremental_value = -1
         self.simulator = simulator
+        from Melodie.dataframe_loader import DataFrameLoader
+        assert isinstance(self.simulator, DataFrameLoader)
+
         self.data_types = {}
         self._row_generator: Optional[Callable[[Scenario], Union[dict, object]]] = None
 
@@ -88,7 +94,7 @@ class TableGenerator:
 
         :return:
         """
-        scenarios = self.simulator.generate_scenarios()
+        scenarios = self.simulator.manager.generate_scenarios()
         data_list = []
         for scenario in scenarios:
             data_list.extend(self.gen_agent_params(scenario))
@@ -116,5 +122,3 @@ class TableGenerator:
                     f"Builtin type {type(generated)} (value: {generated}) cannot be converted to table row.")
             data_list.append(d)
         return data_list
-
-

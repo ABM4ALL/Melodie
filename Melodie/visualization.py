@@ -441,6 +441,7 @@ class NetworkVisualizer(Visualizer):
                                        {"name": 1, "itemStyle": {"color": "#f56c6c"}}
                                    ]}]
                               }
+        self.setup()
 
     def reset(self):
         self.edge_roles = {}

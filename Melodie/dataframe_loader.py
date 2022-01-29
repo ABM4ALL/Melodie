@@ -119,9 +119,10 @@ class DataFrameLoader:
         assert len(scenarios) != 0
         return scenarios
 
-    def generate_scenarios(self) -> List['Scenario']:
+    def generate_scenarios(self, manager_type: str) -> List['Scenario']:
         """
         Generate scenario objects by the parameter from static tables or scenarios_dataframe.
         :return:
         """
-        return self.generate_scenarios_from_dataframe('scenarios')
+        assert manager_type in {'simulator', 'trainer', 'calibrator'}
+        return self.generate_scenarios_from_dataframe(f'{manager_type}_scenarios')
