@@ -21,19 +21,6 @@ _jit_grid_cls = None
 
 
 def create_spots(spot_cls: ClassVar['Spot'], width: int, height: int):
-    # spot = spot_cls(0, 0, 0)
-    # spot.setup()
-    #
-    # dtypes: List[Tuple[str, str]] = []
-    # user_defined_spot_attr_names: List[str] = []
-    # for attr_name, attr_value in spot.__dict__.items():
-    #     user_defined_spot_attr_names.append(attr_name)
-    #     if isinstance(attr_value, (int, bool)):
-    #         dtypes.append((attr_name, 'i8'))
-    #     elif isinstance(attr_value, float):
-    #         dtypes.append((attr_name, 'f8'))
-    #     else:
-    #         raise f'Unsupported Spot attribute "{attr_name}" with value {attr_value} '
     dtypes = dtype_detect(spot_cls, (0, 0, 0))
     spots = np.zeros((height, width), dtype=dtypes)
     for y in range(height):

@@ -17,9 +17,8 @@ if TYPE_CHECKING:
 class FuncEnvironment(Environment):
 
     def setup(self):
-        scenario: FuncScenario = self.current_scenario()
-        self.reliability = scenario.reliability
-        self.recover_rate = scenario.recover_rate
+        self.reliability = self.scenario.reliability
+        self.recover_rate = self.scenario.recover_rate
 
     def step(self, agents: "AgentList", network: "Network"):
         for agent in agents:

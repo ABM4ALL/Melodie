@@ -10,7 +10,7 @@ except:
 
     traceback.print_exc()
 
-
+JIT_AVAILABLE = False
 def fake_jit(*args, **kwargs):
     """
     A fake jit if numba is not available

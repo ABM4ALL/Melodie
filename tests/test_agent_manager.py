@@ -57,10 +57,30 @@ def test_properties():
     al.set_properties(df)
     for agent in al:
         assert agent.a == (df[df['id'] == agent.id]['a'].item())
+    print([a.id for a in al])
+
+
+def test_add_del_agents():
+    n = 20
+    al = AgentList(TestAgent, n, model)
+
+    al.remove(al[10])
+    al.add()
+    assert al[-1].id == 20
+    assert len(al) == 20
+    for agent in al:
+        assert al.get_agent(agent.id).id == agent.id
 
 
 def test_properties_with_scenario():
-    n = random.randint(10, 10)
+    """
+    Test when target scenario id is 100.
+
+    The agent list should load the data with scenario_id==100, and should not load the data with scenario_id==0
+
+    :return:
+    """
+    n = 10
     assert isinstance(model.scenario.id, int)
     al = AgentList(TestAgent, n, model)
     l = [j for j in range(n)]
@@ -69,7 +89,7 @@ def test_properties_with_scenario():
                           {'id': i, "scenario_id": 0, "a": random.randint(-100, 100)} for i in l
                       ] + [
                           {'id': i, "scenario_id": model.scenario.id,
-                           "a": random.randint(-100, 100)} for i in range(n)
+                           "a": random.randint(-100, 100)} for i in l
                       ]
                       )
     al.set_properties(df)
@@ -77,3 +97,6 @@ def test_properties_with_scenario():
     df_scenario = df.query(f"scenario_id == {model.scenario.id}")
     for agent in al:
         assert agent.a == (df_scenario[df_scenario['id'] == agent.id]['a'].item())
+
+    assert al._id_offset == 9
+    print([a.id for a in al])

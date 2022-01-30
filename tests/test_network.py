@@ -8,12 +8,9 @@ import time
 
 import numpy as np
 
-from Melodie import AgentList, Agent
 from Melodie import Network
 from Melodie.boost import JIT_AVAILABLE
 import logging
-
-from .config import model
 
 logger = logging.getLogger(__name__)
 
@@ -94,7 +91,7 @@ def test_network_JIT():
     if not JIT_AVAILABLE:
         return
     from Melodie.boost import JITNetwork
-    network = JITNetwork(TestNode)
+    network = JITNetwork()
     network_routine(network)
 
 

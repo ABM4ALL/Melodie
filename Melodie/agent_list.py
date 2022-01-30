@@ -1,12 +1,14 @@
 import logging
 import random
+from bisect import bisect, bisect_left, bisect_right
 
 import pandas as pd
 from pandas.api.types import is_integer_dtype, is_float_dtype, is_string_dtype
 import typing
 from typing import TYPE_CHECKING, ClassVar, List, Dict, Union, Set, Optional, TypeVar, Type, Generic
 
-from .basic import IndexedAgentList, MelodieExceptions, MelodieException
+from .basic import IndexedAgentList, MelodieExceptions, MelodieException, binary_search
+from .agent import Agent
 from collections.abc import Sequence
 
 AgentGeneric = TypeVar('AgentGeneric')
@@ -18,7 +20,6 @@ logger = logging.getLogger(__name__)
 
 
 class BaseAgentContainer(Generic[AgentGeneric]):
-    # _ID_OFFSET = -1
     _agent_ids = set()
 
     def __init__(self):
@@ -84,7 +85,6 @@ class BaseAgentContainer(Generic[AgentGeneric]):
 
         :return:
         """
-
         MelodieExceptions.Assertions.Type('props_df', props_df, pd.DataFrame)
 
         param_names = [param for param in props_df.columns if param not in
@@ -110,6 +110,13 @@ class BaseAgentContainer(Generic[AgentGeneric]):
     def post_setup(self):
         for i, agent in enumerate(self.agents):
             agent.post_setup()
+
+    def get_agent(self, agent_id: int):
+        index = binary_search(self.agents, agent_id, key=lambda agent: agent.id)
+        if index == -1:
+            return None
+        else:
+            return self.agents[index]
 
 
 class AgentList(BaseAgentContainer, Sequence, typing.Sequence[AgentGeneric]):
@@ -162,8 +169,14 @@ class AgentList(BaseAgentContainer, Sequence, typing.Sequence[AgentGeneric]):
                 self.agents.pop(i)
                 break
 
-    def add(self, agent: 'AgentGeneric'):
-        self.agents.add(agent)
+    def add(self, agent: 'AgentGeneric' = None):
+        new_id = self.new_id()
+        if agent is not None:
+            assert isinstance(agent, Agent)
+        else:
+            agent = self.agent_class(new_id)
+        agent.id = new_id
+        self.agents.append(agent)
 
     def to_list(self, column_names: List[str] = None) -> List[Dict]:
         protected_columns = ['id']
@@ -195,3 +208,7 @@ class AgentList(BaseAgentContainer, Sequence, typing.Sequence[AgentGeneric]):
         df = pd.DataFrame(data_list)
         df['id'] = df['id'].astype(int)
         return df
+
+    def set_properties(self, props_df: pd.DataFrame):
+        super().set_properties(props_df)
+        self.agents.sort(key=lambda agent: agent.id)

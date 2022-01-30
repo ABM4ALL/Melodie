@@ -6,17 +6,17 @@ from .market_strategy import MarketStrategy, NonCompetitiveMarketStrategy
 
 
 class AspirationEnvironment(Environment):
+    scenario: AspirationScenario
 
     def setup(self):
-        scenario: AspirationScenario = self.current_scenario()
-        self.market_strategy = scenario.market_strategy
-        self.market_profit_mean = scenario.market_profit_mean
-        self.market_profit_sigma = scenario.market_profit_sigma
-        self.sigma_exploitation = scenario.sigma_exploitation
-        self.mean_exploration = scenario.mean_exploration
-        self.sigma_exploration = scenario.sigma_exploration
-        self.imitation_share = scenario.imitation_share
-        self.imitation_fail_rate = scenario.imitation_fail_rate
+        self.market_strategy = self.scenario.market_strategy
+        self.market_profit_mean = self.scenario.market_profit_mean
+        self.market_profit_sigma = self.scenario.market_profit_sigma
+        self.sigma_exploitation = self.scenario.sigma_exploitation
+        self.mean_exploration = self.scenario.mean_exploration
+        self.sigma_exploration = self.scenario.sigma_exploration
+        self.imitation_share = self.scenario.imitation_share
+        self.imitation_fail_rate = self.scenario.imitation_fail_rate
         self.average_technology = 0.0
 
     def market_strategy_choice(self) -> Type[MarketStrategy]:

@@ -40,9 +40,10 @@ class Strategy():
 
 
 class GameOfLifeEnvironment(Environment):
+    scenario: GameOfLifeScenario
 
     def setup(self):
-        scenario: GameOfLifeScenario = self.current_scenario()
+        pass
 
     def choose_strategy(self, al: "AgentList[GameOfLifeSpot]"):
         strategy = Strategy(1, al)

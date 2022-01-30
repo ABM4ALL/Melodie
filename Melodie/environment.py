@@ -14,14 +14,14 @@ class Environment(Element):
         self.model: Optional['Model'] = None
         self.scenario: Optional['Scenario'] = None
 
-    def current_scenario(self):
-        """
-        Get the current scenario.
-        :return:
-        """
-        from Melodie import Scenario
-        MelodieExceptions.Assertions.Type('The scenario of self.model', self.model.scenario, Scenario)
-        return self.model.scenario
+    # def current_scenario(self):
+    #     """
+    #     Get the current scenario.
+    #     :return:
+    #     """
+    #     from Melodie import Scenario
+    #     MelodieExceptions.Assertions.Type('The scenario of self.model', self.model.scenario, Scenario)
+    #     return self.model.scenario
 
     def setup(self):
         """

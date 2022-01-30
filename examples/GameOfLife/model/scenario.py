@@ -3,7 +3,6 @@
 # @Author: Zhanyi Hou
 # @Email: 1295752786@qq.com
 # @File: scenario.py
-from typing import List
 
 from Melodie import Scenario
 

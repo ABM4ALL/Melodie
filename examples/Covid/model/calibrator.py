@@ -16,8 +16,8 @@ class CovidCalibrator(Calibrator):
         self.watched_env_properties = ['accumulated_infection']
 
     def distance(self, environment: CovidEnvironment):
-        print("infection_rate", environment.accumulated_infection / environment.current_scenario().agent_num)
-        return (environment.accumulated_infection / environment.current_scenario().agent_num - 0.9) ** 2
+        print("infection_rate", environment.accumulated_infection / environment.scenario.agent_num)
+        return (environment.accumulated_infection / environment.scenario.agent_num - 0.9) ** 2
 
     def convert_distance_to_fitness(self, distance: float):
         return 1 - distance

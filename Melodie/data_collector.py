@@ -98,7 +98,7 @@ class DataCollector:
         t0 = time.time()
         env = self.model.environment
 
-        scenario = self.model.current_scenario()
+        scenario = self.model.scenario
         run_id = self.model.run_id_in_scenario
         env_dic = env.to_dict(self.env_property_names())
         env_dic['step'] = step

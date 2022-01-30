@@ -18,6 +18,8 @@ def dtype_detect(spot_cls: type, args: Tuple) -> List[Tuple[str, str]]:
             dtypes.append((attr_name, 'i8'))
         elif isinstance(attr_value, float):
             dtypes.append((attr_name, 'f8'))
+        elif attr_name == 'scenario':
+            continue
         else:
-            raise f'Unsupported Spot attribute "{attr_name}" with value {attr_value} '
+            raise TypeError(f'Unsupported Spot attribute "{attr_name}" with value {attr_value} ')
     return dtypes

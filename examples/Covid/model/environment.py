@@ -7,12 +7,12 @@ from .scenario import CovidScenario
 
 
 class CovidEnvironment(Environment):
+    scenario: CovidScenario
 
     def setup(self):
-        scenario: CovidScenario = self.current_scenario()
-        self.grid_x_size = scenario.grid_x_size
-        self.grid_y_size = scenario.grid_y_size
-        self.infection_probability = scenario.infection_probability
+        self.grid_x_size = self.scenario.grid_x_size
+        self.grid_y_size = self.scenario.grid_y_size
+        self.infection_probability = self.scenario.infection_probability
         self.accumulated_infection = 0
 
     # grid和network也应该是environment的对象，
