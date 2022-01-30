@@ -1,4 +1,5 @@
 import abc
+import time
 from typing import Type, Callable, List, Optional, ClassVar, Iterator, Union, Tuple, Dict
 import copy
 import numpy as np
@@ -131,9 +132,10 @@ class Calibrator(BaseModellingManager):
         meta = kwargs['meta']
         environment_record_dict = {}
         environment_record_dict.update(self.current_algorithm_meta)
-
+        t0  =time.time()
         self.model.run()
-
+        t1  =time.time()
+        logger.info(f'Model run, taking {t1-t0}s')
         env = self.model.environment
 
         fitness = self.convert_distance_to_fitness(self.distance(env))

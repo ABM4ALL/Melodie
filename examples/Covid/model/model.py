@@ -31,5 +31,5 @@ class CovidModel(Model):
         for t in range(0, self.scenario.periods):
             self.environment.agents_move(self.agent_list, self.grid)
             self.environment.agents_infection(self.agent_list, self.grid)
-            self.data_collector.collect(t)
-        self.data_collector.save()
+        #     self.data_collector.collect(t)
+        # self.data_collector.save()

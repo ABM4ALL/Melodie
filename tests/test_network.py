@@ -64,7 +64,7 @@ def network_routine(network):
     assert 3 in network.get_neighbors(1)
 
     network.remove_edge(0, 3)
-    assert 3 not in network.get_neighbors(0)
+    assert 3 not in list(network.get_neighbors(0))
 
     network.add_agent(0, 'wolves', 0)
     network.add_agent(1, 'wolves', 0)

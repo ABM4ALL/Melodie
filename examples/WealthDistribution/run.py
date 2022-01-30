@@ -10,9 +10,7 @@ from model.model import GiniModel
 from model.simulator import GiniSimulator
 from model.dataframe_loader import GiniDataframeLoader
 from config import config
-import pyjion
 if __name__ == "__main__":
-    pyjion.enable()
     simulator = GiniSimulator(config=config,
                               scenario_cls=GiniScenario,
                               model_cls=GiniModel,

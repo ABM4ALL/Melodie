@@ -169,7 +169,7 @@ def JITNetworkBackup(node_elem_cls):
     return _jit_network_cls(nodes, edges, agents_pos, agents_on_node, neighbors_cache)
 
 
-def JITNetwork(cache=True):
+def JITNetwork(cache=False):
     global _jit_network_cls
 
     agent_num = 100
@@ -330,7 +330,6 @@ def JITNetwork(cache=True):
             :param ids_arr:
             :return:
             """
-
             length = len(ids_arr)
             for i in range(length):
                 self.add_edge(ids_arr[i][0], ids_arr[i][1])

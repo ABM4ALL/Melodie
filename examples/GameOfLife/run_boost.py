@@ -1,24 +1,19 @@
 import logging
 import os
 import sys
-import time
-import json
-from typing import Dict, Tuple, List
 
-import numpy as np
-
-from examples.GameOfLifeNew.model.spot import GameOfLifeSpot
+from model.spot import GameOfLifeSpot
 
 sys.path.append("../..")
 # Melody package is not available on pip yet, so this example has to import Melody package placed at project root.
 # Appending project root to "sys.path" makes Melody package accessible to the interpreter.
 # This code will be removed as soon as we release the first distribution onto pip.
-from model.environment import GameOfLifeEnvironment, Strategy#,Strategy2,Strategy1
+from model.environment import GameOfLifeEnvironment, Strategy
 from model.scenario import GameOfLifeScenario
 from model.model import GameOfLifeModel
 from model.simulator import FuncSimulator
 from model.visualizer import GameOfLifeVisualizer
-from analyzer.analyzer import Analyzer
+from model.df_loader import GameOfLifeDataFrameLoader
 from config import config
 
 logger = logging.getLogger(__name__)
@@ -35,7 +30,7 @@ add_custom_jit_class(Strategy)
 # add_custom_jit_class(Strategy2)
 logging.basicConfig(level=logging.INFO)
 if __name__ == "__main__":
-    simulator = FuncSimulator()
+    simulator = FuncSimulator(config, GameOfLifeScenario, GameOfLifeModel, GameOfLifeDataFrameLoader)
 
     """
     Run the model with register.rst
@@ -46,7 +41,6 @@ if __name__ == "__main__":
         config,
         model_class=GameOfLifeModel,
         scenario_class=GameOfLifeScenario,
-        analyzer_class=Analyzer,
         boost_model_class=GameOfLifeModel,
         model_components=None,
         visualizer_class=GameOfLifeVisualizer

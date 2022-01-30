@@ -84,7 +84,6 @@ def ___model___setup_boost(___model):
 
 
 def ___model___run(___model):
-    ___model.visualizer.parse(___model.grid)
     for i in range(___model.scenario.periods):
         t0: float = time.time()
         ___environment___step(___model.environment, ___model.grid, ___model.agent_list)

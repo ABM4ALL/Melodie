@@ -276,12 +276,8 @@ class Simulator(BaseModellingManager):
                   agent_classes: List[Type['Agent']],
                   environment_class: ClassVar['Environment'],
                   config: 'Config' = None,
-                  data_collector_class: ClassVar['DataCollector'] = None,
                   model_class: ClassVar['Model'] = None,
                   scenario_class: ClassVar['Scenario'] = None,
-                  scenario_manager_class: ClassVar['ScenarioManager'] = None,
-                  table_generator_class: ClassVar['TableGenerator'] = None,
-                  analyzer_class: ClassVar['Analyzer'] = None,
                   visualizer_class: ClassVar['Visualizer'] = None,
                   boost_model_class: ClassVar['Model'] = None,
                   model_components=None
@@ -315,8 +311,9 @@ class Simulator(BaseModellingManager):
 
         self.config = config
         self.scenario_class = scenario_class
-        self.register_scenario_dataframe()
-        self.register_static_dataframes()
+        self.pre_run()
+        # self.register_scenario_dataframe()
+        # self.register_static_dataframes()
 
         # self.scenarios_dataframe = self.create_scenarios_dataframe()
         self.scenarios = self.generate_scenarios()

@@ -5,6 +5,7 @@ import time
 
 import numpy as np
 
+import Melodie.boost
 from Melodie import Model
 from Melodie.grid import Grid
 from .spot import GameOfLifeSpot
@@ -15,6 +16,7 @@ class GameOfLifeModel(Model):
         self.grid = Grid(GameOfLifeSpot, 100, 100)
 
     def setup_boost(self):
+
         from Melodie.boost import JITGrid
         self.environment = None
         self.grid = JITGrid(100, 100, GameOfLifeSpot)

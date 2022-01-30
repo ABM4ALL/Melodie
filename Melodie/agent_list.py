@@ -1,6 +1,5 @@
 import logging
 import random
-from bisect import bisect, bisect_left, bisect_right
 
 import pandas as pd
 from pandas.api.types import is_integer_dtype, is_float_dtype, is_string_dtype
@@ -27,7 +26,6 @@ class BaseAgentContainer(Generic[AgentGeneric]):
         self.scenario: Union['Scenario', None] = None
         self.agents: Union[List['AgentGeneric'], Set['AgentGeneric'], None] = None
 
-    # @staticmethod
     def new_id(self):
         """
         Create a new ID
