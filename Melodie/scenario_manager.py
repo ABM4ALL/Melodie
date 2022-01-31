@@ -94,6 +94,9 @@ class Scenario(Element):
 
 
 class LearningScenario(Scenario):
+    """
+    Learning scenario is used in Trainer and Calibrator for trainer/calibrator parameters.
+    """
     class Parameter():
         def __init__(self, name: str, min: float, max: float):
             self.name = name
@@ -115,7 +118,7 @@ class LearningScenario(Scenario):
         return parameters
 
 
-class GALearningScenario(LearningScenario):
+class GATrainerScenario(LearningScenario):
     def __init__(self, id: int, number_of_path: int, training_generation: int, strategy_population: int,
                  mutation_prob: int, strategy_param_code_length: int):
         super().__init__(id, number_of_path)
@@ -125,10 +128,10 @@ class GALearningScenario(LearningScenario):
         self.strategy_param_code_length = strategy_param_code_length
 
     @staticmethod
-    def from_dataframe_record(record: Dict[str, Union[int, float]]) -> 'GALearningScenario':
-        s = GALearningScenario(record['id'], record['number_of_path'], record['training_generation'],
-                               record['strategy_population'], record['mutation_prob'],
-                               record['strategy_param_code_length'])
+    def from_dataframe_record(record: Dict[str, Union[int, float]]) -> 'GATrainerScenario':
+        s = GATrainerScenario(record['id'], record['number_of_path'], record['training_generation'],
+                              record['strategy_population'], record['mutation_prob'],
+                              record['strategy_param_code_length'])
         max_values = {name[:len(name) - len("_max")]: value for name, value in record.items() if name.endswith("_max")}
         min_values = {name[:len(name) - len("_min")]: value for name, value in record.items() if name.endswith("_min")}
         print(max_values, min_values)

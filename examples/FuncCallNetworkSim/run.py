@@ -1,16 +1,11 @@
 import logging
 import sys
-import json
-from typing import Dict, Tuple, List
-
-from Melodie import DataCollector
 
 sys.path.append("../..")
-# Melody package is not available on pip yet, so this example has to import Melody package placed at project root.
-# Appending project root to "sys.path" makes Melody package accessible to the interpreter.
+# Melodie package is not available on pip yet, so this example has to import Melodie package placed at project root.
+# Appending project root to "sys.path" makes Melodie package accessible to the interpreter.
 # This code will be removed as soon as we release the first distribution onto pip.
-from model.agent import FuncAgent
-from model.environment import FuncEnvironment
+
 from model.scenario import FuncScenario
 from model.model import FuncModel
 from model.simulator import FuncSimulator

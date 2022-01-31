@@ -41,7 +41,7 @@ class Calibrator(BaseModellingManager):
         self.current_algorithm_meta = {
             "scenario_id": 0,
             "learning_scenario_id": 1,
-            "learning_path_id": 0,
+            "trainer_path_id": 0,
             "generation_id": 0
         }
         self.table_loader: Optional['DataFrameLoader'] = None
@@ -66,15 +66,15 @@ class Calibrator(BaseModellingManager):
         for scenario in self.scenarios:
             self.current_algorithm_meta['scenario_id'] = scenario.id
             calibration_scenarios = calibrator_scenarios_table.to_dict(orient="records")
-            for calibration_scenario in calibration_scenarios:
-                calibration_scenario = GACalibrationScenario.from_dataframe_record(calibration_scenario)
-                self.current_algorithm_meta['calibration_scenario_id'] = calibration_scenario.id
-                for learning_path_id in range(calibration_scenario.number_of_path):
-                    self.current_algorithm_meta['learning_path_id'] = learning_path_id
+            for calibrator_scenario in calibration_scenarios:
+                calibrator_scenario = GACalibrationScenario.from_dataframe_record(calibrator_scenario)
+                self.current_algorithm_meta['calibration_scenario_id'] = calibrator_scenario.id
+                for trainer_path_id in range(calibrator_scenario.number_of_path):
+                    self.current_algorithm_meta['learning_path_id'] = trainer_path_id
 
-                    self.learn_once(scenario, calibration_scenario)
+                    self.run_once(scenario, calibrator_scenario)
 
-    def learn_once(self, scenario, calibration_scenario: GACalibrationScenario):
+    def run_once(self, scenario, calibration_scenario: GACalibrationScenario):
 
         scenario.manager = self
         self.model = self.model_cls(self.config, scenario)

@@ -1,9 +1,8 @@
-import os
 import sys
 
 sys.path.append("../..")
-# Melody package is not available on pip yet, so this example has to import Melody package placed at project root.
-# Appending project root to "sys.path" makes Melody package accessible to the interpreter.
+# Melody package is not available on pip yet, so this example has to import Melodie package placed at project root.
+# Appending project root to "sys.path" makes Melodie package accessible to the interpreter.
 # This code will be removed as soon as we release the first distribution onto pip.
 from model.scenario import GiniScenario
 from model.model import GiniModel

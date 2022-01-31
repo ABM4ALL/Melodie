@@ -6,6 +6,7 @@ from .agent import CovidAgent
 from .environment import CovidEnvironment
 from .data_collector import CovidDataCollector
 from .scenario import CovidScenario
+from Melodie.boost import JITGrid
 
 
 class CovidModel(Model):

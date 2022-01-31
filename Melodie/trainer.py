@@ -7,7 +7,7 @@ import copy
 import numpy as np
 import pandas as pd
 
-from Melodie import Model, Scenario, Simulator, Config, Agent, create_db_conn, GALearningScenario
+from Melodie import Model, Scenario, Simulator, Config, Agent, create_db_conn, GATrainerScenario
 from Melodie.algorithms import GeneticAlgorithm, TrainingAlgorithm
 from .simulator import BaseModellingManager
 from .dataframe_loader import DataFrameLoader
@@ -39,7 +39,7 @@ class Trainer(BaseModellingManager):
 
         self.agent_result_columns = [
             "scenario_id", "learning_scenario_id",
-            "learning_path_id", "generation_id",
+            "trainer_path_id", "generation_id",
             "chromosome_id",
             "agent_id",
             "para_1", "para_2", "para_3", "fitness"
@@ -49,7 +49,7 @@ class Trainer(BaseModellingManager):
         self.current_algorithm_meta = {
             "scenario_id": 0,
             "learning_scenario_id": 1,
-            "learning_path_id": 0,
+            "trainer_path_id": 0,
             "generation_id": 0}
 
     def setup(self):
@@ -64,34 +64,34 @@ class Trainer(BaseModellingManager):
         """
         self.setup()
         self.pre_run()
-        learning_scenarios_table = self.get_registered_dataframe('trainer_params_scenarios')
-        assert isinstance(learning_scenarios_table, pd.DataFrame), "No learning scenarios table specified!"
+        trainer_scenarios_table = self.get_registered_dataframe('trainer_params_scenarios')
+        assert isinstance(trainer_scenarios_table, pd.DataFrame), "No learning scenarios table specified!"
 
         for scenario in self.scenarios:
             self.current_algorithm_meta['scenario_id'] = scenario.id
-            learning_scenarios = learning_scenarios_table.to_dict(orient="records")
-            for learning_scenario in learning_scenarios:
-                learning_scenario = GALearningScenario.from_dataframe_record(learning_scenario)
-                self.current_algorithm_meta['learning_scenario_id'] = learning_scenario.id
-                for learning_path_id in range(learning_scenario.number_of_path):
-                    self.current_algorithm_meta['learning_path_id'] = learning_path_id
+            trainer_scenarios = trainer_scenarios_table.to_dict(orient="records")
+            for trainer_scenario in trainer_scenarios:
+                trainer_scenario = GATrainerScenario.from_dataframe_record(trainer_scenario)
+                self.current_algorithm_meta['learning_scenario_id'] = trainer_scenario.id
+                for trainer_path_id in range(trainer_scenario.number_of_path):
+                    self.current_algorithm_meta['trainer_path_id'] = trainer_path_id
 
-                    self.learn_once(scenario, learning_scenario)
+                    self.run_once(scenario, trainer_scenario)
 
-    def learn_once(self, scenario, learning_scenario: GALearningScenario):
+    def run_once(self, scenario, trainer_scenario: GATrainerScenario):
 
         scenario.manager = self
         self.model = self.model_cls(self.config, scenario)
         self.model.setup()
         agents_num = len(self.model.__getattribute__(self.container_name))
         agents = self.model.__getattribute__(self.container_name)
-        self.algorithm = GeneticAlgorithm(learning_scenario.training_generation, learning_scenario.strategy_population,
-                                          learning_scenario.mutation_prob, learning_scenario.strategy_param_code_length)
+        self.algorithm = GeneticAlgorithm(trainer_scenario.training_generation, trainer_scenario.strategy_population,
+                                          trainer_scenario.mutation_prob, trainer_scenario.strategy_param_code_length)
         self.algorithm.set_parameters_agents(agents_num,
                                              len(self.properties),
                                              self.properties,
                                              self.environment_properties)
-        self.algorithm.parameters = learning_scenario.get_parameters_range(agents_num)
+        self.algorithm.parameters = trainer_scenario.get_parameters_range(agents_num)
 
         self.algorithm.parameters_value = []
         for agent in agents:
@@ -99,21 +99,21 @@ class Trainer(BaseModellingManager):
 
         self.algorithm_instance = self.algorithm.optimize_multi_agents(self.fitness, scenario)
 
-        for i in range(learning_scenario.training_generation):
+        for i in range(trainer_scenario.training_generation):
             self.current_algorithm_meta['generation_id'] = i
             print(f"===================Training step {i + 1}=====================")
             if i == 0:
                 strategy_population, params, fitness, meta = self.algorithm_instance.__next__()
             else:
                 strategy_population, params, fitness, meta = self.algorithm_instance.send(len(agents))
-            agent_learning_cov = copy.deepcopy(meta['agent_learning_cov'])
-            env_learning_cov = copy.deepcopy(meta['env_learning_cov'])
+            agent_training_cov = copy.deepcopy(meta['agent_learning_cov'])
+            env_training_cov = copy.deepcopy(meta['env_learning_cov'])
 
-            for d in agent_learning_cov:
+            for d in agent_training_cov:
                 d.update(self.current_algorithm_meta)
-            env_learning_cov.update(self.current_algorithm_meta)
-            create_db_conn(self.config).write_dataframe('agent_learning_cov', pd.DataFrame(agent_learning_cov))
-            create_db_conn(self.config).write_dataframe('env_learning_cov', pd.DataFrame([env_learning_cov]))
+            env_training_cov.update(self.current_algorithm_meta)
+            create_db_conn(self.config).write_dataframe('agent_learning_cov', pd.DataFrame(agent_training_cov))
+            create_db_conn(self.config).write_dataframe('env_learning_cov', pd.DataFrame([env_training_cov]))
 
     def set_algorithm(self, algorithm: Type[TrainingAlgorithm]):
         """
