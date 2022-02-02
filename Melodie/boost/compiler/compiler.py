@@ -299,7 +299,6 @@ def conv(agent_cls, environment_cls, model_cls, output, model_components=None):
     f = open(output, 'w')
     f.write(prefix)
 
-
     for i, agent_class in enumerate(agent_classes):
         f.write(generate_array(agent_cls[i], agent_class) + "\n")
     f.write(generate_array(environment_cls, env_class) + "\n")
@@ -318,7 +317,7 @@ def conv(agent_cls, environment_cls, model_cls, output, model_components=None):
             f.write(code)
 
     for method in find_class_methods(model_class):
-        if method.name != 'setup':
+        if method.name not in {'setup', 'setup_boost'}:
             code = modify_ast_model(method, '___model', model_components, model_class)
             print(code)
             f.write(code)

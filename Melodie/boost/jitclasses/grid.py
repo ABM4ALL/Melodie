@@ -245,5 +245,35 @@ def JITGrid(width: int, height: int, spot_cls: ClassVar['Spot'], wrap=True):
             else:
                 return arr
 
+        def get_roles(self):
+            grid_roles = np.zeros((self.height * self.width, 4))
+            for x in range(self.width):
+                for y in range(self.height):
+                    spot = self.get_spot(x, y)
+                    # role = spot.role
+                    pos_1d = self._convert_to_1d(x, y)
+                    grid_roles[pos_1d, 0] = x
+                    grid_roles[pos_1d, 1] = y
+                    grid_roles[pos_1d, 2] = 0
+                    grid_roles[pos_1d, 3] = spot.role
+            return grid_roles
+        # def get_agent_series(self):
+        #     other_series_data = {}
+        #     existed_agents = self._existed_agents
+        #     for category in existed_agents.keys():
+        #         # if other_series_data.get(category) is None:
+        #         other_series_data[category] = []
+        #         for agent_id in existed_agents[category]:
+        #             pos = self.get_agent_pos(agent_id, category)
+        #             # pos = existed_agents[category][agent_id]
+        #             other_series_data[category].append({
+        #                 'value': list(pos),
+        #                 'id': agent_id,
+        #                 'category': category,
+        #             })
+        #     return other_series_data
+        # for series_name, data in other_series_data.items():
+        #     self.other_series[series_name]['data'] = data
+
     _jit_grid_cls = GridJIT
     return _jit_grid_cls(spots, agent_ids)

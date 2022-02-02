@@ -24,15 +24,16 @@ def test_repr():
 
 def test_agent_manager_type_hinting():
     ta = TestAgent(0)
-    ta.setup()
+    # ta.setup()
     am = AgentList(TestAgent, 0, model)
-    am.add(ta)
+    am.add(ta, {'a': 0})
     ta_2 = TestAgent(1)
-    ta_2.setup()
+    # ta_2.setup()
     ta_2.a = 1
-    am.add(ta_2)
-    for i, a in enumerate(am):
-        assert a.a == i
+    am.add(ta_2, {'a': 1})
+    assert am[0].a == 0
+    assert am[1].a == 1
+
     assert len(am) == 2
 
     assert am.random_sample(1)[0].id in {ta.id, ta_2.id}

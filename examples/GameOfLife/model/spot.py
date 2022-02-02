@@ -11,6 +11,13 @@ from Melodie.grid import Spot
 class GameOfLifeSpot(Spot):
     def setup(self):
         self.alive = random.random() > 0.5
+        self.role: int = self.calc_role()
+
+    def calc_role(self):
+        return 1 if self.alive else -1
+
+    def update_role(self):
+        self.role: int = self.calc_role()
 
     def alive_on_next_tick(self, surround_alive_count: int) -> bool:
         if self.alive:

@@ -1,7 +1,7 @@
 import sys
 
 from .agent import Agent
-from .agent_list import AgentList
+from .agent_list import BaseAgentContainer, AgentList
 from .config import Config
 from .data_collector import DataCollector
 from .db import DB, create_db_conn

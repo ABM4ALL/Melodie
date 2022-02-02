@@ -14,7 +14,7 @@ from websockets.legacy.server import WebSocketServerProtocol
 from Melodie.grid import Grid, Spot
 
 if TYPE_CHECKING:
-    from Melodie import Scenario
+    from Melodie import Scenario, BaseAgentContainer
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
@@ -316,6 +316,7 @@ class GridVisualizer(Visualizer):
         self.height = 0
         self.width = 0
         self.grid_roles = []
+
         self.grid_params = {}
 
         self.chart_options = {"animation": False, "progressiveThreshold": 100000, "tooltip": {"position": "top"},
@@ -330,6 +331,7 @@ class GridVisualizer(Visualizer):
                               "series": [
                                   {"universalTransition": {"enabled": False}, "name": "Punch Card", "type": "heatmap"}]
                               }
+        self.other_series = {}
 
     def reset(self):
         self.grid_roles = []
@@ -337,6 +339,24 @@ class GridVisualizer(Visualizer):
 
     def convert_to_1d(self, x, y):
         return x * self.height + y
+
+    def parse_series(self, grid: Grid):
+        self.grid_roles = grid.get_roles().tolist()
+
+        other_series_data = {}
+        existed_agents = grid._existed_agents
+        for category in existed_agents.keys():
+            if other_series_data.get(category) is None:
+                other_series_data[category] = []
+            for agent_id in existed_agents[category]:
+                pos = grid.get_agent_pos(agent_id, category)
+                other_series_data[category].append({
+                    'value': list(pos),
+                    'id': agent_id,
+                    'category': category,
+                })
+        for series_name, data in other_series_data.items():
+            self.other_series[series_name]['data'] = data
 
     def parse_grid_roles(self, grid: Grid, parser: Callable[['Spot'], int]):
         """
@@ -349,15 +369,29 @@ class GridVisualizer(Visualizer):
         self.width = grid.width
         self.height = grid.height
         self.grid_roles = [None for i in range(grid.height * grid.width)]
+        other_series_data = {}
+
+        categories = grid._agent_ids.keys()
         if isinstance(grid, Grid):
             for x in range(grid.width):
                 for y in range(grid.height):
+                    print(x, y)
                     spot = grid.get_spot(x, y)
                     role = parser(spot)
                     if role < 0:
                         self.grid_roles[self.convert_to_1d(x, y)] = [x, y, "-", 0]
                     else:
                         self.grid_roles[self.convert_to_1d(x, y)] = [x, y, 1, role]
+
+                    for category in categories:
+                        if other_series_data.get(category) is None:
+                            other_series_data[category] = []
+                        for agent_id in grid.get_agent_ids(category, x, y):
+                            other_series_data[category].append({
+                                'value': [x, y],
+                                'id': agent_id,
+                                'category': category,
+                            })
         else:
             for x in range(grid.width):
                 for y in range(grid.height):
@@ -367,52 +401,50 @@ class GridVisualizer(Visualizer):
                         self.grid_roles[self.convert_to_1d(x, y)] = [x, y, "-", 0]
                     else:
                         self.grid_roles[self.convert_to_1d(x, y)] = [x, y, 1, role]
+                    for category in categories:
+                        if other_series_data.get(category) is None:
+                            other_series_data[category] = []
+                        for agent_id in grid.get_agent_ids(category, x, y):
+                            other_series_data[category].append({
+                                'value': [x, y],
+                                'id': agent_id,
+                                'category': category,
+                            })
+        for series_name, data in other_series_data.items():
+            self.other_series[series_name]['data'] = data
+
+    def add_agent_series(self, series_name: str, series_type: str, color: str, symbol="rect", ):
+        assert series_type in {'scatter'}
+        self.other_series[series_name] = {
+            "data": [],
+            "itemStyle":
+                {
+                    "color": color,
+                },
+            "symbol": "rect",
+            "type": series_type,
+            "name": series_name,
+        }
+
+    def set_other_series_data(self, series_name, data):
+        assert series_name in self.other_series
+        self.other_series[series_name]['data'] = data
 
     def format(self):
         data = {
-            "studio":
+            "visualizer":
                 {
                     "series":
                         [
                             {
                                 "data": self.grid_roles,
                             },
-                            {
-                                "data":
-                                    [
-                                        {"category": "sheep",
-                                         "id": i,
-                                         "value": [random.randint(0, 100), random.randint(0, 100)]}
-                                        for i in range(100)
-                                    ],
-                                "itemStyle":
-                                    {
-                                        "color": "#bbbbbb",
-                                    },
-                                "symbol": "rect",
-                                "type": "scatter",
-                                "name": "sheep",
-                            },
-                            {
-                                "data":
-                                    [
-                                        {"category": "wolf",
-                                         "id": i,
-                                         "value": [random.randint(0, 100), random.randint(0, 100)]}
-                                        for i in range(100)
-                                    ],
-                                "itemStyle": {
-                                    "color": "#666666",
-                                },
-                                "symbol": "rect",
-                                "type": "scatter",
-                                "name": "wolves",
-                            },
                         ]
                 },
             "plots": []
 
         }
+        data['visualizer']['series'].extend([series for k, series in self.other_series.items()])
         return data
 
 
@@ -420,7 +452,7 @@ class NetworkVisualizer(Visualizer):
     def __init__(self):
         super().__init__()
 
-        logger.info("Network studio server is starting...")
+        logger.info("Network visualizer server is starting...")
 
         self.vertex_positions: Dict[str, Tuple[int, int]] = {}
         self.vertex_roles: Dict[str, int] = {}
@@ -498,7 +530,7 @@ class NetworkVisualizer(Visualizer):
                 "target": edge[1]
             })
         data = {
-            "studio": {
+            "visualizer": {
                 "series": [{
                     "data": lst,
                     "links": lst_edges

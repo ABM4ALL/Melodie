@@ -1,4 +1,3 @@
-
 import functools
 from typing import ClassVar, Set, Dict, List, Tuple
 
@@ -224,3 +223,16 @@ class Grid:
         :return:
         """
         return vectorize_2d(self._spots, attr_name)
+
+    def get_roles(self):
+        grid_roles = np.zeros((self.height * self.width, 4))
+        for x in range(self.width):
+            for y in range(self.height):
+                spot = self.get_spot(x, y)
+                # role = spot.role
+                pos_1d = self._convert_to_1d(x, y)
+                grid_roles[pos_1d, 0] = x
+                grid_roles[pos_1d, 1] = y
+                grid_roles[pos_1d, 2] = 0
+                grid_roles[pos_1d, 3] = spot.role
+        return grid_roles

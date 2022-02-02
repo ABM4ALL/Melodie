@@ -13,14 +13,15 @@ from model.model import GameOfLifeModel
 from model.simulator import FuncSimulator
 from Melodie.visualization import GridVisualizer
 from config import config
+from model.df_loader import GameOfLifeDataFrameLoader
 
 if __name__ == "__main__":
-    simulator = FuncSimulator()
+    simulator = FuncSimulator(config, GameOfLifeScenario, GameOfLifeModel, GameOfLifeDataFrameLoader)
 
     """
     Run the model with register.rst
     """
-    simulator.run(config, GameOfLifeModel, GameOfLifeScenario)
+    simulator.run_visual()
 
     # register.rst.run_visual(
     #     # agent_class=None,

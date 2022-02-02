@@ -9,11 +9,21 @@ import Melodie.boost
 from Melodie import Model
 from Melodie.grid import Grid
 from .spot import GameOfLifeSpot
+from .environment import GameOfLifeEnvironment
 
 
 class GameOfLifeModel(Model):
     def setup(self):
         self.grid = Grid(GameOfLifeSpot, 100, 100)
+        with self.define_basic_components():
+            self.environment = GameOfLifeEnvironment()
+        self.agent_list: "AgentList[GameOfLifeSpot]" = np.zeros((10,), dtype=[('alive', 'i8')])
+        self.agent_list1: "AgentList[GameOfLifeSpot]" = self.create_agent_container(GameOfLifeSpot, 10)
+        self.grid.add_category('agents')
+        i = 0
+        for agent in self.agent_list1:
+            i += 1
+            self.grid.add_agent(agent.id, 'agents', 10, i)
 
     def setup_boost(self):
 
@@ -22,11 +32,16 @@ class GameOfLifeModel(Model):
         self.grid = JITGrid(100, 100, GameOfLifeSpot)
         self.visualizer.grid = self.grid
         self.agent_list: "AgentList[GameOfLifeSpot]" = np.zeros((10,), dtype=[('alive', 'i8')])
-        self.agent_list[0]['alive'] = True
+        self.agent_list1: "AgentList[GameOfLifeSpot]" = self.create_agent_container(GameOfLifeSpot, 10)
+        self.grid.add_category('agents')
+        i = 0
+        for agent in self.agent_list1:
+            i += 1
+            self.grid.add_agent(agent.id, 'agents', 10, i)
 
     def run(self):
-        # self.studio.parse(self.grid)
-        # self.studio.start()
+        self.visualizer.parse(self.grid)
+        self.visualizer.start()
 
         for i in range(self.scenario.periods):
             t0: float = time.time()
@@ -34,10 +49,8 @@ class GameOfLifeModel(Model):
 
             t1: float = time.time()
 
-            # arr: 'np.ndarray' = self.grid.to_2d_array() # get_2d_array()['alive']
-
-            # self.studio.parse(self.grid)
-            # self.studio.step(i)
+            self.visualizer.parse(self.grid)
+            self.visualizer.step(i)
 
             t2: float = time.time()
 

@@ -40,22 +40,22 @@ def all_fs_items():
         return Response.error(f"Directory {directory} does not exist!")
 
 
-@file_system.route('gotoParent')
+@file_system.route('gotoParentDir')
 def go_to_parent():
     directory: str = request.args.get('directory')
     if directory == '':
         directory = os.path.join(os.path.expanduser('~'), 'Desktop')
     directory = os.path.dirname(directory)
-    Response.ok({"currentDirectory": directory,
+    return Response.ok({"currentDirectory": directory,
                  "fsItemsList": get_all_file_items(directory)})
 
 
-@file_system.route('gotoSub')
+@file_system.route('gotoSubDir')
 def go_to_sub():
     directory: str = request.args.get('directory')
     subdir: str = request.args.get('subdir')
     if directory == '':
         directory = os.path.join(os.path.expanduser('~'), 'Desktop')
     directory = os.path.join(directory, subdir)
-    Response.ok({"currentDirectory": directory,
+    return Response.ok({"currentDirectory": directory,
                  "fsItemsList": get_all_file_items(directory)})

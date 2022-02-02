@@ -4,6 +4,7 @@ from ._config import set_studio_config
 from .handler_charts import charts
 from .handler_db_browser import db_browser
 from .handler_filesystem import file_system
+from .handler_tools import tools
 from .config_manager import init_config_manager
 from .. import Config
 
@@ -12,6 +13,7 @@ app = Flask(__name__, static_folder=os.path.join(os.path.dirname(DIR), 'static')
 app.register_blueprint(charts, url_prefix="/api/charts")
 app.register_blueprint(db_browser, url_prefix="/api/dbBrowser")
 app.register_blueprint(file_system, url_prefix="/api/fs")
+app.register_blueprint(tools, url_prefix="/api/tools")
 
 
 @app.route('/')

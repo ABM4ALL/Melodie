@@ -6,7 +6,7 @@ from Melodie.boost.compiler.boostlib import ___agent___manager___random_sample
 import numba
 from numba.experimental import jitclass
 
-_GameOfLifeSpot_ARRAY = np.zeros((0,), dtype=[('alive', 'i8')])
+_GameOfLifeSpot_ARRAY = np.zeros((0,), dtype=[('alive', 'i8'), ('role', 'i8')])
 _GameOfLifeEnvironment_ARRAY = np.zeros(1, dtype=[])
 @jitclass([('a', numba.int64),('al', numba.typeof(_GameOfLifeSpot_ARRAY)), ])
 class Strategy():
@@ -20,6 +20,16 @@ class Strategy():
 
     def strategy2(self):
         return (self.a + 1)
+@numba.jit
+def ___agent___calc_role(___agent):
+    return (1 if ___agent['alive'] else (- 1))
+
+
+@numba.jit
+def ___agent___update_role(___agent):
+    ___agent['role']: int = ___agent___calc_role(___agent)
+
+
 @numba.jit
 def ___agent___alive_on_next_tick(___agent, surround_alive_count: int) -> bool:
     if ___agent['alive']:
@@ -44,8 +54,6 @@ def ___environment___choose_strategy(___environment, al: 'AgentList[GameOfLifeSp
 
 @numba.jit
 def ___environment___step(___environment, grid: 'Grid', al: 'AgentList[GameOfLifeSpot]'):
-    strategy: int = ___environment___choose_strategy(___environment, al)
-    print(strategy)
     buffer_status_next_tick: 'np.ndarray' = np.zeros((grid.width, grid.height), dtype=np.int64)
     for x in range(grid.width):
         for y in range(grid.height):
@@ -56,6 +64,7 @@ def ___environment___step(___environment, grid: 'Grid', al: 'AgentList[GameOfLif
     for x in range(grid.width):
         for y in range(grid.height):
             spot: 'GameOfLifeSpot' = grid.get_spot(x, y)
+            ___agent___update_role(spot)
             if (buffer_status_next_tick[y][x] == 0):
                 spot['alive'] = False
             else:
@@ -74,20 +83,15 @@ def ___environment___count_neighbor_alives(___environment, grid: 'Grid', neighbo
 
 
 
-def ___model___setup_boost(___model):
-    from Melodie.boost import JITGrid
-    ___model.environment = None
-    ___model.grid = JITGrid(100, 100, GameOfLifeSpot)
-    ___model.visualizer.grid = ___model.grid
-    ___model.agent_list: 'AgentList[GameOfLifeSpot]' = np.zeros((10,), dtype=[('alive', 'i8')])
-    ___model.agent_list[0]['alive'] = True
-
-
 def ___model___run(___model):
+    ___model.visualizer.parse(___model.grid)
+    ___model.visualizer.start()
     for i in range(___model.scenario.periods):
         t0: float = time.time()
         ___environment___step(___model.environment, ___model.grid, ___model.agent_list)
         t1: float = time.time()
+        ___model.visualizer.parse(___model.grid)
+        ___model.visualizer.step(i)
         t2: float = time.time()
         print(f'step {i}, {(t1 - t0)}s for step and {(t2 - t1)}s for conversion.')
     print(___model.grid._spots)

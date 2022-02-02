@@ -3,6 +3,8 @@
 # @Author: Zhanyi Hou
 # @Email: 1295752786@qq.com
 # @File: run_studio.py
+import random
+
 import numba
 import numpy as np
 from numba import typed
@@ -11,53 +13,34 @@ from Melodie.grid import Grid
 from Melodie.visualization import GridVisualizer
 
 
-@numba.njit
-def spot_role_jit(spot):
-    if spot["alive"]:
-        return 1
-    else:
-        return -1
-
-
-@numba.njit
-def convert_to_1d(height, x, y):
-    return x * height + y
-
-
-@numba.njit
-def parse_with_jit(grid) -> np.ndarray:
-    grid_roles = np.zeros((grid.height * grid.width, 4))
-    for x in range(grid.width):
-        for y in range(grid.height):
-            spot = grid.get_spot(x, y)
-            role = spot_role_jit(spot)
-
-            grid_roles[convert_to_1d(grid.height, x, y), 0] = x
-            grid_roles[convert_to_1d(grid.height, x, y), 1] = y
-            grid_roles[convert_to_1d(grid.height, x, y), 2] = 0
-            grid_roles[convert_to_1d(grid.height, x, y), 3] = role
-    return grid_roles
-
-
 class GameOfLifeVisualizer(GridVisualizer):
-    def spot_role(self, spot):
-        if spot.alive:
-            return 1
-        else:
-            return -1
-
-    def spot_role_jit(self, spot):
-        if spot["alive"]:
-            return 1
-        else:
-            return -1
+    def setup(self):
+        self.add_agent_series('sheep', 'scatter', '#bbff00', )
+        self.add_agent_series('agents', 'scatter', '#bb0000', )
 
     def parse(self, grid):
-        if isinstance(grid, Grid):
-            self.parse_grid_roles(grid, self.spot_role)
-        else:
-            self.parse_roles_jit(grid)
+        self.parse_series(grid)
+
 
     def parse_roles_jit(self, grid):
-        parsed = parse_with_jit(grid)
-        self.grid_roles = parsed.tolist()
+        # parsed = parse_with_jit(grid, spot_role_jit)
+        self.grid_roles = grid.get_roles().tolist()
+
+        other_series_data = {}
+        existed_agents = grid._existed_agents
+        for category in existed_agents.keys():
+            if other_series_data.get(category) is None:
+                other_series_data[category] = []
+            for agent_id in existed_agents[category]:
+                pos = grid.get_agent_pos(agent_id, category)
+                # pos = existed_agents[category][agent_id]
+                other_series_data[category].append({
+                    'value': list(pos),
+                    'id': agent_id,
+                    'category': category,
+                })
+        for series_name, data in other_series_data.items():
+            self.other_series[series_name]['data'] = data
+
+    def other_series_data(self):
+        pass

@@ -27,18 +27,6 @@ class Strategy():
         return self.a + 1
 
 
-# class Strategy1(Strategy):
-#     def f(self):
-#         print(self.al)
-#         return self.a
-#
-#
-# class Strategy2(Strategy):
-#     def f(self):
-#         print(self.al)
-#         return self.a + 1
-
-
 class GameOfLifeEnvironment(Environment):
     scenario: GameOfLifeScenario
 
@@ -53,12 +41,9 @@ class GameOfLifeEnvironment(Environment):
             return strategy.strategy2()
 
     def step(self, grid: "Grid", al: "AgentList[GameOfLifeSpot]"):
-        strategy: int = self.choose_strategy(al)
-        # c: Strategy1 =
-        # d: int = c.f()
-        # c1: Strategy2 = Strategy2(1, al)
-        # d1: int = c1.f()
-        print(strategy)
+        # strategy: int = self.choose_strategy(al)
+        #
+        # print(strategy)
         buffer_status_next_tick: "np.ndarray" = np.zeros((grid.width, grid.height), dtype=np.int64)
 
         for x in range(grid.width):
@@ -71,6 +56,7 @@ class GameOfLifeEnvironment(Environment):
         for x in range(grid.width):
             for y in range(grid.height):
                 spot: 'GameOfLifeSpot' = grid.get_spot(x, y)
+                spot.update_role()
                 if buffer_status_next_tick[y][x] == 0:
                     spot.alive = False
                 else:

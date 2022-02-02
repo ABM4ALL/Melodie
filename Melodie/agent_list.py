@@ -167,12 +167,22 @@ class AgentList(BaseAgentContainer, Sequence, typing.Sequence[AgentGeneric]):
                 self.agents.pop(i)
                 break
 
-    def add(self, agent: 'AgentGeneric' = None):
+    def add(self, agent: 'AgentGeneric' = None, params: Dict = None):
         new_id = self.new_id()
         if agent is not None:
             assert isinstance(agent, Agent)
         else:
             agent = self.agent_class(new_id)
+
+        agent.scenario = self.model.scenario
+        agent.setup()
+        if params is not None:
+            assert isinstance(params, dict)
+            if params.get('id') is not None:
+                logger.warning(
+                    "Warning, agent 'id' passed together with 'params' will be overridden by a new id "
+                    "generated automatically")
+            agent.set_params(params)
         agent.id = new_id
         self.agents.append(agent)
 
