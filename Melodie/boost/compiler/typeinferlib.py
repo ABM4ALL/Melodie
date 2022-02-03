@@ -104,7 +104,7 @@ def parse_annotation_ast(anno: Union[ast.Name, ast.Constant]) -> 'BoostTypeModel
         btm = BoostTypeModel()
         btm.type_tree = {
             registered_types[outer_name].root: [registered_types[inner_name].root for inner_name in
-                                                       inner_names]}
+                                                inner_names]}
         return btm
     else:
         raise NotImplementedError(anno)
@@ -261,7 +261,7 @@ class attribute:
     def get_out_type_from_attribute_chain(chain: List[str], types_inferred: Dict[str, BoostTypeModel]):
         assert len(chain) > 1, chain
         if chain[0] in types_inferred:  # 寻找根对象。根对象可能是被注册的，或者已经被扫描过。
-            value = types_inferred[chain[0]].type
+            value = types_inferred[chain[0]].root
         elif chain[0] in global_names:
             value = global_names[chain[0]]
         else:
@@ -273,8 +273,10 @@ class attribute:
         return value
 
 
-def register_type(cls_var: ClassVar):
-    registered_types[cls_var.__name__] = BoostTypeModel.from_type(cls_var)
+def register_type(cls_var: ClassVar,name=None):
+    if name is None:
+        name = cls_var.__name__
+    registered_types[name] = BoostTypeModel.from_type(cls_var)
     print(cls_var.__name__)
 
 

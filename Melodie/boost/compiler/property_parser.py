@@ -38,7 +38,7 @@ def gen_dtypes(inferred_dtypes: Dict[str, "BoostTypeModel"]) -> List[Tuple[str, 
         elif issubclass(btm.root, float):
             dtypes.append((attr_name, 'f8'))
         else:
-            raise f'Unsupported Spot attribute "{attr_name}" with BoostTypeModel {btm} '
+            raise ValueError(f'Unsupported Spot attribute "{attr_name}" with BoostTypeModel {btm} ')
     return dtypes
 
 

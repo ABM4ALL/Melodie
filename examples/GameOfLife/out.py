@@ -8,18 +8,6 @@ from numba.experimental import jitclass
 
 _GameOfLifeSpot_ARRAY = np.zeros((0,), dtype=[('alive', 'i8'), ('role', 'i8')])
 _GameOfLifeEnvironment_ARRAY = np.zeros(1, dtype=[])
-@jitclass([('a', numba.int64),('al', numba.typeof(_GameOfLifeSpot_ARRAY)), ])
-class Strategy():
-
-    def __init__(self, a: int, b: 'AgentList[GameOfLifeSpot]'):
-        self.a: int = a
-        self.al = b
-
-    def strategy1(self):
-        return self.a
-
-    def strategy2(self):
-        return (self.a + 1)
 @numba.jit
 def ___agent___calc_role(___agent):
     return (1 if ___agent['alive'] else (- 1))
@@ -44,16 +32,7 @@ def ___agent___alive_on_next_tick(___agent, surround_alive_count: int) -> bool:
 
 
 @numba.jit
-def ___environment___choose_strategy(___environment, al: 'AgentList[GameOfLifeSpot]'):
-    strategy = Strategy(1, al)
-    if (random.random() > 0.5):
-        return strategy.strategy1()
-    else:
-        return strategy.strategy2()
-
-
-@numba.jit
-def ___environment___step(___environment, grid: 'Grid', al: 'AgentList[GameOfLifeSpot]'):
+def ___environment___step(___environment, grid: 'Grid'):
     buffer_status_next_tick: 'np.ndarray' = np.zeros((grid.width, grid.height), dtype=np.int64)
     for x in range(grid.width):
         for y in range(grid.height):
@@ -88,7 +67,7 @@ def ___model___run(___model):
     ___model.visualizer.start()
     for i in range(___model.scenario.periods):
         t0: float = time.time()
-        ___environment___step(___model.environment, ___model.grid, ___model.agent_list)
+        ___environment___step(___model.environment, ___model.grid)
         t1: float = time.time()
         ___model.visualizer.parse(___model.grid)
         ___model.visualizer.step(i)

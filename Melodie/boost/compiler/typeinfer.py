@@ -66,9 +66,17 @@ class TypeInferr(ast.NodeVisitor):
         elif isinstance(target, ast.Tuple):
             names = target.elts
             for name in names:
-                if name.id not in self.types_inferred:
-                    raise TypeError(f'Vars in Tuple assigning should be annotated declared '
-                                    f'before.')
+                if isinstance(name, ast.Name):
+                    if name.id not in self.types_inferred:
+                        raise TypeError(f'Vars in Tuple assigning should be annotated declared '
+                                        f'before.')
+                elif isinstance(name, ast.Attribute):
+                    prop = astunparse.unparse(name).strip()
+                    if prop not in self.types_inferred:
+                        raise TypeError(f'Vars in Tuple assigning should be annotated declared '
+                                        f'before.')
+                else:
+                    raise NotImplementedError
             return
         elif isinstance(target, ast.Attribute):
             assign.infer_from_value(astunparse.unparse(target).strip(), node.value, self.types_inferred)
@@ -96,6 +104,9 @@ class TypeInferr(ast.NodeVisitor):
                 elif issubclass(self.types_inferred[node.iter.id].root, np.ndarray):
                     self.types_inferred[node.target.id] = BoostTypeModel.from_type(np.ndarray)
                     return
+                elif issubclass(self.types_inferred[node.iter.id].root, list):
+                    self.types_inferred[node.target.id] = BoostTypeModel.from_type(np.ndarray)
+                    raise NotImplementedError("还没写！")
                 else:
                     raise NotImplementedError
             else:
@@ -114,7 +125,6 @@ class TypeInferr(ast.NodeVisitor):
 
     def check_type(self, inferred):
         for k in inferred.keys():
-
             assert isinstance(inferred[k], BoostTypeModel), (inferred[k], inferred)
 
     def __del__(self):

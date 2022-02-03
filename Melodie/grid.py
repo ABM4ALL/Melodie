@@ -110,7 +110,7 @@ class Grid:
         """
         return x % self.width, y % self.height
 
-    def get_neighbors(self, x, y, radius: int = 1, moore=True, except_self=True):
+    def get_neighbors(self, x, y, radius: int = 1, moore=True, except_self=True) -> List[Tuple[int, int]]:
         """
         Get the neighbors of some spot.
         :param x:

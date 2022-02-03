@@ -17,7 +17,6 @@ class GameOfLifeModel(Model):
         self.grid = Grid(GameOfLifeSpot, 100, 100)
         with self.define_basic_components():
             self.environment = GameOfLifeEnvironment()
-        self.agent_list: "AgentList[GameOfLifeSpot]" = np.zeros((10,), dtype=[('alive', 'i8')])
         self.agent_list1: "AgentList[GameOfLifeSpot]" = self.create_agent_container(GameOfLifeSpot, 10)
         self.grid.add_category('agents')
         i = 0
@@ -31,7 +30,6 @@ class GameOfLifeModel(Model):
         self.environment = None
         self.grid = JITGrid(100, 100, GameOfLifeSpot)
         self.visualizer.grid = self.grid
-        self.agent_list: "AgentList[GameOfLifeSpot]" = np.zeros((10,), dtype=[('alive', 'i8')])
         self.agent_list1: "AgentList[GameOfLifeSpot]" = self.create_agent_container(GameOfLifeSpot, 10)
         self.grid.add_category('agents')
         i = 0
@@ -45,7 +43,7 @@ class GameOfLifeModel(Model):
 
         for i in range(self.scenario.periods):
             t0: float = time.time()
-            self.environment.step(self.grid, self.agent_list)
+            self.environment.step(self.grid)
 
             t1: float = time.time()
 

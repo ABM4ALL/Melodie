@@ -10,10 +10,10 @@ class CovidEnvironment(Environment):
     scenario: CovidScenario
 
     def setup(self):
-        self.grid_x_size = self.scenario.grid_x_size
-        self.grid_y_size = self.scenario.grid_y_size
-        self.infection_probability = self.scenario.infection_probability
-        self.accumulated_infection = 0
+        self.grid_x_size: int = self.scenario.grid_x_size
+        self.grid_y_size: int = self.scenario.grid_y_size
+        self.infection_probability: float = self.scenario.infection_probability
+        self.accumulated_infection: int = 0
 
     # grid和network也应该是environment的对象，
     # 1. 概念上更清晰
@@ -51,7 +51,7 @@ class CovidEnvironment(Environment):
             neighbors = grid.get_neighbors(agent.x_pos, agent.y_pos, 1, except_self=False)
             if agent.condition == 0:
                 # 从用grid返回附近agent列表，如果其中有已经感染的，则按照self.infection_probability感染
-                infected = self.infect_from_neighbor(agent.id, neighbors, grid, agent_list)
+                infected: int = self.infect_from_neighbor(agent.id, neighbors, grid, agent_list)
                 if infected == 1:
                     agent.condition = infected
                     self.accumulated_infection += 1
@@ -59,7 +59,7 @@ class CovidEnvironment(Environment):
                 pass
 
     def infect_from_neighbor(self, current_agent_id: int, neighbors: List[int], grid: 'Grid',
-                             agent_list: "AgentList[CovidAgent]"):
+                             agent_list: "AgentList[CovidAgent]") -> int:
         for neighbor in neighbors:
             agent_ids = grid.get_agent_ids('agent_list', neighbor[0], neighbor[1])
             for agent_id in agent_ids:

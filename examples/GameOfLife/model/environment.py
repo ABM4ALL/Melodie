@@ -15,35 +15,21 @@ if TYPE_CHECKING:
     from .spot import GameOfLifeSpot
 
 
-class Strategy():
-    def __init__(self, a: int, b: 'AgentList[GameOfLifeSpot]'):
-        self.a: int = a
-        self.al = b
-
-    def strategy1(self):
-        return self.a
-
-    def strategy2(self):
-        return self.a + 1
-
-
 class GameOfLifeEnvironment(Environment):
     scenario: GameOfLifeScenario
 
     def setup(self):
         pass
 
-    def choose_strategy(self, al: "AgentList[GameOfLifeSpot]"):
-        strategy = Strategy(1, al)
-        if random.random() > 0.5:
-            return strategy.strategy1()
-        else:
-            return strategy.strategy2()
+    # def choose_strategy(self, al: "AgentList[GameOfLifeSpot]"):
+    #     strategy = Strategy(1, al)
+    #     if random.random() > 0.5:
+    #         return strategy.strategy1()
+    #     else:
+    #         return strategy.strategy2()
 
-    def step(self, grid: "Grid", al: "AgentList[GameOfLifeSpot]"):
-        # strategy: int = self.choose_strategy(al)
-        #
-        # print(strategy)
+    def step(self, grid: "Grid"):
+
         buffer_status_next_tick: "np.ndarray" = np.zeros((grid.width, grid.height), dtype=np.int64)
 
         for x in range(grid.width):
