@@ -14,15 +14,3 @@ class FuncSimulator(Simulator):
     def setup(self):
         self.visualizer = GameOfLifeVisualizer()
         self.visualizer.setup()
-        # self.visualizer.current_scenario =
-
-    def register_static_dataframes(self):
-        pass
-
-    def register_scenario_dataframe(self) -> None:
-        """
-        Register scenario dataframe
-        :return:
-        """
-        self.register_dataframe('scenarios', pd.DataFrame(
-            [{"id": i, "periods": 1000} for i in range(2)]))

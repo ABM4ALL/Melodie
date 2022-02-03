@@ -11,9 +11,10 @@ class GiniAgent(Agent):
 
     def setup(self):
         self.account = .0  # initialize `account` with type float
+        self.productivity = 0.1  # value could be: [0.1, 0.2, 0.5, 1.0, 1.5, 2.0 ]
 
     def go_produce(self):
-        self.account += 1
+        self.account += self.productivity
 
 
 class GiniEnvironment(Environment):
@@ -94,7 +95,6 @@ class GiniModel(Model):
 
 class GiniDataCollector(DataCollector):
     def setup(self):
-        self.add_agent_property("agent_list", 'account')
         self.add_environment_property('trade_num')
         self.add_environment_property('rich_win_prob')
         self.add_environment_property('total_wealth')
@@ -102,13 +102,11 @@ class GiniDataCollector(DataCollector):
 
 
 class GiniSimulator(Simulator):
-    def register_scenario_dataframe(self):
-        scenarios_dict = {}
-
     def generate_scenarios(self) -> List['Scenario']:
         scenario = Scenario(0)
         scenario.manager = self
-        scenario.periods = 100  # The model will be executed by 100 steps.
+        scenario.number_of_run = 20
+        scenario.periods = 200
         return [scenario]
 
 
@@ -120,9 +118,6 @@ config = Config(
     output_folder='.',
 )
 
-simulator = GiniSimulator()
+simulator = GiniSimulator(config, Scenario, GiniModel)
 
-simulator.run(
-    config=config,
-    model_class=GiniModel,
-)
+simulator.run()
