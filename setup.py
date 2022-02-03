@@ -21,7 +21,7 @@ with open('README.md', 'r') as fh:
 
 setuptools.setup(
     name='Melodie',
-    version='0.1',
+    version='1.1.0',
     description='A general framework that can be used to establish agent-based models for specific uses.',
     long_description=long_description,
     long_description_content_type='text/markdown',
@@ -51,11 +51,18 @@ setuptools.setup(
         include=['Melodie', 'Melodie.*']
     ),
     install_requires=[
+        'chardet',
         'numpy',
         'pandas',
         'matplotlib',
         'networkx',
-        'openpyxl'
+        'openpyxl',
+        'websockets',
+        'sqlalchemy',
+        'flask',
+        'flask_cors',
+        'astunparse',
+        'pprintast'
     ],
     python_requires='>=3.5',
     entry_points={
