@@ -23,7 +23,7 @@ def handle_root():
 
 def studio_main(conf_folder: str = '', config: Config = None):
     """
-    Main function for studio server.
+    Main function for studio.rst server.
     :param conf_folder:
     :param config:
     :return:

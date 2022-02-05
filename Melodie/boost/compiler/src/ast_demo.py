@@ -105,7 +105,7 @@ class GiniEnvironment(Environment):
 class GiniModel(Model):
 
     def run(self):
-        # dc = self.data_collector
+        # dc = self.data_collector.rst
         for t in range(0, self.scenario.periods):
             self.environment.go_money_produce(self.agent_list)
             self.environment.go_money_transfer(self.agent_list)

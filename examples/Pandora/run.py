@@ -14,7 +14,7 @@ if __name__ == "__main__":
     simulator = CovidSimulator()
 
     """
-    Run the model with register.rst
+    Run the model with dataframe_loader.rst
     """
     simulator.run(
         config=config,
@@ -23,10 +23,10 @@ if __name__ == "__main__":
     )
 
     """
-    Run the model with register.rst in parallel mode. 
+    Run the model with dataframe_loader.rst in parallel mode. 
     Use "cores" to determine how many cores should be used.
     """
-    # register.rst.run_parallel(
+    # dataframe_loader.rst.run_parallel(
     #     config=config,
     #     scenario_class=CovidScenario,
     #     model_class=CovidModel,

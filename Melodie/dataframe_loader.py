@@ -124,5 +124,5 @@ class DataFrameLoader:
         Generate scenario objects by the parameter from static tables or scenarios_dataframe.
         :return:
         """
-        assert manager_type in {'simulator', 'trainer', 'calibrator'}
+        assert manager_type in {'simulator', 'trainer.rst', 'calibrator'}
         return self.generate_scenarios_from_dataframe(f'{manager_type}_scenarios')

@@ -11,6 +11,6 @@ if __name__ == "__main__":
     trainer = AspirationTrainer(config, AspirationScenario, AspirationModel, AspirationDataFrameLoader)
 
     """
-    Run the model with register.rst
+    Run the model with dataframe_loader.rst
     """
     trainer.train()

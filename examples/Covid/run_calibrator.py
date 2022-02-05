@@ -11,6 +11,6 @@ if __name__ == "__main__":
     calibrator = CovidCalibrator(config, CovidScenario, CovidModel, CovidDataFrameLoader)
 
     """
-    Run the model with register.rst
+    Run the model with dataframe_loader.rst
     """
     calibrator.calibrate()

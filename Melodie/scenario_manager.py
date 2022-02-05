@@ -19,6 +19,7 @@ logger = logging.getLogger(__name__)
 
 
 class Scenario(Element):
+
     class BaseParameter():
         def __init__(self, name, type, init):
             self.name = name
@@ -95,7 +96,7 @@ class Scenario(Element):
 
 class LearningScenario(Scenario):
     """
-    Learning scenario is used in Trainer and Calibrator for trainer/calibrator parameters.
+    Learning scenario is used in Trainer and Calibrator for trainer.rst/calibrator parameters.
     """
     class Parameter():
         def __init__(self, name: str, min: float, max: float):

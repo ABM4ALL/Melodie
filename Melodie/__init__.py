@@ -12,6 +12,7 @@ from .table_generator import TableGenerator
 from .dataframe_loader import DataFrameLoader
 from .simulator import Simulator
 from .calibrator import Calibrator
+from .visualizer import Visualizer
 
 from .network import Network, Edge, AgentRelationshipNetwork
 from .grid import Grid, Spot

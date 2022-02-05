@@ -60,8 +60,8 @@ class GameOfLifeModel(Model):
 
     # def run_with_matplotlib(self):
     #     import matplotlib.pyplot as plt
-    #     # self.studio.parse(self.grid)
-    #     # self.studio.start()
+    #     # self.studio.rst.parse(self.grid)
+    #     # self.studio.rst.start()
     #     plt.figure()
     #     plt.ion()
     #
@@ -74,8 +74,8 @@ class GameOfLifeModel(Model):
     #
     #         arr: 'np.ndarray' = self.grid.get_2d_array()['alive']
     #
-    #         # self.studio.parse(self.grid)
-    #         # self.studio.step()
+    #         # self.studio.rst.parse(self.grid)
+    #         # self.studio.rst.step()
     #
     #         t2: float = time.time()
     #
@@ -84,5 +84,5 @@ class GameOfLifeModel(Model):
     #         plt.pause(0.01)
     #
     #     print(self.grid._spots)
-    # self.studio.parse(self.grid)
-    # self.studio.finish()
+    # self.studio.rst.parse(self.grid)
+    # self.studio.rst.finish()
