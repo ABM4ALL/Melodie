@@ -18,7 +18,9 @@ if __name__ == "__main__":
     """
     Run the model with register.rst
     """
-    simulator.run()
+    simulator.run(
+
+    )
 
     """
     Run the model with register.rst in parallel mode. 

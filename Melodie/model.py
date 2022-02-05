@@ -15,7 +15,7 @@ from .environment import Environment
 from .scenario_manager import Scenario
 from .table_generator import TableGenerator
 from .db import create_db_conn
-from .visualization import Visualizer
+from .visualizer import Visualizer
 
 logger = logging.getLogger(__name__)
 

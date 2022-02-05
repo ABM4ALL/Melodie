@@ -10,7 +10,7 @@ import numpy as np
 from numba import typed
 
 from Melodie.grid import Grid
-from Melodie.visualization import GridVisualizer
+from Melodie.visualizer import GridVisualizer
 
 
 class GameOfLifeVisualizer(GridVisualizer):

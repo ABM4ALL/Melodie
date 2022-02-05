@@ -11,7 +11,7 @@ from model.environment import GameOfLifeEnvironment
 from model.scenario import GameOfLifeScenario
 from model.model import GameOfLifeModel
 from model.simulator import FuncSimulator
-from Melodie.visualization import GridVisualizer
+from Melodie.visualizer import GridVisualizer
 from config import config
 from model.df_loader import GameOfLifeDataFrameLoader
 

@@ -11,7 +11,7 @@ import logging
 
 import pandas as pd
 
-import Melodie.visualization
+import Melodie.visualizer
 from . import DB
 from .agent import Agent
 
@@ -33,7 +33,7 @@ if TYPE_CHECKING:
     from .scenario_manager import Scenario
     from .data_collector import DataCollector
     from .config import Config
-    from .visualization import Visualizer
+    from .visualizer import Visualizer
 else:
     from .scenario_manager import Scenario
     from .config import Config
@@ -185,7 +185,7 @@ class Simulator(BaseModellingManager):
             try:
                 self.visualizer.current_scenario = scenario  # set studio scenario.
                 self.run_model(self.config, scenario, 0, self.model_cls, visualizer=self.visualizer)
-            except Melodie.visualization.MelodieModelReset as e:
+            except Melodie.visualizer.MelodieModelReset as e:
 
                 self.visualizer.reset()
 
