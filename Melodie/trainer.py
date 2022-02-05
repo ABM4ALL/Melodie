@@ -1,22 +1,24 @@
-import abc
-import math
-import time
+import logging
 from typing import Type, List, Optional, ClassVar, Iterator, Union, Tuple
-from abc import ABC
 import copy
 import numpy as np
 import pandas as pd
 
-from Melodie import Model, Scenario, Simulator, Config, Agent, create_db_conn, GATrainerScenario
+from Melodie import Model, Scenario, Config, Agent, create_db_conn, GATrainerScenario
 from Melodie.algorithms import GeneticAlgorithm, TrainingAlgorithm
 from .simulator import BaseModellingManager
 from .dataframe_loader import DataFrameLoader
+
+logger = logging.getLogger(__file__)
 
 
 class Trainer(BaseModellingManager):
     """
     Individually calibrate agents' parameters
     """
+
+    class Algorithm:
+        GA = 'GeneticAlgorithm'
 
     def __init__(self, config: 'Config', scenario_cls: 'Optional[ClassVar[Scenario]]',
                  model_cls: 'Optional[ClassVar[Model]]', df_loader_cls: 'Optional[ClassVar[DataFrameLoader]]'):
@@ -32,6 +34,7 @@ class Trainer(BaseModellingManager):
 
         self.environment_properties: List[str] = []
 
+        self.algorithm_cls: ClassVar['TrainingAlgorithm'] = None
         self.algorithm: Optional[Type[TrainingAlgorithm]] = None
         self.algorithm_instance: Iterator[List[float]] = {}
 
@@ -66,32 +69,46 @@ class Trainer(BaseModellingManager):
         self.pre_run()
         trainer_scenarios_table = self.get_registered_dataframe('trainer_params_scenarios')
         assert isinstance(trainer_scenarios_table, pd.DataFrame), "No learning scenarios table specified!"
+        assert self.algorithm_cls is not None
+
+        trainer_scenario_cls: Union[ClassVar[GATrainerScenario]] = None
+        if self.algorithm_cls == GeneticAlgorithm:
+            trainer_scenario_cls = GATrainerScenario
+        assert trainer_scenario_cls is not None
 
         for scenario in self.scenarios:
             self.current_algorithm_meta['scenario_id'] = scenario.id
             trainer_scenarios = trainer_scenarios_table.to_dict(orient="records")
             for trainer_scenario in trainer_scenarios:
-                trainer_scenario = GATrainerScenario.from_dataframe_record(trainer_scenario)
+                trainer_scenario = trainer_scenario_cls.from_dataframe_record(trainer_scenario)
                 self.current_algorithm_meta['learning_scenario_id'] = trainer_scenario.id
                 for trainer_path_id in range(trainer_scenario.number_of_path):
                     self.current_algorithm_meta['trainer_path_id'] = trainer_path_id
 
                     self.run_once(scenario, trainer_scenario)
 
-    def run_once(self, scenario, trainer_scenario: GATrainerScenario):
+    def run_once(self, scenario, trainer_scenario: Union[GATrainerScenario]):
 
         scenario.manager = self
         self.model = self.model_cls(self.config, scenario)
         self.model.setup()
         agents_num = len(self.model.__getattribute__(self.container_name))
         agents = self.model.__getattribute__(self.container_name)
-        self.algorithm = GeneticAlgorithm(trainer_scenario.training_generation, trainer_scenario.strategy_population,
-                                          trainer_scenario.mutation_prob, trainer_scenario.strategy_param_code_length)
+
+        iterations = 0
+        if isinstance(trainer_scenario, GATrainerScenario):
+            self.algorithm = GeneticAlgorithm(trainer_scenario.training_generation,
+                                              trainer_scenario.strategy_population,
+                                              trainer_scenario.mutation_prob,
+                                              trainer_scenario.strategy_param_code_length)
+            iterations = trainer_scenario.training_generation
+        else:
+            pass
         self.algorithm.set_parameters_agents(agents_num,
                                              len(self.properties),
                                              self.properties,
                                              self.environment_properties)
-        self.algorithm.parameters = trainer_scenario.get_parameters_range(agents_num)
+        self.algorithm.parameters = trainer_scenario.get_agents_parameters_range(agents_num)
 
         self.algorithm.parameters_value = []
         for agent in agents:
@@ -99,9 +116,9 @@ class Trainer(BaseModellingManager):
 
         self.algorithm_instance = self.algorithm.optimize_multi_agents(self.fitness, scenario)
 
-        for i in range(trainer_scenario.training_generation):
+        for i in range(iterations):
             self.current_algorithm_meta['generation_id'] = i
-            print(f"===================Training step {i + 1}=====================")
+            logger.info(f"Training iteration {i + 1}/{iterations}")
             if i == 0:
                 strategy_population, params, fitness, meta = self.algorithm_instance.__next__()
             else:
@@ -114,15 +131,6 @@ class Trainer(BaseModellingManager):
             env_training_cov.update(self.current_algorithm_meta)
             create_db_conn(self.config).write_dataframe('agent_learning_cov', pd.DataFrame(agent_training_cov))
             create_db_conn(self.config).write_dataframe('env_learning_cov', pd.DataFrame([env_training_cov]))
-
-    def set_algorithm(self, algorithm: Type[TrainingAlgorithm]):
-        """
-
-        :param algorithm:
-        :return:
-        """
-        assert isinstance(algorithm, TrainingAlgorithm)
-        self.algorithm = algorithm
 
     def add_property(self, container: str, prop: str):
         """

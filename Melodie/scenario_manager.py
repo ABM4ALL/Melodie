@@ -111,7 +111,7 @@ class LearningScenario(Scenario):
         self.number_of_path: int = number_of_path
         self.parameters: List[LearningScenario.Parameter] = []
 
-    def get_parameters_range(self, agent_num) -> List[Tuple[float, float]]:
+    def get_agents_parameters_range(self, agent_num) -> List[Tuple[float, float]]:
         parameters = []
         for agent_id in range(agent_num):
             parameters.extend([(parameter.min, parameter.max) for parameter in self.parameters])

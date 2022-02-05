@@ -268,7 +268,7 @@ class GeneticAlgorithm(TrainingAlgorithm):
 
                 strategy_fitness.append(agents_fitness)
 
-                logger.info(f"Model run once took {time.time() - t0}s")
+                logger.debug(f"Model run once took {time.time() - t0}s")
                 assert np.isfinite(strategy_fitness).all(), f"Fitness contains infinite value {strategy_fitness}"
 
                 for param_name, param_value in env_params.items():

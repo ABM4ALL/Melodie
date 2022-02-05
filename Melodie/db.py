@@ -154,7 +154,7 @@ class DB:
         """
         if data_types is None:
             data_types = DB.get_table_dtypes(table_name)
-        logger.info(f"datatype of table `{table_name}` is: {data_types}")
+        logger.debug(f"datatype of table `{table_name}` is: {data_types}")
         data_frame.to_sql(table_name, self.connection, index=False, dtype=data_types, if_exists=if_exists)
 
     def read_dataframe(self, table_name: str) -> pd.DataFrame:

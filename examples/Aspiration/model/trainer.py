@@ -1,7 +1,7 @@
 import numpy as np
 import sqlalchemy
 
-from Melodie import Trainer
+from Melodie import Trainer, GeneticAlgorithm
 from .agent import AspirationAgent
 from .scenario import AspirationScenario
 
@@ -10,21 +10,6 @@ class AspirationTrainer(Trainer):
     """
 
     """
-    # 以下内容应该是都完成了。
-    # 或许还需要一些小修改。
-
-    # 能不能再多继承一个AspirationSimulator？这样就不用重新注册下面那些东西了？
-    # 或者，把所有跟注册有关的东西都单独拎出来弄一个新class Register？这样simulator, trainer, calibrator就都简化了。
-
-    # 这个目前还没实现是吧：针对不同的scenario和training_scenario组合，每个组合都train一次。
-    # training相关的表还没注册。
-
-    # 似乎scenario是更高一级的，在simulator和trainer之上注册的 --> @Zhanyi？
-
-    # 总结一下需要保存哪些结果
-    # 1. 各agent每generation的参数值
-    # 2. 自动计算一些behavior parameter的COV变化
-    # 3. 自动计算一些宏观变量的收敛路径——每generation都是一个区间，因为有20次模拟
 
     def setup(self):
         self.container_name = "agent_list"
@@ -32,6 +17,7 @@ class AspirationTrainer(Trainer):
         self.add_property('agent_list', 'strategy_param_2')
         self.add_property('agent_list', 'strategy_param_3')
         self.environment_properties = ['average_technology']
+        self.algorithm_cls = GeneticAlgorithm
 
     def register_scenario_dataframe(self):
         scenarios_dict = {"periods": sqlalchemy.Integer(),

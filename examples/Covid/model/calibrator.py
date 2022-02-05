@@ -1,6 +1,6 @@
 import numpy as np
 
-from Melodie import Calibrator
+from Melodie import Calibrator, GeneticAlgorithm
 import sqlalchemy
 
 from .environment import CovidEnvironment
@@ -14,6 +14,7 @@ class CovidCalibrator(Calibrator):
         self.add_property('infection_probability')
 
         self.watched_env_properties = ['accumulated_infection']
+        self.algorithm_cls = GeneticAlgorithm
 
     def distance(self, environment: CovidEnvironment):
         print("infection_rate", environment.accumulated_infection / environment.scenario.agent_num)

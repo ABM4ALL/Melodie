@@ -34,6 +34,7 @@ class Calibrator(BaseModellingManager):
         self.properties: List[str] = []
         self.watched_env_properties: List[str] = []
         self.algorithm: Optional[Type[TrainingAlgorithm]] = None
+        self.algorithm_cls: Union[ClassVar[TrainingAlgorithm]] = None
         self.algorithm_instance: Iterator[List[float]] = {}
 
         self.model: Optional[Model] = None
@@ -62,12 +63,17 @@ class Calibrator(BaseModellingManager):
         self.pre_run()
         calibrator_scenarios_table = self.get_registered_dataframe('calibrator_params_scenarios')
         assert isinstance(calibrator_scenarios_table, pd.DataFrame), "No learning scenarios table specified!"
-
+        assert self.algorithm_cls is not None
+        scenario_cls = None
+        if self.algorithm_cls == GeneticAlgorithm:
+            scenario_cls = GACalibrationScenario
+        else:
+            raise NotImplementedError
         for scenario in self.scenarios:
             self.current_algorithm_meta['scenario_id'] = scenario.id
             calibration_scenarios = calibrator_scenarios_table.to_dict(orient="records")
             for calibrator_scenario in calibration_scenarios:
-                calibrator_scenario = GACalibrationScenario.from_dataframe_record(calibrator_scenario)
+                calibrator_scenario = scenario_cls.from_dataframe_record(calibrator_scenario)
                 self.current_algorithm_meta['calibration_scenario_id'] = calibrator_scenario.id
                 for trainer_path_id in range(calibrator_scenario.number_of_path):
                     self.current_algorithm_meta['learning_path_id'] = trainer_path_id
@@ -79,18 +85,22 @@ class Calibrator(BaseModellingManager):
         scenario.manager = self
         self.model = self.model_cls(self.config, scenario)
         self.model.setup()
-
-        self.algorithm = GeneticAlgorithm(calibration_scenario.calibration_generation,
-                                          calibration_scenario.strategy_population,
-                                          calibration_scenario.mutation_prob,
-                                          calibration_scenario.strategy_param_code_length)
+        iterations = 0
+        if self.algorithm_cls == GeneticAlgorithm:
+            self.algorithm = GeneticAlgorithm(calibration_scenario.calibration_generation,
+                                              calibration_scenario.strategy_population,
+                                              calibration_scenario.mutation_prob,
+                                              calibration_scenario.strategy_param_code_length)
+            iterations = calibration_scenario.calibration_generation
+        else:
+            raise NotImplementedError
         self.algorithm.parameter_names = self.properties
         self.algorithm.parameters = [(parameter.min, parameter.max) for parameter in calibration_scenario.parameters]
         self.algorithm.parameters_num = len(self.algorithm.parameters)
 
         self.algorithm_instance = self.algorithm.optimize(self.fitness, scenario)
 
-        for i in range(calibration_scenario.calibration_generation):
+        for i in range(iterations):
             self.current_algorithm_meta['generation_id'] = i
             logger.info(f"===================Training step {i + 1}=====================")
             strategy_population, params, fitness, meta = self.algorithm_instance.__next__()
@@ -103,14 +113,6 @@ class Calibrator(BaseModellingManager):
             calibrator_result_cov.update(self.current_algorithm_meta)
             create_db_conn(self.config).write_dataframe('calibrator_result_cov',
                                                         pd.DataFrame([calibrator_result_cov]))
-
-    def set_algorithm(self, algorithm: Type[TrainingAlgorithm]):
-        """
-        :param algorithm:
-        :return:
-        """
-        assert isinstance(algorithm, TrainingAlgorithm)
-        self.algorithm = algorithm
 
     def add_property(self, prop: str):
         """
@@ -132,10 +134,10 @@ class Calibrator(BaseModellingManager):
         meta = kwargs['meta']
         environment_record_dict = {}
         environment_record_dict.update(self.current_algorithm_meta)
-        t0  =time.time()
+        t0 = time.time()
         self.model.run()
-        t1  =time.time()
-        logger.info(f'Model run, taking {t1-t0}s')
+        t1 = time.time()
+        logger.info(f'Model run, taking {t1 - t0}s')
         env = self.model.environment
 
         fitness = self.convert_distance_to_fitness(self.distance(env))
