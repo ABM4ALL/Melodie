@@ -19,11 +19,11 @@ if __name__ == "__main__":
     simulator = FuncSimulator(config, GameOfLifeScenario, GameOfLifeModel, GameOfLifeDataFrameLoader)
 
     """
-    Run the model with dataframe_loader.rst
+    Run the model with dataframe_loader
     """
     simulator.run_visual()
 
-    # dataframe_loader.rst.run_visual(
+    # dataframe_loader.run_visual(
     #     # agent_class=None,
     #     # environment_class=GameOfLifeEnvironment,
     #     config=config,

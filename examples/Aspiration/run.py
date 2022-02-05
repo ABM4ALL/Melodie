@@ -23,7 +23,7 @@ if __name__ == "__main__":
     Run the model with simulator in parallel mode. 
     Use "cores" to determine how many cores should be used.
     """
-    # dataframe_loader.rst.run_parallel(
+    # dataframe_loader.run_parallel(
     #     config=config,
     #     scenario_class=AspirationScenario,
     #     model_class=AspirationModel,

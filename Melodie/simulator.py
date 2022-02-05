@@ -163,11 +163,11 @@ class Simulator(BaseModellingManager):
         t2 = time.time()
         logger.info(f'Melodie completed all runs, time elapsed totally {t2 - t0}s, and {t2 - t1}s for running.')
 
-    # studio.rst().run(visualizer)
+    # studio().run(visualizer)
 
     def run_visual(self):
         """
-        Main function for running model with studio.rst.
+        Main function for running model with studio.
         """
         t0 = time.time()
 
@@ -185,7 +185,7 @@ class Simulator(BaseModellingManager):
                 scenario.__setattr__(k, v)
             logger.info(f"Scenario parameters: {scenario.to_dict()}")
             try:
-                self.visualizer.current_scenario = scenario  # set studio.rst scenario.
+                self.visualizer.current_scenario = scenario  # set studio scenario.
                 self.run_model(self.config, scenario, 0, self.model_cls, visualizer=self.visualizer)
             except Melodie.visualizer.MelodieModelReset as e:
 

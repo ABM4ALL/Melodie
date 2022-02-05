@@ -73,7 +73,7 @@ class Model:
         :return:
         """
         MelodieExceptions.Assertions.IsNone('self.environment', self.environment)
-        MelodieExceptions.Assertions.IsNone('self.data_collector.rst', self.data_collector)
+        MelodieExceptions.Assertions.IsNone('self.data_collector', self.data_collector)
 
         yield self
         MelodieExceptions.Assertions.Type('self.environment', self.environment, Environment)
@@ -81,7 +81,7 @@ class Model:
         self.environment.scenario = self.scenario
         self.environment.setup()
         if self.data_collector is not None:
-            MelodieExceptions.Assertions.Type('self.data_collector.rst', self.data_collector, DataCollector)
+            MelodieExceptions.Assertions.Type('self.data_collector', self.data_collector, DataCollector)
             self.data_collector.model = self
             self.data_collector.setup()
 

@@ -188,4 +188,4 @@ class Trainer(BaseModellingManager):
 
     def generate_scenarios(self):
         assert self.table_loader is not None
-        return self.table_loader.generate_scenarios('trainer.rst')
+        return self.table_loader.generate_scenarios('trainer')

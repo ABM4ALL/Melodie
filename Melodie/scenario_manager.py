@@ -96,7 +96,7 @@ class Scenario(Element):
 
 class LearningScenario(Scenario):
     """
-    Learning scenario is used in Trainer and Calibrator for trainer.rst/calibrator parameters.
+    Learning scenario is used in Trainer and Calibrator for trainer/calibrator parameters.
     """
     class Parameter():
         def __init__(self, name: str, min: float, max: float):

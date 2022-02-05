@@ -14,7 +14,7 @@ class AspirationTrainer(Trainer):
     # 或许还需要一些小修改。
 
     # 能不能再多继承一个AspirationSimulator？这样就不用重新注册下面那些东西了？
-    # 或者，把所有跟注册有关的东西都单独拎出来弄一个新class Register？这样simulator, trainer.rst, calibrator就都简化了。
+    # 或者，把所有跟注册有关的东西都单独拎出来弄一个新class Register？这样simulator, trainer, calibrator就都简化了。
 
     # 这个目前还没实现是吧：针对不同的scenario和training_scenario组合，每个组合都train一次。
     # training相关的表还没注册。

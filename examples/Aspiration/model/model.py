@@ -27,5 +27,5 @@ class AspirationModel(Model):
             self.environment.aspiration_update_process(self.agent_list)
             self.environment.technology_search_process(self.agent_list)
             self.environment.calculate_environment_result(self.agent_list)
-            # self.data_collector.rst.collect(t)
-        # self.data_collector.rst.save()
+            # self.data_collector.collect(t)
+        # self.data_collector.save()

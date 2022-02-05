@@ -16,17 +16,15 @@ if __name__ == "__main__":
                               df_loader_cls=GiniDataframeLoader)
 
     """
-    Run the model with dataframe_loader.rst
+    Run the model with dataframe_loader
     """
-    simulator.run(
-
-    )
+    simulator.run()
 
     """
-    Run the model with dataframe_loader.rst in parallel mode. 
+    Run the model with dataframe_loader in parallel mode. 
     Use "cores" to determine how many cores should be used.
     """
-    # dataframe_loader.rst.run_parallel(
+    # dataframe_loader.run_parallel(
     #     config=config,
     #     scenario_class=GiniScenario,
     #     model_class=GiniModel,

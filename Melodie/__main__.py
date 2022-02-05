@@ -18,12 +18,12 @@ parser.add_argument("action", help="""[serve] for starting the management server
 # [run] for scanning code(NotImplemented)
 # """)
 args = parser.parse_args()
-assert args.action in {'run', 'studio.rst', 'create'}
+assert args.action in {'run', 'studio', 'create'}
 if args.action == 'serve':
     from Melodie.management.manager_server import run
 
     run()
-elif args.action == 'studio.rst':
+elif args.action == 'studio':
     from Melodie.studio.main import studio_main
 
     studio_main()
