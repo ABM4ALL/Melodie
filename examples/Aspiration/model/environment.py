@@ -9,18 +9,14 @@ class AspirationEnvironment(Environment):
     scenario: AspirationScenario
 
     def setup(self):
-        self.market_strategy = self.scenario.market_strategy
-        self.market_profit_mean = self.scenario.market_profit_mean
-        self.market_profit_sigma = self.scenario.market_profit_sigma
-        self.sigma_exploitation = self.scenario.sigma_exploitation
-        self.mean_exploration = self.scenario.mean_exploration
-        self.sigma_exploration = self.scenario.sigma_exploration
-        self.imitation_share = self.scenario.imitation_share
-        self.imitation_fail_rate = self.scenario.imitation_fail_rate
         self.average_technology = 0.0
+        self.sleep_accumulated_share = 0
+        self.exploration_accumulated_share = 0
+        self.exploitation_accumulated_share = 0
+        self.imitation_accumulated_share = 0
 
     def market_strategy_choice(self) -> Type[MarketStrategy]:
-        if self.market_strategy == 0:
+        if self.scenario.market_strategy == 0:
             return NonCompetitiveMarketStrategy
         else:
             pass
@@ -43,9 +39,24 @@ class AspirationEnvironment(Environment):
             technology_search_strategy(agent_list, self).technology_search(agent)
         pass
 
-    def calculate_environment_result(self, agent_list: 'AgentList[AspirationAgent]') -> None:
+    def calculate_average_technology(self, agent_list: 'AgentList[AspirationAgent]') -> None:
         sum_tech = 0
         for agent in agent_list:
             sum_tech += agent.technology
-        # self.average_technology = sum([agent.technology for agent in agent_list]) / len(agent_list)
         self.average_technology = sum_tech / len(agent_list)
+
+    def calculate_technology_search_strategy_share(self, agent_list: 'AgentList[AspirationAgent]') -> None:
+        total_sleep_count = 0
+        total_exploration_count = 0
+        total_exploitation_count = 0
+        total_imitation_count = 0
+        for agent in agent_list:
+            total_sleep_count += agent.sleep_count
+            total_exploration_count += agent.exploration_count
+            total_exploitation_count += agent.exploitation_count
+            total_imitation_count += agent.imitation_count
+        count_sum = total_sleep_count + total_exploration_count + total_exploitation_count + total_imitation_count
+        self.sleep_accumulated_share = total_sleep_count / count_sum
+        self.exploration_accumulated_share = total_exploration_count / count_sum
+        self.exploitation_accumulated_share = total_exploitation_count / count_sum
+        self.imitation_accumulated_share = total_imitation_count / count_sum
