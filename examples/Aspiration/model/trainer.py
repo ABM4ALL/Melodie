@@ -1,7 +1,7 @@
 import numpy as np
 import sqlalchemy
 
-from Melodie import Trainer
+from Melodie import Trainer, GeneticAlgorithm
 from .agent import AspirationAgent
 from .scenario import AspirationScenario
 
@@ -18,6 +18,7 @@ class AspirationTrainer(Trainer):
                                        "exploration_accumulated_share",
                                        "exploitation_accumulated_share",
                                        "imitation_accumulated_share"]
+        self.algorithm_cls = GeneticAlgorithm
 
     def fitness_agent(self, agent: AspirationAgent):
         return agent.account
