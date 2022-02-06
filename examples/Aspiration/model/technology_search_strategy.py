@@ -35,7 +35,7 @@ class ExplorationTechnologySearchStrategy(TechnologySearchStrategy):
         technology_search_result = np.random.lognormal(mean, sigma)
         agent.technology = max(agent.technology, technology_search_result)
         agent.exploration_count += 1
-        pass
+        agent.account -= self.environment.scenario.cost_exploration
 
 
 class ExploitationTechnologySearchStrategy(TechnologySearchStrategy):
@@ -45,7 +45,7 @@ class ExploitationTechnologySearchStrategy(TechnologySearchStrategy):
         technology_search_result = np.random.normal(agent.technology, sigma)
         agent.technology = max(agent.technology, technology_search_result)
         agent.exploitation_count += 1
-        pass
+        agent.account -= self.environment.scenario.cost_exploitation
 
 
 class ImitationTechnologySearchStrategy(TechnologySearchStrategy):
@@ -59,3 +59,5 @@ class ImitationTechnologySearchStrategy(TechnologySearchStrategy):
         else:
             pass
         agent.imitation_count += 1
+        agent.account -= self.environment.scenario.cost_imitation
+

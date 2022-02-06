@@ -24,12 +24,6 @@ class AspirationModel(Model):
             self.data_collector = AspirationDataCollector()
 
     def run(self):
-        # account_sum = 0
-        # for agent in self.agent_list:
-        #     agent.account = agent.strategy_param_1 + agent.strategy_param_2 + agent.strategy_param_3
-        #     account_sum += agent.account
-        # self.environment.average_technology = account_sum / len(self.agent_list)
-        # return
         for t in range(0, self.scenario.periods):
             self.environment.market_process(self.agent_list)
             self.environment.aspiration_update_process(self.agent_list)
