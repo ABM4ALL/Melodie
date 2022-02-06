@@ -1,4 +1,5 @@
 import random
+import numpy as np
 from typing import Type
 
 from Melodie import Agent
@@ -33,8 +34,8 @@ class AspirationAgent(Agent):
 
     def post_setup(self):
         weight_sum = sum([self.strategy_param_1, self.strategy_param_2, self.strategy_param_3])
-        self.prob_exploitation = self.strategy_param_1 / weight_sum
-        self.prob_exploration = self.strategy_param_2 / weight_sum
+        self.prob_exploration = self.strategy_param_1 / weight_sum
+        self.prob_exploitation = self.strategy_param_2 / weight_sum
 
     def aspiration_update_strategy_choice(self) -> Type[AspirationUpdateStrategy]:
         if self.aspiration_update_strategy == 0:
@@ -46,7 +47,7 @@ class AspirationAgent(Agent):
         if self.profit_aspiration_difference >= 0:
             return SleepTechnologySearchStrategy
         else:
-            rand = random.random()
+            rand = np.random.uniform(0, 1)
             if rand <= self.prob_exploration:
                 return ExplorationTechnologySearchStrategy
             elif self.prob_exploration < rand <= self.prob_exploration + self.prob_exploitation:

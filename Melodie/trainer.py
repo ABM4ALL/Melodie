@@ -111,7 +111,7 @@ class Trainer(BaseModellingManager):
 
         for i in range(iterations):
             self.current_algorithm_meta['generation_id'] = i
-            logger.info(f"Training iteration {i + 1}/{iterations}")
+            logger.info(f"Training generation {i + 1}/{iterations}")
             if i == 0:
                 strategy_population, params, fitness, meta = self.algorithm_instance.__next__()
             else:
