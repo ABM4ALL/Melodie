@@ -57,7 +57,7 @@ This page loads the whole table data when you switch table, but only renders
 several rows instead of rendering them all. So in most cases there will be no worry
 about performance.
 
-![img.png](docs/source/.images/melodiemanager-sqliteview.png)
+![img.png](docs/_backup/.images/melodiemanager-sqliteview.png)
 #### Build Cython extension
 ```shell
 pip install Cython

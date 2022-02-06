@@ -11,7 +11,7 @@ import logging
 
 import pandas as pd
 
-import Melodie.visualization
+import Melodie.visualizer
 from . import DB
 from .agent import Agent
 
@@ -33,7 +33,7 @@ if TYPE_CHECKING:
     from .scenario_manager import Scenario
     from .data_collector import DataCollector
     from .config import Config
-    from .visualization import Visualizer
+    from .visualizer import Visualizer
 else:
     from .scenario_manager import Scenario
     from .config import Config
@@ -163,6 +163,8 @@ class Simulator(BaseModellingManager):
         t2 = time.time()
         logger.info(f'Melodie completed all runs, time elapsed totally {t2 - t0}s, and {t2 - t1}s for running.')
 
+    # studio().run(visualizer)
+
     def run_visual(self):
         """
         Main function for running model with studio.
@@ -184,7 +186,7 @@ class Simulator(BaseModellingManager):
             try:
                 self.visualizer.current_scenario = scenario  # set studio scenario.
                 self.run_model(self.config, scenario, 0, self.model_cls, visualizer=self.visualizer)
-            except Melodie.visualization.MelodieModelReset as e:
+            except Melodie.visualizer.MelodieModelReset as e:
 
                 self.visualizer.reset()
 

@@ -2,13 +2,15 @@
 __author__ = 'Songmin'
 
 from Melodie import Model, AgentList
+from .scenario import AspirationScenario
 from .agent import AspirationAgent
 from .environment import AspirationEnvironment
 from .data_collector import AspirationDataCollector
 
 
 class AspirationModel(Model):
-
+    scenario: AspirationScenario
+    
     def setup(self):
 
         self.agent_list: AgentList[AspirationAgent] = self.create_agent_container(
@@ -32,6 +34,7 @@ class AspirationModel(Model):
             self.environment.market_process(self.agent_list)
             self.environment.aspiration_update_process(self.agent_list)
             self.environment.technology_search_process(self.agent_list)
-            self.environment.calculate_environment_result(self.agent_list)
-            # self.data_collector.collect(t)
+            self.environment.calculate_average_technology(self.agent_list)
+            self.environment.calculate_technology_search_strategy_share(self.agent_list)
+        #     self.data_collector.collect(t)
         # self.data_collector.save()

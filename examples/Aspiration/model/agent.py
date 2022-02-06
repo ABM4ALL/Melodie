@@ -3,10 +3,13 @@ from typing import Type
 
 from Melodie import Agent
 from .aspiration_update_strategy import AspirationUpdateStrategy, \
-    HistoricalAspirationUpdateStrategy, SocialAspirationUpdateStrategy
+                                        HistoricalAspirationUpdateStrategy, \
+                                        SocialAspirationUpdateStrategy
 from .technology_search_strategy import TechnologySearchStrategy, \
-    SleepTechnologySearchStrategy, ExploitationTechnologySearchStrategy, \
-    ExplorationTechnologySearchStrategy, ImitationTechnologySearchStrategy
+                                        SleepTechnologySearchStrategy, \
+                                        ExploitationTechnologySearchStrategy, \
+                                        ExplorationTechnologySearchStrategy, \
+                                        ImitationTechnologySearchStrategy
 
 
 class AspirationAgent(Agent):

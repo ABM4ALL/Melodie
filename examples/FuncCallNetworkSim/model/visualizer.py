@@ -3,7 +3,7 @@
 # @Author: Zhanyi Hou
 # @Email: 1295752786@qq.com
 # @File: run_studio.py
-from Melodie.visualization import NetworkVisualizer
+from Melodie.visualizer import NetworkVisualizer
 
 
 class FuncCallSimVisualizer(NetworkVisualizer):

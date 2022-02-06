@@ -9,6 +9,7 @@ class AspirationDataCollector(DataCollector):
         self.add_agent_property("agent_list", 'profit')
         self.add_agent_property("agent_list", 'account')
         self.add_agent_property("agent_list", 'profit_aspiration_difference')
+        self.add_agent_property("agent_list", 'sleep_count')
         self.add_agent_property("agent_list", 'exploration_count')
         self.add_agent_property("agent_list", 'exploitation_count')
         self.add_agent_property("agent_list", 'imitation_count')

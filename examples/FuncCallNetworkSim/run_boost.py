@@ -80,7 +80,7 @@ if __name__ == "__main__":
     simulator = FuncSimulator()
 
     """
-    Run the model with register.rst
+    Run the model with dataframe_loader
     """
     simulator.run_boost(
         FuncAgent,

@@ -22,8 +22,8 @@ class MarketStrategy(ABC):
 class NonCompetitiveMarketStrategy(MarketStrategy):
 
     def calculate_profit(self, agent: 'AspirationAgent') -> None:
-        mean = self.environment.market_profit_mean
-        sigma = self.environment.market_profit_sigma
+        mean = self.environment.scenario.market_profit_mean
+        sigma = self.environment.scenario.market_profit_sigma
         agent.profit = agent.technology + np.random.normal(mean, sigma)
         agent.account += agent.profit
         agent.profit_aspiration_difference = agent.profit - agent.aspiration_level

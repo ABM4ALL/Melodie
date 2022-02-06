@@ -12,11 +12,12 @@ YES --> what are the functions you can use and how to use them
     :maxdepth: 1
 
     agent
+    agent_list
     environment
     model
     data_collector
     scenario
-    register
+    dataframe_loader
     simulator
     calibrator
     trainer

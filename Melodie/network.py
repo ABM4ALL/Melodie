@@ -33,7 +33,7 @@ class Network:
         self.simple = True
         self._nodes: Set[int] = set()
         self._adj: Dict[int, Union[Set[int], List[int]]] = {}
-        self._agent_ids: Dict[str, Dict[int, Set[int]]] = {}  # {'wolves': {0 : set(1, 2, 3)}}， 代表0号节点上有1,2,3三只狼
+        self._agent_ids: Dict[str, Dict[int, Set[int]]] = {}  # {'wolves': {0 : set(1, 2, 3)}}，代表0号节点上有1,2,3三只狼
         self._agent_pos: Dict[str, Dict[int, int]] = {}  # {'wolves': {0: 1}}代表0号狼位于1节点
 
     def add_category(self, category_name: str):
@@ -301,7 +301,7 @@ class AgentRelationshipNetwork:
                              container: 'Union[AgentList]',
                              category: str,
                              network_type: str,
-                             nx_creator_fcn: Callable):
+                             nx_creator_fcn: Callable = None):
         """
 
         network_name 网络类型名称
@@ -337,21 +337,3 @@ class NetworkDirected(Network):
 
     def get_neighbors(self, node):
         pass
-
-# class SomeModel:
-#
-#     def setup_agent_list(self):
-#         self.persons = []
-#         self.medias = []
-#
-#     def setup_network(self):
-#         self.network = Network()
-#         self.network.add_category("persons")
-#         self.network.add_category("medias")
-#         self.network.add_agent("persons", self.persons[0])
-#         self.network.add_agent("persons", self.persons[1])
-#         self.network.create_edge("persons", self.persons[0], "persons", self.persons[1], )
-#
-#         pass
-#
-#     pass

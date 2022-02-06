@@ -19,6 +19,7 @@ logger = logging.getLogger(__name__)
 
 
 class Scenario(Element):
+
     class BaseParameter():
         def __init__(self, name, type, init):
             self.name = name

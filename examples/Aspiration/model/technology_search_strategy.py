@@ -30,8 +30,8 @@ class SleepTechnologySearchStrategy(TechnologySearchStrategy):
 class ExplorationTechnologySearchStrategy(TechnologySearchStrategy):
 
     def technology_search(self, agent: 'AspirationAgent') -> None:
-        mean = self.environment.sigma_exploration
-        sigma = self.environment.sigma_exploration
+        mean = self.environment.scenario.sigma_exploration
+        sigma = self.environment.scenario.sigma_exploration
         technology_search_result = np.random.lognormal(mean, sigma)
         agent.technology = max(agent.technology, technology_search_result)
         agent.exploration_count += 1
@@ -41,7 +41,7 @@ class ExplorationTechnologySearchStrategy(TechnologySearchStrategy):
 class ExploitationTechnologySearchStrategy(TechnologySearchStrategy):
 
     def technology_search(self, agent: 'AspirationAgent') -> None:
-        sigma = self.environment.sigma_exploitation
+        sigma = self.environment.scenario.sigma_exploitation
         technology_search_result = np.random.normal(agent.technology, sigma)
         agent.technology = max(agent.technology, technology_search_result)
         agent.exploitation_count += 1
@@ -51,10 +51,10 @@ class ExploitationTechnologySearchStrategy(TechnologySearchStrategy):
 class ImitationTechnologySearchStrategy(TechnologySearchStrategy):
 
     def technology_search(self, agent: 'AspirationAgent') -> None:
-        random_agent_list = random.sample(self.agent_list, int(len(self.agent_list) * self.environment.imitation_share))
+        random_agent_list = random.sample(self.agent_list, int(len(self.agent_list) * self.environment.scenario.imitation_share))
         technology_search_result = np.array([item.technology for item in random_agent_list]).max()
         rand = np.random.uniform(0, 1)
-        if rand <= (1 - self.environment.imitation_fail_rate):
+        if rand <= (1 - self.environment.scenario.imitation_fail_rate):
             agent.technology = max(agent.technology, technology_search_result)
         else:
             pass

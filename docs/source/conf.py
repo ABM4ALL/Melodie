@@ -1,8 +1,3 @@
-# Configuration data for the Sphinx documentation builder.
-#
-# This data only contains a selection of the most common options. For a full
-# list see the documentation:
-# https://www.sphinx-doc.org/en/master/usage/configuration.html
 import os
 
 from sphinx.builders.html import StandaloneHTMLBuilder
@@ -10,17 +5,14 @@ from sphinx.builders.html import StandaloneHTMLBuilder
 # -- Project information -----------------------------------------------------
 
 project = 'Melodie'
-copyright = '2021, open excel_source'
-author = 'Songmin Yu'
-
-# The full version, including alpha/beta/rc tags
-release = '0.1'
+copyright = '2021-2022, ABM4ALL'
+author = 'Songmin Yu, Zhanyi Hou'
+release = '1.0.0'
 
 # -- General configuration ---------------------------------------------------
 
-# Add any Sphinx extension module names here, as strings. They can be
-# extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
-# ones.
+# Add any Sphinx extension module names here, as strings.
+# They can be extensions coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
 extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.napoleon',
@@ -31,7 +23,7 @@ extensions = [
 ]
 
 # Add any paths that contain templates here, relative to this directory.
-templates_path = ['_templates']
+templates_path = []
 
 # List of patterns, relative to excel_source directory, that match files and
 # directories to ignore when looking for excel_source files.
@@ -42,13 +34,17 @@ exclude_patterns = []
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
-#
 html_theme = 'sphinx_rtd_theme'
+html_logo = "image/logo.jpg"
+html_theme_options = {
+    'collapse_navigation': False
+}
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a data named "default.css" will overwrite the builtin "default.css".
 html_static_path = []
+html_css_files = []
 
 # This allows us to dynamically pick between gif and png images based on the build.
 # For example, when we have something like:

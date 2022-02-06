@@ -1,5 +1,5 @@
 
-Gallery
+Model Gallery
 =======
 
 introduce the existing model examples
@@ -10,6 +10,8 @@ summarize the models in a table and show which of the following modules are used
     :caption: Content
     :maxdepth: 1
 
-    technology
-    virus
-    opinion
+    technology_search
+    virus_contagion
+    opinion_dynamics
+
+

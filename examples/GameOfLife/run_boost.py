@@ -35,7 +35,7 @@ if __name__ == "__main__":
     simulator = FuncSimulator(config, GameOfLifeScenario, GameOfLifeModel, GameOfLifeDataFrameLoader)
 
     """
-    Run the model with register.rst
+    Run the model with dataframe_loader
     """
     simulator.run_boost(
         [GameOfLifeSpot],
