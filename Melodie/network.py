@@ -1,6 +1,8 @@
-from typing import Dict, Set, Union, List, Tuple, ClassVar
+from typing import Dict, Set, Union, List, Tuple, ClassVar, Callable
 
 import logging
+
+from Melodie import BaseAgentContainer, AgentList
 
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
@@ -294,6 +296,36 @@ class AgentRelationshipNetwork:
 
     def all_agents(self) -> List[int]:
         return self._nodes
+
+    def from_agent_container(self,
+                             container: 'Union[AgentList]',
+                             category: str,
+                             network_type: str,
+                             nx_creator_fcn: Callable):
+        """
+
+        network_name 网络类型名称
+        network_params 字典，键为小世界网络的参数名，值就是参数值
+
+        network_builder 函数
+        形如：
+        def builder(agent_num):
+            return nx.ba_graph(agent_num, 3, ...)
+
+        self.from_agent_container(container, 'agents', builder)
+
+        :param container:
+        :param category:
+        :param network_type:
+        :param nx_creator_fcn:
+        :return:
+        """
+        import networkx as nx
+        for agent in container:
+            self.add_agent(agent.id, category, agent.id)
+        g = nx.barabasi_albert_graph(len(container), 3, )
+        print(g.nodes)
+        print(g.edges)
 
 
 class NetworkDirected(Network):

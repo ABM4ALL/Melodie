@@ -5,7 +5,7 @@
 # -n will raise warning about missing references in the docs.
 SPHINXOPTS    ?= -W --keep-going -n
 SPHINXBUILD   ?= sphinx-build
-SOURCEDIR     = src
+SOURCEDIR     = source
 BUILDDIR      = build
 
 # Put it first so that "make" without argument is like "make help".

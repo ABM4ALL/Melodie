@@ -119,17 +119,17 @@ class LearningScenario(Scenario):
 
 
 class GATrainerScenario(LearningScenario):
-    def __init__(self, id: int, number_of_path: int, training_generation: int, strategy_population: int,
+    def __init__(self, id: int, number_of_path: int, number_of_generation: int, strategy_population: int,
                  mutation_prob: int, strategy_param_code_length: int):
         super().__init__(id, number_of_path)
-        self.training_generation = training_generation
+        self.number_of_generation = number_of_generation
         self.strategy_population = strategy_population
         self.mutation_prob = mutation_prob
         self.strategy_param_code_length = strategy_param_code_length
 
     @staticmethod
     def from_dataframe_record(record: Dict[str, Union[int, float]]) -> 'GATrainerScenario':
-        s = GATrainerScenario(record['id'], record['number_of_path'], record['training_generation'],
+        s = GATrainerScenario(record['id'], record['number_of_path'], record['number_of_generation'],
                               record['strategy_population'], record['mutation_prob'],
                               record['strategy_param_code_length'])
         max_values = {name[:len(name) - len("_max")]: value for name, value in record.items() if name.endswith("_max")}

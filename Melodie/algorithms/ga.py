@@ -141,11 +141,11 @@ class TrainingAlgorithm(ABC):
 
 class GeneticAlgorithm(TrainingAlgorithm):
     def __init__(self,
-                 training_generations: int,
+                 number_of_generation: int,
                  strategy_population_size: int,
                  mutation_prob: float,
                  strategy_param_code_length: int, ):
-        self.training_generations: int = training_generations
+        self.number_of_generation: int = number_of_generation
         self.strategy_population_size = strategy_population_size
         self.mutation_prob = mutation_prob  # 突变为了避免收敛到局部最优，但太大的导致搜索不稳定
         self.strategy_param_code_length = strategy_param_code_length  # 这个值越大解的精度越高 --> 把下面区间[strategy_param_min, strategy_param_max]分得越细
@@ -188,7 +188,7 @@ class GeneticAlgorithm(TrainingAlgorithm):
         strategy_population = np.random.randint(2,
                                                 size=(self.strategy_population_size,
                                                       self.strategy_param_code_length * self.parameters_num))
-        for gen in range(0, self.training_generations):
+        for gen in range(0, self.number_of_generation):
             strategy_fitness = []
             parameter_values: List[List[int]] = []
             for i, strategy in enumerate(strategy_population):
@@ -234,7 +234,7 @@ class GeneticAlgorithm(TrainingAlgorithm):
         strategy_population = np.random.randint(2,
                                                 size=(self.strategy_population_size,
                                                       self.strategy_param_code_length * self.parameters_num))
-        for gen in range(0, self.training_generations):
+        for gen in range(0, self.number_of_generation):
             strategy_fitness = []
             parameter_sums = [0 for i in range(len(self.parameters))]
             params: List[List[int]] = []
@@ -297,7 +297,7 @@ class GeneticAlgorithm(TrainingAlgorithm):
                               env_parameters.items()}
             meta = []
             for agent_id in range(self.agent_num):
-                d = {'fitness_mean': fitness_mean[agent_id], "fitness_cov": fitness_cov[agent_id]}
+                d = {'agent_id': agent_id, 'fitness_mean': fitness_mean[agent_id], "fitness_cov": fitness_cov[agent_id]}
                 d.update(agent_parameters_mean[agent_id])
                 d.update(agent_parameters_cov[agent_id])
 
@@ -305,8 +305,8 @@ class GeneticAlgorithm(TrainingAlgorithm):
             env_params_meta = {}
             env_params_meta.update(env_params_mean)
             env_params_meta.update(env_params_cov)
-            agents = yield strategy_population, params, strategy_fitness, {"agent_learning_cov": meta,
-                                                                           "env_learning_cov": env_params_meta}
+            agents = yield strategy_population, params, strategy_fitness, {"agent_trainer_result_cov": meta,
+                                                                           "env_trainer_result_cov": env_params_meta}
             for i in range(agents):
                 strategy_population[:,
                 i * self.strategy_param_code_length * self.params_each_agent:

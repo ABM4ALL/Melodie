@@ -47,3 +47,12 @@ def test_relationship_network():
     n.remove_agent(0, 'agents')
 
     assert len(n.get_neighbors(agent_list[1].id, 'agents')) == 1
+
+
+def test_create_ba():
+    model = DemoModel(cfg, Scenario(0))
+    model.setup()
+    agent_list = AgentList(DemoAgent, 10, model)
+    n = DemoAgentRelationshipNetwork()
+    n.add_category('agents')
+    n.from_agent_container(agent_list, 'agents','ba')

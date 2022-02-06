@@ -40,19 +40,12 @@ class Trainer(BaseModellingManager):
 
         self.model: Optional[Model] = None
 
-        self.agent_result_columns = [
-            "scenario_id", "learning_scenario_id",
-            "trainer_path_id", "generation_id",
-            "chromosome_id",
-            "agent_id",
-            "para_1", "para_2", "para_3", "fitness"
-        ]
         self.agent_result = []
 
         self.current_algorithm_meta = {
-            "scenario_id": 0,
-            "learning_scenario_id": 1,
-            "trainer_path_id": 0,
+            "current_scenario_id": 0,
+            "trainer_params_scenario_id": 1,
+            "path_id": 0,
             "generation_id": 0}
 
     def setup(self):
@@ -77,13 +70,13 @@ class Trainer(BaseModellingManager):
         assert trainer_scenario_cls is not None
 
         for scenario in self.scenarios:
-            self.current_algorithm_meta['scenario_id'] = scenario.id
+            self.current_algorithm_meta['trainer_scenario_id'] = scenario.id
             trainer_scenarios = trainer_scenarios_table.to_dict(orient="records")
             for trainer_scenario in trainer_scenarios:
                 trainer_scenario = trainer_scenario_cls.from_dataframe_record(trainer_scenario)
-                self.current_algorithm_meta['learning_scenario_id'] = trainer_scenario.id
-                for trainer_path_id in range(trainer_scenario.number_of_path):
-                    self.current_algorithm_meta['trainer_path_id'] = trainer_path_id
+                self.current_algorithm_meta['trainer_params_scenario_id'] = trainer_scenario.id
+                for path_id in range(trainer_scenario.number_of_path):
+                    self.current_algorithm_meta['path_id'] = path_id
 
                     self.run_once(scenario, trainer_scenario)
 
@@ -97,11 +90,11 @@ class Trainer(BaseModellingManager):
 
         iterations = 0
         if isinstance(trainer_scenario, GATrainerScenario):
-            self.algorithm = GeneticAlgorithm(trainer_scenario.training_generation,
+            self.algorithm = GeneticAlgorithm(trainer_scenario.number_of_generation,
                                               trainer_scenario.strategy_population,
                                               trainer_scenario.mutation_prob,
                                               trainer_scenario.strategy_param_code_length)
-            iterations = trainer_scenario.training_generation
+            iterations = trainer_scenario.number_of_generation
         else:
             pass
         self.algorithm.set_parameters_agents(agents_num,
@@ -123,14 +116,14 @@ class Trainer(BaseModellingManager):
                 strategy_population, params, fitness, meta = self.algorithm_instance.__next__()
             else:
                 strategy_population, params, fitness, meta = self.algorithm_instance.send(len(agents))
-            agent_training_cov = copy.deepcopy(meta['agent_learning_cov'])
-            env_training_cov = copy.deepcopy(meta['env_learning_cov'])
+            agent_training_cov = copy.deepcopy(meta['agent_trainer_result_cov'])
+            env_training_cov = copy.deepcopy(meta['env_trainer_result_cov'])
 
             for d in agent_training_cov:
                 d.update(self.current_algorithm_meta)
             env_training_cov.update(self.current_algorithm_meta)
-            create_db_conn(self.config).write_dataframe('agent_learning_cov', pd.DataFrame(agent_training_cov))
-            create_db_conn(self.config).write_dataframe('env_learning_cov', pd.DataFrame([env_training_cov]))
+            create_db_conn(self.config).write_dataframe('agent_trainer_result_cov', pd.DataFrame(agent_training_cov))
+            create_db_conn(self.config).write_dataframe('env_trainer_result_cov', pd.DataFrame([env_training_cov]))
 
     def add_property(self, container: str, prop: str):
         """
@@ -174,14 +167,16 @@ class Trainer(BaseModellingManager):
         env = self.model.environment
         environment_properties_dict = {prop_name: env.__dict__[prop_name] for prop_name in self.environment_properties}
         environment_record_dict.update(environment_properties_dict)
+        environment_record_dict.update(kwargs['meta'])
         fitness_list = []
         for i, agent in enumerate(agents):
             agent_fitness = self.fitness_agent(agent)
             fitness_list.append(agent_fitness)
             agents_params_list[agent.id]['fitness'] = agent_fitness
-        create_db_conn(self.config).write_dataframe('agent_learning_result', pd.DataFrame(agents_params_list),
+        create_db_conn(self.config).write_dataframe('agent_trainer_result', pd.DataFrame(agents_params_list),
                                                     if_exists="append")
-        create_db_conn(self.config).write_dataframe('env_learning_result', pd.DataFrame([environment_record_dict]),
+
+        create_db_conn(self.config).write_dataframe('env_trainer_result', pd.DataFrame([environment_record_dict]),
                                                     if_exists="append")
         return np.array(fitness_list), environment_properties_dict
 

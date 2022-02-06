@@ -178,7 +178,6 @@ class Simulator(BaseModellingManager):
             logger.info(f"Visualizer interactive paramerters for this scenario are: {self.visualizer.scenario_param}")
             scenario = self.scenario_class()
             scenario.setup()
-            scenario.periods = 99999
             for k, v in self.visualizer.scenario_param.items():
                 scenario.__setattr__(k, v)
             logger.info(f"Scenario parameters: {scenario.to_dict()}")
