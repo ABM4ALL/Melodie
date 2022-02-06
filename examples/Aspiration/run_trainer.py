@@ -9,8 +9,5 @@ from model.dataframe_loader import AspirationDataFrameLoader
 
 if __name__ == "__main__":
     trainer = AspirationTrainer(config, AspirationScenario, AspirationModel, AspirationDataFrameLoader)
-
-    """
-    Run the model with dataframe_loader
-    """
     trainer.train()
+
