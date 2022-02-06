@@ -15,6 +15,10 @@ class AspirationEnvironment(Environment):
         self.exploitation_accumulated_share = 0
         self.imitation_accumulated_share = 0
 
+    def agent_post_setup(self, agent_list: 'AgentList[AspirationAgent]') -> None:
+        for agent in agent_list:
+            agent.post_setup()
+
     def market_strategy_choice(self) -> Type[MarketStrategy]:
         if self.scenario.market_strategy == 0:
             return NonCompetitiveMarketStrategy

@@ -147,9 +147,8 @@ class GeneticAlgorithm(TrainingAlgorithm):
                  strategy_param_code_length: int, ):
         self.number_of_generation: int = number_of_generation
         self.strategy_population_size = strategy_population_size
-        self.mutation_prob = mutation_prob  # 突变为了避免收敛到局部最优，但太大的导致搜索不稳定
-        self.strategy_param_code_length = strategy_param_code_length  # 这个值越大解的精度越高 --> 把下面区间[strategy_param_min, strategy_param_max]分得越细
-
+        self.mutation_prob = mutation_prob
+        self.strategy_param_code_length = strategy_param_code_length
         self.agent_num = 0
         self.params_each_agent = 0
         self.parameters_num = 0
@@ -170,7 +169,7 @@ class GeneticAlgorithm(TrainingAlgorithm):
         """
         self.params_each_agent = agent_params
         self.agent_num = agent_num
-        self.parameters_num = self.agent_num * self.params_each_agent  # 参数的数量
+        self.parameters_num = self.agent_num * self.params_each_agent
         self.parameters = [(-5, 5) for i in range(self.parameters_num)]
         self.parameters_value = np.array([1 for i in range(self.parameters_num)], dtype=np.float64)
         self.parameter_names = parameter_names
