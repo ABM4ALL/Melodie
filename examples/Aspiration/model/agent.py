@@ -34,6 +34,7 @@ class AspirationAgent(Agent):
 
     def post_setup(self):
         weight_sum = sum([self.strategy_param_1, self.strategy_param_2, self.strategy_param_3])
+        if weight_sum == 0: weight_sum = 1
         self.prob_exploration = self.strategy_param_1 / weight_sum
         self.prob_exploitation = self.strategy_param_2 / weight_sum
 
