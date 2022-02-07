@@ -50,9 +50,15 @@ def test_relationship_network():
 
 
 def test_create_ba():
+    def network_creator(agent_list):
+        import networkx as nx
+        return nx.barabasi_albert_graph(len(agent_list), 3)
+
     model = DemoModel(cfg, Scenario(0))
     model.setup()
     agent_list = AgentList(DemoAgent, 10, model)
     n = DemoAgentRelationshipNetwork()
     n.add_category('agents')
-    n.from_agent_container(agent_list, 'agents','ba')
+    n.from_agent_container(agent_list, 'agents', 'ba', {'m': 3})
+    n.from_agent_container(agent_list, 'agents', builder=network_creator)
+    assert len(n.all_agents()) == 10

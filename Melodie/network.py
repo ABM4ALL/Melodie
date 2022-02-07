@@ -300,8 +300,9 @@ class AgentRelationshipNetwork:
     def from_agent_container(self,
                              container: 'Union[AgentList]',
                              category: str,
-                             network_type: str,
-                             nx_creator_fcn: Callable = None):
+                             network_name: str = '',
+                             network_params: dict = '',
+                             builder: Callable = None):
         """
 
         network_name 网络类型名称
@@ -323,9 +324,19 @@ class AgentRelationshipNetwork:
         import networkx as nx
         for agent in container:
             self.add_agent(agent.id, category, agent.id)
-        g = nx.barabasi_albert_graph(len(container), 3, )
-        print(g.nodes)
-        print(g.edges)
+        g = None
+        if builder is not None:
+            g = builder(container)
+        else:
+            if network_name == 'ba':
+                g = nx.barabasi_albert_graph(len(container), **network_params, )
+            else:
+                raise NotImplementedError(f"Network name {network_name} is not implemented!")
+        for edge in g.edges:
+            agent_src = list(self.get_agents(category, edge[0]))[0]
+            agent_dest = list(self.get_agents(category, edge[1]))[0]
+            edge_obj = self.edge_cls(category, agent_src, category, agent_dest, {})
+            self.add_edge(edge[0], edge[1], edge_obj)
 
 
 class NetworkDirected(Network):
