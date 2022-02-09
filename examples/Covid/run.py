@@ -4,7 +4,7 @@ sys.path.append("../..")
 from model.scenario import CovidScenario
 from model.model import CovidModel
 from model.simulator import CovidSimulator
-from model.table_loader import CovidDataFrameLoader
+from model.df_loader import CovidDataFrameLoader
 from config import config
 
 if __name__ == "__main__":
@@ -25,7 +25,7 @@ if __name__ == "__main__":
     """
     # dataframe_loader.run_parallel(
     #     config=config,
-    #     scenario_class=CovidScenario,
+    #     scenario_cls=CovidScenario,
     #     model_class=CovidModel,
     #     cores=4
     # )

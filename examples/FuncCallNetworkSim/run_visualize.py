@@ -25,7 +25,7 @@ if __name__ == "__main__":
         environment_class=FuncEnvironment,
         config=config,
         model_class=FuncModel,
-        scenario_class=FuncScenario,
+        scenario_cls=FuncScenario,
         data_collector_class=DataCollector,
         visualizer_class=FuncCallSimVisualizer
     )

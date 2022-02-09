@@ -38,10 +38,10 @@ def test_table_generator():
 
     simulator.setup()
     simulator.pre_run()
-    with simulator.table_loader.new_table_generator('aaa', 100) as g:
-        print(g.simulator)
+    with simulator.df_loader.new_table_generator('aaa', 100) as g:
         g.set_row_generator(lambda scenario: {"id": g.increment(), "productivity": 0.5})
-    with simulator.table_loader.new_table_generator('bbb', lambda _: 200) as g:
+
+    with simulator.df_loader.new_table_generator('bbb', lambda _: 200) as g:
         def f(s):
             o = obj1()
             o.id = g.increment()
@@ -53,5 +53,5 @@ def test_table_generator():
     print(df)
     df = create_db_conn(cfg_for_temp).read_dataframe('bbb')
     print(df)
-    df = simulator.table_loader.registered_dataframes['bbb']
+    df = simulator.df_loader.registered_dataframes['bbb']
     print(df)

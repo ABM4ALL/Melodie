@@ -11,8 +11,7 @@ from model.environment import CovidEnvironment
 from model.scenario import CovidScenario
 from model.model import CovidModel
 from model.simulator import CovidSimulator
-# from model.visualizer import CovidVisualizer
-from model.table_loader import CovidDataFrameLoader
+from model.df_loader import CovidDataFrameLoader
 from config import config
 
 logger = logging.getLogger(__name__)
@@ -42,7 +41,7 @@ if __name__ == "__main__":
         CovidEnvironment,
         config,
         model_class=CovidModel,
-        scenario_class=CovidScenario,
+        scenario_cls=CovidScenario,
         boost_model_class=CovidModel,
         model_components=None,
     )

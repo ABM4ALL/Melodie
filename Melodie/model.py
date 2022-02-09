@@ -53,10 +53,6 @@ class Model:
         """
         pass
 
-    # def current_scenario(self) -> 'Scenario':
-    #     MelodieExceptions.Assertions.Type("self.scenario", self.scenario, Scenario)
-    #     return self.scenario
-
     def create_db_conn(self) -> 'DB':
         return create_db_conn(self.config)
 

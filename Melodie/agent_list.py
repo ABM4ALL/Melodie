@@ -19,6 +19,9 @@ logger = logging.getLogger(__name__)
 
 
 class BaseAgentContainer(Generic[AgentGeneric]):
+    """
+    The base class that contains agents
+    """
     _agent_ids = set()
 
     def __init__(self):
@@ -28,7 +31,7 @@ class BaseAgentContainer(Generic[AgentGeneric]):
 
     def new_id(self):
         """
-        Create a new ID
+        Create a new auto-increment ID
         :return:
         """
         self._id_offset += 1
@@ -95,7 +98,7 @@ class BaseAgentContainer(Generic[AgentGeneric]):
             props_df_cpy = props_df.copy()  # deep copy this dataframe.
         props_df_cpy.reset_index(drop=True, inplace=True)
         self.type_check(param_names, props_df_cpy)
-        # props_df_cpy.set_index("id", inplace=True)
+
         # Assign parameters to properties for each agent.
         for i, agent in enumerate(self.agents):
             params = {}
@@ -146,6 +149,10 @@ class AgentList(BaseAgentContainer, Sequence, typing.Sequence[AgentGeneric]):
             raise StopIteration
 
     def init_agents(self) -> List[AgentGeneric]:
+        """
+        Initialize all agents in the container, and call the `setup()` method
+        :return:
+        """
         agents: List['AgentGeneric'] = [self.agent_class(self.new_id()) for i in
                                         range(self.initial_agent_num)]
         scenario = self.model.scenario
@@ -155,15 +162,33 @@ class AgentList(BaseAgentContainer, Sequence, typing.Sequence[AgentGeneric]):
         return IndexedAgentList(agents)
 
     def random_sample(self, sample_num: int) -> List['AgentGeneric']:
+        """
+        Randomly sample `sample_num` agents from the container
+        :param sample_num:
+        :return:
+        """
         return random.sample(self.agents, sample_num)
 
     def remove(self, agent: 'AgentGeneric'):
+        """
+        Remove the agent
+
+        :param agent:
+        :return:
+        """
         for i, a in enumerate(self.agents):
             if a is agent:
                 self.agents.pop(i)
                 break
 
     def add(self, agent: 'AgentGeneric' = None, params: Dict = None):
+        """
+        Add an agent
+
+        :param agent:
+        :param params:
+        :return:
+        """
         new_id = self.new_id()
         if agent is not None:
             assert isinstance(agent, Agent)
@@ -183,6 +208,11 @@ class AgentList(BaseAgentContainer, Sequence, typing.Sequence[AgentGeneric]):
         self.agents.append(agent)
 
     def to_list(self, column_names: List[str] = None) -> List[Dict]:
+        """
+        Dump all agent and their properties into a list of dict.
+        :param column_names:  The property name to be dumped.
+        :return:
+        """
         protected_columns = ['id']
         data_list = []
         if len(self.agents) == 0:
@@ -214,5 +244,10 @@ class AgentList(BaseAgentContainer, Sequence, typing.Sequence[AgentGeneric]):
         return df
 
     def set_properties(self, props_df: pd.DataFrame):
+        """
+        Extract properties from a dataframe, and Each row in the dataframe represents the property of an agent.
+        :param props_df:
+        :return:
+        """
         super().set_properties(props_df)
         self.agents.sort(key=lambda agent: agent.id)

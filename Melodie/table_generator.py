@@ -14,7 +14,7 @@ from Melodie.db import create_db_conn
 from Melodie.scenario_manager import Scenario
 
 if TYPE_CHECKING:
-    from Melodie import Simulator, DataFrameLoader, Calibrator, Trainer
+    from Melodie import df_loader, DataFrameLoader, Calibrator, Trainer
 
 logger = logging.getLogger(__name__)
 
@@ -25,24 +25,24 @@ class TableGenerator:
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         new_df = self.gen_agent_param_table_each_scenario()
-        self.simulator.register_dataframe(self.table_name, new_df, self.data_types)
+        self.df_loader.register_dataframe(self.table_name, new_df, self.data_types)
         return
 
     def __init__(self,
-                 simulator: "DataFrameLoader",
+                 df_loader: "DataFrameLoader",
                  table_name: str,
                  num_generator: Union[int, Callable[[Scenario], int]]):
         """
-
+        :param df_loader:
         :param table_name:
         """
 
         self.num_generator = self.convert_to_num_generator(num_generator)
         self.table_name = table_name
         self._self_incremental_value = -1
-        self.simulator = simulator
+        self.df_loader = df_loader
         from Melodie.dataframe_loader import DataFrameLoader
-        assert isinstance(self.simulator, DataFrameLoader)
+        assert isinstance(self.df_loader, DataFrameLoader)
 
         self.data_types = {}
         self._row_generator: Optional[Callable[[Scenario], Union[dict, object]]] = None
@@ -94,7 +94,7 @@ class TableGenerator:
 
         :return:
         """
-        scenarios = self.simulator.manager.generate_scenarios()
+        scenarios = self.df_loader.manager.generate_scenarios()
         data_list = []
         for scenario in scenarios:
             data_list.extend(self.gen_agent_params(scenario))

@@ -7,7 +7,7 @@ from .data_collector import DataCollector
 from .db import DB, create_db_conn
 from .environment import Environment
 from .model import Model
-from .scenario_manager import Scenario, GATrainerScenario, GACalibrationScenario
+from .scenario_manager import Scenario, GATrainerParams, GACalibratorParams
 from .table_generator import TableGenerator
 from .dataframe_loader import DataFrameLoader
 from .simulator import Simulator
@@ -21,4 +21,4 @@ from .trainer import Trainer
 import logging
 
 logging.basicConfig(stream=sys.stderr, level=logging.INFO)
-# from .element import
+

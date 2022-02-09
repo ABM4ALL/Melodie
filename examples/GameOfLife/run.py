@@ -28,7 +28,7 @@ if __name__ == "__main__":
     #     # environment_class=GameOfLifeEnvironment,
     #     config=config,
     #     model_class=GameOfLifeModel,
-    #     scenario_class=GameOfLifeScenario,
+    #     scenario_cls=GameOfLifeScenario,
     #     # data_collector_class=DataCollector,
     #     visualizer_class=GridVisualizer
     # )

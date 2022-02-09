@@ -26,7 +26,7 @@ if __name__ == "__main__":
     """
     # dataframe_loader.run_parallel(
     #     config=config,
-    #     scenario_class=GiniScenario,
+    #     scenario_cls=GiniScenario,
     #     model_class=GiniModel,
     #     agent_class=GINIAgent,
     #     environment_class=GiniEnvironment,

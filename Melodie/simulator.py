@@ -41,18 +41,20 @@ else:
 
 
 class BaseModellingManager(abc.ABC):
+    """
+    Base class of Simulator/Trainer/Calibrator.
+    """
     def __init__(self, config: Config,
                  scenario_cls: ClassVar['Scenario'],
                  model_cls: ClassVar['Model'],
                  df_loader_cls: ClassVar[DataFrameLoader] = None):
         self.config: Optional[Config] = config
-        self.scenario_class = scenario_cls
+        self.scenario_cls = scenario_cls
         self.model_cls = model_cls
-        # self.scenarios_dataframe: Optional[pd.DataFrame] = None
-
+        
         self.scenarios: Optional[List['Scenario']] = None
         self.df_loader_cls: Optional[ClassVar[DataFrameLoader]] = df_loader_cls
-        self.table_loader: Optional[DataFrameLoader] = None
+        self.df_loader: Optional[DataFrameLoader] = None
         if df_loader_cls is not None:
             assert issubclass(df_loader_cls, DataFrameLoader), df_loader_cls
 
@@ -62,12 +64,12 @@ class BaseModellingManager(abc.ABC):
         :param table_name:
         :return:
         """
-        assert self.table_loader is not None
-        if table_name not in self.table_loader.registered_dataframes:
+        assert self.df_loader is not None
+        if table_name not in self.df_loader.registered_dataframes:
             raise MelodieExceptions.Data.StaticTableNotRegistered(table_name,
-                                                                  list(self.table_loader.registered_dataframes.keys()))
+                                                                  list(self.df_loader.registered_dataframes.keys()))
 
-        return self.table_loader.registered_dataframes[table_name]
+        return self.df_loader.registered_dataframes[table_name]
 
     def pre_run(self):
         """
@@ -79,10 +81,10 @@ class BaseModellingManager(abc.ABC):
         """
         create_db_conn(self.config).clear_database()
         if self.df_loader_cls is not None:
-            self.table_loader = self.df_loader_cls(self, self.config, self.scenario_class)
-            self.table_loader.register_scenario_dataframe()
-            self.table_loader.register_static_dataframes()
-            self.table_loader.register_generated_dataframes()
+            self.df_loader = self.df_loader_cls(self, self.config, self.scenario_cls)
+            self.df_loader.register_scenario_dataframe()
+            self.df_loader.register_static_dataframes()
+            self.df_loader.register_generated_dataframes()
 
         self.scenarios = self.generate_scenarios()
 
@@ -106,8 +108,12 @@ class Simulator(BaseModellingManager):
         self.visualizer: Optional[Visualizer] = None
 
     def generate_scenarios(self):
-        assert self.table_loader is not None
-        return self.table_loader.generate_scenarios('simulator')
+        """
+        Generate scenarios from the dataframe_loader
+        :return: 
+        """
+        assert self.df_loader is not None
+        return self.df_loader.generate_scenarios('simulator')
 
     def run_model(self, config, scenario, run_id, model_class: ClassVar['Model'], visualizer=None):
         """
@@ -178,7 +184,7 @@ class Simulator(BaseModellingManager):
         t1 = time.time()
         while True:
             logger.info(f"Visualizer interactive paramerters for this scenario are: {self.visualizer.scenario_param}")
-            scenario = self.scenario_class()
+            scenario = self.scenario_cls()
             scenario.setup()
             for k, v in self.visualizer.scenario_param.items():
                 scenario.__setattr__(k, v)
@@ -198,7 +204,7 @@ class Simulator(BaseModellingManager):
 
     def run_parallel(self,
                      config: 'Config',
-                     scenario_class: ClassVar['Scenario'],
+                     scenario_cls: ClassVar['Scenario'],
                      model_class: ClassVar['Model'],
                      cores: int = 2
                      ):
@@ -241,7 +247,7 @@ class Simulator(BaseModellingManager):
         """
         t0 = time.time()
         self.config = config
-        self.scenario_class = scenario_class
+        self.scenario_cls = scenario_cls
         self.pre_run()
 
         t1 = time.time()
@@ -270,7 +276,7 @@ class Simulator(BaseModellingManager):
                   environment_class: ClassVar['Environment'],
                   config: 'Config' = None,
                   model_class: ClassVar['Model'] = None,
-                  scenario_class: ClassVar['Scenario'] = None,
+                  scenario_cls: ClassVar['Scenario'] = None,
                   visualizer_class: ClassVar['Visualizer'] = None,
                   boost_model_class: ClassVar['Model'] = None,
                   model_components=None
@@ -282,7 +288,7 @@ class Simulator(BaseModellingManager):
         :param config:
         :param data_collector_class:
         :param model_class:
-        :param scenario_class:
+        :param scenario_cls:
         :param scenario_manager_class:
         :param table_generator_class:
         :param analyzer_class:
@@ -303,7 +309,7 @@ class Simulator(BaseModellingManager):
         logger.info("Preprocess compilation finished, now running pre-run procedures.")
 
         self.config = config
-        self.scenario_class = scenario_class
+        self.scenario_cls = scenario_cls
         self.pre_run()
         # self.register_scenario_dataframe()
         # self.register_static_dataframes()

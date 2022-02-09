@@ -42,7 +42,7 @@ if __name__ == "__main__":
         GameOfLifeEnvironment,
         config,
         model_class=GameOfLifeModel,
-        scenario_class=GameOfLifeScenario,
+        scenario_cls=GameOfLifeScenario,
         boost_model_class=GameOfLifeModel,
         model_components=None,
         visualizer_class=GameOfLifeVisualizer

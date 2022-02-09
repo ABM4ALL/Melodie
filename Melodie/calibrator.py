@@ -5,7 +5,7 @@ import copy
 import numpy as np
 import pandas as pd
 import logging
-from Melodie import Model, Scenario, Config, Agent, create_db_conn, GACalibrationScenario, DataFrameLoader
+from Melodie import Model, Scenario, Config, Agent, create_db_conn, GACalibratorParams, DataFrameLoader
 from Melodie.algorithms import GeneticAlgorithm, TrainingAlgorithm
 from Melodie.basic import MelodieExceptions
 from .simulator import BaseModellingManager
@@ -45,7 +45,7 @@ class Calibrator(BaseModellingManager):
             "trainer_path_id": 0,
             "generation_id": 0
         }
-        self.table_loader: Optional['DataFrameLoader'] = None
+        self.df_loader: Optional['DataFrameLoader'] = None
         self.df_loader_cls = df_loader_cls
 
     def setup(self):
@@ -56,7 +56,7 @@ class Calibrator(BaseModellingManager):
         Generate scenario objects by the parameter from static tables or scenarios_dataframe.
         :return:
         """
-        return self.table_loader.generate_scenarios_from_dataframe('calibrator_scenarios')
+        return self.df_loader.generate_scenarios_from_dataframe('calibrator_scenarios')
 
     def calibrate(self):
         self.setup()
@@ -66,7 +66,7 @@ class Calibrator(BaseModellingManager):
         assert self.algorithm_cls is not None
         scenario_cls = None
         if self.algorithm_cls == GeneticAlgorithm:
-            scenario_cls = GACalibrationScenario
+            scenario_cls = GACalibratorParams
         else:
             raise NotImplementedError
         for scenario in self.scenarios:
@@ -80,7 +80,7 @@ class Calibrator(BaseModellingManager):
 
                     self.run_once(scenario, calibrator_scenario)
 
-    def run_once(self, scenario, calibration_scenario: GACalibrationScenario):
+    def run_once(self, scenario, calibration_scenario: GACalibratorParams):
 
         scenario.manager = self
         self.model = self.model_cls(self.config, scenario)

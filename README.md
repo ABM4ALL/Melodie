@@ -59,7 +59,7 @@ config = Config(
     output_folder='data/output',
 )
 
-studio_main(os.path.join(os.getcwd(), ".melodieconfig"), config)
+studio_main(config)
 ```
 
 then visit `http://localhost:8089/` with browser
@@ -82,6 +82,7 @@ sphinx-autobuild source build/html
 ```
 
 #### Run examples
+
 examples are at the `examples/` folder.
 
 

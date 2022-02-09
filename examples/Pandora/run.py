@@ -18,7 +18,7 @@ if __name__ == "__main__":
     """
     simulator.run(
         config=config,
-        scenario_class=CovidScenario,
+        scenario_cls=CovidScenario,
         model_class=CovidModel,
     )
 
@@ -28,7 +28,7 @@ if __name__ == "__main__":
     """
     # dataframe_loader.run_parallel(
     #     config=config,
-    #     scenario_class=CovidScenario,
+    #     scenario_cls=CovidScenario,
     #     model_class=CovidModel,
     #     cores=4
     # )

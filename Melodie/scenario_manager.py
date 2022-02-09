@@ -93,7 +93,7 @@ class Scenario(Element):
         return self.manager.scenarios_dataframe
 
 
-class LearningScenario(Scenario):
+class AlgorithmParameters(Scenario):
     """
     Learning scenario is used in Trainer and Calibrator for trainer/calibrator parameters.
     """
@@ -110,7 +110,7 @@ class LearningScenario(Scenario):
     def __init__(self, id: int, number_of_path: int):
         self.id: int = id
         self.number_of_path: int = number_of_path
-        self.parameters: List[LearningScenario.Parameter] = []
+        self.parameters: List[AlgorithmParameters.Parameter] = []
 
     def get_agents_parameters_range(self, agent_num) -> List[Tuple[float, float]]:
         parameters = []
@@ -119,7 +119,7 @@ class LearningScenario(Scenario):
         return parameters
 
 
-class GATrainerScenario(LearningScenario):
+class GATrainerParams(AlgorithmParameters):
     def __init__(self, id: int, number_of_path: int, number_of_generation: int, strategy_population: int,
                  mutation_prob: int, strategy_param_code_length: int):
         super().__init__(id, number_of_path)
@@ -129,20 +129,20 @@ class GATrainerScenario(LearningScenario):
         self.strategy_param_code_length = strategy_param_code_length
 
     @staticmethod
-    def from_dataframe_record(record: Dict[str, Union[int, float]]) -> 'GATrainerScenario':
-        s = GATrainerScenario(record['id'], record['number_of_path'], record['number_of_generation'],
-                              record['strategy_population'], record['mutation_prob'],
-                              record['strategy_param_code_length'])
+    def from_dataframe_record(record: Dict[str, Union[int, float]]) -> 'GATrainerParams':
+        s = GATrainerParams(record['id'], record['number_of_path'], record['number_of_generation'],
+                            record['strategy_population'], record['mutation_prob'],
+                            record['strategy_param_code_length'])
         max_values = {name[:len(name) - len("_max")]: value for name, value in record.items() if name.endswith("_max")}
         min_values = {name[:len(name) - len("_min")]: value for name, value in record.items() if name.endswith("_min")}
         print(max_values, min_values)
         assert len(max_values) == len(min_values)
         for k in max_values.keys():
-            s.parameters.append(LearningScenario.Parameter(k, min_values[k], max_values[k]))
+            s.parameters.append(AlgorithmParameters.Parameter(k, min_values[k], max_values[k]))
         return s
 
 
-class GACalibrationScenario(LearningScenario):
+class GACalibratorParams(AlgorithmParameters):
     def __init__(self, id: int, number_of_path: int, generation: int, strategy_population: int,
                  mutation_prob: int, strategy_param_code_length: int):
         super().__init__(id, number_of_path)
@@ -152,14 +152,14 @@ class GACalibrationScenario(LearningScenario):
         self.strategy_param_code_length = strategy_param_code_length
 
     @staticmethod
-    def from_dataframe_record(record: Dict[str, Union[int, float]]) -> 'GACalibrationScenario':
-        s = GACalibrationScenario(record['id'], record['number_of_path'], record['calibration_generation'],
-                                  record['strategy_population'], record['mutation_prob'],
-                                  record['strategy_param_code_length'])
+    def from_dataframe_record(record: Dict[str, Union[int, float]]) -> 'GACalibratorParams':
+        s = GACalibratorParams(record['id'], record['number_of_path'], record['calibration_generation'],
+                               record['strategy_population'], record['mutation_prob'],
+                               record['strategy_param_code_length'])
         max_values = {name[:len(name) - len("_max")]: value for name, value in record.items() if name.endswith("_max")}
         min_values = {name[:len(name) - len("_min")]: value for name, value in record.items() if name.endswith("_min")}
         print(max_values, min_values)
         assert len(max_values) == len(min_values)
         for k in max_values.keys():
-            s.parameters.append(LearningScenario.Parameter(k, min_values[k], max_values[k]))
+            s.parameters.append(AlgorithmParameters.Parameter(k, min_values[k], max_values[k]))
         return s

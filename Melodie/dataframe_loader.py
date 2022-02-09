@@ -16,9 +16,9 @@ class DataFrameLoader:
     Simulator/Trainer/Calibrator will have reference to TableLoader for loading tables without defining tables multiple times.
     """
 
-    def __init__(self, manager, config: Config, scenario_class: ClassVar[Scenario]):
+    def __init__(self, manager, config: Config, scenario_cls: ClassVar[Scenario]):
         self.config: Config = config
-        self.scenario_class = scenario_class
+        self.scenario_cls = scenario_cls
         self.registered_dataframes: Optional[Dict[str, pd.DataFrame]] = {}
         self.manager = manager
 
@@ -105,12 +105,12 @@ class DataFrameLoader:
         """
         scenarios_dataframe = self.registered_dataframes[df_name]
         assert scenarios_dataframe is not None
-        assert self.scenario_class is not None
+        assert self.scenario_cls is not None
 
         cols = [col for col in scenarios_dataframe.columns]
         scenarios: List[Scenario] = []
         for i in range(scenarios_dataframe.shape[0]):
-            scenario = self.scenario_class()
+            scenario = self.scenario_cls()
             scenario.manager = self.manager
             for col_name in cols:
                 assert col_name in scenario.__dict__.keys(), f"col_name: '{col_name}', scenario: {scenario}"

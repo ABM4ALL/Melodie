@@ -87,7 +87,7 @@ if __name__ == "__main__":
         FuncEnvironment,
         config,
         model_class=FuncModel,
-        scenario_class=FuncScenario,
+        scenario_cls=FuncScenario,
         analyzer_class=Analyzer,
         boost_model_class=BoostModel
     )

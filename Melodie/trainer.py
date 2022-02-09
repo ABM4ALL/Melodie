@@ -4,7 +4,7 @@ import copy
 import numpy as np
 import pandas as pd
 
-from Melodie import Model, Scenario, Config, Agent, create_db_conn, GATrainerScenario
+from Melodie import Model, Scenario, Config, Agent, create_db_conn, GATrainerParams
 from Melodie.algorithms import GeneticAlgorithm, TrainingAlgorithm
 from .simulator import BaseModellingManager
 from .dataframe_loader import DataFrameLoader
@@ -64,9 +64,9 @@ class Trainer(BaseModellingManager):
         assert isinstance(trainer_scenarios_table, pd.DataFrame), "No learning scenarios table specified!"
         assert self.algorithm_cls is not None
 
-        trainer_scenario_cls: Union[ClassVar[GATrainerScenario]] = None
+        trainer_scenario_cls: Union[ClassVar[GATrainerParams]] = None
         if self.algorithm_cls == GeneticAlgorithm:
-            trainer_scenario_cls = GATrainerScenario
+            trainer_scenario_cls = GATrainerParams
         assert trainer_scenario_cls is not None
 
         for scenario in self.scenarios:
@@ -80,7 +80,7 @@ class Trainer(BaseModellingManager):
 
                     self.run_once(scenario, trainer_scenario)
 
-    def run_once(self, scenario, trainer_scenario: Union[GATrainerScenario]):
+    def run_once(self, scenario, trainer_scenario: Union[GATrainerParams]):
 
         scenario.manager = self
         self.model = self.model_cls(self.config, scenario)
@@ -89,7 +89,7 @@ class Trainer(BaseModellingManager):
         agents = self.model.__getattribute__(self.container_name)
 
         iterations = 0
-        if isinstance(trainer_scenario, GATrainerScenario):
+        if isinstance(trainer_scenario, GATrainerParams):
             self.algorithm = GeneticAlgorithm(trainer_scenario.number_of_generation,
                                               trainer_scenario.strategy_population,
                                               trainer_scenario.mutation_prob,
@@ -189,5 +189,5 @@ class Trainer(BaseModellingManager):
         pass
 
     def generate_scenarios(self):
-        assert self.table_loader is not None
-        return self.table_loader.generate_scenarios('trainer')
+        assert self.df_loader is not None
+        return self.df_loader.generate_scenarios('trainer')

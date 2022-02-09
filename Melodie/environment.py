@@ -27,6 +27,11 @@ class Environment(Element):
         pass
 
     def to_dict(self, properties: List[str]) -> Dict:
+        """
+        Dump Environment to a plain dict.
+        :param properties:
+        :return:
+        """
         if properties is None:
             properties = self.__dict__.keys()
         d = {}

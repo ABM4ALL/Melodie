@@ -21,18 +21,15 @@ def handle_root():
     return redirect('http://localhost:8089/index.html', code=301)
 
 
-def studio_main(conf_folder: str = '', config: Config = None):
+def studio_main(config: Config = None):
     """
     Main function for studio server.
-    :param conf_folder:
+
     :param config:
     :return:
     """
     set_studio_config(config)
-    if conf_folder == '':
-        if not os.path.exists('.melodieconfig'):
-            os.mkdir(".melodieconfig")
-        conf_folder = '.melodieconfig'
+    conf_folder = os.path.join(config.project_root, '.melodiestudio')
     init_config_manager(conf_folder)
 
     app.run(host='0.0.0.0', port=8089)
