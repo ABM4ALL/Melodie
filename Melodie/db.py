@@ -207,7 +207,7 @@ class DB:
 
     def query_agent_results(self, agent_list_name: str, scenario_id: int = None, agent_id: int = None, step: int = None):
         conditions = {'scenario_id': scenario_id, 'id': agent_id, 'step': step}
-        return self.paramed_query(agent_list_name, conditions)
+        return self.paramed_query(agent_list_name+"_result", conditions)
 
     def query_env_results(self, scenario_id: int = None, step: int = None):
         conditions = {'scenario_id': scenario_id, 'step': step}
