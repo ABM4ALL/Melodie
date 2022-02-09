@@ -33,3 +33,4 @@ class AspirationModel(Model):
             self.environment.calculate_technology_search_strategy_share(self.agent_list)
         #     self.data_collector.collect(t)
         # self.data_collector.save()
+
