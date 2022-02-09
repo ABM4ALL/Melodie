@@ -54,7 +54,7 @@ def test_sqlalchemy_data_types():
 
 
 def test_get_scenarios():
-    scenarios = create_db_conn(cfg).query("select * from scenarios;")
+    scenarios = create_db_conn(cfg).query("select * from simulator_scenarios;")
 
     assert scenarios.shape[0] == 3
     scenario_2 = create_db_conn(cfg).query_scenarios(id=2)
@@ -62,9 +62,9 @@ def test_get_scenarios():
 
 
 def test_get_agent_results():
-    agents_df = create_db_conn(cfg).query_agent_results("agent_result", scenario_id=0, id=1)
+    agents_df = create_db_conn(cfg).query_agent_results("agent", scenario_id=0, agent_id=1)
     assert agents_df.shape[0] == 200
-    agents_df = create_db_conn(cfg).query_agent_results("agent_result", scenario_id=0, step=1)
+    agents_df = create_db_conn(cfg).query_agent_results("agent", scenario_id=0, step=1)
     assert agents_df.shape[0] == 100
 
 

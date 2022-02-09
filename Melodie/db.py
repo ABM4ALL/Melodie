@@ -26,7 +26,7 @@ logger = logging.getLogger(__name__)
 class DB:
     table_dtypes: Dict[str, TABLE_DTYPES] = {}
     EXPERIMENTS_TABLE = 'melodie_experiments'
-    SCENARIO_TABLE = 'scenarios'
+    SCENARIO_TABLE = 'simulator_scenarios'
     ENVIRONMENT_RESULT_TABLE = 'env_result'
     RESERVED_TABLES = {'scenarios', 'env_result'}
 
@@ -205,8 +205,8 @@ class DB:
             sql += f"where id={id}"
         return self.query(sql)
 
-    def query_agent_results(self, agent_list_name: str, scenario_id: int = None, id: int = None, step: int = None):
-        conditions = {'scenario_id': scenario_id, 'id': id, 'step': step}
+    def query_agent_results(self, agent_list_name: str, scenario_id: int = None, agent_id: int = None, step: int = None):
+        conditions = {'scenario_id': scenario_id, 'id': agent_id, 'step': step}
         return self.paramed_query(agent_list_name, conditions)
 
     def query_env_results(self, scenario_id: int = None, step: int = None):
