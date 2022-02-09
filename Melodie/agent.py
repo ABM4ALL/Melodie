@@ -35,14 +35,6 @@ class Agent(Element):
         """
         pass
 
-    def post_setup(self):
-        """
-        This method will be executed after the properties are set from the dataframe.
-
-        :return:
-        """
-        pass
-
     def __repr__(self) -> str:
         d = {k: v for k, v in self.__dict__.items() if
              not k.startswith("_")}

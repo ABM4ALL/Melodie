@@ -105,10 +105,6 @@ class BaseAgentContainer(Generic[AgentGeneric]):
 
             agent.set_params(params)
 
-    def post_setup(self):
-        for i, agent in enumerate(self.agents):
-            agent.post_setup()
-
     def get_agent(self, agent_id: int):
         index = binary_search(self.agents, agent_id, key=lambda agent: agent.id)
         if index == -1:

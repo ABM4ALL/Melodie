@@ -59,6 +59,7 @@ def test_create_ba():
     agent_list = AgentList(DemoAgent, 10, model)
     n = DemoAgentRelationshipNetwork()
     n.add_category('agents')
-    n.from_agent_container(agent_list, 'agents', 'ba', {'m': 3})
-    n.from_agent_container(agent_list, 'agents', builder=network_creator)
+    n.from_agent_containers({'agents': agent_list}, 'barabasi_albert_graph', {'m': 3})
+    assert len(n.all_agents()) == 10
+    n.from_agent_containers({'agents': agent_list}, builder=network_creator)
     assert len(n.all_agents()) == 10

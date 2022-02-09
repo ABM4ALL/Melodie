@@ -105,7 +105,6 @@ class Model:
         container = agent_container_class(agent_class, initial_num, model=self)
         if params_df is not None:
             container.set_properties(params_df)
-            container.post_setup()
         else:
             logger.warning(f"No dataframe set for the {agent_container_class.__name__}")
         return container

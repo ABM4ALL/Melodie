@@ -20,8 +20,7 @@ class Environment(Element):
 
         Use `self.scenario` to get the parameters from the scenario.
 
-        Unlike `Agent`, Environment does not have a `post_setup` method because the parameters could be extracted
-        directly from the scenario.
+
 
         :return:
         """

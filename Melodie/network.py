@@ -297,45 +297,48 @@ class AgentRelationshipNetwork:
     def all_agents(self) -> List[int]:
         return self._nodes
 
-    def from_agent_container(self,
-                             container: 'Union[AgentList]',
-                             category: str,
-                             network_name: str = '',
-                             network_params: dict = '',
-                             builder: Callable = None):
+    def all_agent_on_node(self, node_id) -> List[Tuple[str, int]]:
+        l = []
+        for category_name, ids_in_category in self._agent_ids.items():
+            l.extend([(category_name, agent_id) for agent_id in ids_in_category[node_id]])
+        return l
+
+    def from_agent_containers(self,
+                              containers: 'Dict[str,AgentList]',
+                              network_name: str = '',
+                              network_params: dict = '',
+                              builder: Callable = None):
         """
+        :param containers: container or a list of container
+        :param network_name: The name of network.
+        :param network_params: The parameters of network
+        :param builder: The network builder function.
+            - One argument, a list of int representing nodes;
+            - One return as nx.Graph
 
-        network_name 网络类型名称
-        network_params 字典，键为小世界网络的参数名，值就是参数值
+        It is suggested to use builder argument for more freedom of customization.
 
-        network_builder 函数
-        形如：
-        def builder(agent_num):
-            return nx.ba_graph(agent_num, 3, ...)
-
-        self.from_agent_container(container, 'agents', builder)
-
-        :param container:
-        :param category:
-        :param network_type:
-        :param nx_creator_fcn:
         :return:
         """
         import networkx as nx
-        for agent in container:
-            self.add_agent(agent.id, category, agent.id)
+        assert isinstance(containers, dict)
+        for category, container in containers.items():
+            assert isinstance(category, str)
+            self.add_category(category)
+            for agent in container:
+                self.add_agent(agent.id, category, agent.id)
         g = None
         if builder is not None:
-            g = builder(container)
+            g = builder(self._nodes)
         else:
-            if network_name == 'ba':
-                g = nx.barabasi_albert_graph(len(container), **network_params, )
+            if network_name == 'barabasi_albert_graph':
+                g = nx.__getattribute__(network_name)(len(self._nodes), **network_params, )
             else:
                 raise NotImplementedError(f"Network name {network_name} is not implemented!")
         for edge in g.edges:
-            agent_src = list(self.get_agents(category, edge[0]))[0]
-            agent_dest = list(self.get_agents(category, edge[1]))[0]
-            edge_obj = self.edge_cls(category, agent_src, category, agent_dest, {})
+            agent_src = list(self.all_agent_on_node(edge[0]))[0]
+            agent_dest = list(self.all_agent_on_node(edge[1]))[0]
+            edge_obj = self.edge_cls(agent_src[0], agent_src[1], agent_dest[0], agent_dest[1], {})
             self.add_edge(edge[0], edge[1], edge_obj)
 
 
