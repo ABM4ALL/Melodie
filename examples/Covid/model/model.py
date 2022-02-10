@@ -2,7 +2,6 @@
 __author__ = 'Songmin'
 
 from Melodie import Model, AgentList, Grid, Spot
-from Melodie.boost import JITGrid
 from .agent import CovidAgent
 from .environment import CovidEnvironment
 from .data_collector import CovidDataCollector
@@ -24,17 +23,8 @@ class CovidModel(Model):
 
             self.grid = Grid(Spot, self.scenario.grid_x_size, self.scenario.grid_y_size, caching=False)
             self.grid.add_category('agent_list')
-
             for agent in self.agent_list:
                 self.grid.add_agent(agent.id, "agent_list", agent.x_pos, agent.y_pos)
-
-    def setup_boost(self):
-        self.grid = JITGrid(self.scenario.grid_x_size, self.scenario.grid_y_size, Spot, )
-        self.grid.add_category('agent_list')
-
-        for agent in self.agent_list:
-            self.grid.add_agent(agent.id, "agent_list", agent.x_pos, agent.y_pos)
-        pass
 
     def run(self):
         for t in range(0, self.scenario.periods):

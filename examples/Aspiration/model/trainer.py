@@ -25,6 +25,7 @@ class AspirationTrainer(Trainer):
         self.add_environment_result_property("exploration_accumulated_share")
         self.add_environment_result_property("exploitation_accumulated_share")
         self.add_environment_result_property("imitation_accumulated_share")
+
         self.save_env_trainer_result = True
         self.save_agent_trainer_result = True
         self.algorithm_cls = GeneticAlgorithm
