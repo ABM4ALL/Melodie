@@ -217,10 +217,11 @@ class AgentRelationshipNetwork:
         else:
             neighbor_agent_ids_list = []
             for neighbor_id in neighbor_ids.keys():
-                agent_ids = self.get_agents(category, neighbor_id)
-                print(agent_ids)
-                assert len(agent_ids) == 1
-                neighbor_agent_ids_list.extend(agent_ids)
+                agents = self.all_agent_on_node(neighbor_id)
+                # agent_ids = self.get_agents(category, neighbor_id)
+                # print(agent_ids, category, neighbor_id)
+                # if len(agent_ids) == 1:
+                neighbor_agent_ids_list.extend(agents)
             return neighbor_agent_ids_list
 
     def add_edges(self, edges: List[Tuple[int, int]]):
@@ -256,7 +257,6 @@ class AgentRelationshipNetwork:
         self._nodes.remove(node_id)
         target_edges = self._adj.pop(agent_id)
         for target_node, edge in target_edges.items():
-            print(target_node, edge)
             self._adj[target_node].pop(node_id)
 
     def move_agent(self, agent_id: int, category: str, target_node_id: int):
@@ -300,10 +300,13 @@ class AgentRelationshipNetwork:
     def all_agent_on_node(self, node_id) -> List[Tuple[str, int]]:
         l = []
         for category_name, ids_in_category in self._agent_ids.items():
-            l.extend([(category_name, agent_id) for agent_id in ids_in_category[node_id]])
+            agent_ids = ids_in_category.get(node_id)
+            if agent_ids is not None:
+                l.extend([(category_name, agent_id) for agent_id in agent_ids])
         return l
 
-    def from_agent_containers(self,
+    @classmethod
+    def from_agent_containers(cls,
                               containers: 'Dict[str,AgentList]',
                               network_name: str = '',
                               network_params: dict = '',
@@ -320,13 +323,16 @@ class AgentRelationshipNetwork:
 
         :return:
         """
+        self = cls()
         import networkx as nx
         assert isinstance(containers, dict)
+        node_id = 0
         for category, container in containers.items():
             assert isinstance(category, str)
             self.add_category(category)
             for agent in container:
-                self.add_agent(agent.id, category, agent.id)
+                self.add_agent(agent.id, category, node_id)
+                node_id += 1
         g = None
         if builder is not None:
             g = builder(self._nodes)
@@ -335,11 +341,13 @@ class AgentRelationshipNetwork:
                 g = nx.__getattribute__(network_name)(len(self._nodes), **network_params, )
             else:
                 raise NotImplementedError(f"Network name {network_name} is not implemented!")
+        print(g.edges)
         for edge in g.edges:
             agent_src = list(self.all_agent_on_node(edge[0]))[0]
             agent_dest = list(self.all_agent_on_node(edge[1]))[0]
             edge_obj = self.edge_cls(agent_src[0], agent_src[1], agent_dest[0], agent_dest[1], {})
             self.add_edge(edge[0], edge[1], edge_obj)
+        return self
 
 
 class NetworkDirected(Network):

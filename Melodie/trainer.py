@@ -1,5 +1,5 @@
 import logging
-from typing import Type, List, Optional, ClassVar, Iterator, Union, Tuple
+from typing import Type, List, Optional, ClassVar, Iterator, Union, Tuple, Dict
 import copy
 import numpy as np
 import pandas as pd
@@ -30,13 +30,18 @@ class Trainer(BaseModellingManager):
         self.training_strategy: 'Optional[Type[SearchingAlgorithm]]' = None
         self.container_name: str = ''
         self.property_name: str = ''
+
         self.properties: List[str] = []
+        self.agent_result_properties: Dict[str, List[str]] = {}
 
         self.environment_properties: List[str] = []
 
         self.algorithm_cls: ClassVar['SearchingAlgorithm'] = None
         self.algorithm: Optional[Type[SearchingAlgorithm]] = None
         self.algorithm_instance: Iterator[List[float]] = {}
+
+        self.save_agent_trainer_result = False
+        self.save_env_trainer_result = True
 
         self.model: Optional[Model] = None
 
@@ -125,7 +130,7 @@ class Trainer(BaseModellingManager):
             create_db_conn(self.config).write_dataframe('agent_trainer_result_cov', pd.DataFrame(agent_training_cov))
             create_db_conn(self.config).write_dataframe('env_trainer_result_cov', pd.DataFrame([env_training_cov]))
 
-    def add_property(self, container: str, prop: str):
+    def add_agent_training_property(self, container: str, prop: str):
         """
         :param container:
         :param prop:
@@ -134,6 +139,25 @@ class Trainer(BaseModellingManager):
         assert prop not in self.properties
         self.container_name = container
         self.properties.append(prop)
+
+    def add_agent_result_property(self, container: str, prop: str):
+        """
+
+        :param container:
+        :param prop:
+        :return:
+        """
+        if container not in self.agent_result_properties:
+            self.agent_result_properties[container] = []
+        self.agent_result_properties[container].append(prop)
+
+    def add_environment_result_property(self, prop: str):
+        """
+
+        :return:
+        """
+        assert prop not in self.environment_properties
+        self.environment_properties.append(prop)
 
     def get_agent_params(self, all_params, agent_id: int):
         agent_params = {}
@@ -173,12 +197,15 @@ class Trainer(BaseModellingManager):
             agent_fitness = self.fitness_agent(agent)
             fitness_list.append(agent_fitness)
             agents_params_list[agent.id]['fitness'] = agent_fitness
-        # if self.agent_trainer_result_save:
-        create_db_conn(self.config).write_dataframe('agent_trainer_result', pd.DataFrame(agents_params_list),
-                                                    if_exists="append")
-        # if self.env_trainer_result_save:
-        create_db_conn(self.config).write_dataframe('env_trainer_result', pd.DataFrame([environment_record_dict]),
-                                                    if_exists="append")
+            for agent_property in self.agent_result_properties[self.container_name]:
+                agents_params_list[agent.id][agent_property] = getattr(agent, agent_property)
+
+        if self.save_agent_trainer_result:
+            create_db_conn(self.config).write_dataframe('agent_trainer_result', pd.DataFrame(agents_params_list),
+                                                        if_exists="append")
+        if self.save_env_trainer_result:
+            create_db_conn(self.config).write_dataframe('env_trainer_result', pd.DataFrame([environment_record_dict]),
+                                                        if_exists="append")
         return np.array(fitness_list), environment_properties_dict
 
     def fitness_agent(self, agent: Type[Agent]) -> float:
