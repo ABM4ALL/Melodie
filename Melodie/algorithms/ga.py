@@ -8,12 +8,13 @@ import math
 import sys
 import time
 from abc import ABC
-from typing import Callable, List, Type, Optional, TYPE_CHECKING
+from typing import Callable, List, Type, Optional, TYPE_CHECKING, Dict, Union
 
 import numpy as np
 import random
 
 from Melodie.boost import JIT_AVAILABLE
+from .searching_algorithm import SearchingAlgorithm, AlgorithmParameters
 
 logger = logging.getLogger(__name__)
 if JIT_AVAILABLE:
@@ -122,24 +123,53 @@ def population_update(population, fitness_array, mutation_prob, population_scale
     return population_new
 
 
-class TrainingAlgorithm(ABC):
-    def setup(self):
-        pass
+class GATrainerParams(AlgorithmParameters):
+    def __init__(self, id: int, number_of_path: int, number_of_generation: int, strategy_population: int,
+                 mutation_prob: int, strategy_param_code_length: int):
+        super().__init__(id, number_of_path)
+        self.number_of_generation = number_of_generation
+        self.strategy_population = strategy_population
+        self.mutation_prob = mutation_prob
+        self.strategy_param_code_length = strategy_param_code_length
 
-    def set_parameters(self, parameters_num: int):
-        pass
+    @staticmethod
+    def from_dataframe_record(record: Dict[str, Union[int, float]]) -> 'GATrainerParams':
+        s = GATrainerParams(record['id'], record['number_of_path'], record['number_of_generation'],
+                            record['strategy_population'], record['mutation_prob'],
+                            record['strategy_param_code_length'])
+        max_values = {name[:len(name) - len("_max")]: value for name, value in record.items() if name.endswith("_max")}
+        min_values = {name[:len(name) - len("_min")]: value for name, value in record.items() if name.endswith("_min")}
+        print(max_values, min_values)
+        assert len(max_values) == len(min_values)
+        for k in max_values.keys():
+            s.parameters.append(AlgorithmParameters.Parameter(k, min_values[k], max_values[k]))
+        return s
 
-    def set_parameters_agents(self, agent_num: int, agent_params: int):
-        pass
 
-    def optimize(self, fitness: Callable):
-        pass
+class GACalibratorParams(AlgorithmParameters):
+    def __init__(self, id: int, number_of_path: int, generation: int, strategy_population: int,
+                 mutation_prob: int, strategy_param_code_length: int):
+        super().__init__(id, number_of_path)
+        self.calibration_generation = generation
+        self.strategy_population = strategy_population
+        self.mutation_prob = mutation_prob
+        self.strategy_param_code_length = strategy_param_code_length
 
-    def optimize_multi_agents(self, fitness, scenario):
-        pass
+    @staticmethod
+    def from_dataframe_record(record: Dict[str, Union[int, float]]) -> 'GACalibratorParams':
+        s = GACalibratorParams(record['id'], record['number_of_path'], record['calibration_generation'],
+                               record['strategy_population'], record['mutation_prob'],
+                               record['strategy_param_code_length'])
+        max_values = {name[:len(name) - len("_max")]: value for name, value in record.items() if name.endswith("_max")}
+        min_values = {name[:len(name) - len("_min")]: value for name, value in record.items() if name.endswith("_min")}
+        print(max_values, min_values)
+        assert len(max_values) == len(min_values)
+        for k in max_values.keys():
+            s.parameters.append(AlgorithmParameters.Parameter(k, min_values[k], max_values[k]))
+        return s
 
 
-class GeneticAlgorithm(TrainingAlgorithm):
+class GeneticAlgorithm(SearchingAlgorithm):
     def __init__(self,
                  number_of_generation: int,
                  strategy_population_size: int,
@@ -317,25 +347,3 @@ class GeneticAlgorithm(TrainingAlgorithm):
                     i * self.params_each_agent * self.strategy_param_code_length + self.params_each_agent * self.strategy_param_code_length],
                     strategy_fitness[:, i],
                     self.mutation_prob, self.strategy_population_size)
-
-
-class ParticleSwarmOptimization(TrainingAlgorithm):
-    pass
-
-
-if __name__ == "__main__":
-    def loss_function(x1, x2):
-        y_target = 0
-        # y_x = 3 * x1 ** 2 + 5 * x2 ** 2
-        y_x = 3 * x1 ** 2 + np.sin(x2) ** 2
-        return abs(y_target - y_x)  # solution: x = 3
-
-
-    def fitness_function(loss):
-        # 就是为了把loss变成“正向/越大越好”的fitness，没有直接用1/loss而是求2**loss，是为了避免loss等于0报错
-        # 但是2**loss容易造成数据向负方向溢出。
-        return 1 / (2 * abs(loss) + 1)
-        # return 1 / 2 ** loss
-
-
-    GeneticAlgorithm(100, 100, 0.02, 20).optimize(loss_function, fitness_function)

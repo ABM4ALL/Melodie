@@ -1,17 +1,9 @@
-import os
 import logging
-from typing import List, Optional, Union, ClassVar, TYPE_CHECKING, Dict, Tuple
-
-import numpy
-import numpy as np
+from typing import List, Optional, Union, TYPE_CHECKING
 
 from Melodie.element import Element
-from Melodie.db import DB, create_db_conn
 from .basic.exceptions import MelodieExceptions
 import pandas as pd
-
-from .basic.fileio import load_excel, batch_load_tables, load_all_excel_file
-from .config import Config
 
 if TYPE_CHECKING:
     from Melodie import Calibrator, Simulator
@@ -19,7 +11,7 @@ logger = logging.getLogger(__name__)
 
 
 class Scenario(Element):
-    class BaseParameter():
+    class BaseParameter:
         def __init__(self, name, type, init):
             self.name = name
             self.type = type
@@ -72,10 +64,6 @@ class Scenario(Element):
         for k in self.__dict__.keys():
             v = self.__dict__[k]
             d[k] = v
-            # if np.isscalar(v):
-            #     d[k] = v
-            # else:
-            #     logger.warning("type(self.__dict__[k]) is not a scal")
         return d
 
     def properties_as_parameters(self) -> List[BaseParameter]:
@@ -91,75 +79,3 @@ class Scenario(Element):
     def get_scenarios_table(self) -> pd.DataFrame:
         assert self.manager is not None
         return self.manager.scenarios_dataframe
-
-
-class AlgorithmParameters(Scenario):
-    """
-    Learning scenario is used in Trainer and Calibrator for trainer/calibrator parameters.
-    """
-
-    class Parameter():
-        def __init__(self, name: str, min: float, max: float):
-            self.name = name
-            self.min = min
-            self.max = max
-
-        def __repr__(self):
-            return f"<{self.__class__.__name__} '{self.name}', range ({self.min}, {self.max})>"
-
-    def __init__(self, id: int, number_of_path: int):
-        self.id: int = id
-        self.number_of_path: int = number_of_path
-        self.parameters: List[AlgorithmParameters.Parameter] = []
-
-    def get_agents_parameters_range(self, agent_num) -> List[Tuple[float, float]]:
-        parameters = []
-        for agent_id in range(agent_num):
-            parameters.extend([(parameter.min, parameter.max) for parameter in self.parameters])
-        return parameters
-
-
-class GATrainerParams(AlgorithmParameters):
-    def __init__(self, id: int, number_of_path: int, number_of_generation: int, strategy_population: int,
-                 mutation_prob: int, strategy_param_code_length: int):
-        super().__init__(id, number_of_path)
-        self.number_of_generation = number_of_generation
-        self.strategy_population = strategy_population
-        self.mutation_prob = mutation_prob
-        self.strategy_param_code_length = strategy_param_code_length
-
-    @staticmethod
-    def from_dataframe_record(record: Dict[str, Union[int, float]]) -> 'GATrainerParams':
-        s = GATrainerParams(record['id'], record['number_of_path'], record['number_of_generation'],
-                            record['strategy_population'], record['mutation_prob'],
-                            record['strategy_param_code_length'])
-        max_values = {name[:len(name) - len("_max")]: value for name, value in record.items() if name.endswith("_max")}
-        min_values = {name[:len(name) - len("_min")]: value for name, value in record.items() if name.endswith("_min")}
-        print(max_values, min_values)
-        assert len(max_values) == len(min_values)
-        for k in max_values.keys():
-            s.parameters.append(AlgorithmParameters.Parameter(k, min_values[k], max_values[k]))
-        return s
-
-
-class GACalibratorParams(AlgorithmParameters):
-    def __init__(self, id: int, number_of_path: int, generation: int, strategy_population: int,
-                 mutation_prob: int, strategy_param_code_length: int):
-        super().__init__(id, number_of_path)
-        self.calibration_generation = generation
-        self.strategy_population = strategy_population
-        self.mutation_prob = mutation_prob
-        self.strategy_param_code_length = strategy_param_code_length
-
-    @staticmethod
-    def from_dataframe_record(record: Dict[str, Union[int, float]]) -> 'GACalibratorParams':
-        s = GACalibratorParams(record['id'], record['number_of_path'], record['calibration_generation'],
-                               record['strategy_population'], record['mutation_prob'],
-                               record['strategy_param_code_length'])
-        max_values = {name[:len(name) - len("_max")]: value for name, value in record.items() if name.endswith("_max")}
-        min_values = {name[:len(name) - len("_min")]: value for name, value in record.items() if name.endswith("_min")}
-        print(max_values, min_values)
-        assert len(max_values) == len(min_values)
-        for k in max_values.keys():
-            s.parameters.append(AlgorithmParameters.Parameter(k, min_values[k], max_values[k]))
-        return s

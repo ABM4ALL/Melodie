@@ -21,7 +21,7 @@ with open('README.md', 'r') as fh:
 
 setuptools.setup(
     name='Melodie',
-    version='1.1.0',
+    version='0.1.0',
     description='A general framework that can be used to establish agent-based models for specific uses.',
     long_description=long_description,
     long_description_content_type='text/markdown',

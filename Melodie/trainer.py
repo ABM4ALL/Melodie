@@ -5,7 +5,7 @@ import numpy as np
 import pandas as pd
 
 from Melodie import Model, Scenario, Config, Agent, create_db_conn, GATrainerParams
-from Melodie.algorithms import GeneticAlgorithm, TrainingAlgorithm
+from Melodie.algorithms import GeneticAlgorithm, SearchingAlgorithm
 from .simulator import BaseModellingManager
 from .dataframe_loader import DataFrameLoader
 
@@ -27,15 +27,15 @@ class Trainer(BaseModellingManager):
                          model_cls=model_cls,
                          df_loader_cls=df_loader_cls)
 
-        self.training_strategy: 'Optional[Type[TrainingAlgorithm]]' = None
+        self.training_strategy: 'Optional[Type[SearchingAlgorithm]]' = None
         self.container_name: str = ''
         self.property_name: str = ''
         self.properties: List[str] = []
 
         self.environment_properties: List[str] = []
 
-        self.algorithm_cls: ClassVar['TrainingAlgorithm'] = None
-        self.algorithm: Optional[Type[TrainingAlgorithm]] = None
+        self.algorithm_cls: ClassVar['SearchingAlgorithm'] = None
+        self.algorithm: Optional[Type[SearchingAlgorithm]] = None
         self.algorithm_instance: Iterator[List[float]] = {}
 
         self.model: Optional[Model] = None
@@ -43,7 +43,7 @@ class Trainer(BaseModellingManager):
         self.agent_result = []
 
         self.current_algorithm_meta = {
-            "current_scenario_id": 0,
+            "trainer_scenario_id": 0,
             "trainer_params_scenario_id": 1,
             "path_id": 0,
             "generation_id": 0}

@@ -29,7 +29,10 @@ def studio_main(config: Config = None):
     :return:
     """
     set_studio_config(config)
-    conf_folder = os.path.join(config.project_root, '.melodiestudio')
+    if config is None:
+        conf_folder = os.path.join(os.getcwd(), ".melodiestudio")
+    else:
+        conf_folder = os.path.join(config.project_root, '.melodiestudio')
     init_config_manager(conf_folder)
 
     app.run(host='0.0.0.0', port=8089)

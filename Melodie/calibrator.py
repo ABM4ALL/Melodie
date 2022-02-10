@@ -6,7 +6,7 @@ import numpy as np
 import pandas as pd
 import logging
 from Melodie import Model, Scenario, Config, Agent, create_db_conn, GACalibratorParams, DataFrameLoader
-from Melodie.algorithms import GeneticAlgorithm, TrainingAlgorithm
+from Melodie.algorithms import GeneticAlgorithm, SearchingAlgorithm
 from Melodie.basic import MelodieExceptions
 from .simulator import BaseModellingManager
 
@@ -28,13 +28,13 @@ class Calibrator(BaseModellingManager):
             model_cls=model_cls,
             df_loader_cls=df_loader_cls)
         # self.config = config
-        self.training_strategy: 'Optional[Type[TrainingAlgorithm]]' = None
+        self.training_strategy: 'Optional[Type[SearchingAlgorithm]]' = None
         self.container_name: str = ''
 
         self.properties: List[str] = []
         self.watched_env_properties: List[str] = []
-        self.algorithm: Optional[Type[TrainingAlgorithm]] = None
-        self.algorithm_cls: Union[ClassVar[TrainingAlgorithm]] = None
+        self.algorithm: Optional[Type[SearchingAlgorithm]] = None
+        self.algorithm_cls: Union[ClassVar[SearchingAlgorithm]] = None
         self.algorithm_instance: Iterator[List[float]] = {}
 
         self.model: Optional[Model] = None
