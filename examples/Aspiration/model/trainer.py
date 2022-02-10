@@ -13,6 +13,16 @@ class AspirationTrainer(Trainer):
         self.add_property('agent_list', 'strategy_param_1')
         self.add_property('agent_list', 'strategy_param_2')
         self.add_property('agent_list', 'strategy_param_3')
+
+        # self.agent_trainer_result_save = True
+        # self.env_trainer_result_save = True
+
+        # self.add_agent_training_property('agent_list', 'strategy_param_1')
+        # self.add_agent_training_property('agent_list', 'strategy_param_2')
+        # self.add_agent_training_property('agent_list', 'strategy_param_3')
+        # self.add_agent_result_property('agent_list', 'exploration_count')
+        # self.add_environment_result_property("average_technology")
+
         self.environment_properties = ["average_technology",
                                        "sleep_accumulated_share",
                                        "exploration_accumulated_share",

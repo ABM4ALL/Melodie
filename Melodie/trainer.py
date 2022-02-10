@@ -173,8 +173,10 @@ class Trainer(BaseModellingManager):
             agent_fitness = self.fitness_agent(agent)
             fitness_list.append(agent_fitness)
             agents_params_list[agent.id]['fitness'] = agent_fitness
+        # if self.agent_trainer_result_save:
         create_db_conn(self.config).write_dataframe('agent_trainer_result', pd.DataFrame(agents_params_list),
                                                     if_exists="append")
+        # if self.env_trainer_result_save:
         create_db_conn(self.config).write_dataframe('env_trainer_result', pd.DataFrame([environment_record_dict]),
                                                     if_exists="append")
         return np.array(fitness_list), environment_properties_dict
