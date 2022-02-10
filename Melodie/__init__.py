@@ -13,7 +13,8 @@ from .dataframe_loader import DataFrameLoader
 from .simulator import Simulator
 from .calibrator import Calibrator
 from .visualizer import Visualizer
-
+from .analyzer import Analyzer
+from .plotter import Plotter
 from .network import Network, Edge, AgentRelationshipNetwork
 from .grid import Grid, Spot
 from .trainer import Trainer
