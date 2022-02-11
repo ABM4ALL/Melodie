@@ -21,6 +21,10 @@ class DataFrameLoader:
         self.scenario_cls = scenario_cls
         self.registered_dataframes: Optional[Dict[str, pd.DataFrame]] = {}
         self.manager = manager
+        self.setup()
+
+    def setup(self):
+        pass
 
     @abc.abstractmethod
     def register_scenario_dataframe(self) -> None:
