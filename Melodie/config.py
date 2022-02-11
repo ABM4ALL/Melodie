@@ -17,6 +17,7 @@ class Config:
         self.project_name = project_name
         self.project_root = project_root
         self.sqlite_folder = sqlite_folder
+        self.setup()
 
         if not os.path.exists(sqlite_folder):
             os.makedirs(sqlite_folder)
@@ -35,3 +36,6 @@ class Config:
             os.makedirs(self.output_folder)
             # raise FileNotFoundError(
             #     f"output_folder {output_folder} of {self.__class__.__name__} was not found. Please create this folder.")
+
+    def setup(self):
+        pass
