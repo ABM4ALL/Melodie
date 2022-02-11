@@ -1,3 +1,4 @@
+
 from Melodie import DataCollector
 
 
@@ -17,3 +18,4 @@ class AspirationDataCollector(DataCollector):
         self.add_agent_property("agent_list", "prob_exploitation")
 
         self.add_environment_property('average_technology')
+        self.add_environment_property('average_account')
