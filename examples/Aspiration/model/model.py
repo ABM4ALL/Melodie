@@ -30,6 +30,7 @@ class AspirationModel(Model):
             self.environment.aspiration_update_process(self.agent_list)
             self.environment.technology_search_process(self.agent_list)
             self.environment.calculate_average_technology(self.agent_list)
+            self.environment.calculate_account_total(self.agent_list)
             self.environment.calculate_technology_search_strategy_share(self.agent_list)
         #     self.data_collector.collect(t)
         # self.data_collector.save()

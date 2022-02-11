@@ -10,6 +10,7 @@ class AspirationEnvironment(Environment):
 
     def setup(self):
         self.average_technology = 0.0
+        self.account_total = 0.0
         self.sleep_accumulated_share = 0
         self.exploration_accumulated_share = 0
         self.exploitation_accumulated_share = 0
@@ -48,6 +49,10 @@ class AspirationEnvironment(Environment):
         for agent in agent_list:
             sum_tech += agent.technology
         self.average_technology = sum_tech / len(agent_list)
+
+    def calculate_account_total(self, agent_list: 'AgentList[AspirationAgent]') -> None:
+        for agent in agent_list:
+            self.account_total += agent.account
 
     def calculate_technology_search_strategy_share(self, agent_list: 'AgentList[AspirationAgent]') -> None:
         total_sleep_count = 0

@@ -2,9 +2,10 @@ import numpy as np
 import sqlalchemy
 
 from Melodie import DataFrameLoader
-
+from .scenario import CovidScenario
 
 class CovidDataFrameLoader(DataFrameLoader):
+
     def register_scenario_dataframe(self):
         scenarios_dict = {"periods": sqlalchemy.Integer(),
                           "agent_num": sqlalchemy.Integer(),
@@ -15,10 +16,6 @@ class CovidDataFrameLoader(DataFrameLoader):
         self.load_dataframe('simulator_scenarios', 'simulator_scenarios.xlsx', scenarios_dict)
         self.load_dataframe('calibrator_scenarios', 'calibrator_scenarios.xlsx', {})
         self.load_dataframe('calibrator_params_scenarios', 'calibrator_params_scenarios.xlsx', {})
-
-    def register_static_dataframes(self) -> None:
-        # load由calibrator得到的表
-        pass
 
     def register_generated_dataframes(self):
 
