@@ -55,6 +55,7 @@ setuptools.setup(
         'numpy',
         'pandas',
         'matplotlib',
+        'seaborn',
         'networkx',
         'openpyxl',
         'websockets',
