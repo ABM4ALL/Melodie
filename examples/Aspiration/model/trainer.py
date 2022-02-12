@@ -1,9 +1,6 @@
-import numpy as np
-import sqlalchemy
 
 from Melodie import Trainer, GeneticAlgorithmTrainer
 from .agent import AspirationAgent
-from .scenario import AspirationScenario
 
 
 class AspirationTrainer(Trainer):
@@ -20,7 +17,7 @@ class AspirationTrainer(Trainer):
         self.add_agent_result_property('agent_list', 'imitation_count')
 
         self.add_environment_result_property("average_technology")
-        self.add_environment_result_property("account_total")
+        self.add_environment_result_property("average_account")
         self.add_environment_result_property("sleep_accumulated_share")
         self.add_environment_result_property("exploration_accumulated_share")
         self.add_environment_result_property("exploitation_accumulated_share")

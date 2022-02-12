@@ -60,7 +60,8 @@ class AspirationAnalyzer(Analyzer):
     def plot_trainer_env_var_strategy_cost_heatmap(self, env_var_name):
         df_scenario = self.read_dataframe(self.trainer_scenarios)
         df_result = self.read_dataframe(self.env_trainer_result_cov)
-        cost_exploration_list = [2, 4, 6, 8, 10]
+        # cost_exploration_list = [2, 4, 6, 8, 10]
+        cost_exploration_list = [10, 8, 6, 4, 2]
         cost_imitation_list = [2, 4, 6, 8, 10]
         heat_matrix = np.zeros((len(cost_exploration_list), len(cost_imitation_list)))
         for cost_exploration_id, cost_exploration in enumerate(cost_exploration_list):
@@ -86,7 +87,8 @@ class AspirationAnalyzer(Analyzer):
     def table_trainer_env_strategy_share_strategy_cost(self):
         df_scenario = self.read_dataframe(self.trainer_scenarios)
         df_result = self.read_dataframe(self.env_trainer_result_cov)
-        cost_exploration_list = [2, 4, 6, 8, 10]
+        # cost_exploration_list = [2, 4, 6, 8, 10]
+        cost_exploration_list = [10, 8, 6, 4, 2]
         cost_imitation_list = [2, 4, 6, 8, 10]
         aspiration_update_strategy_list = [0, 1]
         result_columns = ["exploration_cost", "imitation_cost",
@@ -124,7 +126,8 @@ class AspirationAnalyzer(Analyzer):
         # self.plot_trainer_agent_s1s2_scatter(0)
         # self.plot_trainer_env_average_technology(0)
         # self.plot_trainer_env_strategy_shares(0)
-        self.plot_trainer_env_var_strategy_cost_heatmap("average_technology_mean")
+        # self.plot_trainer_env_var_strategy_cost_heatmap("average_technology_mean")
+        self.plot_trainer_env_var_strategy_cost_heatmap("average_account_mean")
         # self.table_trainer_env_strategy_share_strategy_cost()
 
 

@@ -29,7 +29,6 @@ class CovidEnvironment(Environment):
                 infected: int = self.infect_from_neighbor(agent.id, neighbors, grid, agent_list)
                 if infected == 1:
                     agent.condition_next = 1
-                    # self.accumulated_infection += 1
             else:
                 pass
 

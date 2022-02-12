@@ -1,4 +1,6 @@
+
 from typing import Type
+
 from Melodie import Environment, AgentList
 from .agent import AspirationAgent
 from .scenario import AspirationScenario
@@ -10,7 +12,7 @@ class AspirationEnvironment(Environment):
 
     def setup(self):
         self.average_technology = 0.0
-        self.account_total = 0.0
+        self.average_account = 0.0
         self.sleep_accumulated_share = 0
         self.exploration_accumulated_share = 0
         self.exploitation_accumulated_share = 0
@@ -51,8 +53,10 @@ class AspirationEnvironment(Environment):
         self.average_technology = sum_tech / len(agent_list)
 
     def calculate_account_total(self, agent_list: 'AgentList[AspirationAgent]') -> None:
+        sum_account = 0
         for agent in agent_list:
-            self.account_total += agent.account
+            sum_account += agent.account
+        self.average_account = sum_account / len(agent_list)
 
     def calculate_technology_search_strategy_share(self, agent_list: 'AgentList[AspirationAgent]') -> None:
         total_sleep_count = 0
