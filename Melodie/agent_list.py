@@ -158,6 +158,7 @@ class AgentList(BaseAgentContainer, Sequence, typing.Sequence[AgentGeneric]):
         scenario = self.model.scenario
         for agent in agents:
             agent.scenario = scenario
+            agent.model = self.model
             agent.setup()
         return IndexedAgentList(agents)
 

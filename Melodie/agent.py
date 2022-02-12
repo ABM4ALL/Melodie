@@ -3,6 +3,7 @@ from typing import Optional, TYPE_CHECKING
 from Melodie.element import Element
 
 if TYPE_CHECKING:
+    from Melodie.model import Model
     from Melodie.scenario_manager import Scenario
 
 
@@ -10,6 +11,7 @@ class Agent(Element):
     def __init__(self, agent_id: int):
         self.id = agent_id
         self.scenario: Optional['Scenario'] = None
+        self.model: Optional['Model'] = None
 
     def setup(self):
         """
