@@ -48,6 +48,30 @@ def test_relationship_network():
 
     assert len(n.get_neighbors(agent_list[1].id, 'agents')) == 1
 
+def test_relationship_directed():
+    model = DemoModel(cfg, Scenario(0))
+    model.setup()
+    agent_list = AgentList(DemoAgent, 10, model)
+    n = DemoAgentRelationshipNetwork(directed=True)
+    n.add_category('agents')
+    for agent in agent_list:
+        n.add_agent(agent.id, 'agents', agent.id)
+
+    n.create_edge(agent_list[0].id, 'agents', agent_list[1].id, 'agents')
+    n.create_edge(agent_list[0].id, 'agents', agent_list[2].id, 'agents')
+    n.create_edge(agent_list[1].id, 'agents', agent_list[2].id, 'agents')
+    n.create_edge(agent_list[3].id, 'agents', agent_list[4].id, 'agents')
+    neighbor_ids = n.get_neighbors(agent_list[0].id, 'agents')
+    assert len(neighbor_ids) == 2 and ('agents', 1) in neighbor_ids and ("agents", 2) in neighbor_ids
+
+    n.add_agent(11, 'agents', 11)
+    assert len(n.all_agents()) == 11
+    assert 11 in n.all_agents()
+
+    n.remove_agent(0, 'agents')
+    print(n._adj)
+    assert len(n.get_neighbors(agent_list[1].id, 'agents')) == 1
+
 
 def test_create_ba():
     def network_creator(agent_list):
@@ -57,10 +81,10 @@ def test_create_ba():
     model = DemoModel(cfg, Scenario(0))
     model.setup()
     agent_list = AgentList(DemoAgent, 10, model)
-    # n = DemoAgentRelationshipNetwork.from_agent_containers({'agents': agent_list}, 'barabasi_albert_graph', {'m': 3})
-    # assert len(n.all_agents()) == 10
-    # n = DemoAgentRelationshipNetwork.from_agent_containers({'agents': agent_list}, builder=network_creator)
-    # assert len(n.all_agents()) == 10
+    n = DemoAgentRelationshipNetwork.from_agent_containers({'agents': agent_list}, 'barabasi_albert_graph', {'m': 3})
+    assert len(n.all_agents()) == 10
+    n = DemoAgentRelationshipNetwork.from_agent_containers({'agents': agent_list}, builder=network_creator)
+    assert len(n.all_agents()) == 10
 
     agent_list2 = AgentList(DemoAgent, 10, model)
 

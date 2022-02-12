@@ -104,7 +104,7 @@ class BaseAgentContainer(Generic[AgentGeneric]):
             params = {}
             for agent_param_name in param_names:
                 # .item() method was applied to convert pandas/numpy data into python-builtin types.
-                params[agent_param_name] = props_df_cpy.loc[i, agent_param_name].item()
+                params[agent_param_name] = props_df_cpy.loc[i, agent_param_name]
 
             agent.set_params(params)
 

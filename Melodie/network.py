@@ -153,8 +153,9 @@ class Network:
 
 class AgentRelationshipNetwork:
 
-    def __init__(self):
+    def __init__(self, directed=False):
         self.simple = True
+        self.directed = directed
         self._nodes: Set[int] = set()
         self._adj: Dict[int, Dict[int, Edge]] = {}
         self._agent_ids: Dict[str, Dict[int, Set[int]]] = {}  # {'wolves': {0 : set(1, 2, 3)}}， 代表0号节点上有1,2,3三只狼
@@ -197,7 +198,8 @@ class AgentRelationshipNetwork:
         if target_id not in self._adj.keys():
             self._adj[target_id] = {}
         self._adj[source_id][target_id] = edge
-        self._adj[target_id][source_id] = edge
+        if not self.directed:
+            self._adj[target_id][source_id] = edge
 
     def remove_edge(self, source_id: int, target_id: int):
         """
@@ -206,8 +208,9 @@ class AgentRelationshipNetwork:
         :param target_id:
         :return:
         """
-        self._adj[source_id].remove(target_id)
-        self._adj[target_id].remove(source_id)
+        self._adj[source_id].pop(target_id)
+        if not self.directed:
+            self._adj[target_id].pop(source_id)
 
     def get_neighbors(self, agent_id: int, category: str) -> List[int]:
         node_id = self.agent_pos(agent_id, category)
@@ -256,8 +259,9 @@ class AgentRelationshipNetwork:
         self._agent_ids[category][node_id].remove(agent_id)
         self._nodes.remove(node_id)
         target_edges = self._adj.pop(agent_id)
-        for target_node, edge in target_edges.items():
-            self._adj[target_node].pop(node_id)
+        if not self.directed:
+            for target_node, edge in target_edges.items():
+                self._adj[target_node].pop(node_id)
 
     def move_agent(self, agent_id: int, category: str, target_node_id: int):
         """
