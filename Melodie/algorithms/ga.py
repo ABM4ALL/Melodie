@@ -192,6 +192,7 @@ class GeneticAlgorithmTrainer(SearchingAlgorithm):
         self.agent_result_properties: List[str] = []
 
     def set_parameters_agents(self, agent_num: int, agent_params: int, parameter_names: List[str],
+                              agent_result_properties: List[str],
                               env_property_names: List[str]):
         """
 
@@ -208,6 +209,7 @@ class GeneticAlgorithmTrainer(SearchingAlgorithm):
         self.parameters_value = np.array([1 for i in range(parameters_num)], dtype=np.float64)
         self.parameter_names = parameter_names
         self.env_property_names = env_property_names
+        self.agent_result_properties = agent_result_properties
 
     def agent_params_convertion(self):
         pass
@@ -306,8 +308,9 @@ class GeneticAlgorithmTrainer(SearchingAlgorithm):
             env_params_meta = {}
             env_params_meta.update(env_params_mean)
             env_params_meta.update(env_params_cov)
-            agents_num = yield strategy_population, params, strategy_fitness, {"agent_trainer_result_cov": agent_trainer_result_cov,
-                                                                           "env_trainer_result_cov": env_params_meta}
+            agents_num = yield strategy_population, params, strategy_fitness, {
+                "agent_trainer_result_cov": agent_trainer_result_cov,
+                "env_trainer_result_cov": env_params_meta}
             for i in range(agents_num):
                 strategy_population[:,
                 i * self.strategy_param_code_length * self.params_each_agent:

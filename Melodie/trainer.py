@@ -105,11 +105,12 @@ class Trainer(BaseModellingManager):
         self.algorithm.set_parameters_agents(agents_num,
                                              len(self.properties),
                                              self.properties,
+                                             self.agent_result_properties[self.container_name],
                                              self.environment_properties)
         self.algorithm.parameters_range = trainer_scenario.get_agents_parameters_range(agents_num)
 
         self.algorithm.parameters_value = []
-        self.algorithm.agent_result_properties = self.agent_result_properties[self.container_name]
+
         for agent in agents:
             self.algorithm.parameters_value.extend([agent.__getattribute__(name) for name in self.properties])
 
