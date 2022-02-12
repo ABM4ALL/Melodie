@@ -197,6 +197,7 @@ class AgentList(BaseAgentContainer, Sequence, typing.Sequence[AgentGeneric]):
             agent = self.agent_class(new_id)
 
         agent.scenario = self.model.scenario
+        agent.model = self.model
         agent.setup()
         if params is not None:
             assert isinstance(params, dict)
