@@ -1,5 +1,5 @@
 import sys
-from .algorithms import GeneticAlgorithm, GATrainerParams, GACalibratorParams
+from .algorithms import GeneticAlgorithmTrainer, GeneticAlgorithmCalibrator, GATrainerParams, GACalibratorParams
 from .agent import Agent
 from .agent_list import BaseAgentContainer, AgentList
 from .config import Config
@@ -22,4 +22,3 @@ from .trainer import Trainer
 import logging
 
 logging.basicConfig(stream=sys.stderr, level=logging.INFO)
-

@@ -6,7 +6,7 @@ import numpy as np
 import pandas as pd
 import logging
 from Melodie import Model, Scenario, Config, Agent, create_db_conn, GACalibratorParams, DataFrameLoader
-from Melodie.algorithms import GeneticAlgorithm, SearchingAlgorithm
+from Melodie.algorithms import GeneticAlgorithmCalibrator, SearchingAlgorithm
 from Melodie.basic import MelodieExceptions
 from .simulator import BaseModellingManager
 
@@ -65,7 +65,7 @@ class Calibrator(BaseModellingManager):
         assert isinstance(calibrator_scenarios_table, pd.DataFrame), "No learning scenarios table specified!"
         assert self.algorithm_cls is not None
         scenario_cls = None
-        if self.algorithm_cls == GeneticAlgorithm:
+        if self.algorithm_cls == GeneticAlgorithmCalibrator:
             scenario_cls = GACalibratorParams
         else:
             raise NotImplementedError
@@ -86,8 +86,8 @@ class Calibrator(BaseModellingManager):
         self.model = self.model_cls(self.config, scenario)
         self.model.setup()
         iterations = 0
-        if self.algorithm_cls == GeneticAlgorithm:
-            self.algorithm = GeneticAlgorithm(calibration_scenario.calibration_generation,
+        if self.algorithm_cls == GeneticAlgorithmCalibrator:
+            self.algorithm = GeneticAlgorithmCalibrator(calibration_scenario.calibration_generation,
                                               calibration_scenario.strategy_population,
                                               calibration_scenario.mutation_prob,
                                               calibration_scenario.strategy_param_code_length)
@@ -95,8 +95,8 @@ class Calibrator(BaseModellingManager):
         else:
             raise NotImplementedError
         self.algorithm.parameter_names = self.properties
-        self.algorithm.parameters = [(parameter.min, parameter.max) for parameter in calibration_scenario.parameters]
-        self.algorithm.parameters_num = len(self.algorithm.parameters)
+        self.algorithm.parameters_range = [(parameter.min, parameter.max) for parameter in calibration_scenario.parameters]
+        self.algorithm.parameters_num = len(self.algorithm.parameters_range)
 
         self.algorithm_instance = self.algorithm.optimize(self.fitness, scenario)
 

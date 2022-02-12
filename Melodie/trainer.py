@@ -5,7 +5,7 @@ import numpy as np
 import pandas as pd
 
 from Melodie import Model, Scenario, Config, Agent, create_db_conn, GATrainerParams
-from Melodie.algorithms import GeneticAlgorithm, SearchingAlgorithm
+from Melodie.algorithms import GeneticAlgorithmTrainer, SearchingAlgorithm
 from .simulator import BaseModellingManager
 from .dataframe_loader import DataFrameLoader
 
@@ -70,7 +70,7 @@ class Trainer(BaseModellingManager):
         assert self.algorithm_cls is not None
 
         trainer_scenario_cls: Union[ClassVar[GATrainerParams]] = None
-        if self.algorithm_cls == GeneticAlgorithm:
+        if self.algorithm_cls == GeneticAlgorithmTrainer:
             trainer_scenario_cls = GATrainerParams
         assert trainer_scenario_cls is not None
 
@@ -95,7 +95,7 @@ class Trainer(BaseModellingManager):
 
         iterations = 0
         if isinstance(trainer_scenario, GATrainerParams):
-            self.algorithm = GeneticAlgorithm(trainer_scenario.number_of_generation,
+            self.algorithm = GeneticAlgorithmTrainer(trainer_scenario.number_of_generation,
                                               trainer_scenario.strategy_population,
                                               trainer_scenario.mutation_prob,
                                               trainer_scenario.strategy_param_code_length)
@@ -106,13 +106,15 @@ class Trainer(BaseModellingManager):
                                              len(self.properties),
                                              self.properties,
                                              self.environment_properties)
-        self.algorithm.parameters = trainer_scenario.get_agents_parameters_range(agents_num)
+        self.algorithm.parameters_range = trainer_scenario.get_agents_parameters_range(agents_num)
 
         self.algorithm.parameters_value = []
+        self.algorithm.agent_result_properties = self.agent_result_properties[self.container_name]
         for agent in agents:
             self.algorithm.parameters_value.extend([agent.__getattribute__(name) for name in self.properties])
 
         self.algorithm_instance = self.algorithm.optimize_multi_agents(self.fitness, scenario)
+
 
         for i in range(iterations):
             self.current_algorithm_meta['generation_id'] = i
@@ -165,7 +167,7 @@ class Trainer(BaseModellingManager):
             agent_params[prop_name] = all_params[agent_id * len(self.properties) + j]
         return agent_params
 
-    def fitness(self, params, scenario: Union[Type[Scenario], Scenario], **kwargs) -> Tuple[np.ndarray, dict]:
+    def fitness(self, params, scenario: Union[Type[Scenario], Scenario], **kwargs) -> Tuple[np.ndarray, dict, list]:
         self.model = self.model_cls(self.config, scenario)
         self.model.setup()
         agents = self.model.__getattribute__(self.container_name)
@@ -206,7 +208,7 @@ class Trainer(BaseModellingManager):
         if self.save_env_trainer_result:
             create_db_conn(self.config).write_dataframe('env_trainer_result', pd.DataFrame([environment_record_dict]),
                                                         if_exists="append")
-        return np.array(fitness_list), environment_properties_dict
+        return np.array(fitness_list), environment_properties_dict, agents_params_list
 
     def fitness_agent(self, agent: Type[Agent]) -> float:
         """

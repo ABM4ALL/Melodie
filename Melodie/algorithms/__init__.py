@@ -4,5 +4,6 @@
 # @Email: 1295752786@qq.com
 # @File: __init__.py
 
-from .ga import SearchingAlgorithm, GeneticAlgorithm, GATrainerParams, GACalibratorParams
+from .ga import SearchingAlgorithm, GeneticAlgorithmTrainer, GeneticAlgorithmCalibrator, GATrainerParams, \
+    GACalibratorParams
 from .searching_algorithm import SearchingAlgorithm, AlgorithmParameters
