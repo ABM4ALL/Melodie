@@ -1,4 +1,5 @@
 import functools
+import random
 from typing import ClassVar, Set, Dict, List, Tuple
 
 import numpy as np
@@ -236,3 +237,14 @@ class Grid:
                 grid_roles[pos_1d, 2] = 0
                 grid_roles[pos_1d, 3] = spot.role
         return grid_roles
+
+    def rand_move(self, agent_id:int, category:str, x_range: int, y_range: int):
+
+        source_x, source_y = self.get_agent_pos(agent_id, category)
+        self._remove_agent(agent_id, category, source_x, source_y)
+        dx = random.randint(-x_range, x_range)
+        dy = random.randint(-y_range, y_range)
+        target_x = source_x+dx
+        target_y = source_y+dy
+        self.add_agent(agent_id, category, target_x, target_y)
+        return target_x, target_y

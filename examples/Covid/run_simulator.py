@@ -15,4 +15,13 @@ if __name__ == "__main__":
         model_cls=CovidModel,
         df_loader_cls=CovidDataFrameLoader)
 
+    import cProfile, pstats
+
+    profiler = cProfile.Profile()
+    profiler.enable()
+
     simulator.run()
+
+    profiler.disable()
+    stats = pstats.Stats(profiler).sort_stats('ncalls')
+    stats.print_stats(30)

@@ -1,4 +1,5 @@
 import logging
+import time
 from typing import Type, List, Optional, ClassVar, Iterator, Union, Tuple, Dict
 import copy
 import numpy as np
@@ -96,9 +97,9 @@ class Trainer(BaseModellingManager):
         iterations = 0
         if isinstance(trainer_scenario, GATrainerParams):
             self.algorithm = GeneticAlgorithmTrainer(trainer_scenario.number_of_generation,
-                                              trainer_scenario.strategy_population,
-                                              trainer_scenario.mutation_prob,
-                                              trainer_scenario.strategy_param_code_length)
+                                                     trainer_scenario.strategy_population,
+                                                     trainer_scenario.mutation_prob,
+                                                     trainer_scenario.strategy_param_code_length)
             iterations = trainer_scenario.number_of_generation
         else:
             pass
@@ -115,7 +116,6 @@ class Trainer(BaseModellingManager):
             self.algorithm.parameters_value.extend([agent.__getattribute__(name) for name in self.properties])
 
         self.algorithm_instance = self.algorithm.optimize_multi_agents(self.fitness, scenario)
-
 
         for i in range(iterations):
             self.current_algorithm_meta['generation_id'] = i
@@ -169,6 +169,7 @@ class Trainer(BaseModellingManager):
         return agent_params
 
     def fitness(self, params, scenario: Union[Type[Scenario], Scenario], **kwargs) -> Tuple[np.ndarray, dict, list]:
+        t0 = time.time()
         self.model = self.model_cls(self.config, scenario)
         self.model.setup()
         agents = self.model.__getattribute__(self.container_name)
@@ -188,8 +189,10 @@ class Trainer(BaseModellingManager):
                 setattr(agent, prop_name, agent_params[prop_name])
             agents_dic.update(agent_params)
             agents_params_list.append(agents_dic)
+        t1 = time.time()
         self.model.run()
-
+        t2 = time.time()
+        print(f"\rModel preparation took {t1 - t0}s; Model run took:", t2 - t1, "s", end="")
         agents = self.model.__getattribute__(self.container_name)
         env = self.model.environment
         environment_properties_dict = {prop_name: env.__dict__[prop_name] for prop_name in self.environment_properties}

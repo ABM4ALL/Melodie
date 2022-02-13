@@ -4,6 +4,8 @@ from distutils.extension import Extension
 
 try:
     from Cython.Distutils import build_ext
+    from Cython.Compiler import Options
+    Options.annotate=True
     ext_modules = [
         Extension("Melodie.boost._vectorize",
                   ["Melodie/boost/_vectorize.pyx"], ),
@@ -12,7 +14,9 @@ try:
         Extension("Melodie.boost.agent_list",
                   ["Melodie/boost/agent_list.pyx"], ),
         Extension("Melodie.boost.grid",
-                  ["Melodie/boost/grid.pyx"], )
+                  ["Melodie/boost/grid.pyx"], ),
+        Extension("Melodie.boost.fastrand",
+                  ["Melodie/boost/fastrand.pyx"], )
     ]
 except:
     import traceback

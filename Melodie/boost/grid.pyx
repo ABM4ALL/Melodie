@@ -227,14 +227,15 @@ cdef class Grid:
         self._remove_agent(agent_id, category, source_x, source_y)
         self.add_agent(agent_id, category, target_x, target_y)
 
-    def rand_move(self, agent_id, category, radius):
+    def rand_move(self, agent_id, category, range_x, range_y):
         source_x, source_y = self.get_agent_pos(agent_id, category)
         self._remove_agent(agent_id, category, source_x, source_y)
-        dx = int((rand()/(RAND_MAX*1.0))*(2*radius+1)) - radius
-        # print(dx)
-        dy = int((rand()/(RAND_MAX*1.0))*(2*radius+1)) - radius
-        # dy = 1 + int(rand()/(RAND_MAX*1.0)*radius)
-        self.add_agent(agent_id, category, source_x+dx, source_y+dy)
+        dx = int((rand()/(RAND_MAX*1.0))*(2*range_x+1)) - range_x
+        dy = int((rand()/(RAND_MAX*1.0))*(2*range_y+1)) - range_y
+        target_x = source_x+dx
+        target_y = source_y+dy
+        self.add_agent(agent_id, category, target_x, target_y)
+        return target_x, target_y
 
     def get_agent_pos(self, agent_id: int, category: str) -> Tuple[int, int]:
         """
