@@ -10,9 +10,11 @@ class NewAgent(Agent):
     def setup(self):
         self.a = 123
         self.b = 456
+
 class FakeModel:
     def __init__(self):
         self.scenario = None
+
 def neighbors(grid):
     px, py = int(grid.width / 2), int(grid.height / 2)
     neighbor_ids = grid.get_neighbors(px, py, 1)
@@ -65,8 +67,8 @@ def test_go_through(al):
     return t1-t0
 
 def test_fast_agent_list():
-    al = AgentList(NewAgent,1000, FakeModel())
-    al_fast = FastAgentList(NewAgent,1000, FakeModel())
+    al = AgentList(NewAgent, 1000, FakeModel())
+    al_fast = FastAgentList(NewAgent, 1000, FakeModel())
     print(test_go_through(al))
     print(test_go_through(al_fast))
 

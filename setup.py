@@ -8,14 +8,20 @@ try:
         Extension("Melodie.boost._vectorize",
                   ["Melodie/boost/_vectorize.pyx"], ),
         Extension("Melodie.boost._vectorize2d",
-                  ["Melodie/boost/_vectorize2d.pyx"], )
+                  ["Melodie/boost/_vectorize2d.pyx"], ),
+        Extension("Melodie.boost.agent_list",
+                  ["Melodie/boost/agent_list.pyx"], ),
+        Extension("Melodie.boost.grid",
+                  ["Melodie/boost/grid.pyx"], )
     ]
 except:
     import traceback
 
     traceback.print_exc()
     ext_modules = None
-    build_ext = lambda _: print('Cython was not installed. With cython you may get better peformance boost!')
+
+    def build_ext(_): return print(
+        'Cython was not installed. With cython you may get better peformance boost!')
 with open('README.md', 'r') as fh:
     long_description = fh.read()
 

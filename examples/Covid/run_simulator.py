@@ -5,7 +5,7 @@ from Melodie import Simulator
 sys.path.append("../..")
 from model.scenario import CovidScenario
 from model.model import CovidModel
-from model.df_loader import CovidDataFrameLoader
+from model.dataframe_loader import CovidDataFrameLoader
 from config import config
 
 if __name__ == "__main__":
