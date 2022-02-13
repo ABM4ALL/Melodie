@@ -2,6 +2,7 @@
 __author__ = 'Songmin'
 
 from Melodie import Model, AgentList, Grid, Spot
+from Melodie.boost.grid import Grid
 from .agent import CovidAgent
 from .environment import CovidEnvironment
 from .data_collector import CovidDataCollector

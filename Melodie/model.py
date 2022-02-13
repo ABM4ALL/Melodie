@@ -94,7 +94,9 @@ class Model:
         """
         agent_container_class: Union[ClassVar[AgentList], None] = None
         if container_type == "list":
+            from Melodie.boost.agent_list import AgentList
             agent_container_class = AgentList
+            # agent_container_class = AgentList
         else:
             raise NotImplementedError(f"Container type '{container_type}' is not valid!")
 
