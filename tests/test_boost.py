@@ -97,6 +97,6 @@ def compare_collect_attribute_time_2d():
     print('use_dll_gather_float', t3 - t2, 'use_dll_gather_int', t2 - t1, 'use_python_time', t1 - t0)
 
 
-def test_benchmark():
-    compare_collect_attribute_time()
-    compare_collect_attribute_time_2d()
+# def test_benchmark():
+#     compare_collect_attribute_time()
+#     compare_collect_attribute_time_2d()

@@ -99,5 +99,5 @@ def test_properties_with_scenario():
     for agent in al:
         assert agent.a == (df_scenario[df_scenario['id'] == agent.id]['a'].item())
 
-    assert al._id_offset == 9
+    assert al.new_id() == 10
     print([a.id for a in al])

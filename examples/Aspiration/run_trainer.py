@@ -12,5 +12,14 @@ if __name__ == "__main__":
                                 scenario_cls=AspirationScenario,
                                 model_cls=AspirationModel,
                                 df_loader_cls=AspirationDataFrameLoader)
-    trainer.train()
+    import cProfile, pstats
 
+    profiler = cProfile.Profile()
+    profiler.enable()
+    try:
+        trainer.train()
+    except KeyboardInterrupt:
+        pass
+    profiler.disable()
+    stats = pstats.Stats(profiler).sort_stats('tottime')
+    stats.print_stats()

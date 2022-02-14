@@ -135,18 +135,18 @@ def convert(grid: Union[Grid, 'JITGrid']):
         print(arr)
 
 
-def test_agents_jit():
-    if JIT_AVAILABLE:
-        from Melodie.boost import JITGrid
-    else:
-        return
-    width = 10
-    height = 20
-    jit_grid = JITGrid(width, height, Spot)
-
-    agents(jit_grid)
-    neighbors(jit_grid)
-    convert(jit_grid)
+# def test_agents_jit():
+#     if JIT_AVAILABLE:
+#         from Melodie.boost import JITGrid
+#     else:
+#         return
+#     width = 10
+#     height = 20
+#     jit_grid = JITGrid(width, height, Spot)
+#
+#     agents(jit_grid)
+#     neighbors(jit_grid)
+#     convert(jit_grid)
 
 
 def test_agents_nojit():

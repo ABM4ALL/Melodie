@@ -242,7 +242,12 @@ cdef class AgentList(BaseAgentContainer, Sequence):
             params = {}
             for agent_param_name in param_names:
                 # .item() method was applied to convert pandas/numpy data into python-builtin types.
-                params[agent_param_name] = props_df_cpy.loc[i, agent_param_name]
+                item = props_df_cpy.loc[i, agent_param_name]
+                if isinstance(item, str):
+                    params[agent_param_name] = item
+                else:
+                    params[agent_param_name] = item.item()
+
 
             agent.set_params(params)
 
