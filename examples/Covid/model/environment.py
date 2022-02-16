@@ -20,17 +20,13 @@ class CovidEnvironment(Environment):
             agent.move(grid)
 
     def agents_infection(self, agent_list: 'AgentList[CovidAgent]', grid: "Grid") -> None:
+
         for agent in agent_list:
-            if agent.condition == 0 and agent.condition_next == 1:
-                agent.condition = agent.condition_next
-        for agent in agent_list:
-            neighbors = grid.get_neighbors(agent.x_pos, agent.y_pos, 1, except_self=False)
-            if agent.condition == 0:
-                infected: int = self.infect_from_neighbor(agent.id, neighbors, grid, agent_list)
-                if infected == 1:
-                    agent.condition_next = 1
-            else:
+            if agent.condition == 1:
                 pass
+            else:
+                neighbors = grid.get_neighbors(agent.x_pos, agent.y_pos, 1, except_self=False)
+                agent.condition = self.infect_from_neighbor(agent.id, neighbors, grid, agent_list)
 
     def infect_from_neighbor(self, current_agent_id: int, neighbors: List[Tuple[int, int]], grid: 'Grid',
                              agent_list: "AgentList[CovidAgent]") -> int:
@@ -44,8 +40,7 @@ class CovidEnvironment(Environment):
         return 0
 
     def calculate_accumulated_infection(self, agents):
-        sum_ = 0
+        sum = 0
         for agent in agents:
-            if agent.condition == 1:
-                sum_ += 1
-        self.accumulated_infection = sum_
+            sum += agent.condition
+        self.accumulated_infection = sum
