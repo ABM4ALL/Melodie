@@ -159,9 +159,9 @@ class GACalibratorParams(AlgorithmParameters):
 
     @staticmethod
     def from_dataframe_record(record: Dict[str, Union[int, float]]) -> 'GACalibratorParams':
-        s = GACalibratorParams(record['id'], record['number_of_path'], record['calibration_generation'],
-                               record['strategy_population'], record['mutation_prob'],
-                               record['strategy_param_code_length'])
+        s = GACalibratorParams(record['id'], record['number_of_path'], record['number_of_generation'],
+                               record['population'], record['mutation_prob'],
+                               record['param_code_length'])
         max_values = {name[:len(name) - len("_max")]: value for name, value in record.items() if name.endswith("_max")}
         min_values = {name[:len(name) - len("_min")]: value for name, value in record.items() if name.endswith("_min")}
         print(max_values, min_values)

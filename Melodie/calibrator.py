@@ -40,7 +40,6 @@ class Calibrator(BaseModellingManager):
         self.model: Optional[Model] = None
 
         self.current_algorithm_meta = {
-            "scenario_id": 0,
             "learning_scenario_id": 1,
             "trainer_path_id": 0,
             "generation_id": 0
@@ -70,13 +69,13 @@ class Calibrator(BaseModellingManager):
         else:
             raise NotImplementedError
         for scenario in self.scenarios:
-            self.current_algorithm_meta['scenario_id'] = scenario.id
+            self.current_algorithm_meta['calibrator_scenario_id'] = scenario.id
             calibration_scenarios = calibrator_scenarios_table.to_dict(orient="records")
             for calibrator_scenario in calibration_scenarios:
                 calibrator_scenario = scenario_cls.from_dataframe_record(calibrator_scenario)
-                self.current_algorithm_meta['calibration_scenario_id'] = calibrator_scenario.id
+                self.current_algorithm_meta['calibrator_params_scenario_id'] = calibrator_scenario.id
                 for trainer_path_id in range(calibrator_scenario.number_of_path):
-                    self.current_algorithm_meta['learning_path_id'] = trainer_path_id
+                    self.current_algorithm_meta['trainer_path_id'] = trainer_path_id
 
                     self.run_once(scenario, calibrator_scenario)
 
@@ -88,14 +87,15 @@ class Calibrator(BaseModellingManager):
         iterations = 0
         if self.algorithm_cls == GeneticAlgorithmCalibrator:
             self.algorithm = GeneticAlgorithmCalibrator(calibration_scenario.calibration_generation,
-                                              calibration_scenario.strategy_population,
-                                              calibration_scenario.mutation_prob,
-                                              calibration_scenario.strategy_param_code_length)
+                                                        calibration_scenario.strategy_population,
+                                                        calibration_scenario.mutation_prob,
+                                                        calibration_scenario.strategy_param_code_length)
             iterations = calibration_scenario.calibration_generation
         else:
             raise NotImplementedError
         self.algorithm.parameter_names = self.properties
-        self.algorithm.parameters_range = [(parameter.min, parameter.max) for parameter in calibration_scenario.parameters]
+        self.algorithm.parameters_range = [(parameter.min, parameter.max) for parameter in
+                                           calibration_scenario.parameters]
         self.algorithm.parameters_num = len(self.algorithm.parameters_range)
 
         self.algorithm_instance = self.algorithm.optimize(self.fitness, scenario)
@@ -114,7 +114,7 @@ class Calibrator(BaseModellingManager):
             create_db_conn(self.config).write_dataframe('calibrator_result_cov',
                                                         pd.DataFrame([calibrator_result_cov]))
 
-    def add_property(self, prop: str):
+    def add_environment_calibrating_property(self, prop: str):
         """
         Add a property to be calibrated.
         It should be a property of environment.
@@ -123,6 +123,15 @@ class Calibrator(BaseModellingManager):
         """
         assert prop not in self.properties
         self.properties.append(prop)
+
+    def add_environment_result_property(self, prop: str):
+        """
+
+        :param prop:
+        :return:
+        """
+        assert prop not in self.watched_env_properties
+        self.watched_env_properties.append(prop)
 
     def fitness(self, params, scenario: Union[Type[Scenario], Scenario], **kwargs) -> float:
         for i, prop_name in enumerate(self.properties):
