@@ -7,15 +7,24 @@ from .scenario import CovidScenario
 class CovidDataFrameLoader(DataFrameLoader):
 
     def register_scenario_dataframe(self):
-        scenarios_dict = {"periods": sqlalchemy.Integer(),
-                          "agent_num": sqlalchemy.Integer(),
-                          "grid_x_size": sqlalchemy.Integer(),
-                          "grid_y_size": sqlalchemy.Integer(),
-                          "initial_infected_percentage": sqlalchemy.Float(),
-                          "infection_probability": sqlalchemy.Integer()}
+        scenarios_dict = {
+            "periods": sqlalchemy.Integer(),
+            "agent_num": sqlalchemy.Integer(),
+            "grid_x_size": sqlalchemy.Integer(),
+            "grid_y_size": sqlalchemy.Integer(),
+            "initial_infected_percentage": sqlalchemy.Float(),
+            "infection_probability": sqlalchemy.Integer(),
+            "number_of_path": sqlalchemy.Integer(),
+            "number_of_generation": sqlalchemy.Integer(),
+            "population": sqlalchemy.Integer(),
+            "mutation_prob": sqlalchemy.Float(),
+            "param_code_length": sqlalchemy.Integer(),
+            "infection_probability_min": sqlalchemy.Float(),
+            "infection_probability_max": sqlalchemy.Float()
+        }
         self.load_dataframe('simulator_scenarios', 'simulator_scenarios.xlsx', scenarios_dict)
-        self.load_dataframe('calibrator_scenarios', 'calibrator_scenarios.xlsx', {})
-        self.load_dataframe('calibrator_params_scenarios', 'calibrator_params_scenarios.xlsx', {})
+        self.load_dataframe('calibrator_scenarios', 'calibrator_scenarios.xlsx', scenarios_dict)
+        self.load_dataframe('calibrator_params_scenarios', 'calibrator_params_scenarios.xlsx', scenarios_dict)
 
     def register_generated_dataframes(self):
 
