@@ -1,11 +1,11 @@
-### Example 1 - Wealth Distribution
+### Melodie Example - Wealth Distribution
 
 ---
 
-This example explores how "Gini index" can be influenced by the productivity and equality of people. After initialization, each agents get some money in their account. Then, in each period, all the agents go through following two processes:
+This example explores how "Gini index" can be influenced by the productivity of and equality among people. After initialization, each agents get some money in their account. Then, in each period, all the agents go through following two processes:
 
 - MoneyProduce: randomly receive some money.
-- MoneyTransfer: in each period, there are multiple rounds. In each round, two agents are randomly selected and they play a game. The winner will take 1 dollar from the loser.
+- MoneyTransfer: in each period, there are multiple rounds (sub-periods). In each round, two agents are randomly selected and they play a game. The winner will take 1 dollar from the loser.
 
 The system calculates the "total wealth" and "gini index" in each period.
 
