@@ -2,7 +2,7 @@
 import numpy as np
 import pandas as pd
 from abc import ABC, abstractmethod
-from typing import ClassVar
+from typing import ClassVar, Dict
 
 from .config import Config
 from .db import create_db_conn, DB
@@ -64,10 +64,39 @@ class Analyzer(ABC):
             column_name = strategy_params_list[param_id] + "_cov"
             param_cov = df_filtered[column_name].to_numpy()
             cov_matrix[param_id,:] = param_cov
-        fig_scenario = "_TS" + str(trainer_scenario_id) + "TPS" + str(trainer_params_scenario_id) + \
-                       "P" + str(path_id) + "G" + str(generation_id) + "_"
+        fig_scenario = "TS" + str(trainer_scenario_id) + "TPS" + str(trainer_params_scenario_id) + \
+                       "P" + str(path_id) + "G" + str(generation_id)
         self.plotter.trainer_agent_strategy_params_cov_heatmap(cov_matrix, fig_scenario,
                                                                strategy_params_ticks=strategy_params_ticks)
+
+    def plot_trainer_agent_strategy_params_cov_lines(self,
+                                                     strategy_params_list: list,
+                                                     df: pd.DataFrame,
+                                                     trainer_scenario_id: int,
+                                                     trainer_params_scenario_id: int = 0,
+                                                     path_id: int = 0,
+                                                     strategy_params_legend_dict: dict = None):
+        filter = {"trainer_scenario_id": trainer_scenario_id,
+                  "trainer_params_scenario_id": trainer_params_scenario_id,
+                  "path_id": path_id}
+        df_filtered = self.filter_dataframe(df, filter)
+        df_filtered = df_filtered.fillna(0)
+        generation_num = len(df_filtered.loc[df_filtered["agent_id"] == 0])
+        agent_num = len(df_filtered.loc[df_filtered["generation_id"] == 0])
+        strategy_params_agent_generation_matrix_dict: Dict[str, np.ndarray] = {}
+        for param_id in range(0, len(strategy_params_list)):
+            agent_generation_matrix = np.zeros((agent_num, generation_num))
+            column_name = strategy_params_list[param_id] + "_cov"
+            for agent_id in range(0, agent_num):
+                strategy_param_cov = df_filtered.loc[df_filtered["agent_id"] == agent_id][column_name].to_numpy()
+                agent_generation_matrix[agent_id,:] = strategy_param_cov
+            strategy_params_agent_generation_matrix_dict[strategy_params_list[param_id]] = agent_generation_matrix
+
+        fig_scenario = "TS" + str(trainer_scenario_id) + "TPS" + str(trainer_params_scenario_id) + \
+                       "P" + str(path_id)
+        self.plotter.trainer_agent_strategy_params_cov_lines(strategy_params_agent_generation_matrix_dict,
+                                                             fig_scenario,
+                                                             strategy_params_legend_dict=strategy_params_legend_dict)
 
     def plot_trainer_agent_var_scatter(self,
                                        var_1_name: str,
@@ -88,7 +117,7 @@ class Analyzer(ABC):
         df_filtered = self.filter_dataframe(df, filter)
         var_1_value = df_filtered[var_1_name].to_numpy()
         var_2_value = df_filtered[var_2_name].to_numpy()
-        fig_scenario = "_TS" + str(trainer_scenario_id) + "TPS" + str(trainer_params_scenario_id) + \
+        fig_scenario = "TS" + str(trainer_scenario_id) + "TPS" + str(trainer_params_scenario_id) + \
                        "P" + str(path_id) + "G" + str(generation_id) + "_"
         self.plotter.trainer_agent_var_scatter(var_1_name, var_1_value,
                                                var_2_name, var_2_value,
@@ -121,7 +150,7 @@ class Analyzer(ABC):
             df_filtered_path_id = df_filtered.loc[df_filtered["path_id"] == path_id]
             var_value_dict[key] = [df_filtered_path_id[var_mean_name].to_numpy(),
                                    df_filtered_path_id[var_cov_name].to_numpy()]
-        fig_scenario = "_TS" + str(trainer_scenario_id) + "TPS" + str(trainer_params_scenario_id) + "_"
+        fig_scenario = "TS" + str(trainer_scenario_id) + "TPS" + str(trainer_params_scenario_id) + "_"
         self.plotter.trainer_env_var(var_name, var_value_dict, fig_scenario,
                                      fig_title=fig_title, y_label=y_label, y_lim=y_lim)
 

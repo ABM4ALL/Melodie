@@ -10,9 +10,8 @@ if TYPE_CHECKING:
 
 class AspirationUpdateStrategy(ABC):
 
-    def __init__(self, agent_list: 'AgentList[AspirationAgent]', environment: 'AspirationEnvironment'):
-        self.agent_list = agent_list
-        self.environment = environment
+    def __init__(self, average_profit: float):
+        self.average_profit = average_profit
 
     @abstractmethod
     def aspiration_update(self, agent: 'AspirationAgent') -> None:
@@ -24,12 +23,9 @@ class HistoricalAspirationUpdateStrategy(AspirationUpdateStrategy):
     def aspiration_update(self, agent: 'AspirationAgent') -> None:
         agent.aspiration_level = agent.historical_aspiration_update_param * agent.profit + \
                                  (1 - agent.historical_aspiration_update_param) * agent.aspiration_level
-        pass
 
 
 class SocialAspirationUpdateStrategy(AspirationUpdateStrategy):
 
     def aspiration_update(self, agent: 'AspirationAgent') -> None:
-        average_profit = np.array([agent.profit for agent in self.agent_list]).mean()
-        agent.aspiration_level = average_profit
-        pass
+        agent.aspiration_level = self.average_profit

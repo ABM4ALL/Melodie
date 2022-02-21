@@ -1,6 +1,7 @@
 
 import numpy as np
 from abc import ABC, abstractmethod
+from typing import Dict
 import seaborn as sns
 import matplotlib.pyplot as plt
 
@@ -12,6 +13,7 @@ class Plotter(ABC):
         self.fig_folder = config.output_folder
         self.setup_common_fig_params()
         self.setup_trainer_agent_strategy_params_cov_heatmap_fig_params()
+        self.setup_trainer_agent_strategy_params_cov_lines_fig_params()
         self.setup_trainer_agent_var_scatter_fig_params()
         self.setup_trainer_env_var_fig_params()
         self.setup_colors()
@@ -35,6 +37,26 @@ class Plotter(ABC):
         self.trainer_agent_strategy_params_cov_heatmap_y_labelpad = 10
         self.trainer_agent_strategy_params_cov_heatmap_x_tick_fontsize = 10
         self.trainer_agent_strategy_params_cov_heatmap_y_tick_fontsize = 10
+
+    def setup_trainer_agent_strategy_params_cov_lines_fig_params(self):
+        self.trainer_agent_strategy_params_cov_lines_fig_name_prefix = "trainer_agent_strategy_params_cov_lines_"
+        self.trainer_agent_strategy_params_cov_lines_fig_size = (12, 6)
+        self.trainer_agent_strategy_params_cov_lines_fig_axe_area = (0.1, 0.15, 0.8, 0.75)
+        self.trainer_agent_strategy_params_cov_lines_title_fontsize = 16
+        self.trainer_agent_strategy_params_cov_lines_title_pad = 10
+        self.trainer_agent_strategy_params_cov_lines_individual_line_width = 0.2
+        self.trainer_agent_strategy_params_cov_lines_individual_line_alpha = 0.2
+        self.trainer_agent_strategy_params_cov_lines_individual_line_style = '-'
+        self.trainer_agent_strategy_params_cov_lines_average_line_width = 1
+        self.trainer_agent_strategy_params_cov_lines_average_line_style = '-'
+        self.trainer_agent_strategy_params_cov_lines_x_label = "Generation"
+        self.trainer_agent_strategy_params_cov_lines_x_label_fontsize = 15
+        self.trainer_agent_strategy_params_cov_lines_x_labelpad = 10
+        self.trainer_agent_strategy_params_cov_lines_y_label = "Strategy Parameter Value"
+        self.trainer_agent_strategy_params_cov_lines_y_label_fontsize = 15
+        self.trainer_agent_strategy_params_cov_lines_y_labelpad = 10
+        self.trainer_agent_strategy_params_cov_lines_x_tick_fontsize = 15
+        self.trainer_agent_strategy_params_cov_lines_y_tick_fontsize = 15
 
     def setup_trainer_agent_var_scatter_fig_params(self):
         self.trainer_agent_var_scatter_fig_name_prefix = "trainer_agent_var_scatter_"
@@ -120,6 +142,52 @@ class Plotter(ABC):
             tick.label1.set_fontsize(self.trainer_agent_strategy_params_cov_heatmap_y_tick_fontsize)
 
         fig_name = self.trainer_agent_strategy_params_cov_heatmap_fig_name_prefix + fig_scenario
+        self.save_fig(figure, fig_name)
+
+    def trainer_agent_strategy_params_cov_lines(self,
+                                                strategy_params_agent_generation_matrix_dict: Dict[str, np.ndarray],
+                                                fig_scenario: str,
+                                                strategy_params_legend_dict: dict = None):
+
+        figure = plt.figure(figsize=self.trainer_agent_strategy_params_cov_lines_fig_size,
+                            dpi=self.fig_dpi, frameon=False)
+        ax = figure.add_axes(self.trainer_agent_strategy_params_cov_lines_fig_axe_area)
+
+        color_counter = 0
+        for strategy_param, agent_generation_matrix in strategy_params_agent_generation_matrix_dict.items():
+            # for agent_id in range(0, agent_generation_matrix.shape[0]):
+            #     strategy_param_cov = agent_generation_matrix[agent_id]
+            #     ax.plot(generation_list, strategy_param_cov,
+            #             linewidth=self.trainer_agent_strategy_params_cov_lines_individual_line_width,
+            #             linestyle=self.trainer_agent_strategy_params_cov_lines_individual_line_style,
+            #             color=self.colors[color_counter],
+            #             alpha=self.trainer_agent_strategy_params_cov_lines_individual_line_alpha)
+            average_strategy_param_cov = agent_generation_matrix.mean(axis=0)
+            generation_list = list(range(len(average_strategy_param_cov)))
+            ax.plot(generation_list, average_strategy_param_cov,
+                    linewidth=self.trainer_agent_strategy_params_cov_lines_average_line_width,
+                    linestyle=self.trainer_agent_strategy_params_cov_lines_average_line_style,
+                    color=self.colors[color_counter],
+                    label=strategy_params_legend_dict[strategy_param])
+            color_counter += 1
+
+        if len(strategy_params_legend_dict) > 1:
+            figure.legend(fontsize=15, bbox_to_anchor=(0, 1.02, 1, 0.1), bbox_transform=ax.transAxes,
+                          loc='lower left', ncol=3, borderaxespad=0, mode='expand', frameon=True)
+
+        ax.set_xlabel(self.trainer_agent_strategy_params_cov_lines_x_label,
+                      fontsize=self.trainer_agent_strategy_params_cov_lines_x_label_fontsize,
+                      labelpad=self.trainer_agent_strategy_params_cov_lines_x_labelpad)
+        ax.set_ylabel(self.trainer_agent_strategy_params_cov_lines_y_label,
+                      fontsize=self.trainer_agent_strategy_params_cov_lines_y_label_fontsize,
+                      labelpad=self.trainer_agent_strategy_params_cov_lines_y_labelpad)
+
+        for tick in ax.xaxis.get_major_ticks():
+            tick.label1.set_fontsize(self.trainer_agent_strategy_params_cov_lines_x_tick_fontsize)
+        for tick in ax.yaxis.get_major_ticks():
+            tick.label1.set_fontsize(self.trainer_agent_strategy_params_cov_lines_y_tick_fontsize)
+
+        fig_name = self.trainer_agent_strategy_params_cov_lines_fig_name_prefix + fig_scenario
         self.save_fig(figure, fig_name)
 
     def trainer_agent_var_scatter(self,

@@ -7,10 +7,10 @@ from Melodie import Plotter
 
 class AspirationPlotter(Plotter):
 
-    def trainer_env_strategy_shares(self, strategy_share_dict, fig_scenario):
+    def trainer_env_strategy_shares(self, strategy_share_dict, fig_scenario, y_lim=None):
 
         figure = plt.figure(figsize=(12, 6), dpi=self.fig_dpi, frameon=False)
-        ax = figure.add_axes((0.15, 0.15, 0.8, 0.7))
+        ax = figure.add_axes((0.1, 0.15, 0.8, 0.75))
         generation_array = np.array((range(len(strategy_share_dict["exploration"])))) + 0.5
 
         exploration_values = strategy_share_dict["exploration"] * 100
@@ -22,8 +22,7 @@ class AspirationPlotter(Plotter):
 
         figure.legend(fontsize=15, bbox_to_anchor=(0, 1.02, 1, 0.1), bbox_transform=ax.transAxes,
                       loc='lower left', ncol=3, borderaxespad=0, mode='expand', frameon=True)
-        # ax.set_ylim((0, 50)) # historical
-        ax.set_ylim((0, 5))  # social
+        if y_lim != None: ax.set_ylim(y_lim)
         ax.set_xlabel("Generation", fontsize=15, labelpad=10)
         ax.set_ylabel("Technology Search Strategy Share (%)", fontsize=15, labelpad=10)
         ax.grid(True)

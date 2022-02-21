@@ -1,5 +1,6 @@
 
 from typing import Type
+import numpy as np
 
 from Melodie import Environment, AgentList
 from .agent import AspirationAgent
@@ -32,19 +33,17 @@ class AspirationEnvironment(Environment):
         market_strategy = self.market_strategy_choice()(agent_list, self)
         for agent in agent_list:
             market_strategy.calculate_profit(agent)
-        pass
 
     def aspiration_update_process(self, agent_list: 'AgentList[AspirationAgent]') -> None:
+        average_profit = np.array([agent.profit for agent in agent_list]).mean()
         for agent in agent_list:
             aspiration_update_strategy = agent.aspiration_update_strategy_choice()
-            aspiration_update_strategy(agent_list, self).aspiration_update(agent)
-        pass
+            aspiration_update_strategy(average_profit).aspiration_update(agent)
 
     def technology_search_process(self, agent_list: 'AgentList[AspirationAgent]') -> None:
         for agent in agent_list:
             technology_search_strategy = agent.technology_search_strategy_choice()
             technology_search_strategy(agent_list, self).technology_search(agent)
-        pass
 
     def calculate_average_technology(self, agent_list: 'AgentList[AspirationAgent]') -> None:
         sum_tech = 0
