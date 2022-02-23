@@ -4,7 +4,6 @@ sys.path.append("../..")
 from Melodie import Simulator
 from model.scenario import AspirationScenario
 from model.model import AspirationModel
-from model.simulator import AspirationSimulator
 from config import config
 from model.dataframe_loader import AspirationDataFrameLoader
 

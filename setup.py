@@ -26,6 +26,7 @@ except:
 
     def build_ext(_): return print(
         'Cython was not installed. With cython you may get better peformance boost!')
+
 with open('README.md', 'r') as fh:
     long_description = fh.read()
 

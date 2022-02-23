@@ -15,7 +15,7 @@ class AspirationAnalyzer(Analyzer):
         self.env_trainer_result = "env_trainer_result"
         self.env_trainer_result_cov = "env_trainer_result_cov"
 
-    def plot_trainer_agent_strategy_params_convergence(self, trainer_scenario_id, generation_id):
+    def plot_trainer_agent_strategy_params_convergence_heatmap(self, trainer_scenario_id, generation_id):
         strategy_params_list = ["strategy_param_1", "strategy_param_2", "strategy_param_3"]
         strategy_params_ticks = [r"$\alpha_{i, 1}$", r"$\alpha_{i, 2}$", r"$\alpha_{i, 3}$"]
         df = self.read_dataframe(self.agent_trainer_result_cov)
@@ -25,25 +25,51 @@ class AspirationAnalyzer(Analyzer):
                                                             generation_id,
                                                             strategy_params_ticks=strategy_params_ticks)
 
+    def plot_trainer_agent_strategy_params_convergence_lines(self,
+                                                             trainer_scenario_id,
+                                                             trainer_params_scenario_id: int = 0,
+                                                             path_id: int = 0):
+        strategy_params_list = ["strategy_param_1", "strategy_param_2", "strategy_param_3"]
+        strategy_params_legend_dict = {
+            "strategy_param_1": r"$\alpha_{i, 1}$",
+            "strategy_param_2": r"$\alpha_{i, 2}$",
+            "strategy_param_3": r"$\alpha_{i, 3}$"
+        }
+        df = self.read_dataframe(self.agent_trainer_result_cov)
+        self.plot_trainer_agent_strategy_params_cov_lines(strategy_params_list,
+                                                          df,
+                                                          trainer_scenario_id,
+                                                          strategy_params_legend_dict=strategy_params_legend_dict,
+                                                          trainer_params_scenario_id=trainer_params_scenario_id,
+                                                          path_id=path_id)
+
+    def plot_trainer_env_average_net_performance(self, trainer_scenario_id):
+        df = self.read_dataframe(self.env_trainer_result_cov)
+        self.plot_trainer_env_var(
+            "average_account", df,
+            trainer_scenario_id=trainer_scenario_id,
+            y_label="Average Final Net Performance",
+            y_lim=(800, 2600)
+        )
+
     def plot_trainer_env_average_technology(self, trainer_scenario_id):
         df = self.read_dataframe(self.env_trainer_result_cov)
         self.plot_trainer_env_var(
             "average_technology", df,
             trainer_scenario_id=trainer_scenario_id,
             y_label="Average Technology",
-            # y_lim=(0, 50) # historical,
-            y_lim=(0, 10)  # social
+            y_lim=(10, 40)
         )
 
     def plot_trainer_agent_s1s2_scatter(self, trainer_scenario_id):
-        var_1_name = "strategy_param_1_mean"
-        var_2_name = "strategy_param_2_mean"
+        var_1_name = "exploration_count_mean"
+        var_2_name = "exploitation_count_mean"
         generation_id = 49
         df = self.read_dataframe(self.agent_trainer_result_cov)
         self.plot_trainer_agent_var_scatter(var_1_name, var_2_name,
                                             df, trainer_scenario_id, generation_id,
-                                            var_1_lim=(0, 100), var_2_lim=(0, 100),
-                                            var_1_label="Strategy Parameter 1", var_2_label="Strategy Parameter 2")
+                                            var_1_lim=(0, 25), var_2_lim=(0, 25),
+                                            var_1_label="Exploration Count", var_2_label="Exploitation Count")
 
     def plot_trainer_env_strategy_shares(self, trainer_scenario_id):
         df = self.read_dataframe(self.env_trainer_result_cov)
@@ -54,8 +80,12 @@ class AspirationAnalyzer(Analyzer):
         strategy_share_dict = {"exploration": df_filtered["exploration_accumulated_share_mean"].to_numpy(),
                                "exploitation": df_filtered["exploitation_accumulated_share_mean"].to_numpy(),
                                "imitation": df_filtered["imitation_accumulated_share_mean"].to_numpy()}
-        fig_scenario = "_TS" + str(trainer_scenario_id) + "TPS0P0_"
-        self.plotter.trainer_env_strategy_shares(strategy_share_dict, fig_scenario)
+        fig_scenario = "TS" + str(trainer_scenario_id) + "TPS0P0"
+        self.plotter.trainer_env_strategy_shares(
+            strategy_share_dict,
+            fig_scenario,
+            y_lim=(0, 50)
+        )
 
     def plot_trainer_env_var_strategy_cost_heatmap(self, env_var_name):
         df_scenario = self.read_dataframe(self.trainer_scenarios)
@@ -121,34 +151,32 @@ class AspirationAnalyzer(Analyzer):
         self.conn.write_dataframe(result_table_name, result_df_to_save, if_exists='replace')
 
     def run(self):
-        # self.plot_trainer_agent_strategy_params_convergence(0, 0)
-        # self.plot_trainer_agent_strategy_params_convergence(0, 49)
-        # self.plot_trainer_agent_s1s2_scatter(0)
-        # self.plot_trainer_env_average_technology(0)
-        # self.plot_trainer_env_strategy_shares(0)
+
+        """
+        Plot for individual scenarios
+        """
+        scenario_list = [0, 125]
+        for scenario_id in scenario_list:
+
+            # --- convergence
+            # self.plot_trainer_agent_strategy_params_convergence_heatmap(scenario_id, 0)
+            # self.plot_trainer_agent_strategy_params_convergence_heatmap(scenario_id, 49)
+            # self.plot_trainer_agent_strategy_params_convergence_lines(scenario_id)
+
+            # --- evolution
+            # self.plot_trainer_env_strategy_shares(scenario_id)
+            # self.plot_trainer_env_average_net_performance(scenario_id)
+            # self.plot_trainer_env_average_technology(scenario_id)
+            # self.plot_trainer_agent_s1s2_scatter(scenario_id)
+
+            pass
+
+        """
+        Plot for multiple scenarios
+        """
         # self.plot_trainer_env_var_strategy_cost_heatmap("average_technology_mean")
-        self.plot_trainer_env_var_strategy_cost_heatmap("average_account_mean")
+        # self.plot_trainer_env_var_strategy_cost_heatmap("average_account_mean")
         # self.table_trainer_env_strategy_share_strategy_cost()
-
-
-
-        # exploration, exploitation, imitation costs
-        special_scenarios = [
-            0,  # 2, 2, 2, historical
-            # 4, # 10, 2, 2, historical
-            # 20, # 2, 10, 2, historical
-            # 100,  # 2, 2, 10, historical
-            # 124,  # 10, 10, 10, historical
-            # 125,  # 2, 2, 2, social
-            # 129,  # 10, 2, 2, social
-            # 145, # 2, 10, 2, social
-            # 225,  # 2, 2, 10, social
-            # 249,  # 10, 10, 10, social
-        ]
-
-        # for scenario_id in special_scenarios:
-        #     self.plot_trainer_env_average_technology(scenario_id)
-        #     self.plot_trainer_env_strategy_shares(scenario_id)
 
 
 

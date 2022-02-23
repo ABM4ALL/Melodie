@@ -10,7 +10,7 @@ from Melodie.algorithms import GeneticAlgorithmTrainer, SearchingAlgorithm
 from .simulator import BaseModellingManager
 from .dataframe_loader import DataFrameLoader
 
-logger = logging.getLogger(__file__)
+logger = logging.getLogger(__name__)
 
 
 class Trainer(BaseModellingManager):
@@ -83,7 +83,7 @@ class Trainer(BaseModellingManager):
                 self.current_algorithm_meta['trainer_params_scenario_id'] = trainer_scenario.id
                 for path_id in range(trainer_scenario.number_of_path):
                     self.current_algorithm_meta['path_id'] = path_id
-
+                    logger.info(f"trainer_scenario_id = {scenario.id}, path_id = {path_id}")
                     self.run_once(scenario, trainer_scenario)
 
     def run_once(self, scenario, trainer_scenario: Union[GATrainerParams]):
