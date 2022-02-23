@@ -25,6 +25,21 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 
+cdef class SeqIter:
+    cdef int _i
+    cdef list _seq
+
+    def __init__(self, seq):
+        self._seq = seq
+        self._i = 0
+
+    def __next__(self):
+        if self._i >= len(self._seq):
+            raise StopIteration
+        next_item = self._seq[self._i]
+        self._i += 1
+        return next_item
+
 # class BaseAgentContainer(Generic[AgentGeneric]):
 cdef class BaseAgentContainer():
     """
@@ -82,15 +97,15 @@ cdef class AgentList(BaseAgentContainer, Sequence):
 
     def __iter__(self):
         self._iter_index = 0
-        return self
+        return SeqIter(self.agents)
 
-    def __next__(self) -> AgentGeneric:
-        if self._iter_index < len(self.agents):
-            elem = self.agents[self._iter_index]
-            self._iter_index += 1
-            return elem
-        else:
-            raise StopIteration
+#    def __next__(self) -> AgentGeneric:
+#        if self._iter_index < len(self.agents):
+#            elem = self.agents[self._iter_index]
+#            self._iter_index += 1
+#            return elem
+#        else:
+#            raise StopIteration
 
     def init_agents(self) -> List[AgentGeneric]:
         """
