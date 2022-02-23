@@ -1,3 +1,4 @@
+from operator import le
 import random
 
 import pandas as pd
@@ -58,7 +59,6 @@ def test_properties():
     al.set_properties(df)
     for agent in al:
         assert agent.a == (df[df['id'] == agent.id]['a'].item())
-    print([a.id for a in al])
 
 
 def test_add_del_agents():
@@ -71,6 +71,20 @@ def test_add_del_agents():
     assert len(al) == 20
     for agent in al:
         assert al.get_agent(agent.id).id == agent.id
+
+
+def test_agent_list_iteration():
+    n = 20
+    al = AgentList(TestAgent, n, model)
+    times = 0
+    for agent in al:
+        l = [a.id for a in al]
+        print(l)
+        assert len(l)==len(al)
+        times+=1
+    assert times==len(al)
+
+
 
 
 def test_properties_with_scenario():
@@ -87,17 +101,18 @@ def test_properties_with_scenario():
     l = [j for j in range(n)]
     random.shuffle(l)
     df = pd.DataFrame([
-                          {'id': i, "scenario_id": 0, "a": random.randint(-100, 100)} for i in l
-                      ] + [
-                          {'id': i, "scenario_id": model.scenario.id,
-                           "a": random.randint(-100, 100)} for i in l
-                      ]
-                      )
+        {'id': i, "scenario_id": 0, "a": random.randint(-100, 100)} for i in l
+    ] + [
+        {'id': i, "scenario_id": model.scenario.id,
+         "a": random.randint(-100, 100)} for i in l
+    ]
+    )
     al.set_properties(df)
     assert len(al) == n
     df_scenario = df.query(f"scenario_id == {model.scenario.id}")
     for agent in al:
-        assert agent.a == (df_scenario[df_scenario['id'] == agent.id]['a'].item())
+        assert agent.a == (
+            df_scenario[df_scenario['id'] == agent.id]['a'].item())
 
     assert al.new_id() == 10
     print([a.id for a in al])
