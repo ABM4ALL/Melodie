@@ -43,34 +43,6 @@ class AspirationAnalyzer(Analyzer):
                                                           trainer_params_scenario_id=trainer_params_scenario_id,
                                                           path_id=path_id)
 
-    def plot_trainer_env_average_net_performance(self, trainer_scenario_id):
-        df = self.read_dataframe(self.env_trainer_result_cov)
-        self.plot_trainer_env_var(
-            "average_account", df,
-            trainer_scenario_id=trainer_scenario_id,
-            y_label="Average Final Net Performance",
-            y_lim=(800, 2600)
-        )
-
-    def plot_trainer_env_average_technology(self, trainer_scenario_id):
-        df = self.read_dataframe(self.env_trainer_result_cov)
-        self.plot_trainer_env_var(
-            "average_technology", df,
-            trainer_scenario_id=trainer_scenario_id,
-            y_label="Average Technology",
-            y_lim=(10, 40)
-        )
-
-    def plot_trainer_agent_s1s2_scatter(self, trainer_scenario_id):
-        var_1_name = "exploration_count_mean"
-        var_2_name = "exploitation_count_mean"
-        generation_id = 49
-        df = self.read_dataframe(self.agent_trainer_result_cov)
-        self.plot_trainer_agent_var_scatter(var_1_name, var_2_name,
-                                            df, trainer_scenario_id, generation_id,
-                                            var_1_lim=(0, 25), var_2_lim=(0, 25),
-                                            var_1_label="Exploration Count", var_2_label="Exploitation Count")
-
     def plot_trainer_env_strategy_shares(self, trainer_scenario_id):
         df = self.read_dataframe(self.env_trainer_result_cov)
         filter = {"trainer_scenario_id": trainer_scenario_id,
@@ -84,8 +56,40 @@ class AspirationAnalyzer(Analyzer):
         self.plotter.trainer_env_strategy_shares(
             strategy_share_dict,
             fig_scenario,
-            y_lim=(0, 50)
+            y_lim=(0, 70)
         )
+
+    def plot_trainer_env_average_net_performance(self, trainer_scenario_id):
+        df = self.read_dataframe(self.env_trainer_result_cov)
+        self.plot_trainer_env_var(
+            "average_account", df,
+            trainer_scenario_id=trainer_scenario_id,
+            y_label="Average Final Net Performance",
+            # y_lim=(800, 2600)，
+            # y_lim=(-500, 2500)
+            y_lim=(500, 4000)
+        )
+
+    def plot_trainer_env_average_technology(self, trainer_scenario_id):
+        df = self.read_dataframe(self.env_trainer_result_cov)
+        self.plot_trainer_env_var(
+            "average_technology", df,
+            trainer_scenario_id=trainer_scenario_id,
+            y_label="Average Final Technology",
+            # y_lim=(10, 40)，
+            # y_lim=(5, 40)
+            y_lim=(5, 60)
+        )
+
+    def plot_trainer_agent_s1s2_scatter(self, trainer_scenario_id):
+        var_1_name = "exploration_count_mean"
+        var_2_name = "exploitation_count_mean"
+        generation_id = 49
+        df = self.read_dataframe(self.agent_trainer_result_cov)
+        self.plot_trainer_agent_var_scatter(var_1_name, var_2_name,
+                                            df, trainer_scenario_id, generation_id,
+                                            var_1_lim=(0, 25), var_2_lim=(0, 25),
+                                            var_1_label="Exploration Count", var_2_label="Exploitation Count")
 
     def plot_trainer_env_var_strategy_cost_heatmap(self, env_var_name):
         df_scenario = self.read_dataframe(self.trainer_scenarios)
@@ -107,12 +111,22 @@ class AspirationAnalyzer(Analyzer):
                                  "generation_id": 49,
                                  "path_id": 0}
                 result_filtered = self.filter_dataframe(df_result, result_filter)
-                heat_matrix[cost_exploration_id][cost_imitation_id] = result_filtered.iloc[0][env_var_name]
+                heat_matrix[cost_exploration_id][cost_imitation_id] = round(result_filtered.iloc[0][env_var_name], 0)
         fig_scenario = env_var_name + "_TS_TPS0P0G49"
-        self.plotter.trainer_env_var_strategy_cost_heatmap(heat_matrix,
-                                                           fig_scenario,
-                                                           imitation_cost_ticks=cost_imitation_list,
-                                                           exploration_cost_ticks=cost_exploration_list)
+        # account
+        # v_min = 900
+        # v_max = 1700
+        # technology
+        v_min = 20
+        v_max = 30
+        self.plotter.trainer_env_var_strategy_cost_heatmap(
+            heat_matrix,
+            fig_scenario,
+            imitation_cost_ticks=cost_imitation_list,
+            exploration_cost_ticks=cost_exploration_list,
+            v_min=v_min,
+            v_max=v_max
+        )
 
     def table_trainer_env_strategy_share_strategy_cost(self):
         df_scenario = self.read_dataframe(self.trainer_scenarios)
@@ -155,18 +169,22 @@ class AspirationAnalyzer(Analyzer):
         """
         Plot for individual scenarios
         """
-        scenario_list = [0, 125]
+        # scenario_list = [0, 125]
+        # scenario_list = [250, 251, 252, 253, 254, 255]
+        scenario_list = list(range(256, 276))
         for scenario_id in scenario_list:
 
             # --- convergence
             # self.plot_trainer_agent_strategy_params_convergence_heatmap(scenario_id, 0)
             # self.plot_trainer_agent_strategy_params_convergence_heatmap(scenario_id, 49)
-            # self.plot_trainer_agent_strategy_params_convergence_lines(scenario_id)
 
             # --- evolution
             # self.plot_trainer_env_strategy_shares(scenario_id)
-            # self.plot_trainer_env_average_net_performance(scenario_id)
-            # self.plot_trainer_env_average_technology(scenario_id)
+            self.plot_trainer_env_average_net_performance(scenario_id)
+            self.plot_trainer_env_average_technology(scenario_id)
+
+            # --- other
+            # self.plot_trainer_agent_strategy_params_convergence_lines(scenario_id)
             # self.plot_trainer_agent_s1s2_scatter(scenario_id)
 
             pass
@@ -174,8 +192,8 @@ class AspirationAnalyzer(Analyzer):
         """
         Plot for multiple scenarios
         """
-        # self.plot_trainer_env_var_strategy_cost_heatmap("average_technology_mean")
         # self.plot_trainer_env_var_strategy_cost_heatmap("average_account_mean")
+        # self.plot_trainer_env_var_strategy_cost_heatmap("average_technology_mean")
         # self.table_trainer_env_strategy_share_strategy_cost()
 
 

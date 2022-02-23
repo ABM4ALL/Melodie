@@ -150,7 +150,7 @@ class Analyzer(ABC):
             df_filtered_path_id = df_filtered.loc[df_filtered["path_id"] == path_id]
             var_value_dict[key] = [df_filtered_path_id[var_mean_name].to_numpy(),
                                    df_filtered_path_id[var_cov_name].to_numpy()]
-        fig_scenario = "TS" + str(trainer_scenario_id) + "TPS" + str(trainer_params_scenario_id) + "_"
+        fig_scenario = "_TS" + str(trainer_scenario_id) + "TPS" + str(trainer_params_scenario_id)
         self.plotter.trainer_env_var(var_name, var_value_dict, fig_scenario,
                                      fig_title=fig_title, y_label=y_label, y_lim=y_lim)
 

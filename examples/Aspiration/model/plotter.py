@@ -40,14 +40,21 @@ class AspirationPlotter(Plotter):
                                               env_var_strategy_cost_matrix: np.ndarray,
                                               fig_name: str,
                                               imitation_cost_ticks: list,
-                                              exploration_cost_ticks: list):
+                                              exploration_cost_ticks: list,
+                                              v_min: float = None,
+                                              v_max: float = None):
 
         figure = plt.figure(figsize=(6, 4.5),
                             dpi=self.fig_dpi, frameon=False)
         ax = figure.add_axes((0.15, 0.15, 0.8, 0.8))
 
-        ax = sns.heatmap(env_var_strategy_cost_matrix, annot=True,
-                         xticklabels=imitation_cost_ticks, yticklabels=exploration_cost_ticks)
+        if v_min == None and v_max == None:
+            ax = sns.heatmap(env_var_strategy_cost_matrix, annot=True, fmt="g", linewidths=.5,
+                             xticklabels=imitation_cost_ticks, yticklabels=exploration_cost_ticks)
+        else:
+            ax = sns.heatmap(env_var_strategy_cost_matrix, annot=True, fmt="g", linewidths=.5,
+                             xticklabels=imitation_cost_ticks, yticklabels=exploration_cost_ticks,
+                             vmin=v_min, vmax=v_max)
 
         ax.set_xlabel("Imitation Cost",
                       fontsize=15,

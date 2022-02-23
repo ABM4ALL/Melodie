@@ -47,9 +47,9 @@ class AspirationDataFrameLoader(DataFrameLoader):
                         'aspiration_update_strategy': scenario.aspiration_update_strategy,
                         'historical_aspiration_update_param': scenario.historical_aspiration_update_param,
                         'social_aspiration_update_param': scenario.social_aspiration_update_param,
-                        'strategy_param_1': 100,
-                        'strategy_param_2': 100,
-                        'strategy_param_3': 50}
+                        'strategy_param_1': np.random.uniform(0, 100),
+                        'strategy_param_2': np.random.uniform(0, 100),
+                        'strategy_param_3': np.random.uniform(0, 100)}
 
             g.set_row_generator(generator_func)
             g.set_column_data_types({'id': sqlalchemy.Integer(),

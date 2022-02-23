@@ -278,5 +278,5 @@ class Plotter(ABC):
         for tick in ax.yaxis.get_major_ticks():
             tick.label1.set_fontsize(self.trainer_env_var_y_tick_fontsize)
 
-        fig_name = self.fig_name_prefix_trainer_env + fig_scenario + var_name
+        fig_name = self.fig_name_prefix_trainer_env + var_name + fig_scenario
         self.save_fig(figure, fig_name)

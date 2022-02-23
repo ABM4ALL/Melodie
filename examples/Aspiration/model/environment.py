@@ -1,11 +1,11 @@
 
 from typing import Type
+import random
 import numpy as np
 
 from Melodie import Environment, AgentList
 from .agent import AspirationAgent
 from .scenario import AspirationScenario
-from .market_strategy import MarketStrategy, NonCompetitiveMarketStrategy
 
 
 class AspirationEnvironment(Environment):
@@ -23,27 +23,42 @@ class AspirationEnvironment(Environment):
         for agent in agent_list:
             agent.post_setup()
 
-    def market_strategy_choice(self) -> Type[MarketStrategy]:
-        if self.scenario.market_strategy == 0:
-            return NonCompetitiveMarketStrategy
-        else:
-            pass
-
     def market_process(self, agent_list: 'AgentList[AspirationAgent]') -> None:
-        market_strategy = self.market_strategy_choice()(agent_list, self)
+        mean = self.scenario.market_profit_mean
+        sigma = self.scenario.market_profit_sigma
         for agent in agent_list:
-            market_strategy.calculate_profit(agent)
+            agent.profit = agent.technology + np.random.normal(mean, sigma)
+            agent.account += agent.profit
+            agent.profit_aspiration_difference = agent.profit - agent.aspiration_level
 
     def aspiration_update_process(self, agent_list: 'AgentList[AspirationAgent]') -> None:
-        average_profit = np.array([agent.profit for agent in agent_list]).mean()
+        average_profit = np.array([agent.profit for agent in agent_list]).mean() # --> much be here, cannot be on 40
         for agent in agent_list:
-            aspiration_update_strategy = agent.aspiration_update_strategy_choice()
-            aspiration_update_strategy(average_profit).aspiration_update(agent)
+            if agent.aspiration_update_strategy == 0:
+                agent.aspiration_update_historical_strategy()
+            elif agent.aspiration_update_strategy == 1:
+                # average_profit = np.array([agent.profit for agent in agent_list]).mean() # --> much be above
+                agent.aspiration_update_social_strategy(average_profit)
+            else:
+                pass
 
     def technology_search_process(self, agent_list: 'AgentList[AspirationAgent]') -> None:
+        technology_list = [agent.technology for agent in agent_list] # --> much be here, cannot be on 57
         for agent in agent_list:
-            technology_search_strategy = agent.technology_search_strategy_choice()
-            technology_search_strategy(agent_list, self).technology_search(agent)
+            if agent.profit_aspiration_difference >= 0:
+                agent.technology_search_sleep_strategy()
+            else:
+                rand = np.random.uniform(0, 1)
+                if rand <= agent.prob_exploration:
+                    agent.technology_search_exploration_strategy()
+                elif agent.prob_exploration < rand <= agent.prob_exploration + agent.prob_exploitation:
+                    agent.technology_search_exploitation_strategy()
+                else:
+                    # technology_list = [agent.technology for agent in agent_list] # --> much be above
+                    observation_num = int(len(agent_list) * self.scenario.imitation_share)
+                    observable_technology_list = random.sample(technology_list, observation_num)
+                    technology_search_result = np.array(observable_technology_list).max()
+                    agent.technology_search_imitation_strategy(technology_search_result)
 
     def calculate_average_technology(self, agent_list: 'AgentList[AspirationAgent]') -> None:
         sum_tech = 0
@@ -72,3 +87,5 @@ class AspirationEnvironment(Environment):
         self.exploration_accumulated_share = total_exploration_count / count_sum
         self.exploitation_accumulated_share = total_exploitation_count / count_sum
         self.imitation_accumulated_share = total_imitation_count / count_sum
+
+
