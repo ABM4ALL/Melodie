@@ -127,15 +127,15 @@ class Analyzer(ABC):
                                                var_1_label=var_1_label, var_2_label=var_2_label,
                                                fig_title=fig_title)
 
-    def plot_trainer_env_var(self,
-                             var_name: str,
-                             df: pd.DataFrame,
-                             trainer_scenario_id: int,
-                             trainer_params_scenario_id: int = 0,
-                             path_id: int = None,
-                             fig_title=None,
-                             y_label=None,
-                             y_lim=None):
+    def plot_trainer_env_var_evolution_path(self,
+                                            var_name: str,
+                                            df: pd.DataFrame,
+                                            trainer_scenario_id: int,
+                                            trainer_params_scenario_id: int = 0,
+                                            path_id: int = None,
+                                            fig_title=None,
+                                            y_label=None,
+                                            y_lim=None):
         filter = {"trainer_scenario_id": trainer_scenario_id,
                   "trainer_params_scenario_id": trainer_params_scenario_id}
         if path_id != None: filter["path_id"] = path_id
@@ -151,10 +151,57 @@ class Analyzer(ABC):
             var_value_dict[key] = [df_filtered_path_id[var_mean_name].to_numpy(),
                                    df_filtered_path_id[var_cov_name].to_numpy()]
         fig_scenario = "_TS" + str(trainer_scenario_id) + "TPS" + str(trainer_params_scenario_id)
-        self.plotter.trainer_env_var(var_name, var_value_dict, fig_scenario,
-                                     fig_title=fig_title, y_label=y_label, y_lim=y_lim)
+        self.plotter.trainer_env_var_evolution_path_line(var_name, var_value_dict, fig_scenario,
+                                                         fig_title=fig_title, y_label=y_label, y_lim=y_lim)
 
+    def plot_trainer_env_var_evolution_value_across_scenarios(self,
+                                                              var_name: str,
+                                                              df: pd.DataFrame,
+                                                              trainer_scenario_id_list: list,
+                                                              result_type: str,
+                                                              trainer_params_scenario_id: int = 0,
+                                                              x_label=None,
+                                                              y_label=None,
+                                                              y_lim=None,
+                                                              trainer_scenario_id_xticks=None):
 
+        filter = {"trainer_scenario_id": 0,
+                  "trainer_params_scenario_id": trainer_params_scenario_id}
+        df_filtered = self.filter_dataframe(df, filter)
+        path_id_set = set(df_filtered["path_id"])
+        path_num = len(path_id_set)
+        trainer_scenario_num = len(trainer_scenario_id_list)
+        value_matrix = np.zeros((path_num, trainer_scenario_num))
+
+        for path_counter, path_id in enumerate(path_id_set):
+            for trainer_scenario_counter, trainer_scenario_id in enumerate(trainer_scenario_id_list):
+                filter = {"trainer_scenario_id": trainer_scenario_id,
+                          "trainer_params_scenario_id": trainer_params_scenario_id,
+                          "path_id": path_id}
+                df_filtered = self.filter_dataframe(df, filter)
+                var_mean_name = var_name + "_mean"
+                values = df_filtered[var_mean_name].to_numpy()
+                if result_type == "average":
+                    value_matrix[path_counter][trainer_scenario_counter] = values.mean()
+                elif result_type == "convergence_level":
+                    tail_length = int(len(values) * 0.1)
+                    value_matrix[path_counter][trainer_scenario_counter] = values[-tail_length:-1].mean()
+                else:
+                    print("Result type is not implemented.")
+
+        fig_scenario = "_TS" + str(trainer_scenario_id_list[0]) + "to" + str(trainer_scenario_id_list[-1]) + \
+                       "TPS" + str(trainer_params_scenario_id)
+
+        self.plotter.trainer_env_var_evolution_value_across_scenarios_line(
+            var_name,
+            value_matrix,
+            fig_scenario,
+            trainer_scenario_id_list,
+            x_label=x_label,
+            y_label=y_label,
+            y_lim=y_lim,
+            trainer_scenario_id_xticks=trainer_scenario_id_xticks
+        )
 
 
 

@@ -1,7 +1,7 @@
 
 import numpy as np
 from abc import ABC, abstractmethod
-from typing import Dict
+from typing import Dict, List
 import seaborn as sns
 import matplotlib.pyplot as plt
 
@@ -15,7 +15,8 @@ class Plotter(ABC):
         self.setup_trainer_agent_strategy_params_cov_heatmap_fig_params()
         self.setup_trainer_agent_strategy_params_cov_lines_fig_params()
         self.setup_trainer_agent_var_scatter_fig_params()
-        self.setup_trainer_env_var_fig_params()
+        self.setup_trainer_env_var_evolution_path_fig_params()
+        self.setup_trainer_env_var_evolution_value_across_scenarios_fig_params()
         self.setup_colors()
         self.setup()
 
@@ -44,11 +45,14 @@ class Plotter(ABC):
         self.trainer_agent_strategy_params_cov_lines_fig_axe_area = (0.1, 0.15, 0.8, 0.75)
         self.trainer_agent_strategy_params_cov_lines_title_fontsize = 16
         self.trainer_agent_strategy_params_cov_lines_title_pad = 10
+        self.trainer_agent_strategy_params_cov_lines_individual_line_boolean = False
         self.trainer_agent_strategy_params_cov_lines_individual_line_width = 0.2
         self.trainer_agent_strategy_params_cov_lines_individual_line_alpha = 0.2
         self.trainer_agent_strategy_params_cov_lines_individual_line_style = '-'
         self.trainer_agent_strategy_params_cov_lines_average_line_width = 1
         self.trainer_agent_strategy_params_cov_lines_average_line_style = '-'
+        self.trainer_agent_strategy_params_cov_lines_average_line_std_boolean = True
+        self.trainer_agent_strategy_params_cov_lines_average_line_std_alpha = 0.2
         self.trainer_agent_strategy_params_cov_lines_x_label = "Generation"
         self.trainer_agent_strategy_params_cov_lines_x_label_fontsize = 15
         self.trainer_agent_strategy_params_cov_lines_x_labelpad = 10
@@ -70,25 +74,41 @@ class Plotter(ABC):
         self.trainer_agent_var_scatter_grid = True
         self.trainer_agent_var_scatter_tick_fontsize = 15
 
-    def setup_trainer_env_var_fig_params(self):
-        self.fig_name_prefix_trainer_env = "trainer_env_"
-        self.trainer_env_var_cov_range_width = 1
-        self.trainer_env_var_fig_size = (12, 6)
-        self.trainer_env_var_fig_axe_area = (0.1, 0.15, 0.8, 0.75)
-        self.trainer_env_var_title_fontsize = 16
-        self.trainer_env_var_title_pad = 10
-        self.trainer_env_var_x_label = "Generation"
-        self.trainer_env_var_x_label_fontsize = 15
-        self.trainer_env_var_x_labelpad = 10
-        self.trainer_env_var_y_label_fontsize = 15
-        self.trainer_env_var_y_labelpad = 10
-        self.trainer_env_var_mean_linewidth = 3
-        self.trainer_env_var_mean_linestyle = '-'
-        self.trainer_env_var_cov_alpha = 0.3
-        self.trainer_env_var_x_lim = None
-        self.trainer_env_var_grid = True
-        self.trainer_env_var_x_tick_fontsize = 15
-        self.trainer_env_var_y_tick_fontsize = 15
+    def setup_trainer_env_var_evolution_path_fig_params(self):
+        self.fig_name_prefix_trainer_env_evolution_path = "trainer_env_evolution_path_"
+        self.trainer_env_var_evolution_path_cov_range_width = 1
+        self.trainer_env_var_evolution_path_fig_size = (12, 6)
+        self.trainer_env_var_evolution_path_fig_axe_area = (0.1, 0.15, 0.8, 0.75)
+        self.trainer_env_var_evolution_path_title_fontsize = 16
+        self.trainer_env_var_evolution_path_title_pad = 10
+        self.trainer_env_var_evolution_path_x_label = "Generation"
+        self.trainer_env_var_evolution_path_x_label_fontsize = 15
+        self.trainer_env_var_evolution_path_x_labelpad = 10
+        self.trainer_env_var_evolution_path_y_label_fontsize = 15
+        self.trainer_env_var_evolution_path_y_labelpad = 10
+        self.trainer_env_var_evolution_path_mean_linewidth = 3
+        self.trainer_env_var_evolution_path_mean_linestyle = '-'
+        self.trainer_env_var_evolution_path_cov_alpha = 0.3
+        self.trainer_env_var_evolution_path_x_lim = None
+        self.trainer_env_var_evolution_path_grid = True
+        self.trainer_env_var_evolution_path_x_tick_fontsize = 15
+        self.trainer_env_var_evolution_path_y_tick_fontsize = 15
+
+    def setup_trainer_env_var_evolution_value_across_scenarios_fig_params(self):
+        self.fig_name_prefix_trainer_env_evolution_value_across_scenarios = "trainer_env_evolution_value_across_scenarios_"
+        self.trainer_env_var_evolution_value_across_scenarios_fig_size = (12, 6)
+        self.trainer_env_var_evolution_value_across_scenarios_fig_axe_area = (0.1, 0.15, 0.8, 0.75)
+        self.trainer_env_var_evolution_value_across_scenarios_mean_linewidth = 3
+        self.trainer_env_var_evolution_value_across_scenarios_mean_linestyle = '-'
+        self.trainer_env_var_evolution_value_across_scenarios_std_alpha = 0.2
+        self.trainer_env_var_evolution_value_across_scenarios_x_label = "Scenario"
+        self.trainer_env_var_evolution_value_across_scenarios_x_label_fontsize = 15
+        self.trainer_env_var_evolution_value_across_scenarios_x_labelpad = 10
+        self.trainer_env_var_evolution_value_across_scenarios_y_label_fontsize = 15
+        self.trainer_env_var_evolution_value_across_scenarios_y_labelpad = 10
+        self.trainer_env_var_evolution_value_across_scenarios_grid = True
+        self.trainer_env_var_evolution_value_across_scenarios_x_tick_fontsize = 15
+        self.trainer_env_var_evolution_value_across_scenarios_y_tick_fontsize = 15
 
     def setup_colors(self):
         self.colors = ["tab:orange", "tab:blue", "tab:green", "tab:red", "tab:purple",
@@ -100,11 +120,11 @@ class Plotter(ABC):
     def setup(self):
         pass
 
-    def check_param(self, param, default_value):
-        if param == None:
-            value = default_value
+    def check_if_no_label_use_var_name(self, label, var_name):
+        if label == None:
+            value = var_name
         else:
-            value = param
+            value = label
         return value
 
     def save_fig(self, fig, fig_name):
@@ -155,20 +175,32 @@ class Plotter(ABC):
 
         color_counter = 0
         for strategy_param, agent_generation_matrix in strategy_params_agent_generation_matrix_dict.items():
-            # for agent_id in range(0, agent_generation_matrix.shape[0]):
-            #     strategy_param_cov = agent_generation_matrix[agent_id]
-            #     ax.plot(generation_list, strategy_param_cov,
-            #             linewidth=self.trainer_agent_strategy_params_cov_lines_individual_line_width,
-            #             linestyle=self.trainer_agent_strategy_params_cov_lines_individual_line_style,
-            #             color=self.colors[color_counter],
-            #             alpha=self.trainer_agent_strategy_params_cov_lines_individual_line_alpha)
-            average_strategy_param_cov = agent_generation_matrix.mean(axis=0)
-            generation_list = list(range(len(average_strategy_param_cov)))
-            ax.plot(generation_list, average_strategy_param_cov,
+
+
+            strategy_param_cov_mean = agent_generation_matrix.mean(axis=0)
+            strategy_param_cov_std = agent_generation_matrix.std(axis=0)
+            generation_list = list(range(len(strategy_param_cov_mean)))
+
+            # if self.trainer_agent_strategy_params_cov_lines_individual_line_boolean:
+            #     for agent_id in range(0, agent_generation_matrix.shape[0]):
+            #         strategy_param_cov = agent_generation_matrix[agent_id]
+            #         ax.plot(generation_list, strategy_param_cov,
+            #                 linewidth=self.trainer_agent_strategy_params_cov_lines_individual_line_width,
+            #                 linestyle=self.trainer_agent_strategy_params_cov_lines_individual_line_style,
+            #                 color=self.colors[color_counter],
+            #                 alpha=self.trainer_agent_strategy_params_cov_lines_individual_line_alpha)
+
+            ax.plot(generation_list, strategy_param_cov_mean,
                     linewidth=self.trainer_agent_strategy_params_cov_lines_average_line_width,
                     linestyle=self.trainer_agent_strategy_params_cov_lines_average_line_style,
                     color=self.colors[color_counter],
                     label=strategy_params_legend_dict[strategy_param])
+            if self.trainer_agent_strategy_params_cov_lines_average_line_std_boolean:
+                ax.fill_between(generation_list,
+                                strategy_param_cov_mean - strategy_param_cov_std,
+                                strategy_param_cov_mean + strategy_param_cov_std,
+                                alpha=self.trainer_agent_strategy_params_cov_lines_average_line_std_alpha,
+                                facecolor=self.colors[color_counter])
             color_counter += 1
 
         if len(strategy_params_legend_dict) > 1:
@@ -212,10 +244,10 @@ class Plotter(ABC):
             ax.set_title(fig_title,
                          fontsize=self.trainer_agent_var_scatter_title_fontsize,
                          pad=self.trainer_agent_var_scatter_title_pad)
-        ax.set_xlabel(self.check_param(var_1_label, var_1_name),
+        ax.set_xlabel(self.check_if_no_label_use_var_name(var_1_label, var_1_name),
                       fontsize=self.trainer_agent_var_scatter_var_label_fontsize,
                       labelpad=self.trainer_agent_var_scatter_var_labelpad)
-        ax.set_ylabel(self.check_param(var_2_label, var_2_name),
+        ax.set_ylabel(self.check_if_no_label_use_var_name(var_2_label, var_2_name),
                       fontsize=self.trainer_agent_var_scatter_var_label_fontsize,
                       labelpad=self.trainer_agent_var_scatter_var_labelpad)
 
@@ -229,14 +261,14 @@ class Plotter(ABC):
         for tick in ax.yaxis.get_major_ticks():
             tick.label1.set_fontsize(self.trainer_agent_var_scatter_tick_fontsize)
 
-        fig_name = self.fig_name_prefix_trainer_env + fig_scenario + var_1_name + "_" + var_2_name
+        fig_name = self.fig_name_prefix_trainer_env_evolution_path + fig_scenario + var_1_name + "_" + var_2_name
         self.save_fig(figure, fig_name)
 
-    def trainer_env_var(self, var_name, var_value_dict, fig_scenario,
-                        fig_title=None, y_label=None, y_lim=None):
+    def trainer_env_var_evolution_path_line(self, var_name, var_value_dict, fig_scenario,
+                                            fig_title=None, y_label=None, y_lim=None):
 
-        figure = plt.figure(figsize=self.trainer_env_var_fig_size, dpi=self.fig_dpi, frameon=False)
-        ax = figure.add_axes(self.trainer_env_var_fig_axe_area)
+        figure = plt.figure(figsize=self.trainer_env_var_evolution_path_fig_size, dpi=self.fig_dpi, frameon=False)
+        ax = figure.add_axes(self.trainer_env_var_evolution_path_fig_axe_area)
 
         color_counter = 0
         for key, value in var_value_dict.items():
@@ -245,28 +277,33 @@ class Plotter(ABC):
             path_var_cov = value[1]
             generation_list = list(range(len(path_var_mean)))
             ax.plot(generation_list, path_var_mean,
-                    linewidth=self.trainer_env_var_mean_linewidth,
-                    linestyle=self.trainer_env_var_mean_linestyle,
+                    linewidth=self.trainer_env_var_evolution_path_mean_linewidth,
+                    linestyle=self.trainer_env_var_evolution_path_mean_linestyle,
                     color=self.colors[color_counter],
                     label=path_name)
             ax.fill_between(generation_list,
-                            path_var_mean * (1 - self.trainer_env_var_cov_range_width * path_var_cov),
-                            path_var_mean * (1 + self.trainer_env_var_cov_range_width * path_var_cov),
-                            alpha=self.trainer_env_var_cov_alpha, facecolor=self.colors[color_counter])
+                            path_var_mean * (1 - self.trainer_env_var_evolution_path_cov_range_width * path_var_cov),
+                            path_var_mean * (1 + self.trainer_env_var_evolution_path_cov_range_width * path_var_cov),
+                            alpha=self.trainer_env_var_evolution_path_cov_alpha,
+                            facecolor=self.colors[color_counter])
             color_counter += 1
             if color_counter == len(self.colors):
                 color_counter = np.random.randint(0, len(self.colors))
         if fig_title != None:
-            ax.set_title(fig_title, fontsize=self.trainer_env_var_title_fontsize, pad=self.trainer_env_var_title_pad)
-        ax.set_ylabel(self.check_param(y_label, var_name),
-                      fontsize=self.trainer_env_var_x_label_fontsize,
-                      labelpad=self.trainer_env_var_x_labelpad)
-        ax.set_xlabel(self.trainer_env_var_x_label,
-                      fontsize=self.trainer_env_var_y_label_fontsize,
-                      labelpad=self.trainer_env_var_y_labelpad)
-        if self.trainer_env_var_x_lim != None: ax.set_xlim(self.trainer_env_var_x_lim)
+            ax.set_title(
+                fig_title,
+                fontsize=self.trainer_env_var_evolution_path_title_fontsize,
+                pad=self.trainer_env_var_evolution_path_title_pad
+            )
+        ax.set_ylabel(self.check_if_no_label_use_var_name(y_label, var_name),
+                      fontsize=self.trainer_env_var_evolution_path_x_label_fontsize,
+                      labelpad=self.trainer_env_var_evolution_path_x_labelpad)
+        ax.set_xlabel(self.trainer_env_var_evolution_path_x_label,
+                      fontsize=self.trainer_env_var_evolution_path_y_label_fontsize,
+                      labelpad=self.trainer_env_var_evolution_path_y_labelpad)
+        if self.trainer_env_var_evolution_path_x_lim != None: ax.set_xlim(self.trainer_env_var_evolution_path_x_lim)
         if y_lim != None: ax.set_ylim(y_lim)
-        ax.grid(self.trainer_env_var_grid)
+        ax.grid(self.trainer_env_var_evolution_path_grid)
 
         if len(var_value_dict) > 1:
             figure.legend(fontsize=15, bbox_to_anchor=(0, 1.02, 1, 0.1), bbox_transform=ax.transAxes,
@@ -274,9 +311,88 @@ class Plotter(ABC):
 
         ax.get_yaxis().get_major_formatter().set_useOffset(False)
         for tick in ax.xaxis.get_major_ticks():
-            tick.label1.set_fontsize(self.trainer_env_var_x_tick_fontsize)
+            tick.label1.set_fontsize(self.trainer_env_var_evolution_path_x_tick_fontsize)
         for tick in ax.yaxis.get_major_ticks():
-            tick.label1.set_fontsize(self.trainer_env_var_y_tick_fontsize)
+            tick.label1.set_fontsize(self.trainer_env_var_evolution_path_y_tick_fontsize)
 
-        fig_name = self.fig_name_prefix_trainer_env + var_name + fig_scenario
+        fig_name = self.fig_name_prefix_trainer_env_evolution_path + var_name + fig_scenario
         self.save_fig(figure, fig_name)
+
+    def trainer_env_var_evolution_value_across_scenarios_line(self,
+                                                              var_name: str,
+                                                              value_matrix: np.ndarray,
+                                                              fig_scenario,
+                                                              trainer_scenario_id_list: List[int],
+                                                              x_label=None, y_label=None, y_lim=None,
+                                                              trainer_scenario_id_xticks: List[str] = None):
+
+        figure = plt.figure(
+            figsize=self.trainer_env_var_evolution_value_across_scenarios_fig_size,
+            dpi=self.fig_dpi,
+            frameon=False
+        )
+        ax = figure.add_axes(self.trainer_env_var_evolution_value_across_scenarios_fig_axe_area)
+        value_mean = value_matrix.mean(axis=0)
+        value_std = value_matrix.std(axis=0)
+        generation_list = [i + 1 for i in range(len(value_mean))]
+        ax.plot(generation_list, value_mean,
+                linewidth=self.trainer_env_var_evolution_value_across_scenarios_mean_linewidth,
+                linestyle=self.trainer_env_var_evolution_value_across_scenarios_mean_linestyle,
+                color=self.colors[0])
+        ax.fill_between(generation_list,
+                        value_mean + value_std,
+                        value_mean - value_std,
+                        alpha=self.trainer_env_var_evolution_value_across_scenarios_std_alpha,
+                        facecolor=self.colors[0])
+
+        ax.set_ylabel(self.check_if_no_label_use_var_name(y_label, var_name),
+                      fontsize=self.trainer_env_var_evolution_value_across_scenarios_x_label_fontsize,
+                      labelpad=self.trainer_env_var_evolution_value_across_scenarios_x_labelpad)
+        ax.set_xlabel(self.check_if_no_label_use_var_name(x_label,
+                                                          self.trainer_env_var_evolution_value_across_scenarios_x_label),
+                      fontsize=self.trainer_env_var_evolution_value_across_scenarios_y_label_fontsize,
+                      labelpad=self.trainer_env_var_evolution_value_across_scenarios_y_labelpad)
+
+        if y_lim != None: ax.set_ylim(y_lim)
+        ax.grid(self.trainer_env_var_evolution_value_across_scenarios_grid)
+
+        x_ticks_labels = self.check_if_no_label_use_var_name(trainer_scenario_id_xticks, trainer_scenario_id_list)
+        ax.set_xticks(generation_list, labels=x_ticks_labels)
+
+        ax.get_yaxis().get_major_formatter().set_useOffset(False)
+        for tick in ax.xaxis.get_major_ticks():
+            tick.label1.set_fontsize(self.trainer_env_var_evolution_value_across_scenarios_x_tick_fontsize)
+        for tick in ax.yaxis.get_major_ticks():
+            tick.label1.set_fontsize(self.trainer_env_var_evolution_value_across_scenarios_y_tick_fontsize)
+
+        fig_name = self.fig_name_prefix_trainer_env_evolution_value_across_scenarios + var_name + fig_scenario
+        self.save_fig(figure, fig_name)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
