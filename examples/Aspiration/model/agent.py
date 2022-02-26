@@ -26,6 +26,7 @@ class AspirationAgent(Agent):
         self.exploration_count = 0
         self.exploitation_count = 0
         self.imitation_count = 0
+        self.be_learned_count = 0
 
     def post_setup(self):
         weight_sum = sum([self.strategy_param_1, self.strategy_param_2, self.strategy_param_3])
@@ -58,7 +59,7 @@ class AspirationAgent(Agent):
         self.technology = max(self.technology, technology_search_result)
         self.account -= self.scenario.cost_exploitation
 
-    def technology_search_imitation_strategy(self, technology_search_result: float):
+    def technology_search_imitation_strategy(self, agent_to_learn: 'AspirationAgent', technology_search_result: float):
         self.imitation_count += 1
         rand = np.random.uniform(0, 1)
         if rand <= (1 - self.scenario.imitation_fail_rate):
@@ -66,6 +67,8 @@ class AspirationAgent(Agent):
         else:
             pass
         self.account -= self.scenario.cost_imitation
+        agent_to_learn.account += self.scenario.cost_imitation
+        agent_to_learn.be_learned_count += 1
 
 
 
