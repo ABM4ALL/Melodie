@@ -40,8 +40,8 @@ class Calibrator(BaseModellingManager):
         self.model: Optional[Model] = None
 
         self.current_algorithm_meta = {
-            "learning_scenario_id": 1,
-            "trainer_path_id": 0,
+            "calibrator_scenario_id": 1,
+            "path_id": 0,
             "generation_id": 0
         }
         self.df_loader: Optional['DataFrameLoader'] = None
@@ -75,7 +75,7 @@ class Calibrator(BaseModellingManager):
                 calibrator_scenario = scenario_cls.from_dataframe_record(calibrator_scenario)
                 self.current_algorithm_meta['calibrator_params_scenario_id'] = calibrator_scenario.id
                 for trainer_path_id in range(calibrator_scenario.number_of_path):
-                    self.current_algorithm_meta['trainer_path_id'] = trainer_path_id
+                    self.current_algorithm_meta['path_id'] = trainer_path_id
 
                     self.run_once(scenario, calibrator_scenario)
 
