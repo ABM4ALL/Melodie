@@ -3,7 +3,7 @@ import math
 import sys
 import time
 from abc import ABC
-from typing import Callable, List, Type, Optional, TYPE_CHECKING, Dict, Union
+from typing import Callable, List, Type, Optional, TYPE_CHECKING, Dict, Union, Tuple
 
 import numpy as np
 import random
@@ -359,10 +359,11 @@ class GeneticAlgorithmCalibrator(SearchingAlgorithm):
     def agent_params_convertion(self):
         pass
 
-    def optimize(self, fitness: Callable, scenario):
+    def optimize(self, fitness: Callable[[], Tuple[int, int]], scenario):
         """
 
         :param fitness:
+        :param scenario:
         :return:
         """
         strategy_population = np.random.randint(2,
@@ -370,6 +371,7 @@ class GeneticAlgorithmCalibrator(SearchingAlgorithm):
                                                       self.strategy_param_code_length * self.parameters_num))
         for gen in range(0, self.number_of_generation):
             strategy_fitness = []
+            strategy_distance = []
             parameter_values: List[List[int]] = []
             for i, strategy in enumerate(strategy_population):
                 inner_parameters: List[int] = []
@@ -383,13 +385,15 @@ class GeneticAlgorithmCalibrator(SearchingAlgorithm):
                     )
                     inner_parameters.append(parameters_value[param_index])
                 parameter_values.append(inner_parameters)
-
-                strategy_fitness.append(fitness(parameters_value, scenario, meta={"chromosome_id": i}))
+                fitness_value, distance_value = fitness(parameters_value, scenario, meta={"chromosome_id": i})
+                strategy_fitness.append(fitness_value)
+                strategy_distance.append(distance_value)
                 assert np.isfinite(strategy_fitness).all(), f"Fitness contains infinite value {strategy_fitness}"
             parameter_values_arr = np.array(parameter_values)
-            fitness_mean = np.mean(strategy_fitness)
-            fitness_cov = np.std(strategy_fitness) / np.mean(strategy_fitness)
-
+            # fitness_mean = np.mean(strategy_fitness)
+            # fitness_cov = np.std(strategy_fitness) / np.mean(strategy_fitness)
+            distance_mean = np.mean(strategy_distance)
+            distance_cov = np.std(strategy_distance) / np.mean(strategy_distance)
             env_params_mean = {self.parameter_names[index] + "_mean": float(np.mean(parameter_values_arr[:, index])) for
                                index
                                in range(parameter_values_arr.shape[1])}
@@ -398,10 +402,8 @@ class GeneticAlgorithmCalibrator(SearchingAlgorithm):
                 index in range(parameter_values_arr.shape[1])}
             yield strategy_population, parameter_values, strategy_fitness, {'env_params_mean': env_params_mean,
                                                                             'env_params_cov': env_params_cov,
-                                                                            'fitness_cov': fitness_cov,
-                                                                            'distance_cov': -fitness_cov,
-                                                                            'fitness_mean': fitness_mean,
-                                                                            'distance_mean': -fitness_mean
+                                                                            'distance_cov': distance_cov,
+                                                                            'distance_mean': distance_mean
                                                                             }
 
             strategy_population = population_update(strategy_population, np.array(strategy_fitness),
