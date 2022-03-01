@@ -2,6 +2,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
+from typing import List, Dict
 
 from Melodie import Plotter
 
@@ -40,14 +41,21 @@ class AspirationPlotter(Plotter):
                                               env_var_strategy_cost_matrix: np.ndarray,
                                               fig_name: str,
                                               imitation_cost_ticks: list,
-                                              exploration_cost_ticks: list):
+                                              exploration_cost_ticks: list,
+                                              v_min: float = None,
+                                              v_max: float = None):
 
         figure = plt.figure(figsize=(6, 4.5),
                             dpi=self.fig_dpi, frameon=False)
         ax = figure.add_axes((0.15, 0.15, 0.8, 0.8))
 
-        ax = sns.heatmap(env_var_strategy_cost_matrix, annot=True,
-                         xticklabels=imitation_cost_ticks, yticklabels=exploration_cost_ticks)
+        if v_min == None and v_max == None:
+            ax = sns.heatmap(env_var_strategy_cost_matrix, annot=True, fmt="g", linewidths=.5,
+                             xticklabels=imitation_cost_ticks, yticklabels=exploration_cost_ticks)
+        else:
+            ax = sns.heatmap(env_var_strategy_cost_matrix, annot=True, fmt="g", linewidths=.5,
+                             xticklabels=imitation_cost_ticks, yticklabels=exploration_cost_ticks,
+                             vmin=v_min, vmax=v_max)
 
         ax.set_xlabel("Imitation Cost",
                       fontsize=15,
@@ -66,7 +74,63 @@ class AspirationPlotter(Plotter):
 
         self.save_fig(figure, fig_name)
 
+    def trainer_env_var_evolution_strategy_shares_across_scenarios_line(self,
+                                                                        strategy_name_list: List[str],
+                                                                        strategy_matrix_dict: Dict[str, np.ndarray],
+                                                                        trainer_scenario_id_list: List[int],
+                                                                        fig_name,
+                                                                        x_label=None,
+                                                                        y_lim=None,
+                                                                        trainer_scenario_id_xticks: list = None):
 
+        figure = plt.figure(
+            figsize=self.trainer_env_var_evolution_value_across_scenarios_fig_size,
+            dpi=self.fig_dpi,
+            frameon=False
+        )
+        ax = figure.add_axes(self.trainer_env_var_evolution_value_across_scenarios_fig_axe_area)
+        color_counter = 0
+        for strategy_name in strategy_name_list:
+            value_matrix = strategy_matrix_dict[strategy_name]
+            value_mean = value_matrix.mean(axis=0)
+            value_std = value_matrix.std(axis=0)
+            generation_list = [i + 1 for i in range(len(value_mean))]
+            ax.plot(generation_list, value_mean,
+                    linewidth=self.trainer_env_var_evolution_value_across_scenarios_mean_linewidth,
+                    linestyle=self.trainer_env_var_evolution_value_across_scenarios_mean_linestyle,
+                    # color=self.colors[color_counter],
+                    label=strategy_name)
+            ax.fill_between(generation_list,
+                            value_mean + value_std,
+                            value_mean - value_std,
+                            alpha=self.trainer_env_var_evolution_value_across_scenarios_std_alpha,
+                            # facecolor=self.colors[color_counter],
+                            )
+            color_counter += 1
+
+        figure.legend(fontsize=15, bbox_to_anchor=(0, 1.02, 1, 0.1), bbox_transform=ax.transAxes,
+                      loc='lower left', ncol=3, borderaxespad=0, mode='expand', frameon=True)
+        ax.set_ylabel("Technology Search Strategy Share (%)",
+                      fontsize=self.trainer_env_var_evolution_value_across_scenarios_x_label_fontsize,
+                      labelpad=self.trainer_env_var_evolution_value_across_scenarios_x_labelpad)
+        ax.set_xlabel(self.check_if_no_label_use_var_name(x_label,
+                                                          self.trainer_env_var_evolution_value_across_scenarios_x_label),
+                      fontsize=self.trainer_env_var_evolution_value_across_scenarios_y_label_fontsize,
+                      labelpad=self.trainer_env_var_evolution_value_across_scenarios_y_labelpad)
+
+        if y_lim != None: ax.set_ylim(y_lim)
+        ax.grid(self.trainer_env_var_evolution_value_across_scenarios_grid)
+
+        x_ticks_labels = self.check_if_no_label_use_var_name(trainer_scenario_id_xticks, trainer_scenario_id_list)
+        ax.set_xticks(generation_list, labels=x_ticks_labels)
+
+        ax.get_yaxis().get_major_formatter().set_useOffset(False)
+        for tick in ax.xaxis.get_major_ticks():
+            tick.label1.set_fontsize(self.trainer_env_var_evolution_value_across_scenarios_x_tick_fontsize)
+        for tick in ax.yaxis.get_major_ticks():
+            tick.label1.set_fontsize(self.trainer_env_var_evolution_value_across_scenarios_y_tick_fontsize)
+
+        self.save_fig(figure, fig_name)
 
 
 
