@@ -42,7 +42,7 @@ class AspirationEnvironment(Environment):
                 pass
 
     def technology_search_process(self, agent_list: 'AgentList[AspirationAgent]') -> None:
-        agent_technology_list = [(agent.id, agent.technology) for agent in agent_list]
+        agent_technology_list = [(agent.id, agent.technology, agent.profit) for agent in agent_list]
         for agent in agent_list:
             if agent.profit_aspiration_difference >= 0:
                 agent.technology_search_sleep_strategy()
@@ -59,22 +59,25 @@ class AspirationEnvironment(Environment):
                     observable_technology_list = random.sample(agent_technology_list, observation_num)
                     observable_technology_list_rank = sorted(
                         observable_technology_list,
-                        key=lambda x: x[1],
+                        key=lambda x: x[2],
                         reverse=True
                     )
-                    teacher_id = observable_technology_list_rank[0][0]
-                    teacher_technology = observable_technology_list_rank[0][1]
-                    if agent.id == teacher_id or agent.technology >= teacher_technology:
-                        pass
+
+                    teacher_pos = 0
+                    if observable_technology_list_rank[0][0] == agent.id:
+                        teacher_pos = 1
                     else:
-                        # agent.account -= self.scenario.cost_imitation
-                        # agent_list[teacher_id].account += self.scenario.cost_imitation
-                        agent_list[teacher_id].be_learned_count += 1
-                        rand = np.random.uniform(0, 1)
-                        if rand <= (1 - self.scenario.imitation_fail_rate):
-                            self.technology = teacher_technology
-                        else:
-                            pass
+                        pass
+                    teacher_id = observable_technology_list_rank[teacher_pos][0]
+                    teacher_technology = observable_technology_list_rank[teacher_pos][1]
+                    agent_list[teacher_id].account += self.scenario.cost_imitation
+                    agent_list[teacher_id].be_learned_count += 1
+
+                    rand = np.random.uniform(0, 1)
+                    if rand <= (1 - self.scenario.imitation_fail_rate):
+                        agent.technology = max(agent.technology, teacher_technology)
+                    else:
+                        pass
 
     def calculate_average_technology(self, agent_list: 'AgentList[AspirationAgent]') -> None:
         sum_tech = 0
