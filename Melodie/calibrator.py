@@ -107,8 +107,6 @@ class Calibrator(BaseModellingManager):
 
             calibrator_result_cov = copy.deepcopy(meta['env_params_cov'])
             calibrator_result_cov.update(meta['env_params_mean'])
-            # calibrator_result_cov['fitness_mean'] = meta['fitness_mean']
-            # calibrator_result_cov['fitness_cov'] = meta['fitness_cov']
             calibrator_result_cov['distance_mean'] = meta['distance_mean']
             calibrator_result_cov['distance_cov'] = meta['distance_cov']
 
@@ -135,7 +133,7 @@ class Calibrator(BaseModellingManager):
         assert prop not in self.watched_env_properties
         self.watched_env_properties.append(prop)
 
-    def fitness(self, params, scenario: Union[Type[Scenario], Scenario], **kwargs) -> float:
+    def fitness(self, params, scenario: Union[Type[Scenario], Scenario], **kwargs) -> Tuple[float, float]:
         for i, prop_name in enumerate(self.properties):
             assert scenario.__getattribute__(prop_name) is not None
             scenario.__setattr__(prop_name, params[i])
@@ -164,7 +162,7 @@ class Calibrator(BaseModellingManager):
             write_dataframe('calibrator_result',
                             pd.DataFrame([environment_record_dict]),
                             if_exists="append")
-        return fitness
+        return fitness, distance
 
     @abc.abstractmethod
     def distance(self, environment) -> float:
