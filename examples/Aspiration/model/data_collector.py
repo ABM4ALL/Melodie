@@ -14,6 +14,7 @@ class AspirationDataCollector(DataCollector):
         self.add_agent_property("agent_list", 'exploration_count')
         self.add_agent_property("agent_list", 'exploitation_count')
         self.add_agent_property("agent_list", 'imitation_count')
+        self.add_agent_property("agent_list", 'be_learned_count')
         self.add_agent_property("agent_list", "prob_exploration")
         self.add_agent_property("agent_list", "prob_exploitation")
 

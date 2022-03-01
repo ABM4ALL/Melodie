@@ -32,18 +32,17 @@ class AspirationEnvironment(Environment):
             agent.profit_aspiration_difference = agent.profit - agent.aspiration_level
 
     def aspiration_update_process(self, agent_list: 'AgentList[AspirationAgent]') -> None:
-        average_profit = np.array([agent.profit for agent in agent_list]).mean() # --> much be here, cannot be on 40
+        average_profit = np.array([agent.profit for agent in agent_list]).mean()
         for agent in agent_list:
             if agent.aspiration_update_strategy == 0:
                 agent.aspiration_update_historical_strategy()
             elif agent.aspiration_update_strategy == 1:
-                # average_profit = np.array([agent.profit for agent in agent_list]).mean() # --> much be above
                 agent.aspiration_update_social_strategy(average_profit)
             else:
                 pass
 
     def technology_search_process(self, agent_list: 'AgentList[AspirationAgent]') -> None:
-        technology_list = [agent.technology for agent in agent_list] # --> much be here, cannot be on 57
+        agent_technology_list = [(agent.id, agent.technology) for agent in agent_list]
         for agent in agent_list:
             if agent.profit_aspiration_difference >= 0:
                 agent.technology_search_sleep_strategy()
@@ -54,11 +53,28 @@ class AspirationEnvironment(Environment):
                 elif agent.prob_exploration < rand <= agent.prob_exploration + agent.prob_exploitation:
                     agent.technology_search_exploitation_strategy()
                 else:
-                    # technology_list = [agent.technology for agent in agent_list] # --> much be above
+                    agent.imitation_count += 1
+                    agent.account -= self.scenario.cost_imitation
                     observation_num = int(len(agent_list) * self.scenario.imitation_share)
-                    observable_technology_list = random.sample(technology_list, observation_num)
-                    technology_search_result = np.array(observable_technology_list).max()
-                    agent.technology_search_imitation_strategy(technology_search_result)
+                    observable_technology_list = random.sample(agent_technology_list, observation_num)
+                    observable_technology_list_rank = sorted(
+                        observable_technology_list,
+                        key=lambda x: x[1],
+                        reverse=True
+                    )
+                    teacher_id = observable_technology_list_rank[0][0]
+                    teacher_technology = observable_technology_list_rank[0][1]
+                    if agent.id == teacher_id or agent.technology >= teacher_technology:
+                        pass
+                    else:
+                        # agent.account -= self.scenario.cost_imitation
+                        # agent_list[teacher_id].account += self.scenario.cost_imitation
+                        agent_list[teacher_id].be_learned_count += 1
+                        rand = np.random.uniform(0, 1)
+                        if rand <= (1 - self.scenario.imitation_fail_rate):
+                            self.technology = teacher_technology
+                        else:
+                            pass
 
     def calculate_average_technology(self, agent_list: 'AgentList[AspirationAgent]') -> None:
         sum_tech = 0
