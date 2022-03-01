@@ -1,4 +1,3 @@
-
 import logging
 import math
 import sys
@@ -400,7 +399,10 @@ class GeneticAlgorithmCalibrator(SearchingAlgorithm):
             yield strategy_population, parameter_values, strategy_fitness, {'env_params_mean': env_params_mean,
                                                                             'env_params_cov': env_params_cov,
                                                                             'fitness_cov': fitness_cov,
-                                                                            'fitness_mean': fitness_mean}
+                                                                            'distance_cov': fitness_cov,
+                                                                            'fitness_mean': fitness_mean,
+                                                                            'distance_mean': -fitness_mean
+                                                                            }
 
             strategy_population = population_update(strategy_population, np.array(strategy_fitness),
                                                     self.mutation_prob, self.strategy_population_size)

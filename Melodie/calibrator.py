@@ -107,8 +107,10 @@ class Calibrator(BaseModellingManager):
 
             calibrator_result_cov = copy.deepcopy(meta['env_params_cov'])
             calibrator_result_cov.update(meta['env_params_mean'])
-            calibrator_result_cov['fitness_mean'] = meta['fitness_mean']
-            calibrator_result_cov['fitness_cov'] = meta['fitness_cov']
+            # calibrator_result_cov['fitness_mean'] = meta['fitness_mean']
+            # calibrator_result_cov['fitness_cov'] = meta['fitness_cov']
+            calibrator_result_cov['distance_mean'] = meta['distance_mean']
+            calibrator_result_cov['distance_cov'] = meta['distance_cov']
 
             calibrator_result_cov.update(self.current_algorithm_meta)
             create_db_conn(self.config).write_dataframe('calibrator_result_cov',
@@ -148,15 +150,15 @@ class Calibrator(BaseModellingManager):
         t1 = time.time()
         logger.info(f'Model run, taking {t1 - t0}s')
         env = self.model.environment
-
-        fitness = self.convert_distance_to_fitness(self.distance(env))
+        distance = self.distance(env)
+        fitness = self.convert_distance_to_fitness(distance)
         MelodieExceptions.Assertions.NotNone('fitness', fitness)
         environment_record_dict.update(scenario_properties_dict)
         environment_record_dict['chromosome_id'] = meta['chromosome_id']
         environment_record_dict.update({
             prop: env.__dict__[prop] for prop in self.watched_env_properties
         })
-        environment_record_dict['fitness'] = fitness
+        environment_record_dict['distance'] = distance
 
         create_db_conn(self.config). \
             write_dataframe('calibrator_result',
