@@ -13,6 +13,4 @@ class CovidCalibrator(Calibrator):
         print("infection_rate", environment.accumulated_infection / environment.scenario.agent_num)
         return abs(environment.accumulated_infection / environment.scenario.agent_num - 0.75)
 
-    def convert_distance_to_fitness(self, distance: float):
-        print('fitness', 1 - distance)
-        return 1 - distance
+

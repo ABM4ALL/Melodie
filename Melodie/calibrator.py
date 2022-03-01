@@ -102,7 +102,7 @@ class Calibrator(BaseModellingManager):
 
         for i in range(iterations):
             self.current_algorithm_meta['generation_id'] = i
-            logger.info(f"===================Training step {i + 1}=====================")
+            logger.info(f"===================Calibrating step {i + 1}=====================")
             strategy_population, params, fitness, meta = self.algorithm_instance.__next__()
 
             calibrator_result_cov = copy.deepcopy(meta['env_params_cov'])
@@ -168,6 +168,5 @@ class Calibrator(BaseModellingManager):
     def distance(self, environment) -> float:
         return -1.0
 
-    @abc.abstractmethod
     def convert_distance_to_fitness(self, distance: float):
-        return -1.0
+        return - distance
