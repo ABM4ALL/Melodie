@@ -399,7 +399,7 @@ class GeneticAlgorithmCalibrator(SearchingAlgorithm):
             yield strategy_population, parameter_values, strategy_fitness, {'env_params_mean': env_params_mean,
                                                                             'env_params_cov': env_params_cov,
                                                                             'fitness_cov': fitness_cov,
-                                                                            'distance_cov': fitness_cov,
+                                                                            'distance_cov': -fitness_cov,
                                                                             'fitness_mean': fitness_mean,
                                                                             'distance_mean': -fitness_mean
                                                                             }
