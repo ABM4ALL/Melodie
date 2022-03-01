@@ -158,12 +158,13 @@ class Analyzer(ABC):
                                                               var_name: str,
                                                               df: pd.DataFrame,
                                                               trainer_scenario_id_list: list,
-                                                              result_type: str,
+                                                              result_type: str = "convergence_level",
                                                               trainer_params_scenario_id: int = 0,
                                                               x_label=None,
                                                               y_label=None,
                                                               y_lim=None,
-                                                              trainer_scenario_id_xticks=None):
+                                                              trainer_scenario_id_xticks=None,
+                                                              unit_adjustment: float = 1):
 
         filter = {"trainer_scenario_id": 0,
                   "trainer_params_scenario_id": trainer_params_scenario_id}
@@ -180,7 +181,7 @@ class Analyzer(ABC):
                           "path_id": path_id}
                 df_filtered = self.filter_dataframe(df, filter)
                 var_mean_name = var_name + "_mean"
-                values = df_filtered[var_mean_name].to_numpy()
+                values = df_filtered[var_mean_name].to_numpy() * unit_adjustment
                 if result_type == "average":
                     value_matrix[path_counter][trainer_scenario_counter] = values.mean()
                 elif result_type == "convergence_level":

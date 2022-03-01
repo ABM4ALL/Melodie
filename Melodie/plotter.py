@@ -176,7 +176,6 @@ class Plotter(ABC):
         color_counter = 0
         for strategy_param, agent_generation_matrix in strategy_params_agent_generation_matrix_dict.items():
 
-
             strategy_param_cov_mean = agent_generation_matrix.mean(axis=0)
             strategy_param_cov_std = agent_generation_matrix.std(axis=0)
             generation_list = list(range(len(strategy_param_cov_mean)))
@@ -307,7 +306,7 @@ class Plotter(ABC):
 
         if len(var_value_dict) > 1:
             figure.legend(fontsize=15, bbox_to_anchor=(0, 1.02, 1, 0.1), bbox_transform=ax.transAxes,
-                          loc='lower left', ncol=2, borderaxespad=0, mode='expand', frameon=True)
+                          loc='lower left', ncol=5, borderaxespad=0, mode='expand', frameon=True)
 
         ax.get_yaxis().get_major_formatter().set_useOffset(False)
         for tick in ax.xaxis.get_major_ticks():
