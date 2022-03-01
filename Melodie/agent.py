@@ -19,13 +19,15 @@ class Agent(Element):
 
         Here, "Declare" is to define properties with zero as initial value, such as:
 
-        ```python
-        class NewAgent(Agent)
-            def setup(self):
-                self.int_property = 0
-                self.float_property = 0.0
-                self.str_property = ""
-        ```
+        .. code-block:: python
+            :linenos:
+
+            class NewAgent(Agent)
+                def setup(self):
+                    self.int_property = 0
+                    self.float_property = 0.0
+                    self.str_property = ""
+
 
         It is also fine to define properties with complex data structure such as dict/list/set, but the values in the
         complex data structure is hard to be recorded by the `DataCollector`

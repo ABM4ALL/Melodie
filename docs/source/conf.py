@@ -1,5 +1,15 @@
 import os
+import sys
 
+
+def melodie_dir():
+    root = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
+    directory = root
+    print(directory)
+    return directory
+
+
+sys.path.append(melodie_dir())
 from sphinx.builders.html import StandaloneHTMLBuilder
 
 # -- Project information -----------------------------------------------------
@@ -16,6 +26,12 @@ release = '1.0.0'
 extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.napoleon',
+    'sphinx.ext.doctest',
+    'sphinx.ext.intersphinx',
+    'sphinx.ext.todo',
+    'sphinx.ext.coverage',
+    'sphinx.ext.mathjax',
+
     'sphinx_rtd_theme',
     'recommonmark',
     'sphinxcontrib.mermaid',
@@ -63,6 +79,5 @@ language = 'en'  # language supported
 local_dirs = ['../locales/']
 for dir in local_dirs:
     assert os.path.exists(dir)
-print(os.getcwd())
 gettext_compact = True  # optional.
 gettext_uuid = True  # optional.
