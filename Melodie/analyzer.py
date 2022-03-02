@@ -158,6 +158,7 @@ class Analyzer(ABC):
                                                               var_name: str,
                                                               df: pd.DataFrame,
                                                               trainer_scenario_id_list: list,
+                                                              fig_name: str,
                                                               result_type: str = "convergence_level",
                                                               trainer_params_scenario_id: int = 0,
                                                               x_label=None,
@@ -190,13 +191,10 @@ class Analyzer(ABC):
                 else:
                     print("Result type is not implemented.")
 
-        fig_scenario = "_TS" + str(trainer_scenario_id_list[0]) + "to" + str(trainer_scenario_id_list[-1]) + \
-                       "TPS" + str(trainer_params_scenario_id)
-
         self.plotter.trainer_env_var_evolution_value_across_scenarios_line(
             var_name,
             value_matrix,
-            fig_scenario,
+            fig_name,
             trainer_scenario_id_list,
             x_label=x_label,
             y_label=y_label,

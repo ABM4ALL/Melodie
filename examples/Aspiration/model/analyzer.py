@@ -66,8 +66,8 @@ class AspirationAnalyzer(Analyzer):
             "average_account", df,
             trainer_scenario_id=trainer_scenario_id,
             y_label="Average Final Net Performance",
-            y_lim=(-1000, 1500)
-            # y_lim=(500, 1200)
+            y_lim=(-1000, 2000)
+            # y_lim=(600, 2000)
         )
 
     def plot_trainer_env_average_technology(self, trainer_scenario_id):
@@ -76,15 +76,14 @@ class AspirationAnalyzer(Analyzer):
             "average_technology", df,
             trainer_scenario_id=trainer_scenario_id,
             y_label="Average Final Technology",
-            # y_lim=(10, 40)，
-            # y_lim=(5, 40)
-            y_lim=(0, 20)
+            # y_lim=(10, 40),
+            y_lim=(5, 40)
         )
 
     def plot_trainer_agent_s1s2_scatter(self, trainer_scenario_id):
         var_1_name = "exploration_count_mean"
         var_2_name = "exploitation_count_mean"
-        generation_id = 49
+        generation_id = 29
         df = self.read_dataframe(self.agent_trainer_result_cov)
         self.plot_trainer_agent_var_scatter(var_1_name, var_2_name,
                                             df, trainer_scenario_id, generation_id,
@@ -110,7 +109,7 @@ class AspirationAnalyzer(Analyzer):
                 trainer_scenario_id = df_scenario_filtered.iloc[0]["id"]
                 result_filter = {"trainer_scenario_id": trainer_scenario_id,
                                  "trainer_params_scenario_id": 0,
-                                 "generation_id": 49,
+                                 "generation_id": 29,
                                  "path_id": 0}
                 result_filtered = self.filter_dataframe(df_result, result_filter)
                 env_var_value = result_filtered.iloc[0][env_var_name]
@@ -165,7 +164,7 @@ class AspirationAnalyzer(Analyzer):
                     trainer_scenario_id = df_scenario_filtered.iloc[0]["id"]
                     result_filter = {"trainer_scenario_id": trainer_scenario_id,
                                      "trainer_params_scenario_id": 0,
-                                     "generation_id": 49,
+                                     "generation_id": 29,
                                      "path_id": 0}
                     result_filtered = self.filter_dataframe(df_result, result_filter)
                     exploration_share = result_filtered.iloc[0]["exploration_accumulated_share_mean"]
@@ -240,19 +239,21 @@ class AspirationAnalyzer(Analyzer):
 
 
 
-
+    def read_dataframe(self, df_name: str):
+        df = self.conn.read_dataframe(df_name)
+        return df
 
     def plot_basic(self):
-        # scenario_list = [10, 135] # two base scenarios
-        # scenario_list = [0, 1, 2, 3, 4, 5]  # extreme cases
-        scenario_list = list(range(20))
+        scenario_list = [10, 135] # two base scenarios
+        # scenario_list = list(range(250, 256))  # extreme cases
+        # scenario_list = list(range(0, 30))  # extreme cases
         for scenario_id in scenario_list:
             # --- convergence
-            # self.plot_trainer_agent_strategy_params_convergence_heatmap(scenario_id, 0)
-            # self.plot_trainer_agent_strategy_params_convergence_heatmap(scenario_id, 29)
+            self.plot_trainer_agent_strategy_params_convergence_heatmap(scenario_id, 0)
+            self.plot_trainer_agent_strategy_params_convergence_heatmap(scenario_id, 29)
 
             # --- evolution
-            self.plot_trainer_env_strategy_shares(scenario_id)
+            # self.plot_trainer_env_strategy_shares(scenario_id)
             # self.plot_trainer_env_average_net_performance(scenario_id)
             # self.plot_trainer_env_average_technology(scenario_id)
 
@@ -264,13 +265,13 @@ class AspirationAnalyzer(Analyzer):
         aspiration_update_strategy_id_list = [0, 1]
         params_values_dict = {
             "agent_num": [50, 100, 150, 200, 250],
-            # "sigma_exploration": [0.2, 0.5, 0.8, 1.1, 1.4],
-            "cost_imitation": [2, 4, 6, 8, 10]
+            "sigma_exploration": [0.4, 0.6, 0.8, 1.0, 1.2],
+            # "cost_imitation": [2, 4, 6, 8, 10]
         }
         param_default_dict = {
             # "agent_num": 50,
-            "sigma_exploration": 0.8,
-            # "cost_imitation": 2
+            # "sigma_exploration": 0.8,
+            "cost_imitation": 2
         }
         params_label_dict = {
             "agent_num": "Firm Number",
@@ -298,37 +299,83 @@ class AspirationAnalyzer(Analyzer):
                                               param2_name, param2_values, param2_label,
                                               default_param_name, default_param_value)
 
+
+
+    def get_env_var_evolution_value_across_scenarios(self,
+                                                     var_name: str,
+                                                     df: pd.DataFrame,
+                                                     trainer_scenario_id_list: list,
+                                                     result_type: str = "convergence_level",
+                                                     trainer_params_scenario_id: int = 0,
+                                                     unit_adjustment: float = 1):
+
+        filter = {"trainer_scenario_id": 0,
+                  "trainer_params_scenario_id": trainer_params_scenario_id}
+        df_filtered = self.filter_dataframe(df, filter)
+        path_id_set = set(df_filtered["path_id"])
+        path_num = len(path_id_set)
+        trainer_scenario_num = len(trainer_scenario_id_list)
+        value_matrix = np.zeros((path_num, trainer_scenario_num))
+
+        for path_counter, path_id in enumerate(path_id_set):
+            for trainer_scenario_counter, trainer_scenario_id in enumerate(trainer_scenario_id_list):
+                filter = {"trainer_scenario_id": trainer_scenario_id,
+                          "trainer_params_scenario_id": trainer_params_scenario_id,
+                          "path_id": path_id}
+                df_filtered = self.filter_dataframe(df, filter)
+                var_mean_name = var_name + "_mean"
+                values = df_filtered[var_mean_name].to_numpy() * unit_adjustment
+                if result_type == "average":
+                    value_matrix[path_counter][trainer_scenario_counter] = values.mean()
+                elif result_type == "convergence_level":
+                    tail_length = int(len(values) * 0.1)
+                    value_matrix[path_counter][trainer_scenario_counter] = values[-tail_length:-1].mean()
+                else:
+                    print("Result type is not implemented.")
+        return value_matrix
+
+
+
     def plot_env_var_across_scenarios(self):
-        df = self.read_dataframe(self.env_trainer_result_cov)
 
         scenario_group_1_info = {
+            "var": "firm_num",
             "scenario_list": list(range(0, 10)),
             "x_label": "Firm Number",
-            "x_ticks": [50, 100, 150, 200, 250, 300, 350, 400, 450, 500]
+            "x_ticks": list(range(50, 550, 50))
         }
 
         scenario_group_2_info = {
-            # "scenario_list": list(range(10, 20)),
-            "scenario_list": list(range(0, 20)),
-            "x_label": "Patent Fee ($C_3$)",
-            # "x_ticks": [2, 4, 6, 8, 10, 12, 14, 16, 18, 20]
-            "x_ticks": [2 * i for i in range(1, 21)]
+            "var": "tech_potential",
+            "scenario_list": list(range(10, 20)),
+            "x_label": "Technology Potential ($\sigma _2$)",
+            "x_ticks": [round(0.4 + 0.1 * i, 1) for i in range(0, 10)]
         }
 
         scenario_group_3_info = {
+            "var": "patent_fee",
             "scenario_list": list(range(20, 30)),
-            "x_label": "Technology Potential ($\sigma _2$)",
-            "x_ticks": [0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95, 1, 1.05]
+            "x_label": "Patent Fee ($C_3$)",
+            "x_ticks": list(range(2, 22, 2))
         }
 
-        env_var_name_list = [["average_account", "Average Final Net Performance", (), 1],
-                             ["average_technology", "Average Final Technology", (), 1],
-                             ["sleep_accumulated_share", "Sleep Share (%)", (), 100],
-                             ["exploration_accumulated_share", "Exploration Share (%)", (), 100],
-                             ["exploitation_accumulated_share", "Exploitation Share (%)", (), 100],
-                             ["imitation_accumulated_share", "Imitation Share (%)", (), 100]]
-        # scenario_group_info_list = [scenario_group_1_info, scenario_group_2_info, scenario_group_3_info]
-        scenario_group_info_list = [scenario_group_2_info]
+        env_var_name_list = [[
+                                 "average_account",
+                                 "Average Final Net Performance",
+                                 # (1000, 2600),
+                                 # (0, 10000),
+                                 (900, 1500),
+                                 1
+                             ],
+                             [
+                                 "average_technology",
+                                 "Average Final Technology",
+                                 # (10, 40),
+                                 # (0, 200),
+                                 (10, 26),
+                                 1
+                             ]]
+        scenario_group_info_list = [scenario_group_3_info]
 
         for env_var in env_var_name_list:
             for scenario_group_info in scenario_group_info_list:
@@ -336,24 +383,136 @@ class AspirationAnalyzer(Analyzer):
                 scenario_group_info["y_label"] = env_var[1]
                 scenario_group_info["y_lim"] = env_var[2]
                 scenario_group_info["unit_adjustment"] = env_var[3]
+                matrix_dict = {}
 
-                self.plot_trainer_env_var_evolution_value_across_scenarios(
+                self.config.project_name = "Aspiration_TrainerScenariosHistorical"
+                self.conn = self.create_db_conn(self.config)
+                df = self.read_dataframe(self.env_trainer_result_cov)
+                matrix_dict["historical"] = self.get_env_var_evolution_value_across_scenarios(
                     scenario_group_info["env_var_name"],
                     df,
                     scenario_group_info["scenario_list"],
-                    x_label=scenario_group_info["x_label"],
-                    y_label=scenario_group_info["y_label"],
-                    # y_lim=scenario_group_info["y_lim"],
-                    trainer_scenario_id_xticks=scenario_group_info["x_ticks"],
                     unit_adjustment=scenario_group_info["unit_adjustment"]
                 )
 
+                self.config.project_name = "Aspiration_TrainerScenariosSocial"
+                self.conn = self.create_db_conn(self.config)
+                df = self.read_dataframe(self.env_trainer_result_cov)
+                matrix_dict["social"] = self.get_env_var_evolution_value_across_scenarios(
+                    scenario_group_info["env_var_name"],
+                    df,
+                    scenario_group_info["scenario_list"],
+                    unit_adjustment=scenario_group_info["unit_adjustment"]
+                )
+
+                fig_name = scenario_group_info["var"] + "_" + scenario_group_info["env_var_name"]
+                self.plotter.env_var_result_across_scenarios_two_aspirations(
+                    matrix_dict,
+                    scenario_group_info["y_lim"],
+                    scenario_group_info["y_label"],
+                    scenario_group_info["x_label"],
+                    scenario_group_info["x_ticks"],
+                    fig_name
+                )
+
+
+
+
+    def get_strategy_shares_across_scenarios(self,
+                                             df,
+                                             trainer_scenario_id_list: List[int],
+                                             result_type="convergence_level",
+                                             trainer_params_scenario_id=0):
+
+        filter = {"trainer_scenario_id": 0,
+                  "trainer_params_scenario_id": 0}
+        df_filtered = self.filter_dataframe(df, filter)
+        path_id_set = set(df_filtered["path_id"])
+        path_num = len(path_id_set)
+        trainer_scenario_num = len(trainer_scenario_id_list)
+
+        strategy_name_list = ["exploration", "exploitation", "imitation"]
+        strategy_matrix_dict = {}
+        for strategy_name in strategy_name_list:
+            value_matrix = np.zeros((path_num, trainer_scenario_num))
+            for path_counter, path_id in enumerate(path_id_set):
+                for trainer_scenario_counter, trainer_scenario_id in enumerate(trainer_scenario_id_list):
+                    filter = {"trainer_scenario_id": trainer_scenario_id,
+                              "trainer_params_scenario_id": trainer_params_scenario_id,
+                              "path_id": path_id}
+                    df_filtered = self.filter_dataframe(df, filter)
+                    var_mean_name = strategy_name + "_accumulated_share_mean"
+                    values = df_filtered[var_mean_name].to_numpy()
+                    if result_type == "average":
+                        value_matrix[path_counter][trainer_scenario_counter] = values.mean()
+                    elif result_type == "convergence_level":
+                        tail_length = int(len(values) * 0.1)
+                        value_matrix[path_counter][trainer_scenario_counter] = values[-tail_length:-1].mean()
+                    else:
+                        print("Result type is not implemented.")
+            strategy_matrix_dict[strategy_name] = value_matrix.mean(axis=0)
+        return strategy_matrix_dict
+
+    def plot_strategy_shares_across_scenarios(self):
+
+        scenario_group_1_info = {
+            "var": "firm_num",
+            "scenario_list": list(range(0, 10)),
+            "x_label": "Firm Number",
+            "x_ticks": list(range(50, 550, 50))
+        }
+
+        scenario_group_2_info = {
+            "var": "tech_potential",
+            "scenario_list": list(range(10, 20)),
+            "x_label": "Technology Potential ($\sigma _2$)",
+            "x_ticks": [round(0.4 + 0.1 * i, 1) for i in range(0, 10)]
+        }
+
+        scenario_group_3_info = {
+            "var": "patent_fee",
+            "scenario_list": list(range(20, 30)),
+            "x_label": "Patent Fee ($C_3$)",
+            "x_ticks": list(range(2, 22, 2))
+        }
+
+        scenario_group_info_list = [scenario_group_1_info, scenario_group_2_info, scenario_group_3_info]
+
+        for scenario_group_info in scenario_group_info_list:
+            self.config.project_name = "Aspiration_TrainerScenariosHistorical"
+            self.conn = self.create_db_conn(self.config)
+            df = self.read_dataframe(self.env_trainer_result_cov)
+            strategy_shares_matrix_dict = self.get_strategy_shares_across_scenarios(
+                df,
+                scenario_group_info["scenario_list"]
+            )
+            self.plotter.trainer_env_strategy_shares_across_scenarios(strategy_shares_matrix_dict,
+                                                                      scenario_group_info["var"] + "_historical",
+                                                                      x_ticks=scenario_group_info["x_ticks"],
+                                                                      y_lim=(0, 70))
+
+            self.config.project_name = "Aspiration_TrainerScenariosSocial"
+            self.conn = self.create_db_conn(self.config)
+            df = self.read_dataframe(self.env_trainer_result_cov)
+            strategy_shares_matrix_dict = self.get_strategy_shares_across_scenarios(
+                df,
+                scenario_group_info["scenario_list"]
+            )
+            self.plotter.trainer_env_strategy_shares_across_scenarios(strategy_shares_matrix_dict,
+                                                                      scenario_group_info["var"] + "_social",
+                                                                      x_ticks=scenario_group_info["x_ticks"],
+                                                                      y_lim=(0, 70))
+
+
+
+
     def run(self):
 
-        # self.plot_basic()
+        self.plot_basic()
         # self.plot_env_var_heatmap()
         # self.table_trainer_env_strategy_share_strategy_cost()
-        self.plot_env_var_across_scenarios()
+        # self.plot_env_var_across_scenarios()
+        # self.plot_strategy_shares_across_scenarios()
 
 
 

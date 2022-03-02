@@ -134,9 +134,91 @@ class AspirationPlotter(Plotter):
 
         self.save_fig(figure, fig_name)
 
+    def env_var_result_across_scenarios_two_aspirations(self,
+                                                        matrix_dict,
+                                                        y_lim,
+                                                        y_label,
+                                                        x_label,
+                                                        x_ticks,
+                                                        fig_name):
 
+        figure = plt.figure(
+            figsize=self.trainer_env_var_evolution_value_across_scenarios_fig_size,
+            dpi=self.fig_dpi,
+            frameon=False
+        )
+        ax = figure.add_axes(self.trainer_env_var_evolution_value_across_scenarios_fig_axe_area)
 
+        for aspiration in ["historical", "social"]:
+            value_matrix = matrix_dict[aspiration]
+            value_mean = value_matrix.mean(axis=0)
+            value_std = value_matrix.std(axis=0)
+            generation_list = [i + 1 for i in range(len(value_mean))]
+            ax.plot(generation_list, value_mean,
+                    linewidth=self.trainer_env_var_evolution_value_across_scenarios_mean_linewidth,
+                    linestyle=self.trainer_env_var_evolution_value_across_scenarios_mean_linestyle,
+                    label=aspiration)
+            ax.fill_between(generation_list,
+                            value_mean + value_std,
+                            value_mean - value_std,
+                            alpha=self.trainer_env_var_evolution_value_across_scenarios_std_alpha,
+                            )
 
+        figure.legend(fontsize=15, bbox_to_anchor=(0, 1.02, 1, 0.1), bbox_transform=ax.transAxes,
+                      loc='lower left', ncol=2, borderaxespad=0, mode='expand', frameon=True)
+
+        ax.set_ylabel(y_label,
+                      fontsize=self.trainer_env_var_evolution_value_across_scenarios_x_label_fontsize,
+                      labelpad=self.trainer_env_var_evolution_value_across_scenarios_x_labelpad)
+        ax.set_xlabel(x_label,
+                      fontsize=self.trainer_env_var_evolution_value_across_scenarios_y_label_fontsize,
+                      labelpad=self.trainer_env_var_evolution_value_across_scenarios_y_labelpad)
+
+        if y_lim != None: ax.set_ylim(y_lim)
+        ax.grid(self.trainer_env_var_evolution_value_across_scenarios_grid)
+
+        x_ticks_labels = x_ticks
+        ax.set_xticks(generation_list, labels=x_ticks_labels)
+
+        ax.get_yaxis().get_major_formatter().set_useOffset(False)
+        for tick in ax.xaxis.get_major_ticks():
+            tick.label1.set_fontsize(self.trainer_env_var_evolution_value_across_scenarios_x_tick_fontsize)
+        for tick in ax.yaxis.get_major_ticks():
+            tick.label1.set_fontsize(self.trainer_env_var_evolution_value_across_scenarios_y_tick_fontsize)
+
+        self.save_fig(figure, fig_name)
+
+    def trainer_env_strategy_shares_across_scenarios(self, strategy_share_dict, fig_scenario, x_ticks, y_lim=None):
+
+        figure = plt.figure(figsize=(12, 6), dpi=self.fig_dpi, frameon=False)
+        ax = figure.add_axes((0.1, 0.15, 0.8, 0.75))
+        generation_array = np.array((range(len(strategy_share_dict["exploration"])))) + 0.5
+
+        exploration_values = strategy_share_dict["exploration"] * 100
+        exploitation_values = strategy_share_dict["exploitation"] * 100
+        imitation_values = strategy_share_dict["imitation"] * 100
+        ax.bar(generation_array, exploration_values, width=1, label='exploration')
+        ax.bar(generation_array, exploitation_values, width=1, bottom=exploration_values, label='exploitation')
+        ax.bar(generation_array, imitation_values, width=1, bottom=exploration_values + exploitation_values, label='imitation')
+
+        figure.legend(fontsize=15, bbox_to_anchor=(0, 1.02, 1, 0.1), bbox_transform=ax.transAxes,
+                      loc='lower left', ncol=3, borderaxespad=0, mode='expand', frameon=True)
+        if y_lim != None: ax.set_ylim(y_lim)
+        ax.set_xlabel("Generation", fontsize=15, labelpad=10)
+        ax.set_ylabel("Technology Search Strategy Share (%)", fontsize=15, labelpad=10)
+        ax.grid(True)
+
+        x_ticks_labels = x_ticks
+        ax.set_xticks(generation_array, labels=x_ticks_labels)
+
+        ax.get_yaxis().get_major_formatter().set_useOffset(False)
+        for tick in ax.xaxis.get_major_ticks():
+            tick.label1.set_fontsize(15)
+        for tick in ax.yaxis.get_major_ticks():
+            tick.label1.set_fontsize(15)
+
+        fig_name = fig_scenario + "_strategy_shares"
+        self.save_fig(figure, fig_name)
 
 
 

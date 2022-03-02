@@ -11,6 +11,6 @@ class CovidCalibrator(Calibrator):
 
     def distance(self, environment: CovidEnvironment):
         print("infection_rate", environment.accumulated_infection / environment.scenario.agent_num)
-        return abs(environment.accumulated_infection / environment.scenario.agent_num - 0.75)
+        return (environment.accumulated_infection / environment.scenario.agent_num - 0.75) ** 2
 
 

@@ -35,7 +35,7 @@ class AspirationDataFrameLoader(DataFrameLoader):
                                    "strategy_param_3_max": sqlalchemy.Float()}
 
         self.load_dataframe('simulator_scenarios', 'simulator_scenarios.xlsx', scenario_data_type_dict)
-        self.load_dataframe('trainer_scenarios', 'trainer_scenarios2.xlsx', scenario_data_type_dict)
+        self.load_dataframe('trainer_scenarios', 'trainer_scenarios3.xlsx', scenario_data_type_dict)
         self.load_dataframe('trainer_params_scenarios', 'trainer_params_scenarios.xlsx', scenario_data_type_dict)
 
     def register_generated_dataframes(self):

@@ -320,7 +320,7 @@ class Plotter(ABC):
     def trainer_env_var_evolution_value_across_scenarios_line(self,
                                                               var_name: str,
                                                               value_matrix: np.ndarray,
-                                                              fig_scenario,
+                                                              fig_name,
                                                               trainer_scenario_id_list: List[int],
                                                               x_label=None, y_label=None, y_lim=None,
                                                               trainer_scenario_id_xticks: List[str] = None):
@@ -364,7 +364,7 @@ class Plotter(ABC):
         for tick in ax.yaxis.get_major_ticks():
             tick.label1.set_fontsize(self.trainer_env_var_evolution_value_across_scenarios_y_tick_fontsize)
 
-        fig_name = self.fig_name_prefix_trainer_env_evolution_value_across_scenarios + var_name + fig_scenario
+        # fig_name = self.fig_name_prefix_trainer_env_evolution_value_across_scenarios + fig_name
         self.save_fig(figure, fig_name)
 
 
