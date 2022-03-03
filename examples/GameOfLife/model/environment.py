@@ -1,14 +1,12 @@
 # -*- coding: utf-8 -*-
 __author__ = 'Songmin'
 
-import random
-from typing import TYPE_CHECKING, List, Tuple
+from typing import TYPE_CHECKING
 
 import numpy as np
 
-from Melodie import AgentList, Environment
+from Melodie import Environment
 from Melodie.grid import Grid
-from Melodie.network import Network
 from .scenario import GameOfLifeScenario
 
 if TYPE_CHECKING:

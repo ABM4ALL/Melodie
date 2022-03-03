@@ -7,7 +7,7 @@ import pandas as pd
 
 from . import DB
 from .agent import Agent
-from .agent_list import AgentList, BaseAgentContainer
+from .boost.agent_list import AgentList, BaseAgentContainer
 from .basic import MelodieExceptions
 from .config import Config
 from .data_collector import DataCollector

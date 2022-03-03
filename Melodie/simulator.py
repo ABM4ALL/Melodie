@@ -15,7 +15,7 @@ import Melodie.visualizer
 from . import DB
 from .agent import Agent
 
-from .agent_list import AgentList
+from .boost.agent_list import AgentList
 
 from .table_generator import TableGenerator
 from .basic.exceptions import MelodieExceptions
