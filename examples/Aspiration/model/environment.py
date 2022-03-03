@@ -1,4 +1,3 @@
-
 from typing import Type
 import random
 import numpy as np
@@ -42,7 +41,6 @@ class AspirationEnvironment(Environment):
                 pass
 
     def technology_search_process(self, agent_list: 'AgentList[AspirationAgent]') -> None:
-        agent_technology_list = [(agent.id, agent.technology) for agent in agent_list]
         for agent in agent_list:
             if agent.profit_aspiration_difference >= 0:
                 agent.technology_search_sleep_strategy()
@@ -56,7 +54,9 @@ class AspirationEnvironment(Environment):
                     agent.imitation_count += 1
                     agent.account -= self.scenario.cost_imitation
                     observation_num = int(len(agent_list) * self.scenario.imitation_share)
-                    observable_technology_list = random.sample(agent_technology_list, observation_num)
+                    observable_technology_list = [(agent.id, agent.technology) for agent in
+                                                  agent_list.random_sample(observation_num)]
+                    # observable_technology_list = random.sample(agent_technology_list, observation_num)
                     observable_technology_list_rank = sorted(
                         observable_technology_list,
                         key=lambda x: x[1],
@@ -103,5 +103,3 @@ class AspirationEnvironment(Environment):
         self.exploration_accumulated_share = total_exploration_count / count_sum
         self.exploitation_accumulated_share = total_exploitation_count / count_sum
         self.imitation_accumulated_share = total_imitation_count / count_sum
-
-

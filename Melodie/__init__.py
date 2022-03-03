@@ -17,7 +17,7 @@ from .plotter import Plotter
 from .network import Network, Edge, AgentRelationshipNetwork
 from .grid import Grid, Spot
 from .trainer import Trainer
-
+from .tools import *
 import logging
 
 logging.basicConfig(stream=sys.stderr, level=logging.INFO)
