@@ -17,9 +17,8 @@ try:
                   ["Melodie/boost/grid.pyx"], ),
         Extension("Melodie.boost.fastrand",
                   ["Melodie/boost/fastrand.pyx"], ),
-        Extension("Melodie.boost.cpppacks.adapter",
-                  ["Melodie/boost/cpppacks/adapter.pyx"],
-                  language="c++" )
+        Extension("Melodie.boost.basics",
+                  ["Melodie/boost/basics.pyx"], ),
     ]
 except:
     import traceback

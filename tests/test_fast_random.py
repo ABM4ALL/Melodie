@@ -22,4 +22,4 @@ def test_sample():
             value_dict[value] += 1
     print(value_dict)
     for _, value in value_dict.items():
-        assert 900 < value < 1100
+        assert 800 < value < 1200

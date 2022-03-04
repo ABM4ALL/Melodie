@@ -44,9 +44,9 @@ class Grid:
                 self._spots[y][x].setup()
         self._agent_ids: Dict[str, List[Set[int]]] = {}  # [set() for i in range(width * height)]
 
-        if caching:
-            self.get_neighbors = functools.lru_cache(self.width * self.height)(self.get_neighbors)
-            self._bound_check = functools.lru_cache(self.width * self.height)(self._bound_check)
+        # if caching:
+        #     self.get_neighbors = functools.lru_cache(self.width * self.height)(self.get_neighbors)
+        #     self._bound_check = functools.lru_cache(self.width * self.height)(self._bound_check)
 
     def add_category(self, category_name: str):
         """

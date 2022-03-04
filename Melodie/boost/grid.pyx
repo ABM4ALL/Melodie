@@ -1,4 +1,5 @@
 # cython:language_level=3
+# cython: profile=False
 # -*- coding:utf-8 -*-
 # @Time: 2021/10/3 20:58
 # @Author: Zhanyi Hou
@@ -7,16 +8,17 @@
 
 import functools
 from typing import ClassVar, Set, Dict, List, Tuple
-from .vectorize import vectorize_2d
+from Melodie.boost.vectorize import vectorize_2d
 from Melodie.agent import Agent
 from cpython.ref cimport PyObject  # somewhere at the top
 from cpython cimport PyObject_GetAttr, PyObject_GetAttrString, \
     PyObject_GetItem, PyList_GetItem, PyList_Size, PyObject_SetAttr
 cimport cython
+from libc.math cimport pow
 from libc.stdlib cimport rand, RAND_MAX
 cimport numpy as np
 import numpy as np
-
+import time
 ctypedef np.int64_t DTYPE_t
 ctypedef np.float64_t DTYPE_FLOAT
 
@@ -24,13 +26,45 @@ ctypedef fused DTYPE_FUSED:
     np.int64_t
     np.float64_t
 
-class Spot(Agent):
+@cython.boundscheck(False)
+@cython.wraparound(False)
+cpdef f(object testlist):
+    cdef object[:, :] testarr
+    cdef np.ndarray ar1
+    cdef object testobj
+    cdef long i, length
+    ar1 = np.array(testlist, dtype=object)
+    testarr = ar1
+    print(testarr, ar1)
+    length = len(testlist)
+    t0 = time.time()
+    for i in range(10000_000):
+        for j in range(length):
+            testobj = testlist[j][0]
+    t1 = time.time()
+    print("list",t1-t0)
+
+    t0 = time.time()
+    for i in range(10000_000):
+        for j in range(length):
+            testobj = testarr[j, 0]
+    t1 = time.time()
+    print("arr", t1-t0)
+
+
+    pass
+
+cdef class Spot:
     def __init__(self, spot_id: int, x: int = 0, y: int = 0):
-        super(Spot, self).__init__(spot_id)
+        self.id = spot_id
+        # self.scenario: Optional['Scenario'] = None
+        # self.model: Optional['Model'] = None
         self.x = x
         self.y = y
+        self.scenario = None
+        self.model = None
 
-    def setup(self):
+    cpdef void setup(self):
         pass
 
 cdef class Grid:
@@ -38,14 +72,8 @@ cdef class Grid:
     Grid is a widely-used discrete space for ABM.
     Grid contains many `Spot`s, each `Spot` could contain several agents.
     """
-    cdef int _width
-    cdef int _height
-    cdef bint wrap
-    cdef dict _existed_agents
-    cdef list _spots
-    cdef dict _agent_ids
 
-    def __init__(self, spot_cls: ClassVar[Spot], width: int, height: int, wrap=True, caching=True):
+    def __init__(self, spot_cls: ClassVar[Spot], width, height, wrap=True, caching=True):
         """
 
         :param spot_cls: The class of Spot
@@ -58,18 +86,18 @@ cdef class Grid:
         self._width = width
         self._height = height
         self.wrap = wrap
-        self._existed_agents: Dict[str, Dict[int, Tuple[int, int]]] = {}
+        self._existed_agents = {}
         self._spots = [[spot_cls(self._convert_to_1d(x, y), x, y) for x in range(width)] for y in range(height)]
         for x in range(self._width):
             for y in range(self._height):
                 self._spots[y][x].setup()
-        self._agent_ids: Dict[str, List[Set[int]]] = {}  # [set() for i in range(width * height)]
-
+        self._agent_ids = {}  # [set() for i in range(width * height)]
+        self._neighbors_cache = {}# [None] * self._width * self._height
         #if caching:
         #    self.get_neighbors = functools.lru_cache(self._width * self._height)(self.get_neighbors)
         #    self._bound_check = functools.lru_cache(self._width * self._height)(self._bound_check)
 
-    def add_category(self, category_name: str):
+    cpdef add_category(self, object category_name):
         """
         Add agent category
         :param category_name:
@@ -78,17 +106,25 @@ cdef class Grid:
         self._agent_ids[category_name] = [set() for i in range(self._width * self._height)]
         self._existed_agents[category_name] = {}
 
-    def get_spot(self, x, y) -> "Spot":
+    # @cython.boundscheck(False)
+    # @cython.wraparound(False)
+    cpdef get_spot(self, long x, long y):
         """
         Get a spot at position (x, y)
         :param x:
         :param y:
         :return:
         """
+        cdef list row
         x, y = self._bound_check(x, y)
-        return self._spots[y][x]
+        
+        row = <list>PyList_GetItem(self._spots, <Py_ssize_t> (y))
+        
+        # row = <list>self._spots[y]
+        # return row[x]
+        return <list>PyList_GetItem(row, <Py_ssize_t> (x))
 
-    def get_agent_ids(self, category: str, x: int, y: int) -> Set[int]:
+    cpdef get_agent_ids(self, object category, long x, long y):
         """
         Get all agent of a specific category from the spot at (x, y)
         :param category:
@@ -101,19 +137,23 @@ cdef class Grid:
             raise KeyError(f'Category {category} not registered!')
         return agent_ids
 
-    cdef int _convert_to_1d(self, int x, int y):
+    cdef long _convert_to_1d(self, long x, long y):
         return x * self._height + y
 
-    cdef bint _in_bounds(self, int x, int y):
+    cdef bint _in_bounds(self, long x, long y):
         return (0 <= x < self._width) and (0 <= y <= self._height)
 
-    def _get_category_of_agents(self, category_name: str):
+    cpdef _get_category_of_agents(self, object category_name):
+        """
+        Get category of agents
+        """
         category = self._existed_agents.get(category_name)
         if category is None:
             raise ValueError(f"Category {category_name} is not registered!")
         return category
 
-    cdef (int, int) _bound_check(self, int x, int y):
+    @cython.initializedcheck(False)
+    cdef (long, long) _bound_check(self, long x, long y):
         if self.wrap:
             return self._coords_wrap(x, y)
         if not (0 <= x < self._width):
@@ -123,7 +163,8 @@ cdef class Grid:
         else:
             return x, y
 
-    cdef (int, int) _coords_wrap(self, int x ,int y):
+    # @cython.cdivision(True)
+    cdef (long, long) _coords_wrap(self, long x ,long y):
         """
         Wrap the coordination
         :param x:
@@ -132,15 +173,39 @@ cdef class Grid:
         """
         return x % self._width, y % self._height
 
-    def coords_wrap(self, x, y):
+    cpdef (long, long) coords_wrap(self, long x, long y):
         return self._coords_wrap(x, y)
 
-    cdef list _neighbors(self, int x, int y, int radius, bint moore, bint except_self):
-        cdef list neighbors
-        cdef int dx,dy
+    cdef long _get_neighbors_array_length(self, long radius, bint moore, bint except_self):
+        cdef long length 
+        length = 0
+        if moore:
+            length = (radius * 2 + 1) ** 2
+        else:
+            length = 2 * radius * (radius + 1) + 1
+        if except_self:
+            length -= 1
+        return length
+        
+    cdef long _get_neighbors_key_hash(self, long x, long y, long radius, bint moore, bint except_self):
+        """
+        The key hash is:
+        """
+        cdef long ret
+        ret =  x*2**22 
+        ret += y*2**12
+        ret += radius*2**3
+        ret += (<long>moore)*2 + <long>except_self
+        return ret
 
+    cdef list _neighbors(self, long x, long y, long radius, bint moore, bint except_self):
+        cdef long dx, dy, length, coor_x, coor_y, counter
+        cdef list neighbors
+        
         x, y = self._bound_check(x, y)
-        neighbors = []
+        length = self._get_neighbors_array_length(radius, moore, except_self)
+        neighbors = [None]*length
+        counter = 0
         for dx in range(-radius, radius + 1):
             for dy in range(-radius, radius + 1):
                 if not moore and abs(dx) + abs(dy) > radius:
@@ -149,10 +214,12 @@ cdef class Grid:
                     continue
                 if dx == 0 and dy == 0 and except_self:
                     continue
-                neighbors.append(self._bound_check(x + dx, y + dy))
+                # coor_x, coor_y = self._bound_check(x + dx, y + dy)
+                neighbors[counter] = self._bound_check(x + dx, y + dy)
+                counter += 1
         return neighbors
 
-    def get_neighbors(self, int x, int y, int radius = 1, bint moore=True, bint except_self=True) -> List[Tuple[int, int]]:
+    cpdef list get_neighbors(self, long x, long y, long radius = 1, bint moore=True, bint except_self=True):
         """
         Get the neighbors of some spot.
         :param x:
@@ -160,11 +227,28 @@ cdef class Grid:
         :param radius:
         :param moore:
         :param except_self:
-        :return:
+        :return:  -> List[Tuple[int, int]]
         """
-        return self._neighbors(x, y, radius, moore, except_self)
+        cdef list neighbors 
+        cdef tuple key
+        # cdef object key
+        key = (x, y, radius, moore, except_self)
+        # key = self._get_neighbors_key_hash(x, y, radius, moore, except_self)
+        if self._neighbors_cache.get(key) is not None:
+            return self._neighbors_cache[key]
+        else:
+            neighbors = self._neighbors(x, y, radius, moore, except_self)
+            self._neighbors_cache[key] = neighbors
+            return neighbors
 
-    def add_agent(self, agent_id: int, category: str, x: int, y: int):
+        # if self._neighbors_cache[self._convert_to_1d(x, y)] is not None:
+        #     return self._neighbors_cache[self._convert_to_1d(x, y)]
+        # else:
+        #     neighbors = self._neighbors(x, y, radius, moore, except_self)
+        #     self._neighbors_cache[self._convert_to_1d(x, y)] = neighbors
+        #     return neighbors
+
+    def add_agent(self, agent_id: long, category: str, x: long, y: long):
         """
         Add agent onto the grid
         :param agent_id:
@@ -186,7 +270,7 @@ cdef class Grid:
             self._agent_ids[category][self._convert_to_1d(x, y)].add(agent_id)
             self._existed_agents[category][agent_id] = (x, y)
 
-    def _remove_agent(self, agent_id: int, category: str, x: int, y: int):
+    def _remove_agent(self, agent_id: long, category: str, x: long, y: long):
         x, y = self._bound_check(x, y)
 
         category_of_agents = self._get_category_of_agents(category)
@@ -204,7 +288,7 @@ cdef class Grid:
             self._agent_ids[category][self._convert_to_1d(x, y)].remove(agent_id)
             self._existed_agents[category].pop(agent_id)
 
-    def remove_agent(self, agent_id: int, category: str):
+    def remove_agent(self, agent_id: long, category: str):
         """
         Remove agent from the grid
         :param agent_id:
@@ -230,14 +314,14 @@ cdef class Grid:
     def rand_move(self, agent_id, category, range_x, range_y):
         source_x, source_y = self.get_agent_pos(agent_id, category)
         self._remove_agent(agent_id, category, source_x, source_y)
-        dx = int((rand()/(RAND_MAX*1.0))*(2*range_x+1)) - range_x
-        dy = int((rand()/(RAND_MAX*1.0))*(2*range_y+1)) - range_y
+        dx = long((rand()/(RAND_MAX*1.0))*(2*range_x+1)) - range_x
+        dy = long((rand()/(RAND_MAX*1.0))*(2*range_y+1)) - range_y
         target_x = source_x+dx
         target_y = source_y+dy
         self.add_agent(agent_id, category, target_x, target_y)
         return target_x, target_y
 
-    def get_agent_pos(self, agent_id: int, category: str) -> Tuple[int, int]:
+    def get_agent_pos(self, agent_id: long, category: str) -> Tuple[int, int]:
         """
         Get the agent position at the grid.
         :param agent_id:
@@ -278,10 +362,16 @@ cdef class Grid:
                 grid_roles[pos_1d, 3] = spot.role
         return grid_roles
 
-    @property
-    def height(self):
+    # @property
+    # def height(self):
+    #     return self._height
+    
+    # @property
+    # def width(self):
+    #     return self._width
+    
+    cpdef long height(self):
         return self._height
     
-    @property
-    def width(self):
+    cpdef long width(self):
         return self._width

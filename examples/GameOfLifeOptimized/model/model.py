@@ -7,14 +7,15 @@ import numpy as np
 
 import Melodie.boost
 from Melodie import Model
-from Melodie.boost.grid import Grid
-from .spot import GameOfLifeSpot
+from Melodie import Grid
+# from .spot import GameOfLifeSpot
+from .environment import GameOfLifeSpot
 from .environment import GameOfLifeEnvironment
 
 
 class GameOfLifeModel(Model):
     def setup(self):
-        self.grid = Grid(GameOfLifeSpot, 100, 100)
+        self.grid = Grid(GameOfLifeSpot, 200, 200)
         with self.define_basic_components():
             self.environment = GameOfLifeEnvironment()
         self.agent_list1: "AgentList[GameOfLifeSpot]" = self.create_agent_container(GameOfLifeSpot, 10)
@@ -40,7 +41,7 @@ class GameOfLifeModel(Model):
     def run(self):
         # self.visualizer.parse(self.grid)
         # self.visualizer.start()
-
+        self.scenario.periods = 100
         for i in range(self.scenario.periods):
             t0: float = time.time()
             self.environment.step(self.grid)
@@ -54,7 +55,7 @@ class GameOfLifeModel(Model):
 
             print(f"step {i}, {t1 - t0}s for step and {t2 - t1}s for conversion.")
 
-        print(self.grid._spots)
+        # print(self.grid._spots)
 
     # def run_with_matplotlib(self):
     #     import matplotlib.pyplot as plt

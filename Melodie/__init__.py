@@ -15,7 +15,7 @@ from .visualizer import Visualizer
 from .analyzer import Analyzer
 from .plotter import Plotter
 from .network import Network, Edge, AgentRelationshipNetwork
-from .grid import Grid, Spot
+# from .grid import Grid, Spot
 from .trainer import Trainer
 from .tools import *
 import logging
@@ -24,4 +24,4 @@ logging.basicConfig(stream=sys.stderr, level=logging.INFO)
 
 from .boost.agent_list import BaseAgentContainer, AgentList
 
-from .boost.grid import Grid
+from .boost.grid import Grid, Spot
