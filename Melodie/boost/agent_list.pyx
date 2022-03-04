@@ -16,7 +16,7 @@ from typing import TYPE_CHECKING, ClassVar, List, Dict, Union, Set, Optional, Ty
 from Melodie.basic import IndexedAgentList, MelodieExceptions, MelodieException, binary_search
 from Melodie.agent import Agent
 from collections.abc import Sequence
-
+from .fastrand import sample
 AgentGeneric = TypeVar('AgentGeneric')
 if TYPE_CHECKING:
     from .model import Model
@@ -26,6 +26,9 @@ logger = logging.getLogger(__name__)
 
 
 cdef class SeqIter:
+    """
+    The iterator to deal with for-loops in AgentList or other agent containers
+    """
     cdef int _i
     cdef list _seq
 
@@ -99,14 +102,6 @@ cdef class AgentList(BaseAgentContainer, Sequence):
         self._iter_index = 0
         return SeqIter(self.agents)
 
-#    def __next__(self) -> AgentGeneric:
-#        if self._iter_index < len(self.agents):
-#            elem = self.agents[self._iter_index]
-#            self._iter_index += 1
-#            return elem
-#        else:
-#            raise StopIteration
-
     def init_agents(self) -> List[AgentGeneric]:
         """
         Initialize all agents in the container, and call the `setup()` method
@@ -156,7 +151,8 @@ cdef class AgentList(BaseAgentContainer, Sequence):
         :param sample_num:
         :return:
         """
-        return random.sample(self.agents, sample_num)
+        return sample(self.agents, sample_num)
+        
 
     def remove(self, agent: 'AgentGeneric'):
         """
@@ -172,7 +168,7 @@ cdef class AgentList(BaseAgentContainer, Sequence):
 
     def add(self, agent: 'AgentGeneric' = None, params: Dict = None):
         """
-        Add an agent
+        Add an agent to this AgentList
 
         :param agent:
         :param params:
@@ -279,6 +275,7 @@ cdef class AgentList(BaseAgentContainer, Sequence):
     def all_agent_ids(self) -> List[int]:
         """
         Get id of all agents.
+
         :return:
         """
         return [agent.id for agent in self.agents]

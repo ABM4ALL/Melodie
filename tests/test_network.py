@@ -87,12 +87,12 @@ def network_routine(network):
         print("run with jit takes:", t)
 
 
-def test_network_JIT():
-    if not JIT_AVAILABLE:
-        return
-    from Melodie.boost import JITNetwork
-    network = JITNetwork()
-    network_routine(network)
+# def test_network_JIT():
+#     if not JIT_AVAILABLE:
+#         return
+#     from Melodie.boost import JITNetwork
+#     network = JITNetwork()
+#     network_routine(network)
 
 
 def test_network_noJIT():

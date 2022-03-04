@@ -65,14 +65,14 @@ class GiniEnvironment(Environment):
         B = sum(xi * (N - i) for i, xi in enumerate(x)) / (N * account_sum)
         return 1 + (1 / N) - 2 * B
 
-    def calc_wealth_and_gini(self, AgentList):
+    def calc_wealth_and_gini(self, agent_list: 'AgentList[GiniAgent]'):
         account_list = []
-        for agent in AgentList:
+        for agent in agent_list:
             account_list.append(agent.account)
         self.total_wealth = sum(account_list)
         self.gini = self.calc_gini(account_list)
 
-    def step(self, agent_list: AgentList[GiniAgent]):
+    def step(self, agent_list: 'AgentList[GiniAgent]'):
         self.go_money_produce(agent_list)
         self.go_money_transfer(agent_list)
         self.calc_wealth_and_gini(agent_list)
@@ -119,5 +119,4 @@ config = Config(
 )
 
 simulator = GiniSimulator(config, Scenario, GiniModel)
-
 simulator.run()

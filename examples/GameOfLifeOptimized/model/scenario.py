@@ -9,4 +9,4 @@ from Melodie import Scenario
 
 class GameOfLifeScenario(Scenario):
     def setup(self):
-        self.periods = 10000
+        pass

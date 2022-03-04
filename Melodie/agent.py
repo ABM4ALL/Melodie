@@ -17,16 +17,16 @@ class Agent(Element):
         """
         This is the initialization method, declare properties here.
 
-        Here, "Declare" is to define properties with zero as initial value, such as:
+        Here, "Declare" is to define properties with an initial value, such as:
 
         .. code-block:: python
             :linenos:
 
             class NewAgent(Agent)
                 def setup(self):
-                    self.int_property = 0
-                    self.float_property = 0.0
-                    self.str_property = ""
+                    self.int_property = 0  # int property
+                    self.float_property = 0.0  # float property
+                    self.str_property = ""  # string property
 
 
         It is also fine to define properties with complex data structure such as dict/list/set, but the values in the

@@ -7,7 +7,7 @@ import pandas as pd
 
 from . import DB
 from .agent import Agent
-from .agent_list import AgentList, BaseAgentContainer
+from .boost.agent_list import AgentList, BaseAgentContainer
 from .basic import MelodieExceptions
 from .config import Config
 from .data_collector import DataCollector
@@ -72,7 +72,7 @@ class Model:
         MelodieExceptions.Assertions.IsNone('self.data_collector', self.data_collector)
 
         yield self
-        MelodieExceptions.Assertions.Type('self.environment', self.environment, Environment)
+        # MelodieExceptions.Assertions.Type('self.environment', self.environment, Environment)
         self.environment.model = self
         self.environment.scenario = self.scenario
         self.environment.setup()

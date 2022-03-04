@@ -1,7 +1,6 @@
 import sys
 from .algorithms import GeneticAlgorithmTrainer, GeneticAlgorithmCalibrator, GATrainerParams, GACalibratorParams
 from .agent import Agent
-from .agent_list import BaseAgentContainer, AgentList
 from .config import Config
 from .data_collector import DataCollector
 from .db import DB, create_db_conn
@@ -16,18 +15,13 @@ from .visualizer import Visualizer
 from .analyzer import Analyzer
 from .plotter import Plotter
 from .network import Network, Edge, AgentRelationshipNetwork
-from .grid import Grid, Spot
+# from .grid import Grid, Spot
 from .trainer import Trainer
-
+from .tools import *
 import logging
 
 logging.basicConfig(stream=sys.stderr, level=logging.INFO)
 
+from .boost.agent_list import BaseAgentContainer, AgentList
 
-from .boost.agent_list import AgentList as FastAgentList
-from .boost.grid import Grid as FastGrid
-
-_USE_CYTHON_CLASSES = True
-if _USE_CYTHON_CLASSES:
-    AgentList = FastAgentList
-    Grid = FastGrid
+from .boost.grid import Grid, Spot

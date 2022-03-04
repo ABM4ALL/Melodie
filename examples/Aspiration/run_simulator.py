@@ -1,7 +1,7 @@
 import sys
 
 sys.path.append("../..")
-from Melodie import Simulator
+from Melodie import Simulator, run_profile
 from model.scenario import AspirationScenario
 from model.model import AspirationModel
 from config import config
@@ -13,4 +13,4 @@ if __name__ == "__main__":
                           model_cls=AspirationModel,
                           df_loader_cls=AspirationDataFrameLoader)
 
-    simulator.run()
+    run_profile(simulator.run)

@@ -81,6 +81,12 @@ sphinx-autobuild source build/html
 # click the link appeared in the console to view the documentation website.
 ```
 
+As for auto-generated API Documentation, run this command to update:
+```shell
+python setup.py build_ext -i
+sphinx-build source build/html -E -a
+```
+
 #### Run examples
 
 examples are at the `examples/` folder.

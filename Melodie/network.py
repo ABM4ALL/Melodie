@@ -2,7 +2,7 @@ from typing import Dict, Set, Union, List, Tuple, ClassVar, Callable
 
 import logging
 
-from Melodie import BaseAgentContainer, AgentList
+from .boost.agent_list import BaseAgentContainer, AgentList
 
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)

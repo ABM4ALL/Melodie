@@ -61,7 +61,6 @@ async def handler(ws: WebSocketServerProtocol, path):
     while 1:
         try:
             content = await asyncio.wait_for(ws.recv(), timeout=0.05)
-            print(content)
             rec = json.loads(content)
             cmd = rec['cmd']
             data = rec['data']
@@ -146,7 +145,7 @@ class Visualizer:
         assert chart_name in self.plot_charts.keys()
         for series_name, series_value in series_values.items():
             self.chart_data[chart_name][series_name][current_step] = series_value
-        print(self.chart_data)
+        # print(self.chart_data)
 
     def send_initial_msg(self, ws: WebSocketServerProtocol):
         formatted = self.format()
@@ -203,9 +202,9 @@ class Visualizer:
             json.dumps(
                 {"type": "params", "step": self.current_step, "data": params, "modelState": self.model_state,
                  "status": OK}))
-        print(json.dumps(
-            {"type": "params", "step": self.current_step, "data": params, "modelState": self.model_state, "status": OK},
-            indent=4))
+        # print(json.dumps(
+        #     {"type": "params", "step": self.current_step, "data": params, "modelState": self.model_state, "status": OK},
+        #     indent=4))
 
     def send_current_data(self):
         t0 = time.time()
@@ -375,7 +374,6 @@ class GridVisualizer(Visualizer):
         if isinstance(grid, Grid):
             for x in range(grid.width):
                 for y in range(grid.height):
-                    print(x, y)
                     spot = grid.get_spot(x, y)
                     role = parser(spot)
                     if role < 0:
