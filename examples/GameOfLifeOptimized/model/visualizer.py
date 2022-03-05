@@ -5,9 +5,9 @@
 # @File: run_studio.py
 import random
 
-import numba
-import numpy as np
-from numba import typed
+# import numba
+# import numpy as np
+# from numba import typed
 
 from Melodie.grid import Grid
 from Melodie.visualizer import GridVisualizer

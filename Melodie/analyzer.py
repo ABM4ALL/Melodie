@@ -16,7 +16,6 @@ class Analyzer(ABC):
         self.setup()
         self.conn = self.create_db_conn(config)
 
-    @abstractmethod
     def setup(self):
         pass
 
@@ -43,43 +42,48 @@ class Analyzer(ABC):
         df_filtered = df.loc[(df[list(filter)] == pd.Series(filter)).all(axis=1)]
         return df_filtered
 
-    def plot_trainer_agent_strategy_params_cov_heatmap(self,
-                                                       strategy_params_list: list,
-                                                       df: pd.DataFrame,
-                                                       trainer_scenario_id: int,
-                                                       generation_id: int,
-                                                       trainer_params_scenario_id: int = 0,
-                                                       path_id: int = 0,
-                                                       strategy_params_ticks: list = None):
+    def plot_trainer_agent_strategy_params_convergence_heatmap(self,
+                                                               agent_trainer_result_cov: pd.DataFrame,
+                                                               strategy_params: list,
+                                                               trainer_scenario_id: int,
+                                                               generation_id: int,
+                                                               trainer_params_scenario_id: int = 0,
+                                                               path_id: int = 0,
+                                                               ylim: tuple = None,
+                                                               strategy_params_labels: list = None,
+                                                               fig_suffix: str = None):
+
         filter = {"trainer_scenario_id": trainer_scenario_id,
                   "trainer_params_scenario_id": trainer_params_scenario_id,
                   "path_id": path_id,
                   "generation_id": generation_id}
-        df_filtered = self.filter_dataframe(df, filter)
+        df_filtered = self.filter_dataframe(agent_trainer_result_cov, filter)
         df_filtered = df_filtered.fillna(0)
         agent_num = len(df_filtered)
-        params_num = len(strategy_params_list)
+        params_num = len(strategy_params)
         cov_matrix = np.zeros((params_num, agent_num))
-        for param_id in range(0, len(strategy_params_list)):
-            column_name = strategy_params_list[param_id] + "_cov"
+        for param_id in range(0, len(strategy_params)):
+            column_name = strategy_params[param_id] + "_cov"
             param_cov = df_filtered[column_name].to_numpy()
             cov_matrix[param_id,:] = param_cov
-        fig_scenario = "TS" + str(trainer_scenario_id) + "TPS" + str(trainer_params_scenario_id) + \
-                       "P" + str(path_id) + "G" + str(generation_id)
-        self.plotter.trainer_agent_strategy_params_cov_heatmap(cov_matrix, fig_scenario,
-                                                               strategy_params_ticks=strategy_params_ticks)
+        self.plotter.trainer_agent_strategy_params_convergence_heatmap(cov_matrix,
+                                                                       ylim=ylim,
+                                                                       fig_suffix=fig_suffix,
+                                                                       strategy_params_labels=strategy_params_labels)
 
-    def plot_trainer_agent_strategy_params_cov_lines(self,
-                                                     strategy_params_list: list,
-                                                     df: pd.DataFrame,
-                                                     trainer_scenario_id: int,
-                                                     trainer_params_scenario_id: int = 0,
-                                                     path_id: int = 0,
-                                                     strategy_params_legend_dict: dict = None):
+    def plot_trainer_agent_strategy_params_convergence_lines(self,
+                                                             agent_trainer_result_cov: pd.DataFrame,
+                                                             strategy_params_list: list,
+                                                             trainer_scenario_id: int,
+                                                             trainer_params_scenario_id: int = 0,
+                                                             path_id: int = 0,
+                                                             ylim: tuple = None,
+                                                             strategy_params_labels: list = None,
+                                                             fig_suffix: str = None):
         filter = {"trainer_scenario_id": trainer_scenario_id,
                   "trainer_params_scenario_id": trainer_params_scenario_id,
                   "path_id": path_id}
-        df_filtered = self.filter_dataframe(df, filter)
+        df_filtered = self.filter_dataframe(agent_trainer_result_cov, filter)
         df_filtered = df_filtered.fillna(0)
         generation_num = len(df_filtered.loc[df_filtered["agent_id"] == 0])
         agent_num = len(df_filtered.loc[df_filtered["generation_id"] == 0])
@@ -92,54 +96,26 @@ class Analyzer(ABC):
                 agent_generation_matrix[agent_id,:] = strategy_param_cov
             strategy_params_agent_generation_matrix_dict[strategy_params_list[param_id]] = agent_generation_matrix
 
-        fig_scenario = "TS" + str(trainer_scenario_id) + "TPS" + str(trainer_params_scenario_id) + \
-                       "P" + str(path_id)
-        self.plotter.trainer_agent_strategy_params_cov_lines(strategy_params_agent_generation_matrix_dict,
-                                                             fig_scenario,
-                                                             strategy_params_legend_dict=strategy_params_legend_dict)
+        self.plotter.trainer_agent_strategy_params_convergence_lines(strategy_params_agent_generation_matrix_dict,
+                                                                     ylim=ylim,
+                                                                     fig_suffix=fig_suffix,
+                                                                     strategy_params_labels=strategy_params_labels)
 
-    def plot_trainer_agent_var_scatter(self,
-                                       var_1_name: str,
-                                       var_2_name: str,
-                                       df: pd.DataFrame,
-                                       trainer_scenario_id: int,
-                                       generation_id: int,
-                                       trainer_params_scenario_id: int = 0,
-                                       path_id: int = 0,
-                                       area_value: np.array = None,
-                                       var_1_lim=None, var_2_lim=None,
-                                       var_1_label=None, var_2_label=None,
-                                       fig_title=None):
-        filter = {"trainer_scenario_id": trainer_scenario_id,
-                  "trainer_params_scenario_id": trainer_params_scenario_id,
-                  "path_id": path_id,
-                  "generation_id": generation_id}
-        df_filtered = self.filter_dataframe(df, filter)
-        var_1_value = df_filtered[var_1_name].to_numpy()
-        var_2_value = df_filtered[var_2_name].to_numpy()
-        fig_scenario = "TS" + str(trainer_scenario_id) + "TPS" + str(trainer_params_scenario_id) + \
-                       "P" + str(path_id) + "G" + str(generation_id) + "_"
-        self.plotter.trainer_agent_var_scatter(var_1_name, var_1_value,
-                                               var_2_name, var_2_value,
-                                               fig_scenario,
-                                               area_value=area_value,
-                                               var_1_lim=var_1_lim, var_2_lim=var_2_lim,
-                                               var_1_label=var_1_label, var_2_label=var_2_label,
-                                               fig_title=fig_title)
+    def plot_trainer_env_var_evolution_lines(self,
+                                             var_name: str,
+                                             env_trainer_result_cov: pd.DataFrame,
+                                             trainer_scenario_id: int,
+                                             trainer_params_scenario_id: int = 0,
+                                             path_id: int = None,
+                                             y_label: str = None,
+                                             y_lim: tuple = None,
+                                             legend_ncol: int = None,
+                                             fig_suffix: str = None):
 
-    def plot_trainer_env_var_evolution_path(self,
-                                            var_name: str,
-                                            df: pd.DataFrame,
-                                            trainer_scenario_id: int,
-                                            trainer_params_scenario_id: int = 0,
-                                            path_id: int = None,
-                                            fig_title=None,
-                                            y_label=None,
-                                            y_lim=None):
         filter = {"trainer_scenario_id": trainer_scenario_id,
                   "trainer_params_scenario_id": trainer_params_scenario_id}
         if path_id != None: filter["path_id"] = path_id
-        df_filtered = self.filter_dataframe(df, filter)
+        df_filtered = self.filter_dataframe(env_trainer_result_cov, filter)
 
         var_mean_name = var_name + "_mean"
         var_cov_name = var_name + "_cov"
@@ -150,39 +126,65 @@ class Analyzer(ABC):
             df_filtered_path_id = df_filtered.loc[df_filtered["path_id"] == path_id]
             var_value_dict[key] = [df_filtered_path_id[var_mean_name].to_numpy(),
                                    df_filtered_path_id[var_cov_name].to_numpy()]
-        fig_scenario = "_TS" + str(trainer_scenario_id) + "TPS" + str(trainer_params_scenario_id)
-        self.plotter.trainer_env_var_evolution_path_line(var_name, var_value_dict, fig_scenario,
-                                                         fig_title=fig_title, y_label=y_label, y_lim=y_lim)
 
-    def plot_trainer_env_var_evolution_value_across_scenarios(self,
-                                                              var_name: str,
-                                                              df: pd.DataFrame,
-                                                              trainer_scenario_id_list: list,
-                                                              fig_name: str,
-                                                              result_type: str = "convergence_level",
-                                                              trainer_params_scenario_id: int = 0,
-                                                              x_label=None,
-                                                              y_label=None,
-                                                              y_lim=None,
-                                                              trainer_scenario_id_xticks=None,
-                                                              unit_adjustment: float = 1):
+        self.plotter.trainer_env_var_evolution_lines(var_name,
+                                                     var_value_dict,
+                                                     y_label=y_label,
+                                                     y_lim=y_lim,
+                                                     legend_ncol=legend_ncol,
+                                                     fig_suffix=fig_suffix)
+
+    def plot_trainer_agent_vars_scatter(self,
+                                        var_1_name: str,
+                                        var_2_name: str,
+                                        agent_trainer_result_cov: pd.DataFrame,
+                                        trainer_scenario_id: int,
+                                        generation_id: int,
+                                        trainer_params_scenario_id: int = 0,
+                                        path_id: int = 0,
+                                        fig_suffix: str = None,
+                                        area_value: np.array = None,
+                                        var_1_lim=None, var_2_lim=None,
+                                        var_1_label=None, var_2_label=None):
+        filter = {"trainer_scenario_id": trainer_scenario_id,
+                  "trainer_params_scenario_id": trainer_params_scenario_id,
+                  "path_id": path_id,
+                  "generation_id": generation_id}
+        df_filtered = self.filter_dataframe(agent_trainer_result_cov, filter)
+        var_1_value = df_filtered[var_1_name].to_numpy()
+        var_2_value = df_filtered[var_2_name].to_numpy()
+        self.plotter.trainer_agent_vars_scatter(var_1_name, var_1_value,
+                                                var_2_name, var_2_value,
+                                                area_value=area_value,
+                                                var_1_lim=var_1_lim, var_2_lim=var_2_lim,
+                                                var_1_label=var_1_label, var_2_label=var_2_label,
+                                                fig_suffix=fig_suffix)
+
+    def plot_trainer_env_var_across_scenarios(self,
+                                              scenario_var_info: dict,
+                                              env_var_info: dict,
+                                              env_trainer_result_cov: pd.DataFrame,
+                                              result_type: str = "convergence_level",
+                                              trainer_params_scenario_id: int = 0,
+                                              fig_suffix: str = None,
+                                              unit_adjustment: float = 1):
 
         filter = {"trainer_scenario_id": 0,
                   "trainer_params_scenario_id": trainer_params_scenario_id}
-        df_filtered = self.filter_dataframe(df, filter)
+        df_filtered = self.filter_dataframe(env_trainer_result_cov, filter)
         path_id_set = set(df_filtered["path_id"])
-        path_num = len(path_id_set)
-        trainer_scenario_num = len(trainer_scenario_id_list)
-        value_matrix = np.zeros((path_num, trainer_scenario_num))
+        number_of_path = len(path_id_set)
+        number_of_scenario = len(scenario_var_info["scenario_id_list"])
+        value_matrix = np.zeros((number_of_path, number_of_scenario))
 
         for path_counter, path_id in enumerate(path_id_set):
-            for trainer_scenario_counter, trainer_scenario_id in enumerate(trainer_scenario_id_list):
+            for trainer_scenario_counter, trainer_scenario_id in enumerate(scenario_var_info["scenario_id_list"]):
                 filter = {"trainer_scenario_id": trainer_scenario_id,
                           "trainer_params_scenario_id": trainer_params_scenario_id,
                           "path_id": path_id}
-                df_filtered = self.filter_dataframe(df, filter)
-                var_mean_name = var_name + "_mean"
-                values = df_filtered[var_mean_name].to_numpy() * unit_adjustment
+                df_filtered = self.filter_dataframe(env_trainer_result_cov, filter)
+                env_var_mean_name = env_var_info["var"] + "_mean"
+                values = df_filtered[env_var_mean_name].to_numpy() * unit_adjustment
                 if result_type == "average":
                     value_matrix[path_counter][trainer_scenario_counter] = values.mean()
                 elif result_type == "convergence_level":
@@ -191,15 +193,13 @@ class Analyzer(ABC):
                 else:
                     print("Result type is not implemented.")
 
-        self.plotter.trainer_env_var_evolution_value_across_scenarios_line(
-            var_name,
+        self.plotter.trainer_env_var_across_scenarios_line(
             value_matrix,
-            fig_name,
-            trainer_scenario_id_list,
-            x_label=x_label,
-            y_label=y_label,
-            y_lim=y_lim,
-            trainer_scenario_id_xticks=trainer_scenario_id_xticks
+            x_label=scenario_var_info["x_label"],
+            y_label=env_var_info["y_label"],
+            y_lim=env_var_info["y_lim"],
+            x_ticks=scenario_var_info["x_ticks"],
+            fig_suffix=fig_suffix
         )
 
 
