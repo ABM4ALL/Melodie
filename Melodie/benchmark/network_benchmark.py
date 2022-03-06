@@ -7,7 +7,7 @@ import time
 
 import networkx as nx
 from Melodie.boost import JITNetwork
-from Melodie import Network
+from Melodie import OldNetwork
 import matplotlib.pyplot as plt
 import numba
 import logging
@@ -20,7 +20,7 @@ class A:
         a = 1
 
 
-def walk_neighbors_nojit(network: Network, nodes):
+def walk_neighbors_nojit(network: OldNetwork, nodes):
     for i in range(1000):
         for n in range(nodes):
             for neighbor in network.get_neighbors(n):
@@ -30,7 +30,7 @@ def walk_neighbors_nojit(network: Network, nodes):
 
 
 @numba.njit
-def walk_neighbors_jit(network: Network, nodes):
+def walk_neighbors_jit(network: OldNetwork, nodes):
     for i in range(1000):
         for n in range(nodes):
             for neighbor in network.get_neighbors(n):
@@ -50,7 +50,7 @@ def main():
         g = nx.watts_strogatz_graph(nodes, 3, 0.1)
         jit_nw = JITNetwork(cache=True)
         jit_nw_without_cache = JITNetwork(cache=False)
-        nw = Network()
+        nw = OldNetwork()
         for e in g.edges:
             jit_nw.add_edge(e[0], e[1])
             nw.add_edge(e[0], e[1])

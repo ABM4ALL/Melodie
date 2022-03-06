@@ -7,7 +7,7 @@ from typing import TYPE_CHECKING
 import numpy as np
 
 from Melodie import AgentList, Environment
-from Melodie.network import Network
+from Melodie.network import OldNetwork
 from .scenario import FuncScenario
 
 if TYPE_CHECKING:
@@ -20,7 +20,7 @@ class FuncEnvironment(Environment):
         self.reliability = self.scenario.reliability
         self.recover_rate = self.scenario.recover_rate
 
-    def step(self, agents: "AgentList", network: "Network"):
+    def step(self, agents: "AgentList", network: "OldNetwork"):
         for agent in agents:
             if agent.status == 0:
                 if random.random() > self.reliability:

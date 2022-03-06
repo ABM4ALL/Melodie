@@ -37,7 +37,7 @@ class CovidDataFrameLoader(DataFrameLoader):
                 pass
             return condition
 
-        with self.new_table_generator('agent_params', lambda scenario: scenario.agent_num) as g:
+        with self.table_generator('agent_params', lambda scenario: scenario.agent_num) as g:
             def generator_func(scenario: 'CovidScenario'):
                 return {'id': g.increment(),
                         'x_pos': np.random.randint(0, scenario.grid_x_size),

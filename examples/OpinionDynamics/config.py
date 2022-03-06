@@ -4,7 +4,7 @@ import os
 from Melodie import Config
 
 config = Config(
-    project_name='PANDORA',
+    project_name='OpinionDynamics',
     project_root=os.path.dirname(__file__),
     sqlite_folder='data/sqlite',
     excel_source_folder='data/excel_source',

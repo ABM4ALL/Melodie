@@ -12,7 +12,7 @@ class GiniDataframeLoader(DataFrameLoader):
 
     def register_generated_dataframes(self):
 
-        with self.new_table_generator('agent_params', lambda scenario: scenario.agent_num) as g:
+        with self.table_generator('agent_params', lambda scenario: scenario.agent_num) as g:
             def generator_func(scenario: GiniScenario):
                 return {
                     'id': g.increment(),

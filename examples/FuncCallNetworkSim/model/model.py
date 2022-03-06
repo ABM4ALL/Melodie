@@ -8,7 +8,7 @@ from typing import Dict, List, Tuple
 import numpy as np
 
 from Melodie import Model, AgentList
-from Melodie.network import Network
+from Melodie.network import OldNetwork
 from .visualizer import FuncCallSimVisualizer
 from .environment import FuncEnvironment
 from examples.FuncCallNetworkSim.model.agent import FuncAgent
@@ -16,7 +16,7 @@ from examples.FuncCallNetworkSim.model.agent import FuncAgent
 
 class FuncModel(Model):
     def setup(self):
-        self.network = Network()
+        self.network = OldNetwork()
         self.network.add_category('func')
         with self.define_basic_components():
             self.environment = FuncEnvironment()

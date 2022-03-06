@@ -1,101 +1,97 @@
-# -*- coding:utf-8 -*-
-# @Time: 2021/11/11 10:39
-# @Author: Zhanyi Hou
-# @Email: 1295752786@qq.com
-# @File: test_grid.py
-
-import time
-
-import numpy as np
-
-from Melodie import Network
-from Melodie.boost import JIT_AVAILABLE
-import logging
-
-logger = logging.getLogger(__name__)
-
-N = 10000_000
+from Melodie import AgentList, Agent, Model, Scenario, Edge, Network
+from tests.config import cfg
 
 
-def run_jit(network):
-    import numba
-    @numba.njit
-    def get_neighbor_jit(network):
-        s0 = 0
-        for i in range(1000_000):
-            ids = network.get_neighbors(0)
-            for i in ids:
-                s0 += i
-
-    get_neighbor_jit(network)
-    t0 = time.time()
-    get_neighbor_jit(network)
-    t1 = time.time()
-    return t1 - t0
+class RelationshipEdge(Edge):
+    def setup(self):
+        self.edge_a = 0
+        self.edge_b = 12.0
 
 
-def run_without_jit(network):
-    def f(network):
-        s = 0
-        for i in range(1000_000):
-            neighbors = network.get_neighbors(0)
-            for neighbor in neighbors:
-                s += neighbor
-
-    t0 = time.time()
-    f(network)
-    t1 = time.time()
-    return t1 - t0
+class DemoNetwork(Network):
+    def setup(self):
+        self.edge_cls = RelationshipEdge
 
 
-def network_routine(network):
-    network.add_category('wolves')
-    network.add_category('sheep')
-    network.add_edge(0, 1)
-    network.add_edge(0, 2)
-    network.add_edge(0, 3)
-    network.add_edges(np.array([(4, 0), (5, 0)], dtype=np.int64))
-    network.add_edges(np.array([(1, 2), (1, 3)], dtype=np.int64))
-
-    assert len(network.get_neighbors(0)) == 5
-    assert len(network.get_neighbors(1)) == 3
-    assert 0 in network.get_neighbors(1)
-    assert 2 in network.get_neighbors(1)
-    assert 3 in network.get_neighbors(1)
-
-    network.remove_edge(0, 3)
-    assert 3 not in list(network.get_neighbors(0))
-
-    network.add_agent(0, 'wolves', 0)
-    network.add_agent(1, 'wolves', 0)
-    network.add_agent(2, 'wolves', 0)
-    network.add_agent(1, 'sheep', 1)
-
-    assert len(network.get_agents('wolves', 0)) == 3
-    assert len(network.get_agents('sheep', 1)) == 1
-    assert len(network.get_agents('sheep', 0)) == 0
-    # network.remove_agent(1,'sheep')
-    network.move_agent(1, 'sheep', 0)
-    assert len(network.get_agents('sheep', 1)) == 0
-    assert len(network.get_agents('sheep', 0)) == 1
-
-    if isinstance(network, Network):
-        t = run_without_jit(network)
-        print("run without jit takes:", t)
-    else:
-        t = run_jit(network)
-        print("run with jit takes:", t)
+class DemoAgent(Agent):
+    def setup(self):
+        self.agent_a = 0
+        self.agent_b = 0
 
 
-# def test_network_JIT():
-#     if not JIT_AVAILABLE:
-#         return
-#     from Melodie.boost import JITNetwork
-#     network = JITNetwork()
-#     network_routine(network)
+class DemoModel(Model):
+    def setup(self):
+        self.agent_list = self.create_agent_container(DemoAgent, 10, )
 
 
-def test_network_noJIT():
-    from Melodie import Network
-    network = Network()
-    network_routine(network)
+def test_relationship_network():
+    model = DemoModel(cfg, Scenario(0))
+    model.setup()
+    agent_list = AgentList(DemoAgent, 10, model)
+    n = DemoNetwork()
+    n.add_category('agents')
+    for agent in agent_list:
+        n.add_agent(agent.id, 'agents', agent.id)
+
+    n.create_edge(agent_list[0].id, 'agents', agent_list[1].id, 'agents')
+    n.create_edge(agent_list[0].id, 'agents', agent_list[2].id, 'agents')
+    n.create_edge(agent_list[1].id, 'agents', agent_list[2].id, 'agents')
+    n.create_edge(agent_list[3].id, 'agents', agent_list[4].id, 'agents')
+    neighbor_ids = n.get_neighbors(agent_list[0].id, 'agents')
+    assert len(neighbor_ids) == 2 and ('agents', 1) in neighbor_ids and ("agents", 2) in neighbor_ids
+
+    n.add_agent(11, 'agents', 11)
+    assert len(n.all_agents()) == 11
+    assert 11 in n.all_agents()
+
+    n.remove_agent(0, 'agents')
+
+    assert len(n.get_neighbors(agent_list[1].id, 'agents')) == 1
+
+def test_relationship_directed():
+    model = DemoModel(cfg, Scenario(0))
+    model.setup()
+    agent_list = AgentList(DemoAgent, 10, model)
+    n = DemoNetwork(directed=True)
+    n.add_category('agents')
+    for agent in agent_list:
+        n.add_agent(agent.id, 'agents', agent.id)
+
+    n.create_edge(agent_list[0].id, 'agents', agent_list[1].id, 'agents')
+    n.create_edge(agent_list[0].id, 'agents', agent_list[2].id, 'agents')
+    n.create_edge(agent_list[1].id, 'agents', agent_list[2].id, 'agents')
+    n.create_edge(agent_list[3].id, 'agents', agent_list[4].id, 'agents')
+    neighbor_ids = n.get_neighbors(agent_list[0].id, 'agents')
+    assert len(neighbor_ids) == 2 and ('agents', 1) in neighbor_ids and ("agents", 2) in neighbor_ids
+
+    n.add_agent(11, 'agents', 11)
+    assert len(n.all_agents()) == 11
+    assert 11 in n.all_agents()
+
+    n.remove_agent(0, 'agents')
+    print(n._adj)
+    assert len(n.get_neighbors(agent_list[1].id, 'agents')) == 1
+
+
+def test_create_ba():
+    def network_creator(agent_list):
+        import networkx as nx
+        return nx.barabasi_albert_graph(len(agent_list), 3)
+
+    model = DemoModel(cfg, Scenario(0))
+    model.setup()
+    agent_list = AgentList(DemoAgent, 10, model)
+    n = DemoNetwork.from_agent_containers({'agents': agent_list}, 'barabasi_albert_graph', {'m': 3})
+    assert len(n.all_agents()) == 10
+    n = DemoNetwork.from_agent_containers({'agents': agent_list}, builder=network_creator)
+    assert len(n.all_agents()) == 10
+
+    agent_list2 = AgentList(DemoAgent, 10, model)
+
+    n = DemoNetwork.from_agent_containers({'wolves': agent_list, "sheep": agent_list2},
+                                          'barabasi_albert_graph', {'m': 3})
+    for i in range(10):
+        neighbors = n.get_neighbors(i, 'wolves')
+        print(neighbors)
+    # for node in neighbors:
+    #     print(n.all_agent_on_node(node))

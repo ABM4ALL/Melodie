@@ -90,7 +90,7 @@ class DataFrameLoader:
 
         self.registered_dataframes[table_name] = create_db_conn(self.config).read_dataframe(table_name)
 
-    def new_table_generator(self, table_name: str, rows_in_scenario: Union[int, Callable[[Scenario], int]]):
+    def table_generator(self, table_name: str, rows_in_scenario: Union[int, Callable[[Scenario], int]]):
         """
         Create a new generator
         :param table_name:

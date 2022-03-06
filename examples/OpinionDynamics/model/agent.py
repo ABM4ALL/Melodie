@@ -24,7 +24,7 @@ class GiniAgent(Agent):
 
 
 
-class PandoraAgent(Agent):
+class OpinionDynamicsAgent(Agent):
 
     def setup(self):
         self.political_interest = 0

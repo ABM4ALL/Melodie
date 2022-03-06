@@ -28,7 +28,7 @@ class Edge:
             setattr(self, prop_name, prop_value)
 
 
-class Network:
+class OldNetwork:
     def __init__(self):
         self.simple = True
         self._nodes: Set[int] = set()
@@ -151,7 +151,7 @@ class Network:
         self.add_edge(edge)
 
 
-class AgentRelationshipNetwork:
+class Network:
 
     def __init__(self, directed=False):
         self.simple = True
@@ -160,9 +160,9 @@ class AgentRelationshipNetwork:
         self._adj: Dict[int, Dict[int, Edge]] = {}
         self._agent_ids: Dict[str, Dict[int, Set[int]]] = {}  # {'wolves': {0 : set(1, 2, 3)}}， 代表0号节点上有1,2,3三只狼
         self._agent_pos: Dict[str, Dict[int, int]] = {}  # {'wolves': {0: 1}}代表0号狼位于1节点
-        self.edge_cls: ClassVar[Edge] = None
+        self.edge_cls: ClassVar[Edge] = Edge
         self.setup()
-        assert self.edge_cls is not None
+        # assert self.edge_cls is not None
 
     def setup(self):
         pass
@@ -354,7 +354,7 @@ class AgentRelationshipNetwork:
         return self
 
 
-class NetworkDirected(Network):
+class NetworkDirected(OldNetwork):
     def __init__(self):
         super(NetworkDirected, self).__init__()
 

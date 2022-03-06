@@ -43,7 +43,7 @@ function_types = {  # 函数的返回类型
 
 try:
     from ..jitclasses import JITGrid, JITNetwork
-    from Melodie import Grid, Network
+    from Melodie import Grid, OldNetwork
 
     function_types[JITGrid] = Grid
     function_types[JITNetwork] = JITNetwork

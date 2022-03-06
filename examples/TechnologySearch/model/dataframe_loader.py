@@ -8,9 +8,9 @@ from .scenario import TechnologySearchScenario
 class TechnologySearchDataFrameLoader(DataFrameLoader):
 
     def register_scenario_dataframe(self):
-        scenario_data_type_dict = {"periods": sqlalchemy.Integer(),
+        scenario_data_type_dict = {"number_of_run": sqlalchemy.Integer(),
+                                   "periods": sqlalchemy.Integer(),
                                    "agent_num": sqlalchemy.Integer(),
-                                   "market_strategy": sqlalchemy.Integer(),
                                    "market_profit_mean": sqlalchemy.Float(),
                                    "market_profit_sigma": sqlalchemy.Float(),
                                    "aspiration_update_strategy": sqlalchemy.Integer(),
@@ -39,7 +39,7 @@ class TechnologySearchDataFrameLoader(DataFrameLoader):
         self.load_dataframe('trainer_params_scenarios', 'trainer_params_scenarios.xlsx', scenario_data_type_dict)
 
     def register_generated_dataframes(self):
-        with self.new_table_generator('agent_params', lambda scenario: scenario.agent_num) as g:
+        with self.table_generator('agent_params', lambda scenario: scenario.agent_num) as g:
             def generator_func(scenario: 'TechnologySearchScenario'):
                 return {'id': g.increment(),
                         'technology': scenario.initial_technology,
