@@ -343,6 +343,8 @@ class Network:
         else:
             if network_name == 'barabasi_albert_graph':
                 g = nx.__getattribute__(network_name)(len(self._nodes), **network_params, )
+            elif network_name == 'watts_strogatz_graph':
+                g = nx.__getattribute__(network_name)(len(self._nodes), **network_params, )
             else:
                 raise NotImplementedError(f"Network name {network_name} is not implemented!")
         print(g.edges)

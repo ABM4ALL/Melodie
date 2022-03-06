@@ -89,7 +89,7 @@ def test_create_ba():
     agent_list2 = AgentList(DemoAgent, 10, model)
 
     n = DemoNetwork.from_agent_containers({'wolves': agent_list, "sheep": agent_list2},
-                                          'barabasi_albert_graph', {'m': 3})
+                                          'watts_strogatz_graph', {'k': 3, 'p': 0.2})
     for i in range(10):
         neighbors = n.get_neighbors(i, 'wolves')
         print(neighbors)
