@@ -23,5 +23,3 @@ YES --> what are the functions you can use and how to use them
     trainer
     network
     grid
-    studio
-    booster

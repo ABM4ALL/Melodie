@@ -1,0 +1,4 @@
+sphinx-autobuild
+sphinx-markdown-tables        0.0.15
+sphinx-rtd-theme              1.0.0
+sphinxcontrib-mermaid         0.7.1

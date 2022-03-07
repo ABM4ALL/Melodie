@@ -1,7 +1,5 @@
 import sys
 
-from Melodie import DataCollector
-
 sys.path.append("../..")
 # Melody package is not available on pip yet, so this example has to import Melody package placed at project root.
 # Appending project root to "sys.path" makes Melody package accessible to the interpreter.
