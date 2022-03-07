@@ -1,101 +1,60 @@
 
+import logging
 import random
 import numpy as np
+from typing import TYPE_CHECKING
 
 from Melodie import Agent
-from .scenario import GiniScenario
-
-
-class GiniAgent(Agent):
-    scenario: GiniScenario
-
-    def setup(self):
-        self.account = .0
-        self.productivity = .0
-
-    def go_produce(self):
-        rand = random.random()
-        if rand <= self.productivity:
-            self.account += 1
-        else:
-            pass
-
-        return None
-
-
+if TYPE_CHECKING:
+    from .scenario import OpinionDynamicsScenario
+logger = logging.getLogger(__name__)
 
 class OpinionDynamicsAgent(Agent):
+    scenario: 'OpinionDynamicsScenario'
 
     def setup(self):
-        self.political_interest = 0
-        self.technology_interest = 0
-        self.house_owner = 1
-        self.environmental_attitude = 0
-        self.political_attitude = 0
-        self.expectancy_fairness = 0.0
-        self.expectancy_financial_burden = 0.0
-        self.expectancy_effectiveness = 0.0
-        self.attitude_vector = np.zeros(3)  # Vector contains the Output of the policy evaluation (ExV)
-        self.has_attitude = False
+        self.opinion_level = 0.0
+        self.opinion_radius = 0.0
 
-    def process_policy_info(self, policy_info_a):
-        self.has_attitude = True
-        if not self._should_use_deliberative_process():
-            self._use_spontaneous_process()
-        else:
-            self._use_deliberative_process(policy_info_a)
+    def reset_communication_track(self):
+        self.communication_action = "no"
+        self.communication_neighbor_id = -1
+        self.communication_result = "-"
 
-    def _should_use_deliberative_process(self):
-        use_deliberative_process = False
-        if self.political_interest > 0 or self.technology_interest > 0 or self.house_owner:
-            use_deliberative_process = True
-        else:
+    def update_opinion_level_with_neighbor(self, neighbor: 'OpinionDynamicsAgent'):
+        """
+        The communication process between two agents is modeled following the "relative agreement algorithm".
+        Reference:
+        Deffuant, G., Amblard, F., Weisbuch, G., & Faure, T. (2002).
+        How can extremism prevail? A study based on the relative agreement interaction model.
+        Journal of artificial societies and social simulation, 5(4).
+
+        :param neighbor:
+        :return:
+        """
+        self.communication_action = "yes"
+        self.communication_neighbor_id = neighbor.id
+        neighbor_opinion_level = neighbor.opinion_level
+        neighbor_opinion_radius = neighbor.opinion_radius
+
+        overlap = min(neighbor_opinion_level + neighbor_opinion_radius,
+                      self.opinion_level + self.opinion_radius) - \
+                  max(neighbor_opinion_level - neighbor_opinion_radius,
+                      self.opinion_level - self.opinion_radius)
+        non_overlap = 2 * neighbor_opinion_radius - overlap
+        agreement = overlap - non_overlap
+        relative_agreement = agreement / (2 * neighbor_opinion_radius)
+        if relative_agreement <= 0:
+            self.communication_result = "unchanged"
             pass
-        return use_deliberative_process
+        else:
+            self.communication_result = "changed"
+            self.opinion_level = self.opinion_level + \
+                                 self.scenario.relative_agreement_param * relative_agreement * \
+                                 (neighbor_opinion_level - self.opinion_level)
+            self.opinion_radius = self.opinion_radius + \
+                                  self.scenario.relative_agreement_param * relative_agreement * \
+                                  (neighbor_opinion_radius - self.opinion_radius)
 
-    def _use_spontaneous_process(self):
-        pass
-
-    def _use_deliberative_process(self, policy_info_b):
-        input_vector = self._construct_evaluation_input(policy_info_b)
-        value_vector = self._evaluate(input_vector)
-        expectancy_vector = self._construct_expectancy()
-        self.attitude_vector = expectancy_vector * value_vector # Element wise product of the vectors 'expectancy' and 'value'
-
-    def _construct_evaluation_input(self, policy_info_c):
-        influencing_properties = np.zeros(2)
-        influencing_properties[0] = self.environmental_attitude
-        influencing_properties[1] = self.political_attitude
-
-        return np.concatenate([policy_info_c, influencing_properties])
-
-    def _evaluate(self, input_vector):
-        return np.dot(input_vector, self.model.regression_coefficients)
-
-    def _construct_expectancy(self):
-        expectancy_properties = np.zeros(3)
-        expectancy_properties[0] = self.expectancy_fairness
-        expectancy_properties[1] = self.expectancy_financial_burden
-        expectancy_properties[2] = self.expectancy_effectiveness
-
-        return expectancy_properties
-
-    def get_attitude_vector(self):
-        return self.attitude_vector
-
-    def _receive_message(self, sender_attitude):
-        self.has_attitude = True
-        value_vector = sender_attitude
-        expectancy_vector = self._construct_expectancy()
-        self.attitude_vector = expectancy_vector * value_vector
-
-    def step(self):
-        if self.has_attitude:
-            other_agent = self
-            while other_agent == self:
-                other_agent = self.random.choice(self.model.schedule.agents)
-
-            other_agent._receive_message(self.attitude_vector)
-            print(self.unique_id, 'sent to', other_agent.unique_id)
 
 
