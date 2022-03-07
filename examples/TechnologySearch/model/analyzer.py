@@ -95,7 +95,6 @@ class TechnologySearchAnalyzer(Analyzer):
             fig_suffix=fig_suffix,
         )
 
-
     def run(self):
 
         # self.plot_agent_strategy_convergence(0, 30)
