@@ -1,38 +1,32 @@
-# -*- coding: utf-8 -*-
-__author__ = 'Songmin'
 
 from Melodie import Model, AgentList
-from .scenario import OptimalConsumptionScenario
-from .agent import OptimalConsumptionAgent
-from .environment import OptimalConsumptionEnvironment
-from .data_collector import OptimalConsumptionDataCollector
+from .scenario import OCScenario
+from .agent import OCAgent
+from .environment import OCEnvironment
+from .data_collector import OCDataCollector
 
 
-class OptimalConsumptionModel(Model):
-    scenario: OptimalConsumptionScenario
+class OCModel(Model):
+    scenario: OCScenario
     
     def setup(self):
 
-        self.agent_list: AgentList[OptimalConsumptionAgent] = self.create_agent_container(
-            OptimalConsumptionAgent,
+        self.agent_list: AgentList[OCAgent] = self.create_agent_container(
+            OCAgent,
             self.scenario.agent_num,
             self.scenario.get_registered_dataframe('agent_params')
         )
 
         with self.define_basic_components():
-            self.environment = OptimalConsumptionEnvironment()
-            self.data_collector = OptimalConsumptionDataCollector()
+            self.environment = OCEnvironment()
+            self.data_collector = OCDataCollector()
 
     def run(self):
-        self.environment.agent_post_setup(self.agent_list)
+        self.environment.setup_agents_action_probability(self.agent_list)
         for t in range(0, self.scenario.periods):
-            # print(f'Period = {t}')
-            self.environment.market_process(self.agent_list)
-            self.environment.aspiration_update_process(self.agent_list)
-            self.environment.technology_search_process(self.agent_list)
-            self.environment.calculate_average_technology(self.agent_list)
-            self.environment.calculate_account_total(self.agent_list)
-            self.environment.calculate_technology_search_strategy_share(self.agent_list)
-        #     self.data_collector.collect(t)
-        # self.data_collector.save()
+            print(f'Period = {t}')
+            self.environment.run_game_rounds(self.agent_list)
+            self.environment.calc_agents_total_account(self.agent_list)
+            self.data_collector.collect(t)
+        self.data_collector.save()
 

@@ -1,9 +1,9 @@
 
 from Melodie import Trainer, GeneticAlgorithmTrainer
-from .agent import OptimalConsumptionAgent
+from .agent import OCAgent
 
 
-class OptimalConsumptionTrainer(Trainer):
+class OCTrainer(Trainer):
 
     def setup(self):
         self.container_name = "agent_list"
@@ -11,21 +11,15 @@ class OptimalConsumptionTrainer(Trainer):
         self.add_agent_training_property('agent_list', 'strategy_param_2')
         self.add_agent_training_property('agent_list', 'strategy_param_3')
 
-        self.add_agent_result_property('agent_list', 'sleep_count')
-        self.add_agent_result_property('agent_list', 'exploration_count')
-        self.add_agent_result_property('agent_list', 'exploitation_count')
-        self.add_agent_result_property('agent_list', 'imitation_count')
-
-        self.add_environment_result_property("average_technology")
-        self.add_environment_result_property("average_account")
-        self.add_environment_result_property("sleep_accumulated_share")
-        self.add_environment_result_property("exploration_accumulated_share")
-        self.add_environment_result_property("exploitation_accumulated_share")
-        self.add_environment_result_property("imitation_accumulated_share")
+        self.add_agent_result_property('agent_list', 'rock_count')
+        self.add_agent_result_property('agent_list', 'paper_count')
+        self.add_agent_result_property('agent_list', 'scissors_count')
+        self.add_agent_result_property('agent_list', 'total_payoff')
+        self.add_environment_result_property("agents_total_payoff")
 
         self.save_env_trainer_result = True
         self.save_agent_trainer_result = True
         self.algorithm_cls = GeneticAlgorithmTrainer
 
-    def fitness_agent(self, agent: OptimalConsumptionAgent):
-        return agent.account
+    def fitness_agent(self, agent: OCAgent):
+        return agent.total_payoff

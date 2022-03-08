@@ -2,26 +2,20 @@ import numpy as np
 import sqlalchemy
 
 from Melodie import DataFrameLoader
-from .scenario import OptimalConsumptionScenario
+from .scenario import OCScenario
 
 
-class OptimalConsumptionDataFrameLoader(DataFrameLoader):
+class OCDataFrameLoader(DataFrameLoader):
 
     def register_scenario_dataframe(self):
         scenario_data_type_dict = {"number_of_run": sqlalchemy.Integer(),
                                    "periods": sqlalchemy.Integer(),
                                    "agent_num": sqlalchemy.Integer(),
-                                   "market_profit_mean": sqlalchemy.Float(),
-                                   "market_profit_sigma": sqlalchemy.Float(),
-                                   "aspiration_update_strategy": sqlalchemy.Integer(),
-                                   "historical_aspiration_update_param": sqlalchemy.Float(),
-                                   "social_aspiration_update_param": sqlalchemy.Float(),
-                                   "initial_technology": sqlalchemy.Float(),
-                                   "sigma_exploitation": sqlalchemy.Float(),
-                                   "mean_exploration": sqlalchemy.Float(),
-                                   "sigma_exploration": sqlalchemy.Float(),
-                                   "imitation_share": sqlalchemy.Float(),
-                                   "imitation_fail_rate": sqlalchemy.Float(),
+                                   "payoff_win_min": sqlalchemy.Float(),
+                                   "payoff_win_max": sqlalchemy.Float(),
+                                   "payoff_lose_min": sqlalchemy.Integer(),
+                                   "payoff_lose_max": sqlalchemy.Float(),
+                                   "payoff_tie": sqlalchemy.Float(),
                                    "number_of_path": sqlalchemy.Integer(),
                                    "number_of_generation": sqlalchemy.Integer(),
                                    "strategy_population": sqlalchemy.Integer(),
@@ -40,24 +34,31 @@ class OptimalConsumptionDataFrameLoader(DataFrameLoader):
 
     def register_generated_dataframes(self):
         with self.table_generator('agent_params', lambda scenario: scenario.agent_num) as g:
-            def generator_func(scenario: 'OptimalConsumptionScenario'):
+            def generator_func(scenario: 'OCScenario'):
                 return {'id': g.increment(),
-                        'technology': scenario.initial_technology,
-                        'aspiration_level': scenario.initial_technology + scenario.market_profit_mean,
-                        'aspiration_update_strategy': scenario.aspiration_update_strategy,
-                        'historical_aspiration_update_param': scenario.historical_aspiration_update_param,
-                        'social_aspiration_update_param': scenario.social_aspiration_update_param,
+                        'payoff_rock_win': np.random.uniform(scenario.payoff_win_min, scenario.payoff_win_max),
+                        'payoff_rock_lose': np.random.uniform(scenario.payoff_lose_min, scenario.payoff_lose_max),
+                        'payoff_paper_win': np.random.uniform(scenario.payoff_win_min, scenario.payoff_win_max),
+                        'payoff_paper_lose': np.random.uniform(scenario.payoff_lose_min, scenario.payoff_lose_max),
+                        'payoff_scissors_win': np.random.uniform(scenario.payoff_win_min, scenario.payoff_win_max),
+                        'payoff_scissors_lose': np.random.uniform(scenario.payoff_lose_min, scenario.payoff_lose_max),
+                        'payoff_tie': scenario.payoff_tie,
                         'strategy_param_1': np.random.uniform(0, 100),
                         'strategy_param_2': np.random.uniform(0, 100),
                         'strategy_param_3': np.random.uniform(0, 100)}
 
             g.set_row_generator(generator_func)
             g.set_column_data_types({'id': sqlalchemy.Integer(),
-                                     'technology': sqlalchemy.Float(),
-                                     'aspiration_level': sqlalchemy.Float(),
-                                     'aspiration_update_strategy': sqlalchemy.Integer(),
-                                     'historical_aspiration_update_param': sqlalchemy.Float(),
-                                     'social_aspiration_update_param': sqlalchemy.Float(),
+                                     'payoff_rock_win': sqlalchemy.Float(),
+                                     'payoff_rock_lose': sqlalchemy.Float(),
+                                     'payoff_paper_win': sqlalchemy.Float(),
+                                     'payoff_paper_lose': sqlalchemy.Float(),
+                                     'payoff_scissors_win': sqlalchemy.Float(),
+                                     'payoff_scissors_lose': sqlalchemy.Float(),
+                                     'payoff_tie': sqlalchemy.Float(),
                                      'strategy_param_1': sqlalchemy.Float(),
                                      'strategy_param_2': sqlalchemy.Float(),
                                      'strategy_param_3': sqlalchemy.Float()})
+
+
+

@@ -1,110 +1,65 @@
 
-from typing import Type
+from typing import TYPE_CHECKING
 import random
 import numpy as np
+from Melodie import Environment
 
-from Melodie import Environment, AgentList
-from .agent import OptimalConsumptionAgent
-from .scenario import OptimalConsumptionScenario
+if TYPE_CHECKING:
+    from Melodie import AgentList
+    from .agent import OCAgent
+    from .scenario import OCScenario
 
 
-class OptimalConsumptionEnvironment(Environment):
-    scenario: OptimalConsumptionScenario
+class OCEnvironment(Environment):
+    scenario: 'OCScenario'
 
     def setup(self):
-        self.average_technology = 0.0
-        self.average_account = 0.0
-        self.sleep_accumulated_share = 0
-        self.exploration_accumulated_share = 0
-        self.exploitation_accumulated_share = 0
-        self.imitation_accumulated_share = 0
+        self.agents_total_payoff = 0.0
 
-    def agent_post_setup(self, agent_list: 'AgentList[OptimalConsumptionAgent]') -> None:
+    def setup_agents_action_probability(self, agent_list: 'AgentList[OCAgent]') -> None:
         for agent in agent_list:
-            agent.post_setup()
+            agent.setup_action_probability()
 
-    def market_process(self, agent_list: 'AgentList[OptimalConsumptionAgent]') -> None:
-        mean = self.scenario.market_profit_mean
-        sigma = self.scenario.market_profit_sigma
+    def run_game_rounds(self, agent_list: 'AgentList[OCAgent]') -> None:
+        assert len(agent_list)%2 == 0, print("scenario.agent_num must be even number.")
+        agent_id_list = [i for i in range(0, len(agent_list))]
+        random.shuffle(agent_id_list)
+        while agent_id_list:
+            agent_1 = agent_list[agent_id_list.pop()]
+            agent_2 = agent_list[agent_id_list.pop()]
+            self.agents_battle(agent_1, agent_2)
+
+    def agents_battle(self, agent_1: 'OCAgent', agent_2: 'OCAgent'):
+        agent_1.period_competitor_id = agent_2.id
+        agent_1.action_choice()
+        agent_2.period_competitor_id = agent_1.id
+        agent_2.action_choice()
+
+        if agent_1.period_action == agent_2.period_action:
+            agent_1.update_account_tie()
+            agent_2.update_account_tie()
+        elif ((agent_1.period_action < agent_2.period_action) and (agent_2.period_action - agent_1.period_action == 1))\
+             or (agent_1.period_action - agent_2.period_action == 2):
+            agent_1.update_account_lose()
+            agent_2.update_account_win()
+        elif ((agent_2.period_action < agent_1.period_action) and (agent_1.period_action - agent_2.period_action == 1))\
+             or (agent_2.period_action - agent_1.period_action == 2):
+            agent_1.update_account_win()
+            agent_2.update_account_lose()
+
+    def calc_agents_total_account(self, agent_list: 'AgentList[OCAgent]') -> None:
         for agent in agent_list:
-            agent.profit = agent.technology + np.random.normal(mean, sigma)
-            agent.account += agent.profit
-            agent.profit_aspiration_difference = agent.profit - agent.aspiration_level
+            self.agents_total_payoff += agent.total_payoff
 
-    def aspiration_update_process(self, agent_list: 'AgentList[OptimalConsumptionAgent]') -> None:
-        average_profit = np.array([agent.profit for agent in agent_list]).mean()
-        for agent in agent_list:
-            if agent.aspiration_update_strategy == 0:
-                agent.aspiration_update_historical_strategy()
-            elif agent.aspiration_update_strategy == 1:
-                agent.aspiration_update_social_strategy(average_profit)
-            else:
-                pass
 
-    def technology_search_process(self, agent_list: 'AgentList[OptimalConsumptionAgent]') -> None:
-        agent_technology_list = [(agent.id, agent.technology, agent.profit) for agent in agent_list]
-        for agent in agent_list:
-            if agent.profit_aspiration_difference >= 0:
-                agent.technology_search_sleep_strategy()
-            else:
-                rand = np.random.uniform(0, 1)
-                if rand <= agent.prob_exploration:
-                    agent.technology_search_exploration_strategy()
-                elif agent.prob_exploration < rand <= agent.prob_exploration + agent.prob_exploitation:
-                    agent.technology_search_exploitation_strategy()
-                else:
-                    agent.imitation_count += 1
-                    agent.account -= self.scenario.cost_imitation
-                    observation_num = int(len(agent_list) * self.scenario.imitation_share)
-                    observable_technology_list = random.sample(agent_technology_list, observation_num)
-                    observable_technology_list_rank = sorted(
-                        observable_technology_list,
-                        key=lambda x: x[2],
-                        reverse=True
-                    )
 
-                    teacher_pos = 0
-                    if observable_technology_list_rank[0][0] == agent.id:
-                        teacher_pos = 1
-                    else:
-                        pass
-                    teacher_id = observable_technology_list_rank[teacher_pos][0]
-                    teacher_technology = observable_technology_list_rank[teacher_pos][1]
-                    agent_list[teacher_id].account += self.scenario.cost_imitation
-                    agent_list[teacher_id].be_learned_count += 1
 
-                    rand = np.random.uniform(0, 1)
-                    if rand <= (1 - self.scenario.imitation_fail_rate):
-                        agent.technology = max(agent.technology, teacher_technology)
-                    else:
-                        pass
 
-    def calculate_average_technology(self, agent_list: 'AgentList[OptimalConsumptionAgent]') -> None:
-        sum_tech = 0
-        for agent in agent_list:
-            sum_tech += agent.technology
-        self.average_technology = sum_tech / len(agent_list)
 
-    def calculate_account_total(self, agent_list: 'AgentList[OptimalConsumptionAgent]') -> None:
-        sum_account = 0
-        for agent in agent_list:
-            sum_account += agent.account
-        self.average_account = sum_account / len(agent_list)
 
-    def calculate_technology_search_strategy_share(self, agent_list: 'AgentList[OptimalConsumptionAgent]') -> None:
-        total_sleep_count = 0
-        total_exploration_count = 0
-        total_exploitation_count = 0
-        total_imitation_count = 0
-        for agent in agent_list:
-            total_sleep_count += agent.sleep_count
-            total_exploration_count += agent.exploration_count
-            total_exploitation_count += agent.exploitation_count
-            total_imitation_count += agent.imitation_count
-        count_sum = total_sleep_count + total_exploration_count + total_exploitation_count + total_imitation_count
-        self.sleep_accumulated_share = total_sleep_count / count_sum
-        self.exploration_accumulated_share = total_exploration_count / count_sum
-        self.exploitation_accumulated_share = total_exploitation_count / count_sum
-        self.imitation_accumulated_share = total_imitation_count / count_sum
+
+
+
+
 
 
