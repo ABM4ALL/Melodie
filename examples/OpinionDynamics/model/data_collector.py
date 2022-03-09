@@ -2,10 +2,13 @@
 from Melodie import DataCollector
 
 
-class GiniDataCollector(DataCollector):
+class OpinionDynamicsDataCollector(DataCollector):
+
     def setup(self):
-        self.add_agent_property('agent_list', 'account')
-        self.add_environment_property('trade_num')
-        self.add_environment_property('win_prob')
-        self.add_environment_property('total_wealth')
-        self.add_environment_property('gini')
+        self.add_agent_property('agent_list', 'opinion_level')
+        self.add_agent_property('agent_list', 'opinion_radius')
+        self.add_agent_property('agent_list', 'communication_action')
+        self.add_agent_property('agent_list', 'communication_neighbor_id')
+        self.add_agent_property('agent_list', 'communication_result')
+        self.add_environment_property('average_opinion_level')
+
