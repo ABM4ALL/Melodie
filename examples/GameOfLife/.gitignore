@@ -4,3 +4,4 @@ output/*
 data/sqlite/*
 temp
 .melodieconfig
+.melodiestudio

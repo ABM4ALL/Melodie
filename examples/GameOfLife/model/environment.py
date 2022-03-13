@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 __author__ = 'Songmin'
 
+import random
 from typing import TYPE_CHECKING
 
 import numpy as np
 
 from Melodie import Environment
-from Melodie.grid import Grid
 from .scenario import GameOfLifeScenario
 
 if TYPE_CHECKING:
@@ -17,14 +17,8 @@ class GameOfLifeEnvironment(Environment):
     scenario: GameOfLifeScenario
 
     def setup(self):
-        pass
-
-    # def choose_strategy(self, al: "AgentList[GameOfLifeSpot]"):
-    #     strategy = Strategy(1, al)
-    #     if random.random() > 0.5:
-    #         return strategy.strategy1()
-    #     else:
-    #         return strategy.strategy2()
+        self.value1 = 0
+        self.value2 = 0
 
     def step(self, grid: "Grid"):
 
@@ -45,6 +39,8 @@ class GameOfLifeEnvironment(Environment):
                     spot.alive = False
                 else:
                     spot.alive = True
+        self.value1 = random.random()
+        self.value2 = random.random() * 2
 
     def count_neighbor_alives(self, grid: 'Grid', neighbor_positions: "np.ndarray"):
         alive_count = 0

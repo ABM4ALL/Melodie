@@ -9,7 +9,7 @@ cdef class Grid:
     cdef long _width
     cdef long _height
     cdef bint wrap
-    cdef dict _existed_agents
+    cdef public dict _existed_agents
     cdef list _spots
     cdef dict _agent_ids
     cdef dict _neighbors_cache

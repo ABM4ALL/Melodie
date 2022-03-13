@@ -5,7 +5,7 @@
 # @File: grid.py
 import random
 
-from Melodie.grid import Spot
+from Melodie import Spot
 
 
 class GameOfLifeSpot(Spot):

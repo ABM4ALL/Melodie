@@ -10,7 +10,8 @@ from Melodie import Scenario, Simulator
 from .visualizer import GameOfLifeVisualizer
 
 
-class FuncSimulator(Simulator):
+class GameOfLifeSimulator(Simulator):
     def setup(self):
         self.visualizer = GameOfLifeVisualizer()
         self.visualizer.setup()
+

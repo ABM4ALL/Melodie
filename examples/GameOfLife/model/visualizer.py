@@ -3,13 +3,8 @@
 # @Author: Zhanyi Hou
 # @Email: 1295752786@qq.com
 # @File: run_studio.py
-import random
 
-# import numba
-# import numpy as np
-# from numba import typed
 
-from Melodie.grid import Grid
 from Melodie.visualizer import GridVisualizer
 
 
@@ -18,9 +13,17 @@ class GameOfLifeVisualizer(GridVisualizer):
         self.add_agent_series('sheep', 'scatter', '#bbff00', )
         self.add_agent_series('agents', 'scatter', '#bb0000', )
 
+        self.add_plot_chart('chart1', ["series1", "series2"])
+        self.add_plot_chart('chart2', ["series_chart2"])
+        # add_pie_chart("pie_chart", data_source={"series1": lambda: self.model.environment.value1,
+        # "series2": lambda: self.model.environment.value2})
+        self.set_chart_data_source('chart1', "series1", lambda: self.model.environment.value1)
+        self.set_chart_data_source('chart1', "series2", lambda: self.model.environment.value2)
+        self.set_chart_data_source('chart2', "series_chart2",
+                                   lambda: self.model.environment.value2 + self.model.environment.value1)
+
     def parse(self, grid):
         self.parse_series(grid)
-
 
     def parse_roles_jit(self, grid):
         # parsed = parse_with_jit(grid, spot_role_jit)
@@ -33,7 +36,6 @@ class GameOfLifeVisualizer(GridVisualizer):
                 other_series_data[category] = []
             for agent_id in existed_agents[category]:
                 pos = grid.get_agent_pos(agent_id, category)
-                # pos = existed_agents[category][agent_id]
                 other_series_data[category].append({
                     'value': list(pos),
                     'id': agent_id,

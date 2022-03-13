@@ -3,10 +3,18 @@
 # @Author: Zhanyi Hou
 # @Email: 1295752786@qq.com
 # @File: scenario.py
+from typing import List
 
 from Melodie import Scenario
 
 
 class GameOfLifeScenario(Scenario):
     def setup(self):
-        self.periods = 10000
+        self.periods = 1000
+        self.a = 10
+
+    def properties_as_parameters(self) -> List[Scenario.BaseParameter]:
+        return [
+            Scenario.NumberParameter("periods", self.periods, 100, 1000, 1),
+            Scenario.NumberParameter("a", self.a, 0, 20, 1),
+        ]

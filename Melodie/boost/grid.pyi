@@ -1,11 +1,12 @@
 import functools
 import random
-from typing import ClassVar, Set, Dict, List, Tuple
+from typing import ClassVar, Set, Dict, List, Tuple, TYPE_CHECKING
 
 import numpy as np
 
-from .agent import Agent
-from .boost.vectorize import vectorize_2d
+if TYPE_CHECKING:
+    from ..agent import Agent
+    from ..boost.vectorize import vectorize_2d
 
 
 class Spot(Agent):
@@ -44,9 +45,11 @@ class Grid:
                 self._spots[y][x].setup()
         self._agent_ids: Dict[str, List[Set[int]]] = {}  # [set() for i in range(width * height)]
 
-        # if caching:
-        #     self.get_neighbors = functools.lru_cache(self.width * self.height)(self.get_neighbors)
-        #     self._bound_check = functools.lru_cache(self.width * self.height)(self._bound_check)
+    def width(self) -> int:
+        ...
+
+    def height(self) -> int:
+        ...
 
     def add_category(self, category_name: str):
         """
@@ -238,13 +241,13 @@ class Grid:
                 grid_roles[pos_1d, 3] = spot.role
         return grid_roles
 
-    def rand_move(self, agent_id:int, category:str, x_range: int, y_range: int):
+    def rand_move(self, agent_id: int, category: str, x_range: int, y_range: int):
 
         source_x, source_y = self.get_agent_pos(agent_id, category)
         self._remove_agent(agent_id, category, source_x, source_y)
         dx = random.randint(-x_range, x_range)
         dy = random.randint(-y_range, y_range)
-        target_x = source_x+dx
-        target_y = source_y+dy
+        target_x = source_x + dx
+        target_y = source_y + dy
         self.add_agent(agent_id, category, target_x, target_y)
         return target_x, target_y

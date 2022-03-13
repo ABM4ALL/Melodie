@@ -11,7 +11,7 @@ sys.path.append("../..")
 from model.environment import GameOfLifeEnvironment
 from model.scenario import GameOfLifeScenario
 from model.model import GameOfLifeModel
-from model.simulator import FuncSimulator
+from model.simulator import GameOfLifeSimulator
 from model.visualizer import GameOfLifeVisualizer
 from model.df_loader import GameOfLifeDataFrameLoader
 from config import config
@@ -32,7 +32,7 @@ register_type(GameOfLifeSpot)
 # add_custom_jit_class(Strategy2)
 logging.basicConfig(level=logging.INFO)
 if __name__ == "__main__":
-    simulator = FuncSimulator(config, GameOfLifeScenario, GameOfLifeModel, GameOfLifeDataFrameLoader)
+    simulator = GameOfLifeSimulator(config, GameOfLifeScenario, GameOfLifeModel, GameOfLifeDataFrameLoader)
 
     """
     Run the model with dataframe_loader

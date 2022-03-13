@@ -1,20 +1,21 @@
 import logging
 import asyncio
 import queue
-import random
+from urllib.request import urlopen
+from urllib.error import URLError
 import threading
 import time
-
 import websockets
 import json
 from queue import Queue
 from typing import Dict, Tuple, List, Any, Callable, Union, Set, TYPE_CHECKING
 from websockets.legacy.server import WebSocketServerProtocol
 
-from Melodie.grid import Grid, Spot
+from .basic.exceptions import MelodieExceptions
+from .basic.vis_charts import ChartSeries, ChartManager, Chart
 
 if TYPE_CHECKING:
-    from Melodie import Scenario, BaseAgentContainer
+    from Melodie import Scenario, BaseAgentContainer, Model, Grid
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
@@ -102,12 +103,13 @@ class Visualizer:
         self.current_step = 0
         self.model_state = UNCONFIGURED
         self.current_scenario: 'Scenario' = None
+        self._model: 'Model' = None
         self.scenario_param: Dict[str, Union[int, str, float]] = {}
 
         self.chart_options: Dict[str, Any] = {}
 
-        self.plot_charts: Dict[str, List[Dict[str, str]]] = {}  # {<chartName>: [{name: series1}, {name: series2}]}
-        self.chart_data: Dict[str, Dict[str, Dict[int, Any]]] = {}  # {"chart_name": {<series>: { <step>: value} } }
+        # self.plot_charts: Dict[str, List[ChartSeries]] = {}  # {<chartName>: ChartSeries[]}
+        self.plot_charts: ChartManager = ChartManager()
         self.current_websocket: WebSocketServerProtocol = None
 
         start_server = websockets.serve(handler, 'localhost', 8765)
@@ -128,12 +130,18 @@ class Visualizer:
     def format(self):
         pass
 
+    @property
+    def model(self):
+        return self._model
+
     def add_plot_chart(self, chart_name: str, series_names: List[str]):
-        if chart_name not in self.plot_charts.keys():
-            self.plot_charts[chart_name] = [{"seriesName": name} for name in series_names]
-            self.chart_data[chart_name] = {name: {} for name in series_names}
+        if chart_name not in self.plot_charts.all_chart_names():
+            self.plot_charts.add_chart(chart_name, series_names)
         else:
             raise ValueError(f"chart name '{chart_name}' already existed!")
+
+    def set_chart_data_source(self, chart_name: str, series_name: str, source: "Callable[[Model], Union[int, float]]"):
+        self.plot_charts.get_chart(chart_name).get_series(series_name).set_data_source(source)
 
     def set_plot_data(self, current_step: int, chart_name: str, series_values: Dict):
         """
@@ -142,10 +150,11 @@ class Visualizer:
         :param series_values:
         :return:
         """
-        assert chart_name in self.plot_charts.keys()
+        assert chart_name in self.plot_charts.all_chart_names()
         for series_name, series_value in series_values.items():
-            self.chart_data[chart_name][series_name][current_step] = series_value
-        # print(self.chart_data)
+            series = self.plot_charts.get_chart(chart_name).get_series(series_name)
+            series.add_data_value(series_value)
+            assert current_step == len(series.data) - 1, (current_step, len(series.data))
 
     def send_initial_msg(self, ws: WebSocketServerProtocol):
         formatted = self.format()
@@ -183,7 +192,9 @@ class Visualizer:
     def send_plot_series(self):
         self.send_message(
             json.dumps(
-                {"type": "initPlotSeries", "step": 0, "data": self.plot_charts,
+                {"type": "initPlotSeries",
+                 "step": 0,
+                 "data": self.plot_charts.to_json(),
                  "modelState": self.model_state,
                  "status": OK}))
 
@@ -285,7 +296,7 @@ class Visualizer:
     def step(self, current_step):
         self.model_state = RUNNING
         self.current_step = current_step
-
+        self.plot_charts.update(self.current_step)
         while 1:
             logger.info("in step")
             flag, data, ws = self.get_in_queue()
@@ -323,23 +334,40 @@ class GridVisualizer(Visualizer):
                               "xAxis": {"type": "category", "splitArea": {"show": True}},
                               "yAxis": {"type": "category", "splitArea": {"show": True}},
                               "visualMap": {
-                                  "min": 1, "max": 3, "calculable": True, "orient": "horizontal",
-                                  "left": "center", "color": ["#e33e33", "#fec42c", "#409eff"],
+                                  "type": "piecewise",
+                                  "categories": [1, 2, 3],
+                                  "calculable": True,
+                                  "orient": "horizontal",
+                                  "left": "center",
+                                  "inRange": {
+                                      "color": {
+                                          1: "#e33e33",
+                                          2: "#fec42c",
+                                          3: "#ff0000"
+                                      }
+                                  },
                                   "seriesIndex": [0]
                               },
                               "series": [
-                                  {"universalTransition": {"enabled": False}, "name": "Punch Card", "type": "heatmap"}]
+                                  {"universalTransition": {"enabled": False}, "name": "Spot", "type": "heatmap"}]
                               }
         self.other_series = {}
+        try:
+            my_url = urlopen("http://localhost:8089/api/tools/test")
+        except ConnectionRefusedError:
+            raise MelodieExceptions.Tools.MelodieStudioUnAvailable()
+        except URLError:
+            raise MelodieExceptions.Tools.MelodieStudioUnAvailable()
 
     def reset(self):
         self.grid_roles = []
         self.grid_params = {}
+        self.plot_charts.reset()
 
     def convert_to_1d(self, x, y):
         return x * self.height + y
 
-    def parse_series(self, grid: Grid):
+    def parse_series(self, grid: "Grid"):
         self.grid_roles = grid.get_roles().tolist()
 
         other_series_data = {}
@@ -357,7 +385,7 @@ class GridVisualizer(Visualizer):
         for series_name, data in other_series_data.items():
             self.other_series[series_name]['data'] = data
 
-    def parse_grid_roles(self, grid: Grid, parser: Callable[['Spot'], int]):
+    def parse_grid_roles(self, grid: "Grid", parser: Callable[['Spot'], int]):
         """
         Parse the role of each spot on the grid.
 
@@ -367,47 +395,27 @@ class GridVisualizer(Visualizer):
         """
         self.width = grid.width
         self.height = grid.height
-        self.grid_roles = [None for i in range(grid.height * grid.width)]
+        self.grid_roles = [None] * (grid.height * grid.width)
         other_series_data = {}
 
         categories = grid._agent_ids.keys()
-        if isinstance(grid, Grid):
-            for x in range(grid.width):
-                for y in range(grid.height):
-                    spot = grid.get_spot(x, y)
-                    role = parser(spot)
-                    if role < 0:
-                        self.grid_roles[self.convert_to_1d(x, y)] = [x, y, "-", 0]
-                    else:
-                        self.grid_roles[self.convert_to_1d(x, y)] = [x, y, 1, role]
-
-                    for category in categories:
-                        if other_series_data.get(category) is None:
-                            other_series_data[category] = []
-                        for agent_id in grid.get_agent_ids(category, x, y):
-                            other_series_data[category].append({
-                                'value': [x, y],
-                                'id': agent_id,
-                                'category': category,
-                            })
-        else:
-            for x in range(grid.width):
-                for y in range(grid.height):
-                    spot = grid.get_spot(x, y)
-                    role = parser(spot)
-                    if role < 0:
-                        self.grid_roles[self.convert_to_1d(x, y)] = [x, y, "-", 0]
-                    else:
-                        self.grid_roles[self.convert_to_1d(x, y)] = [x, y, 1, role]
-                    for category in categories:
-                        if other_series_data.get(category) is None:
-                            other_series_data[category] = []
-                        for agent_id in grid.get_agent_ids(category, x, y):
-                            other_series_data[category].append({
-                                'value': [x, y],
-                                'id': agent_id,
-                                'category': category,
-                            })
+        for x in range(grid.width):
+            for y in range(grid.height):
+                spot = grid.get_spot(x, y)
+                role = parser(spot)
+                if role < 0:
+                    self.grid_roles[self.convert_to_1d(x, y)] = [x, y, "-", 0]
+                else:
+                    self.grid_roles[self.convert_to_1d(x, y)] = [x, y, 1, role]
+                for category in categories:
+                    if other_series_data.get(category) is None:
+                        other_series_data[category] = []
+                    for agent_id in grid.get_agent_ids(category, x, y):
+                        other_series_data[category].append({
+                            'value': [x, y],
+                            'id': agent_id,
+                            'category': category,
+                        })
         for series_name, data in other_series_data.items():
             self.other_series[series_name]['data'] = data
 
@@ -428,21 +436,37 @@ class GridVisualizer(Visualizer):
         assert series_name in self.other_series
         self.other_series[series_name]['data'] = data
 
+    def add_visualizer(self, type):
+        pass
+
+
     def format(self):
         data = {
-            "visualizer":
-                {
-                    "series":
-                        [
-                            {
-                                "data": self.grid_roles,
-                            },
-                        ]
-                },
-            "plots": []
-
+            "visualizers":
+                [{
+                    "name": "grid",
+                    "type": "grid",
+                    "data": {
+                        "series":
+                            [
+                                {
+                                    "data": self.grid_roles,
+                                },
+                            ]
+                    }
+                }],
+            "plots": [{
+                "chartName": name,
+                "series": [
+                    {
+                        "name": self.plot_charts.get_chart(name).get_series_by_index(i).seriesName,
+                        "value": self.plot_charts.get_chart(name).get_series(
+                            self.plot_charts.get_chart(name).get_series_by_index(i).seriesName
+                        ).latest_data} for i in range(len(self.plot_charts.get_chart(name).series))]}
+                for name in self.plot_charts.all_chart_names()
+            ]
         }
-        data['visualizer']['series'].extend([series for k, series in self.other_series.items()])
+        data['visualizers'][0]['data']['series'].extend([series for k, series in self.other_series.items()])
         return data
 
 
@@ -538,8 +562,8 @@ class NetworkVisualizer(Visualizer):
                 "chartName": name,
                 "series": [
                     {
-                        "name": self.plot_charts[name][i]['seriesName'],
-                        "value": self.chart_data[name][self.plot_charts[name][i]['seriesName']][
+                        "name": self.plot_charts[name][i].seriesName,
+                        "value": self.chart_data[name][self.plot_charts[name][i].seriesName][
                             self.current_step]} for i in
                     range(len(self.plot_charts[name]))]} for name in self.plot_charts.keys()
             ]

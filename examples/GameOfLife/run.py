@@ -5,28 +5,18 @@ sys.path.append("../..")
 # Appending project root to "sys.path" makes Melody package accessible to the interpreter.
 # This code will be removed as soon as we release the first distribution onto pip.
 
-from model.environment import GameOfLifeEnvironment
 from model.scenario import GameOfLifeScenario
 from model.model import GameOfLifeModel
-from model.simulator import FuncSimulator
-from Melodie.visualizer import GridVisualizer
+from model.simulator import GameOfLifeSimulator
 from config import config
 from model.df_loader import GameOfLifeDataFrameLoader
+from Melodie import run_profile
 
 if __name__ == "__main__":
-    simulator = FuncSimulator(config, GameOfLifeScenario, GameOfLifeModel, GameOfLifeDataFrameLoader)
+    simulator = GameOfLifeSimulator(config, GameOfLifeScenario, GameOfLifeModel, GameOfLifeDataFrameLoader)
 
     """
     Run the model with dataframe_loader
     """
-    simulator.run_visual()
 
-    # dataframe_loader.run_visual(
-    #     # agent_class=None,
-    #     # environment_class=GameOfLifeEnvironment,
-    #     config=config,
-    #     model_class=GameOfLifeModel,
-    #     scenario_cls=GameOfLifeScenario,
-    #     # data_collector_class=DataCollector,
-    #     visualizer_class=GridVisualizer
-    # )
+    run_profile(simulator.run_visual)

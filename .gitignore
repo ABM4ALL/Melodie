@@ -409,5 +409,7 @@ _Database
 _database
 _output
 
+*.sqlite
+.melodiestudio
 .melodieconfig
 .history

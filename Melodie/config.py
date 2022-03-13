@@ -7,16 +7,19 @@ class Config:
     Config is needed by Simulator/Calibrator/Trainer and MelodieStudio for determining the project root, IO directories
      and other crucial configurations.
     """
+
     def __init__(self,
                  project_name: str,
                  project_root: str,
                  sqlite_folder: str,
                  excel_source_folder: str,
                  output_folder: str,
+                 visualizer_entry: str
                  ):
         self.project_name = project_name
         self.project_root = project_root
         self.sqlite_folder = sqlite_folder
+        self.visualizer_entry = visualizer_entry
         self.setup()
 
         if not os.path.exists(sqlite_folder):

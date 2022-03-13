@@ -196,3 +196,15 @@ class MelodieExceptions:
                                     f"The Agent property '{param_name}' is of type {param_type}, but the corresponding column "
                                     f"of the dataframe is of type {dataframe_dtypes[param_name]}.\n"
                                     f"The agent that offended is: {agent}")
+
+    class Tools:
+        """
+        This class is for errors related with dev tools such as MelodieStudio
+        """
+        ID = 1600
+
+        @staticmethod
+        def MelodieStudioUnAvailable():
+            return MelodieException(1601,
+                                    f'Connection to Melodie Studio was refused. It seems that Melodie studio is not '
+                                    f'started yet. Please start Melodie Studio.')

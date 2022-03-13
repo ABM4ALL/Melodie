@@ -44,6 +44,7 @@ class BaseModellingManager(abc.ABC):
     """
     Base class of Simulator/Trainer/Calibrator.
     """
+
     def __init__(self, config: Config,
                  scenario_cls: ClassVar['Scenario'],
                  model_cls: ClassVar['Model'],
@@ -51,7 +52,7 @@ class BaseModellingManager(abc.ABC):
         self.config: Optional[Config] = config
         self.scenario_cls = scenario_cls
         self.model_cls = model_cls
-        
+
         self.scenarios: Optional[List['Scenario']] = None
         self.df_loader_cls: Optional[ClassVar[DataFrameLoader]] = df_loader_cls
         self.df_loader: Optional[DataFrameLoader] = None
@@ -127,7 +128,8 @@ class Simulator(BaseModellingManager):
                             scenario,
                             run_id_in_scenario=run_id,
                             visualizer=visualizer)
-
+        if visualizer is not None:
+            visualizer._model = model
         model.setup()
         t1 = time.time()
         model.run()

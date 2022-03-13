@@ -3,11 +3,7 @@ __author__ = 'Songmin'
 
 import time
 
-import numpy as np
-
-import Melodie.boost
-from Melodie import Model
-from Melodie.boost.grid import Grid
+from Melodie import Model, Grid
 from .spot import GameOfLifeSpot
 from .environment import GameOfLifeEnvironment
 
@@ -38,23 +34,26 @@ class GameOfLifeModel(Model):
             self.grid.add_agent(agent.id, 'agents', 10, i)
 
     def run(self):
-        # self.visualizer.parse(self.grid)
-        # self.visualizer.start()
+        self.visualizer.parse(self.grid)
+        v = 0
+        # self.visualizer.set_plot_data(0, 'chart1', {'series1': v, 'series2': 100 - v})
+        self.visualizer.start()
 
+        # self.visualizer.set_plot_data(0, 'chart1', {'series1': v, 'series2': 100 - v})
         for i in range(self.scenario.periods):
             t0: float = time.time()
             self.environment.step(self.grid)
 
             t1: float = time.time()
 
-            # self.visualizer.parse(self.grid)
-            # self.visualizer.step(i)
+            self.visualizer.parse(self.grid)
+            v += 1
+            # self.visualizer.set_plot_data(i, 'chart1', {'series1': v, 'series2': 100 - v})
+            self.visualizer.step(i + 1)
 
             t2: float = time.time()
 
             print(f"step {i}, {t1 - t0}s for step and {t2 - t1}s for conversion.")
-
-        print(self.grid._spots)
 
     # def run_with_matplotlib(self):
     #     import matplotlib.pyplot as plt

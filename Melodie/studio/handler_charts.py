@@ -59,6 +59,11 @@ def delete_chart_options():
 
 @charts.route('setChartOptions', methods=["post"])
 def set_chart_option():
+    """
+    This method will overwrite the whole config of one chart.
+
+    :return:
+    """
     style_config_file = get_config_manager().basic_config.CHART_STYLE_CONFIG_FILE
     if os.path.exists(style_config_file):
         options, err = JSONManager.from_file(style_config_file, dict)

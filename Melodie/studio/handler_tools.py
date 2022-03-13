@@ -16,6 +16,11 @@ def name_convert_to_snake(name: str) -> str:
     return name.lower()
 
 
+@tools.route('test', methods=['get'])
+def test():
+    return Response.ok("Ok")
+
+
 @tools.route('createProject', methods=['post'])
 def create_new_project():
     data = json.loads(request.data)
