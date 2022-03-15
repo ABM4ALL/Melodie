@@ -9,14 +9,17 @@ import websockets
 import json
 from queue import Queue
 from typing import Dict, Tuple, List, Any, Callable, Union, Set, TYPE_CHECKING
+
+from websockets.exceptions import ConnectionClosedOK
 from websockets.legacy.server import WebSocketServerProtocol
 
 from .basic.exceptions import MelodieExceptions
+from .basic.vis_agent_series import AgentSeriesManager
 from .basic.vis_charts import ChartSeries, ChartManager, Chart
 
 if TYPE_CHECKING:
     from Melodie import Scenario, BaseAgentContainer, Model, Grid
-logging.basicConfig(level=logging.INFO)
+
 logger = logging.getLogger(__name__)
 
 # Command code
@@ -76,6 +79,8 @@ async def handler(ws: WebSocketServerProtocol, path):
                 raise NotImplementedError(cmd)
         except (asyncio.TimeoutError, ConnectionRefusedError):
             pass
+        except ConnectionClosedOK as e:
+            logger.info(e.reason)
         if ws.closed:
             socks.remove(ws)
             visualize_result_queues.pop(ws)
@@ -105,12 +110,13 @@ class Visualizer:
         self.current_scenario: 'Scenario' = None
         self._model: 'Model' = None
         self.scenario_param: Dict[str, Union[int, str, float]] = {}
-
+        self.visualizer_components: List[Tuple[str, str]] = []
         self.chart_options: Dict[str, Any] = {}
 
         # self.plot_charts: Dict[str, List[ChartSeries]] = {}  # {<chartName>: ChartSeries[]}
         self.plot_charts: ChartManager = ChartManager()
         self.current_websocket: WebSocketServerProtocol = None
+        self.agent_series_managers: Dict[str, AgentSeriesManager] = {}
 
         start_server = websockets.serve(handler, 'localhost', 8765)
         asyncio.get_event_loop().run_until_complete(start_server)
@@ -182,10 +188,20 @@ class Visualizer:
             socks.remove(closed_ws)
             visualize_result_queues.pop(closed_ws)
 
+    def get_visualizers_initial_options(self):
+        initial_options = []
+        for component_name, component_type in self.visualizer_components:
+            if component_type == 'grid':
+                initial_options.append(self.chart_options)
+            else:
+                raise NotImplementedError
+        return initial_options
+
     def send_chart_options(self):
         self.send_message(
             json.dumps(
-                {"type": "initOption", "step": 0, "data": self.chart_options,
+                {"type": "initOption", "step": 0,
+                 "data": self.get_visualizers_initial_options(),
                  "modelState": self.model_state,
                  "status": OK}))
 
@@ -208,14 +224,10 @@ class Visualizer:
             "initialParams": initial_params,
             "paramModels": param_models
         }
-        # print(params)
         self.send_message(
             json.dumps(
                 {"type": "params", "step": self.current_step, "data": params, "modelState": self.model_state,
                  "status": OK}))
-        # print(json.dumps(
-        #     {"type": "params", "step": self.current_step, "data": params, "modelState": self.model_state, "status": OK},
-        #     indent=4))
 
     def send_current_data(self):
         t0 = time.time()
@@ -251,7 +263,7 @@ class Visualizer:
 
     def generic_handler(self, cmd_type: int, data: Dict[str, Any], ws: WebSocketServerProtocol) -> bool:
         """
-        handler for viewing current data, get scenario parameters.
+        The handler for viewing current data, getting scenario parameters.
         :param cmd_type:
         :param data:
         :param ws:
@@ -274,6 +286,7 @@ class Visualizer:
     def start(self):
         self.model_state = READY
         self.current_step = 0
+        self.reset()
         try:
             self.send_current_data()
         except:
@@ -325,6 +338,7 @@ class GridVisualizer(Visualizer):
         super().__init__()
         self.height = 0
         self.width = 0
+
         self.grid_roles = []
 
         self.grid_params = {}
@@ -351,9 +365,8 @@ class GridVisualizer(Visualizer):
                               "series": [
                                   {"universalTransition": {"enabled": False}, "name": "Spot", "type": "heatmap"}]
                               }
-        self.other_series = {}
         try:
-            my_url = urlopen("http://localhost:8089/api/tools/test")
+            urlopen("http://localhost:8089/api/tools/test")
         except ConnectionRefusedError:
             raise MelodieExceptions.Tools.MelodieStudioUnAvailable()
         except URLError:
@@ -367,106 +380,59 @@ class GridVisualizer(Visualizer):
     def convert_to_1d(self, x, y):
         return x * self.height + y
 
-    def parse_series(self, grid: "Grid"):
-        self.grid_roles = grid.get_roles().tolist()
+    def parse_grid_series(self, grid: "Grid", grid_name: str):
+        grid_roles = grid.get_roles().tolist()
 
-        other_series_data = {}
+        agent_series_data = {}
         existed_agents = grid._existed_agents
         for category in existed_agents.keys():
-            if other_series_data.get(category) is None:
-                other_series_data[category] = []
+            if agent_series_data.get(category) is None:
+                agent_series_data[category] = []
             for agent_id in existed_agents[category]:
                 pos = grid.get_agent_pos(agent_id, category)
-                other_series_data[category].append({
+                agent_series_data[category].append({
                     'value': list(pos),
                     'id': agent_id,
                     'category': category,
                 })
-        for series_name, data in other_series_data.items():
-            self.other_series[series_name]['data'] = data
-
-    def parse_grid_roles(self, grid: "Grid", parser: Callable[['Spot'], int]):
-        """
-        Parse the role of each spot on the grid.
-
-        :param grid: The grid object to parse
-        :param parser: A function computes roles of each cell, returning an integer.
-        :return:
-        """
-        self.width = grid.width
-        self.height = grid.height
-        self.grid_roles = [None] * (grid.height * grid.width)
-        other_series_data = {}
-
-        categories = grid._agent_ids.keys()
-        for x in range(grid.width):
-            for y in range(grid.height):
-                spot = grid.get_spot(x, y)
-                role = parser(spot)
-                if role < 0:
-                    self.grid_roles[self.convert_to_1d(x, y)] = [x, y, "-", 0]
-                else:
-                    self.grid_roles[self.convert_to_1d(x, y)] = [x, y, 1, role]
-                for category in categories:
-                    if other_series_data.get(category) is None:
-                        other_series_data[category] = []
-                    for agent_id in grid.get_agent_ids(category, x, y):
-                        other_series_data[category].append({
-                            'value': [x, y],
-                            'id': agent_id,
-                            'category': category,
-                        })
-        for series_name, data in other_series_data.items():
-            self.other_series[series_name]['data'] = data
-
-    def add_agent_series(self, series_name: str, series_type: str, color: str, symbol="rect", ):
-        assert series_type in {'scatter'}
-        self.other_series[series_name] = {
-            "data": [],
-            "itemStyle":
-                {
-                    "color": color,
-                },
-            "symbol": "rect",
-            "type": series_type,
-            "name": series_name,
+        for series_name, data in agent_series_data.items():
+            self.agent_series_managers[grid_name].set_series_data(series_name, data)
+        return {
+            "name": "grid",
+            "type": "grid",
+            "data": {
+                "series":
+                    [
+                        {
+                            "data": grid_roles,
+                        },
+                    ] + [series for k, series in self.agent_series_managers[grid_name].to_dict().items()]
+            }
         }
 
-    def set_other_series_data(self, series_name, data):
-        assert series_name in self.other_series
-        self.other_series[series_name]['data'] = data
+    def add_agent_series(self, component_name: str, series_name: str, series_type: str, color: str, symbol="rect", ):
+        assert series_type in {'scatter'}
+        if component_name not in self.agent_series_managers:
+            self.agent_series_managers[component_name] = AgentSeriesManager()
+        self.agent_series_managers[component_name].add_series(series_name, series_type, color, symbol)
 
-    def add_visualizer(self, type):
-        pass
-
+    def add_visualize_component(self, component: str, type: str):
+        assert type in {"grid", "network"}
+        self.visualizer_components.append((component, type))
 
     def format(self):
+        visualizers = []
+        for vis_component_name, vis_component_type in self.visualizer_components:
+            if vis_component_type == "grid":
+                r = self.parse_grid_series(getattr(self._model, vis_component_name), vis_component_name)
+                visualizers.append(r)
+            else:
+                raise NotImplementedError
         data = {
-            "visualizers":
-                [{
-                    "name": "grid",
-                    "type": "grid",
-                    "data": {
-                        "series":
-                            [
-                                {
-                                    "data": self.grid_roles,
-                                },
-                            ]
-                    }
-                }],
-            "plots": [{
-                "chartName": name,
-                "series": [
-                    {
-                        "name": self.plot_charts.get_chart(name).get_series_by_index(i).seriesName,
-                        "value": self.plot_charts.get_chart(name).get_series(
-                            self.plot_charts.get_chart(name).get_series_by_index(i).seriesName
-                        ).latest_data} for i in range(len(self.plot_charts.get_chart(name).series))]}
-                for name in self.plot_charts.all_chart_names()
-            ]
+            "visualizers": visualizers,
+            "plots": self.plot_charts.get_current_data()
         }
-        data['visualizers'][0]['data']['series'].extend([series for k, series in self.other_series.items()])
+
         return data
 
 

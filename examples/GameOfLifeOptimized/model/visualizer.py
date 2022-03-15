@@ -19,7 +19,7 @@ class GameOfLifeVisualizer(GridVisualizer):
         self.add_agent_series('agents', 'scatter', '#bb0000', )
 
     def parse(self, grid):
-        self.parse_series(grid)
+        self.parse_grid_series(grid)
 
 
     def parse_roles_jit(self, grid):

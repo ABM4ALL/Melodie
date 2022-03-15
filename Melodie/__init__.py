@@ -19,7 +19,10 @@ from .trainer import Trainer
 from .tools import *
 import logging
 
-logging.basicConfig(stream=sys.stderr, level=logging.INFO)
+logging.basicConfig(level=logging.INFO,
+                    format='%(filename)s:%(lineno)d %(levelname)s %(message)s',
+                    datefmt='%a, %d %b %Y %H:%M:%S',
+                    )
 
 from .boost.agent_list import BaseAgentContainer, AgentList
 

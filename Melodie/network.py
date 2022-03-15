@@ -4,7 +4,7 @@ import logging
 
 from .boost.agent_list import BaseAgentContainer, AgentList
 
-logging.basicConfig(level=logging.DEBUG)
+
 logger = logging.getLogger(__name__)
 
 

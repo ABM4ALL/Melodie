@@ -9,10 +9,8 @@ import sys
 import time
 from typing import Union, TYPE_CHECKING
 
-from Melodie import AgentList, Agent
-from Melodie.grid import Grid, Spot
+from Melodie import Grid, Spot
 
-from Melodie.boost import JIT_AVAILABLE
 import logging
 
 if TYPE_CHECKING:
@@ -57,8 +55,8 @@ def agents(grid: Union['JITGrid', Grid]):
     #     assert y == grid.get_spot(x, y)['y']
 
 
-def neighbors(grid):
-    px, py = int(grid.width / 2), int(grid.height / 2)
+def neighbors(grid: Grid):
+    px, py = int(grid.width() / 2), int(grid.height() / 2)
     neighbor_ids = grid.get_neighbors(px, py, 1)
     if not isinstance(grid, Grid):  # convert jit data types
         print(neighbor_ids)
@@ -84,22 +82,8 @@ def neighbors(grid):
     else:
         assert x == grid.get_spot(x, y)['x']
         assert y == grid.get_spot(x, y)['y']
-    neighbor_ids = grid.get_neighbors(grid.width - 1, grid.height - 1, 1)
+    neighbor_ids = grid.get_neighbors(grid.width() - 1, grid.height() - 1, 1)
     grid.get_spot(0, 0)
-
-
-def test_to_json():
-    g = Grid(Spot, 100, 100)
-    t0 = time.time()
-    l = []
-    for x in range(g.width):
-        for y in range(g.height):
-            l.append(g.get_spot(x, y).__dict__)
-    t1 = time.time()
-    s = json.dumps(l)
-    t2 = time.time()
-
-    print(t2 - t0, t2 - t1, sys.getsizeof(s))
 
 
 # def test_agent_list():

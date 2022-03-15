@@ -2,7 +2,7 @@
 # @Time: 2021/11/12 9:20
 # @Author: Zhanyi Hou
 # @Email: 1295752786@qq.com
-# @File: grid.py
+# @File: spot.py
 import random
 
 from Melodie import Spot
@@ -10,7 +10,7 @@ from Melodie import Spot
 
 class GameOfLifeSpot(Spot):
     def setup(self):
-        self.alive = random.random() > 0.5
+        self.alive = random.random() > 0.3
         self.role: int = self.calc_role()
 
     def calc_role(self):

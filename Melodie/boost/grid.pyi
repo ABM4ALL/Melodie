@@ -35,8 +35,6 @@ class Grid:
         :param caching: If true, the neighbors and bound check results will be cached to avoid re-computing.
 
         """
-        self.width = width
-        self.height = height
         self.wrap = wrap
         self._existed_agents: Dict[str, Dict[int, Tuple[int, int]]] = {}
         self._spots = [[spot_cls(self._convert_to_1d(x, y), x, y) for x in range(width)] for y in range(height)]

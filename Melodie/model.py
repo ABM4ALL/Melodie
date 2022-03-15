@@ -20,6 +20,34 @@ from .visualizer import Visualizer
 logger = logging.getLogger(__name__)
 
 
+class ModelRunRoutine:
+    """
+    This is an simple iterator
+    """
+
+    def __init__(self, max_step: int, model: "Model"):
+        self._current_step = 0
+        self._max_step = max_step
+        self.model: "Model" = model
+
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        if self._current_step >= self._max_step:
+            raise StopIteration
+        self.model.visualizer_step(self._current_step)
+        self._current_step += 1
+        return self._current_step
+
+    def __del__(self):
+        """
+        Remove circular reference before deletion
+        :return:
+        """
+        self.model = None
+
+
 class Model:
     def __init__(self,
                  config: 'Config',
@@ -38,6 +66,13 @@ class Model:
 
         self.network = None
         self.visualizer = visualizer
+
+    def __del__(self):
+        """
+        Remove circular reference before deletion
+        :return:
+        """
+        self.visualizer = None
 
     def setup(self):
         """
@@ -125,3 +160,10 @@ class Model:
 
     def run_boost(self):
         pass
+
+    def routine(self):
+        return ModelRunRoutine(self.scenario.periods, self)
+
+    def visualizer_step(self, current_step: int):
+        if (self.visualizer is not None) and (current_step > 0):
+            self.visualizer.step(current_step)

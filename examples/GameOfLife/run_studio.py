@@ -4,7 +4,7 @@
 # @Email: 1295752786@qq.com
 # @File: run_studio.py
 
-from Melodie.studio import studio_main
+from MelodieStudio import studio_main
 from config import config
 
 studio_main(config)

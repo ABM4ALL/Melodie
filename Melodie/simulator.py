@@ -21,10 +21,6 @@ from .table_generator import TableGenerator
 from .basic.exceptions import MelodieExceptions
 from .dataframe_loader import DataFrameLoader
 
-logging.basicConfig(level=logging.INFO,
-                    format='%(asctime)s %(filename)s [line:%(lineno)d] %(levelname)s %(message)s',
-                    datefmt='%a, %d %b %Y %H:%M:%S',
-                    )
 logger = logging.getLogger(__name__)
 
 if TYPE_CHECKING:
@@ -130,7 +126,12 @@ class Simulator(BaseModellingManager):
                             visualizer=visualizer)
         if visualizer is not None:
             visualizer._model = model
+
         model.setup()
+
+        if visualizer is not None:
+            visualizer.start()
+
         t1 = time.time()
         model.run()
         t2 = time.time()
@@ -197,9 +198,7 @@ class Simulator(BaseModellingManager):
             except Melodie.visualizer.MelodieModelReset as e:
 
                 self.visualizer.reset()
-
-                import traceback
-                traceback.print_exc()
+                logger.info("Model reset.")
 
         t2 = time.time()
         logger.info(f'Melodie completed all runs, time elapsed totally {t2 - t0}s, and {t2 - t1}s for running.')

@@ -97,6 +97,24 @@ class ChartManager(JSONBase):
     def get_chart(self, chart_name: str) -> Chart:
         return self.charts[chart_name]
 
+    def get_current_data(self) -> List[Dict[str, List]]:
+        current_data = []
+        for chart_name in self.all_chart_names():
+            chart = self.get_chart(chart_name)
+            chart_series_data = []
+            for i in range(len(chart.series)):
+                s = {
+                    "name": chart.get_series_by_index(i).seriesName,
+                    "value": chart.get_series(
+                        chart.get_series_by_index(i).seriesName
+                    ).latest_data}
+                chart_series_data.append(s)
+            current_data.append({
+                "chartName": chart_name,
+                "series": chart_series_data
+            })
+        return current_data
+
     def reset(self):
         for chart_name, chart in self.charts.items():
             chart.reset()
