@@ -15,7 +15,7 @@ class GiniAgent(Agent):
     def go_produce(self):
         rand = random.random()
         if rand <= self.productivity:
-            self.account += 1
+            self.account += self.scenario.agent_productivity
         else:
             pass
 

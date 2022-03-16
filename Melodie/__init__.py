@@ -11,7 +11,7 @@ from .table_generator import TableGenerator
 from .dataframe_loader import DataFrameLoader
 from .simulator import Simulator
 from .calibrator import Calibrator
-from .visualizer import Visualizer
+from .visualizer import Visualizer, GridVisualizer
 from .analyzer import Analyzer
 from .plotter import Plotter
 from .network import OldNetwork, Edge, Network

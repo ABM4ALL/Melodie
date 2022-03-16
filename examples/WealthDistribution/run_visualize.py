@@ -1,8 +1,8 @@
 from model.scenario import GiniScenario
 from model.model import GiniModel
 from model.dataframe_loader import GiniDataframeLoader
-from model.simulator import GiniSimulator
 from config import config
+from model.simulator import GiniSimulator
 
 if __name__ == "__main__":
     simulator = GiniSimulator(config=config,
@@ -10,4 +10,4 @@ if __name__ == "__main__":
                               model_cls=GiniModel,
                               df_loader_cls=GiniDataframeLoader)
 
-    simulator.run()
+    simulator.run_visual()

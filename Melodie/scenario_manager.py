@@ -46,11 +46,21 @@ class Scenario(Element):
         super().__init__()
         if (id_scenario is not None) and (not isinstance(id_scenario, (int, str))):
             raise MelodieExceptions.Scenario.ScenarioIDTypeError(id_scenario)
+        self._parameters = []
         self.manager: Union['Calibrator', 'Simulator', None] = None
         self.id = id_scenario
         self.number_of_run = 1
         self.periods = 0
         self.setup()
+
+    def copy(self) -> 'Scenario':
+        new_scenario = self.__class__()
+        for property_name, property in self.__dict__.items():
+            assert property_name in new_scenario.__dict__
+            setattr(new_scenario, property_name, property)
+        for parameter in self._parameters:
+            parameter.init = getattr(self, parameter.name)
+        return new_scenario
 
     def setup(self):
         pass
@@ -67,7 +77,7 @@ class Scenario(Element):
         return d
 
     def properties_as_parameters(self) -> List[BaseParameter]:
-        return []
+        return self._parameters
 
     def __repr__(self):
         return f"<{self.__class__.__name__} {self.__dict__}>"
@@ -79,3 +89,11 @@ class Scenario(Element):
     def get_scenarios_table(self) -> pd.DataFrame:
         assert self.manager is not None
         return self.manager.scenarios_dataframe
+
+    def add_interactive_parameters(self, parameters: List[Union[BaseParameter, NumberParameter, SelectionParameter]]):
+        self._parameters.extend(parameters)
+        temp_set = set()
+        for parameter in self._parameters:
+            if parameter.name in temp_set:
+                raise MelodieExceptions.Scenario.ParameterRedefinedError(parameter.name, self._parameters)
+            temp_set.add(parameter.name)

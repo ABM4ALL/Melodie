@@ -15,6 +15,6 @@ class GameOfLifeScenario(Scenario):
 
     def properties_as_parameters(self) -> List[Scenario.BaseParameter]:
         return [
-            Scenario.NumberParameter("periods", self.periods, 100, 1000, 1),
+            Scenario.NumberParameter("periods", self.periods, 50, 300, 1),
             Scenario.NumberParameter("a", self.a, 0, 20, 1),
         ]

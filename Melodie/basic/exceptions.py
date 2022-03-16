@@ -113,6 +113,11 @@ class MelodieExceptions:
         def NoScenarioSheetInExcel(file_name: str):
             return MelodieException(1208, f'Melodie excel file {file_name} should have a sheet named \'scenarios\' ')
 
+        @staticmethod
+        def ParameterRedefinedError(parameter_name: str, all_params: List):
+            return MelodieException(1209,
+                                    f'A parameter with same name "{parameter_name}" already existed! all parameters are: {all_params}')
+
         # @staticmethod
         # def UnusedTableInExcel(excel_file_name: str, other_sheets: List[str]):
         #     return MelodieException(1209,

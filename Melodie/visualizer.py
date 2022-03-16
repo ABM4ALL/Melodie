@@ -15,10 +15,10 @@ from websockets.legacy.server import WebSocketServerProtocol
 
 from .basic.exceptions import MelodieExceptions
 from .basic.vis_agent_series import AgentSeriesManager
-from .basic.vis_charts import ChartSeries, ChartManager, Chart
+from .basic.vis_charts import ChartManager
 
 if TYPE_CHECKING:
-    from Melodie import Scenario, BaseAgentContainer, Model, Grid
+    from Melodie import Scenario, Model, Grid
 
 logger = logging.getLogger(__name__)
 
@@ -330,7 +330,10 @@ class Visualizer:
             if flag == CURRENT_DATA:
                 self.send_current_data()
             else:
-                self.send_error(f"Invalid command flag {flag} for function 'finish'. ")
+                if flag == STEP:
+                    self.send_error(f"Model already finished, please reset the model.")
+                else:
+                    self.send_error(f"Invalid command flag {flag} for function 'finish'. ")
 
 
 class GridVisualizer(Visualizer):
@@ -343,28 +346,29 @@ class GridVisualizer(Visualizer):
 
         self.grid_params = {}
 
-        self.chart_options = {"animation": False, "progressiveThreshold": 100000, "tooltip": {"position": "top"},
-                              "grid": {"height": "80%", "top": "10%"},
-                              "xAxis": {"type": "category", "splitArea": {"show": True}},
-                              "yAxis": {"type": "category", "splitArea": {"show": True}},
-                              "visualMap": {
-                                  "type": "piecewise",
-                                  "categories": [1, 2, 3],
-                                  "calculable": True,
-                                  "orient": "horizontal",
-                                  "left": "center",
-                                  "inRange": {
-                                      "color": {
-                                          1: "#e33e33",
-                                          2: "#fec42c",
-                                          3: "#ff0000"
-                                      }
-                                  },
-                                  "seriesIndex": [0]
-                              },
-                              "series": [
-                                  {"universalTransition": {"enabled": False}, "name": "Spot", "type": "heatmap"}]
-                              }
+        self.chart_options = {
+            "animation": False, "progressiveThreshold": 100000, "tooltip": {"position": "top"},
+            "grid": {"height": "80%", "top": "10%"},
+            "xAxis": {"type": "category", "splitArea": {"show": True}},
+            "yAxis": {"type": "category", "splitArea": {"show": True}},
+            "visualMap": {
+                "type": "piecewise",
+                "categories": [1, 2, 3],
+                "calculable": True,
+                "orient": "horizontal",
+                "left": "center",
+                "inRange": {
+                    "color": {
+                        1: "#e33e33",
+                        2: "#fec42c",
+                        3: "#ff0000"
+                    }
+                },
+                "seriesIndex": [0]
+            },
+            "series": [
+                {"universalTransition": {"enabled": False}, "name": "Spot", "type": "heatmap"}]
+        }
         try:
             urlopen("http://localhost:8089/api/tools/test")
         except ConnectionRefusedError:

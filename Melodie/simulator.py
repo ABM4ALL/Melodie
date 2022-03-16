@@ -104,7 +104,7 @@ class Simulator(BaseModellingManager):
         self.server_thread: threading.Thread = None
         self.visualizer: Optional[Visualizer] = None
 
-    def generate_scenarios(self):
+    def generate_scenarios(self) -> List['Scenario']:
         """
         Generate scenarios from the dataframe_loader
         :return: 
@@ -134,6 +134,8 @@ class Simulator(BaseModellingManager):
 
         t1 = time.time()
         model.run()
+        if visualizer is not None:
+            model.visualizer.finish()
         t2 = time.time()
 
         model_setup_time = t1 - t0
@@ -165,7 +167,7 @@ class Simulator(BaseModellingManager):
         t1 = time.time()
         for scenario_index, scenario in enumerate(self.scenarios):
             for run_id in range(scenario.number_of_run):
-                self.run_model(self.config, scenario, run_id, self.model_cls, visualizer=self.visualizer)
+                self.run_model(self.config, scenario, run_id, self.model_cls, visualizer=None)
 
             logger.info(f'{scenario_index + 1} of {len(self.scenarios)} scenarios has completed.')
 
@@ -182,13 +184,13 @@ class Simulator(BaseModellingManager):
 
         self.setup()
         self.pre_run()
-
         logger.info('Loading scenarios and static tables...')
         t1 = time.time()
         while True:
             logger.info(f"Visualizer interactive paramerters for this scenario are: {self.visualizer.scenario_param}")
-            scenario = self.scenario_cls()
-            scenario.setup()
+
+            scenario = self.scenarios[0].copy()
+            scenario.manager = self
             for k, v in self.visualizer.scenario_param.items():
                 scenario.__setattr__(k, v)
             logger.info(f"Scenario parameters: {scenario.to_dict()}")
