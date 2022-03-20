@@ -9,6 +9,17 @@ if TYPE_CHECKING:
     from ..boost.vectorize import vectorize_2d
 
 
+class GridAgent:
+    def __init__(self, agent_id: int, x: int = 0, y: int = 0):
+        self.id = 0
+        self.x = 0
+        self.y = 0
+        return
+
+    def setup(self):
+        pass
+
+
 class Spot(Agent):
     def __init__(self, spot_id: int, x: int = 0, y: int = 0):
         super(Spot, self).__init__(spot_id)
@@ -135,7 +146,7 @@ class Grid:
                 neighbors.append(self._bound_check(x + dx, y + dy))
         return neighbors
 
-    def add_agent(self, agent_id: int, category: str, x: int, y: int):
+    def add_agent(self, agent: GridAgent, category: str):
         """
         Add agent onto the grid
         :param agent_id:
@@ -144,18 +155,7 @@ class Grid:
         :param y:
         :return:
         """
-        x, y = self._bound_check(x, y)
-
-        category_of_agents = self._get_category_of_agents(category)
-
-        if agent_id in category_of_agents.keys():
-            raise ValueError(f"Agent with id: {agent_id} already exists on grid!")
-
-        if agent_id in self._agent_ids[category][self._convert_to_1d(x, y)]:
-            raise ValueError(f"Agent with id: {agent_id} already exists at position {(x, y)}!")
-        else:
-            self._agent_ids[category][self._convert_to_1d(x, y)].add(agent_id)
-            self._existed_agents[category][agent_id] = (x, y)
+        ...
 
     def _remove_agent(self, agent_id: int, category: str, x: int, y: int):
         x, y = self._bound_check(x, y)
@@ -175,28 +175,25 @@ class Grid:
             self._agent_ids[category][self._convert_to_1d(x, y)].remove(agent_id)
             self._existed_agents[category].pop(agent_id)
 
-    def remove_agent(self, agent_id: int, category: str):
+    def remove_agent(self, agent: GridAgent, category: str) -> None:
         """
         Remove agent from the grid
-        :param agent_id:
+        :param agent:
         :param category:
         :return:
         """
-        source_x, source_y = self.get_agent_pos(agent_id, category)
-        self._remove_agent(agent_id, category, source_x, source_y)
+        ...
 
-    def move_agent(self, agent_id, category: str, target_x, target_y):
+    def move_agent(self, agent: GridAgent, category: str, target_x, target_y) -> None:
         """
         Move agent to target position.
-        :param agent_id:
+        :param agent:
         :param category:
         :param target_x:
         :param target_y:
         :return:
         """
-        source_x, source_y = self.get_agent_pos(agent_id, category)
-        self._remove_agent(agent_id, category, source_x, source_y)
-        self.add_agent(agent_id, category, target_x, target_y)
+        ...
 
     def get_agent_pos(self, agent_id: int, category: str) -> Tuple[int, int]:
         """
@@ -239,7 +236,7 @@ class Grid:
                 grid_roles[pos_1d, 3] = spot.role
         return grid_roles
 
-    def rand_move(self, agent_id: int, category: str, x_range: int, y_range: int):
+    def rand_move(self, agent_id: GridAgent, category: str, x_range: int, y_range: int):
 
         source_x, source_y = self.get_agent_pos(agent_id, category)
         self._remove_agent(agent_id, category, source_x, source_y)

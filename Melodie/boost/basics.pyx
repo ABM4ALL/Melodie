@@ -10,7 +10,7 @@ if TYPE_CHECKING:
 
 cdef class Element:
 
-    cpdef void set_params(self, dict params):
+    cpdef void set_params(self, dict params) except *:
 
         """
 

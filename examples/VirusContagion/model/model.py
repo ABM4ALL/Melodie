@@ -24,7 +24,7 @@ class CovidModel(Model):
             self.grid = Grid(Spot, self.scenario.grid_x_size, self.scenario.grid_y_size, caching=False)
             self.grid.add_category('agent_list')
             for agent in self.agent_list:
-                self.grid.add_agent(agent.id, "agent_list", agent.x_pos, agent.y_pos)
+                self.grid.add_agent(agent, "agent_list")  # , agent.x, agent.y)
 
     def run(self):
         for t in range(0, self.scenario.periods):

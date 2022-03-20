@@ -9,7 +9,7 @@ import sys
 import time
 from typing import Union, TYPE_CHECKING
 
-from Melodie import Grid, Spot
+from Melodie import Grid, Spot, GridAgent, Agent
 
 import logging
 
@@ -24,17 +24,26 @@ N = 10000_000
 def agents(grid: Union['JITGrid', Grid]):
     grid.add_category('wolves')
     grid.add_category('sheep')
-
-    grid.add_agent(0, 'wolves', 1, 1)
-    grid.add_agent(1, 'wolves', 1, 1)
-    grid.add_agent(2, 'wolves', 1, 1)
-    grid.add_agent(3, 'sheep', 1, 1)
+    a0 = GridAgent(0, 1, 1)
+    a1 = GridAgent(1, 1, 1)
+    a2 = GridAgent(2, 1, 1)
+    a3 = GridAgent(3, 1, 1)
+    error_agent = Agent(0)
+    grid.add_agent(a0, 'wolves')
+    grid.add_agent(a1, 'wolves')
+    grid.add_agent(a2, 'wolves')
+    grid.add_agent(a3, 'sheep')
     try:
-        grid.add_agent(3, 'undefined', 1, 1)
+        grid.add_agent(error_agent, "sheep")
+        assert False, "An error should be raised at line above"
+    except TypeError:
+        pass
+    try:
+        grid.add_agent(a3, 'undefined')
         assert False, "An error should be raised at line above"
     except ValueError:
         pass
-    grid.remove_agent(0, 'wolves')
+    grid.remove_agent(a0, 'wolves')
     wolves_at_1_1 = grid.get_agent_ids('wolves', 1, 1)
     assert 1 in wolves_at_1_1
     assert 2 in wolves_at_1_1
@@ -42,17 +51,8 @@ def agents(grid: Union['JITGrid', Grid]):
     sheep_at_1_1 = grid.get_agent_ids('sheep', 1, 1)
     assert 3 in sheep_at_1_1
 
-    grid.move_agent(3, 'sheep', 2, 2)
+    grid.move_agent(a3, 'sheep', 2, 2)
     assert 3 in grid.get_agent_ids('sheep', 2, 2)
-
-    pos = grid.get_agent_pos(3, 'sheep')
-    assert pos == (2, 2)
-    # if isinstance(grid, Grid):
-    #     assert x == grid.get_spot(x, y).x
-    #     assert y == grid.get_spot(x, y).y
-    # else:
-    #     assert x == grid.get_spot(x, y)['x']
-    #     assert y == grid.get_spot(x, y)['y']
 
 
 def neighbors(grid: Grid):

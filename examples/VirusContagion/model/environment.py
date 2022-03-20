@@ -25,7 +25,7 @@ class CovidEnvironment(Environment):
             if agent.condition == 1:
                 pass
             else:
-                neighbors = grid.get_neighbors(agent.x_pos, agent.y_pos, 1, except_self=False)
+                neighbors = grid.get_neighbors(agent.x, agent.y, 1, except_self=False)
                 agent.condition = self.infect_from_neighbor(agent.id, neighbors, grid, agent_list)
 
     def infect_from_neighbor(self, current_agent_id: int, neighbors: List[Tuple[int, int]], grid: 'Grid',

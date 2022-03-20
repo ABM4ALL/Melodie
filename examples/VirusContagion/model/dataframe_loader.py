@@ -40,12 +40,12 @@ class CovidDataFrameLoader(DataFrameLoader):
         with self.table_generator('agent_params', lambda scenario: scenario.agent_num) as g:
             def generator_func(scenario: 'CovidScenario'):
                 return {'id': g.increment(),
-                        'x_pos': np.random.randint(0, scenario.grid_x_size),
-                        'y_pos': np.random.randint(0, scenario.grid_y_size),
+                        'x': np.random.randint(0, scenario.grid_x_size),
+                        'y': np.random.randint(0, scenario.grid_y_size),
                         'condition': init_condition(scenario.initial_infected_percentage)}
 
             g.set_row_generator(generator_func)
             g.set_column_data_types({'id': sqlalchemy.Integer(),
-                                     'x_pos': sqlalchemy.Integer(),
-                                     'y_pos': sqlalchemy.Integer(),
+                                     'x': sqlalchemy.Integer(),
+                                     'y': sqlalchemy.Integer(),
                                      'condition': sqlalchemy.Integer()})

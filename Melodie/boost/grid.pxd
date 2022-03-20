@@ -1,3 +1,11 @@
+from .basics cimport Element
+
+cdef class GridAgent(Element):
+    cdef public long id
+    cdef public long x
+    cdef public long y
+    cpdef void set_params(self, dict params) except *
+
 cdef class Spot:
     cdef public long id
     cdef public long x
@@ -18,7 +26,7 @@ cdef class Grid:
     cpdef get_agent_ids(self, object category, long x, long y)
     cdef long _convert_to_1d(self, long x, long y)
     cdef bint _in_bounds(self, long x, long y)
-    cpdef _get_category_of_agents(self, object category_name)
+    cpdef list _get_agent_id_set_list(self, object category_name)
     cdef (long, long) _bound_check(self, long x, long y) except *
     cdef (long, long) _coords_wrap(self, long x ,long y)
     cpdef (long, long) coords_wrap(self, long x, long y)
@@ -28,9 +36,10 @@ cdef class Grid:
     cpdef list get_neighbors(self, long x, long y, long radius=*, bint moore=*, bint except_self=*)
     cpdef long height(self)
     cpdef long width(self)
-    cpdef void add_agent(self, long agent_id, object category, long x, long y) except *
-    cpdef void remove_agent(self, long agent_id, object category) except *
+    cpdef void add_agent(self, GridAgent agent, object category) except *
+    cpdef void remove_agent(self, GridAgent agent, object category) except *
+    cpdef void move_agent(self, GridAgent agent, object category, target_x, target_y) except *
     cdef void _add_agent(self, long agent_id, object category, long x, long y) except *
     cdef void _remove_agent(self, long agent_id, object category,long x, long y) except *
-    cpdef (long, long) get_agent_pos(self, long agent_id, object category)
-    cpdef (long, long) rand_move(self, long agent_id, object category, long range_x, long range_y)
+    # cpdef (long, long) get_agent_pos(self, long agent_id, object category)
+    cpdef (long, long) rand_move(self, GridAgent agent, object category, long range_x, long range_y)

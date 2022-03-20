@@ -16,6 +16,7 @@ from cpython cimport PyObject_GetAttr, PyObject_GetAttrString, \
 cimport cython
 from libc.math cimport pow
 from libc.stdlib cimport rand, RAND_MAX
+from .basics cimport Element
 cimport numpy as np
 import numpy as np
 import time
@@ -25,6 +26,29 @@ ctypedef np.float64_t DTYPE_FLOAT
 ctypedef fused DTYPE_FUSED:
     np.int64_t
     np.float64_t
+
+cdef class GridAgent(Element):
+    def __init__(self, agent_id:int, x:int=0, y:int=0):
+        self.id = agent_id
+        self.x = x
+        self.y = y
+
+    cpdef void set_params(self, dict params) except *:
+        """
+
+        :param params:
+        :return:
+        """
+        for paramName, paramValue in params.items():
+            if paramName=='x':
+                self.x = paramValue
+            elif paramName=='y':
+                self.y = paramValue
+            elif paramName=='id':
+                self.id = paramValue
+            else:
+                assert paramName in self.__dict__.keys(), f"param named {paramName}, value {paramValue} not in Agent.params:{self.__dict__.keys()}"
+                setattr(self, paramName, paramValue)
 
 cdef class Spot:
     def __init__(self, spot_id: int, x: int = 0, y: int = 0):
@@ -58,7 +82,6 @@ cdef class Grid:
         self._width = width
         self._height = height
         self.wrap = wrap
-        self._existed_agents = {}
         self._spots = [[spot_cls(self._convert_to_1d(x, y), x, y) for x in range(width)] for y in range(height)]
         for x in range(self._width):
             for y in range(self._height):
@@ -76,7 +99,6 @@ cdef class Grid:
         :return:
         """
         self._agent_ids[category_name] = [set() for i in range(self._width * self._height)]
-        self._existed_agents[category_name] = {}
 
     # @cython.boundscheck(False)
     # @cython.wraparound(False)
@@ -115,12 +137,12 @@ cdef class Grid:
     cdef bint _in_bounds(self, long x, long y):
         return (0 <= x < self._width) and (0 <= y <= self._height)
 
-    cpdef _get_category_of_agents(self, object category_name):
+    cpdef list _get_agent_id_set_list(self, object category_name):
         """
         Get category of agents
         """
-        cdef dict category
-        category = self._existed_agents.get(category_name)
+        cdef list category
+        category = self._agent_ids.get(category_name)
         if category is None:
             raise ValueError(f"Category {category_name} is not registered!")
         return category
@@ -204,24 +226,13 @@ cdef class Grid:
         """
         cdef list neighbors 
         cdef tuple key
-        # cdef object key
         key = (x, y, radius, moore, except_self)
-        # key = self._get_neighbors_key_hash(x, y, radius, moore, except_self)
         if self._neighbors_cache.get(key) is not None:
             return self._neighbors_cache[key]
         else:
             neighbors = self._neighbors(x, y, radius, moore, except_self)
             self._neighbors_cache[key] = neighbors
             return neighbors
-
-        # if self._neighbors_cache[self._convert_to_1d(x, y)] is not None:
-        #     return self._neighbors_cache[self._convert_to_1d(x, y)]
-        # else:
-        #     neighbors = self._neighbors(x, y, radius, moore, except_self)
-        #     self._neighbors_cache[self._convert_to_1d(x, y)] = neighbors
-        #     return neighbors
-    cpdef void add_agent(self, long agent_id, object category, long x, long y) except *:
-        self._add_agent(agent_id, category, x, y)
 
     cdef void _add_agent(self, long agent_id, object category, long x, long y) except *:
         """
@@ -238,18 +249,17 @@ cdef class Grid:
         
         x, y = self._bound_check(x, y)
 
-        category_of_agents = self._get_category_of_agents(category)
+        agent_id_set_list = self._get_agent_id_set_list(category)
 
-        if agent_id in category_of_agents:
-            raise ValueError(f"Agent with id: {agent_id} already exists on grid!")
-        agent_id_set_list = self._agent_ids[category]
+        # if agent_id in category_of_agents:
+        #     raise ValueError(f"Agent with id: {agent_id} already exists on grid!")
+        # agent_id_set_list = self._agent_ids[category]
         agent_id_set = agent_id_set_list[self._convert_to_1d(x, y)]
         if agent_id in agent_id_set:
             raise ValueError(f"Agent with id: {agent_id} already exists at position {(x, y)}!")
         else:
-            
             agent_id_set.add(agent_id)
-            category_of_agents[agent_id] = (x, y)
+            # category_of_agents[agent_id] = (x, y)
 
     cdef void _remove_agent(self, long agent_id, object category,long x, long y) except *:
         cdef dict category_of_agents
@@ -258,12 +268,12 @@ cdef class Grid:
 
         x, y = self._bound_check(x, y)
 
-        category_of_agents = self._get_category_of_agents(category)
+        agent_id_set_list = self._get_agent_id_set_list(category)
 
-        if agent_id not in category_of_agents:
-            raise ValueError(f"Agent with id: {agent_id} does not exist on grid!")
+        # if agent_id not in category_of_agents:
+        #     raise ValueError(f"Agent with id: {agent_id} does not exist on grid!")
 
-        agent_id_set_list = self._agent_ids[category]
+        # agent_id_set_list = self._agent_ids[category]
         agent_id_set = agent_id_set_list[self._convert_to_1d(x, y)]
         if agent_id not in agent_id_set:
             print("Melodie-boost error occured. agent_id:", agent_id, "x:", x, "y:",
@@ -271,19 +281,20 @@ cdef class Grid:
             raise IndexError("agent_id does not exist on such coordinate.")
         else:
             agent_id_set.remove(agent_id)
-            self._existed_agents[category].pop(agent_id)
 
-    cpdef void remove_agent(self, long agent_id, object category) except *:
+    cpdef void add_agent(self, GridAgent agent, object category) except *:
+        self._add_agent(agent.id, category, agent.x, agent.y)
+
+    cpdef void remove_agent(self, GridAgent agent, object category) except *:
         """
         Remove agent from the grid
         :param agent_id:
         :param category:
         :return:
         """
-        source_x, source_y = self.get_agent_pos(agent_id, category)
-        self._remove_agent(agent_id, category, source_x, source_y)
+        self._remove_agent(agent.id, category, agent.x, agent.y)
 
-    def move_agent(self, agent_id, category: str, target_x, target_y):
+    cpdef void move_agent(self, GridAgent agent, object category, target_x, target_y) except *:
         """
         Move agent to target position.
         :param agent_id:
@@ -292,30 +303,30 @@ cdef class Grid:
         :param target_y:
         :return:
         """
-        source_x, source_y = self.get_agent_pos(agent_id, category)
-        self._remove_agent(agent_id, category, source_x, source_y)
-        self.add_agent(agent_id, category, target_x, target_y)
+        self._remove_agent(agent.id, category, agent.x, agent.y)
+        self._add_agent(agent.id, category, target_x, target_y)
 
     @cython.cdivision(True)
-    cpdef (long, long) rand_move(self, long agent_id, object category, long range_x, long range_y):
+    cpdef (long, long) rand_move(self, GridAgent agent, object category, long range_x, long range_y):
         cdef long source_x, source_y, dx, dy, target_x, target_y
-        source_x, source_y = self.get_agent_pos(agent_id, category)
-        self._remove_agent(agent_id, category, source_x, source_y)
+        source_x = agent.x
+        source_y = agent.y
+        self._remove_agent(agent.id, category, source_x, source_y)
         dx = <long>((rand()/(RAND_MAX*1.0))*(2*range_x+1)) - range_x
         dy = <long>((rand()/(RAND_MAX*1.0))*(2*range_y+1)) - range_y
         target_x = source_x+dx
         target_y = source_y+dy
-        self.add_agent(agent_id, category, target_x, target_y)
+        self._add_agent(agent.id, category, target_x, target_y)
         return target_x, target_y
 
-    cpdef (long, long) get_agent_pos(self, long agent_id, object category):
-        """
-        Get the agent position at the grid.
-        :param agent_id:
-        :param category:
-        :return:
-        """
-        return self._existed_agents[category][agent_id]
+    # cpdef (long, long) get_agent_pos(self, long agent_id, object category):
+    #     """
+    #     Get the agent position at the grid.
+    #     :param agent_id:
+    #     :param category:
+    #     :return:
+    #     """
+    #     return self._existed_agents[category][agent_id]
 
     def to_2d_array(self, attr_name: str) -> np.ndarray:
         """

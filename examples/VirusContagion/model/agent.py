@@ -1,13 +1,13 @@
-from Melodie import Agent, Grid
+from Melodie import Agent, Grid, GridAgent
 
 
-class CovidAgent(Agent):
+class CovidAgent(GridAgent):
 
     def setup(self):
-        self.x_pos = 0
-        self.y_pos = 0
+        self.x = 0
+        self.y = 0
         self.condition = 0
 
     def move(self, grid: 'Grid'):
-        self.x_pos, self.y_pos = grid.rand_move(self.id, 'agent_list', 1, 1)
+        self.x, self.y = grid.rand_move(self, 'agent_list', 1, 1)
         return

@@ -9,7 +9,7 @@ if TYPE_CHECKING:
     from Melodie import Model, Scenario
 
 cdef class Element:
-    cpdef void set_params(self, dict params)
+    cpdef void set_params(self, dict params) except *
 
 
 cdef class Environment(Element):
