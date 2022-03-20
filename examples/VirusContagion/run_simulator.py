@@ -1,6 +1,6 @@
 import sys
 
-from Melodie import Simulator
+from Melodie import Simulator,run_profile
 
 sys.path.append("../..")
 from model.scenario import CovidScenario
@@ -20,7 +20,8 @@ if __name__ == "__main__":
     # profiler = cProfile.Profile()
     # profiler.enable()
     #
-    simulator.run()
+    run_profile(simulator.run)
+    # simulator.run()
     #
     # profiler.disable()
     # stats = pstats.Stats(profiler).sort_stats('ncalls')

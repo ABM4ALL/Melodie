@@ -28,3 +28,7 @@ cdef class Grid:
     cpdef list get_neighbors(self, long x, long y, long radius=*, bint moore=*, bint except_self=*)
     cpdef long height(self)
     cpdef long width(self)
+    cpdef void add_agent(self, long agent_id, object category, long x, long y)
+    cdef _remove_agent(self, long agent_id, object category,long x, long y)
+    cpdef (long, long) get_agent_pos(self, long agent_id, object category)
+    cpdef (long, long) rand_move(self, long agent_id, object category, long range_x, long range_y)
