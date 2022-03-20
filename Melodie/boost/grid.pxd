@@ -19,7 +19,7 @@ cdef class Grid:
     cdef long _convert_to_1d(self, long x, long y)
     cdef bint _in_bounds(self, long x, long y)
     cpdef _get_category_of_agents(self, object category_name)
-    cdef (long, long) _bound_check(self, long x, long y)
+    cdef (long, long) _bound_check(self, long x, long y) except *
     cdef (long, long) _coords_wrap(self, long x ,long y)
     cpdef (long, long) coords_wrap(self, long x, long y)
     cdef list _neighbors(self, long x, long y, long radius, bint moore, bint except_self)
@@ -28,7 +28,9 @@ cdef class Grid:
     cpdef list get_neighbors(self, long x, long y, long radius=*, bint moore=*, bint except_self=*)
     cpdef long height(self)
     cpdef long width(self)
-    cpdef void add_agent(self, long agent_id, object category, long x, long y)
-    cdef _remove_agent(self, long agent_id, object category,long x, long y)
+    cpdef void add_agent(self, long agent_id, object category, long x, long y) except *
+    cpdef void remove_agent(self, long agent_id, object category) except *
+    cdef void _add_agent(self, long agent_id, object category, long x, long y) except *
+    cdef void _remove_agent(self, long agent_id, object category,long x, long y) except *
     cpdef (long, long) get_agent_pos(self, long agent_id, object category)
     cpdef (long, long) rand_move(self, long agent_id, object category, long range_x, long range_y)

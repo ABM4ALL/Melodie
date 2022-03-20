@@ -26,34 +26,6 @@ ctypedef fused DTYPE_FUSED:
     np.int64_t
     np.float64_t
 
-@cython.boundscheck(False)
-@cython.wraparound(False)
-cpdef f(object testlist):
-    cdef object[:, :] testarr
-    cdef np.ndarray ar1
-    cdef object testobj
-    cdef long i, length
-    ar1 = np.array(testlist, dtype=object)
-    testarr = ar1
-    print(testarr, ar1)
-    length = len(testlist)
-    t0 = time.time()
-    for i in range(10000_000):
-        for j in range(length):
-            testobj = testlist[j][0]
-    t1 = time.time()
-    print("list",t1-t0)
-
-    t0 = time.time()
-    for i in range(10000_000):
-        for j in range(length):
-            testobj = testarr[j, 0]
-    t1 = time.time()
-    print("arr", t1-t0)
-
-
-    pass
-
 cdef class Spot:
     def __init__(self, spot_id: int, x: int = 0, y: int = 0):
         self.id = spot_id
@@ -154,7 +126,7 @@ cdef class Grid:
         return category
 
     @cython.initializedcheck(False)
-    cdef (long, long) _bound_check(self, long x, long y):
+    cdef (long, long) _bound_check(self, long x, long y) except *:
         if self.wrap:
             return self._coords_wrap(x, y)
         if not (0 <= x < self._width):
@@ -248,8 +220,10 @@ cdef class Grid:
         #     neighbors = self._neighbors(x, y, radius, moore, except_self)
         #     self._neighbors_cache[self._convert_to_1d(x, y)] = neighbors
         #     return neighbors
+    cpdef void add_agent(self, long agent_id, object category, long x, long y) except *:
+        self._add_agent(agent_id, category, x, y)
 
-    cpdef void add_agent(self, long agent_id, object category, long x, long y):
+    cdef void _add_agent(self, long agent_id, object category, long x, long y) except *:
         """
         Add agent onto the grid
         :param agent_id:
@@ -266,17 +240,18 @@ cdef class Grid:
 
         category_of_agents = self._get_category_of_agents(category)
 
-        if agent_id in category_of_agents.keys():
+        if agent_id in category_of_agents:
             raise ValueError(f"Agent with id: {agent_id} already exists on grid!")
         agent_id_set_list = self._agent_ids[category]
-        if agent_id in agent_id_set_list[self._convert_to_1d(x, y)]:
+        agent_id_set = agent_id_set_list[self._convert_to_1d(x, y)]
+        if agent_id in agent_id_set:
             raise ValueError(f"Agent with id: {agent_id} already exists at position {(x, y)}!")
         else:
-            agent_id_set = agent_id_set_list[self._convert_to_1d(x, y)]
+            
             agent_id_set.add(agent_id)
             category_of_agents[agent_id] = (x, y)
 
-    cdef _remove_agent(self, long agent_id, object category,long x, long y):
+    cdef void _remove_agent(self, long agent_id, object category,long x, long y) except *:
         cdef dict category_of_agents
         cdef list agent_id_set_list
         cdef set agent_id_set
@@ -298,7 +273,7 @@ cdef class Grid:
             agent_id_set.remove(agent_id)
             self._existed_agents[category].pop(agent_id)
 
-    def remove_agent(self, agent_id: long, category: str):
+    cpdef void remove_agent(self, long agent_id, object category) except *:
         """
         Remove agent from the grid
         :param agent_id:
