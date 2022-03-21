@@ -20,8 +20,8 @@ if __name__ == "__main__":
     # profiler = cProfile.Profile()
     # profiler.enable()
     #
-    # run_profile(simulator.run)
-    simulator.run()
+    run_profile(simulator.run)
+    # simulator.run()
     #
     # profiler.disable()
     # stats = pstats.Stats(profiler).sort_stats('ncalls')

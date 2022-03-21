@@ -9,6 +9,8 @@ import sys
 import time
 from typing import Union, TYPE_CHECKING
 
+import numpy as np
+
 from Melodie import Grid, Spot, GridAgent, Agent
 
 import logging
@@ -131,6 +133,31 @@ def convert(grid: Union[Grid, 'JITGrid']):
 #     agents(jit_grid)
 #     neighbors(jit_grid)
 #     convert(jit_grid)
+
+def test_roles():
+    agents = [GridAgent(i) for i in range(10)]
+    agents_b = [GridAgent(i) for i in range(10)]
+    grid = Grid(Spot, 100, 100)
+    grid2 = Grid(Spot, 100, 100)
+
+    grid2.add_category('a')
+    grid2.add_category('b')
+    for agent in agents:
+        grid2.add_agent(agent, 'a')
+    for agent in agents_b:
+        grid2.add_agent(agent, 'b')
+    N = 100
+    t0 = time.time()
+    for i in range(N):
+        roles = grid.get_roles()
+    t1 = time.time()
+
+    for i in range(N):
+        roles2 = grid2.get_roles()
+    t2 = time.time()
+
+    print(t1 - t0, t2 - t1)
+    print(roles2[1])
 
 
 def test_agents_nojit():

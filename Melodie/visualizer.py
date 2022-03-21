@@ -224,6 +224,7 @@ class Visualizer:
             "initialParams": initial_params,
             "paramModels": param_models
         }
+
         self.send_message(
             json.dumps(
                 {"type": "params", "step": self.current_step, "data": params, "modelState": self.model_state,
@@ -385,20 +386,20 @@ class GridVisualizer(Visualizer):
         return x * self.height + y
 
     def parse_grid_series(self, grid: "Grid", grid_name: str):
-        grid_roles = grid.get_roles().tolist()
+        grid_roles, agent_series_data = grid.get_roles()
 
-        agent_series_data = {}
-        existed_agents = grid._existed_agents
-        for category in existed_agents.keys():
-            if agent_series_data.get(category) is None:
-                agent_series_data[category] = []
-            for agent_id in existed_agents[category]:
-                pos = grid.get_agent_pos(agent_id, category)
-                agent_series_data[category].append({
-                    'value': list(pos),
-                    'id': agent_id,
-                    'category': category,
-                })
+        # agent_series_data = {}
+        # existed_agents = grid._existed_agents
+        # for category in existed_agents.keys():
+        #     if agent_series_data.get(category) is None:
+        #         agent_series_data[category] = []
+        #     for agent_id in existed_agents[category]:
+        #         pos = grid.get_agent_pos(agent_id, category)
+        #         agent_series_data[category].append({
+        #             'value': list(pos),
+        #             'id': agent_id,
+        #             'category': category,
+        #         })
         for series_name, data in agent_series_data.items():
             self.agent_series_managers[grid_name].set_series_data(series_name, data)
         return {

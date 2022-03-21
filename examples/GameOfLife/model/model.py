@@ -6,7 +6,7 @@
 
 import time
 
-from Melodie import Model, Grid, AgentList
+from Melodie import Model, Grid, AgentList, GridAgent
 from .spot import GameOfLifeSpot
 from .environment import GameOfLifeEnvironment
 from .visualizer import GameOfLifeVisualizer
@@ -19,12 +19,15 @@ class GameOfLifeModel(Model):
         self.grid = Grid(GameOfLifeSpot, 100, 100)
         with self.define_basic_components():
             self.environment = GameOfLifeEnvironment()
-        self.agent_list1: "AgentList[GameOfLifeSpot]" = self.create_agent_container(GameOfLifeSpot, 10)
+        self.agent_list1: "AgentList[GridAgent]" = self.create_agent_container(GridAgent, 10)
         self.grid.add_category('agents')
+
         i = 0
         for agent in self.agent_list1:
             i += 1
-            self.grid.add_agent(agent.id, 'agents', 10, i)
+            agent.x = 10
+            agent.y = i
+            self.grid.add_agent(agent, 'agents')
 
     def run(self):
         for current_step in self.routine():

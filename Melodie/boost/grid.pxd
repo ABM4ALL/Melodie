@@ -1,15 +1,18 @@
 from .basics cimport Element
-
+cimport numpy as np
 cdef class GridAgent(Element):
     cdef public long id
     cdef public long x
     cdef public long y
+    cdef public object model, scenario
+    cpdef void setup(self)
     cpdef void set_params(self, dict params) except *
 
 cdef class Spot:
     cdef public long id
     cdef public long x
     cdef public long y
+    cdef public long role
     cdef public object model, scenario
     cpdef void setup(Spot self)
 
@@ -21,6 +24,7 @@ cdef class Grid:
     cdef list _spots
     cdef dict _agent_ids
     cdef dict _neighbors_cache
+    cdef list _roles_list
     cpdef add_category(self, object category_name)
     cpdef get_spot(self, long x, long y)
     cpdef get_agent_ids(self, object category, long x, long y)
@@ -43,3 +47,4 @@ cdef class Grid:
     cdef void _remove_agent(self, long agent_id, object category,long x, long y) except *
     # cpdef (long, long) get_agent_pos(self, long agent_id, object category)
     cpdef (long, long) rand_move(self, GridAgent agent, object category, long range_x, long range_y)
+    cpdef tuple get_roles(self)

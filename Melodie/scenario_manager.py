@@ -30,10 +30,16 @@ class Scenario(Element):
             super().__init__(name, "number", init_value)
             if min_val is None or max_val is None or step is None:
                 raise NotImplementedError("This version of melodie does not support free bound or step yet")
+            assert isinstance(init_value, (int, float))
+            assert isinstance(max_val, (int, float))
+            assert isinstance(min_val, (int, float))
+            assert isinstance(step, (int, float))
             self.min = min_val
             self.max = max_val
             self.step = step
-
+        # def __setattr__(self, key, value):
+        #     if hasattr(self, key):
+        #         assert key in
     class SelectionParameter(BaseParameter):
         def __init__(self, name, init_value: Union[int, str, bool], selections: List[Union[int, str, bool]]):
             super().__init__(name, "selection", init_value)

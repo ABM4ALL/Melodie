@@ -32,6 +32,11 @@ cdef class GridAgent(Element):
         self.id = agent_id
         self.x = x
         self.y = y
+        self.scenario = None
+        self.model = None
+        
+    cpdef void setup(self):
+        pass
 
     cpdef void set_params(self, dict params) except *:
         """
@@ -57,6 +62,7 @@ cdef class Spot:
         # self.model: Optional['Model'] = None
         self.x = x
         self.y = y
+        self.role = 0
         self.scenario = None
         self.model = None
 
@@ -66,7 +72,7 @@ cdef class Spot:
 cdef class Grid:
     """
     Grid is a widely-used discrete space for ABM.
-    Grid contains many `Spot`s, each `Spot` could contain several agents.
+    Grid contains many `Spot`s, each `Spot` could contain several agents_series_data.
     """
 
     def __init__(self, spot_cls: ClassVar[Spot], width, height, wrap=True, caching=True):
@@ -88,6 +94,7 @@ cdef class Grid:
                 self._spots[y][x].setup()
         self._agent_ids = {}  # [set() for i in range(width * height)]
         self._neighbors_cache = {}# [None] * self._width * self._height
+        self._roles_list = [[0 for j in range(4)] for i in range(self._width*self._height)]
         #if caching:
         #    self.get_neighbors = functools.lru_cache(self._width * self._height)(self.get_neighbors)
         #    self._bound_check = functools.lru_cache(self._width * self._height)(self._bound_check)
@@ -113,9 +120,6 @@ cdef class Grid:
         x, y = self._bound_check(x, y)
         
         row = <list>PyList_GetItem(self._spots, <Py_ssize_t> (y))
-        
-        # row = <list>self._spots[y]
-        # return row[x]
         return <list>PyList_GetItem(row, <Py_ssize_t> (x))
 
     cpdef get_agent_ids(self, object category, long x, long y):
@@ -139,7 +143,7 @@ cdef class Grid:
 
     cpdef list _get_agent_id_set_list(self, object category_name):
         """
-        Get category of agents
+        Get category of agents_series_data
         """
         cdef list category
         category = self._agent_ids.get(category_name)
@@ -251,15 +255,11 @@ cdef class Grid:
 
         agent_id_set_list = self._get_agent_id_set_list(category)
 
-        # if agent_id in category_of_agents:
-        #     raise ValueError(f"Agent with id: {agent_id} already exists on grid!")
-        # agent_id_set_list = self._agent_ids[category]
         agent_id_set = agent_id_set_list[self._convert_to_1d(x, y)]
         if agent_id in agent_id_set:
             raise ValueError(f"Agent with id: {agent_id} already exists at position {(x, y)}!")
         else:
             agent_id_set.add(agent_id)
-            # category_of_agents[agent_id] = (x, y)
 
     cdef void _remove_agent(self, long agent_id, object category,long x, long y) except *:
         cdef dict category_of_agents
@@ -270,10 +270,6 @@ cdef class Grid:
 
         agent_id_set_list = self._get_agent_id_set_list(category)
 
-        # if agent_id not in category_of_agents:
-        #     raise ValueError(f"Agent with id: {agent_id} does not exist on grid!")
-
-        # agent_id_set_list = self._agent_ids[category]
         agent_id_set = agent_id_set_list[self._convert_to_1d(x, y)]
         if agent_id not in agent_id_set:
             print("Melodie-boost error occured. agent_id:", agent_id, "x:", x, "y:",
@@ -319,15 +315,6 @@ cdef class Grid:
         self._add_agent(agent.id, category, target_x, target_y)
         return target_x, target_y
 
-    # cpdef (long, long) get_agent_pos(self, long agent_id, object category):
-    #     """
-    #     Get the agent position at the grid.
-    #     :param agent_id:
-    #     :param category:
-    #     :return:
-    #     """
-    #     return self._existed_agents[category][agent_id]
-
     def to_2d_array(self, attr_name: str) -> np.ndarray:
         """
         Collect attribute of each spot and write the attribute value into an 2d np.array.
@@ -347,8 +334,8 @@ cdef class Grid:
         """
         return vectorize_2d(self._spots, attr_name)
 
-    def get_roles(self):
-        grid_roles = np.zeros((self._height * self._width, 4))
+    def get_roles_old(self):
+        grid_roles = np.zeros((self._height * self._width, 4),dtype="i8")
         for x in range(self._width):
             for y in range(self._height):
                 spot = self.get_spot(x, y)
@@ -359,6 +346,46 @@ cdef class Grid:
                 grid_roles[pos_1d, 2] = 0
                 grid_roles[pos_1d, 3] = spot.role
         return grid_roles
+
+    @cython.wraparound(False)
+    @cython.boundscheck(False)
+    cpdef tuple get_roles(self):
+        cdef Spot spot
+        cdef long pos_1d 
+        cdef long x, y, i, j
+        cdef str category_name
+        cdef list category
+        cdef dict agents_series_data
+        cdef set agent_id_set
+        cdef list role_pos_list
+        cdef list _agent_ids_items_to_iterate = [(category_name, category) for category_name, category in self._agent_ids.items()]
+        cdef long categories_num = len(_agent_ids_items_to_iterate)
+
+        agents_series_data = {}
+        for category_name, category in self._agent_ids.items():
+            agents_series_data[category_name] = []
+        for x in range(self._width):
+            for y in range(self._height):
+                spot = self.get_spot(x, y)
+                pos_1d = self._convert_to_1d(x, y)
+                role_pos_list = self._roles_list[pos_1d]
+                role_pos_list[0] = x
+                role_pos_list[1] = y
+                role_pos_list[2] = 0
+                role_pos_list[3] = spot.role
+                for i in range(categories_num):
+                    category_name = _agent_ids_items_to_iterate[i][0]
+                    category = _agent_ids_items_to_iterate[i][1]
+                    agent_id_set = category[pos_1d]
+                    series_data_one_category = agents_series_data[category_name]
+                    for agent_id in agent_id_set:
+                        series_data_one_category.append({
+                        'value': [x, y],
+                        'id': agent_id,
+                        'category': category_name,
+                        })
+
+        return self._roles_list, agents_series_data
 
     # @property
     # def height(self):

@@ -118,7 +118,11 @@ class DataFrameLoader:
             scenario.manager = self.manager
             for col_name in cols:
                 assert col_name in scenario.__dict__.keys(), f"col_name: '{col_name}', scenario: {scenario}"
-                scenario.__dict__[col_name] = scenarios_dataframe.loc[i, col_name]
+                value = scenarios_dataframe.loc[i, col_name]
+                if isinstance(value, str):
+                    scenario.__dict__[col_name] = value
+                else:
+                    scenario.__dict__[col_name] = value.item()
             scenarios.append(scenario)
         assert len(scenarios) != 0
         return scenarios
