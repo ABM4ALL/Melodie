@@ -9,14 +9,13 @@
 import functools
 from typing import ClassVar, Set, Dict, List, Tuple
 from Melodie.boost.vectorize import vectorize_2d
-from Melodie.agent import Agent
 from cpython.ref cimport PyObject  # somewhere at the top
 from cpython cimport PyObject_GetAttr, PyObject_GetAttrString, \
     PyObject_GetItem, PyList_GetItem, PyList_Size, PyObject_SetAttr
 cimport cython
 from libc.math cimport pow
 from libc.stdlib cimport rand, RAND_MAX
-from .basics cimport Element
+from .basics cimport Element, Agent
 cimport numpy as np
 import numpy as np
 import time
@@ -27,16 +26,30 @@ ctypedef fused DTYPE_FUSED:
     np.int64_t
     np.float64_t
 
-cdef class GridAgent(Element):
+cdef class GridItem(Agent):
     def __init__(self, agent_id:int, x:int=0, y:int=0):
-        self.id = agent_id
+        super().__init__(agent_id)
         self.x = x
         self.y = y
-        self.scenario = None
-        self.model = None
-        
+
     cpdef void setup(self):
         pass
+
+    def has_attr(self, attr_name: str):
+        if attr_name in {"id", "x", "y"}:
+            return True
+        else:
+            return hasattr(self, attr_name)
+
+    def get_attr(self, attr_name: str):
+        if attr_name == "id":
+            return self.id
+        elif attr_name == "x":
+            return self.x
+        elif attr_name == "y":
+            return self.y
+        else:
+            return self.__dict__[attr_name]
 
     cpdef void set_params(self, dict params) except *:
         """
@@ -55,16 +68,18 @@ cdef class GridAgent(Element):
                 assert paramName in self.__dict__.keys(), f"param named {paramName}, value {paramValue} not in Agent.params:{self.__dict__.keys()}"
                 setattr(self, paramName, paramValue)
 
-cdef class Spot:
+cdef class GridAgent(GridItem):
+    def __init__(self, agent_id: int, x:int=0, y:int=0):
+        super().__init__(agent_id, x, y)
+
+    cpdef void setup(self):
+        pass
+
+
+cdef class Spot(GridItem):
     def __init__(self, spot_id: int, x: int = 0, y: int = 0):
-        self.id = spot_id
-        # self.scenario: Optional['Scenario'] = None
-        # self.model: Optional['Model'] = None
-        self.x = x
-        self.y = y
+        super().__init__(spot_id, x, y)
         self.role = 0
-        self.scenario = None
-        self.model = None
 
     cpdef void setup(self):
         pass

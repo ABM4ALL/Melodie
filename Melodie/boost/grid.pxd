@@ -1,19 +1,17 @@
-from .basics cimport Element
+from .basics cimport Agent
 cimport numpy as np
-cdef class GridAgent(Element):
-    cdef public long id
+
+cdef class GridItem(Agent):
     cdef public long x
     cdef public long y
-    cdef public object model, scenario
     cpdef void setup(self)
     cpdef void set_params(self, dict params) except *
 
-cdef class Spot:
-    cdef public long id
-    cdef public long x
-    cdef public long y
+cdef class GridAgent(GridItem):
+    cpdef void setup(self)
+
+cdef class Spot(GridItem):
     cdef public long role
-    cdef public object model, scenario
     cpdef void setup(Spot self)
 
 cdef class Grid:

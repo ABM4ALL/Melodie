@@ -21,6 +21,7 @@ def test_repr():
     assert '<TestAgent ' in ret
     assert '\'a\'' in ret
     assert '\'id\'' in ret
+    assert isinstance(ta.id, int)
 
 
 def test_agent_manager_type_hinting():

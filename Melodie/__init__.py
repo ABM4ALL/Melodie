@@ -1,10 +1,8 @@
 import sys
 from .algorithms import GeneticAlgorithmTrainer, GeneticAlgorithmCalibrator, GATrainerParams, GACalibratorParams
-from .agent import Agent
 from .config import Config
 from .data_collector import DataCollector
 from .db import DB, create_db_conn
-from .environment import Environment
 from .model import Model
 from .scenario_manager import Scenario
 from .table_generator import TableGenerator
@@ -25,5 +23,5 @@ logging.basicConfig(level=logging.INFO,
                     )
 
 from .boost.agent_list import BaseAgentContainer, AgentList
-
+from .boost.basics import Environment, Element, Agent
 from .boost.grid import Grid, Spot, GridAgent

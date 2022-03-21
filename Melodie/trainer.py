@@ -5,8 +5,9 @@ import copy
 import numpy as np
 import pandas as pd
 
-from Melodie import Model, Scenario, Config, Agent, create_db_conn, GATrainerParams
+from Melodie import Model, Scenario, Config, create_db_conn, GATrainerParams
 from Melodie.algorithms import GeneticAlgorithmTrainer, SearchingAlgorithm
+from .boost.basics import Agent
 from .simulator import BaseModellingManager
 from .dataframe_loader import DataFrameLoader
 

@@ -13,7 +13,7 @@ import pandas as pd
 
 import Melodie.visualizer
 from . import DB
-from .agent import Agent
+from .boost.basics import Agent
 
 from .boost.agent_list import AgentList
 

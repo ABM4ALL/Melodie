@@ -11,6 +11,10 @@ if TYPE_CHECKING:
 cdef class Element:
     cpdef void set_params(self, dict params) except *
 
+cdef class Agent(Element):
+    cdef public long id
+    cdef public object model, scenario
+
 
 cdef class Environment(Element):
     cdef public object model

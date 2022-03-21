@@ -12,9 +12,8 @@ import pandas as pd
 from pandas.api.types import is_integer_dtype, is_float_dtype, is_string_dtype
 import typing
 from typing import TYPE_CHECKING, ClassVar, List, Dict, Union, Set, Optional, TypeVar, Type, Generic
-
+from .basics import Agent
 from Melodie.basic import IndexedAgentList, MelodieExceptions, MelodieException, binary_search
-from Melodie.agent import Agent
 from collections.abc import Sequence
 from .fastrand import sample
 AgentGeneric = TypeVar('AgentGeneric')
@@ -138,7 +137,8 @@ cdef class AgentList(BaseAgentContainer, Sequence):
                 dataframe_dtypes[col] = None
         for agent in self.agents:
             for param_name in param_names:
-                param_type = type(getattr(agent, param_name))
+                # param_type = type(getattr(agent, param_name))
+                param_type = type(agent.get_attr(param_name))
                 if param_type == dataframe_dtypes[param_name] or param_type is None:
                     continue
                 else:
@@ -199,20 +199,20 @@ cdef class AgentList(BaseAgentContainer, Sequence):
         :param column_names:  The property name to be dumped.
         :return:
         """
-        protected_columns = ['id']
+        
         data_list = []
         if len(self.agents) == 0:
             raise MelodieExceptions.Agents.AgentListEmpty(self)
 
         if column_names is None:
             column_names = list(self.__dict__.keys())
-        column_names = protected_columns + column_names
         agent0 = self.agents[0]
         for column_name in column_names:
-            if column_name not in agent0.__dict__.keys():
+            if not agent0.has_attr(column_name):
                 raise MelodieExceptions.Agents.AgentPropertyNameNotExist(column_name, agent0)
         for agent in self.agents:
             d = {k: agent.__dict__[k] for k in column_names}
+            d['id'] = agent.id
             data_list.append(d)
         return data_list
 

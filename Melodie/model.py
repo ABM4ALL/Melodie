@@ -6,12 +6,11 @@ from typing import ClassVar, Optional, Union
 import pandas as pd
 
 from . import DB
-from .agent import Agent
+from .boost.basics import Agent, Environment
 from .boost.agent_list import AgentList, BaseAgentContainer
 from .basic import MelodieExceptions
 from .config import Config
 from .data_collector import DataCollector
-from .environment import Environment
 from .scenario_manager import Scenario
 from .table_generator import TableGenerator
 from .db import create_db_conn

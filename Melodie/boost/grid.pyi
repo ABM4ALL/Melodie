@@ -5,16 +5,19 @@ from typing import ClassVar, Set, Dict, List, Tuple, TYPE_CHECKING
 import numpy as np
 
 if TYPE_CHECKING:
-    from ..agent import Agent
+    from .basics import Agent
     from ..boost.vectorize import vectorize_2d
 
 
-class GridAgent:
+class GridItem(Agent):
     def __init__(self, agent_id: int, x: int = 0, y: int = 0):
-        self.id = 0
-        self.x = 0
-        self.y = 0
-        return
+        self.x = x
+        self.y = y
+
+
+class GridAgent(GridItem):
+    def __init__(self, agent_id: int, x: int = 0, y: int = 0):
+        super().__init__(agent_id, x, y)
 
     def setup(self):
         pass
@@ -23,8 +26,7 @@ class GridAgent:
 class Spot(Agent):
     def __init__(self, spot_id: int, x: int = 0, y: int = 0):
         super(Spot, self).__init__(spot_id)
-        self.x = x
-        self.y = y
+        self.role = 0
 
     def setup(self):
         pass
@@ -52,7 +54,7 @@ class Grid:
         for x in range(self.width):
             for y in range(self.height):
                 self._spots[y][x].setup()
-        self._agent_ids: Dict[str, List[Set[int]]] = {}  # [set() for i in range(width * height)]
+        self._agent_ids: Dict[str, List[Set[int]]] = {}
 
     def width(self) -> int:
         ...

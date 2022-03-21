@@ -7,7 +7,6 @@
 
 import functools
 from typing import ClassVar, Set, Dict, List, Tuple
-from Melodie.agent import Agent
 from cpython.ref cimport PyObject  # somewhere at the top
 from cpython cimport PyObject_GetAttr, PyObject_GetAttrString, \
     PyObject_GetItem, PyList_GetItem, PyList_Size, PyObject_SetAttr

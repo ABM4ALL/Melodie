@@ -5,7 +5,7 @@ import copy
 import numpy as np
 import pandas as pd
 import logging
-from Melodie import Model, Scenario, Config, Agent, create_db_conn, GACalibratorParams, DataFrameLoader
+from Melodie import Model, Scenario, Config, create_db_conn, GACalibratorParams, DataFrameLoader
 from Melodie.algorithms import GeneticAlgorithmCalibrator, SearchingAlgorithm
 from Melodie.basic import MelodieExceptions
 from .simulator import BaseModellingManager
