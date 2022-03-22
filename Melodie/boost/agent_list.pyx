@@ -138,7 +138,7 @@ cdef class AgentList(BaseAgentContainer, Sequence):
         for agent in self.agents:
             for param_name in param_names:
                 # param_type = type(getattr(agent, param_name))
-                param_type = type(agent.get_attr(param_name))
+                param_type = type(getattr(agent, param_name))
                 if param_type == dataframe_dtypes[param_name] or param_type is None:
                     continue
                 else:
@@ -208,7 +208,7 @@ cdef class AgentList(BaseAgentContainer, Sequence):
             column_names = list(self.__dict__.keys())
         agent0 = self.agents[0]
         for column_name in column_names:
-            if not agent0.has_attr(column_name):
+            if not hasattr(agent0, column_name):
                 raise MelodieExceptions.Agents.AgentPropertyNameNotExist(column_name, agent0)
         for agent in self.agents:
             d = {k: agent.__dict__[k] for k in column_names}

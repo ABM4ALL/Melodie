@@ -49,7 +49,6 @@ class Grid:
 
         """
         self.wrap = wrap
-        self._existed_agents: Dict[str, Dict[int, Tuple[int, int]]] = {}
         self._spots = [[spot_cls(self._convert_to_1d(x, y), x, y) for x in range(width)] for y in range(height)]
         for x in range(self.width):
             for y in range(self.height):
@@ -62,14 +61,12 @@ class Grid:
     def height(self) -> int:
         ...
 
-    def add_category(self, category_name: str):
+    def add_category(self, category_name: str) -> None:
         """
         Add agent category
         :param category_name:
         :return:
         """
-        self._agent_ids[category_name] = [set() for i in range(self.width * self.height)]
-        self._existed_agents[category_name] = {}
 
     def get_spot(self, x, y) -> "Spot":
         """
@@ -78,8 +75,6 @@ class Grid:
         :param y:
         :return:
         """
-        x, y = self._bound_check(x, y)
-        return self._spots[y][x]
 
     def get_agent_ids(self, category: str, x: int, y: int) -> Set[int]:
         """
@@ -93,28 +88,6 @@ class Grid:
         if agent_ids is None:
             raise KeyError(f'Category {category} not registered!')
         return agent_ids
-
-    def _convert_to_1d(self, x, y):
-        return x * self.height + y
-
-    def _in_bounds(self, x, y):
-        return (0 <= x < self.width) and (0 <= y <= self.height)
-
-    def _get_category_of_agents(self, category_name: str):
-        category = self._existed_agents.get(category_name)
-        if category is None:
-            raise ValueError(f"Category {category_name} is not registered!")
-        return category
-
-    def _bound_check(self, x, y):
-        if self.wrap:
-            return self.coords_wrap(x, y)
-        if not (0 <= x < self.width):
-            raise IndexError("grid index x was out of range")
-        elif not (0 <= y <= self.height):
-            raise IndexError("grid index y was out of range")
-        else:
-            return x, y
 
     def coords_wrap(self, x, y):
         """
@@ -148,34 +121,14 @@ class Grid:
                 neighbors.append(self._bound_check(x + dx, y + dy))
         return neighbors
 
-    def add_agent(self, agent: GridAgent, category: str):
+    def add_agent(self, agent: GridAgent, category: str) -> None:
         """
         Add agent onto the grid
-        :param agent_id:
+        :param agent:
         :param category:
-        :param x:
-        :param y:
         :return:
         """
         ...
-
-    def _remove_agent(self, agent_id: int, category: str, x: int, y: int):
-        x, y = self._bound_check(x, y)
-
-        category_of_agents = self._get_category_of_agents(category)
-
-        if agent_id not in category_of_agents.keys():
-            raise ValueError(f"Agent with id: {agent_id} does not exist on grid!")
-
-        if agent_id not in self._existed_agents[category]:
-            raise ValueError("Agent does not exist on the grid!")
-        if agent_id not in self._agent_ids[category][self._convert_to_1d(x, y)]:
-            print("Melodie-boost error occured. agent_id:", agent_id, "x:", x, "y:",
-                  y)
-            raise IndexError("agent_id does not exist on such coordinate.")
-        else:
-            self._agent_ids[category][self._convert_to_1d(x, y)].remove(agent_id)
-            self._existed_agents[category].pop(agent_id)
 
     def remove_agent(self, agent: GridAgent, category: str) -> None:
         """
@@ -196,15 +149,6 @@ class Grid:
         :return:
         """
         ...
-
-    def get_agent_pos(self, agent_id: int, category: str) -> Tuple[int, int]:
-        """
-        Get the agent position at the grid.
-        :param agent_id:
-        :param category:
-        :return:
-        """
-        return self._existed_agents[category][agent_id]
 
     def to_2d_array(self, attr_name: str) -> np.ndarray:
         """

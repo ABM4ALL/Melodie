@@ -35,22 +35,6 @@ cdef class GridItem(Agent):
     cpdef void setup(self):
         pass
 
-    def has_attr(self, attr_name: str):
-        if attr_name in {"id", "x", "y"}:
-            return True
-        else:
-            return hasattr(self, attr_name)
-
-    def get_attr(self, attr_name: str):
-        if attr_name == "id":
-            return self.id
-        elif attr_name == "x":
-            return self.x
-        elif attr_name == "y":
-            return self.y
-        else:
-            return self.__dict__[attr_name]
-
     cpdef void set_params(self, dict params) except *:
         """
 
@@ -58,15 +42,8 @@ cdef class GridItem(Agent):
         :return:
         """
         for paramName, paramValue in params.items():
-            if paramName=='x':
-                self.x = paramValue
-            elif paramName=='y':
-                self.y = paramValue
-            elif paramName=='id':
-                self.id = paramValue
-            else:
-                assert paramName in self.__dict__.keys(), f"param named {paramName}, value {paramValue} not in Agent.params:{self.__dict__.keys()}"
-                setattr(self, paramName, paramValue)
+            assert hasattr(self, paramName), f"param named {paramName}, value {paramValue} not in Agent.params:{self.__dict__.keys()}"
+            setattr(self, paramName, paramValue)
 
 cdef class GridAgent(GridItem):
     def __init__(self, agent_id: int, x:int=0, y:int=0):
@@ -116,8 +93,13 @@ cdef class Grid:
 
     cpdef add_category(self, object category_name):
         """
-        Add agent category
-        :param category_name:
+        Add an agent category.
+        
+        For example, if there are two classes of agents: `Wolf(GridAgent)` and `Sheep(GridAgent)`, 
+        and there are 100 agents with id 0~99 for each class. It is obvious in such a circumstance that 
+        we cannot identify an agent only with agent *id*.So it is essential to use *category_name* to distinguish two types of agents. 
+
+        :param category_name: The name of new category.
         :return:
         """
         self._agent_ids[category_name] = [set() for i in range(self._width * self._height)]
@@ -126,10 +108,11 @@ cdef class Grid:
     # @cython.wraparound(False)
     cpdef get_spot(self, long x, long y):
         """
-        Get a spot at position (x, y)
+        Get a ``Spot`` at position ``(x, y)``
+
         :param x:
         :param y:
-        :return:
+        :return: The ``Spot`` at position (x, y)
         """
         cdef list row
         x, y = self._bound_check(x, y)
@@ -139,9 +122,10 @@ cdef class Grid:
 
     cpdef get_agent_ids(self, object category, long x, long y):
         """
-        Get all agent of a specific category from the spot at (x, y)
-        :param category:
-        :param x:
+        Get all agent of a specific category from the spot at ``(x, y)``
+
+        :param category: category name of agent.
+        :param x: 
         :param y:
         :return: A set of int, the agent ids.
         """
@@ -235,13 +219,14 @@ cdef class Grid:
 
     cpdef list get_neighbors(self, long x, long y, long radius = 1, bint moore=True, bint except_self=True):
         """
-        Get the neighbors of some spot.
+        Get the neighbors of one spot at (x, y).
+
         :param x:
         :param y:
         :param radius:
         :param moore:
         :param except_self:
-        :return:  -> List[Tuple[int, int]]
+        :return:  A list of the neighbor coordinates.
         """
         cdef list neighbors 
         cdef tuple key
@@ -294,24 +279,33 @@ cdef class Grid:
             agent_id_set.remove(agent_id)
 
     cpdef void add_agent(self, GridAgent agent, object category) except *:
+        """
+        Add an agent to the grid
+
+        :param agent: An GridAgent object.
+        :param category: A string, the name of category. The category should be registered. 
+        :return:
+        """
         self._add_agent(agent.id, category, agent.x, agent.y)
 
     cpdef void remove_agent(self, GridAgent agent, object category) except *:
         """
-        Remove agent from the grid
-        :param agent_id:
-        :param category:
+        Remove an agent from the grid
+
+        :param agent: An GridAgent object.
+        :param category: A string, the name of category. The category should be registered. 
         :return:
         """
         self._remove_agent(agent.id, category, agent.x, agent.y)
 
-    cpdef void move_agent(self, GridAgent agent, object category, target_x, target_y) except *:
+    cpdef void move_agent(self, GridAgent agent, object category, long target_x, long target_y) except *:
         """
         Move agent to target position.
-        :param agent_id:
-        :param category:
-        :param target_x:
-        :param target_y:
+
+        :param agent: An GridAgent object.
+        :param category: A string, the name of category. The category should be registered. 
+        :param target_x: The target x coordinate
+        :param target_y: The target y coordinate
         :return:
         """
         self._remove_agent(agent.id, category, agent.x, agent.y)
@@ -319,6 +313,19 @@ cdef class Grid:
 
     @cython.cdivision(True)
     cpdef (long, long) rand_move(self, GridAgent agent, object category, long range_x, long range_y):
+        """
+        Randomly move an agent with maximum movement `range_x` in x axis and `range_y` in y axis.
+        
+        :param agent: Must be `Melodie.GridAgent`, not `Agent`. That is because `GridAgent` has predefined properties required in `Grid`. 
+        :param range_x: The activity range of agent on the x axis. 
+        :param range_y: The activity range of agent on the y axis.
+        
+        For example, if the agent is at `(0, 0)`, `range_x=1` and `range_y=0`, the result can be
+        `(-1, 0), (0, 0) or (1, 0)`. The probability of these three outcomes are equal.
+
+        :return: (int, int), the new position
+        """
+        
         cdef long source_x, source_y, dx, dy, target_x, target_y
         source_x = agent.x
         source_y = agent.y
@@ -333,38 +340,35 @@ cdef class Grid:
     def to_2d_array(self, attr_name: str) -> np.ndarray:
         """
         Collect attribute of each spot and write the attribute value into an 2d np.array.
+
         Notice:
+
         - The attribute to collect should be float/int/bool, not other types such as str.
         - If you would like to get an element from the returned array, please write like this:
-         ```python
-         arr = self.to_2d_array('some_attr')
-         y = 10
-         x = 5
-         spot_at_x_5_y_10 = arr[y][x] # CORRECT. Get the some_attr value of spot at `x = 5, y = 10`
-         spot_at_x_5_y_10 = arr[x][y] # INCORRECT. You will get the value of spot at `x = 10, y = 5`
-         ```
+        
+        .. code-block:: python
+            :linenos:
+
+            arr = self.to_2d_array('some_attr')
+            y = 10
+            x = 5
+            spot_at_x_5_y_10 = arr[y][x] # CORRECT. Get the some_attr value of spot at `x = 5, y = 10`
+            spot_at_x_5_y_10 = arr[x][y] # INCORRECT. You will get the value of spot at `x = 10, y = 5`
+        
 
         :param attr_name: the attribute name to collect for this model.
         :return:
         """
         return vectorize_2d(self._spots, attr_name)
 
-    def get_roles_old(self):
-        grid_roles = np.zeros((self._height * self._width, 4),dtype="i8")
-        for x in range(self._width):
-            for y in range(self._height):
-                spot = self.get_spot(x, y)
-                # role = spot.role
-                pos_1d = self._convert_to_1d(x, y)
-                grid_roles[pos_1d, 0] = x
-                grid_roles[pos_1d, 1] = y
-                grid_roles[pos_1d, 2] = 0
-                grid_roles[pos_1d, 3] = spot.role
-        return grid_roles
-
     @cython.wraparound(False)
     @cython.boundscheck(False)
     cpdef tuple get_roles(self):
+        """
+        Get the role of each spot.
+
+        :return: A tuple. The first item is a nested list for spot roles, and the second item is a dict for agent roles.
+        """
         cdef Spot spot
         cdef long pos_1d 
         cdef long x, y, i, j
@@ -401,14 +405,6 @@ cdef class Grid:
                         })
 
         return self._roles_list, agents_series_data
-
-    # @property
-    # def height(self):
-    #     return self._height
-    
-    # @property
-    # def width(self):
-    #     return self._width
     
     cpdef long height(self):
         return self._height

@@ -174,8 +174,6 @@ class Simulator(BaseModellingManager):
         t2 = time.time()
         logger.info(f'Melodie completed all runs, time elapsed totally {t2 - t0}s, and {t2 - t1}s for running.')
 
-    # studio().run(visualizer)
-
     def run_visual(self):
         """
         Main function for running model with studio.

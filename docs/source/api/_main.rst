@@ -11,12 +11,11 @@ YES --> what are the functions you can use and how to use them
     :caption: Content
     :maxdepth: 1
 
-    agent
+    agent_and_environment
     agent_list
-    environment
     model
-    data_collector
     scenario
+    data_collector
     dataframe_loader
     simulator
     calibrator

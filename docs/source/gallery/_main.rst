@@ -15,3 +15,4 @@ summarize the models in a table and show which of the following modules are used
     opinion_dynamics
 
 
+

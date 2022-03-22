@@ -30,23 +30,13 @@ cdef class Agent(Element):
         self.scenario = None
         self.model = None
 
-    def has_attr(self, attr_name: str):
-        if attr_name == "id":
-            return True
-        else:
-            return hasattr(self, attr_name)
-
-    def get_attr(self, attr_name: str):
-        if attr_name == "id":
-            return self.id
-        else:
-            return self.__dict__[attr_name]
 
     cpdef void set_params(self, dict params) except *:
-
         """
+        As ``Agent.id`` is a Cython-compiled property, it cannot be modified by ``setattr()`` function. 
+        So this method is for overcoming this problem.
 
-        :param params: Dict[str, Any]
+        :param params: None
         :return:
         """
         for paramName, paramValue in params.items():
@@ -109,6 +99,7 @@ cdef class Environment(Element):
     cpdef dict to_dict(self, list properties):
         """
         Dump Environment to a plain dict.
+
         :param properties: List[str]
         :return:
         """
@@ -124,6 +115,7 @@ cdef class Environment(Element):
     cpdef to_dataframe(self, properties: List[str]):
         """
         Dump Environment to a one-row pd.DataFrame
+
         :param properties:
         :return:
         """

@@ -1,6 +1,7 @@
 import logging
 import asyncio
 import queue
+from copy import deepcopy
 from urllib.request import urlopen
 from urllib.error import URLError
 import threading
@@ -110,10 +111,8 @@ class Visualizer:
         self.current_scenario: 'Scenario' = None
         self._model: 'Model' = None
         self.scenario_param: Dict[str, Union[int, str, float]] = {}
-        self.visualizer_components: List[Tuple[str, str]] = []
-        self.chart_options: Dict[str, Any] = {}
+        self.visualizer_components: List[Tuple[str, str, Dict]] = []
 
-        # self.plot_charts: Dict[str, List[ChartSeries]] = {}  # {<chartName>: ChartSeries[]}
         self.plot_charts: ChartManager = ChartManager()
         self.current_websocket: WebSocketServerProtocol = None
         self.agent_series_managers: Dict[str, AgentSeriesManager] = {}
@@ -190,9 +189,9 @@ class Visualizer:
 
     def get_visualizers_initial_options(self):
         initial_options = []
-        for component_name, component_type in self.visualizer_components:
+        for component_name, component_type, options in self.visualizer_components:
             if component_type == 'grid':
-                initial_options.append(self.chart_options)
+                initial_options.append(options)
             else:
                 raise NotImplementedError
         return initial_options
@@ -347,29 +346,6 @@ class GridVisualizer(Visualizer):
 
         self.grid_params = {}
 
-        self.chart_options = {
-            "animation": False, "progressiveThreshold": 100000, "tooltip": {"position": "top"},
-            "grid": {"height": "80%", "top": "10%"},
-            "xAxis": {"type": "category", "splitArea": {"show": True}},
-            "yAxis": {"type": "category", "splitArea": {"show": True}},
-            "visualMap": {
-                "type": "piecewise",
-                "categories": [1, 2, 3],
-                "calculable": True,
-                "orient": "horizontal",
-                "left": "center",
-                "inRange": {
-                    "color": {
-                        1: "#e33e33",
-                        2: "#fec42c",
-                        3: "#ff0000"
-                    }
-                },
-                "seriesIndex": [0]
-            },
-            "series": [
-                {"universalTransition": {"enabled": False}, "name": "Spot", "type": "heatmap"}]
-        }
         try:
             urlopen("http://localhost:8089/api/tools/test")
         except ConnectionRefusedError:
@@ -388,18 +364,6 @@ class GridVisualizer(Visualizer):
     def parse_grid_series(self, grid: "Grid", grid_name: str):
         grid_roles, agent_series_data = grid.get_roles()
 
-        # agent_series_data = {}
-        # existed_agents = grid._existed_agents
-        # for category in existed_agents.keys():
-        #     if agent_series_data.get(category) is None:
-        #         agent_series_data[category] = []
-        #     for agent_id in existed_agents[category]:
-        #         pos = grid.get_agent_pos(agent_id, category)
-        #         agent_series_data[category].append({
-        #             'value': list(pos),
-        #             'id': agent_id,
-        #             'category': category,
-        #         })
         for series_name, data in agent_series_data.items():
             self.agent_series_managers[grid_name].set_series_data(series_name, data)
         return {
@@ -421,13 +385,33 @@ class GridVisualizer(Visualizer):
             self.agent_series_managers[component_name] = AgentSeriesManager()
         self.agent_series_managers[component_name].add_series(series_name, series_type, color, symbol)
 
-    def add_visualize_component(self, component: str, type: str):
+    def add_visualize_component(self, component: str, type: str, color_categories: Dict[int, str]):
         assert type in {"grid", "network"}
-        self.visualizer_components.append((component, type))
+        chart_options = {
+            "animation": False, "progressiveThreshold": 100000, "tooltip": {"position": "top"},
+            "grid": {"height": "80%", "top": "10%"},
+            "xAxis": {"type": "category", "splitArea": {"show": True}},
+            "yAxis": {"type": "category", "splitArea": {"show": True}},
+            "visualMap": {
+                "type": "piecewise",
+                "categories": [i for i, color in color_categories.items()],
+                "calculable": True,
+                "orient": "horizontal",
+                "left": "center",
+                "inRange": {
+                    "color":
+                        deepcopy(color_categories)
+                },
+                "seriesIndex": [0]
+            },
+            "series": [
+                {"universalTransition": {"enabled": False}, "name": "Spot", "type": "heatmap"}]
+        }
+        self.visualizer_components.append((component, type, chart_options))
 
     def format(self):
         visualizers = []
-        for vis_component_name, vis_component_type in self.visualizer_components:
+        for vis_component_name, vis_component_type, _ in self.visualizer_components:
             if vis_component_type == "grid":
                 r = self.parse_grid_series(getattr(self._model, vis_component_name), vis_component_name)
                 visualizers.append(r)

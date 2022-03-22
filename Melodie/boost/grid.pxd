@@ -40,7 +40,7 @@ cdef class Grid:
     cpdef long width(self)
     cpdef void add_agent(self, GridAgent agent, object category) except *
     cpdef void remove_agent(self, GridAgent agent, object category) except *
-    cpdef void move_agent(self, GridAgent agent, object category, target_x, target_y) except *
+    cpdef void move_agent(self, GridAgent agent, object category, long target_x, long target_y) except *
     cdef void _add_agent(self, long agent_id, object category, long x, long y) except *
     cdef void _remove_agent(self, long agent_id, object category,long x, long y) except *
     # cpdef (long, long) get_agent_pos(self, long agent_id, object category)

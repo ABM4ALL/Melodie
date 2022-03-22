@@ -3,6 +3,6 @@ Grid
 =============
 
 .. automodule:: Melodie.boost.grid
-               :members:
                :undoc-members:
+               :members:
                :show-inheritance:

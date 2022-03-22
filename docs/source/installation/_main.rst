@@ -12,6 +12,7 @@ You can install Melodie via `pip`:
 .. code-block::
 
    pip install Melodie
+   pip install MelodieStudio
 
 
 Developer Installation
@@ -36,7 +37,7 @@ Dependency Note
 ---------------
 Melodie has the following dependencies
 
-* Python 3.7 or Python3.8
+* Python >=3.7
 * numpy
 * pandas
 * matplotlib

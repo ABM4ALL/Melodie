@@ -11,6 +11,14 @@ Then, for the other examples, we can simplify the tutorial.
 
 provide the file tree, including all the files listed in toctree below (except summary).
 
+
+.. toctree::
+    :caption: Content
+    :maxdepth: 1
+
+    simpledemo
+
+
 Agent
 --------
 
