@@ -1,0 +1,4 @@
+setuptools==59.2.0; python_version == '3.7'
+setuptools; python_version >= '3.8'
+numpy
+cython

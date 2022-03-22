@@ -9,5 +9,5 @@ os:
 
 script: pytest
 before_script:
- - python -m pip install setuptools cython numpy
+ - python -m pip install -r build_requirements.txt
  - python setup.py build_ext --inplace
