@@ -1,22 +1,34 @@
 # cython:language_level=3
+# distutils: language = c++
 # cython: profile=False
 # -*- coding:utf-8 -*-
 # @Time: 2021/10/3 20:58
 # @Author: Zhanyi Hou
 # @Email: 1295752786@qq.com
 # @File: grid.pyx
+cdef extern from "Python.h":
+    const char* PyUnicode_AsUTF8(object unicode)
 
 import functools
 from typing import ClassVar, Set, Dict, List, Tuple
 from Melodie.boost.vectorize import vectorize_2d
-from cpython.ref cimport PyObject  # somewhere at the top
+from cpython.ref cimport PyObject
 from cpython cimport PyObject_GetAttr, PyObject_GetAttrString, \
     PyObject_GetItem, PyList_GetItem, PyList_Size, PyObject_SetAttr
 cimport cython
 from libc.math cimport pow
 from libc.stdlib cimport rand, RAND_MAX
+from libcpp.vector cimport vector
+from libcpp.set cimport set as cpp_set
+from libcpp.unordered_map cimport unordered_map as cpp_map
+from libcpp.string cimport string as cpp_string
+from libcpp.pair cimport pair as cpp_pair
+from cython.operator cimport dereference as deref, preincrement as inc
+
 from .basics cimport Element, Agent
+from .agent_list cimport AgentList
 cimport numpy as np
+import random
 import numpy as np
 import time
 ctypedef np.int64_t DTYPE_t
@@ -45,6 +57,9 @@ cdef class GridItem(Agent):
             assert hasattr(self, paramName), f"param named {paramName}, value {paramValue} not in Agent.params:{self.__dict__.keys()}"
             setattr(self, paramName, paramValue)
 
+    def __repr__(self):
+        return f"<{self.__class__.__name__} 'x': {self.x}, 'y': {self.y}>"
+
 cdef class GridAgent(GridItem):
     def __init__(self, agent_id: int, x:int=0, y:int=0):
         super().__init__(agent_id, x, y)
@@ -61,13 +76,90 @@ cdef class Spot(GridItem):
     cpdef void setup(self):
         pass
 
+    def __repr__(self):
+        return f"<{self.__class__.__name__} 'x': {self.x}, 'y': {self.y}, 'role': {self.role}>"
+
+cdef class AgentIDManager:
+    def __init__(self, long width, long height, bint allow_multi=False):
+        self._agents = [set() for i in range(width*height)]
+        self._width = width
+        self._height = height
+        self._max_id = 1000000
+        self.allow_multi = allow_multi
+        self._empty_spots = set()
+        self.all_categories = set()
+        for x in range(self._width):
+            for y in range(self._height):
+                self._empty_spots.insert(self._convert_to_1d(x, y))
+    
+    cpdef add_agent(self, long agent_id, long category, long x, long y) except *:
+        cdef cpp_set[long]* agents_on_spot = &self._agents[self._convert_to_1d(x, y)]
+        cdef long agent_num_repr = self.agent_id_and_category_to_number(agent_id, category)
+        if (not self.allow_multi) and (agents_on_spot.count(self._convert_to_1d(x, y))!=0):  # If not allow multi, the spot should be empty before adding an agent.
+            raise ValueError(f"Multiple agents on one spot is not allowed.")
+        if agents_on_spot.count(agent_num_repr)!=0:
+            raise ValueError(f"Agent id {agent_id}, category {category} already on spot <{x}, {y}>")
+        
+        self._empty_spots.erase(self._convert_to_1d(x, y))
+        agents_on_spot.insert(agent_num_repr)
+        self.all_categories.insert(category)
+    
+    cpdef remove_agent(self, long agent_id, long category, long x, long y) except *:
+        cdef cpp_set[long]* agents_on_spot = &self._agents[self._convert_to_1d(x, y)]
+        cdef long agent_num_repr = self.agent_id_and_category_to_number(agent_id, category)
+        if agents_on_spot.count(agent_num_repr)==0:
+            raise ValueError(f"Agent id {agent_id}, category {category} does not exist on spot <{x}, {y}>")
+        agents_on_spot.erase(agent_num_repr)
+        if agents_on_spot.size()==0:
+            self._empty_spots.insert(self._convert_to_1d(x, y))
+
+    cdef long _convert_to_1d(self, long x, long y):
+        return x * self._height + y
+
+    cdef cpp_set[long]* _get_empty_spots(self):
+        return &self._empty_spots
+
+    cpdef set get_empty_spots(self):
+        return self._empty_spots
+
+    cpdef long agent_id_and_category_to_number(self, long agent_id, long category) except *:
+        if not 0<=agent_id<=self._max_id:
+            raise ValueError(f"Agent id {agent_id} out of range!")
+        return category*self._max_id + agent_id
+
+    @cython.cdivision(True)
+    cpdef (long, long) number_to_agent_id_and_category(self, long num) except *:
+        return num%self._max_id, num/self._max_id
+
+    @cython.cdivision(True)
+    cdef (long, long) num_to_2d_coor(self, long num) except *:
+        return num/self._height, num%self._width
+
+    cpdef list agents_on_spot(self, long x, long y) except *:
+        cdef list l = []
+        cdef long spot = 0
+        for spot in self._agents[self._convert_to_1d(x, y)]:
+            l.append(self.number_to_agent_id_and_category(spot))
+        return l
+
+    cdef (long, long) find_empty_spot(self) except *:
+        cdef long rand_value = random.randint(0, self._empty_spots.size()-1)
+        cdef long i = 0
+        for item in self._empty_spots:
+            if i==rand_value:
+                return self.num_to_2d_coor(item)
+            i+=1
+        # cdef long v = deref(self._empty_spots.begin())
+        # return self.num_to_2d_coor(v)
+
+
 cdef class Grid:
     """
     Grid is a widely-used discrete space for ABM.
     Grid contains many `Spot`s, each `Spot` could contain several agents_series_data.
     """
 
-    def __init__(self, spot_cls: ClassVar[Spot], width, height, wrap=True, caching=True):
+    def __init__(self, spot_cls: ClassVar[Spot], width, height, wrap=True, caching=True, multi=False):
         """
 
         :param spot_cls: The class of Spot
@@ -80,18 +172,17 @@ cdef class Grid:
         self._width = width
         self._height = height
         self.wrap = wrap
+        self._multi = multi
         self._spots = [[spot_cls(self._convert_to_1d(x, y), x, y) for x in range(width)] for y in range(height)]
         for x in range(self._width):
             for y in range(self._height):
                 self._spots[y][x].setup()
-        self._agent_ids = {}  # [set() for i in range(width * height)]
         self._neighbors_cache = {}# [None] * self._width * self._height
         self._roles_list = [[0 for j in range(4)] for i in range(self._width*self._height)]
-        #if caching:
-        #    self.get_neighbors = functools.lru_cache(self._width * self._height)(self.get_neighbors)
-        #    self._bound_check = functools.lru_cache(self._width * self._height)(self._bound_check)
+        self._agent_id_mgr = AgentIDManager(width, height, allow_multi=multi)
+        self._agent_containers = [None for i in range(100)]
 
-    cpdef add_category(self, object category_name):
+    cpdef add_agent_container(self, long category_id, AgentList category) except *:
         """
         Add an agent category.
         
@@ -99,10 +190,19 @@ cdef class Grid:
         and there are 100 agents with id 0~99 for each class. It is obvious in such a circumstance that 
         we cannot identify an agent only with agent *id*.So it is essential to use *category_name* to distinguish two types of agents. 
 
-        :param category_name: The name of new category.
+        :param category_id: The id of new category.
         :return:
         """
-        self._agent_ids[category_name] = [set() for i in range(self._width * self._height)]
+        cdef GridAgent agent
+        cdef tuple pos
+        assert 0<=category_id<100, f"Category ID {category_id} should be a int between [0, 100)"
+        assert self._agent_containers[category_id] is None, f"Category ID {category_id} already existed!"
+        self._agent_containers[category_id] = category
+        for agent in category:
+            pos = self.find_empty_spot()
+            agent.x = pos[0]
+            agent.y = pos[1]
+            self._add_agent(agent.id, category_id, agent.x, agent.y)
 
     # @cython.boundscheck(False)
     # @cython.wraparound(False)
@@ -120,7 +220,7 @@ cdef class Grid:
         row = <list>PyList_GetItem(self._spots, <Py_ssize_t> (y))
         return <list>PyList_GetItem(row, <Py_ssize_t> (x))
 
-    cpdef get_agent_ids(self, object category, long x, long y):
+    cpdef list get_agent_ids(self, long x, long y) except *:
         """
         Get all agent of a specific category from the spot at ``(x, y)``
 
@@ -129,10 +229,18 @@ cdef class Grid:
         :param y:
         :return: A set of int, the agent ids.
         """
-        agent_ids = self._agent_ids[category][self._convert_to_1d(x, y)]
-        if agent_ids is None:
-            raise KeyError(f'Category {category} not registered!')
-        return agent_ids
+        return self._agent_id_mgr.agents_on_spot(x, y)
+    
+    cpdef list get_agents(self, long x, long y) except *:
+        agents = []
+        for agent_id, agent_category in self._agent_id_mgr.agents_on_spot(x, y):
+            agents.append(self.get_agent_container(agent_category).get_agent(agent_id))
+        return agents
+
+    cdef AgentList get_agent_container(self, category_id) except *:
+        cdef AgentList ret = self._agent_containers[category_id]
+        assert ret is not None, f"Agent List for category id {category_id} is not registered!"
+        return ret
 
     cdef long _convert_to_1d(self, long x, long y):
         return x * self._height + y
@@ -238,7 +346,7 @@ cdef class Grid:
             self._neighbors_cache[key] = neighbors
             return neighbors
 
-    cdef void _add_agent(self, long agent_id, object category, long x, long y) except *:
+    cdef void _add_agent(self, long agent_id, long category, long x, long y) except *:
         """
         Add agent onto the grid
         :param agent_id:
@@ -247,38 +355,14 @@ cdef class Grid:
         :param y:
         :return:
         """
-        cdef dict category_of_agents
-        cdef list agent_id_set_list
-        cdef set agent_id_set
-        
         x, y = self._bound_check(x, y)
+        self._agent_id_mgr.add_agent(agent_id, category, x, y)
 
-        agent_id_set_list = self._get_agent_id_set_list(category)
-
-        agent_id_set = agent_id_set_list[self._convert_to_1d(x, y)]
-        if agent_id in agent_id_set:
-            raise ValueError(f"Agent with id: {agent_id} already exists at position {(x, y)}!")
-        else:
-            agent_id_set.add(agent_id)
-
-    cdef void _remove_agent(self, long agent_id, object category,long x, long y) except *:
-        cdef dict category_of_agents
-        cdef list agent_id_set_list
-        cdef set agent_id_set
-
+    cdef void _remove_agent(self, long agent_id, long category,long x, long y) except *:
         x, y = self._bound_check(x, y)
+        self._agent_id_mgr.remove_agent(agent_id, category, x, y)
 
-        agent_id_set_list = self._get_agent_id_set_list(category)
-
-        agent_id_set = agent_id_set_list[self._convert_to_1d(x, y)]
-        if agent_id not in agent_id_set:
-            print("Melodie-boost error occured. agent_id:", agent_id, "x:", x, "y:",
-                  y)
-            raise IndexError("agent_id does not exist on such coordinate.")
-        else:
-            agent_id_set.remove(agent_id)
-
-    cpdef void add_agent(self, GridAgent agent, object category) except *:
+    cpdef void add_agent(self, GridAgent agent, long category) except *:
         """
         Add an agent to the grid
 
@@ -288,7 +372,7 @@ cdef class Grid:
         """
         self._add_agent(agent.id, category, agent.x, agent.y)
 
-    cpdef void remove_agent(self, GridAgent agent, object category) except *:
+    cpdef void remove_agent(self, GridAgent agent, long category) except *:
         """
         Remove an agent from the grid
 
@@ -298,7 +382,7 @@ cdef class Grid:
         """
         self._remove_agent(agent.id, category, agent.x, agent.y)
 
-    cpdef void move_agent(self, GridAgent agent, object category, long target_x, long target_y) except *:
+    cpdef void move_agent(self, GridAgent agent, long category, long target_x, long target_y) except *:
         """
         Move agent to target position.
 
@@ -310,9 +394,11 @@ cdef class Grid:
         """
         self._remove_agent(agent.id, category, agent.x, agent.y)
         self._add_agent(agent.id, category, target_x, target_y)
+        agent.x = target_x
+        agent.y = target_y
 
     @cython.cdivision(True)
-    cpdef (long, long) rand_move(self, GridAgent agent, object category, long range_x, long range_y):
+    cpdef (long, long) rand_move(self, GridAgent agent, long category, long range_x, long range_y):
         """
         Randomly move an agent with maximum movement `range_x` in x axis and `range_y` in y axis.
         
@@ -361,8 +447,6 @@ cdef class Grid:
         """
         return vectorize_2d(self._spots, attr_name)
 
-    @cython.wraparound(False)
-    @cython.boundscheck(False)
     cpdef tuple get_roles(self):
         """
         Get the role of each spot.
@@ -372,17 +456,15 @@ cdef class Grid:
         cdef Spot spot
         cdef long pos_1d 
         cdef long x, y, i, j
-        cdef str category_name
+        cdef long category_id, agent_category
         cdef list category
         cdef dict agents_series_data
         cdef set agent_id_set
         cdef list role_pos_list
-        cdef list _agent_ids_items_to_iterate = [(category_name, category) for category_name, category in self._agent_ids.items()]
-        cdef long categories_num = len(_agent_ids_items_to_iterate)
 
         agents_series_data = {}
-        for category_name, category in self._agent_ids.items():
-            agents_series_data[category_name] = []
+        for category_id in self._agent_id_mgr.all_categories:
+            agents_series_data[category_id] = []
         for x in range(self._width):
             for y in range(self._height):
                 spot = self.get_spot(x, y)
@@ -392,16 +474,12 @@ cdef class Grid:
                 role_pos_list[1] = y
                 role_pos_list[2] = 0
                 role_pos_list[3] = spot.role
-                for i in range(categories_num):
-                    category_name = _agent_ids_items_to_iterate[i][0]
-                    category = _agent_ids_items_to_iterate[i][1]
-                    agent_id_set = category[pos_1d]
-                    series_data_one_category = agents_series_data[category_name]
-                    for agent_id in agent_id_set:
-                        series_data_one_category.append({
+                for agent_id, agent_category in self._agent_id_mgr.agents_on_spot(x, y):
+                    series_data_one_category = agents_series_data[agent_category]
+                    series_data_one_category.append({
                         'value': [x, y],
                         'id': agent_id,
-                        'category': category_name,
+                        'category': agent_category,
                         })
 
         return self._roles_list, agents_series_data
@@ -411,3 +489,7 @@ cdef class Grid:
     
     cpdef long width(self):
         return self._width
+
+    cpdef (long, long) find_empty_spot(self) except *:
+        return self._agent_id_mgr.find_empty_spot()
+    

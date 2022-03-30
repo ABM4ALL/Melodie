@@ -19,6 +19,8 @@ try:
                   ["Melodie/boost/fastrand.pyx"], ),
         Extension("Melodie.boost.basics",
                   ["Melodie/boost/basics.pyx"], ),
+        Extension("Melodie.boost.containers.container",
+                  ["Melodie/boost/containers/container.pyx"], ),
     ]
 except:
     import traceback
@@ -73,8 +75,6 @@ setuptools.setup(
         'openpyxl',
         'websockets',
         'sqlalchemy',
-        'flask',
-        'flask_cors',
         'astunparse',
         'pprintast'
     ],

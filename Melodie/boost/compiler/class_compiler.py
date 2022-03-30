@@ -12,7 +12,7 @@ from pprintast import pprintast
 
 from .typeinfer import TypeInferr
 from .typeinferlib import registered_types, BoostTypeModel
-from ... import AgentList, Environment
+from ... import AgentList
 from ...management.ast_parse import find_class_methods
 
 _expected_to_compile_classes = {

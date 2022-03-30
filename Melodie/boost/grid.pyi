@@ -4,6 +4,8 @@ from typing import ClassVar, Set, Dict, List, Tuple, TYPE_CHECKING
 
 import numpy as np
 
+from .. import AgentList
+
 if TYPE_CHECKING:
     from .basics import Agent
     from ..boost.vectorize import vectorize_2d
@@ -38,7 +40,8 @@ class Grid:
     Grid contains many `Spot`s, each `Spot` could contain several agents.
     """
 
-    def __init__(self, spot_cls: ClassVar[Spot], width: int, height: int, wrap=True, caching=True):
+    def __init__(self, spot_cls: ClassVar[Spot], width: int, height: int, wrap=True, caching=True,
+                 multi=True):
         """
 
         :param spot_cls: The class of Spot
@@ -61,7 +64,7 @@ class Grid:
     def height(self) -> int:
         ...
 
-    def add_category(self, category_name: str) -> None:
+    def add_agent_container(self, category_id: int, container: AgentList) -> None:
         """
         Add agent category
         :param category_name:
@@ -76,18 +79,16 @@ class Grid:
         :return:
         """
 
-    def get_agent_ids(self, category: str, x: int, y: int) -> Set[int]:
+    def get_agents(self, x: int, y: int) -> List[GridAgent]:
+        ...
+
+    def get_agent_ids(self, x: int, y: int) -> List[Tuple[int, int]]:
         """
         Get all agent of a specific category from the spot at (x, y)
-        :param category:
         :param x:
         :param y:
         :return: A set of int, the agent ids.
         """
-        agent_ids = self._agent_ids[category][self._convert_to_1d(x, y)]
-        if agent_ids is None:
-            raise KeyError(f'Category {category} not registered!')
-        return agent_ids
 
     def coords_wrap(self, x, y):
         """
@@ -121,7 +122,7 @@ class Grid:
                 neighbors.append(self._bound_check(x + dx, y + dy))
         return neighbors
 
-    def add_agent(self, agent: GridAgent, category: str) -> None:
+    def add_agent(self, agent: GridAgent, category: int) -> None:
         """
         Add agent onto the grid
         :param agent:
@@ -130,7 +131,7 @@ class Grid:
         """
         ...
 
-    def remove_agent(self, agent: GridAgent, category: str) -> None:
+    def remove_agent(self, agent: GridAgent, category: int) -> None:
         """
         Remove agent from the grid
         :param agent:
@@ -139,7 +140,7 @@ class Grid:
         """
         ...
 
-    def move_agent(self, agent: GridAgent, category: str, target_x, target_y) -> None:
+    def move_agent(self, agent: GridAgent, category: int, target_x, target_y) -> None:
         """
         Move agent to target position.
         :param agent:
@@ -192,3 +193,6 @@ class Grid:
         target_y = source_y + dy
         self.add_agent(agent_id, category, target_x, target_y)
         return target_x, target_y
+
+    def find_empty_spot(self) -> Tuple[int, int]:
+        ...

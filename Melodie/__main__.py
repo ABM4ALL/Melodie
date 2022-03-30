@@ -13,6 +13,6 @@ parser.add_argument("action", help="""[serve] for starting the management server
 args = parser.parse_args()
 assert args.action in {'studio'}
 if args.action == 'studio':
-    from Melodie.studio.main import studio_main
+    from MelodieStudio.main import studio_main
 
     studio_main()

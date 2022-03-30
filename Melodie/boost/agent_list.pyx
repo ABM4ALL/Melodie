@@ -28,8 +28,6 @@ cdef class SeqIter:
     """
     The iterator to deal with for-loops in AgentList or other agent containers
     """
-    cdef int _i
-    cdef list _seq
 
     def __init__(self, seq):
         self._seq = seq
@@ -47,8 +45,8 @@ cdef class BaseAgentContainer():
     """
     The base class that contains agents
     """
-    cdef int _id_offset
-    cdef object scenario
+    # cdef int _id_offset
+    # cdef object scenario
 
     def __init__(self):
         self._id_offset = -1
@@ -72,13 +70,13 @@ cdef class BaseAgentContainer():
 
 
 
-cdef class AgentList(BaseAgentContainer, Sequence):
-    cdef int _iter_index
+cdef class AgentList(BaseAgentContainer):
+    # cdef int _iter_index
     # // cdef object scenario
-    cdef object agent_class
-    cdef int initial_agent_num
-    cdef object model
-    cdef list agents
+    # cdef object agent_class
+    # cdef int initial_agent_num
+    # cdef object model
+    # cdef list agents
     def __init__(self, agent_class: ClassVar[AgentGeneric], length: int, model: 'Model') -> None:
         super(AgentList, self).__init__()
         self._iter_index = 0

@@ -1,5 +1,6 @@
 *.c
 *.pyd
 *.html
+*.cpp
 testfeatures.py
 _test_features.pyx

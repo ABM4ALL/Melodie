@@ -15,12 +15,9 @@ import astunparse
 from pprintast import pprintast
 
 from Melodie import Agent, AgentList
-from Melodie.boost.compiler.typeinferlib import registered_types, BoostTypeModel, type_registered
+from Melodie.boost.compiler.typeinferlib import  BoostTypeModel, type_registered
 
-from Melodie.network import OldNetwork
-from Melodie.grid import Grid
-from Melodie.management.ast_parse import find_class_defs, find_class_methods
-import numpy as np
+from Melodie.management.ast_parse import  find_class_methods
 
 logging.basicConfig(level=logging.WARNING, stream=sys.stderr)
 logger = logging.getLogger(__name__)

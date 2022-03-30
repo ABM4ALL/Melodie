@@ -4,12 +4,11 @@
 # @Email: 1295752786@qq.com
 # @File: property_parser.py
 import ast
-import code
-from typing import Union, TYPE_CHECKING, Type, ClassVar, Dict, Tuple, List
+from typing import Union,  ClassVar, Dict, Tuple, List
 
 from Melodie.boost.compiler.typeinfer import TypeInferr
 from Melodie.management.ast_parse import find_class_methods
-from Melodie import Agent, AgentList, Environment
+from Melodie import Agent,  Environment
 from Melodie.boost.compiler.typeinferlib import BoostTypeModel
 # if TYPE_CHECKING:
 

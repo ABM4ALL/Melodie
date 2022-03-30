@@ -12,5 +12,6 @@ from .visualizer import GameOfLifeVisualizer
 
 class FuncSimulator(Simulator):
     def setup(self):
-        self.visualizer = GameOfLifeVisualizer()
-        self.visualizer.setup()
+        pass
+        # self.visualizer = GameOfLifeVisualizer()
+        # self.visualizer.setup()

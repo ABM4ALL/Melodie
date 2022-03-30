@@ -9,7 +9,7 @@ import random
 # import numpy as np
 # from numba import typed
 
-from Melodie.grid import Grid
+from Melodie import Grid
 from Melodie.visualizer import GridVisualizer
 
 

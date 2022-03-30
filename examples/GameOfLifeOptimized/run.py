@@ -21,7 +21,7 @@ if __name__ == "__main__":
     """
     Run the model with dataframe_loader
     """
-    run_profile(simulator.run_visual)
+    run_profile(simulator.run)
 
     # dataframe_loader.run_visual(
     #     # agent_class=None,

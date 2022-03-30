@@ -1,0 +1,4 @@
+*.sqlite
+*.sqlite3
+.melodieconfig
+out.py

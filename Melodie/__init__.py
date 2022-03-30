@@ -24,4 +24,4 @@ logging.basicConfig(level=logging.INFO,
 
 from .boost.agent_list import BaseAgentContainer, AgentList
 from .boost.basics import Environment, Element, Agent
-from .boost.grid import Grid, Spot, GridAgent
+from .boost.grid import Grid, Spot, GridAgent, AgentIDManager

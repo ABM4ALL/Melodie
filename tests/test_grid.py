@@ -7,12 +7,10 @@ import json
 import random
 import sys
 import time
+from .config import model
 from typing import Union, TYPE_CHECKING
 
-import numpy as np
-
-from Melodie import Grid, Spot, GridAgent, Agent
-
+from Melodie import Grid, Spot, GridAgent, Agent, AgentList
 import logging
 
 if TYPE_CHECKING:
@@ -24,37 +22,37 @@ N = 10000_000
 
 
 def agents(grid: Union['JITGrid', Grid]):
-    grid.add_category('wolves')
-    grid.add_category('sheep')
+    WOLVES = 0
+    SHEEP = 1
     a0 = GridAgent(0, 1, 1)
     a1 = GridAgent(1, 1, 1)
     a2 = GridAgent(2, 1, 1)
     a3 = GridAgent(3, 1, 1)
-    error_agent = Agent(0)
-    grid.add_agent(a0, 'wolves')
-    grid.add_agent(a1, 'wolves')
-    grid.add_agent(a2, 'wolves')
-    grid.add_agent(a3, 'sheep')
+    type_error_agent = Agent(0)
+    grid.add_agent(a0, WOLVES)
+    grid.add_agent(a1, WOLVES)
+    grid.add_agent(a2, WOLVES)
+    grid.add_agent(a3, SHEEP)
     try:
-        grid.add_agent(error_agent, "sheep")
+        grid.add_agent(type_error_agent, SHEEP)
         assert False, "An error should be raised at line above"
     except TypeError:
         pass
-    try:
-        grid.add_agent(a3, 'undefined')
-        assert False, "An error should be raised at line above"
-    except ValueError:
-        pass
-    grid.remove_agent(a0, 'wolves')
-    wolves_at_1_1 = grid.get_agent_ids('wolves', 1, 1)
-    assert 1 in wolves_at_1_1
-    assert 2 in wolves_at_1_1
-    assert 3 not in wolves_at_1_1
-    sheep_at_1_1 = grid.get_agent_ids('sheep', 1, 1)
-    assert 3 in sheep_at_1_1
+    # try:
+    #     grid.add_agent(a3, 2)
+    #     assert False, "An error should be raised at line above"
+    # except ValueError:
+    #     pass
+    grid.remove_agent(a0, WOLVES)
+    mammals_at_1_1 = grid.get_agent_ids(1, 1)
+    assert (1, WOLVES) in mammals_at_1_1, mammals_at_1_1
+    assert (2, WOLVES) in mammals_at_1_1
+    assert (3, WOLVES) not in mammals_at_1_1
 
-    grid.move_agent(a3, 'sheep', 2, 2)
-    assert 3 in grid.get_agent_ids('sheep', 2, 2)
+    assert (3, SHEEP) in mammals_at_1_1
+
+    grid.move_agent(a3, SHEEP, 2, 2)
+    assert (3, SHEEP) in grid.get_agent_ids(2, 2)
 
 
 def neighbors(grid: Grid):
@@ -121,6 +119,31 @@ def convert(grid: Union[Grid, 'JITGrid']):
         print(arr)
 
 
+def test_agent_id_mgr():
+    from Melodie.boost.grid import AgentIDManager
+    am = AgentIDManager(10, 10)
+    SHEEP = 0
+    WOLF = 1
+    am.add_agent(0, 0, 1, 1)  # add a sheep at (1, 1)
+    assert 10 * 1 + 1 not in am.get_empty_spots()
+    am.remove_agent(0, 0, 1, 1)  # remove a sheep from (1, 1)
+    assert 10 * 1 + 1 in am.get_empty_spots()
+
+    am.add_agent(0, 0, 1, 1)  # add a sheep at (1, 1)
+    try:
+        am.add_agent(0, 0, 1, 1)  # add a sheep at (1, 1)
+        assert False, "An Error should be raised above"
+    except ValueError:
+        pass
+    print(len(am.get_empty_spots()))
+    am.add_agent(0, WOLF, 1, 1)
+    print(am.agents_on_spot(1, 1))
+    assert (0, WOLF) in am.agents_on_spot(1, 1)
+    assert (0, SHEEP) in am.agents_on_spot(1, 1)
+    print(am.agents_on_spot(5, 5))
+    pass
+
+
 # def test_agents_jit():
 #     if JIT_AVAILABLE:
 #         from Melodie.boost import JITGrid
@@ -137,19 +160,20 @@ def convert(grid: Union[Grid, 'JITGrid']):
 def test_roles():
     agents = [GridAgent(i) for i in range(10)]
     agents_b = [GridAgent(i) for i in range(10)]
-    grid = Grid(Spot, 100, 100)
-    grid2 = Grid(Spot, 100, 100)
+    grid = Grid(Spot, 100, 100, multi=True)
+    grid2 = Grid(Spot, 100, 100, multi=True)
 
-    grid2.add_category('a')
-    grid2.add_category('b')
+    CATRGORY_A = 0
+    CATRGORY_B = 1
+
     for agent in agents:
-        grid2.add_agent(agent, 'a')
+        grid2.add_agent(agent, CATRGORY_A)
     for agent in agents_b:
-        grid2.add_agent(agent, 'b')
+        grid2.add_agent(agent, CATRGORY_B)
     N = 100
     t0 = time.time()
     for i in range(N):
-        roles = grid.get_roles()
+        roles = grid2.get_roles()
     t1 = time.time()
 
     for i in range(N):
@@ -160,6 +184,23 @@ def test_roles():
     print(roles2[1])
 
 
+def test_single_grid():
+    agents = [GridAgent(i) for i in range(15)]
+    grid = Grid(Spot, 4, 4)
+    for i in range(4):
+        for j in range(4):
+            if i * 4 + j < 15:
+                agent = agents[i * 4 + j]
+                agent.x = i
+                agent.y = j
+                grid.add_agent(agent, 0)
+    spot = grid.find_empty_spot()
+    assert spot == (3, 3), spot
+    grid.move_agent(agents[0], 0, 3, 3)
+    spot = grid.find_empty_spot()
+    assert spot == (0, 0), spot
+
+
 def test_agents_nojit():
     width = 10
     height = 20
@@ -168,3 +209,15 @@ def test_agents_nojit():
     agents(grid)
     neighbors(grid)
     convert(grid)
+
+
+def test_containers():
+    grid = Grid(Spot, 10, 10)
+    agent_list: AgentList[GridAgent] = model.create_agent_container(GridAgent, 10)
+    for i in range(10):
+        agent_list[i].x = i
+        agent_list[i].y = i
+    grid.add_agent_container(0, agent_list)
+    agents_on_grid = grid.get_agents(1, 1)
+    assert len(agents_on_grid) == 1
+    assert agents_on_grid[0].x == 1, agents_on_grid[0].y == 1
