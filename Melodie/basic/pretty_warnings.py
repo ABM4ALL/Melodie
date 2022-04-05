@@ -2,8 +2,11 @@
 Write prettified warnings to terminal for better focus attraction.
 """
 # https://pypi.org/project/termcolor/
-from termcolor import cprint
-
+try:
+    from termcolor import cprint
+except:
+    def cprint(s, **kwargs):
+        print(s)
 from .fsm import FSM
 
 
