@@ -8,19 +8,33 @@ try:
     Options.annotate = True
     ext_modules = [
         Extension("Melodie.boost._vectorize",
-                  ["Melodie/boost/_vectorize.pyx"], ),
+                  ["Melodie/boost/_vectorize.pyx"],
+                  language="c++",
+                  extra_compile_args=["-std=c++11"]
+                  ),
         Extension("Melodie.boost._vectorize2d",
-                  ["Melodie/boost/_vectorize2d.pyx"], ),
+                  ["Melodie/boost/_vectorize2d.pyx"],
+                  language="c++",
+                  extra_compile_args=["-std=c++11"]
+                  ),
         Extension("Melodie.boost.agent_list",
-                  ["Melodie/boost/agent_list.pyx"], ),
+                  ["Melodie/boost/agent_list.pyx"],
+                  language="c++",
+                  extra_compile_args=["-std=c++11"]),
         Extension("Melodie.boost.grid",
-                  ["Melodie/boost/grid.pyx"], ),
+                  ["Melodie/boost/grid.pyx"],
+                  language="c++",
+                  extra_compile_args=["-std=c++11"]),
         Extension("Melodie.boost.fastrand",
-                  ["Melodie/boost/fastrand.pyx"], ),
+                  ["Melodie/boost/fastrand.pyx"]),
         Extension("Melodie.boost.basics",
-                  ["Melodie/boost/basics.pyx"], ),
+                  ["Melodie/boost/basics.pyx"],
+                  language="c++",
+                  extra_compile_args=["-std=c++11"]),
         Extension("Melodie.boost.containers.container",
-                  ["Melodie/boost/containers/container.pyx"], ),
+                  ["Melodie/boost/containers/container.pyx"],
+                  language="c++",
+                  extra_compile_args=["-std=c++11"]),
     ]
 except:
     import traceback
