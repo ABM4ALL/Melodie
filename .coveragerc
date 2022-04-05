@@ -1,9 +1,9 @@
 [run]
 plugins = Cython.Coverage
-branch = True
 source = Melodie
 
 [report]
+show_missing = true
 exclude_lines =
     if self.debug:
     pragma: no cover

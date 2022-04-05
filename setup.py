@@ -5,6 +5,7 @@ from distutils.extension import Extension
 try:
     from Cython.Distutils import build_ext
     from Cython.Compiler import Options
+
     Options.annotate = True
     ext_modules = [
         Extension("Melodie.boost._vectorize",
@@ -24,7 +25,8 @@ try:
         Extension("Melodie.boost.grid",
                   ["Melodie/boost/grid.pyx"],
                   language="c++",
-                  extra_compile_args=["-std=c++11"]),
+                  extra_compile_args=["-std=c++11"],),
+                  # define_macros=[('CYTHON_TRACE', '1')]),
         Extension("Melodie.boost.fastrand",
                   ["Melodie/boost/fastrand.pyx"]),
         Extension("Melodie.boost.basics",
@@ -42,8 +44,10 @@ except:
     traceback.print_exc()
     ext_modules = None
 
-    def build_ext(_): return print(
-        'Cython was not installed. With cython you may get better peformance boost!')
+
+    def build_ext(_):
+        return print(
+            'Cython was not installed. With cython you may get better peformance boost!')
 
 with open('README.md', 'r') as fh:
     long_description = fh.read()

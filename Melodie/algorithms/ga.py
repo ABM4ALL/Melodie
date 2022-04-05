@@ -10,7 +10,6 @@ import random
 
 import pandas as pd
 
-from Melodie.boost import JIT_AVAILABLE
 from .searching_algorithm import SearchingAlgorithm, AlgorithmParameters
 
 logger = logging.getLogger(__name__)

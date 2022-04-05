@@ -9,7 +9,6 @@ import time
 import numpy as np
 
 from Melodie import OldNetwork
-from Melodie.boost import JIT_AVAILABLE
 import logging
 
 logger = logging.getLogger(__name__)
