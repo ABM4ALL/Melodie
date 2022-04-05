@@ -151,11 +151,12 @@ class Visualizer:
     def set_plot_data(self, current_step: int, chart_name: str, series_values: Dict):
         """
         Set plot data
+        :param current_step:
         :param chart_name:
         :param series_values:
         :return:
         """
-        assert chart_name in self.plot_charts.all_chart_names()
+        MelodieExceptions.Visualizer.Charts.ChartNameAlreadyDefined(chart_name, self.plot_charts.all_chart_names())
         for series_name, series_value in series_values.items():
             series = self.plot_charts.get_chart(chart_name).get_series(series_name)
             series.add_data_value(series_value)
@@ -380,13 +381,15 @@ class GridVisualizer(Visualizer):
         }
 
     def add_agent_series(self, component_name: str, series_name: str, series_type: str, color: str, symbol="rect", ):
-        assert series_type in {'scatter'}
+        if series_type not in {'scatter'}:
+            MelodieExceptions.Program.Variable.VariableNotInSet('series_type', series_type, {'scatter'})
         if component_name not in self.agent_series_managers:
             self.agent_series_managers[component_name] = AgentSeriesManager()
         self.agent_series_managers[component_name].add_series(series_name, series_type, color, symbol)
 
     def add_visualize_component(self, component: str, type: str, color_categories: Dict[int, str]):
         assert type in {"grid", "network"}
+
         chart_options = {
             "animation": False, "progressiveThreshold": 100000, "tooltip": {"position": "top"},
             "grid": {"height": "80%", "top": "10%"},

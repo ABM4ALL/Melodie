@@ -61,7 +61,7 @@ cdef class GridItem(Agent):
         return f"<{self.__class__.__name__} 'x': {self.x}, 'y': {self.y}>"
 
 cdef class GridAgent(GridItem):
-    def __init__(self, agent_id: int, x:int=0, y:int=0):
+    def __init__(self, agent_id: int, x: int = 0, y: int = 0, category: int = 0):
         super().__init__(agent_id, x, y)
 
     cpdef void setup(self):
@@ -129,6 +129,9 @@ cdef class AgentIDManager:
 
     @cython.cdivision(True)
     cpdef (long, long) number_to_agent_id_and_category(self, long num) except *:
+        """
+        return: (agent_id, category_id)
+        """
         return num%self._max_id, num/self._max_id
 
     @cython.cdivision(True)
@@ -182,7 +185,20 @@ cdef class Grid:
         self._agent_id_mgr = AgentIDManager(width, height, allow_multi=multi)
         self._agent_containers = [None for i in range(100)]
 
-    cpdef add_agent_container(self, long category_id, AgentList category) except *:
+    cpdef validate(self):
+        """
+        Validate the container.
+        This method will be run at the beginning of model.run
+
+        1. All agents already in the container should be on the grid.
+
+        """
+        for container_id, container in enumerate(self._agent_containers):
+            if container is not None:
+                for agent in container:
+                    assert (agent.id, agent.category) in self.get_agent_ids(agent.x, agent.y), f"Agent id: {agent.id}, category: {agent.category} x: {agent.x}, y: {agent.y} is not on the grid."
+
+    def add_agent_container(self, category_id: int, category: "AgentList" ,initial_placement = "none"):
         """
         Add an agent category.
         
@@ -191,18 +207,29 @@ cdef class Grid:
         we cannot identify an agent only with agent *id*.So it is essential to use *category_name* to distinguish two types of agents. 
 
         :param category_id: The id of new category.
+        :param category: An AgentList object
+        :param initial_placement: A str object stand for initial placement.
         :return:
         """
+        initial_placement = initial_placement.lower()
+        self._add_agent_container(category_id, category, initial_placement)
+
+    cpdef _add_agent_container(self, long category_id, AgentList category, str initial_placement) except *:
         cdef GridAgent agent
         cdef tuple pos
         assert 0<=category_id<100, f"Category ID {category_id} should be a int between [0, 100)"
         assert self._agent_containers[category_id] is None, f"Category ID {category_id} already existed!"
         self._agent_containers[category_id] = category
-        for agent in category:
-            pos = self.find_empty_spot()
-            agent.x = pos[0]
-            agent.y = pos[1]
-            self._add_agent(agent.id, category_id, agent.x, agent.y)
+        assert initial_placement in {"random_single", "none", "direct"}, f"Invalid initial placement '{initial_placement}' "
+        if initial_placement == "random_single":
+            for agent in category:
+                pos = self.find_empty_spot()
+                agent.x = pos[0]
+                agent.y = pos[1]
+                self._add_agent(agent.id, category_id, agent.x, agent.y)
+        elif initial_placement == "direct":
+            for agent in category:
+                self._add_agent(agent.id, category_id, agent.x, agent.y)
 
     # @cython.boundscheck(False)
     # @cython.wraparound(False)
@@ -380,6 +407,7 @@ cdef class Grid:
         :param category: A string, the name of category. The category should be registered. 
         :return:
         """
+        
         self._remove_agent(agent.id, category, agent.x, agent.y)
 
     cpdef void move_agent(self, GridAgent agent, long category, long target_x, long target_y) except *:
@@ -392,13 +420,14 @@ cdef class Grid:
         :param target_y: The target y coordinate
         :return:
         """
+        
         self._remove_agent(agent.id, category, agent.x, agent.y)
         self._add_agent(agent.id, category, target_x, target_y)
         agent.x = target_x
         agent.y = target_y
 
     @cython.cdivision(True)
-    cpdef (long, long) rand_move(self, GridAgent agent, long category, long range_x, long range_y):
+    cpdef (long, long) rand_move(self, GridAgent agent, long category, long range_x, long range_y) except *:
         """
         Randomly move an agent with maximum movement `range_x` in x axis and `range_y` in y axis.
         
@@ -411,7 +440,6 @@ cdef class Grid:
 
         :return: (int, int), the new position
         """
-        
         cdef long source_x, source_y, dx, dy, target_x, target_y
         source_x = agent.x
         source_y = agent.y

@@ -15,11 +15,11 @@ class ShellingModelModel(Model):
             self.agent_list_b: AgentList[ShellingModelAgentTypeB] = self.create_agent_container(ShellingModelAgentTypeB,
                                                                                                 160)
         self.grid = Grid(Spot, 20, 20, multi=False)
-        self.grid.add_agent_container(0, self.agent_list_a)
-        self.grid.add_agent_container(1, self.agent_list_b)
+        self.grid.add_agent_container(0, self.agent_list_a, "random_single")
+        self.grid.add_agent_container(1, self.agent_list_b, "random_single")
 
     def run(self):
-        for i in range(self.scenario.periods):
+        for i in self.routine():
 
             unsatisfied_a, unsatisfied_b = self.environment.calc_satisfactory(self.grid, self.agent_list_a,
                                                                               self.agent_list_b)
@@ -39,24 +39,19 @@ class ShellingModelModel(Model):
                 agent_b.x = pos[0]
                 agent_b.y = pos[1]
 
-            print(
-                [(self.agent_list_a.get_agent(a_id).x, self.agent_list_a.get_agent(a_id).y) for a_id in unsatisfied_a],
-                unsatisfied_b)
-
-            for y in range(20):
-                for x in range(20):
-
-                    agents = self.grid.get_agent_ids(x, y)
-                    if len(agents) == 0:
-                        print("-", end="")
-                    elif agents[0][1] == 0:
-                        print("o", end="")
-                    elif agents[0][1] == 1:
-                        print('x', end="")
-                print("\n", end="")
-            print(i, len(unsatisfied_b) + len(unsatisfied_a), "=======" * 20)
-
-
-import dis
-
-print(dis.dis(ShellingModelModel.run))
+            # print(
+            #     [(self.agent_list_a.get_agent(a_id).x, self.agent_list_a.get_agent(a_id).y) for a_id in unsatisfied_a],
+            #     unsatisfied_b)
+            #
+            # for y in range(20):
+            #     for x in range(20):
+            #
+            #         agents = self.grid.get_agent_ids(x, y)
+            #         if len(agents) == 0:
+            #             print("-", end="")
+            #         elif agents[0][1] == 0:
+            #             print("o", end="")
+            #         elif agents[0][1] == 1:
+            #             print('x', end="")
+            #     print("\n", end="")
+            # print(i, len(unsatisfied_b) + len(unsatisfied_a), "=======" * 20)

@@ -217,7 +217,11 @@ def test_containers():
     for i in range(10):
         agent_list[i].x = i
         agent_list[i].y = i
-    grid.add_agent_container(0, agent_list)
+        agent_list[i].category = 0
+    grid.add_agent_container(0, agent_list, "direct")
+    # grid.add_agent_container(0, agent_list, "none")
+    grid.validate()
     agents_on_grid = grid.get_agents(1, 1)
+
     assert len(agents_on_grid) == 1
     assert agents_on_grid[0].x == 1, agents_on_grid[0].y == 1

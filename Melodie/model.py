@@ -1,3 +1,4 @@
+import inspect
 import logging
 import sys
 from contextlib import contextmanager
@@ -8,7 +9,7 @@ import pandas as pd
 from . import DB
 from .boost.basics import Agent, Environment
 from .boost.agent_list import AgentList, BaseAgentContainer
-from .basic import MelodieExceptions
+from .basic import MelodieExceptions, show_prettified_warning, show_link
 from .config import Config
 from .data_collector import DataCollector
 from .scenario_manager import Scenario
@@ -137,7 +138,8 @@ class Model:
         if params_df is not None:
             container.set_properties(params_df)
         else:
-            logger.warning(f"No dataframe set for the {agent_container_class.__name__}")
+            show_prettified_warning(f"No dataframe set for the {agent_container_class.__name__}.\n\t"
+                                    + show_link())
         return container
 
     def check_agent_containers(self):

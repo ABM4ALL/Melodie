@@ -13,6 +13,7 @@ import pandas as pd
 
 import Melodie.visualizer
 from . import DB
+from .basic import show_prettified_warning
 from .boost.basics import Agent
 
 from .boost.agent_list import AgentList
@@ -61,7 +62,8 @@ class BaseModellingManager(abc.ABC):
         :param table_name:
         :return:
         """
-        assert self.df_loader is not None
+        if self.df_loader is None:
+            raise MelodieExceptions.Data.NoDataframeLoaderDefined()
         if table_name not in self.df_loader.registered_dataframes:
             raise MelodieExceptions.Data.StaticTableNotRegistered(table_name,
                                                                   list(self.df_loader.registered_dataframes.keys()))
@@ -84,8 +86,8 @@ class BaseModellingManager(abc.ABC):
             self.df_loader.register_generated_dataframes()
 
         self.scenarios = self.generate_scenarios()
-
-        assert self.scenarios is not None
+        if self.scenarios is None:
+            MelodieExceptions.Scenario.NoValidScenarioGenerated(self.scenarios)
 
     @abc.abstractmethod
     def generate_scenarios(self):
@@ -109,7 +111,8 @@ class Simulator(BaseModellingManager):
         Generate scenarios from the dataframe_loader
         :return: 
         """
-        assert self.df_loader is not None
+        if self.df_loader is None:
+            raise MelodieExceptions.Data.NoDataframeLoaderDefined()
         return self.df_loader.generate_scenarios('simulator')
 
     def run_model(self, config, scenario, run_id, model_class: ClassVar['Model'], visualizer=None):
@@ -160,9 +163,12 @@ class Simulator(BaseModellingManager):
         """
         t0 = time.time()
         self.setup()
-
+        if self.visualizer is not None:
+            show_prettified_warning(
+                "You are using `Simulator.run()` method to run model, but you have also defined visualizer.\n"
+                "If you would like to visualize this model, please use `Simulator.run_visual()` "
+                "instead of `Simulator.run` ")
         self.pre_run()
-        print('simulator started!')
         logger.info('Loading scenarios and static tables...')
         t1 = time.time()
         for scenario_index, scenario in enumerate(self.scenarios):
@@ -312,12 +318,11 @@ class Simulator(BaseModellingManager):
         self.config = config
         self.scenario_cls = scenario_cls
         self.pre_run()
-        # self.register_scenario_dataframe()
-        # self.register_static_dataframes()
 
-        # self.scenarios_dataframe = self.create_scenarios_dataframe()
         self.scenarios = self.generate_scenarios()
-        assert self.scenarios is not None
+        if self.scenarios is None:
+            raise MelodieExceptions.Scenario.NoValidScenarioGenerated(self.scenarios)
+
         logger.info("Pre-run procedures finished. Now simulation starts...")
 
         t0 = time.time()

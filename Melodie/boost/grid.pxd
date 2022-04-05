@@ -13,6 +13,7 @@ cdef class GridItem(Agent):
     cpdef void set_params(self, dict params) except *
 
 cdef class GridAgent(GridItem):
+    cdef public long category
     cpdef void setup(self)
 
 cdef class Spot(GridItem):
@@ -56,7 +57,8 @@ cdef class Grid:
     cdef list _agent_containers
     
     cdef AgentIDManager _agent_id_mgr
-    cpdef add_agent_container(self, long category_id, AgentList category ) except *
+    cpdef  validate(self)
+    cpdef _add_agent_container(self, long category_id, AgentList category , str initial_placement) except *
     cdef AgentList get_agent_container(self, category_id) except *
     cpdef get_spot(self, long x, long y)
     # cpdef get_agent_ids(self, object category, long x, long y)
@@ -80,6 +82,6 @@ cdef class Grid:
     cdef void _add_agent(self, long agent_id, long category, long x, long y) except *
     cdef void _remove_agent(self, long agent_id, long category,long x, long y) except *
     # cpdef (long, long) get_agent_pos(self, long agent_id, object category)
-    cpdef (long, long) rand_move(self, GridAgent agent, long category, long range_x, long range_y)
+    cpdef (long, long) rand_move(self, GridAgent agent, long category, long range_x, long range_y) except *
     cpdef tuple get_roles(self)
     cpdef (long, long) find_empty_spot(self) except *

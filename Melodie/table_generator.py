@@ -10,6 +10,7 @@ from typing import Callable, Any, Union, Tuple, List, TYPE_CHECKING, Optional
 
 import pandas as pd
 
+from Melodie.basic import MelodieExceptions, args_check
 from Melodie.db import create_db_conn
 from Melodie.scenario_manager import Scenario
 
@@ -42,7 +43,8 @@ class TableGenerator:
         self._self_incremental_value = -1
         self.df_loader = df_loader
         from Melodie.dataframe_loader import DataFrameLoader
-        assert isinstance(self.df_loader, DataFrameLoader)
+        if not isinstance(self.df_loader, DataFrameLoader):
+            MelodieExceptions.Data.NoDataframeLoaderDefined()
 
         self.data_types = {}
         self._row_generator: Optional[Callable[[Scenario], Union[dict, object]]] = None
@@ -68,14 +70,15 @@ class TableGenerator:
         :param data_types:
         :return:
         """
-        assert len(self.data_types) == 0, "Data types has been already defined!"
+        if len(self.data_types) > 0:
+            raise ValueError("Data types has been already defined!")
         self.data_types = data_types
 
     def convert_to_num_generator(self, num_generator: Union[int, Callable[[Scenario], int]]):
         if isinstance(num_generator, int):
             return lambda _: num_generator
         elif callable(num_generator):
-            assert num_generator.__code__.co_argcount == 1
+            args_check(num_generator, 1)
             return num_generator
         else:
             raise TypeError
@@ -86,7 +89,7 @@ class TableGenerator:
         :param row_generator:
         :return:
         """
-        assert row_generator.__code__.co_argcount == 1
+        args_check(row_generator, 1)
         self._row_generator = row_generator
 
     def gen_agent_param_table_each_scenario(self):

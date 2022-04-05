@@ -1,5 +1,6 @@
 import functools
 import random
+from turtle import st
 from typing import ClassVar, Set, Dict, List, Tuple, TYPE_CHECKING
 
 import numpy as np
@@ -18,7 +19,7 @@ class GridItem(Agent):
 
 
 class GridAgent(GridItem):
-    def __init__(self, agent_id: int, x: int = 0, y: int = 0):
+    def __init__(self, agent_id: int, x: int = 0, y: int = 0, category: int = 0):
         super().__init__(agent_id, x, y)
 
     def setup(self):
@@ -52,7 +53,8 @@ class Grid:
 
         """
         self.wrap = wrap
-        self._spots = [[spot_cls(self._convert_to_1d(x, y), x, y) for x in range(width)] for y in range(height)]
+        self._spots = [[spot_cls(self._convert_to_1d(x, y), x, y)
+                        for x in range(width)] for y in range(height)]
         for x in range(self.width):
             for y in range(self.height):
                 self._spots[y][x].setup()
@@ -64,7 +66,7 @@ class Grid:
     def height(self) -> int:
         ...
 
-    def add_agent_container(self, category_id: int, container: AgentList) -> None:
+    def add_agent_container(self, category_id: int, container: AgentList, initial_placement: str = "none") -> None:
         """
         Add agent category
         :param category_name:
@@ -87,7 +89,7 @@ class Grid:
         Get all agent of a specific category from the spot at (x, y)
         :param x:
         :param y:
-        :return: A set of int, the agent ids.
+        :return: A set of (int, int) standing for (agent_id, category), the agent ids.
         """
 
     def coords_wrap(self, x, y):
@@ -183,7 +185,7 @@ class Grid:
                 grid_roles[pos_1d, 3] = spot.role
         return grid_roles
 
-    def rand_move(self, agent_id: GridAgent, category: str, x_range: int, y_range: int):
+    def rand_move(self, agent_id: GridAgent, category: int, x_range: int, y_range: int):
 
         source_x, source_y = self.get_agent_pos(agent_id, category)
         self._remove_agent(agent_id, category, source_x, source_y)

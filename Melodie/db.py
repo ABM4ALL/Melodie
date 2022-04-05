@@ -7,7 +7,6 @@ from typing import Union, Dict, TYPE_CHECKING, List, Tuple, Type, Hashable, Opti
 
 from sqlalchemy.exc import OperationalError
 
-
 import pandas as pd
 
 import numpy as np
@@ -33,7 +32,8 @@ class DB:
     def __init__(self, db_name: str, db_type: str = 'sqlite', conn_params: Dict[str, str] = None):
         self.db_name = db_name
 
-        assert db_type in {'sqlite'}, f"Database type '{db_type}' is not supported!"
+        if db_type not in {'sqlite'}:
+            MelodieExceptions.Data.InvalidDatabaseType(db_type, {'sqlite'})
         if db_type == 'sqlite':
             if conn_params is None:
                 conn_params = {'db_path': ''}
@@ -205,9 +205,10 @@ class DB:
             sql += f"where id={id}"
         return self.query(sql)
 
-    def query_agent_results(self, agent_list_name: str, scenario_id: int = None, agent_id: int = None, step: int = None):
+    def query_agent_results(self, agent_list_name: str, scenario_id: int = None, agent_id: int = None,
+                            step: int = None):
         conditions = {'scenario_id': scenario_id, 'id': agent_id, 'step': step}
-        return self.paramed_query(agent_list_name+"_result", conditions)
+        return self.paramed_query(agent_list_name + "_result", conditions)
 
     def query_env_results(self, scenario_id: int = None, step: int = None):
         conditions = {'scenario_id': scenario_id, 'step': step}

@@ -37,9 +37,7 @@ class Scenario(Element):
             self.min = min_val
             self.max = max_val
             self.step = step
-        # def __setattr__(self, key, value):
-        #     if hasattr(self, key):
-        #         assert key in
+
     class SelectionParameter(BaseParameter):
         def __init__(self, name, init_value: Union[int, str, bool], selections: List[Union[int, str, bool]]):
             super().__init__(name, "selection", init_value)

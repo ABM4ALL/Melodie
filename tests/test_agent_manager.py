@@ -72,6 +72,8 @@ def test_add_del_agents():
     assert len(al) == 20
     for agent in al:
         assert al.get_agent(agent.id).id == agent.id
+    new_agent = TestAgent(100)
+    al.add(new_agent, {'id': 1000})
 
 
 def test_agent_list_iteration():

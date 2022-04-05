@@ -2,6 +2,7 @@ from typing import List
 
 from Melodie import Simulator
 from .scenario import ShellingModelScenario
+from .visualizer import ShellingVisualizer
 
 
 class ShellingModelSimulator(Simulator):
@@ -10,3 +11,7 @@ class ShellingModelSimulator(Simulator):
         scenario.periods = 100
         scenario.desired_sametype_neighbors = 4
         return [scenario]
+
+    def setup(self):
+        self.visualizer = ShellingVisualizer()
+        self.visualizer.setup()

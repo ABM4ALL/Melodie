@@ -1,5 +1,5 @@
 import json
-from typing import TYPE_CHECKING, Any, List, Callable, Dict
+from typing import TYPE_CHECKING, Any, List, Callable, Dict, Set
 from collections import Counter
 
 if TYPE_CHECKING:
@@ -43,6 +43,32 @@ class MelodieExceptions:
         def TypeError(name, obj, expected_type: type):
             return TypeError(
                 f"{name} should be a {expected_type}, however it was {type(obj)}, value {obj}")
+
+    class Program:
+        """
+        Errors related to programming
+        """
+        ID = 1000
+
+        class Variable:
+            ID = 1010
+
+            @staticmethod
+            def VariableInvalid(var_desc: str, var_value: Any, expected_value: Any):
+                return MelodieException(1011, f"Variable {var_desc} is {var_value}, but expected {expected_value} ")
+
+            @staticmethod
+            def VariableNotInSet(var_desc: str, var_value: Any, allowed_set: Set[Any]):
+                return MelodieException(1012, f"Variable {var_desc} is {var_value}, not in allowed set {allowed_set} ")
+
+        class Function:
+            ID = 1020
+
+            @staticmethod
+            def FunctionArgsNumError(func: Callable, expected_arg_num: int, actual_arg_num: int):
+                return MelodieException(1021,
+                                        f"There should be {expected_arg_num} for function {func}, "
+                                        f"but the actual argument number was {actual_arg_num}")
 
     class State:
         ID = 1100
@@ -202,9 +228,38 @@ class MelodieExceptions:
                                     f"of the dataframe is of type {dataframe_dtypes[param_name]}.\n"
                                     f"The agent that offended is: {agent}")
 
+        @staticmethod
+        def TableNameInvalid(table_name):
+            return MelodieException(1505,
+                                    f"Table name '{table_name}' is invalid."
+                                    f"The expected table name should be an identifier.")
+
+        @staticmethod
+        def TableNotFound(table_name: str, all_tables: dict):
+            return MelodieException(1506,
+                                    f"Table '{table_name}' is not found. All registered tables are: {set(all_tables.keys())}")
+
+        @staticmethod
+        def TableColumnDoesNotMatchObjectProperty(table_name: str, column_name: str, obj: object):
+            return MelodieException(1507,
+                                    f"No property of object {obj.__class__.__name__} matchs column '{column_name}' "
+                                    f"at table '{table_name}' ")
+
+        @staticmethod
+        def InvalidDatabaseType(database: str, supported_db_types: Set[str]):
+            return MelodieException(1508,
+                                    f"Melodie only support these kinds of databases: {supported_db_types}.\n"
+                                    f"Database type {database} is not supported right now.\n"
+                                    "Is there any spelling problems with the database name?\n"
+                                    "If you do not need to write data into database, please pass `None` as DB type.")
+
+        @staticmethod
+        def NoDataframeLoaderDefined():
+            return MelodieException(1509, f"No dataframe loader defined for the Simulator/Calibrator/Trainer.")
+
     class Tools:
         """
-        This class is for errors related with dev tools such as MelodieStudio
+        This class is for errors related to dev tools such as MelodieStudio
         """
         ID = 1600
 
@@ -213,3 +268,17 @@ class MelodieExceptions:
             return MelodieException(1601,
                                     f'Connection to Melodie Studio was refused. It seems that Melodie studio is not '
                                     f'started yet. Please start Melodie Studio.')
+
+    class Visualizer:
+        """
+        This class is for errors related to visualizer.
+        """
+        ID = 1700
+
+        class Charts:
+            ID = 1700
+
+            @staticmethod
+            def ChartNameAlreadyDefined(chart_name: str, all_chart_names: List[str]):
+                return MelodieException(
+                    f"Chart name '{chart_name}' is already defined. All chart names are: {all_chart_names}")

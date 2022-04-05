@@ -1,5 +1,5 @@
 from abc import ABC
-from typing import Callable, List, Tuple
+from typing import Callable, List, Tuple, Union, Dict
 
 
 class SearchingAlgorithm(ABC):
@@ -13,9 +13,6 @@ class SearchingAlgorithm(ABC):
         pass
 
     def optimize(self, fitness: Callable):
-        pass
-
-    def optimize_multi_agents(self, fitness, scenario):
         pass
 
 
@@ -43,3 +40,11 @@ class AlgorithmParameters:
         for agent_id in range(agent_num):
             parameters.extend([(parameter.min, parameter.max) for parameter in self.parameters])
         return parameters
+
+    def parse_params(self, record: Dict[str, Union[int, float]]):
+        max_values = {name[:len(name) - len("_max")]: value for name, value in record.items() if name.endswith("_max")}
+        min_values = {name[:len(name) - len("_min")]: value for name, value in record.items() if name.endswith("_min")}
+        print(max_values, min_values)
+        assert len(max_values) == len(min_values)
+        for k in max_values.keys():
+            self.parameters.append(AlgorithmParameters.Parameter(k, min_values[k], max_values[k]))

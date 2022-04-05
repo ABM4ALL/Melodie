@@ -14,4 +14,5 @@ if __name__ == "__main__":
     """
     Run the model
     """
+    # simulator.run_visual()
     simulator.run()

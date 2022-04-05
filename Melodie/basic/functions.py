@@ -2,7 +2,14 @@ import dis
 from typing import List, Callable
 import logging
 
+from .exceptions import MelodieExceptions
+
 logger = logging.getLogger(__name__)
+
+
+def args_check(func: Callable, expected_arg_num: int):
+    if func.__code__.co_argcount != expected_arg_num:
+        raise MelodieExceptions.Program.Function.FunctionArgsNumError(func, expected_arg_num, func.__code__.co_argcount)
 
 
 def parse_watched_attrs(func) -> List[str]:

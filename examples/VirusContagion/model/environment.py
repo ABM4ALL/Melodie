@@ -31,11 +31,11 @@ class CovidEnvironment(Environment):
     def infect_from_neighbor(self, current_agent_id: int, neighbors: List[Tuple[int, int]], grid: 'Grid',
                              agent_list: "AgentList[CovidAgent]") -> int:
         for neighbor in neighbors:
-            agent_ids = grid.get_agent_ids('agent_list', neighbor[0], neighbor[1])
-            for agent_id in agent_ids:
+            agent_ids = grid.get_agent_ids(neighbor[0], neighbor[1])
+            for agent_id, agent_category in agent_ids:
                 if agent_id == current_agent_id:
                     continue
-                if agent_list[agent_id].condition == 1 and random.uniform(0, 1) < self.infection_probability:
+                if agent_list.get_agent(agent_id).condition == 1 and random.uniform(0, 1) < self.infection_probability:
                     return 1
         return 0
 

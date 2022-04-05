@@ -57,11 +57,15 @@ class Calibrator(BaseModellingManager):
         """
         return self.df_loader.generate_scenarios_from_dataframe('calibrator_scenarios')
 
+    def get_params_scenarios(self):
+        calibrator_scenarios_table = self.get_registered_dataframe('calibrator_params_scenarios')
+        assert isinstance(calibrator_scenarios_table, pd.DataFrame), "No learning scenarios table specified!"
+        return calibrator_scenarios_table.to_dict(orient="records")
+
     def calibrate(self):
         self.setup()
         self.pre_run()
-        calibrator_scenarios_table = self.get_registered_dataframe('calibrator_params_scenarios')
-        assert isinstance(calibrator_scenarios_table, pd.DataFrame), "No learning scenarios table specified!"
+
         assert self.algorithm_cls is not None
         scenario_cls = None
         if self.algorithm_cls == GeneticAlgorithmCalibrator:
@@ -70,7 +74,7 @@ class Calibrator(BaseModellingManager):
             raise NotImplementedError
         for scenario in self.scenarios:
             self.current_algorithm_meta['calibrator_scenario_id'] = scenario.id
-            calibration_scenarios = calibrator_scenarios_table.to_dict(orient="records")
+            calibration_scenarios = self.get_params_scenarios()
             for calibrator_scenario in calibration_scenarios:
                 calibrator_scenario = scenario_cls.from_dataframe_record(calibrator_scenario)
                 self.current_algorithm_meta['calibrator_params_scenario_id'] = calibrator_scenario.id
@@ -86,11 +90,11 @@ class Calibrator(BaseModellingManager):
         self.model.setup()
         iterations = 0
         if self.algorithm_cls == GeneticAlgorithmCalibrator:
-            self.algorithm = GeneticAlgorithmCalibrator(calibration_scenario.calibration_generation,
+            self.algorithm = GeneticAlgorithmCalibrator(calibration_scenario.number_of_generation,
                                                         calibration_scenario.strategy_population,
                                                         calibration_scenario.mutation_prob,
                                                         calibration_scenario.strategy_param_code_length)
-            iterations = calibration_scenario.calibration_generation
+            iterations = calibration_scenario.number_of_generation
         else:
             raise NotImplementedError
         self.algorithm.parameter_names = self.properties

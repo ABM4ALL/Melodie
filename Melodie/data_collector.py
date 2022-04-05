@@ -4,6 +4,7 @@ from typing import List, ClassVar, TYPE_CHECKING, Dict, Tuple, Any, Optional
 import pandas as pd
 import logging
 
+from Melodie.basic import MelodieExceptions
 from Melodie.db import DB
 
 logger = logging.getLogger(__name__)
@@ -34,7 +35,9 @@ class DataCollector:
     """
 
     def __init__(self, target='sqlite'):
-        assert target in {'sqlite', None}, f"Invalid database type {target}"
+        if target not in {"sqlite", None}:
+            MelodieExceptions.Data.InvalidDatabaseType(target, {"sqlite"})
+
         self.target = target
         self.model: Optional[Model] = None
         self._agent_properties_to_collect: Dict[str, List[PropertyToCollect]] = {}
