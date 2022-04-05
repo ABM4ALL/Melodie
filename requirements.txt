@@ -14,7 +14,7 @@ pprintast
 websockets
 sphinx
 pytest
-termcolor
+termcolor;  python_version > '3.7'
 cython
 melodiestudio
 setuptools
