@@ -2,7 +2,7 @@ from Melodie import Agent, Grid, GridAgent
 
 
 class CovidAgent(GridAgent):
-
+    category = 0
     def setup(self):
         self.x = 0
         self.y = 0

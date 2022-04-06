@@ -11,10 +11,7 @@ logger = logging.getLogger(__name__)
 class JSONBase:
     def to_json(self):
         d = {}
-        # print(self, self.__dict__)
         for k, v in self.__dict__.items():
-
-            # print(v, hasattr(v, "to_json"))
             if k.startswith("_"):
                 continue
             elif hasattr(v, "to_json"):

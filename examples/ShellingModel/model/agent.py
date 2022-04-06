@@ -18,7 +18,6 @@ class BaseGridAgent(GridAgent):
                 else:
                     count_other_category += 1
         return count >= self.scenario.desired_sametype_neighbors
-        # return count >= self.scenario.desired_sametype_neighbors
 
     def move(self, grid: Grid):
         self.x, self.y = grid.choose_empty_place()
@@ -26,15 +25,15 @@ class BaseGridAgent(GridAgent):
 
 class ShellingModelAgentTypeA(BaseGridAgent):
     scenario: ShellingModelScenario
+    category = 0
 
     def setup(self):
-        self.category = 0
         pass
 
 
 class ShellingModelAgentTypeB(BaseGridAgent):
     scenario: ShellingModelScenario
+    category = 1
 
     def setup(self):
-        self.category = 1
         pass

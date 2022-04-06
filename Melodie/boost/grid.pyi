@@ -13,12 +13,16 @@ if TYPE_CHECKING:
 
 
 class GridItem(Agent):
+    x: int
+    y: int
+
     def __init__(self, agent_id: int, x: int = 0, y: int = 0):
-        self.x = x
-        self.y = y
+        pass
 
 
 class GridAgent(GridItem):
+    category: int
+
     def __init__(self, agent_id: int, x: int = 0, y: int = 0, category: int = 0):
         super().__init__(agent_id, x, y)
 
@@ -27,9 +31,10 @@ class GridAgent(GridItem):
 
 
 class Spot(Agent):
+    role: int
+
     def __init__(self, spot_id: int, x: int = 0, y: int = 0):
         super(Spot, self).__init__(spot_id)
-        self.role = 0
 
     def setup(self):
         pass
@@ -197,4 +202,7 @@ class Grid:
         return target_x, target_y
 
     def find_empty_spot(self) -> Tuple[int, int]:
+        ...
+
+    def choose_empty_place(self) -> Tuple[int, int]:
         ...

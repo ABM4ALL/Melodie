@@ -25,7 +25,7 @@ from .dataframe_loader import DataFrameLoader
 logger = logging.getLogger(__name__)
 
 if TYPE_CHECKING:
-    from .environment import Environment
+    from .boost.basics import Agent, Environment
     from .model import Model
     from .scenario_manager import Scenario
     from .data_collector import DataCollector
@@ -277,81 +277,3 @@ class Simulator(BaseModellingManager):
         pool.join()
         t2 = time.time()
         logger.info(f'Melodie completed all runs, time elapsed totally {t2 - t0}s, and {t2 - t1}s for running.')
-
-    def run_boost(self,
-                  agent_classes: List[Type['Agent']],
-                  environment_class: ClassVar['Environment'],
-                  config: 'Config' = None,
-                  model_class: ClassVar['Model'] = None,
-                  scenario_cls: ClassVar['Scenario'] = None,
-                  visualizer_class: ClassVar['Visualizer'] = None,
-                  boost_model_class: ClassVar['Model'] = None,
-                  model_components=None
-                  ):
-        """
-        Boost.
-        :param agent_classes:
-        :param environment_class:
-        :param config:
-        :param data_collector_class:
-        :param model_class:
-        :param scenario_cls:
-        :param scenario_manager_class:
-        :param table_generator_class:
-        :param analyzer_class:
-        :param visualizer_class:
-        :param boost_model_class:
-        :param model_components:
-        :return:
-        """
-        from Melodie.boost.compiler.compiler import conv
-        import importlib
-
-        conv(agent_classes, environment_class, model_class, 'out.py', model_components=model_components)
-
-        logger.warning("Testing. compilation finished, program exits")
-        # return
-        compiled = importlib.import_module('out')
-        model_run = compiled.__getattribute__('___model___run')
-        logger.info("Preprocess compilation finished, now running pre-run procedures.")
-
-        self.config = config
-        self.scenario_cls = scenario_cls
-        self.pre_run()
-
-        self.scenarios = self.generate_scenarios()
-        if self.scenarios is None:
-            raise MelodieExceptions.Scenario.NoValidScenarioGenerated(self.scenarios)
-
-        logger.info("Pre-run procedures finished. Now simulation starts...")
-
-        t0 = time.time()
-        t1 = time.time()
-        first_run_finished_at = time.time()
-        first_run = True
-        for scenario in self.scenarios:
-            for run_id in range(scenario.number_of_run):
-                if first_run:
-                    logger.info("Numba is now taking control of program. "
-                                "It may take a few seconds for compilation.")
-                visualizer = visualizer_class()
-                visualizer.setup()
-                visualizer.current_scenario = scenario
-                model = boost_model_class(self.config,
-                                          scenario,
-                                          visualizer=visualizer
-                                          )
-                model.setup_boost()
-                model_run(model)
-                if first_run:
-                    logger.info("The first run has completed, and numba has finished compilaiton. "
-                                "Your program will be speeded up greatly.")
-                    first_run_finished_at = time.time()
-                    first_run = False
-
-                logger.info(f"Finished running <experiment {run_id}, scenario {scenario.id}>. "
-                            f"time elapsed: {time.time() - t1}s")
-                t1 = time.time()
-
-        logger.info(f"totally time elapsed {time.time() - t0} s,"
-                    f" {(time.time() - t0) / 100}s per run, {(time.time() - first_run_finished_at) / (100 - 1)}s per run after compilation")

@@ -10,13 +10,13 @@ class ShellingModelModel(Model):
         with self.define_basic_components():
             self.data_collector = ShellingModelDataCollector()
             self.environment = ShellingModelEnvironment()
-            self.agent_list_a: AgentList[ShellingModelAgentTypeA] = self.create_agent_container(ShellingModelAgentTypeA,
-                                                                                                160)
-            self.agent_list_b: AgentList[ShellingModelAgentTypeB] = self.create_agent_container(ShellingModelAgentTypeB,
-                                                                                                160)
+            self.agent_list_a: AgentList[ShellingModelAgentTypeA] = \
+                self.create_agent_container(ShellingModelAgentTypeA, 160)
+            self.agent_list_b: AgentList[ShellingModelAgentTypeB] = \
+                self.create_agent_container(ShellingModelAgentTypeB, 160)
         self.grid = Grid(Spot, 20, 20, multi=False)
-        self.grid.add_agent_container(0, self.agent_list_a, "random_single")
-        self.grid.add_agent_container(1, self.agent_list_b, "random_single")
+        self.grid.add_agent_container(ShellingModelAgentTypeA.category, self.agent_list_a, "random_single")
+        self.grid.add_agent_container(ShellingModelAgentTypeB.category, self.agent_list_b, "random_single")
 
     def run(self):
         for i in self.routine():

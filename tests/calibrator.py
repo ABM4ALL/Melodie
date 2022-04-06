@@ -15,6 +15,7 @@ class CovidScenario(Scenario):
 
 
 class CovidAgent(GridAgent):
+    category = 0
 
     def setup(self):
         self.condition = 0
@@ -82,6 +83,3 @@ class CovidCalibrator(Calibrator):
                  'strategy_param_code_length': 10,
                  "infection_probability_min": 0,
                  'infection_probability_max': 1}]
-
-
-

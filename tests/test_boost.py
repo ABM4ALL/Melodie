@@ -5,7 +5,7 @@
 # @File: test_lib.py
 
 import time
-from Melodie.boost import vectorize, apply, vectorize_2d, apply_2d, py_vectorize_2d
+from Melodie.boost import vectorize, apply, vectorize_2d, apply_2d
 from Melodie import Agent, AgentList, Model, Scenario
 from .config import cfg
 
@@ -70,33 +70,3 @@ def compare_collect_attribute_time():
     print('use_python_time', t1 - t0)
     print('use_cython_time_float', t2 - t1)
     print('use_cython_time_int', t2 - t1)
-
-
-def compare_collect_attribute_time_2d():
-    steps = 200
-
-    t0 = time.time()
-    for i in range(steps):
-        py_vectorize_2d(pure_py_lst, 'a')
-
-    t1 = time.time()
-
-    for i in range(steps):
-        res = vectorize_2d(lst, 'a')
-        res += 3
-        # res = res.astype('int16')
-        apply_2d(lst, 'a', res)
-    t2 = time.time()
-    print(res)
-    for i in range(steps):
-        res = vectorize_2d(lst, 'b')
-        res += 1
-        apply_2d(lst, 'b', res)
-    t3 = time.time()
-    print(res)
-    print('use_dll_gather_float', t3 - t2, 'use_dll_gather_int', t2 - t1, 'use_python_time', t1 - t0)
-
-
-# def test_benchmark():
-#     compare_collect_attribute_time()
-#     compare_collect_attribute_time_2d()

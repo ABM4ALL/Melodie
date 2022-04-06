@@ -380,12 +380,12 @@ class GridVisualizer(Visualizer):
             }
         }
 
-    def add_agent_series(self, component_name: str, series_name: str, series_type: str, color: str, symbol="rect", ):
+    def add_agent_series(self, component_name: str, series_id: int, series_type: str, color: str, symbol="rect", ):
         if series_type not in {'scatter'}:
             MelodieExceptions.Program.Variable.VariableNotInSet('series_type', series_type, {'scatter'})
         if component_name not in self.agent_series_managers:
             self.agent_series_managers[component_name] = AgentSeriesManager()
-        self.agent_series_managers[component_name].add_series(series_name, series_type, color, symbol)
+        self.agent_series_managers[component_name].add_series(series_id, series_type, color, symbol)
 
     def add_visualize_component(self, component: str, type: str, color_categories: Dict[int, str]):
         assert type in {"grid", "network"}

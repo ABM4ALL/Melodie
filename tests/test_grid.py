@@ -21,13 +21,17 @@ logger = logging.getLogger(__name__)
 N = 10000_000
 
 
+class TestGridAgent(GridAgent):
+    category = 0
+
+
 def agents(grid: Union['JITGrid', Grid]):
     WOLVES = 0
     SHEEP = 1
-    a0 = GridAgent(0, 1, 1)
-    a1 = GridAgent(1, 1, 1)
-    a2 = GridAgent(2, 1, 1)
-    a3 = GridAgent(3, 1, 1)
+    a0 = TestGridAgent(0, 1, 1)
+    a1 = TestGridAgent(1, 1, 1)
+    a2 = TestGridAgent(2, 1, 1)
+    a3 = TestGridAgent(3, 1, 1)
     type_error_agent = Agent(0)
     grid.add_agent(a0, WOLVES)
     grid.add_agent(a1, WOLVES)
@@ -158,8 +162,8 @@ def test_agent_id_mgr():
 #     convert(jit_grid)
 
 def test_roles():
-    agents = [GridAgent(i) for i in range(10)]
-    agents_b = [GridAgent(i) for i in range(10)]
+    agents = [TestGridAgent(i) for i in range(10)]
+    agents_b = [TestGridAgent(i) for i in range(10)]
     grid = Grid(Spot, 100, 100, multi=True)
     grid2 = Grid(Spot, 100, 100, multi=True)
 
@@ -185,7 +189,7 @@ def test_roles():
 
 
 def test_single_grid():
-    agents = [GridAgent(i) for i in range(15)]
+    agents = [TestGridAgent(i) for i in range(15)]
     grid = Grid(Spot, 4, 4)
     for i in range(4):
         for j in range(4):
@@ -213,7 +217,7 @@ def test_agents_nojit():
 
 def test_containers():
     grid = Grid(Spot, 10, 10)
-    agent_list: AgentList[GridAgent] = model.create_agent_container(GridAgent, 10)
+    agent_list: AgentList[TestGridAgent] = model.create_agent_container(TestGridAgent, 10)
     for i in range(10):
         agent_list[i].x = i
         agent_list[i].y = i
