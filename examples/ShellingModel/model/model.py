@@ -23,21 +23,23 @@ class ShellingModelModel(Model):
 
             unsatisfied_a, unsatisfied_b = self.environment.calc_satisfactory(self.grid, self.agent_list_a,
                                                                               self.agent_list_b)
-            for a_id in unsatisfied_a:
-                pos = self.grid.find_empty_spot()
-                agent_a = self.agent_list_a.get_agent(a_id)
-
-                self.grid.move_agent(agent_a, agent_a.category, pos[0], pos[1])
-                agent_a.x = pos[0]
-                agent_a.y = pos[1]
-
-            for b_id in unsatisfied_b:
-                pos = self.grid.find_empty_spot()
-                agent_b = self.agent_list_b.get_agent(b_id)
-
-                self.grid.move_agent(agent_b, agent_b.category, pos[0], pos[1])
-                agent_b.x = pos[0]
-                agent_b.y = pos[1]
+            self.environment.unsatisfied_move_to_empty(unsatisfied_a, self.agent_list_a, self.grid)
+            self.environment.unsatisfied_move_to_empty(unsatisfied_b, self.agent_list_b, self.grid)
+            # for a_id in unsatisfied_a:
+            #     pos = self.grid.find_empty_spot()
+            #     agent_a = self.agent_list_a.get_agent(a_id)
+            #
+            #     self.grid.move_agent(agent_a, agent_a.category, pos[0], pos[1])
+            #     agent_a.x = pos[0]
+            #     agent_a.y = pos[1]
+            #
+            # for b_id in unsatisfied_b:
+            #     pos = self.grid.find_empty_spot()
+            #     agent_b = self.agent_list_b.get_agent(b_id)
+            #
+            #     self.grid.move_agent(agent_b, agent_b.category, pos[0], pos[1])
+            #     agent_b.x = pos[0]
+            #     agent_b.y = pos[1]
 
             # print(
             #     [(self.agent_list_a.get_agent(a_id).x, self.agent_list_a.get_agent(a_id).y) for a_id in unsatisfied_a],

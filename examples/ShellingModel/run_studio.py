@@ -1,5 +1,3 @@
-import os
-
 from MelodieStudio import studio_main
 from config import config
 

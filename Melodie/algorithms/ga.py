@@ -244,7 +244,7 @@ class GeneticAlgorithmTrainer(SearchingAlgorithm):
         strategy_population = np.random.randint(2,
                                                 size=(self.strategy_population_size,
                                                       self.strategy_param_code_length * self.agent_num * self.params_each_agent))
-        print(fitness, scenario)
+
         for gen in range(0, self.number_of_generation):
             strategy_fitness = []
             agent_props_each_chromosome = []
@@ -255,7 +255,6 @@ class GeneticAlgorithmTrainer(SearchingAlgorithm):
                 range(self.agent_num)]
             env_parameters = {env_parameter_name: [0 for chromosome_id in strategy_population] for env_parameter_name in
                               self.env_property_names}
-            print(gen)
             for chromosome_id, strategy in enumerate(strategy_population):
                 inner_parameters: List[int] = []
                 for param_index in range(self.agent_num * self.params_each_agent):
