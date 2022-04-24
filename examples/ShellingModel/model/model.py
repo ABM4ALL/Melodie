@@ -1,5 +1,5 @@
 from Melodie import Model, Grid, Spot, AgentList
-from .agent import ShellingModelAgentTypeA, ShellingModelAgentTypeB
+from .agent import ShellingModelAgentTypeA, ShellingModelAgentTypeB, CategoryA, CategoryB
 from .data_collector import ShellingModelDataCollector
 from .environment import ShellingModelEnvironment
 
@@ -15,12 +15,11 @@ class ShellingModelModel(Model):
             self.agent_list_b: AgentList[ShellingModelAgentTypeB] = \
                 self.create_agent_container(ShellingModelAgentTypeB, 160)
         self.grid = Grid(Spot, 20, 20, multi=False)
-        self.grid.add_agent_container(ShellingModelAgentTypeA.category, self.agent_list_a, "random_single")
-        self.grid.add_agent_container(ShellingModelAgentTypeB.category, self.agent_list_b, "random_single")
+        self.grid.add_agent_container(CategoryA, self.agent_list_a, "random_single")
+        self.grid.add_agent_container(CategoryB, self.agent_list_b, "random_single")
 
     def run(self):
         for i in self.routine():
-
             unsatisfied_a, unsatisfied_b = self.environment.calc_satisfactory(self.grid, self.agent_list_a,
                                                                               self.agent_list_b)
             self.environment.unsatisfied_move_to_empty(unsatisfied_a, self.agent_list_a, self.grid)

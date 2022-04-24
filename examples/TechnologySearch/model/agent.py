@@ -7,6 +7,7 @@ from Melodie import Agent
 if TYPE_CHECKING:
     from .scenario import TechnologySearchScenario
 
+
 class TechnologySearchAgent(Agent):
     scenario: 'TechnologySearchScenario'
 
@@ -59,13 +60,7 @@ class TechnologySearchAgent(Agent):
         self.technology = max(self.technology, technology_search_result)
         self.account -= self.scenario.cost_exploitation
 
-    def technology_search_imitation_strategy(self, agent_to_learn: 'TechnologySearchAgent', technology_search_result: float):
+    def technology_search_imitation_strategy(self, agent_to_learn: 'TechnologySearchAgent',
+                                             technology_search_result: float):
         # the logic is written in the AspirationEnvironment class
         pass
-
-
-
-
-
-
-

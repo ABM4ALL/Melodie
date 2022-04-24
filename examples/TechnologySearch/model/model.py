@@ -10,9 +10,8 @@ from .data_collector import TechnologySearchDataCollector
 
 class TechnologySearchModel(Model):
     scenario: TechnologySearchScenario
-    
-    def setup(self):
 
+    def setup(self):
         self.agent_list: AgentList[TechnologySearchAgent] = self.create_agent_container(
             TechnologySearchAgent,
             self.scenario.agent_num,
@@ -33,6 +32,17 @@ class TechnologySearchModel(Model):
             self.environment.calculate_average_technology(self.agent_list)
             self.environment.calculate_account_total(self.agent_list)
             self.environment.calculate_technology_search_strategy_share(self.agent_list)
+        print(self.agent_list.get_agent(0).account,
+              (self.agent_list.get_agent(0).exploration_count,
+               self.agent_list.get_agent(0).exploitation_count,
+               self.agent_list.get_agent(0).imitation_count,),
+              (
+                  self.agent_list.get_agent(0).prob_exploration,
+                  self.agent_list.get_agent(0).prob_exploitation,
+              ),
+              self.agent_list.get_agent(0).strategy_param_1,
+              self.agent_list.get_agent(0).strategy_param_2, self.agent_list.get_agent(0).strategy_param_3)
+        # print(
+        # print(self).agent_list.get_agent(0).exploitation_count)
         #     self.data_collector.collect(t)
         # self.data_collector.save()
-

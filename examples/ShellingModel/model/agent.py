@@ -1,10 +1,12 @@
 from Melodie import GridAgent, Grid
 from .scenario import ShellingModelScenario
 
+CategoryA = 0
+CategoryB = 1
+
 
 class BaseGridAgent(GridAgent):
     scenario: ShellingModelScenario
-    category: int
 
     def satisfy_with_neighbors(self, grid: Grid):
         neighbors = grid.get_neighbors(self.x, self.y)
@@ -25,15 +27,14 @@ class BaseGridAgent(GridAgent):
 
 class ShellingModelAgentTypeA(BaseGridAgent):
     scenario: ShellingModelScenario
-    category = 0
 
     def setup(self):
+        self.category = CategoryA
         pass
 
 
 class ShellingModelAgentTypeB(BaseGridAgent):
     scenario: ShellingModelScenario
-    category = 1
 
     def setup(self):
-        pass
+        self.category = CategoryB

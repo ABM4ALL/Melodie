@@ -30,7 +30,7 @@ class GridAgent(GridItem):
         pass
 
 
-class Spot(Agent):
+class Spot(GridItem):
     role: int
 
     def __init__(self, spot_id: int, x: int = 0, y: int = 0):
