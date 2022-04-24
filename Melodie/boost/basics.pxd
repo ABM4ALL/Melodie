@@ -1,3 +1,4 @@
+# cython:language_level=3
 from typing import Dict, Any
 from typing import Tuple, List, Dict, Optional, TYPE_CHECKING
 

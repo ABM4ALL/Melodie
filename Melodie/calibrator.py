@@ -67,7 +67,6 @@ class Calibrator(BaseModellingManager):
         self.pre_run()
 
         assert self.algorithm_cls is not None
-        scenario_cls = None
         if self.algorithm_cls == GeneticAlgorithmCalibrator:
             scenario_cls = GACalibratorParams
         else:

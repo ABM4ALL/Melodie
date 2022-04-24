@@ -1,3 +1,4 @@
+# cython:language_level=3
 from .basics cimport Agent
 from .agent_list cimport AgentList
 cimport numpy as np
