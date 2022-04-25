@@ -471,6 +471,7 @@ class NetworkVisualizer(Visualizer):
         """
 
         :param node_info: A list contains a series of node information.
+        :param parser: The layout of the network.
         :return:
         """
         if parser is None:
@@ -484,6 +485,7 @@ class NetworkVisualizer(Visualizer):
         """
 
         :param node_info: A list contains a series of node information.
+        :param parser: A Callable to parse the role of vertex.
         :return:
         """
         assert parser is not None

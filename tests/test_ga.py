@@ -1,10 +1,8 @@
 import numpy as np
 
 from Melodie import Scenario
-from Melodie.algorithms.ga import translate_binary2real, prob_calculation, gene_pick, crossover, mutation, \
+from Melodie.algorithms.ga import prob_calculation, gene_pick, crossover, mutation, \
     population_update, GeneticAlgorithmTrainer
-
-
 # def test_translate_binary_to_real():
 #     real = translate_binary2real([1, 1, 1, 1, 1], 0, 1)
 #
@@ -49,12 +47,12 @@ def test_mutation():
     for i in range(10):
         arr = np.array([0, 1, 0, 1, 0, 1])
         ret = mutation(arr, 1)
-        for i in ret:
-            assert ret[i] in {0, 1}
+        for j in ret:
+            assert ret[j] in {0, 1}
 
         ret = mutation(arr, 0)
-        for i in ret:
-            assert ret[i] == arr[i]
+        for j in ret:
+            assert ret[j] == arr[j]
 
 
 def test_population_update():

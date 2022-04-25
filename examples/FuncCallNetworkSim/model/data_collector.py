@@ -6,4 +6,4 @@ from Melodie import DataCollector
 
 class FuncDataCollector(DataCollector):
     def setup(self):
-        self.add_agent_property('status')
+        self.add_agent_property('agent_list', 'status')

@@ -22,7 +22,7 @@ def test_parse_watched_attrs():
             self.val2 = 1
 
         def a(self):
-            return self.val + self.text.length * 3 + math.acos(self.val2)
+            return self.val + len(self.text) * 3 + math.acos(self.val2)
 
     def f6(agent):
         agent.val += 1

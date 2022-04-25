@@ -5,7 +5,7 @@
 # @File: run_studio.py
 
 
-from Melodie.studio.main import studio_main
+from MelodieStudio import studio_main
 import config
 
 studio_main(config.config)

@@ -10,7 +10,7 @@ from typing import List
 
 import pandas as pd
 
-from Melodie import Agent, DataCollector, Environment, Scenario, Simulator, Model, AgentList
+from Melodie import Agent, DataCollector, Environment, Scenario, Simulator, Model
 from Melodie.basic import MelodieException
 from .config import cfg_for_temp
 

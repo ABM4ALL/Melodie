@@ -2,14 +2,10 @@
 __author__ = 'Songmin'
 
 import json
-import time
 from typing import Dict, List, Tuple
-
-import numpy as np
 
 from Melodie import Model, AgentList
 from Melodie.network import OldNetwork
-from .visualizer import FuncCallSimVisualizer
 from .environment import FuncEnvironment
 from examples.FuncCallNetworkSim.model.agent import FuncAgent
 

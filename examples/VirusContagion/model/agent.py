@@ -1,4 +1,4 @@
-from Melodie import Agent, Grid, GridAgent
+from Melodie import Grid, GridAgent
 
 
 class CovidAgent(GridAgent):
@@ -10,5 +10,4 @@ class CovidAgent(GridAgent):
 
     def move(self, grid: 'Grid'):
         self.x, self.y = grid.rand_move(self, 0, 1, 1)
-        # print(self.x, self.y)
         return

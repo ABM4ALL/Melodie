@@ -6,14 +6,14 @@
 
 from Melodie.algorithms.trainer_algorithm import TrainerAlgorithm
 
-from Melodie import AgentList, Agent, Model, Scenario
+from Melodie import Agent, Model, Scenario
 from .config import cfg
 
 
 class DemoAgent(Agent):
     def setup(self):
-        param1 = 0.0
-        param2 = 0.0
+        self.param1 = 0.0
+        self.param2 = 0.0
 
 
 class NewModel(Model):
@@ -32,7 +32,7 @@ def test_chrom_params():
     # model = NewModel(cfg, scenario)
 
     ta.add_agent_container('agent_list', 0, ['param1', 'param2'], [i for i in range(10)])
-    ta._current_model = ta.create_model()
+    ta._current_model: NewModel = ta.create_model()
     al = ta._current_model.agent_list
     algorithm_at_agent_0 = ta.algorithms_dict[(0, 0)]
     # algorithm_at_agent_0.run()

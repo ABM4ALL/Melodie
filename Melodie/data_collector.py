@@ -10,8 +10,7 @@ from Melodie.db import DB
 logger = logging.getLogger(__name__)
 
 if TYPE_CHECKING:
-    from Melodie import Model
-    from Melodie.agent_list import BaseAgentContainer
+    from Melodie import Model, BaseAgentContainer
 
 
 class PropertyToCollect:
@@ -53,6 +52,13 @@ class DataCollector:
 
     def setup(self):
         pass
+
+    def time_elapsed(self):
+        """
+        Get the time spent of collecting data.
+        :return:
+        """
+        return self._time_elapsed
 
     def add_agent_property(self, container_name: str, property_name: str, as_type: ClassVar = None):
         """

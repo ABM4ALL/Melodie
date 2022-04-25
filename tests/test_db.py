@@ -5,14 +5,11 @@
 # @File: test_db.py
 import os
 
-import Melodie.basic
-from Melodie import create_db_conn, DB
 import pandas as pd
-from pandas.api.types import is_string_dtype
-from pandas.api.types import is_numeric_dtype, is_integer_dtype, is_float_dtype
-import numpy as np
+from pandas.api.types import is_integer_dtype, is_float_dtype
 from sqlalchemy.types import Integer
 
+from Melodie import create_db_conn, DB
 from Melodie.basic import MelodieException
 from .config import cfg
 
@@ -24,7 +21,6 @@ def test_sqlalchemy_data_types():
     In-memory sqlite testcase.
     :return:
     """
-    from sqlalchemy import create_engine
     # engine = create_engine('sqlite://', echo=False)
     db = DB('test_db')
     db.register_dtypes('df_with_dtypes', {'A': Integer(), 'B': Integer()})

@@ -1,5 +1,4 @@
 import sys
-import numpy as np
 sys.path.append("../..")
 from config import config
 from model.analyzer import RPSAnalyzer

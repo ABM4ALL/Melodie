@@ -1,4 +1,3 @@
-from operator import le
 import random
 
 import pandas as pd

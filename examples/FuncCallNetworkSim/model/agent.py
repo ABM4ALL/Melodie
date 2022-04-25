@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 __author__ = 'Songmin'
 
-import random
 from Melodie import Agent
 
 

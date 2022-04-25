@@ -3,7 +3,6 @@
 # @Author: Zhanyi Hou
 # @Email: 1295752786@qq.com
 # @File: dataframe_loader.rst.py
-import pandas as pd
 
 from Melodie import Simulator
 from .visualizer import FuncCallSimVisualizer

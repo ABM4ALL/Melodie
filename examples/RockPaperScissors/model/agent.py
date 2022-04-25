@@ -1,7 +1,5 @@
-
-import random
 import numpy as np
-from typing import Type, TYPE_CHECKING
+from typing import TYPE_CHECKING
 
 from Melodie import Agent
 
@@ -24,7 +22,7 @@ class RPSAgent(Agent):
         self.strategy_param_2 = 0.0
         self.strategy_param_3 = 0.0
         self.period_competitor_id = 0
-        self.period_action = 0 # rock = 0, paper = 1, scissors = 2
+        self.period_action = 0  # rock = 0, paper = 1, scissors = 2
         self.period_payoff = 0.0
         self.total_payoff = 0.0
         self.rock_count = 0
@@ -76,9 +74,3 @@ class RPSAgent(Agent):
         elif self.period_action == 2:
             self.period_payoff = self.payoff_scissors_lose
             self.total_payoff += self.payoff_scissors_lose
-
-
-
-
-
-

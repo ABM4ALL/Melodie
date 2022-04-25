@@ -1,5 +1,3 @@
-from typing import List
-
 from Melodie import Scenario
 
 

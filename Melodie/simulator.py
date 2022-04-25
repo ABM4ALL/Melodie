@@ -2,33 +2,24 @@
 This data stores the run function for model running, storing global variables and other services.
 """
 import abc
-import os.path
+import logging
 import threading
 import time
 from multiprocessing import Pool
-from typing import ClassVar, TYPE_CHECKING, Optional, List, Dict, Tuple, Callable, Union, Type
-import logging
+from typing import ClassVar, TYPE_CHECKING, Optional, List, Tuple
 
 import pandas as pd
 
 import Melodie.visualizer
-from . import DB
 from .basic import show_prettified_warning
-from .boost.basics import Agent
-
-from .boost.agent_list import AgentList
-
-from .table_generator import TableGenerator
 from .basic.exceptions import MelodieExceptions
 from .dataframe_loader import DataFrameLoader
 
 logger = logging.getLogger(__name__)
 
 if TYPE_CHECKING:
-    from .boost.basics import Agent, Environment
     from .model import Model
     from .scenario_manager import Scenario
-    from .data_collector import DataCollector
     from .config import Config
     from .visualizer import Visualizer
 else:
@@ -123,10 +114,10 @@ class Simulator(BaseModellingManager):
         logger.info(f'Running {run_id + 1} times in scenario {scenario.id}.')
         t0 = time.time()
 
-        model = model_class(config,
-                            scenario,
-                            run_id_in_scenario=run_id,
-                            visualizer=visualizer)
+        model: Model = model_class(config,
+                                   scenario,
+                                   run_id_in_scenario=run_id,
+                                   visualizer=visualizer)
         if visualizer is not None:
             visualizer._model = model
 
@@ -144,7 +135,7 @@ class Simulator(BaseModellingManager):
         model_setup_time = t1 - t0
         model_run_time = t2 - t1
         if model.data_collector is not None:
-            data_collect_time = model.data_collector._time_elapsed
+            data_collect_time = model.data_collector.time_elapsed()
         else:
             data_collect_time = 0.0
         model_run_time -= data_collect_time
@@ -250,6 +241,7 @@ class Simulator(BaseModellingManager):
         shot, which means running one of the runs out of one scenario, by main-process. If first shot completes, the
         subprocesses will be launched.
 
+
         :return:
         """
         t0 = time.time()
@@ -273,7 +265,7 @@ class Simulator(BaseModellingManager):
         logger.info(f'Verification finished, now using {cores} cores for parallel computing!')
         pool.starmap(self.run_model, parameters)
 
-        pool.close()  # 关闭进程池，不再接受新的进程
+        pool.close()
         pool.join()
         t2 = time.time()
         logger.info(f'Melodie completed all runs, time elapsed totally {t2 - t0}s, and {t2 - t1}s for running.')

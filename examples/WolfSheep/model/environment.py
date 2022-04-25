@@ -2,7 +2,7 @@ import random
 
 from typing import List, Tuple
 from Melodie import Environment, AgentList, Grid
-from .agent import CovidAgent
+from .agent import Wolf,Sheep
 from .scenario import CovidScenario
 
 

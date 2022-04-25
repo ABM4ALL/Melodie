@@ -1,5 +1,3 @@
-
-import random
 import numpy as np
 from typing import TYPE_CHECKING
 
@@ -31,10 +29,4 @@ class OpinionDynamicsEnvironment(Environment):
         sum_opinion_level = 0
         for agent in agent_list:
             sum_opinion_level += agent.opinion_level
-        self.average_opinion_level = sum_opinion_level/self.scenario.agent_num
-
-
-
-
-
-
+        self.average_opinion_level = sum_opinion_level / self.scenario.agent_num

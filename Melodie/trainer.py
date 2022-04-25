@@ -217,13 +217,18 @@ class Trainer(BaseModellingManager):
 
     def fitness_agent(self, agent: Type[Agent]) -> float:
         """
-        返回float，只要保证值越大、策略越好即可。
-        无需保证>=0
+
+        Return a float
+        the larger the fitness, the better is the chromosome
         :param agent:
         :return:
         """
         pass
 
     def generate_scenarios(self):
+        """
+        Generate scenario for trainer
+        :return:
+        """
         assert self.df_loader is not None
         return self.df_loader.generate_scenarios('trainer')

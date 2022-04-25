@@ -16,21 +16,21 @@ logger = logging.getLogger(__name__)
 N = 10000_000
 
 
-def run_jit(network):
-    import numba
-    @numba.njit
-    def get_neighbor_jit(network):
-        s0 = 0
-        for i in range(1000_000):
-            ids = network.get_neighbors(0)
-            for i in ids:
-                s0 += i
-
-    get_neighbor_jit(network)
-    t0 = time.time()
-    get_neighbor_jit(network)
-    t1 = time.time()
-    return t1 - t0
+# def run_jit(network):
+#     import numba
+#     @numba.njit
+#     def get_neighbor_jit(network):
+#         s0 = 0
+#         for i in range(1000_000):
+#             ids = network.get_neighbors(0)
+#             for j in ids:
+#                 s0 += j
+#
+#     get_neighbor_jit(network)
+#     t0 = time.time()
+#     get_neighbor_jit(network)
+#     t1 = time.time()
+#     return t1 - t0
 
 
 def run_without_jit(network):
@@ -82,8 +82,7 @@ def network_routine(network):
         t = run_without_jit(network)
         print("run without jit takes:", t)
     else:
-        t = run_jit(network)
-        print("run with jit takes:", t)
+        raise NotImplementedError
 
 
 # def test_network_JIT():

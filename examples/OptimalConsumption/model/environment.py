@@ -1,7 +1,6 @@
 
 from typing import TYPE_CHECKING
 import random
-import numpy as np
 from Melodie import Environment
 
 if TYPE_CHECKING:

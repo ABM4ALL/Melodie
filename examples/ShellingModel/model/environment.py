@@ -1,6 +1,6 @@
 from typing import List
 
-from Melodie import Environment, Grid, GridAgent, AgentList
+from Melodie import Environment, Grid, AgentList
 from .agent import ShellingModelAgentTypeA, ShellingModelAgentTypeB, BaseGridAgent
 from .scenario import ShellingModelScenario
 

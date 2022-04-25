@@ -9,7 +9,7 @@ from typing import TYPE_CHECKING
 
 import numpy as np
 
-from Melodie import Environment
+from Melodie import Environment, Grid
 from .scenario import GameOfLifeScenario
 
 if TYPE_CHECKING:

@@ -90,9 +90,9 @@ class Scenario(Element):
         assert self.manager is not None
         return self.manager.get_registered_dataframe(table_name)
 
-    def get_scenarios_table(self) -> pd.DataFrame:
-        assert self.manager is not None
-        return self.manager.scenarios_dataframe
+    # def get_scenarios_table(self) -> pd.DataFrame:
+    #     assert self.manager is not None
+    #     return self.manager.scenarios_dataframe
 
     def add_interactive_parameters(self, parameters: List[Union[BaseParameter, NumberParameter, SelectionParameter]]):
         self._parameters.extend(parameters)

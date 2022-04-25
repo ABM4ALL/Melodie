@@ -1,6 +1,6 @@
 import sys
 
-from Melodie import Simulator, run_profile
+from Melodie import Simulator
 
 sys.path.append("../..")
 from model.scenario import CovidScenario

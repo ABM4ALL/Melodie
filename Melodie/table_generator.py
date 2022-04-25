@@ -5,17 +5,15 @@
 # @File: table_generator.py
 
 import logging
-import random
-from typing import Callable, Any, Union, Tuple, List, TYPE_CHECKING, Optional
+from typing import Callable, Union, TYPE_CHECKING, Optional
 
 import pandas as pd
 
 from Melodie.basic import MelodieExceptions, args_check
-from Melodie.db import create_db_conn
 from Melodie.scenario_manager import Scenario
 
 if TYPE_CHECKING:
-    from Melodie import df_loader, DataFrameLoader, Calibrator, Trainer
+    from Melodie import DataFrameLoader
 
 logger = logging.getLogger(__name__)
 
@@ -112,9 +110,7 @@ class TableGenerator:
         """
         data_list = []
         for agent_id in range(0, self.num_generator(scenario)):
-            d = {}
-            d['scenario_id'] = scenario.id
-            d['id'] = agent_id
+            d = {'scenario_id': scenario.id, 'id': agent_id}
             generated = self._row_generator(scenario)
             if isinstance(generated, dict):
                 d.update(generated)

@@ -3,11 +3,8 @@
 # @Author: Zhanyi Hou
 # @Email: 1295752786@qq.com
 # @File: dataframe_loader.py
-import pandas as pd
-from typing import List
 
-from Melodie import Scenario, Simulator
-from .visualizer import GameOfLifeVisualizer
+from Melodie import Simulator
 
 
 class FuncSimulator(Simulator):

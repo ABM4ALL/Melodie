@@ -1,6 +1,5 @@
-import random
 import numpy as np
-from typing import Type, TYPE_CHECKING
+from typing import TYPE_CHECKING
 
 from Melodie import Agent
 

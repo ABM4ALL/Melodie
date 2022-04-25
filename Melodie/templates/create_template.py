@@ -33,7 +33,7 @@ def create_project(project_config):
     shutil.copytree(TEMPLATE_ROOT, project_root)
     for root, dirs, files in os.walk(project_root):
         for file in files:
-            if file.endswith(('.py', '.md', '.txt')):
+            if file.endswith((b'.py', b'.md', b'.txt')):
                 file_abs_path = os.path.join(root, file)
                 with open(file_abs_path, 'rb') as f:
                     bs = f.read()
@@ -41,9 +41,10 @@ def create_project(project_config):
                 encoding = chardet.detect(bs)['encoding']
                 if encoding is not None:
                     b_formatted = bs.decode(encoding).replace('_ALIAS_', project_config['alias']).encode(encoding)
-                    b_formatted = b_formatted.decode(encoding).replace('_NAME_', project_config['name']).encode(encoding)
+                    b_formatted = b_formatted.decode(encoding).replace('_NAME_', project_config['name']).encode(
+                        encoding)
                     with open(file_abs_path, 'wb') as f:
-                            f.write(b_formatted)
+                        f.write(b_formatted)
 
 
 if __name__ == '__main__':

@@ -1,13 +1,13 @@
-
 import logging
-import random
-import numpy as np
+
 from typing import TYPE_CHECKING
 
 from Melodie import Agent
+
 if TYPE_CHECKING:
     from .scenario import OpinionDynamicsScenario
 logger = logging.getLogger(__name__)
+
 
 class OpinionDynamicsAgent(Agent):
     scenario: 'OpinionDynamicsScenario'
@@ -55,6 +55,3 @@ class OpinionDynamicsAgent(Agent):
             self.opinion_radius = self.opinion_radius + \
                                   self.scenario.relative_agreement_param * relative_agreement * \
                                   (neighbor_opinion_radius - self.opinion_radius)
-
-
-

@@ -2,8 +2,7 @@ import logging
 import os
 import sqlite3
 import sqlalchemy
-import time
-from typing import Union, Dict, TYPE_CHECKING, List, Tuple, Type, Hashable, Optional
+from typing import Union, Dict, TYPE_CHECKING, Type, Optional
 
 from sqlalchemy.exc import OperationalError
 
@@ -14,7 +13,6 @@ import numpy as np
 from Melodie.basic import MelodieExceptions
 
 if TYPE_CHECKING:
-    from Melodie.scenario_manager import Scenario
     from Melodie.config import Config
 
 TABLE_DTYPES = Dict[str, Union[str, Type[str], Type[float], Type[int], Type[complex], Type[bool], Type[object]]]

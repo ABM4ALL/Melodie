@@ -1,6 +1,4 @@
-import functools
 import random
-from turtle import st
 from typing import ClassVar, Set, Dict, List, Tuple, TYPE_CHECKING
 
 import numpy as np
@@ -10,6 +8,10 @@ from .. import AgentList
 if TYPE_CHECKING:
     from .basics import Agent
     from ..boost.vectorize import vectorize_2d
+
+
+class AgentIDManager:
+    pass
 
 
 class GridItem(Agent):
@@ -58,8 +60,7 @@ class Grid:
 
         """
         self.wrap = wrap
-        self._spots = [[spot_cls(self._convert_to_1d(x, y), x, y)
-                        for x in range(width)] for y in range(height)]
+        self._spots: List[List[Spot]] = []
         for x in range(self.width):
             for y in range(self.height):
                 self._spots[y][x].setup()
@@ -73,8 +74,11 @@ class Grid:
 
     def add_agent_container(self, category_id: int, container: AgentList, initial_placement: str = "none") -> None:
         """
-        Add agent category
-        :param category_name:
+        Add agent container
+
+        :param category_id: A integer stand for category. It's better to define it as a global variable.
+        :param container: The Agent container object
+        :param initial_placement: Whether/How the agents in the agent container will be placed on the grid initially.
         :return:
         """
 
@@ -116,18 +120,7 @@ class Grid:
         :param except_self:
         :return:
         """
-        x, y = self._bound_check(x, y)
-        neighbors = []
-        for dx in range(-radius, radius + 1):
-            for dy in range(-radius, radius + 1):
-                if not moore and abs(dx) + abs(dy) > radius:
-                    continue
-                if not self.wrap and not self._in_bounds(x + dx, y + dy):
-                    continue
-                if dx == 0 and dy == 0 and except_self:
-                    continue
-                neighbors.append(self._bound_check(x + dx, y + dy))
-        return neighbors
+        ...
 
     def add_agent(self, agent: GridAgent, category: int) -> None:
         """
@@ -178,31 +171,16 @@ class Grid:
         return vectorize_2d(self._spots, attr_name)
 
     def get_roles(self):
-        grid_roles = np.zeros((self.height * self.width, 4))
-        for x in range(self.width):
-            for y in range(self.height):
-                spot = self.get_spot(x, y)
-                # role = spot.role
-                pos_1d = self._convert_to_1d(x, y)
-                grid_roles[pos_1d, 0] = x
-                grid_roles[pos_1d, 1] = y
-                grid_roles[pos_1d, 2] = 0
-                grid_roles[pos_1d, 3] = spot.role
-        return grid_roles
+        ...
 
-    def rand_move(self, agent_id: GridAgent, category: int, x_range: int, y_range: int):
-
-        source_x, source_y = self.get_agent_pos(agent_id, category)
-        self._remove_agent(agent_id, category, source_x, source_y)
-        dx = random.randint(-x_range, x_range)
-        dy = random.randint(-y_range, y_range)
-        target_x = source_x + dx
-        target_y = source_y + dy
-        self.add_agent(agent_id, category, target_x, target_y)
-        return target_x, target_y
+    def rand_move(self, agent_id: GridAgent, category: int, x_range: int, y_range: int) -> Tuple[int, int]:
+        ...
 
     def find_empty_spot(self) -> Tuple[int, int]:
         ...
 
     def choose_empty_place(self) -> Tuple[int, int]:
         ...
+
+    def validate(self):
+        pass

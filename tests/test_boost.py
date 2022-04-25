@@ -5,7 +5,7 @@
 # @File: test_lib.py
 
 import time
-from Melodie.boost import vectorize, apply, vectorize_2d, apply_2d
+from Melodie.boost import vectorize, apply
 from Melodie import Agent, AgentList, Model, Scenario
 from .config import cfg
 

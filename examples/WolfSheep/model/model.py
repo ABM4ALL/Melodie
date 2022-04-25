@@ -2,7 +2,7 @@
 __author__ = 'Songmin'
 
 from Melodie import Model, AgentList, Grid, Spot
-from .agent import CovidAgent
+from .agent import Sheep, Wolf
 from .environment import CovidEnvironment
 from .data_collector import CovidDataCollector
 from .scenario import CovidScenario
@@ -12,7 +12,11 @@ class CovidModel(Model):
     scenario: CovidScenario
 
     def setup(self):
-        self.agent_list: AgentList[CovidAgent] = self.create_agent_container(CovidAgent,
+        self.agent_list: AgentList = self.create_agent_container(Sheep,
+                                                                             self.scenario.agent_num,
+                                                                             self.scenario.get_registered_dataframe(
+                                                                                 'agent_params'))
+        self.agent_list: AgentList = self.create_agent_container(Wolf,
                                                                              self.scenario.agent_num,
                                                                              self.scenario.get_registered_dataframe(
                                                                                  'agent_params'))

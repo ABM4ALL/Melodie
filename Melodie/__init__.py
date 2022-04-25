@@ -1,4 +1,3 @@
-import sys
 from .algorithms import GeneticAlgorithmTrainer, GeneticAlgorithmCalibrator, GATrainerParams, GACalibratorParams
 from .config import Config
 from .data_collector import DataCollector

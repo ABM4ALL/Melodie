@@ -1,8 +1,7 @@
 import abc
 import time
-from typing import Type, Callable, List, Optional, ClassVar, Iterator, Union, Tuple, Dict
+from typing import Type, List, Optional, ClassVar, Iterator, Union, Tuple
 import copy
-import numpy as np
 import pandas as pd
 import logging
 from Melodie import Model, Scenario, Config, create_db_conn, GACalibratorParams, DataFrameLoader

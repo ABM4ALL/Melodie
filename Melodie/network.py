@@ -2,8 +2,7 @@ from typing import Dict, Set, Union, List, Tuple, ClassVar, Callable
 
 import logging
 
-from .boost.agent_list import BaseAgentContainer, AgentList
-
+from .boost.agent_list import AgentList
 
 logger = logging.getLogger(__name__)
 
@@ -31,10 +30,11 @@ class Edge:
 class OldNetwork:
     def __init__(self):
         self.simple = True
-        self._nodes: Set[int] = set()
+        # self._nodes: Set[int] = set()
         self._adj: Dict[int, Union[Set[int], List[int]]] = {}
-        self._agent_ids: Dict[str, Dict[int, Set[int]]] = {}  # {'wolves': {0 : set(1, 2, 3)}}，代表0号节点上有1,2,3三只狼
-        self._agent_pos: Dict[str, Dict[int, int]] = {}  # {'wolves': {0: 1}}代表0号狼位于1节点
+        self._agent_ids: Dict[
+            str, Dict[int, Set[int]]] = {}  # {'wolves': {0 : set(1, 2, 3)}}: there are 1,2,3 three wolves on #0 node
+        self._agent_pos: Dict[str, Dict[int, int]] = {}  # {'wolves': {0: 1}}: there are wolve #0 on #1 node
 
     def add_category(self, category_name: str):
         """
@@ -45,10 +45,6 @@ class OldNetwork:
         self._agent_ids[category_name] = {}
         self._agent_pos[category_name] = {}
 
-    def add_node(self, node: int):
-        # 可以删掉，只用add_agent，因为agent就是node
-        assert node not in self._nodes
-
     def add_edge(self, source_id: int, target_id: int):
         """
         Add an edge onto the network.
@@ -56,10 +52,10 @@ class OldNetwork:
         :param target_id: 
         :return: 
         """
-        if source_id not in self._nodes:
-            self.add_node(source_id)
-        if target_id not in self._nodes:
-            self.add_node(target_id)
+        # if source_id not in self._nodes:
+        #     self.add_node(source_id)
+        # if target_id not in self._nodes:
+        #     self.add_node(target_id)
 
         if source_id not in self._adj.keys():
             self._adj[source_id] = set()
@@ -158,11 +154,10 @@ class Network:
         self.directed = directed
         self._nodes: Set[int] = set()
         self._adj: Dict[int, Dict[int, Edge]] = {}
-        self._agent_ids: Dict[str, Dict[int, Set[int]]] = {}  # {'wolves': {0 : set(1, 2, 3)}}， 代表0号节点上有1,2,3三只狼
-        self._agent_pos: Dict[str, Dict[int, int]] = {}  # {'wolves': {0: 1}}代表0号狼位于1节点
+        self._agent_ids: Dict[str, Dict[int, Set[int]]] = {}  # {'wolves': {0 : set(1, 2, 3)}}
+        self._agent_pos: Dict[str, Dict[int, int]] = {}  # {'wolves': {0: 1}}
         self.edge_cls: ClassVar[Edge] = Edge
         self.setup()
-        # assert self.edge_cls is not None
 
     def setup(self):
         pass
@@ -176,10 +171,6 @@ class Network:
         self._agent_ids[category_name] = {}
         self._agent_pos[category_name] = {}
 
-    def add_node(self, node: int):
-        # 可以删掉，只用add_agent，因为agent就是node
-        assert node not in self._nodes
-
     def add_edge(self, source_id: int, target_id: int, edge: Edge):
         """
         Add an edge onto the network.
@@ -188,10 +179,6 @@ class Network:
         :param edge
         :return:
         """
-        if source_id not in self._nodes:
-            self.add_node(source_id)
-        if target_id not in self._nodes:
-            self.add_node(target_id)
 
         if source_id not in self._adj.keys():
             self._adj[source_id] = {}
@@ -221,13 +208,15 @@ class Network:
             neighbor_agent_ids_list = []
             for neighbor_id in neighbor_ids.keys():
                 agents = self.all_agent_on_node(neighbor_id)
-                # agent_ids = self.get_agents(category, neighbor_id)
-                # print(agent_ids, category, neighbor_id)
-                # if len(agent_ids) == 1:
                 neighbor_agent_ids_list.extend(agents)
             return neighbor_agent_ids_list
 
     def add_edges(self, edges: List[Tuple[int, int]]):
+        """
+        Add multiple edges onto the network.
+        :param edges:
+        :return:
+        """
         for edge in edges:
             self.add_edge(edge[0], edge[1])
 

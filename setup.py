@@ -1,5 +1,3 @@
-import time
-
 import setuptools
 import numpy as np
 from distutils.extension import Extension

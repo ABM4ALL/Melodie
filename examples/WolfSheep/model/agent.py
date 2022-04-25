@@ -1,4 +1,4 @@
-from Melodie import Agent, Grid, GridAgent
+from Melodie import Grid, GridAgent
 
 
 class RandMoveAgent(GridAgent):

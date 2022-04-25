@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING, Any, List, Callable, Dict, Set
 from collections import Counter
 
 if TYPE_CHECKING:
-    from Melodie.agent import Agent
+    from Melodie import Agent
 
 
 def assert_exc_occurs(exc_id: int, func: Callable):

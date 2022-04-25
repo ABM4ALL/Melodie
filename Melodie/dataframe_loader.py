@@ -138,5 +138,6 @@ class DataFrameLoader:
         :return:
         """
         if manager_type not in {'simulator', 'trainer', 'calibrator'}:
-            MelodieExceptions.Program.Variable.VariableNotInSet(manager_type, {'simulator', 'trainer', 'calibrator'})
+            MelodieExceptions.Program.Variable.VariableNotInSet("manager_type", manager_type,
+                                                                {'simulator', 'trainer', 'calibrator'})
         return self.generate_scenarios_from_dataframe(f'{manager_type}_scenarios')

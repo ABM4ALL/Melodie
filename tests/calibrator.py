@@ -1,8 +1,7 @@
-import os
 import random
 from typing import List
 
-from Melodie import Calibrator, GeneticAlgorithmCalibrator, Environment, Model, AgentList, GridAgent, Scenario
+from Melodie import Calibrator, GeneticAlgorithmCalibrator, Environment, Model, AgentList, GridAgent, Scenario, Grid
 
 
 class CovidScenario(Scenario):

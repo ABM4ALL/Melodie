@@ -8,7 +8,6 @@ from typing import Dict, Tuple, Callable, Union, List, ClassVar
 from sko.GA import GA
 
 from Melodie import AgentList, Model, Agent, Config, Scenario
-from ..basic import MelodieExceptions
 from ..simulator import BaseModellingManager
 
 
@@ -36,9 +35,7 @@ class TargetFcnCache:
 
 class TrainerAlgorithm(BaseModellingManager):
     """
-    参数：一个tuple
-    每次会跑20条染色体，然后将参数缓存起来。
-    目标函数从TargetFcnCache中查询。
+    Run 20 chromosomes each time and store their data for GA algorithm
     """
 
     def __init__(self, config: Config, scenario_cls: ClassVar[Model], model_cls: ClassVar[Model], df_loader_cls=None):
@@ -76,7 +73,8 @@ class TrainerAlgorithm(BaseModellingManager):
         self.agent_container_getters[container_id] = lambda: getattr(self._current_model, container_name)
         for agent_id in agent_id_list:
             self.algorithms_dict[(agent_id, container_id)] = GA(func=self.target_function(agent_id, container_id),
-                                                                n_dim=len(param_names), size_pop=self.chromosomes, max_iter=80,
+                                                                n_dim=len(param_names), size_pop=self.chromosomes,
+                                                                max_iter=80,
                                                                 prob_mut=0.02, lb=[0, 0, 0], ub=[1, 1, 1],
                                                                 precision=1e-5)
         self.agent_params_defined[container_id] = param_names
@@ -93,7 +91,7 @@ class TrainerAlgorithm(BaseModellingManager):
     def target_function_from_model_to_cache(self, target_fcn: Callable[[Agent], float], generation: int,
                                             chromosome_id: int, ):
         """
-        将Model中的目标函数值提取出来，放到cache里面。
+        Get the target value from model, and then put the value into cache.
         :return:
         """
         for container_category, container_getter in self.agent_container_getters.items():
@@ -149,7 +147,7 @@ class TrainerAlgorithm(BaseModellingManager):
 
                 self.target_function_from_model_to_cache(self.target_fcn, i, chromosome_id)
 
-            # 运行一步
+            # run one step
             for key, algorithm in self.algorithms_dict.items():
                 self._chromosome_counter = -1
                 algorithm.run(1)

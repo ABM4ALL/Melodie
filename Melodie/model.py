@@ -1,6 +1,4 @@
-import inspect
 import logging
-import sys
 from contextlib import contextmanager
 from typing import ClassVar, Optional, Union
 
@@ -90,11 +88,6 @@ class Model:
 
     def create_db_conn(self) -> 'DB':
         return create_db_conn(self.config)
-
-    def setup_environment(self):
-        self.environment = self.environment_class()
-        self.environment.model = self
-        self.environment.setup()
 
     @contextmanager
     def define_basic_components(self):

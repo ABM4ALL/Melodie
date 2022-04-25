@@ -2,8 +2,6 @@ from typing import Any, Optional, TYPE_CHECKING, Dict, List
 
 import pandas as pd
 
-from Melodie.element import Element
-
 if TYPE_CHECKING:
     from Melodie.model import Model
     from Melodie.scenario_manager import Scenario

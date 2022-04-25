@@ -1,8 +1,7 @@
+import json
 import logging
-import os
 import sys
 import time
-import json
 from typing import Dict, Tuple, List
 
 import numpy as np

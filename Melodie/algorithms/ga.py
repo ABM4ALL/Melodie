@@ -1,9 +1,7 @@
 import logging
 import math
-import sys
 import time
-from abc import ABC
-from typing import Callable, List, Type, Optional, TYPE_CHECKING, Dict, Union, Tuple
+from typing import Callable, List, Type, Optional, TYPE_CHECKING, Dict, Union, Tuple, Any
 
 import numpy as np
 import random
@@ -343,7 +341,7 @@ class GeneticAlgorithmCalibrator(SearchingAlgorithm):
     def agent_params_convertion(self):
         pass
 
-    def optimize(self, fitness: Callable[[], Tuple[int, int]], scenario):
+    def optimize(self, fitness: "Callable[[Any, Scenario], Tuple[int, int]]", scenario):
         """
 
         :param fitness:
@@ -374,8 +372,7 @@ class GeneticAlgorithmCalibrator(SearchingAlgorithm):
                 strategy_distance.append(distance_value)
                 assert np.isfinite(strategy_fitness).all(), f"Fitness contains infinite value {strategy_fitness}"
             parameter_values_arr = np.array(parameter_values)
-            # fitness_mean = np.mean(strategy_fitness)
-            # fitness_cov = np.std(strategy_fitness) / np.mean(strategy_fitness)
+
             distance_mean = np.mean(strategy_distance)
             distance_cov = np.std(strategy_distance) / np.mean(strategy_distance)
             env_params_mean = {self.parameter_names[index] + "_mean": float(np.mean(parameter_values_arr[:, index])) for

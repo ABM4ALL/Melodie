@@ -3,18 +3,12 @@
 # @Author: Zhanyi Hou
 # @Email: 1295752786@qq.com
 # @File: test_grid.py
-import json
-import random
-import sys
+import logging
 import time
-from .config import model
 from typing import Union, TYPE_CHECKING
 
 from Melodie import Grid, Spot, GridAgent, Agent, AgentList
-import logging
-
-if TYPE_CHECKING:
-    from Melodie.boost import JITGrid
+from .config import model
 
 logger = logging.getLogger(__name__)
 
@@ -84,8 +78,7 @@ def neighbors(grid: Grid):
         assert x == grid.get_spot(x, y).x
         assert y == grid.get_spot(x, y).y
     else:
-        assert x == grid.get_spot(x, y)['x']
-        assert y == grid.get_spot(x, y)['y']
+        raise NotImplementedError
     neighbor_ids = grid.get_neighbors(grid.width() - 1, grid.height() - 1, 1)
     grid.get_spot(0, 0)
 
@@ -147,28 +140,29 @@ def test_agent_id_mgr():
     print(am.agents_on_spot(5, 5))
     pass
 
+    # def test_agents_jit():
+    #     if JIT_AVAILABLE:
+    #         from Melodie.boost import JITGrid
+    #     else:
+    #         return
+    #     width = 10
+    #     height = 20
+    #     jit_grid = JITGrid(width, height, Spot)
+    #
+    #     agents(jit_grid)
+    #     neighbors(jit_grid)
+    #     convert(jit_grid)
 
-# def test_agents_jit():
-#     if JIT_AVAILABLE:
-#         from Melodie.boost import JITGrid
-#     else:
-#         return
-#     width = 10
-#     height = 20
-#     jit_grid = JITGrid(width, height, Spot)
-#
-#     agents(jit_grid)
-#     neighbors(jit_grid)
-#     convert(jit_grid)
+
+CATRGORY_A = 0
+CATRGORY_B = 1
+
 
 def test_roles():
     agents = [TestGridAgent(i) for i in range(10)]
     agents_b = [TestGridAgent(i) for i in range(10)]
     grid = Grid(Spot, 100, 100, multi=True)
     grid2 = Grid(Spot, 100, 100, multi=True)
-
-    CATRGORY_A = 0
-    CATRGORY_B = 1
 
     for agent in agents:
         grid2.add_agent(agent, CATRGORY_A)
@@ -223,7 +217,6 @@ def test_containers():
         agent_list[i].y = i
         agent_list[i].category = 0
     grid.add_agent_container(0, agent_list, "direct")
-    # grid.add_agent_container(0, agent_list, "none")
     grid.validate()
     agents_on_grid = grid.get_agents(1, 1)
 

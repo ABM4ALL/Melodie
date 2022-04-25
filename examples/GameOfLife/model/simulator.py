@@ -3,10 +3,8 @@
 # @Author: Zhanyi Hou
 # @Email: 1295752786@qq.com
 # @File: simulator.py
-import pandas as pd
-from typing import List
 
-from Melodie import Scenario, Simulator
+from Melodie import Simulator
 from .visualizer import GameOfLifeVisualizer
 
 

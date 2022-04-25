@@ -1,4 +1,4 @@
-from Melodie import Agent, GeneticAlgorithmTrainer, Scenario
+from Melodie import Agent
 
 
 class TestAgent(Agent):

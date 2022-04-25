@@ -3,12 +3,8 @@ __author__ = 'Songmin'
 
 import time
 
-import numpy as np
-
-import Melodie.boost
-from Melodie import Model, GridAgent
+from Melodie import Model, GridAgent, AgentList
 from Melodie import Grid
-# from .spot import GameOfLifeSpot
 from .environment import GameOfLifeSpot
 from .environment import GameOfLifeEnvironment
 
@@ -26,19 +22,6 @@ class GameOfLifeModel(Model):
             agent.x = 10
             agent.y = i
             self.grid.add_agent(agent, 'agents')
-
-    def setup_boost(self):
-
-        from Melodie.boost import JITGrid
-        self.environment = None
-        self.grid = JITGrid(100, 100, GameOfLifeSpot)
-        self.visualizer.grid = self.grid
-        self.agent_list1: "AgentList[GameOfLifeSpot]" = self.create_agent_container(GameOfLifeSpot, 10)
-        self.grid.add_category('agents')
-        i = 0
-        for agent in self.agent_list1:
-            i += 1
-            self.grid.add_agent(agent.id, 'agents', 10, i)
 
     def run(self):
         # self.visualizer.parse(self.grid)

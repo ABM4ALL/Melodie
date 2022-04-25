@@ -1,5 +1,3 @@
-
-from typing import Type
 import random
 import numpy as np
 
@@ -106,5 +104,3 @@ class TechnologySearchEnvironment(Environment):
         self.exploration_accumulated_share = total_exploration_count / count_sum
         self.exploitation_accumulated_share = total_exploitation_count / count_sum
         self.imitation_accumulated_share = total_imitation_count / count_sum
-
-
