@@ -63,6 +63,10 @@ if __name__ == "__main__":
         if a == b:
             c = 45
             pass
+        else:
+            c = 1
+        a = agent + fwer
+        return a, c
 
 
     print(f1.__code__.co_varnames, f1.__code__.co_argcount)
@@ -78,7 +82,7 @@ if __name__ == "__main__":
             # c =
             a = {}
             b = dict()
-            return
+            return a, b
             # return ((self.name + self.app) is ({}.get(''))) or (self.app.started == True)
 
 

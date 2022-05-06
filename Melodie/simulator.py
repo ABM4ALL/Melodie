@@ -14,6 +14,7 @@ import Melodie.visualizer
 from .basic import show_prettified_warning
 from .basic.exceptions import MelodieExceptions
 from .dataframe_loader import DataFrameLoader
+from .visualizer import Visualizer
 
 logger = logging.getLogger(__name__)
 
@@ -21,7 +22,7 @@ if TYPE_CHECKING:
     from .model import Model
     from .scenario_manager import Scenario
     from .config import Config
-    from .visualizer import Visualizer
+
 else:
     from .scenario_manager import Scenario
     from .config import Config
@@ -153,12 +154,14 @@ class Simulator(BaseModellingManager):
         Main function for running model!
         """
         t0 = time.time()
+        Visualizer.enabled = False
         self.setup()
         if self.visualizer is not None:
             show_prettified_warning(
                 "You are using `Simulator.run()` method to run model, but you have also defined visualizer.\n"
                 "If you would like to visualize this model, please use `Simulator.run_visual()` "
                 "instead of `Simulator.run` ")
+
         self.pre_run()
         logger.info('Loading scenarios and static tables...')
         t1 = time.time()
@@ -179,8 +182,9 @@ class Simulator(BaseModellingManager):
 
         self.setup()
         self.pre_run()
-        logger.info('Loading scenarios and static tables...')
+
         t1 = time.time()
+        logger.info(f'Simulator start up cost: {t1 - t0}s')
         while True:
             logger.info(f"Visualizer interactive paramerters for this scenario are: {self.visualizer.scenario_param}")
 
@@ -192,7 +196,7 @@ class Simulator(BaseModellingManager):
             try:
                 self.visualizer.current_scenario = scenario  # set studio scenario.
                 self.run_model(self.config, scenario, 0, self.model_cls, visualizer=self.visualizer)
-            except Melodie.visualizer.MelodieModelReset as e:
+            except Melodie.visualizer.MelodieModelReset:
 
                 self.visualizer.reset()
                 logger.info("Model reset.")
@@ -200,12 +204,7 @@ class Simulator(BaseModellingManager):
         t2 = time.time()
         logger.info(f'Melodie completed all runs, time elapsed totally {t2 - t0}s, and {t2 - t1}s for running.')
 
-    def run_parallel(self,
-                     config: 'Config',
-                     scenario_cls: ClassVar['Scenario'],
-                     model_class: ClassVar['Model'],
-                     cores: int = 2
-                     ):
+    def run_parallel(self, cores: int = 2):
         """
         Parallel model running
 
@@ -237,16 +236,15 @@ class Simulator(BaseModellingManager):
             4. p2 --> db <request the db to create a table 'test'>
             5. db --> p1 <created table named 'test'>
             6. db --> p2 <table 'test' already exists!> ERROR!
+
         For multiple-cores, if running modelthis might happen very frequently. To avoid this, Melodie makes the first
-        shot, which means running one of the runs out of one scenario, by main-process. If first shot completes, the
-        subprocesses will be launched.
+        shot, which means running one of the runs out of one scenario, by main-process. Only when first shot completes
+        will the subprocesses be launched.
 
 
         :return:
         """
         t0 = time.time()
-        self.config = config
-        self.scenario_cls = scenario_cls
         self.pre_run()
 
         t1 = time.time()
@@ -256,7 +254,7 @@ class Simulator(BaseModellingManager):
         parameters: List[Tuple] = []
         for scenario_index, scenario in enumerate(self.scenarios):
             for run_id in range(scenario.number_of_run):
-                params = (config, scenario, run_id, model_class,)
+                params = (self.config, scenario, run_id, self.model_cls,)
                 parameters.append(params)
 
         logger.info(f'Melodie will run totally {len(parameters)} times!.')

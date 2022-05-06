@@ -9,7 +9,7 @@ import time
 import websockets
 import json
 from queue import Queue
-from typing import Dict, Tuple, List, Any, Callable, Union, Set, TYPE_CHECKING
+from typing import Dict, Tuple, List, Any, Callable, Union, Set, TYPE_CHECKING, Optional
 
 from websockets.exceptions import ConnectionClosedOK
 from websockets.legacy.server import WebSocketServerProtocol
@@ -104,7 +104,24 @@ class MelodieModelReset(BaseException):
         self.ws = ws
 
 
+def execute_only_enabled(func):
+    """
+    Execute the decorated function only if the Visualizer.enabled() is True.
+    :param func:
+    :return:
+    """
+
+    def wrapper(*args, **kwargs):
+        if Visualizer.enabled:
+            return func(*args, **kwargs)
+
+    return wrapper
+
+
 class Visualizer:
+    enabled = True  # If in the Simulator.run() or Simulator.run_parallel(), this flag will be set to False
+    ws_port = 8765  # The websocket port that is desired to transfer data.
+
     def __init__(self):
         self.current_step = 0
         self.model_state = UNCONFIGURED
@@ -114,10 +131,16 @@ class Visualizer:
         self.visualizer_components: List[Tuple[str, str, Dict]] = []
 
         self.plot_charts: ChartManager = ChartManager()
-        self.current_websocket: WebSocketServerProtocol = None
         self.agent_series_managers: Dict[str, AgentSeriesManager] = {}
 
-        start_server = websockets.serve(handler, 'localhost', 8765)
+        self.current_websocket: Optional[WebSocketServerProtocol] = None
+        self.th: Optional[threading.Thread] = None
+
+        self.start_websocket()
+
+    @execute_only_enabled
+    def start_websocket(self):
+        start_server = websockets.serve(handler, 'localhost', self.ws_port)
         asyncio.get_event_loop().run_until_complete(start_server)
         asyncio_serve = asyncio.get_event_loop().run_forever
 
@@ -125,6 +148,13 @@ class Visualizer:
 
         self.th.setDaemon(True)
         self.th.start()
+
+        try:
+            urlopen("http://localhost:8089/api/tools/test")
+        except ConnectionRefusedError:
+            raise MelodieExceptions.Tools.MelodieStudioUnAvailable()
+        except URLError:
+            raise MelodieExceptions.Tools.MelodieStudioUnAvailable()
 
     def setup(self):
         pass
@@ -346,13 +376,6 @@ class GridVisualizer(Visualizer):
         self.grid_roles = []
 
         self.grid_params = {}
-
-        try:
-            urlopen("http://localhost:8089/api/tools/test")
-        except ConnectionRefusedError:
-            raise MelodieExceptions.Tools.MelodieStudioUnAvailable()
-        except URLError:
-            raise MelodieExceptions.Tools.MelodieStudioUnAvailable()
 
     def reset(self):
         self.grid_roles = []

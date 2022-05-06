@@ -121,7 +121,7 @@ class Model:
         :return:
         """
         from Melodie import AgentList
-        agent_container_class: Union[ClassVar[AgentList], None] = None
+        agent_container_class: Union[ClassVar[AgentList], None]
         if container_type == "list":
             agent_container_class = AgentList
         else:

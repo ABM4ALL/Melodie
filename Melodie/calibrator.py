@@ -86,7 +86,6 @@ class Calibrator(BaseModellingManager):
         scenario.manager = self
         self.model = self.model_cls(self.config, scenario)
         self.model.setup()
-        iterations = 0
         if self.algorithm_cls == GeneticAlgorithmCalibrator:
             self.algorithm = GeneticAlgorithmCalibrator(calibration_scenario.number_of_generation,
                                                         calibration_scenario.strategy_population,

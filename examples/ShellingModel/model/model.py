@@ -19,7 +19,7 @@ class ShellingModelModel(Model):
         self.grid.add_agent_container(CategoryB, self.agent_list_b, "random_single")
 
     def run(self):
-        for i in self.routine():
+        for _ in self.routine():
             unsatisfied_a, unsatisfied_b = self.environment.calc_satisfactory(self.grid, self.agent_list_a,
                                                                               self.agent_list_b)
             self.environment.unsatisfied_move_to_empty(unsatisfied_a, self.agent_list_a, self.grid)

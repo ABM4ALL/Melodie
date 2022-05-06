@@ -25,7 +25,7 @@ def target_fcn(agent: DemoAgent):
     return agent.param1 ** 2 + agent.param2 ** 2
 
 
-def test_chrom_params():
+def _test_chrom_params():
     chroms = 20
     ta = TrainerAlgorithm(cfg, NewModel, Scenario, )
     scenario = Scenario(0)
@@ -48,7 +48,7 @@ def test_chrom_params():
     print(ta.target_fcn_cache.target_fcn_record)
 
 
-def test_chrom_params_algorithm():
+def _test_chrom_params_algorithm():
     chroms = 20
     ta = TrainerAlgorithm(cfg, Scenario, NewModel, )
     ta.target_fcn = target_fcn

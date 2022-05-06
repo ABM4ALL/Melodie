@@ -15,5 +15,3 @@ class GiniVisualizer(GridVisualizer):
 
         self.set_chart_data_source('chart1', "wealth", lambda: self.model.environment.total_wealth)
         self.set_chart_data_source('chart2', "gini", lambda: self.model.environment.gini)
-        # self.set_chart_data_source('chart2', "series_chart2",
-        #                            lambda: self.model.environment.value2 + self.model.environment.value1)

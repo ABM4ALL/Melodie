@@ -48,7 +48,7 @@ class FuncEnvironment(Environment):
 
     def get_agents_statistic(self, agents: "AgentList"):
         s = 0
-        agent: FuncAgent = None
+        agent: FuncAgent
         for agent in agents:
             s += agent.status
         print(s / 652)

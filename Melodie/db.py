@@ -163,7 +163,7 @@ class DB:
         """
         try:
             return pd.read_sql(f'select * from {table_name}', self.connection)
-        except OperationalError as e:
+        except OperationalError:
             raise MelodieExceptions.Data.AttemptingReadingFromUnexistedTable(table_name)
 
     def drop_table(self, table_name: str):

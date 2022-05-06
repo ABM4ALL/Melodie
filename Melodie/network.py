@@ -326,7 +326,7 @@ class Network:
             for agent in container:
                 self.add_agent(agent.id, category, node_id)
                 node_id += 1
-        g = None
+
         if builder is not None:
             g = builder(self._nodes)
         else:

@@ -79,7 +79,7 @@ def test_agent_list_iteration():
     n = 20
     al = AgentList(TestAgent, n, model)
     times = 0
-    for agent in al:
+    for _ in al:
         l = [a.id for a in al]
         print(l)
         assert len(l) == len(al)

@@ -59,7 +59,7 @@ class PseudoAgent:
         else:
             pass
 
-        return None
+        return y, z, w
 
     def test_enclosures(self):
         """

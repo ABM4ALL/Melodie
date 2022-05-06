@@ -6,7 +6,7 @@ try:
     from termcolor import cprint
 except:
     def cprint(s, **kwargs):
-        print(s)
+        print(s, **kwargs)
 from .fsm import FSM
 
 
@@ -93,5 +93,4 @@ def show_link(stackdepth=1):
 
 
 def show_prettified_warning(warning: str):
-    return
     ColorParseFSM().parse('WARNING: ' + warning)
