@@ -56,11 +56,11 @@ cdef class ReservoirSample(object):
     cdef void feed(self, long item):
         cdef long rand_int
         self._counter += 1
-        # 第i个元素（i <= k），直接进入池中
+        # The i.th element(i <= k) directly put into the pool
         if self._counter-1 < self._size:
             self._sample[self._counter-1] = item
             return
-        # 第i个元素（i > k），以k / i的概率进入池中
+        # The i.th element (i > k) put into the pool with the possibility of k/i
         rand_int = randint(1, self._counter)
         if rand_int <= self._size:
             self._sample[rand_int - 1] = item
@@ -72,9 +72,8 @@ cdef class ReservoirSample(object):
 @cython.nonecheck(False)
 cdef long* _reservoir_sample(int size, int num):
     """
-    返回一个数组的指针。
 
-    注意，需要及时释放这部分的指针，以免发生问题。
+    Return the pointer of reservoir array
     """
     cdef list sample
     cdef ReservoirSample rs
