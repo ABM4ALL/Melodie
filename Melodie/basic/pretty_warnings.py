@@ -6,7 +6,7 @@ try:
     from termcolor import cprint
 except:
     def cprint(s, **kwargs):
-        print(s, **kwargs)
+        print(s)
 from .fsm import FSM
 
 
