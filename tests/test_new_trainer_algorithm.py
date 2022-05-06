@@ -4,7 +4,7 @@
 # @Email: 1295752786@qq.com
 # @File: test_new_trainer_algorithm.py
 
-from Melodie.algorithms.trainer_algorithm import TrainerAlgorithm
+# from Melodie.algorithms.trainer_algorithm import TrainerAlgorithm
 
 from Melodie import Agent, Model, Scenario
 from .config import cfg
