@@ -336,7 +336,7 @@ class Network:
                 g = nx.__getattribute__(network_name)(len(self._nodes), **network_params, )
             else:
                 raise NotImplementedError(f"Network name {network_name} is not implemented!")
-        print(g.edges)
+
         for edge in g.edges:
             agent_src = list(self.all_agent_on_node(edge[0]))[0]
             agent_dest = list(self.all_agent_on_node(edge[1]))[0]
