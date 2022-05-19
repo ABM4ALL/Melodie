@@ -209,7 +209,7 @@ cdef class AgentList(BaseAgentContainer):
             if not hasattr(agent0, column_name):
                 raise MelodieExceptions.Agents.AgentPropertyNameNotExist(column_name, agent0)
         for agent in self.agents:
-            d = {k: agent.__dict__[k] for k in column_names}
+            d = {k: getattr(agent, k) for k in column_names}
             d['id'] = agent.id
             data_list.append(d)
         return data_list

@@ -2,7 +2,7 @@ import random
 
 import pandas as pd
 
-from Melodie import Agent, AgentList
+from Melodie import Agent, AgentList, GridAgent
 
 from .config import model
 
@@ -116,3 +116,8 @@ def test_properties_with_scenario():
 
     assert al.new_id() == 10
     print([a.id for a in al])
+
+
+def test_grid_agents():
+    al = AgentList(GridAgent, 10, model)
+    al.to_list(['x'])

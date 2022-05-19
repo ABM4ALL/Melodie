@@ -63,10 +63,10 @@ cdef class GridItem(Agent):
 cdef class GridAgent(GridItem):
     def __init__(self, agent_id: int, x: int = 0, y: int = 0, category: int = 0):
         super().__init__(agent_id, x, y)
-        category = self.__class__.category
-        assert isinstance(self.__class__.category, int), f"Category id should be an integer and defined in class property space."
-        self.category = category
-        assert self.category >= 0, f"Category id should be an integer {self.category} and larger than 0"
+        # category = self.__class__.category
+        # assert isinstance(self.__class__.category, int), f"Category id should be an integer and defined in class property space."
+        # self.category = category
+        # assert self.category >= 0, f"Category id should be an integer {self.category} and larger than 0"
 
     cpdef void setup(self):
         pass
