@@ -11,7 +11,7 @@ from .calibrator import Calibrator
 from .visualizer import Visualizer, GridVisualizer
 from .analyzer import Analyzer
 from .plotter import Plotter
-from .network import OldNetwork, Edge, Network
+from .network import Edge, Network
 from .trainer import Trainer
 from .tools import *
 import logging
