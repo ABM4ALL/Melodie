@@ -10,16 +10,13 @@ from libcpp.string cimport string as cpp_string
 cdef class GridItem(Agent):
     cdef public long x
     cdef public long y
-    cpdef void setup(self)
     cpdef void set_params(self, dict params) except *
 
 cdef class GridAgent(GridItem):
     cdef public long category
-    cpdef void setup(self)
 
 cdef class Spot(GridItem):
     cdef public long role
-    cpdef void setup(Spot self)
 
 cdef class AgentIDManager:
     cdef long _width

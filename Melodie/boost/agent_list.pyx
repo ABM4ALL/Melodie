@@ -103,7 +103,7 @@ cdef class AgentList(BaseAgentContainer):
 
     def type_check(self, param_names: List[str], agent_params_df: pd.DataFrame):
         """
-        Check if the agent is 
+        Check if the parameters in the data frame has corresponding type with param_name 
         
         :param agent_sample:
         :param param_names:

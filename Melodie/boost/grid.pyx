@@ -41,9 +41,6 @@ cdef class GridItem(Agent):
         self.x = x
         self.y = y
 
-    cpdef void setup(self):
-        pass
-
     cpdef void set_params(self, dict params) except *:
         """
 
@@ -60,23 +57,17 @@ cdef class GridItem(Agent):
 cdef class GridAgent(GridItem):
     def __init__(self, agent_id: int, x: int = 0, y: int = 0, category: int = 0):
         super().__init__(agent_id, x, y)
-        
+        self.category = category
         # category = self.__class__.category
         # assert isinstance(self.__class__.category, int), f"Category id should be an integer and defined in class property space."
         # self.category = category
         # assert self.category >= 0, f"Category id should be an integer {self.category} and larger than 0"
-
-    cpdef void setup(self):
-        pass
 
 
 cdef class Spot(GridItem):
     def __init__(self, spot_id: int, x: int = 0, y: int = 0):
         super().__init__(spot_id, x, y)
         self.role = 0
-
-    cpdef void setup(self):
-        pass
 
     def __repr__(self):
         return f"<{self.__class__.__name__} 'x': {self.x}, 'y': {self.y}, 'role': {self.role}>"
