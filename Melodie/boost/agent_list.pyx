@@ -36,13 +36,10 @@ cdef class SeqIter:
         self._i += 1
         return next_item
 
-# class BaseAgentContainer(Generic[AgentGeneric]):
 cdef class BaseAgentContainer():
     """
     The base class that contains agents
     """
-    # cdef int _id_offset
-    # cdef object scenario
 
     def __init__(self):
         self._id_offset = -1
@@ -60,19 +57,13 @@ cdef class BaseAgentContainer():
     def to_list(self, column_names: List[str] = None) -> List[Dict]:
         """
         Convert all agent properties to a list of dict.
+        
         :param column_names:  property names
         :return:
         """
 
 
-
 cdef class AgentList(BaseAgentContainer):
-    # cdef int _iter_index
-    # // cdef object scenario
-    # cdef object agent_class
-    # cdef int initial_agent_num
-    # cdef object model
-    # cdef list agents
     def __init__(self, agent_class: ClassVar[AgentGeneric], length: int, model: 'Model') -> None:
         super(AgentList, self).__init__()
         self._iter_index = 0
@@ -98,6 +89,7 @@ cdef class AgentList(BaseAgentContainer):
     def init_agents(self) -> List[AgentGeneric]:
         """
         Initialize all agents in the container, and call the `setup()` method
+        
         :return:
         """
         agents: List['AgentGeneric'] = [self.agent_class(self.new_id()) for i in
@@ -111,7 +103,8 @@ cdef class AgentList(BaseAgentContainer):
 
     def type_check(self, param_names: List[str], agent_params_df: pd.DataFrame):
         """
-        Check if the agent is
+        Check if the agent is 
+        
         :param agent_sample:
         :param param_names:
         :param agent_params_df:
@@ -142,6 +135,7 @@ cdef class AgentList(BaseAgentContainer):
     def random_sample(self, sample_num: int) -> List['AgentGeneric']:
         """
         Randomly sample `sample_num` agents from the container
+        
         :param sample_num:
         :return:
         """
@@ -190,6 +184,7 @@ cdef class AgentList(BaseAgentContainer):
     def to_list(self, column_names: List[str] = None) -> List[Dict]:
         """
         Dump all agent and their properties into a list of dict.
+        
         :param column_names:  The property name to be dumped.
         :return:
         """
@@ -259,6 +254,7 @@ cdef class AgentList(BaseAgentContainer):
     def set_properties(self, props_df: pd.DataFrame):
         """
         Extract properties from a dataframe, and Each row in the dataframe represents the property of an agent.
+        
         :param props_df:
         :return:
         """
@@ -277,6 +273,11 @@ cdef class AgentList(BaseAgentContainer):
 
 
     def get_agent(self, agent_id: int):
+        """
+        Get an agent from the agent list
+
+        :param agent_id:
+        """
         index = binary_search(self.agents, agent_id, key=lambda agent: agent.id)
         if index == -1:
             return None

@@ -91,7 +91,7 @@ class Grid:
     def get_roles(self):
         ...
 
-    def rand_move(self, agent_id: GridAgent, category: int, x_range: int, y_range: int) -> Tuple[int, int]:
+    def rand_move(self, agent: GridAgent, category: int, x_range: int, y_range: int) -> Tuple[int, int]:
         ...
 
     def find_empty_spot(self) -> Tuple[int, int]:
