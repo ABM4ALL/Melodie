@@ -24,7 +24,7 @@ class GiniEnvironment(Environment):
 
         return None
 
-    def go_give_money(self, agent_from: 'GiniAgent', agent_to: 'GiniAgent'):
+    def go_give_money(self, agent_from: "GiniAgent", agent_to: "GiniAgent"):
 
         if agent_from.account == 0:
             pass
@@ -34,23 +34,23 @@ class GiniEnvironment(Environment):
 
         return None
 
-    def go_money_transfer(self, agent_list: 'AgentList'):
+    def go_money_transfer(self, agent_list: "AgentList"):
         for sub_period in range(0, self.trade_num):
             [agent_1, agent_2] = agent_list.random_sample(2)
 
             rand = random.random()
             if rand <= self.win_prob:
-                who_win = 'Rich'
+                who_win = "Rich"
             else:
-                who_win = 'Poor'
+                who_win = "Poor"
 
-            if agent_1.account >= agent_2.account and who_win == 'Rich':
+            if agent_1.account >= agent_2.account and who_win == "Rich":
                 self.go_give_money(agent_2, agent_1)
-            elif agent_1.account < agent_2.account and who_win == 'Rich':
+            elif agent_1.account < agent_2.account and who_win == "Rich":
                 self.go_give_money(agent_1, agent_2)
-            elif agent_1.account >= agent_2.account and who_win == 'Poor':
+            elif agent_1.account >= agent_2.account and who_win == "Poor":
                 self.go_give_money(agent_1, agent_2)
-            elif agent_1.account < agent_2.account and who_win == 'Poor':
+            elif agent_1.account < agent_2.account and who_win == "Poor":
                 self.go_give_money(agent_2, agent_1)
             else:
                 pass
@@ -63,7 +63,7 @@ class GiniEnvironment(Environment):
         N = len(Account_list)
         B = sum(xi * (N - i) for i, xi in enumerate(x)) / (N * sum(x))
 
-        return (1 + (1 / N) - 2 * B)
+        return 1 + (1 / N) - 2 * B
 
     def calc_wealth_and_gini(self, AgentList):
 

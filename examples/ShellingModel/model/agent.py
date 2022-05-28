@@ -13,7 +13,9 @@ class BaseGridAgent(GridAgent):
         count = 0
         count_other_category = 0
         for neighbor in neighbors:
-            agents = grid.get_agents(neighbor[0], neighbor[1])  # Get neighbor with same type
+            agents = grid.get_agents(
+                neighbor[0], neighbor[1]
+            )  # Get neighbor with same type
             if len(agents) == 1:
                 if agents[0].category == self.category:
                     count += 1

@@ -9,7 +9,9 @@ logger = logging.getLogger(__name__)
 
 def args_check(func: Callable, expected_arg_num: int):
     if func.__code__.co_argcount != expected_arg_num:
-        raise MelodieExceptions.Program.Function.FunctionArgsNumError(func, expected_arg_num, func.__code__.co_argcount)
+        raise MelodieExceptions.Program.Function.FunctionArgsNumError(
+            func, expected_arg_num, func.__code__.co_argcount
+        )
 
 
 def parse_watched_attrs(func) -> List[str]:
@@ -31,18 +33,18 @@ def parse_watched_attrs(func) -> List[str]:
     ARG_VAR_LOADED = 1
     status = IDLE
     if func.__code__.co_argcount != 1:
-        raise ValueError('The query %s should have only one argument' % func)
+        raise ValueError("The query %s should have only one argument" % func)
     argname = func.__code__.co_varnames[0]
     attr_watch_list: List[str] = []
 
     for instr in bytecode:
         print(instr.opname, instr.argval)
-        if instr.opname == 'LOAD_FAST':
+        if instr.opname == "LOAD_FAST":
             if instr.argval == argname:
                 status = ARG_VAR_LOADED
             else:
                 status = IDLE
-        elif instr.opname == 'LOAD_ATTR':
+        elif instr.opname == "LOAD_ATTR":
             if status == ARG_VAR_LOADED:
                 attr_watch_list.append(instr.argval)
                 status = IDLE
@@ -53,9 +55,9 @@ def parse_watched_attrs(func) -> List[str]:
 
 
 if __name__ == "__main__":
+
     def f():
         return True
-
 
     def f1(agent, fwer):
         a = 123
@@ -68,9 +70,7 @@ if __name__ == "__main__":
         a = agent + fwer
         return a, c
 
-
     print(f1.__code__.co_varnames, f1.__code__.co_argcount)
-
 
     class A:
         def f(self):
@@ -84,7 +84,6 @@ if __name__ == "__main__":
             b = dict()
             return a, b
             # return ((self.name + self.app) is ({}.get(''))) or (self.app.started == True)
-
 
     s = parse_watched_attrs(A().a)
     print(s)

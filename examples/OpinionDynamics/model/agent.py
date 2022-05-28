@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 
 
 class OpinionDynamicsAgent(Agent):
-    scenario: 'OpinionDynamicsScenario'
+    scenario: "OpinionDynamicsScenario"
 
     def setup(self):
         self.opinion_level = 0.0
@@ -21,7 +21,7 @@ class OpinionDynamicsAgent(Agent):
         self.communication_neighbor_id = -1
         self.communication_result = "-"
 
-    def update_opinion_level_with_neighbor(self, neighbor: 'OpinionDynamicsAgent'):
+    def update_opinion_level_with_neighbor(self, neighbor: "OpinionDynamicsAgent"):
         """
         The communication process between two agents is modeled following the "relative agreement algorithm".
         Reference:
@@ -37,10 +37,13 @@ class OpinionDynamicsAgent(Agent):
         neighbor_opinion_level = neighbor.opinion_level
         neighbor_opinion_radius = neighbor.opinion_radius
 
-        overlap = min(neighbor_opinion_level + neighbor_opinion_radius,
-                      self.opinion_level + self.opinion_radius) - \
-                  max(neighbor_opinion_level - neighbor_opinion_radius,
-                      self.opinion_level - self.opinion_radius)
+        overlap = min(
+            neighbor_opinion_level + neighbor_opinion_radius,
+            self.opinion_level + self.opinion_radius,
+        ) - max(
+            neighbor_opinion_level - neighbor_opinion_radius,
+            self.opinion_level - self.opinion_radius,
+        )
         non_overlap = 2 * neighbor_opinion_radius - overlap
         agreement = overlap - non_overlap
         relative_agreement = agreement / (2 * neighbor_opinion_radius)
@@ -49,9 +52,15 @@ class OpinionDynamicsAgent(Agent):
             pass
         else:
             self.communication_result = "changed"
-            self.opinion_level = self.opinion_level + \
-                                 self.scenario.relative_agreement_param * relative_agreement * \
-                                 (neighbor_opinion_level - self.opinion_level)
-            self.opinion_radius = self.opinion_radius + \
-                                  self.scenario.relative_agreement_param * relative_agreement * \
-                                  (neighbor_opinion_radius - self.opinion_radius)
+            self.opinion_level = (
+                self.opinion_level
+                + self.scenario.relative_agreement_param
+                * relative_agreement
+                * (neighbor_opinion_level - self.opinion_level)
+            )
+            self.opinion_radius = (
+                self.opinion_radius
+                + self.scenario.relative_agreement_param
+                * relative_agreement
+                * (neighbor_opinion_radius - self.opinion_radius)
+            )

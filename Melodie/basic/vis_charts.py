@@ -64,7 +64,9 @@ class ChartSeries(JSONBase):
 class Chart(JSONBase):
     def __init__(self, series_names: List[str]):
         self._index = {series_name: i for i, series_name in enumerate(series_names)}
-        self.series: Tuple[ChartSeries] = tuple([ChartSeries(name) for name in series_names])
+        self.series: Tuple[ChartSeries] = tuple(
+            [ChartSeries(name) for name in series_names]
+        )
 
     def get_series(self, series_name: str) -> ChartSeries:
         return self.series[self._index[series_name]]
@@ -104,12 +106,10 @@ class ChartManager(JSONBase):
                     "name": chart.get_series_by_index(i).seriesName,
                     "value": chart.get_series(
                         chart.get_series_by_index(i).seriesName
-                    ).latest_data}
+                    ).latest_data,
+                }
                 chart_series_data.append(s)
-            current_data.append({
-                "chartName": chart_name,
-                "series": chart_series_data
-            })
+            current_data.append({"chartName": chart_name, "series": chart_series_data})
         return current_data
 
     def reset(self):

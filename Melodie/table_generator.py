@@ -23,10 +23,12 @@ class TableGenerator:
         self.df_loader.register_dataframe(self.table_name, new_df, self.data_types)
         return
 
-    def __init__(self,
-                 df_loader: "DataFrameLoader",
-                 table_name: str,
-                 num_generator: Union[int, Callable[[Scenario], int]]):
+    def __init__(
+        self,
+        df_loader: "DataFrameLoader",
+        table_name: str,
+        num_generator: Union[int, Callable[[Scenario], int]],
+    ):
         """
         :param df_loader:
         :param table_name:
@@ -37,6 +39,7 @@ class TableGenerator:
         self._self_incremental_value = -1
         self.df_loader = df_loader
         from Melodie.dataframe_loader import DataFrameLoader
+
         if not isinstance(self.df_loader, DataFrameLoader):
             MelodieExceptions.Data.NoDataframeLoaderDefined()
 
@@ -68,7 +71,9 @@ class TableGenerator:
             raise ValueError("Data types has been already defined!")
         self.data_types = data_types
 
-    def convert_to_num_generator(self, num_generator: Union[int, Callable[[Scenario], int]]):
+    def convert_to_num_generator(
+        self, num_generator: Union[int, Callable[[Scenario], int]]
+    ):
         if isinstance(num_generator, int):
             return lambda _: num_generator
         elif callable(num_generator):
@@ -77,7 +82,9 @@ class TableGenerator:
         else:
             raise TypeError
 
-    def set_row_generator(self, row_generator: Callable[[Scenario], Union[dict, object]]):
+    def set_row_generator(
+        self, row_generator: Callable[[Scenario], Union[dict, object]]
+    ):
         """
 
         :param row_generator:
@@ -106,7 +113,7 @@ class TableGenerator:
         """
         data_list = []
         for agent_id in range(0, self.num_generator(scenario)):
-            d = {'scenario_id': scenario.id, 'id': agent_id}
+            d = {"scenario_id": scenario.id, "id": agent_id}
             generated = self._row_generator(scenario)
             if isinstance(generated, dict):
                 d.update(generated)
@@ -114,6 +121,7 @@ class TableGenerator:
                 d.update(generated.__dict__)
             else:
                 raise TypeError(
-                    f"Builtin type {type(generated)} (value: {generated}) cannot be converted to table row.")
+                    f"Builtin type {type(generated)} (value: {generated}) cannot be converted to table row."
+                )
             data_list.append(d)
         return data_list

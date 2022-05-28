@@ -33,7 +33,7 @@ class DataCollector:
     data or datafile.
     """
 
-    def __init__(self, target='sqlite'):
+    def __init__(self, target="sqlite"):
         if target not in {"sqlite", None}:
             MelodieExceptions.Data.InvalidDatabaseType(target, {"sqlite"})
 
@@ -60,7 +60,9 @@ class DataCollector:
         """
         return self._time_elapsed
 
-    def add_agent_property(self, container_name: str, property_name: str, as_type: ClassVar = None):
+    def add_agent_property(
+        self, container_name: str, property_name: str, as_type: ClassVar = None
+    ):
         """
         This method tells the data collector which property and in which agent container it should collect.
         It can also be determined what type the data could be represented as in the database.
@@ -73,7 +75,9 @@ class DataCollector:
             raise AttributeError(f"Model has no agent container '{container_name}'")
         if container_name not in self._agent_properties_to_collect.keys():
             self._agent_properties_to_collect[container_name] = []
-        self._agent_properties_to_collect[container_name].append(PropertyToCollect(property_name, as_type))
+        self._agent_properties_to_collect[container_name].append(
+            PropertyToCollect(property_name, as_type)
+        )
 
     def add_environment_property(self, property_name: str, as_type: ClassVar = None):
         """
@@ -82,7 +86,9 @@ class DataCollector:
         :param as_type:
         :return:
         """
-        self._environment_properties_to_collect.append(PropertyToCollect(property_name, as_type))
+        self._environment_properties_to_collect.append(
+            PropertyToCollect(property_name, as_type)
+        )
 
     def env_property_names(self):
         """
@@ -96,10 +102,12 @@ class DataCollector:
 
         :return:
         """
-        return {container_name: [prop.property_name for prop in props] for container_name, props in
-                self._agent_properties_to_collect.items()}
+        return {
+            container_name: [prop.property_name for prop in props]
+            for container_name, props in self._agent_properties_to_collect.items()
+        }
 
-    def agent_containers(self) -> List[Tuple[str, 'BaseAgentContainer']]:
+    def agent_containers(self) -> List[Tuple[str, "BaseAgentContainer"]]:
         """
 
         :return:
@@ -122,9 +130,9 @@ class DataCollector:
         for container_name, container in agent_containers:
             agent_prop_list = container.to_list(agent_property_names[container_name])
             for agent_prop in agent_prop_list:
-                agent_prop['step'] = step
-                agent_prop['run_id'] = run_id
-                agent_prop['scenario_id'] = scenario_id
+                agent_prop["step"] = step
+                agent_prop["run_id"] = run_id
+                agent_prop["scenario_id"] = scenario_id
             if container_name not in self.agent_properties_dict:
                 self.agent_properties_dict[container_name] = []
             self.agent_properties_dict[container_name].extend(agent_prop_list)
@@ -141,15 +149,15 @@ class DataCollector:
         scenario = self.model.scenario
         run_id = self.model.run_id_in_scenario
         env_dic = env.to_dict(self.env_property_names())
-        env_dic['step'] = step
-        env_dic['scenario_id'] = scenario.id
-        env_dic['run_id'] = run_id
+        env_dic["step"] = step
+        env_dic["scenario_id"] = scenario.id
+        env_dic["run_id"] = run_id
 
         self.environment_properties_list.append(env_dic)
 
         self.collect_agent_properties(step, run_id, scenario.id)
         t1 = time.time()
-        self._time_elapsed += (t1 - t0)
+        self._time_elapsed += t1 - t0
 
     def save(self):
         """
@@ -159,15 +167,23 @@ class DataCollector:
         t0 = time.time()
 
         environment_properties_df = pd.DataFrame(self.environment_properties_list)
-        self.model.create_db_conn().write_dataframe(DB.ENVIRONMENT_RESULT_TABLE, environment_properties_df, {})
+        self.model.create_db_conn().write_dataframe(
+            DB.ENVIRONMENT_RESULT_TABLE, environment_properties_df, {}
+        )
 
         for container_name in self.agent_properties_dict.keys():
-            agent_properties_df = pd.DataFrame(self.agent_properties_dict[container_name])
-            self.model.create_db_conn().write_dataframe(container_name + "_result", agent_properties_df, {})
+            agent_properties_df = pd.DataFrame(
+                self.agent_properties_dict[container_name]
+            )
+            self.model.create_db_conn().write_dataframe(
+                container_name + "_result", agent_properties_df, {}
+            )
 
         t1 = time.time()
         collect_time = self._time_elapsed
         db_wrote_time = t1 - t0
         self._time_elapsed += db_wrote_time
-        logger.info(f'datacollector took {t1 - t0}s to format dataframe and write it to data.\n'
-                    f'    {db_wrote_time} for writing into database, and {collect_time} for collect data.')
+        logger.info(
+            f"datacollector took {t1 - t0}s to format dataframe and write it to data.\n"
+            f"    {db_wrote_time} for writing into database, and {collect_time} for collect data."
+        )

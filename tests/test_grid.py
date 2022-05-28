@@ -15,7 +15,7 @@ class TestGridAgent(GridAgent):
     category = 0
 
 
-def agents(grid: Union['JITGrid', Grid]):
+def agents(grid: Union["JITGrid", Grid]):
     WOLVES = 0
     SHEEP = 1
     a0 = TestGridAgent(0, 1, 1)
@@ -54,11 +54,16 @@ def neighbors(grid: Grid):
     neighbor_ids = grid.get_neighbors(px, py, 1)
     if not isinstance(grid, Grid):  # convert jit data types
         print(neighbor_ids)
-        l = [(neighbor_ids[i][0], neighbor_ids[i][1]) for i in range(neighbor_ids.shape[0])]
+        l = [
+            (neighbor_ids[i][0], neighbor_ids[i][1])
+            for i in range(neighbor_ids.shape[0])
+        ]
         print(l)
         neighbor_ids = set(l)
     else:
-        neighbor_ids = set([(neighbor_ids[i][0], neighbor_ids[i][1]) for i in range(len(neighbor_ids))])
+        neighbor_ids = set(
+            [(neighbor_ids[i][0], neighbor_ids[i][1]) for i in range(len(neighbor_ids))]
+        )
 
     assert len(list(neighbor_ids)) == 8
 
@@ -103,9 +108,10 @@ def neighbors(grid: Grid):
 #     print(ids)
 #     print(grid._agent_categories)
 
-def convert(grid: Union[Grid, 'JITGrid']):
+
+def convert(grid: Union[Grid, "JITGrid"]):
     if isinstance(grid, Grid):
-        arr = grid.to_2d_array('id')
+        arr = grid.to_2d_array("id")
         print(arr)
     else:
         arr = grid.get_2d_array()
@@ -114,6 +120,7 @@ def convert(grid: Union[Grid, 'JITGrid']):
 
 def test_agent_id_mgr():
     from Melodie.boost.grid import AgentIDManager
+
     am = AgentIDManager(10, 10)
     SHEEP = 0
     WOLF = 1
@@ -207,7 +214,9 @@ def test_agents_nojit():
 
 def test_containers():
     grid = Grid(Spot, 10, 10)
-    agent_list: AgentList[TestGridAgent] = model.create_agent_container(TestGridAgent, 10)
+    agent_list: AgentList[TestGridAgent] = model.create_agent_container(
+        TestGridAgent, 10
+    )
     for i in range(10):
         agent_list[i].x = i
         agent_list[i].y = i

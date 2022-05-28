@@ -8,5 +8,5 @@ class CovidAgent(GridAgent):
         self.category = 0
         self.condition = 0
 
-    def move(self, grid: 'Grid'):
+    def move(self, grid: "Grid"):
         self.x, self.y = grid.rand_move(self, self.category, 1, 1)

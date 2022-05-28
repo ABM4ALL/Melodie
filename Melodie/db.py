@@ -1,4 +1,3 @@
-
 import logging
 import os
 import sqlite3
@@ -16,32 +15,39 @@ from Melodie.basic import MelodieExceptions
 if TYPE_CHECKING:
     from Melodie.config import Config
 
-TABLE_DTYPES = Dict[str, Union[str, Type[str], Type[float], Type[int], Type[complex], Type[bool], Type[object]]]
+TABLE_DTYPES = Dict[
+    str,
+    Union[
+        str, Type[str], Type[float], Type[int], Type[complex], Type[bool], Type[object]
+    ],
+]
 
 logger = logging.getLogger(__name__)
 
 
 class DB:
     table_dtypes: Dict[str, TABLE_DTYPES] = {}
-    EXPERIMENTS_TABLE = 'melodie_experiments'
-    SCENARIO_TABLE = 'simulator_scenarios'
-    ENVIRONMENT_RESULT_TABLE = 'env_result'
-    RESERVED_TABLES = {'scenarios', 'env_result'}
+    EXPERIMENTS_TABLE = "melodie_experiments"
+    SCENARIO_TABLE = "simulator_scenarios"
+    ENVIRONMENT_RESULT_TABLE = "env_result"
+    RESERVED_TABLES = {"scenarios", "env_result"}
 
-    def __init__(self, db_name: str, db_type: str = 'sqlite', conn_params: Dict[str, str] = None):
+    def __init__(
+        self, db_name: str, db_type: str = "sqlite", conn_params: Dict[str, str] = None
+    ):
         self.db_name = db_name
 
-        if db_type not in {'sqlite'}:
-            MelodieExceptions.Data.InvalidDatabaseType(db_type, {'sqlite'})
-        if db_type == 'sqlite':
+        if db_type not in {"sqlite"}:
+            MelodieExceptions.Data.InvalidDatabaseType(db_type, {"sqlite"})
+        if db_type == "sqlite":
             if conn_params is None:
-                conn_params = {'db_path': ''}
+                conn_params = {"db_path": ""}
             elif not isinstance(conn_params, dict):
                 raise NotImplementedError
-            elif conn_params.get('db_path') is None:
-                conn_params['db_path'] = ''
+            elif conn_params.get("db_path") is None:
+                conn_params["db_path"] = ""
 
-            self.db_path = conn_params['db_path']
+            self.db_path = conn_params["db_path"]
             self.connection = self.create_connection(db_name)
         else:
             raise NotImplementedError
@@ -50,7 +56,9 @@ class DB:
         return self.connection
 
     def create_connection(self, database_name) -> sqlalchemy.engine.Engine:
-        return sqlalchemy.create_engine(f'sqlite:///{os.path.join(self.db_path, database_name + ".sqlite")}')
+        return sqlalchemy.create_engine(
+            f'sqlite:///{os.path.join(self.db_path, database_name + ".sqlite")}'
+        )
 
     @classmethod
     def register_dtypes(cls, table_name: str, dtypes: TABLE_DTYPES):
@@ -59,9 +67,11 @@ class DB:
 
         :return:
         """
-        MelodieExceptions.Assertions.Type('dtypes', dtypes, dict)
+        MelodieExceptions.Assertions.Type("dtypes", dtypes, dict)
         if table_name in cls.table_dtypes:
-            raise ValueError(f"Table dtypes of '{table_name}' has been already defined!")
+            raise ValueError(
+                f"Table dtypes of '{table_name}' has been already defined!"
+            )
         cls.table_dtypes[table_name] = dtypes
 
     @classmethod
@@ -104,17 +114,17 @@ class DB:
 
     def _dtype(self, a) -> str:
         if isinstance(a, int):
-            return 'INTEGER'
+            return "INTEGER"
         elif isinstance(a, float):
-            return 'REAL'
+            return "REAL"
         elif isinstance(a, str):
-            return 'TEXT'
+            return "TEXT"
         elif np.issubdtype(a, np.integer):
-            return 'INTEGER'
+            return "INTEGER"
         elif np.issubdtype(a, np.floating):
-            return 'REAL'
+            return "REAL"
         else:
-            raise ValueError(f'{a}, type {type(a)} not recognized!')
+            raise ValueError(f"{a}, type {type(a)} not recognized!")
 
     def auto_convert(self, a: np.float) -> str:
         if isinstance(a, (int, float, str)):
@@ -124,13 +134,15 @@ class DB:
         elif np.issubdtype(a, np.floating):
             return a.item()
         else:
-            raise TypeError(f'{a},type {type(a)} not recognized!')
+            raise TypeError(f"{a},type {type(a)} not recognized!")
 
-    def create_table_if_not_exists(self, table_name: str, dtypes: Dict[str, str]) -> bool:
-        s = ''
+    def create_table_if_not_exists(
+        self, table_name: str, dtypes: Dict[str, str]
+    ) -> bool:
+        s = ""
         for key, dtype in dtypes.items():
-            s += f'{key} {dtype},'
-        s = s.strip(',')
+            s += f"{key} {dtype},"
+        s = s.strip(",")
         sql = f"""create table {table_name} ({s});"""
         try:
             self.connection.execute(sql)
@@ -139,9 +151,13 @@ class DB:
         except sqlite3.OperationalError:  # Table exists, unable to create
             return False
 
-    def write_dataframe(self, table_name: str, data_frame: pd.DataFrame,
-                        data_types: Optional[TABLE_DTYPES] = None,
-                        if_exists='append'):
+    def write_dataframe(
+        self,
+        table_name: str,
+        data_frame: pd.DataFrame,
+        data_types: Optional[TABLE_DTYPES] = None,
+        if_exists="append",
+    ):
         """
         Write a dataframe to database.
 
@@ -154,7 +170,13 @@ class DB:
         if data_types is None:
             data_types = DB.get_table_dtypes(table_name)
         logger.debug(f"datatype of table `{table_name}` is: {data_types}")
-        data_frame.to_sql(table_name, self.connection, index=False, dtype=data_types, if_exists=if_exists)
+        data_frame.to_sql(
+            table_name,
+            self.connection,
+            index=False,
+            dtype=data_types,
+            if_exists=if_exists,
+        )
 
     def read_dataframe(self, table_name: str) -> pd.DataFrame:
         """
@@ -163,7 +185,7 @@ class DB:
         :return:
         """
         try:
-            return pd.read_sql(f'select * from {table_name}', self.connection)
+            return pd.read_sql(f"select * from {table_name}", self.connection)
         except OperationalError:
             raise MelodieExceptions.Data.AttemptingReadingFromUnexistedTable(table_name)
 
@@ -173,7 +195,7 @@ class DB:
         :param table_name:
         :return:
         """
-        self.connection.execute(f'drop table if exists  {table_name} ;')
+        self.connection.execute(f"drop table if exists  {table_name} ;")
 
     def query(self, sql) -> pd.DataFrame:
         """
@@ -183,11 +205,13 @@ class DB:
         """
         return pd.read_sql(sql, self.connection)
 
-    def paramed_query(self, table_name: str, conditions: Dict[str, Union[int, str, tuple, float]]) -> pd.DataFrame:
+    def paramed_query(
+        self, table_name: str, conditions: Dict[str, Union[int, str, tuple, float]]
+    ) -> pd.DataFrame:
         conditions = {k: v for k, v in conditions.items() if v is not None}
-        sql = f'select * from {table_name}'
+        sql = f"select * from {table_name}"
         if len(conditions) > 0:
-            sql += ' where'
+            sql += " where"
             conditions_count = 0
             for k, v in conditions.items():
                 if conditions_count == 0:
@@ -204,37 +228,46 @@ class DB:
             sql += f"where id={id}"
         return self.query(sql)
 
-    def query_agent_results(self, agent_list_name: str, scenario_id: int = None, agent_id: int = None,
-                            step: int = None):
-        conditions = {'scenario_id': scenario_id, 'id': agent_id, 'step': step}
+    def query_agent_results(
+        self,
+        agent_list_name: str,
+        scenario_id: int = None,
+        agent_id: int = None,
+        step: int = None,
+    ):
+        conditions = {"scenario_id": scenario_id, "id": agent_id, "step": step}
         return self.paramed_query(agent_list_name + "_result", conditions)
 
     def query_env_results(self, scenario_id: int = None, step: int = None):
-        conditions = {'scenario_id': scenario_id, 'step': step}
+        conditions = {"scenario_id": scenario_id, "step": step}
         return self.paramed_query(self.ENVIRONMENT_RESULT_TABLE, conditions)
 
     def delete_env_record(self, scenario_id: int, run_id: int):
         try:
             self.connection.execute(
-                f"delete from {self.ENVIRONMENT_RESULT_TABLE} where scenario_id={scenario_id} and run_id={run_id}")
+                f"delete from {self.ENVIRONMENT_RESULT_TABLE} where scenario_id={scenario_id} and run_id={run_id}"
+            )
         except sqlite3.OperationalError:
             import traceback
+
             traceback.print_exc()
 
     def delete_agent_records(self, table_name: str, scenario_id: int, run_id: int):
         try:
             cur = self.connection
             cur.execute(
-                f"delete from {table_name} where scenario_id={scenario_id} and run_id={run_id}")
+                f"delete from {table_name} where scenario_id={scenario_id} and run_id={run_id}"
+            )
         except sqlite3.OperationalError:
             import traceback
+
             traceback.print_exc()
 
 
-def create_db_conn(config: 'Config') -> DB:
+def create_db_conn(config: "Config") -> DB:
     """
     create a Database by current config
     :return:
     """
 
-    return DB(config.project_name, conn_params={'db_path': config.sqlite_folder})
+    return DB(config.project_name, conn_params={"db_path": config.sqlite_folder})

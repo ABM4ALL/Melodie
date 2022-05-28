@@ -13,7 +13,7 @@ class MyAgent(Agent):
         self.c = 0
 
 
-class PurePyCell():
+class PurePyCell:
     def __init__(self) -> None:
         self.x = 0
         self.y = 0
@@ -33,7 +33,9 @@ agents = [Agent]
 pure_py_lst = [[PurePyCell() for i in range(XM)] for j in range(YM)]
 lst = pure_py_lst
 
-agent_manager = AgentList(MyAgent, 200, MyModel(config=cfg, scenario=Scenario(id_scenario=0)))
+agent_manager = AgentList(
+    MyAgent, 200, MyModel(config=cfg, scenario=Scenario(id_scenario=0))
+)
 
 
 def python_step():
@@ -50,19 +52,19 @@ def compare_collect_attribute_time():
     t1 = time.time()
 
     for i in range(steps):
-        a_vec = vectorize(agent_manager.agents, 'b')
+        a_vec = vectorize(agent_manager.agents, "b")
         a_vec += 1
-        apply(agent_manager.agents, 'a', a_vec)
+        apply(agent_manager.agents, "a", a_vec)
 
     t2 = time.time()
 
     for i in range(steps):
-        c_vec = vectorize(agent_manager.agents, 'c')
+        c_vec = vectorize(agent_manager.agents, "c")
         c_vec += 1
-        apply(agent_manager.agents, 'c', c_vec)
+        apply(agent_manager.agents, "c", c_vec)
 
     t3 = time.time()
 
-    print('use_python_time', t1 - t0)
-    print('use_cython_time_float', t2 - t1)
-    print('use_cython_time_int', t2 - t1)
+    print("use_python_time", t1 - t0)
+    print("use_cython_time_float", t2 - t1)
+    print("use_cython_time_int", t2 - t1)

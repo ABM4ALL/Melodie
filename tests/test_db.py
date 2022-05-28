@@ -18,31 +18,31 @@ def test_sqlalchemy_data_types():
     :return:
     """
     # engine = create_engine('sqlite://', echo=False)
-    db = DB('test_db')
-    db.register_dtypes('df_with_dtypes', {'A': Integer(), 'B': Integer()})
+    db = DB("test_db")
+    db.register_dtypes("df_with_dtypes", {"A": Integer(), "B": Integer()})
     df = pd.DataFrame({"A": [1, None, 2], "B": [1, 3, 2]})
 
-    db.write_dataframe('df_default_dtypes', df)
+    db.write_dataframe("df_default_dtypes", df)
     try:
-        db.read_dataframe('unexisted_table')
+        db.read_dataframe("unexisted_table")
         assert False, "Code should raise exception above"
     except MelodieException as e:
         assert e.id == 1503  # Assert error 1503 occurs
-    got_df = db.read_dataframe('df_default_dtypes')
+    got_df = db.read_dataframe("df_default_dtypes")
 
     # As column `A` contains a None value, it will be converted to float64 with a NaN.
     # At the same time `B` is still integer.
-    assert is_float_dtype(got_df.dtypes['A'])
-    assert is_integer_dtype(got_df.dtypes['B'])
+    assert is_float_dtype(got_df.dtypes["A"])
+    assert is_integer_dtype(got_df.dtypes["B"])
 
     # db.write_dataframe('df_with_dtypes', df, data_types={'A': Integer(), 'B': Integer()})
-    db.write_dataframe('df_with_dtypes', df)
+    db.write_dataframe("df_with_dtypes", df)
     # df.to_sql('df_with_dtypes', engine, index=False, dtype={'A': Integer(), 'B': Integer()})
-    data_with_types = db.get_engine().execute('select * from df_with_dtypes').fetchall()
+    data_with_types = db.get_engine().execute("select * from df_with_dtypes").fetchall()
     print(data_with_types)
     assert isinstance(data_with_types[0][1], int)
     db.close()
-    os.remove('test_db.sqlite')
+    os.remove("test_db.sqlite")
 
 
 def test_get_scenarios():
@@ -50,11 +50,13 @@ def test_get_scenarios():
 
     assert scenarios.shape[0] == 3
     scenario_2 = create_db_conn(cfg).query_scenarios(id=2)
-    assert scenario_2['id'][0] == 2
+    assert scenario_2["id"][0] == 2
 
 
 def test_get_agent_results():
-    agents_df = create_db_conn(cfg).query_agent_results("agent", scenario_id=0, agent_id=1)
+    agents_df = create_db_conn(cfg).query_agent_results(
+        "agent", scenario_id=0, agent_id=1
+    )
     assert agents_df.shape[0] == 200
     agents_df = create_db_conn(cfg).query_agent_results("agent", scenario_id=0, step=1)
     assert agents_df.shape[0] == 100
@@ -68,7 +70,7 @@ def test_get_env_results():
     print(env_df)
     env_df = create_db_conn(cfg).query_env_results(scenario_id=0, step=1)
     assert env_df.shape[0] == 1
-    assert env_df['step'][0] == 1
+    assert env_df["step"][0] == 1
 
     # scenario_2 = create_db_conn(
     #     Config('test', db_folder='resources/db', output_folder='resources/output')).query_scenarios(id=2)

@@ -9,7 +9,8 @@ if __name__ == "__main__":
         df_loader_cls=_ALIAS_DataframeLoader,
         config=config,
         scenario_cls=_ALIAS_Scenario,
-        model_cls=_ALIAS_Model)
+        model_cls=_ALIAS_Model,
+    )
 
     """
     Run the model

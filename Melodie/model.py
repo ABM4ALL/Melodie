@@ -47,12 +47,13 @@ class ModelRunRoutine:
 
 
 class Model:
-    def __init__(self,
-                 config: 'Config',
-                 scenario: 'Scenario',
-                 run_id_in_scenario: int = 0,
-                 visualizer: Visualizer = None
-                 ):
+    def __init__(
+        self,
+        config: "Config",
+        scenario: "Scenario",
+        run_id_in_scenario: int = 0,
+        visualizer: Visualizer = None,
+    ):
 
         self.scenario = scenario
         self.config = config
@@ -86,7 +87,7 @@ class Model:
         """
         pass
 
-    def create_db_conn(self) -> 'DB':
+    def create_db_conn(self) -> "DB":
         return create_db_conn(self.config)
 
     @contextmanager
@@ -96,8 +97,8 @@ class Model:
         Environment or DataCollector should not be defined more than once
         :return:
         """
-        MelodieExceptions.Assertions.IsNone('self.environment', self.environment)
-        MelodieExceptions.Assertions.IsNone('self.data_collector', self.data_collector)
+        MelodieExceptions.Assertions.IsNone("self.environment", self.environment)
+        MelodieExceptions.Assertions.IsNone("self.data_collector", self.data_collector)
 
         yield self
         # MelodieExceptions.Assertions.Type('self.environment', self.environment, Environment)
@@ -105,13 +106,19 @@ class Model:
         self.environment.scenario = self.scenario
         self.environment.setup()
         if self.data_collector is not None:
-            MelodieExceptions.Assertions.Type('self.data_collector', self.data_collector, DataCollector)
+            MelodieExceptions.Assertions.Type(
+                "self.data_collector", self.data_collector, DataCollector
+            )
             self.data_collector.model = self
             self.data_collector.setup()
 
-    def create_agent_container(self, agent_class: ClassVar['Agent'], initial_num: int,
-                               params_df: pd.DataFrame = None,
-                               container_type: str = "list") -> Union[AgentList]:
+    def create_agent_container(
+        self,
+        agent_class: ClassVar["Agent"],
+        initial_num: int,
+        params_df: pd.DataFrame = None,
+        container_type: str = "list",
+    ) -> Union[AgentList]:
         """
         Create a container for agents
         :param agent_class:
@@ -121,18 +128,23 @@ class Model:
         :return:
         """
         from Melodie import AgentList
+
         agent_container_class: Union[ClassVar[AgentList], None]
         if container_type == "list":
             agent_container_class = AgentList
         else:
-            raise NotImplementedError(f"Container type '{container_type}' is not valid!")
+            raise NotImplementedError(
+                f"Container type '{container_type}' is not valid!"
+            )
 
         container = agent_container_class(agent_class, initial_num, model=self)
         if params_df is not None:
             container.set_properties(params_df)
         else:
-            show_prettified_warning(f"No dataframe set for the {agent_container_class.__name__}.\n\t"
-                                    + show_link())
+            show_prettified_warning(
+                f"No dataframe set for the {agent_container_class.__name__}.\n\t"
+                + show_link()
+            )
         return container
 
     def check_agent_containers(self):

@@ -10,10 +10,12 @@ if TYPE_CHECKING:
 
 
 class OpinionDynamicsEnvironment(Environment):
-    scenario: 'OpinionDynamicsScenario'
-    agent: 'OpinionDynamicsAgent'
+    scenario: "OpinionDynamicsScenario"
+    agent: "OpinionDynamicsAgent"
 
-    def agents_communication(self, agent_list: 'AgentList[OpinionDynamicsAgent]', network: 'Network') -> None:
+    def agents_communication(
+        self, agent_list: "AgentList[OpinionDynamicsAgent]", network: "Network"
+    ) -> None:
         for agent in agent_list:
             agent.reset_communication_track()
             agent_neighbors = network.get_neighbors(agent.id, "agent_list")
@@ -24,7 +26,9 @@ class OpinionDynamicsEnvironment(Environment):
                 else:
                     pass
 
-    def calc_average_opinion_level(self, agent_list: 'AgentList[OpinionDynamicsAgent]') -> None:
+    def calc_average_opinion_level(
+        self, agent_list: "AgentList[OpinionDynamicsAgent]"
+    ) -> None:
         self.average_opinion_level = 0
         sum_opinion_level = 0
         for agent in agent_list:

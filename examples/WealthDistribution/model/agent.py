@@ -8,8 +8,8 @@ class GiniAgent(Agent):
     scenario: GiniScenario
 
     def setup(self):
-        self.account = .0
-        self.productivity = .0
+        self.account = 0.0
+        self.productivity = 0.0
 
     def go_produce(self):
         rand = random.random()

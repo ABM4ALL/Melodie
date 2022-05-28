@@ -4,7 +4,6 @@ from .environment import _ALIAS_Environment
 
 
 class _ALIAS_Model(Model):
-
     def setup(self):
         with self.define_basic_components():
             self.data_collector = _ALIAS_DataCollector()

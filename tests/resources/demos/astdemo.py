@@ -49,7 +49,7 @@ class PseudoAgent:
         self.x = (1, 2, 3)
         y = [1, 2, 3]
         z = {1, 2, 3}
-        w = {'a': 1, 'b': 2, 'c': 3}
+        w = {"a": 1, "b": 2, "c": 3}
         if rand <= self.productivity:
             self.account, self.x = 1, 2
         else:
