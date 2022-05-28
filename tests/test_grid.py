@@ -1,8 +1,4 @@
 # -*- coding:utf-8 -*-
-# @Time: 2021/11/11 10:39
-# @Author: Zhanyi Hou
-# @Email: 1295752786@qq.com
-# @File: test_grid.py
 import logging
 import time
 from typing import Union, TYPE_CHECKING

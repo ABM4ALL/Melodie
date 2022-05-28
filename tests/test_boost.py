@@ -1,8 +1,4 @@
 # -*- coding:utf-8 -*-
-# @Time: 2021/10/3 21:00
-# @Author: Zhanyi Hou
-# @Email: 1295752786@qq.com
-# @File: test_lib.py
 
 import time
 from Melodie.boost import vectorize, apply

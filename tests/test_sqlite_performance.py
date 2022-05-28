@@ -1,8 +1,4 @@
 # -*- coding:utf-8 -*-
-# @Time: 2021/9/27 8:07
-# @Author: Zhanyi Hou
-# @Email: 1295752786@qq.com
-# @File: test_sqlite_performance.py
 import random
 import sqlite3
 import time

@@ -11,9 +11,7 @@ from Melodie import Model, Scenario
 
 
 class SeqIter(Generic[AgentGeneric]):
-    """
-    The iterator to deal with for-loops in AgentList or other agent containers
-    """
+
 
     def __init__(self, seq: Iterable[AgentGeneric]):
         self._seq = seq
@@ -24,9 +22,7 @@ class SeqIter(Generic[AgentGeneric]):
 
 
 class BaseAgentContainer(Generic[AgentGeneric]):
-    """
-    The base class that contains agents
-    """
+
     _agent_ids = set()
 
     def __init__(self):

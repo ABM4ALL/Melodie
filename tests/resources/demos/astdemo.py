@@ -1,8 +1,4 @@
 # -*- coding:utf-8 -*-
-# @Time: 2021/10/8 13:54
-# @Author: Zhanyi Hou
-# @Email: 1295752786@qq.com
-# @File: astdemo.py.py
 import numpy as np
 
 

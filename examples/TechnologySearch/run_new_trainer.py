@@ -1,8 +1,4 @@
 # -*- coding:utf-8 -*-
-# @Time: 2022/4/9 9:46
-# @Author: Zhanyi Hou
-# @Email: 1295752786@qq.com
-# @File: new_trainer.py.py
 from Melodie.algorithms.trainer_algorithm import TrainerAlgorithm
 from config import config
 from model.scenario import TechnologySearchScenario

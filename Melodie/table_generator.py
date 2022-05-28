@@ -1,8 +1,4 @@
 # -*- coding:utf-8 -*-
-# @Time: 2021/9/21 10:45
-# @Author: Zhanyi Hou
-# @Email: 1295752786@qq.com
-# @File: table_generator.py
 
 import logging
 from typing import Callable, Union, TYPE_CHECKING, Optional

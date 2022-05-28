@@ -1,8 +1,4 @@
 # -*- coding:utf-8 -*-
-# @Time: 2021/10/6 13:29
-# @Author: Zhanyi Hou
-# @Email: 1295752786@qq.com
-# @File: cookiecutter.py.py
 import os.path
 import shutil
 

@@ -1,10 +1,7 @@
 # -*- coding:utf-8 -*-
 # This data will not auto run in pytest command
 # It creates a virtual environment for test the pypi package distribution.
-# @Time: 2021/10/5 0:17
-# @Author: Zhanyi Hou
-# @Email: 1295752786@qq.com
-# @File: test_package.py
+
 
 import os
 import sys

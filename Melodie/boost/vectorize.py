@@ -1,8 +1,4 @@
 # -*- coding:utf-8 -*-
-# @Time: 2021/10/5 14:04
-# @Author: Zhanyi Hou
-# @Email: 1295752786@qq.com
-# @File: vectorize.py
 from typing import Union, List
 
 import numpy as np

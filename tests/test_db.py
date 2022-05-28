@@ -1,8 +1,4 @@
 # -*- coding:utf-8 -*-
-# @Time: 2021/9/19 10:38
-# @Author: Zhanyi Hou
-# @Email: 1295752786@qq.com
-# @File: test_db.py
 import os
 
 import pandas as pd

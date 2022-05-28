@@ -1,8 +1,4 @@
 # -*- coding:utf-8 -*-
-# @Time: 2021/11/18 16:25
-# @Author: Zhanyi Hou
-# @Email: 1295752786@qq.com
-# @File: test_model.py
 import pandas as pd
 
 from Melodie.basic import MelodieException

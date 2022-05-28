@@ -1,9 +1,5 @@
 # cython:language_level=3
 # -*- coding:utf-8 -*-
-# @Time: 2021/10/3 20:58
-# @Author: Zhanyi Hou
-# @Email: 1295752786@qq.com
-# @File: test.pyx.py
 
 
 from cpython.ref cimport PyObject  # somewhere at the top

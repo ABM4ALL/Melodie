@@ -1,8 +1,4 @@
 # -*- coding:utf-8 -*-
-# @Time: 2021/9/23 15:53
-# @Author: Zhanyi Hou
-# @Email: 1295752786@qq.com
-# @File: test_data_collector.py
 
 
 import random

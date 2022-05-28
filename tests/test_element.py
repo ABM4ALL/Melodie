@@ -1,8 +1,4 @@
 # -*- coding:utf-8 -*-
-# @Time: 2021/9/23 16:03
-# @Author: Zhanyi Hou
-# @Email: 1295752786@qq.com
-# @File: test_element.py
 
 from Melodie.element import Element
 

@@ -1,8 +1,4 @@
 # -*- coding:utf-8 -*-
-# @Time: 2021/10/16 17:09
-# @Author: Zhanyi Hou
-# @Email: 1295752786@qq.com
-# @File: simulator_config.py.py
 import os
 
 from Melodie import Config

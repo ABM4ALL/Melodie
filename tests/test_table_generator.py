@@ -1,8 +1,4 @@
 # -*- coding:utf-8 -*-
-# @Time: 2021/12/7 20:59
-# @Author: Zhanyi Hou
-# @Email: 1295752786@qq.com
-# @File: test_table_generator.py
 import pandas as pd
 
 from Melodie import Simulator, Scenario, create_db_conn, Model, DataFrameLoader

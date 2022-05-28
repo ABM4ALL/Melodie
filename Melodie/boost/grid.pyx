@@ -2,10 +2,7 @@
 # distutils: language = c++
 # cython: profile=False
 # -*- coding:utf-8 -*-
-# @Time: 2021/10/3 20:58
-# @Author: Zhanyi Hou
-# @Email: 1295752786@qq.com
-# @File: grid.pyx
+
 cdef extern from "Python.h":
     const char* PyUnicode_AsUTF8(object unicode)
 

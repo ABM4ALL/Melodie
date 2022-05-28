@@ -1,8 +1,4 @@
 # -*- coding:utf-8 -*-
-# @Time: 2021/11/12 18:51
-# @Author: Zhanyi Hou
-# @Email: 1295752786@qq.com
-# @File: run_studio.py
 import random
 
 # import numba

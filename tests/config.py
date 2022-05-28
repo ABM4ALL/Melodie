@@ -1,8 +1,4 @@
 # -*- coding:utf-8 -*-
-# @Time: 2021/10/20 20:21
-# @Author: Zhanyi Hou
-# @Email: 1295752786@qq.com
-# @File: config.py
 import os
 
 from Melodie import Config, Model, Scenario

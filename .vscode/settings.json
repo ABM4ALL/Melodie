@@ -2,5 +2,14 @@
     "files.associations": {
         "__locale": "c",
         "ios": "c"
-    }
+    },
+    "MicroPython.executeButton": [
+        {
+            "text": "▶",
+            "tooltip": "运行",
+            "alignment": "left",
+            "command": "extension.executeFile",
+            "priority": 3.5
+        }
+    ]
 }
