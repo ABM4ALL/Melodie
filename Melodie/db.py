@@ -22,6 +22,8 @@ TABLE_DTYPES = Dict[
     ],
 ]
 
+SQLITE_FILE_SUFFIX = ".sqlite"
+
 logger = logging.getLogger(__name__)
 
 
@@ -57,7 +59,7 @@ class DB:
 
     def create_connection(self, database_name) -> sqlalchemy.engine.Engine:
         return sqlalchemy.create_engine(
-            f'sqlite:///{os.path.join(self.db_path, database_name + ".sqlite")}'
+            f"sqlite:///{os.path.join(self.db_path, database_name + SQLITE_FILE_SUFFIX)}"
         )
 
     @classmethod

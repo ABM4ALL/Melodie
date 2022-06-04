@@ -2,3 +2,7 @@ setuptools==59.2.0; python_version == '3.7'
 setuptools; python_version >= '3.8'
 numpy >= "1.20"
 cython==3.0.0a10
+sphinx_rtd_theme
+recommonmark
+sphinxcontrib.mermaid
+sphinx_markdown_tables
