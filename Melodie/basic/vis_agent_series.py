@@ -18,10 +18,12 @@ class AgentSeriesManager(JSONBase):
         self.agent_series: Dict[str, AgentSeries] = {}
 
     def add_series(self, series_name, series_type: str, color: str, symbol: str):
-        self.agent_series[series_name] = AgentSeries(series_name, series_type, color, symbol)
+        self.agent_series[series_name] = AgentSeries(
+            series_name, series_type, color, symbol
+        )
 
     def set_series_data(self, series_name: str, data):
         self.agent_series[series_name].data = data
 
     def to_dict(self):
-        return self.to_json()['agent_series']
+        return self.to_json()["agent_series"]

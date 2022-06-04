@@ -1,29 +1,40 @@
 from Melodie import Model, Grid, Spot, AgentList
-from .agent import ShellingModelAgentTypeA, ShellingModelAgentTypeB, CategoryA, CategoryB
+from .agent import (
+    ShellingModelAgentTypeA,
+    ShellingModelAgentTypeB,
+    CategoryA,
+    CategoryB,
+)
 from .data_collector import ShellingModelDataCollector
 from .environment import ShellingModelEnvironment
 
 
 class ShellingModelModel(Model):
-
     def setup(self):
         with self.define_basic_components():
             self.data_collector = ShellingModelDataCollector()
             self.environment = ShellingModelEnvironment()
-            self.agent_list_a: AgentList[ShellingModelAgentTypeA] = \
-                self.create_agent_container(ShellingModelAgentTypeA, 160)
-            self.agent_list_b: AgentList[ShellingModelAgentTypeB] = \
-                self.create_agent_container(ShellingModelAgentTypeB, 160)
+            self.agent_list_a: AgentList[
+                ShellingModelAgentTypeA
+            ] = self.create_agent_container(ShellingModelAgentTypeA, 160)
+            self.agent_list_b: AgentList[
+                ShellingModelAgentTypeB
+            ] = self.create_agent_container(ShellingModelAgentTypeB, 160)
         self.grid = Grid(Spot, 20, 20, multi=False)
         self.grid.add_agent_container(CategoryA, self.agent_list_a, "random_single")
         self.grid.add_agent_container(CategoryB, self.agent_list_b, "random_single")
 
     def run(self):
         for _ in self.routine():
-            unsatisfied_a, unsatisfied_b = self.environment.calc_satisfactory(self.grid, self.agent_list_a,
-                                                                              self.agent_list_b)
-            self.environment.unsatisfied_move_to_empty(unsatisfied_a, self.agent_list_a, self.grid)
-            self.environment.unsatisfied_move_to_empty(unsatisfied_b, self.agent_list_b, self.grid)
+            unsatisfied_a, unsatisfied_b = self.environment.calc_satisfactory(
+                self.grid, self.agent_list_a, self.agent_list_b
+            )
+            self.environment.unsatisfied_move_to_empty(
+                unsatisfied_a, self.agent_list_a, self.grid
+            )
+            self.environment.unsatisfied_move_to_empty(
+                unsatisfied_b, self.agent_list_b, self.grid
+            )
             # for a_id in unsatisfied_a:
             #     pos = self.grid.find_empty_spot()
             #     agent_a = self.agent_list_a.get_agent(a_id)

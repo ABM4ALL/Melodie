@@ -7,5 +7,6 @@
 
 from typing import List, TypeVar
 
-T = TypeVar('T')
-def sample(population: List[T], sample_num: int)->List[T]:...
+T = TypeVar("T")
+
+def sample(population: List[T], sample_num: int) -> List[T]: ...

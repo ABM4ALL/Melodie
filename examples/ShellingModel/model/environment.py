@@ -11,8 +11,12 @@ class ShellingModelEnvironment(Environment):
     def setup(self):
         pass
 
-    def calc_satisfactory(self, grid: Grid, agent_list_a: "AgentList[ShellingModelAgentTypeA]",
-                          agent_list_b: "AgentList[ShellingModelAgentTypeB]"):
+    def calc_satisfactory(
+        self,
+        grid: Grid,
+        agent_list_a: "AgentList[ShellingModelAgentTypeA]",
+        agent_list_b: "AgentList[ShellingModelAgentTypeB]",
+    ):
         """
         Get all unsatisfied agents
 
@@ -31,8 +35,12 @@ class ShellingModelEnvironment(Environment):
                 b_unsatisfied.append(agent_b.id)
         return a_unsatisfied, b_unsatisfied
 
-    def unsatisfied_move_to_empty(self, unsatisfied_agent_id: List[int], agent_list: 'AgentList[BaseGridAgent]',
-                                  grid: Grid):
+    def unsatisfied_move_to_empty(
+        self,
+        unsatisfied_agent_id: List[int],
+        agent_list: "AgentList[BaseGridAgent]",
+        grid: Grid,
+    ):
         for b_id in unsatisfied_agent_id:
             pos = grid.find_empty_spot()
             agent = agent_list.get_agent(b_id)

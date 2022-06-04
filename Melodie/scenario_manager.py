@@ -21,15 +21,24 @@ class Scenario(Element):
             return self.__dict__
 
         def __repr__(self):
-            return f"<class {self.__class__.__name__}, name {self.name}, type {self.type}>"
+            return (
+                f"<class {self.__class__.__name__}, name {self.name}, type {self.type}>"
+            )
 
     class NumberParameter(BaseParameter):
-        def __init__(self, name, init_value: Union[int, float], min_val: Optional[Union[int, float]] = None,
-                     max_val: Optional[Union[int, float]] = None,
-                     step: Optional[Union[int, float]] = None):
+        def __init__(
+            self,
+            name,
+            init_value: Union[int, float],
+            min_val: Optional[Union[int, float]] = None,
+            max_val: Optional[Union[int, float]] = None,
+            step: Optional[Union[int, float]] = None,
+        ):
             super().__init__(name, "number", init_value)
             if min_val is None or max_val is None or step is None:
-                raise NotImplementedError("This version of melodie does not support free bound or step yet")
+                raise NotImplementedError(
+                    "This version of melodie does not support free bound or step yet"
+                )
             assert isinstance(init_value, (int, float))
             assert isinstance(max_val, (int, float))
             assert isinstance(min_val, (int, float))
@@ -39,7 +48,12 @@ class Scenario(Element):
             self.step = step
 
     class SelectionParameter(BaseParameter):
-        def __init__(self, name, init_value: Union[int, str, bool], selections: List[Union[int, str, bool]]):
+        def __init__(
+            self,
+            name,
+            init_value: Union[int, str, bool],
+            selections: List[Union[int, str, bool]],
+        ):
             super().__init__(name, "selection", init_value)
             self.selections = selections
 
@@ -51,13 +65,13 @@ class Scenario(Element):
         if (id_scenario is not None) and (not isinstance(id_scenario, (int, str))):
             raise MelodieExceptions.Scenario.ScenarioIDTypeError(id_scenario)
         self._parameters = []
-        self.manager: Union['Calibrator', 'Simulator', None] = None
+        self.manager: Union["Calibrator", "Simulator", None] = None
         self.id = id_scenario
         self.number_of_run = 1
         self.periods = 0
         self.setup()
 
-    def copy(self) -> 'Scenario':
+    def copy(self) -> "Scenario":
         new_scenario = self.__class__()
         for property_name, property in self.__dict__.items():
             assert property_name in new_scenario.__dict__
@@ -94,10 +108,15 @@ class Scenario(Element):
     #     assert self.manager is not None
     #     return self.manager.scenarios_dataframe
 
-    def add_interactive_parameters(self, parameters: List[Union[BaseParameter, NumberParameter, SelectionParameter]]):
+    def add_interactive_parameters(
+        self,
+        parameters: List[Union[BaseParameter, NumberParameter, SelectionParameter]],
+    ):
         self._parameters.extend(parameters)
         temp_set = set()
         for parameter in self._parameters:
             if parameter.name in temp_set:
-                raise MelodieExceptions.Scenario.ParameterRedefinedError(parameter.name, self._parameters)
+                raise MelodieExceptions.Scenario.ParameterRedefinedError(
+                    parameter.name, self._parameters
+                )
             temp_set.add(parameter.name)

@@ -1,4 +1,9 @@
-from .algorithms import GeneticAlgorithmTrainer, GeneticAlgorithmCalibrator, GATrainerParams, GACalibratorParams
+from .algorithms import (
+    GeneticAlgorithmTrainer,
+    GeneticAlgorithmCalibrator,
+    GATrainerParams,
+    GACalibratorParams,
+)
 from .config import Config
 from .data_collector import DataCollector
 from .db import DB, create_db_conn
@@ -16,10 +21,11 @@ from .trainer import Trainer
 from .tools import *
 import logging
 
-logging.basicConfig(level=logging.INFO,
-                    format='%(filename)s:%(lineno)d %(levelname)s %(message)s',
-                    datefmt='%a, %d %b %Y %H:%M:%S',
-                    )
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(filename)s:%(lineno)d %(levelname)s %(message)s",
+    datefmt="%a, %d %b %Y %H:%M:%S",
+)
 
 from .boost.agent_list import BaseAgentContainer, AgentList
 from .boost.basics import Environment, Element, Agent

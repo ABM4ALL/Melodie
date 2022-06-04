@@ -8,7 +8,7 @@ if TYPE_CHECKING:
 
 
 class RPSAgent(Agent):
-    scenario: 'RPSScenario'
+    scenario: "RPSScenario"
 
     def setup(self):
         self.payoff_rock_win = 0.0
@@ -30,8 +30,11 @@ class RPSAgent(Agent):
         self.scissors_count = 0
 
     def setup_action_probability(self):
-        weight_sum = np.array([self.strategy_param_1, self.strategy_param_2, self.strategy_param_3]).sum()
-        if weight_sum == 0: weight_sum = 1
+        weight_sum = np.array(
+            [self.strategy_param_1, self.strategy_param_2, self.strategy_param_3]
+        ).sum()
+        if weight_sum == 0:
+            weight_sum = 1
         self.prob_rock = self.strategy_param_1 / weight_sum
         self.prob_paper = self.strategy_param_2 / weight_sum
 

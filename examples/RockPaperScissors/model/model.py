@@ -1,4 +1,3 @@
-
 from Melodie import Model, AgentList
 from .scenario import RPSScenario
 from .agent import RPSAgent
@@ -8,13 +7,13 @@ from .data_collector import RPSDataCollector
 
 class RPSModel(Model):
     scenario: RPSScenario
-    
+
     def setup(self):
 
         self.agent_list: AgentList[RPSAgent] = self.create_agent_container(
             RPSAgent,
             self.scenario.agent_num,
-            self.scenario.get_registered_dataframe('agent_params')
+            self.scenario.get_registered_dataframe("agent_params"),
         )
 
         with self.define_basic_components():
@@ -29,4 +28,3 @@ class RPSModel(Model):
             self.environment.calc_agents_total_account(self.agent_list)
         #     self.data_collector.collect(t)
         # self.data_collector.save()
-

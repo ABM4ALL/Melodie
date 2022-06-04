@@ -8,5 +8,7 @@ from config import config
 from model.dataframe_loader import CovidDataFrameLoader
 
 if __name__ == "__main__":
-    calibrator = CovidCalibrator(config, CovidScenario, CovidModel, CovidDataFrameLoader)
+    calibrator = CovidCalibrator(
+        config, CovidScenario, CovidModel, CovidDataFrameLoader
+    )
     calibrator.calibrate()

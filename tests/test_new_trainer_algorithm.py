@@ -16,22 +16,30 @@ class NewModel(Model):
 
 
 def target_fcn(agent: DemoAgent):
-    return agent.param1 ** 2 + agent.param2 ** 2
+    return agent.param1**2 + agent.param2**2
 
 
 def _test_chrom_params():
     chroms = 20
-    ta = TrainerAlgorithm(cfg, NewModel, Scenario, )
+    ta = TrainerAlgorithm(
+        cfg,
+        NewModel,
+        Scenario,
+    )
     scenario = Scenario(0)
     # model = NewModel(cfg, scenario)
 
-    ta.add_agent_container('agent_list', 0, ['param1', 'param2'], [i for i in range(10)])
+    ta.add_agent_container(
+        "agent_list", 0, ["param1", "param2"], [i for i in range(10)]
+    )
     ta._current_model: NewModel = ta.create_model()
     al = ta._current_model.agent_list
     algorithm_at_agent_0 = ta.algorithms_dict[(0, 0)]
     # algorithm_at_agent_0.run()
     for chrom_id in range(chroms):
-        chrom_value_param1, chrom_value_param2 = algorithm_at_agent_0.chrom2x(algorithm_at_agent_0.Chrom)[chrom_id]
+        chrom_value_param1, chrom_value_param2 = algorithm_at_agent_0.chrom2x(
+            algorithm_at_agent_0.Chrom
+        )[chrom_id]
         ta.params_from_algorithm_to_agent_container(chrom_id)
         assert al.get_agent(0).param1 == chrom_value_param1
         assert al.get_agent(0).param2 == chrom_value_param2
@@ -44,10 +52,16 @@ def _test_chrom_params():
 
 def _test_chrom_params_algorithm():
     chroms = 20
-    ta = TrainerAlgorithm(cfg, Scenario, NewModel, )
+    ta = TrainerAlgorithm(
+        cfg,
+        Scenario,
+        NewModel,
+    )
     ta.target_fcn = target_fcn
     scenario = Scenario(0)
     # model = NewModel(cfg, scenario)
 
-    ta.add_agent_container('agent_list', 0, ['param1', 'param2'], [i for i in range(10)])
+    ta.add_agent_container(
+        "agent_list", 0, ["param1", "param2"], [i for i in range(10)]
+    )
     ta.run()

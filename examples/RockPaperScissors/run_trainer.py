@@ -9,8 +9,10 @@ from model.dataframe_loader import RPSDataFrameLoader
 from Melodie import run_profile
 
 if __name__ == "__main__":
-    trainer = RPSTrainer(config=config,
-                         scenario_cls=RPSScenario,
-                         model_cls=RPSModel,
-                         df_loader_cls=RPSDataFrameLoader)
+    trainer = RPSTrainer(
+        config=config,
+        scenario_cls=RPSScenario,
+        model_cls=RPSModel,
+        df_loader_cls=RPSDataFrameLoader,
+    )
     run_profile(trainer.train)

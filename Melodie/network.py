@@ -8,9 +8,14 @@ logger = logging.getLogger(__name__)
 
 
 class Edge:
-
-    def __init__(self, category_1: str, agent_1_id: int, category_2: str, agent_2_id: int,
-                 edge_properties: Dict[str, Union[int, str, float, bool]]):
+    def __init__(
+        self,
+        category_1: str,
+        agent_1_id: int,
+        category_2: str,
+        agent_2_id: int,
+        edge_properties: Dict[str, Union[int, str, float, bool]],
+    ):
         self.category_1 = category_1
         self.agent_1_id = agent_1_id
         self.category_2 = category_2
@@ -28,13 +33,14 @@ class Edge:
 
 
 class Network:
-
     def __init__(self, directed=False):
         self.simple = True
         self.directed = directed
         self._nodes: Set[int] = set()
         self._adj: Dict[int, Dict[int, Edge]] = {}
-        self._agent_ids: Dict[str, Dict[int, Set[int]]] = {}  # {'wolves': {0 : set(1, 2, 3)}}
+        self._agent_ids: Dict[
+            str, Dict[int, Set[int]]
+        ] = {}  # {'wolves': {0 : set(1, 2, 3)}}
         self._agent_pos: Dict[str, Dict[int, int]] = {}  # {'wolves': {0: 1}}
         self.edge_cls: ClassVar[Edge] = Edge
         self.setup()
@@ -158,11 +164,17 @@ class Network:
     def agent_pos(self, agent_id: int, category: str):
         return self._agent_pos[category][agent_id]
 
-    def create_edge(self, agent_1_id: int, category_1: str, agent_2_id: int, category_2: str,
-                    **edge_properties):
-        edge = self.edge_cls(category_1, agent_1_id,
-                             category_2, agent_2_id,
-                             edge_properties)
+    def create_edge(
+        self,
+        agent_1_id: int,
+        category_1: str,
+        agent_2_id: int,
+        category_2: str,
+        **edge_properties,
+    ):
+        edge = self.edge_cls(
+            category_1, agent_1_id, category_2, agent_2_id, edge_properties
+        )
         src_pos = self.agent_pos(agent_1_id, category_1)
         dst_pos = self.agent_pos(agent_2_id, category_2)
         self.add_edge(src_pos, dst_pos, edge)
@@ -179,11 +191,13 @@ class Network:
         return l
 
     @classmethod
-    def from_agent_containers(cls,
-                              containers: 'Dict[str,AgentList]',
-                              network_name: str = '',
-                              network_params: dict = '',
-                              builder: Callable = None):
+    def from_agent_containers(
+        cls,
+        containers: "Dict[str,AgentList]",
+        network_name: str = "",
+        network_params: dict = "",
+        builder: Callable = None,
+    ):
         """
         :param containers: container or a list of container
         :param network_name: The name of network.
@@ -198,6 +212,7 @@ class Network:
         """
         self = cls()
         import networkx as nx
+
         assert isinstance(containers, dict)
         node_id = 0
         for category, container in containers.items():
@@ -210,16 +225,26 @@ class Network:
         if builder is not None:
             g = builder(self._nodes)
         else:
-            if network_name == 'barabasi_albert_graph':
-                g = nx.__getattribute__(network_name)(len(self._nodes), **network_params, )
-            elif network_name == 'watts_strogatz_graph':
-                g = nx.__getattribute__(network_name)(len(self._nodes), **network_params, )
+            if network_name == "barabasi_albert_graph":
+                g = nx.__getattribute__(network_name)(
+                    len(self._nodes),
+                    **network_params,
+                )
+            elif network_name == "watts_strogatz_graph":
+                g = nx.__getattribute__(network_name)(
+                    len(self._nodes),
+                    **network_params,
+                )
             else:
-                raise NotImplementedError(f"Network name {network_name} is not implemented!")
+                raise NotImplementedError(
+                    f"Network name {network_name} is not implemented!"
+                )
 
         for edge in g.edges:
             agent_src = list(self.all_agent_on_node(edge[0]))[0]
             agent_dest = list(self.all_agent_on_node(edge[1]))[0]
-            edge_obj = self.edge_cls(agent_src[0], agent_src[1], agent_dest[0], agent_dest[1], {})
+            edge_obj = self.edge_cls(
+                agent_src[0], agent_src[1], agent_dest[0], agent_dest[1], {}
+            )
             self.add_edge(edge[0], edge[1], edge_obj)
         return self

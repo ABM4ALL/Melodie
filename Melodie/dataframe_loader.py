@@ -18,7 +18,9 @@ class DataFrameLoader:
     """
 
     def __init__(self, manager, config: Config, scenario_cls: ClassVar[Scenario]):
-        MelodieExceptions.Assertions.NotNone(scenario_cls, 'Scenario class should not be None!')
+        MelodieExceptions.Assertions.NotNone(
+            scenario_cls, "Scenario class should not be None!"
+        )
         self.config: Config = config
         self.scenario_cls = scenario_cls
         self.registered_dataframes: Optional[Dict[str, pd.DataFrame]] = {}
@@ -48,7 +50,9 @@ class DataFrameLoader:
         """
         pass
 
-    def register_dataframe(self, table_name: str, data_frame: pd.DataFrame, data_types: dict = None) -> None:
+    def register_dataframe(
+        self, table_name: str, data_frame: pd.DataFrame, data_types: dict = None
+    ) -> None:
         """
 
         :param table_name:
@@ -59,9 +63,12 @@ class DataFrameLoader:
         if data_types is None:
             data_types = {}
         DB.register_dtypes(table_name, data_types)
-        create_db_conn(self.config).write_dataframe(table_name, data_frame, data_types=data_types,
-                                                    if_exists="replace")
-        self.registered_dataframes[table_name] = create_db_conn(self.config).read_dataframe(table_name)
+        create_db_conn(self.config).write_dataframe(
+            table_name, data_frame, data_types=data_types, if_exists="replace"
+        )
+        self.registered_dataframes[table_name] = create_db_conn(
+            self.config
+        ).read_dataframe(table_name)
 
     def load_dataframe(self, table_name: str, file_name: str, data_types: dict) -> None:
 
@@ -81,19 +88,27 @@ class DataFrameLoader:
         table: Optional[pd.DataFrame]
 
         MelodieExceptions.Data.TableNameInvalid(table_name)
-        if ext in {'.xls', '.xlsx'}:
+        if ext in {".xls", ".xlsx"}:
             file_path_abs = os.path.join(self.config.excel_source_folder, file_name)
             table = pd.read_excel(file_path_abs)
         else:
             raise NotImplemented(file_name)
 
         DB.register_dtypes(table_name, data_types)
-        create_db_conn(self.config).write_dataframe(table_name, table, data_types=data_types,
-                                                    if_exists="replace", )
+        create_db_conn(self.config).write_dataframe(
+            table_name,
+            table,
+            data_types=data_types,
+            if_exists="replace",
+        )
 
-        self.registered_dataframes[table_name] = create_db_conn(self.config).read_dataframe(table_name)
+        self.registered_dataframes[table_name] = create_db_conn(
+            self.config
+        ).read_dataframe(table_name)
 
-    def table_generator(self, table_name: str, rows_in_scenario: Union[int, Callable[[Scenario], int]]):
+    def table_generator(
+        self, table_name: str, rows_in_scenario: Union[int, Callable[[Scenario], int]]
+    ):
         """
         Create a new generator
         :param table_name:
@@ -105,7 +120,7 @@ class DataFrameLoader:
         """
         return TableGenerator(self, table_name, rows_in_scenario)
 
-    def generate_scenarios_from_dataframe(self, df_name: str) -> List['Scenario']:
+    def generate_scenarios_from_dataframe(self, df_name: str) -> List["Scenario"]:
         """
         Generate scenario objects by the parameter from static tables
         :return:
@@ -121,7 +136,9 @@ class DataFrameLoader:
             scenario.manager = self.manager
             for col_name in cols:
                 if col_name not in scenario.__dict__.keys():
-                    raise MelodieExceptions.Data.TableColumnDoesNotMatchObjectProperty(df_name, col_name, scenario)
+                    raise MelodieExceptions.Data.TableColumnDoesNotMatchObjectProperty(
+                        df_name, col_name, scenario
+                    )
                 value = scenarios_dataframe.loc[i, col_name]
                 if isinstance(value, str):
                     scenario.__dict__[col_name] = value
@@ -132,12 +149,13 @@ class DataFrameLoader:
             raise MelodieExceptions.Scenario.ScenariosIsEmptyList()
         return scenarios
 
-    def generate_scenarios(self, manager_type: str) -> List['Scenario']:
+    def generate_scenarios(self, manager_type: str) -> List["Scenario"]:
         """
         Generate scenario objects by the parameter from static tables or scenarios_dataframe.
         :return:
         """
-        if manager_type not in {'simulator', 'trainer', 'calibrator'}:
-            MelodieExceptions.Program.Variable.VariableNotInSet("manager_type", manager_type,
-                                                                {'simulator', 'trainer', 'calibrator'})
-        return self.generate_scenarios_from_dataframe(f'{manager_type}_scenarios')
+        if manager_type not in {"simulator", "trainer", "calibrator"}:
+            MelodieExceptions.Program.Variable.VariableNotInSet(
+                "manager_type", manager_type, {"simulator", "trainer", "calibrator"}
+            )
+        return self.generate_scenarios_from_dataframe(f"{manager_type}_scenarios")

@@ -34,15 +34,18 @@ class BaseModellingManager(abc.ABC):
     Base class of Simulator/Trainer/Calibrator.
     """
 
-    def __init__(self, config: Config,
-                 scenario_cls: ClassVar['Scenario'],
-                 model_cls: ClassVar['Model'],
-                 df_loader_cls: ClassVar[DataFrameLoader] = None):
+    def __init__(
+        self,
+        config: Config,
+        scenario_cls: ClassVar["Scenario"],
+        model_cls: ClassVar["Model"],
+        df_loader_cls: ClassVar[DataFrameLoader] = None,
+    ):
         self.config: Optional[Config] = config
         self.scenario_cls = scenario_cls
         self.model_cls = model_cls
 
-        self.scenarios: Optional[List['Scenario']] = None
+        self.scenarios: Optional[List["Scenario"]] = None
         self.df_loader_cls: Optional[ClassVar[DataFrameLoader]] = df_loader_cls
         self.df_loader: Optional[DataFrameLoader] = None
         if df_loader_cls is not None:
@@ -57,8 +60,9 @@ class BaseModellingManager(abc.ABC):
         if self.df_loader is None:
             raise MelodieExceptions.Data.NoDataframeLoaderDefined()
         if table_name not in self.df_loader.registered_dataframes:
-            raise MelodieExceptions.Data.StaticTableNotRegistered(table_name,
-                                                                  list(self.df_loader.registered_dataframes.keys()))
+            raise MelodieExceptions.Data.StaticTableNotRegistered(
+                table_name, list(self.df_loader.registered_dataframes.keys())
+            )
 
         return self.df_loader.registered_dataframes[table_name]
 
@@ -87,38 +91,44 @@ class BaseModellingManager(abc.ABC):
 
 
 class Simulator(BaseModellingManager):
-    def __init__(self, config: Config,
-                 scenario_cls: 'ClassVar[Scenario]',
-                 model_cls: 'ClassVar[Model]',
-                 df_loader_cls: 'ClassVar[DataFrameLoader]' = None):
-        super(Simulator, self).__init__(config=config,
-                                        scenario_cls=scenario_cls,
-                                        model_cls=model_cls,
-                                        df_loader_cls=df_loader_cls)
+    def __init__(
+        self,
+        config: Config,
+        scenario_cls: "ClassVar[Scenario]",
+        model_cls: "ClassVar[Model]",
+        df_loader_cls: "ClassVar[DataFrameLoader]" = None,
+    ):
+        super(Simulator, self).__init__(
+            config=config,
+            scenario_cls=scenario_cls,
+            model_cls=model_cls,
+            df_loader_cls=df_loader_cls,
+        )
         self.server_thread: threading.Thread = None
         self.visualizer: Optional[Visualizer] = None
 
-    def generate_scenarios(self) -> List['Scenario']:
+    def generate_scenarios(self) -> List["Scenario"]:
         """
         Generate scenarios from the dataframe_loader
-        :return: 
+        :return:
         """
         if self.df_loader is None:
             raise MelodieExceptions.Data.NoDataframeLoaderDefined()
-        return self.df_loader.generate_scenarios('simulator')
+        return self.df_loader.generate_scenarios("simulator")
 
-    def run_model(self, config, scenario, run_id, model_class: ClassVar['Model'], visualizer=None):
+    def run_model(
+        self, config, scenario, run_id, model_class: ClassVar["Model"], visualizer=None
+    ):
         """
 
-        :return: 
+        :return:
         """
-        logger.info(f'Running {run_id + 1} times in scenario {scenario.id}.')
+        logger.info(f"Running {run_id + 1} times in scenario {scenario.id}.")
         t0 = time.time()
 
-        model: Model = model_class(config,
-                                   scenario,
-                                   run_id_in_scenario=run_id,
-                                   visualizer=visualizer)
+        model: Model = model_class(
+            config, scenario, run_id_in_scenario=run_id, visualizer=visualizer
+        )
         if visualizer is not None:
             visualizer._model = model
 
@@ -140,10 +150,12 @@ class Simulator(BaseModellingManager):
         else:
             data_collect_time = 0.0
         model_run_time -= data_collect_time
-        info = (f'Running {run_id + 1} in scenario {scenario.id} completed with time elapsed(seconds):\n'
-                f'    model-setup   \t {round(model_setup_time, 6)}\n'
-                f'    model-run     \t {round(model_run_time, 6)}\n'
-                f'    data-collect  \t {round(data_collect_time, 6)}\n')
+        info = (
+            f"Running {run_id + 1} in scenario {scenario.id} completed with time elapsed(seconds):\n"
+            f"    model-setup   \t {round(model_setup_time, 6)}\n"
+            f"    model-run     \t {round(model_run_time, 6)}\n"
+            f"    data-collect  \t {round(data_collect_time, 6)}\n"
+        )
         logger.info(info)
 
     def setup(self):
@@ -160,19 +172,26 @@ class Simulator(BaseModellingManager):
             show_prettified_warning(
                 "You are using `Simulator.run()` method to run model, but you have also defined visualizer.\n"
                 "If you would like to visualize this model, please use `Simulator.run_visual()` "
-                "instead of `Simulator.run` ")
+                "instead of `Simulator.run` "
+            )
 
         self.pre_run()
-        logger.info('Loading scenarios and static tables...')
+        logger.info("Loading scenarios and static tables...")
         t1 = time.time()
         for scenario_index, scenario in enumerate(self.scenarios):
             for run_id in range(scenario.number_of_run):
-                self.run_model(self.config, scenario, run_id, self.model_cls, visualizer=None)
+                self.run_model(
+                    self.config, scenario, run_id, self.model_cls, visualizer=None
+                )
 
-            logger.info(f'{scenario_index + 1} of {len(self.scenarios)} scenarios has completed.')
+            logger.info(
+                f"{scenario_index + 1} of {len(self.scenarios)} scenarios has completed."
+            )
 
         t2 = time.time()
-        logger.info(f'Melodie completed all runs, time elapsed totally {t2 - t0}s, and {t2 - t1}s for running.')
+        logger.info(
+            f"Melodie completed all runs, time elapsed totally {t2 - t0}s, and {t2 - t1}s for running."
+        )
 
     def run_visual(self):
         """
@@ -184,9 +203,11 @@ class Simulator(BaseModellingManager):
         self.pre_run()
 
         t1 = time.time()
-        logger.info(f'Simulator start up cost: {t1 - t0}s')
+        logger.info(f"Simulator start up cost: {t1 - t0}s")
         while True:
-            logger.info(f"Visualizer interactive paramerters for this scenario are: {self.visualizer.scenario_param}")
+            logger.info(
+                f"Visualizer interactive paramerters for this scenario are: {self.visualizer.scenario_param}"
+            )
 
             scenario = self.scenarios[0].copy()
             scenario.manager = self
@@ -195,14 +216,18 @@ class Simulator(BaseModellingManager):
             logger.info(f"Scenario parameters: {scenario.to_dict()}")
             try:
                 self.visualizer.current_scenario = scenario  # set studio scenario.
-                self.run_model(self.config, scenario, 0, self.model_cls, visualizer=self.visualizer)
+                self.run_model(
+                    self.config, scenario, 0, self.model_cls, visualizer=self.visualizer
+                )
             except Melodie.visualizer.MelodieModelReset:
 
                 self.visualizer.reset()
                 logger.info("Model reset.")
 
         t2 = time.time()
-        logger.info(f'Melodie completed all runs, time elapsed totally {t2 - t0}s, and {t2 - t1}s for running.')
+        logger.info(
+            f"Melodie completed all runs, time elapsed totally {t2 - t0}s, and {t2 - t1}s for running."
+        )
 
     def run_parallel(self, cores: int = 2):
         """
@@ -248,22 +273,33 @@ class Simulator(BaseModellingManager):
         self.pre_run()
 
         t1 = time.time()
-        logger.info('Loading scenarios and static tables...')
+        logger.info("Loading scenarios and static tables...")
         pool = Pool(cores)
 
         parameters: List[Tuple] = []
         for scenario_index, scenario in enumerate(self.scenarios):
             for run_id in range(scenario.number_of_run):
-                params = (self.config, scenario, run_id, self.model_cls,)
+                params = (
+                    self.config,
+                    scenario,
+                    run_id,
+                    self.model_cls,
+                )
                 parameters.append(params)
 
-        logger.info(f'Melodie will run totally {len(parameters)} times!.')
-        logger.info('Running the first session with only one core to verify this model...')
+        logger.info(f"Melodie will run totally {len(parameters)} times!.")
+        logger.info(
+            "Running the first session with only one core to verify this model..."
+        )
         self.run_model(*parameters.pop())
-        logger.info(f'Verification finished, now using {cores} cores for parallel computing!')
+        logger.info(
+            f"Verification finished, now using {cores} cores for parallel computing!"
+        )
         pool.starmap(self.run_model, parameters)
 
         pool.close()
         pool.join()
         t2 = time.time()
-        logger.info(f'Melodie completed all runs, time elapsed totally {t2 - t0}s, and {t2 - t1}s for running.')
+        logger.info(
+            f"Melodie completed all runs, time elapsed totally {t2 - t0}s, and {t2 - t1}s for running."
+        )

@@ -1,8 +1,15 @@
 import numpy as np
 
 from Melodie import Scenario
-from Melodie.algorithms.ga import prob_calculation, gene_pick, crossover, mutation, \
-    population_update, GeneticAlgorithmTrainer
+from Melodie.algorithms.ga import (
+    prob_calculation,
+    gene_pick,
+    crossover,
+    mutation,
+    population_update,
+    GeneticAlgorithmTrainer,
+)
+
 # def test_translate_binary_to_real():
 #     real = translate_binary2real([1, 1, 1, 1, 1], 0, 1)
 #
@@ -56,12 +63,9 @@ def test_mutation():
 
 
 def test_population_update():
-    population = np.array([
-        [1, 1, 1, 1, 1],
-        [0, 0, 0, 0, 0],
-        [1, 1, 1, 0, 0],
-        [0, 0, 0, 1, 1]
-    ])
+    population = np.array(
+        [[1, 1, 1, 1, 1], [0, 0, 0, 0, 0], [1, 1, 1, 0, 0], [0, 0, 0, 1, 1]]
+    )
     fitness_array = np.array([0.0, 0.0, 0.0, 1.0])
     mutation_prob = 0
     population_scale = len(population)
@@ -70,13 +74,12 @@ def test_population_update():
         tuple(new[i]) == (0, 0, 0, 1, 1)
 
 
-
-
-
 def test_ga4trainer():
     agent_num = 5
     scenario = Scenario()
     trainer_algorithm = GeneticAlgorithmTrainer(10, 10, 0.02, 5)
-    trainer_algorithm.set_parameters_agents(agent_num, 2, ['param_a', 'param_b'], ['result_value'], [])
+    trainer_algorithm.set_parameters_agents(
+        agent_num, 2, ["param_a", "param_b"], ["result_value"], []
+    )
     opt = trainer_algorithm.optimize_multi_agents(_callable_f, scenario)
     strategy_population, params, fitness, meta = opt.__next__()

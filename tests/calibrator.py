@@ -1,11 +1,19 @@
 import random
 from typing import List
 
-from Melodie import Calibrator, GeneticAlgorithmCalibrator, Environment, Model, AgentList, GridAgent, Scenario, Grid
+from Melodie import (
+    Calibrator,
+    GeneticAlgorithmCalibrator,
+    Environment,
+    Model,
+    AgentList,
+    GridAgent,
+    Scenario,
+    Grid,
+)
 
 
 class CovidScenario(Scenario):
-
     def setup(self):
         self.periods = 1
         self.agent_num = 1000
@@ -19,24 +27,24 @@ class CovidAgent(GridAgent):
     def setup(self):
         self.condition = 0
 
-    def move(self, grid: 'Grid'):
-        self.x, self.y = grid.rand_move(self, 'agent_list', 1, 1)
+    def move(self, grid: "Grid"):
+        self.x, self.y = grid.rand_move(self, "agent_list", 1, 1)
         return
 
 
 class CovidEnvironment(Environment):
-    scenario: 'CovidScenario'
+    scenario: "CovidScenario"
 
     def setup(self):
         self.infection_probability: float = self.scenario.infection_probability
         self.accumulated_infection: int = 0
 
-    def env_run(self, agent_list: 'AgentList[CovidAgent]') -> None:
+    def env_run(self, agent_list: "AgentList[CovidAgent]") -> None:
         for agent in agent_list:
             if random.random() < self.infection_probability:
                 agent.condition = 1
 
-    def count(self, agent_list: 'AgentList[CovidAgent]'):
+    def count(self, agent_list: "AgentList[CovidAgent]"):
         s = 0
         for agent in agent_list:
             s += agent.condition
@@ -44,12 +52,12 @@ class CovidEnvironment(Environment):
 
 
 class CovidModel(Model):
-    scenario: 'CovidScenario'
+    scenario: "CovidScenario"
 
     def setup(self):
-        self.agent_list: AgentList[CovidAgent] = self.create_agent_container(CovidAgent,
-                                                                             1000
-                                                                             )
+        self.agent_list: AgentList[CovidAgent] = self.create_agent_container(
+            CovidAgent, 1000
+        )
         with self.define_basic_components():
             self.environment = CovidEnvironment()
 
@@ -59,26 +67,34 @@ class CovidModel(Model):
 
 
 class CovidCalibrator(Calibrator):
-
     def setup(self):
-        self.add_environment_calibrating_property('infection_probability')
-        self.add_environment_result_property('accumulated_infection')
+        self.add_environment_calibrating_property("infection_probability")
+        self.add_environment_result_property("accumulated_infection")
         self.algorithm_cls = GeneticAlgorithmCalibrator
 
     def distance(self, environment: CovidEnvironment):
-        print("infection_rate", environment.accumulated_infection / environment.scenario.agent_num,
-              environment.scenario.infection_probability)
-        return (environment.accumulated_infection / environment.scenario.agent_num - 0.75) ** 2
+        print(
+            "infection_rate",
+            environment.accumulated_infection / environment.scenario.agent_num,
+            environment.scenario.infection_probability,
+        )
+        return (
+            environment.accumulated_infection / environment.scenario.agent_num - 0.75
+        ) ** 2
 
-    def generate_scenarios(self) -> List['Scenario']:
+    def generate_scenarios(self) -> List["Scenario"]:
         return [CovidScenario(0)]
 
     def get_params_scenarios(self):
-        return [{'id': 0,
-                 'number_of_path': 1,
-                 'number_of_generation': 1,
-                 "strategy_population": 100,
-                 'mutation_prob': 0.02,
-                 'strategy_param_code_length': 10,
-                 "infection_probability_min": 0,
-                 'infection_probability_max': 1}]
+        return [
+            {
+                "id": 0,
+                "number_of_path": 1,
+                "number_of_generation": 1,
+                "strategy_population": 100,
+                "mutation_prob": 0.02,
+                "strategy_param_code_length": 10,
+                "infection_probability_min": 0,
+                "infection_probability_max": 1,
+            }
+        ]

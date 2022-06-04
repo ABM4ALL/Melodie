@@ -5,9 +5,8 @@ from config import config
 
 if __name__ == "__main__":
     simulator = ShellingModelSimulator(
-        config=config,
-        scenario_cls=ShellingModelScenario,
-        model_cls=ShellingModelModel)
+        config=config, scenario_cls=ShellingModelScenario, model_cls=ShellingModelModel
+    )
 
     """
     Run the model

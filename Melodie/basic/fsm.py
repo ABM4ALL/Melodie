@@ -8,5 +8,9 @@ class FSM:
 
     def state_change(self, new_state: int):
         assert new_state in self.stt.keys()
-        assert new_state in self.stt[self.current_state], (new_state, self.current_state, self.stt[self.current_state])
+        assert new_state in self.stt[self.current_state], (
+            new_state,
+            self.current_state,
+            self.stt[self.current_state],
+        )
         self.current_state = new_state
