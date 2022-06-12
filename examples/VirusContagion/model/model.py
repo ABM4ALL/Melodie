@@ -32,7 +32,7 @@ class CovidModel(Model):
             self.grid.add_agent_container(0, self.agent_list, "direct")
 
     def run(self):
-        for t in range(0, self.scenario.periods):
+        for t in self.routine():
             self.environment.agents_move(self.agent_list, self.grid)
             self.environment.agents_infection(self.agent_list, self.grid)
             self.environment.calculate_accumulated_infection(self.agent_list)

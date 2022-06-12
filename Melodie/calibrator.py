@@ -1,6 +1,6 @@
 import abc
 import time
-from typing import Type, List, Optional, ClassVar, Iterator, Union, Tuple
+from typing import Type, List, Optional, ClassVar, Iterator, Union, Tuple, Dict
 import copy
 import pandas as pd
 import logging
@@ -37,14 +37,15 @@ class Calibrator(BaseModellingManager):
             model_cls=model_cls,
             df_loader_cls=df_loader_cls,
         )
-        # self.config = config
         self.training_strategy: "Optional[Type[SearchingAlgorithm]]" = None
         self.container_name: str = ""
 
         self.properties: List[str] = []
         self.watched_env_properties: List[str] = []
         self.algorithm: Optional[Type[SearchingAlgorithm]] = None
-        self.algorithm_cls: Union[ClassVar[SearchingAlgorithm]] = None
+        self.algorithm_cls: Union[
+            ClassVar[SearchingAlgorithm]
+        ] = GeneticAlgorithmCalibrator
         self.algorithm_instance: Iterator[List[float]] = {}
 
         self.model: Optional[Model] = None
@@ -63,11 +64,17 @@ class Calibrator(BaseModellingManager):
     def generate_scenarios(self) -> List["Scenario"]:
         """
         Generate scenario objects by the parameter from static tables or scenarios_dataframe.
+
         :return:
         """
         return self.df_loader.generate_scenarios_from_dataframe("calibrator_scenarios")
 
-    def get_params_scenarios(self):
+    def get_params_scenarios(self) -> Dict:
+        """
+        Get the parameters of calibrator parameters from the registered dataframe.
+
+        :return:
+        """
         calibrator_scenarios_table = self.get_registered_dataframe(
             "calibrator_params_scenarios"
         )
@@ -77,6 +84,10 @@ class Calibrator(BaseModellingManager):
         return calibrator_scenarios_table.to_dict(orient="records")
 
     def calibrate(self):
+        """
+        The main method for calibrator.
+        :return:
+        """
         self.setup()
         self.pre_run()
 
@@ -101,7 +112,13 @@ class Calibrator(BaseModellingManager):
                     self.run_once(scenario, calibrator_scenario)
 
     def run_once(self, scenario, calibration_scenario: GACalibratorParams):
+        """
+        Instantiate and run the model, then collect the value of target function.
 
+        :param scenario:
+        :param calibration_scenario:
+        :return:
+        """
         scenario.manager = self
         self.model = self.model_cls(self.config, scenario)
         self.model.setup()
@@ -148,16 +165,19 @@ class Calibrator(BaseModellingManager):
 
     def add_environment_calibrating_property(self, prop: str):
         """
-        Add a property to be calibrated.
-        It should be a property of environment.
+        Add a property to be calibrated, and the property should be a property of environment.
+
         :param prop:
         :return:
         """
-        assert prop not in self.properties
+        assert (
+            prop not in self.properties
+        ), f'Property "{prop}" is already in the calibrating properties!'
         self.properties.append(prop)
 
     def add_environment_result_property(self, prop: str):
         """
+        Add a property of environment to be recorded in the calibration voyage.
 
         :param prop:
         :return:
@@ -168,6 +188,14 @@ class Calibrator(BaseModellingManager):
     def fitness(
         self, params, scenario: Union[Type[Scenario], Scenario], **kwargs
     ) -> Tuple[float, float]:
+        """
+        Calculate the fitness.
+
+        :param params:
+        :param scenario:
+        :param kwargs:
+        :return:
+        """
         for i, prop_name in enumerate(self.properties):
             assert scenario.__getattribute__(prop_name) is not None
             scenario.__setattr__(prop_name, params[i])

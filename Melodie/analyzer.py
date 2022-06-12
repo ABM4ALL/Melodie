@@ -4,7 +4,7 @@ from abc import ABC
 from typing import ClassVar, Dict
 
 from .config import Config
-from .db import create_db_conn, DB
+from .db import create_db_conn, DBConn
 from .plotter import Plotter
 
 
@@ -18,7 +18,7 @@ class Analyzer(ABC):
     def setup(self):
         pass
 
-    def create_db_conn(self, config) -> "DB":
+    def create_db_conn(self, config) -> "DBConn":
         return create_db_conn(config)
 
     def _check_if_df_loaded(self, df_name: str):

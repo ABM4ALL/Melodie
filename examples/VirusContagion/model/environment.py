@@ -52,7 +52,7 @@ class CovidEnvironment(Environment):
         return 0
 
     def calculate_accumulated_infection(self, agents):
-        sum = 0
+        accumulated = 0
         for agent in agents:
-            sum += agent.condition
-        self.accumulated_infection = sum
+            accumulated += agent.condition
+        self.accumulated_infection = accumulated

@@ -5,7 +5,7 @@ import pandas as pd
 import logging
 
 from Melodie.basic import MelodieExceptions
-from Melodie.db import DB
+from Melodie.db import DBConn
 
 logger = logging.getLogger(__name__)
 
@@ -162,28 +162,33 @@ class DataCollector:
     def save(self):
         """
         Save the collected data into database.
+
         :return:
         """
         t0 = time.time()
-
+        write_db_time = 0
+        connection = self.model.create_db_conn()
         environment_properties_df = pd.DataFrame(self.environment_properties_list)
-        self.model.create_db_conn().write_dataframe(
-            DB.ENVIRONMENT_RESULT_TABLE, environment_properties_df, {}
+        _t = time.time()
+        connection.write_dataframe(
+            DBConn.ENVIRONMENT_RESULT_TABLE, environment_properties_df, {}
         )
+        write_db_time += time.time() - _t
 
         for container_name in self.agent_properties_dict.keys():
             agent_properties_df = pd.DataFrame(
                 self.agent_properties_dict[container_name]
             )
-            self.model.create_db_conn().write_dataframe(
+            _t = time.time()
+            connection.write_dataframe(
                 container_name + "_result", agent_properties_df, {}
             )
+            write_db_time += time.time() - _t
 
         t1 = time.time()
         collect_time = self._time_elapsed
-        db_wrote_time = t1 - t0
-        self._time_elapsed += db_wrote_time
+        self._time_elapsed += t1 - t0
         logger.info(
             f"datacollector took {t1 - t0}s to format dataframe and write it to data.\n"
-            f"    {db_wrote_time} for writing into database, and {collect_time} for collect data."
+            f"    {write_db_time} for writing into database, and {collect_time} for collect data."
         )

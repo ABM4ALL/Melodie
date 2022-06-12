@@ -8,7 +8,7 @@ from Melodie import TableGenerator, Scenario
 from Melodie.basic import MelodieExceptions
 from Melodie.config import Config
 
-from Melodie.db import DB, create_db_conn
+from Melodie.db import DBConn, create_db_conn
 
 
 class DataFrameLoader:
@@ -62,7 +62,7 @@ class DataFrameLoader:
         """
         if data_types is None:
             data_types = {}
-        DB.register_dtypes(table_name, data_types)
+        DBConn.register_dtypes(table_name, data_types)
         create_db_conn(self.config).write_dataframe(
             table_name, data_frame, data_types=data_types, if_exists="replace"
         )
@@ -94,7 +94,7 @@ class DataFrameLoader:
         else:
             raise NotImplemented(file_name)
 
-        DB.register_dtypes(table_name, data_types)
+        DBConn.register_dtypes(table_name, data_types)
         create_db_conn(self.config).write_dataframe(
             table_name,
             table,

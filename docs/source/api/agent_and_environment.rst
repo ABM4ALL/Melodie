@@ -14,3 +14,9 @@ please visit our git repository. The path to related files are listed below:
                :members:
                :undoc-members:
                :show-inheritance:
+
+Just include class *Agent* inside doc and undoc the Agent.id and Agent.model
+
+.. automodule:: Melodie.boost.basics
+               :members: Agent
+               :show-inheritance:

@@ -27,7 +27,7 @@ SQLITE_FILE_SUFFIX = ".sqlite"
 logger = logging.getLogger(__name__)
 
 
-class DB:
+class DBConn:
     table_dtypes: Dict[str, TABLE_DTYPES] = {}
     EXPERIMENTS_TABLE = "melodie_experiments"
     SCENARIO_TABLE = "simulator_scenarios"
@@ -55,9 +55,20 @@ class DB:
             raise NotImplementedError
 
     def get_engine(self):
+        """
+        Get the connection
+
+        :return:
+        """
         return self.connection
 
     def create_connection(self, database_name) -> sqlalchemy.engine.Engine:
+        """
+        Create a connection to the sqlite database.
+
+        :param database_name:
+        :return:
+        """
         return sqlalchemy.create_engine(
             f"sqlite:///{os.path.join(self.db_path, database_name + SQLITE_FILE_SUFFIX)}"
         )
@@ -107,52 +118,6 @@ class DB:
             self.connection.execute(f"drop table {table_name}")
             logger.info(f"Table '{table_name}' in database has been droped!")
 
-    def table_exists(self, table_name: str) -> bool:
-        sql = f"""SELECT * FROM sqlite_master WHERE type="table" AND name = '{table_name}'; """
-        self.connection.execute(sql)
-        self.connection.commit()
-        res = self.connection.cursor().fetchall()
-        return len(res) > 0
-
-    def _dtype(self, a) -> str:
-        if isinstance(a, int):
-            return "INTEGER"
-        elif isinstance(a, float):
-            return "REAL"
-        elif isinstance(a, str):
-            return "TEXT"
-        elif np.issubdtype(a, np.integer):
-            return "INTEGER"
-        elif np.issubdtype(a, np.floating):
-            return "REAL"
-        else:
-            raise ValueError(f"{a}, type {type(a)} not recognized!")
-
-    def auto_convert(self, a: np.float) -> str:
-        if isinstance(a, (int, float, str)):
-            return a
-        elif np.issubdtype(a, np.integer):
-            return a.item()
-        elif np.issubdtype(a, np.floating):
-            return a.item()
-        else:
-            raise TypeError(f"{a},type {type(a)} not recognized!")
-
-    def create_table_if_not_exists(
-        self, table_name: str, dtypes: Dict[str, str]
-    ) -> bool:
-        s = ""
-        for key, dtype in dtypes.items():
-            s += f"{key} {dtype},"
-        s = s.strip(",")
-        sql = f"""create table {table_name} ({s});"""
-        try:
-            self.connection.execute(sql)
-            self.connection.commit()
-            return True
-        except sqlite3.OperationalError:  # Table exists, unable to create
-            return False
-
     def write_dataframe(
         self,
         table_name: str,
@@ -170,7 +135,7 @@ class DB:
         :return:
         """
         if data_types is None:
-            data_types = DB.get_table_dtypes(table_name)
+            data_types = DBConn.get_table_dtypes(table_name)
         logger.debug(f"datatype of table `{table_name}` is: {data_types}")
         data_frame.to_sql(
             table_name,
@@ -224,52 +189,11 @@ class DB:
                 conditions_count += 1
         return self.query(sql)
 
-    def query_scenarios(self, id: int = None):
-        sql = f"select * from {self.SCENARIO_TABLE} "
-        if id is not None:
-            sql += f"where id={id}"
-        return self.query(sql)
 
-    def query_agent_results(
-        self,
-        agent_list_name: str,
-        scenario_id: int = None,
-        agent_id: int = None,
-        step: int = None,
-    ):
-        conditions = {"scenario_id": scenario_id, "id": agent_id, "step": step}
-        return self.paramed_query(agent_list_name + "_result", conditions)
-
-    def query_env_results(self, scenario_id: int = None, step: int = None):
-        conditions = {"scenario_id": scenario_id, "step": step}
-        return self.paramed_query(self.ENVIRONMENT_RESULT_TABLE, conditions)
-
-    def delete_env_record(self, scenario_id: int, run_id: int):
-        try:
-            self.connection.execute(
-                f"delete from {self.ENVIRONMENT_RESULT_TABLE} where scenario_id={scenario_id} and run_id={run_id}"
-            )
-        except sqlite3.OperationalError:
-            import traceback
-
-            traceback.print_exc()
-
-    def delete_agent_records(self, table_name: str, scenario_id: int, run_id: int):
-        try:
-            cur = self.connection
-            cur.execute(
-                f"delete from {table_name} where scenario_id={scenario_id} and run_id={run_id}"
-            )
-        except sqlite3.OperationalError:
-            import traceback
-
-            traceback.print_exc()
-
-
-def create_db_conn(config: "Config") -> DB:
+def create_db_conn(config: "Config") -> DBConn:
     """
     create a Database by current config
     :return:
     """
 
-    return DB(config.project_name, conn_params={"db_path": config.sqlite_folder})
+    return DBConn(config.project_name, conn_params={"db_path": config.sqlite_folder})

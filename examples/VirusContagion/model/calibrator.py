@@ -6,7 +6,6 @@ class CovidCalibrator(Calibrator):
     def setup(self):
         self.add_environment_calibrating_property("infection_probability")
         self.add_environment_result_property("accumulated_infection")
-        self.algorithm_cls = GeneticAlgorithmCalibrator
 
     def distance(self, environment: CovidEnvironment):
         print(

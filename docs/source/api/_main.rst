@@ -18,6 +18,7 @@ this chapter provides the main APIs for each module
     scenario
     data_collector
     dataframe_loader
+    table_generator
     simulator
     calibrator
     trainer
