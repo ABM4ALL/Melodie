@@ -86,6 +86,14 @@ class TableGenerator:
         self, row_generator: Callable[[Scenario], Union[dict, object]]
     ):
         """
+        Set the geneator for each row. Every time the row_generator is called, this function
+        returns a dict standing for one row.
+        For example, if row_generator is called twice, and the return values are {"id": 0, "a": 1},
+            and {"id": 1, "a": 2}. The generated table will be:
+        | id | a |
+        |----|---|
+        | 0  | 1 |
+        | 1  | 2 |
 
         :param row_generator:
         :return:

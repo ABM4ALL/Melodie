@@ -4,7 +4,7 @@ from typing import ClassVar, Optional, Union
 
 import pandas as pd
 
-from . import DB
+from . import DBConn
 from .boost.basics import Agent, Environment
 from .boost.agent_list import AgentList, BaseAgentContainer
 from .basic import MelodieExceptions, show_prettified_warning, show_link
@@ -87,7 +87,7 @@ class Model:
         """
         pass
 
-    def create_db_conn(self) -> "DB":
+    def create_db_conn(self) -> "DBConn":
         return create_db_conn(self.config)
 
     @contextmanager

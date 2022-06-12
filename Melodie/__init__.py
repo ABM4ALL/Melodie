@@ -6,7 +6,7 @@ from .algorithms import (
 )
 from .config import Config
 from .data_collector import DataCollector
-from .db import DB, create_db_conn
+from .db import DBConn, create_db_conn
 from .model import Model
 from .scenario_manager import Scenario
 from .table_generator import TableGenerator

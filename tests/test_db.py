@@ -5,7 +5,7 @@ import pandas as pd
 from pandas.api.types import is_integer_dtype, is_float_dtype
 from sqlalchemy.types import Integer
 
-from Melodie import create_db_conn, DB, Scenario
+from Melodie import create_db_conn, DBConn, Scenario
 from Melodie.basic import MelodieException
 from .config import cfg
 
@@ -15,8 +15,15 @@ cfg = cfg
 def test_init_database():
     scenarios = [Scenario(i) for i in range(3)]
     df = pd.DataFrame(
-        [{"id": scenario.id, 'number_of_run': scenario.number_of_run, 'periods': scenario.periods} for scenario in
-         scenarios])
+        [
+            {
+                "id": scenario.id,
+                "number_of_run": scenario.number_of_run,
+                "periods": scenario.periods,
+            }
+            for scenario in scenarios
+        ]
+    )
     print(df)
     create_db_conn(cfg).write_dataframe("simulator_scenarios", df, if_exists="replace")
 
@@ -27,7 +34,7 @@ def test_sqlalchemy_data_types():
     :return:
     """
     # engine = create_engine('sqlite://', echo=False)
-    db = DB("test_db")
+    db = DBConn("test_db")
     db.register_dtypes("df_with_dtypes", {"A": Integer(), "B": Integer()})
     df = pd.DataFrame({"A": [1, None, 2], "B": [1, 3, 2]})
 
@@ -54,12 +61,12 @@ def test_sqlalchemy_data_types():
     os.remove("test_db.sqlite")
 
 
-def test_get_scenarios():
-    scenarios = create_db_conn(cfg).query("select * from simulator_scenarios;")
-
-    assert scenarios.shape[0] == 3
-    scenario_2 = create_db_conn(cfg).query_scenarios(id=2)
-    assert scenario_2["id"][0] == 2
+# def test_get_scenarios():
+#     scenarios = create_db_conn(cfg).query("select * from simulator_scenarios;")
+#
+#     assert scenarios.shape[0] == 3
+#     scenario_2 = create_db_conn(cfg).query_scenarios(id=2)
+#     assert scenario_2["id"][0] == 2
 
 #
 # def test_get_agent_results():
@@ -81,6 +88,6 @@ def test_get_scenarios():
 #     assert env_df.shape[0] == 1
 #     assert env_df["step"][0] == 1
 
-    # scenario_2 = create_db_conn(
-    #     Config('test', db_folder='resources/db', output_folder='resources/output')).query_scenarios(id=2)
-    # assert scenario_2['id'][0] == 2
+# scenario_2 = create_db_conn(
+#     Config('test', db_folder='resources/db', output_folder='resources/output')).query_scenarios(id=2)
+# assert scenario_2['id'][0] == 2
