@@ -1,6 +1,9 @@
 name: Build
 
-on: [workflow_dispatch]
+on:
+  push:
+    branches:
+      - dist
 
 jobs:
   build_wheels:
