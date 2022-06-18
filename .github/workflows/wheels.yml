@@ -1,12 +1,16 @@
 name: Build
 
-on: [workflow_dispatch]
+on:
+  push:
+    branches:
+      - dist
 
 jobs:
   build_wheels:
     name: Build wheels on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
         os: [windows-2019, ubuntu-20.04, macos-11]
     steps:
@@ -20,7 +24,8 @@ jobs:
 
       - name: Build wheels
         env:
-          CIBW_BUILD: "cp36-* cp37-* cp38-* cp39-*"
+          CIBW_BUILD: "cp37-* cp38-* cp39-*"
+          CIBW_BEFORE_BUILD: "pip install -r build_requirements.txt"
         run: python -m cibuildwheel --output-dir wheelhouse
         # to supply options, put them in 'env', like:
 
