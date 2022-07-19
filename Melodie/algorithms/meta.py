@@ -13,7 +13,7 @@ class TrainerAlgorithmMeta:
     def __init__(self):
         self._freeze = False
         self.trainer_scenario_id = 0
-        self.trainer_params_scenario_id = 1
+        self.trainer_params_id = 1
         self.path_id = 0
         self.iteration = 0
 

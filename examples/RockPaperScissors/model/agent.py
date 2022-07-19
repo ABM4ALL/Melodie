@@ -39,6 +39,7 @@ class RPSAgent(Agent):
         self.prob_paper = self.strategy_param_2 / weight_sum
 
     def action_choice(self):
+
         rand = np.random.uniform(0, 1)
         if rand <= self.prob_rock:
             action = 0

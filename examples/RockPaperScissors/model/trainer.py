@@ -5,19 +5,11 @@ from .agent import RPSAgent
 class RPSTrainer(Trainer):
     def setup(self):
         self.container_name = "agent_list"
-        self.add_agent_training_property("agent_list", "strategy_param_1")
-        self.add_agent_training_property("agent_list", "strategy_param_2")
-        self.add_agent_training_property("agent_list", "strategy_param_3")
-
-        self.add_agent_result_property("agent_list", "rock_count")
-        self.add_agent_result_property("agent_list", "paper_count")
-        self.add_agent_result_property("agent_list", "scissors_count")
-        self.add_agent_result_property("agent_list", "total_payoff")
         self.add_environment_result_property("agents_total_payoff")
 
         self.add_container('agent_list',
                            ["strategy_param_1", "strategy_param_2", "strategy_param_3"],
-                           ['rock_count'],
+                           ['rock_count', 'paper_count', 'scissors_count', 'total_payoff'],
                            lambda scenario: list(range(scenario.agent_num))
                            )
 
@@ -25,5 +17,5 @@ class RPSTrainer(Trainer):
         self.save_agent_trainer_result = True
         self.algorithm_cls = GeneticAlgorithmTrainer
 
-    def fitness_agent(self, agent: RPSAgent):
-        return agent.total_payoff
+    def target_function(self, agent: RPSAgent):
+        return -agent.total_payoff

@@ -3,14 +3,20 @@
 # @Author: Zhanyi Hou
 # @Email: 1295752786@qq.com
 # @File: trainer_algorithm.py
+import base64
+import importlib
+import json
+import logging
+import multiprocessing
+import sys
 import time
-from typing import Dict, Tuple, Callable, Union, List, ClassVar, Any
+from typing import Dict, Tuple, Callable, Union, List, Any
 import cloudpickle
 import numpy as np
 import pandas as pd
 from sko.GA import GA
 
-from Melodie import AgentList, Model, Agent, Config, Scenario, GATrainerParams, Trainer, create_db_conn
+from Melodie import AgentList, Model, Agent, Config, Scenario, GATrainerParams, Trainer, create_db_conn, Environment
 from .meta import GATrainerAlgorithmMeta
 
 
@@ -88,15 +94,12 @@ class GATrainerAlgorithm:
     目标函数从TargetFcnCache中查询。
     """
 
-    def __init__(self, config: Config, scenario_cls: ClassVar[Model], model_cls: ClassVar[Model],
-                 params: GATrainerParams, manager: Trainer = None):
+    def __init__(self,
+                 params: GATrainerParams, manager: Trainer = None, processors=1):
+        global pool
         self.manager = manager
         self.params = params
-        self._config = config
-        self._model_cls: ClassVar[Model] = model_cls
-        self._scenario_cls: ClassVar[Scenario] = scenario_cls
         self.chromosomes = 20
-        self.target_fcn: Callable[[Agent], float] = None
         self.algorithms_dict: Dict[Tuple[int, str], Union[GA]] = {}
 
         self.target_fcn_cache = TargetFcnCache()
@@ -108,6 +111,17 @@ class GATrainerAlgorithm:
 
         self._chromosome_counter = 0
         self._current_generation = 0
+        self.processors = processors
+        if pool is None:
+            pool = multiprocessing.Pool(processes=processors)
+        for i in range(processors):
+            d = {
+                "model": (self.manager.model_cls.__name__, self.manager.model_cls.__module__),
+                "scenario": (self.manager.scenario_cls.__name__, self.manager.scenario_cls.__module__),
+                "trainer": (self.manager.__class__.__name__, self.manager.__class__.__module__),
+                "df_loader": (self.manager.df_loader_cls.__name__, self.manager.df_loader_cls.__module__),
+            }
+            pool.apply_async(sub_routine, [i, d, self.manager.config.to_dict()])
 
     def add_agent_container(self, container_name: str,
                             param_names: List[str],
@@ -130,34 +144,38 @@ class GATrainerAlgorithm:
         self.recorded_agent_properties[container_name] = recorded_properties
         self.agent_ids[container_name] = agent_id_list
 
-    def params_from_algorithm_to_agent_container(self, model: Model, chromosome_id: int):
+    def get_agent_params(self, chromosome_id: int):
         """
         Pass parameters from the chromosome to the agent container.
 
-        :param model: Melodie Model
         :param chromosome_id:
         :return:
         """
+        params: Dict[str, List[Dict[str, Any]]] = {category: [] for category in
+                                                   self.agent_ids.keys()}
+        # {category : [{id: 0, param1: 1, param2: 2, ...}]}
         for key, algorithm in self.algorithms_dict.items():
             chromosome_value = algorithm.chrom2x(algorithm.Chrom)[chromosome_id]
             agent_id, agent_category = key
-            container: Union[AgentList] = self.agent_container_getters[agent_category](model)
-            agent = container.get_agent(agent_id)
+            d = {"id": agent_id}
             for i, param_name in enumerate(self.agent_params_defined[agent_category]):
-                setattr(agent, param_name, chromosome_value[i])
+                d[param_name] = chromosome_value[i]
+            params[agent_category].append(d)
+        return params
 
-    def target_function_from_model_to_cache(self, model: Model, target_fcn: Callable[[Agent], float], generation: int,
-                                            chromosome_id: int, ):
+    def target_function_to_cache(self, agent_target_function_values: Dict[str, List[Dict[str, Any]]],
+                                 generation: int,
+                                 chromosome_id: int, ):
         """
         Extract the value of target functions from Model, and write them into cache.
 
         :return:
         """
         for container_category, container_getter in self.agent_container_getters.items():
-            container = container_getter(model)
-            for agent in container:
-                val = target_fcn(agent)
-                self.target_fcn_cache.set_agent_target_value(agent.id, container_category, val, generation,
+            agent_props_list = agent_target_function_values[container_category]
+            for agent_props in agent_props_list:
+                self.target_fcn_cache.set_agent_target_value(agent_props['agent_id'], container_category,
+                                                             agent_props['target_function_value'], generation,
                                                              chromosome_id)
 
     def target_function(self, agent_id: int, container_name: str) -> Callable[[], float]:
@@ -170,13 +188,10 @@ class GATrainerAlgorithm:
 
         return f
 
-    def create_model(self, scenario: Scenario):
-        model = self._model_cls(self._config, scenario)
-        scenario.manager = self.manager
-        model.setup()
-        return model
-
-    def record_agent_properties(self, model: Model, meta: GATrainerAlgorithmMeta):
+    def record_agent_properties(self,
+                                agent_data: Dict[str, List[Dict[str, Any]]],
+                                env_data: Dict[str, Any],
+                                meta: GATrainerAlgorithmMeta):
         """
         Record the property of each agent in the current chromosome.
 
@@ -184,32 +199,38 @@ class GATrainerAlgorithm:
         :param meta:
         :return:
         """
-        agent_records = []
+        agent_records = {}
         env_record = {}
         meta_dict = meta.to_dict(public_only=True)
 
         for container_name, agent_container_getter in self.agent_container_getters.items():
-            for agent in agent_container_getter(model):
+            agent_records[container_name] = []
+            data = agent_data[container_name]
+            for agent_container_data in data:
                 d = {}
                 d.update(meta_dict)
-                d['agent_id'] = agent.id
-                d["target_function_value"] = self.target_fcn(agent)
-                for prop_name in self.recorded_agent_properties[container_name]:
-                    d[prop_name] = getattr(agent, prop_name)
+                d.update(agent_container_data)
 
-                agent_records.append(d)
-        environment = model.environment
+                agent_records[container_name].append(d)
+            create_db_conn(self.manager.config).write_dataframe(f'{container_name}_trainer_result',
+                                                                pd.DataFrame(agent_records[container_name]),
+                                                                if_exists="append")
         env_record.update(meta_dict)
-        env_record.update({prop_name: getattr(environment, prop_name) for prop_name in self.recorded_env_properties})
-        create_db_conn(self.manager.config).write_dataframe('agent_trainer_result',
-                                                            pd.DataFrame(agent_records),
-                                                            if_exists="append")
+        env_record.update(env_data)
+
         create_db_conn(self.manager.config).write_dataframe('env_trainer_result',
                                                             pd.DataFrame([env_record]),
                                                             if_exists="append")
         return agent_records, env_record
 
-    def calc_cov_df(self, df, env_df: pd.DataFrame, meta):
+    def calc_cov_df(self, agent_container_df_dict: Dict[str, pd.DataFrame], env_df: pd.DataFrame, meta):
+        """
+        Calculate the coefficient of variation
+        :param agent_container_df_dict:
+        :param env_df:
+        :param meta:
+        :return:
+        """
 
         pd.set_option('max_colwidth', 500)
         pd.set_option('display.max_columns', None)
@@ -217,18 +238,20 @@ class GATrainerAlgorithm:
         meta_dict = meta.to_dict(public_only=True)
         meta_dict.pop("chromosome_id")
         for container_name in self.agent_ids.keys():
+            df = agent_container_df_dict[container_name]
             container_agent_record_list = []
             for agent_id in self.agent_ids[container_name]:
                 agent_data = df.loc[df["agent_id"] == agent_id]
                 cov_records = {}
                 cov_records.update(meta_dict)
+                cov_records['agent_id'] = agent_id
                 for prop_name in self.recorded_agent_properties[container_name] + ['target_function_value']:
                     p: pd.Series = agent_data[prop_name]
                     mean = p.mean()
                     cov = p.std() / p.mean()
                     cov_records.update({prop_name + '_mean': mean, prop_name + '_cov': cov})
                 container_agent_record_list.append(cov_records)
-            create_db_conn(self.manager.config).write_dataframe('agent_trainer_result_cov',
+            create_db_conn(self.manager.config).write_dataframe(f'{container_name}_trainer_result_cov',
                                                                 pd.DataFrame(container_agent_record_list),
                                                                 if_exists="append")
         env_record = {}
@@ -260,26 +283,99 @@ class GATrainerAlgorithm:
             print(f"======================="
                   f"Path {meta.path_id} Iteration {i + 1}/{self.params.number_of_generation}"
                   f"=======================")
-            agent_records_collector: List[List[Dict[str, Any]]] = []
-            env_records_list: List[Dict[str, Any]] = []
+
             for chromosome_id in range(self.chromosomes):
-                meta.chromosome_id = chromosome_id
-                _current_model = self.create_model(scenario)
-                self.params_from_algorithm_to_agent_container(_current_model, chromosome_id)
-                t0 = time.time()
-                cloudpickle.dumps(_current_model)
-                t1 = time.time()
-                print(t1 - t0)
-                _current_model.run()
-                agent_records, env_record = self.record_agent_properties(_current_model, meta)
-                agent_records_collector += agent_records
+                params = self.get_agent_params(chromosome_id)
+                q.put(json.dumps((chromosome_id, scenario.to_json(), params)))
+
+            agent_records_collector: Dict[str, List[Dict[str, Any]]] = {container_name: [] for container_name in
+                                                                        self.agent_ids.keys()}
+            env_records_list: List[Dict[str, Any]] = []
+
+            for _chromosome_id in range(self.chromosomes):
+                v = res_q.get()
+
+                chrom, agents_data, env_data = cloudpickle.loads(base64.b64decode(v))
+                meta.chromosome_id = chrom
+                agent_records, env_record = self.record_agent_properties(agents_data, env_data, meta)
+                for container_name, records in agent_records.items():
+                    agent_records_collector[container_name] += records
                 env_records_list.append(env_record)
+                self.target_function_to_cache(agents_data, i, chrom)
 
-                self.target_function_from_model_to_cache(_current_model, self.target_fcn, i, chromosome_id)
-
-            self.calc_cov_df(pd.DataFrame(agent_records_collector),
+            self.calc_cov_df({k: pd.DataFrame(v) for k, v in agent_records_collector.items()},
                              pd.DataFrame(env_records_list), meta)
 
             for key, algorithm in self.algorithms_dict.items():
                 self._chromosome_counter = -1
                 algorithm.run(1)
+
+
+def sub_routine(proc_id: int, modules: Dict[str, Tuple[str, str]], config_raw: Dict[str, Any]):
+    try:
+        config = Config.from_dict(config_raw)
+        import logging
+        logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
+        logger = logging.getLogger(f"Trainer-processor-{proc_id}")
+        logger.info('subroutine started!')
+
+        classes_dict = {}
+        for module_type, content in modules.items():
+            class_name, module_name = content
+            module = importlib.import_module(module_name)
+            cls = getattr(module, class_name)
+            classes_dict[module_type] = cls
+
+        trainer: Trainer = classes_dict['trainer'](
+            config=config,
+            scenario_cls=classes_dict['scenario'],
+            model_cls=classes_dict['model'],
+            df_loader_cls=classes_dict['df_loader'],
+        )
+        trainer.setup()
+        trainer.subworker_prerun()
+    except BaseException:
+        import traceback
+        traceback.print_exc()
+        return
+    while 1:
+        try:
+            ret = q.get()
+            t0 = time.time()
+
+            chrom, d, agent_params = json.loads(ret)
+            logger.debug(f"processor {proc_id} got chrom {chrom}")
+            scenario = classes_dict['scenario']()
+            scenario.set_params(d)
+            model = classes_dict['model'](config, scenario)
+            scenario.manager = trainer
+            model.setup()
+            # {category: [{id: 0, param1: 1, param2: 2, ...}]}
+            for category, params in agent_params.items():
+                agent_container: AgentList[Agent] = getattr(model, category)
+                for param in params:
+                    agent = agent_container.get_agent(param['id'])
+                    agent.set_params(param)
+            model.run()
+            agent_data = {}
+            for container in trainer.container_manager.agent_containers:
+                agent_container = getattr(model, container.container_name)
+                df = agent_container.to_list(container.recorded_properties)
+                agent_data[container.container_name] = df
+                for row in df:
+                    row['target_function_value'] = trainer.target_function(agent_container.get_agent(row['id']))
+                    row['agent_id'] = row.pop('id')
+            env: Environment = model.environment
+            env_data = env.to_dict(trainer.environment_properties)
+            dumped = cloudpickle.dumps((chrom, agent_data, env_data))
+            t1 = time.time()
+            logger.info(f'Processor {proc_id}, chromosome {chrom}, time consumption: {t1 - t0}')
+            res_q.put(base64.b64encode(dumped))
+        except Exception:
+            import traceback
+            traceback.print_exc()
+
+
+pool = None
+q = multiprocessing.Queue()
+res_q = multiprocessing.Queue()

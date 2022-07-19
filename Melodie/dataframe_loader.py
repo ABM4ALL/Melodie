@@ -21,6 +21,7 @@ class DataFrameLoader:
         MelodieExceptions.Assertions.NotNone(
             scenario_cls, "Scenario class should not be None!"
         )
+        self.as_sub_worker = False  # If loader is loaded from sub worker.
         self.config: Config = config
         self.scenario_cls = scenario_cls
         self.registered_dataframes: Optional[Dict[str, pd.DataFrame]] = {}
@@ -51,7 +52,7 @@ class DataFrameLoader:
         pass
 
     def register_dataframe(
-        self, table_name: str, data_frame: pd.DataFrame, data_types: dict = None
+            self, table_name: str, data_frame: pd.DataFrame, data_types: dict = None
     ) -> None:
         """
 
@@ -62,10 +63,11 @@ class DataFrameLoader:
         """
         if data_types is None:
             data_types = {}
-        DBConn.register_dtypes(table_name, data_types)
-        create_db_conn(self.config).write_dataframe(
-            table_name, data_frame, data_types=data_types, if_exists="replace"
-        )
+        if not self.as_sub_worker:
+            DBConn.register_dtypes(table_name, data_types)
+            create_db_conn(self.config).write_dataframe(
+                table_name, data_frame, data_types=data_types, if_exists="replace"
+            )
         self.registered_dataframes[table_name] = create_db_conn(
             self.config
         ).read_dataframe(table_name)
@@ -93,21 +95,21 @@ class DataFrameLoader:
             table = pd.read_excel(file_path_abs)
         else:
             raise NotImplemented(file_name)
-
-        DBConn.register_dtypes(table_name, data_types)
-        create_db_conn(self.config).write_dataframe(
-            table_name,
-            table,
-            data_types=data_types,
-            if_exists="replace",
-        )
+        if not self.as_sub_worker:
+            DBConn.register_dtypes(table_name, data_types)
+            create_db_conn(self.config).write_dataframe(
+                table_name,
+                table,
+                data_types=data_types,
+                if_exists="replace",
+            )
 
         self.registered_dataframes[table_name] = create_db_conn(
             self.config
         ).read_dataframe(table_name)
 
     def table_generator(
-        self, table_name: str, rows_in_scenario: Union[int, Callable[[Scenario], int]]
+            self, table_name: str, rows_in_scenario: Union[int, Callable[[Scenario], int]]
     ):
         """
         Create a new generator
