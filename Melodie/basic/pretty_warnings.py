@@ -105,4 +105,5 @@ def show_link(stackdepth=1):
 
 
 def show_prettified_warning(warning: str):
+    return
     ColorParseFSM().parse("WARNING: " + warning)

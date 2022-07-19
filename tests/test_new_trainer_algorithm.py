@@ -1,6 +1,7 @@
 # -*- coding:utf-8 -*-
 
-from Melodie import Agent, Model, Scenario
+from Melodie import Agent, Model, Scenario, GATrainerParams
+from Melodie.algorithms.ga_trainer import GATrainerAlgorithm
 from .config import cfg
 
 
@@ -16,12 +17,12 @@ class NewModel(Model):
 
 
 def target_fcn(agent: DemoAgent):
-    return agent.param1**2 + agent.param2**2
+    return agent.param1 ** 2 + agent.param2 ** 2
 
 
 def _test_chrom_params():
     chroms = 20
-    ta = TrainerAlgorithm(
+    ta = GATrainerAlgorithm(
         cfg,
         NewModel,
         Scenario,
@@ -50,16 +51,20 @@ def _test_chrom_params():
     print(ta.target_fcn_cache.target_fcn_record)
 
 
-def _test_chrom_params_algorithm():
+def test_chrom_params_algorithm():
     chroms = 20
-    ta = TrainerAlgorithm(
+    params = GATrainerParams(0, 5, 50, 20, 0.02, 20,
+                             param1_min=-1, param1_max=1, param2_min=-1, param2_max=1)
+
+    ta = GATrainerAlgorithm(
         cfg,
         Scenario,
         NewModel,
+        params,
+
     )
     ta.target_fcn = target_fcn
     scenario = Scenario(0)
-    # model = NewModel(cfg, scenario)
 
     ta.add_agent_container(
         "agent_list", 0, ["param1", "param2"], [i for i in range(10)]

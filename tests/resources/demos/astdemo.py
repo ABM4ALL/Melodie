@@ -5,7 +5,7 @@ import numpy as np
 class PseudoAgent:
     """
     This is a pseudo agent simulating an Agent class
-    with some properties and common ways.
+    with some training_properties and common ways.
     """
 
     def setup(self):

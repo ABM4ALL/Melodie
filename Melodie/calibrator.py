@@ -172,7 +172,7 @@ class Calibrator(BaseModellingManager):
         """
         assert (
             prop not in self.properties
-        ), f'Property "{prop}" is already in the calibrating properties!'
+        ), f'Property "{prop}" is already in the calibrating training_properties!'
         self.properties.append(prop)
 
     def add_environment_result_property(self, prop: str):

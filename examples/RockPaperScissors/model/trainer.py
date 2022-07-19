@@ -15,6 +15,12 @@ class RPSTrainer(Trainer):
         self.add_agent_result_property("agent_list", "total_payoff")
         self.add_environment_result_property("agents_total_payoff")
 
+        self.add_container('agent_list',
+                           ["strategy_param_1", "strategy_param_2", "strategy_param_3"],
+                           ['rock_count'],
+                           lambda scenario: list(range(scenario.agent_num))
+                           )
+
         self.save_env_trainer_result = True
         self.save_agent_trainer_result = True
         self.algorithm_cls = GeneticAlgorithmTrainer
