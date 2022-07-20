@@ -52,7 +52,7 @@ class DataFrameLoader:
         pass
 
     def register_dataframe(
-            self, table_name: str, data_frame: pd.DataFrame, data_types: dict = None
+        self, table_name: str, data_frame: pd.DataFrame, data_types: dict = None
     ) -> None:
         """
 
@@ -109,7 +109,7 @@ class DataFrameLoader:
         ).read_dataframe(table_name)
 
     def table_generator(
-            self, table_name: str, rows_in_scenario: Union[int, Callable[[Scenario], int]]
+        self, table_name: str, rows_in_scenario: Union[int, Callable[[Scenario], int]]
     ):
         """
         Create a new generator

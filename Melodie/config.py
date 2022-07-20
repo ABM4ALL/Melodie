@@ -10,14 +10,13 @@ class Config:
     """
 
     def __init__(
-            self,
-            project_name: str,
-            project_root: str,
-            sqlite_folder: str,
-            excel_source_folder: str,
-            output_folder: str,
-            visualizer_entry: str = "",
-
+        self,
+        project_name: str,
+        project_root: str,
+        sqlite_folder: str,
+        excel_source_folder: str,
+        output_folder: str,
+        visualizer_entry: str = "",
     ):
         self.project_name = project_name
         self.project_root = project_root
@@ -46,10 +45,12 @@ class Config:
     @staticmethod
     def from_dict(d: Dict[str, Any]):
 
-        c = Config(d["project_name"],
-                   d['project_root'],
-                   d["sqlite_folder"],
-                   d["excel_source_folder"],
-                   d["excel_source_folder"],
-                   d["output_folder"])
+        c = Config(
+            d["project_name"],
+            d["project_root"],
+            d["sqlite_folder"],
+            d["excel_source_folder"],
+            d["excel_source_folder"],
+            d["output_folder"],
+        )
         return c

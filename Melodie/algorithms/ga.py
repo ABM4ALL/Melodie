@@ -17,6 +17,7 @@ import numpy as np
 import random
 
 import pandas as pd
+from sko.GA import GA
 
 from .searching_algorithm import SearchingAlgorithm, AlgorithmParameters
 
@@ -30,7 +31,7 @@ if TYPE_CHECKING:
 def translate_binary2real(binary_array, min_value, max_value):
     sum = 0
     length = len(binary_array)
-    real_maximum = 2 ** length - 1
+    real_maximum = 2**length - 1
     for bit in range(0, length):
         sum += binary_array[bit] * 2 ** (length - 1 - bit)
     real_value = min_value + sum / real_maximum * (max_value - min_value)
@@ -124,14 +125,14 @@ def population_update(population, fitness_array, mutation_prob, population_scale
 
 class GATrainerParams(AlgorithmParameters):
     def __init__(
-            self,
-            id: int,
-            number_of_path: int,
-            number_of_generation: int,
-            strategy_population: int,
-            mutation_prob: float,
-            strategy_param_code_length: int,
-            **kw,
+        self,
+        id: int,
+        number_of_path: int,
+        number_of_generation: int,
+        strategy_population: int,
+        mutation_prob: float,
+        strategy_param_code_length: int,
+        **kw,
     ):
         super().__init__(id, number_of_path)
         self.number_of_generation = number_of_generation
@@ -142,7 +143,7 @@ class GATrainerParams(AlgorithmParameters):
 
     @staticmethod
     def from_dataframe_record(
-            record: Dict[str, Union[int, float]]
+        record: Dict[str, Union[int, float]]
     ) -> "GATrainerParams":
         s = GATrainerParams(
             record["id"],
@@ -156,7 +157,7 @@ class GATrainerParams(AlgorithmParameters):
         return s
 
     def __repr__(self):
-        return f'<{self.__class__.__name__} {self.__dict__}>'
+        return f"<{self.__class__.__name__} {self.__dict__}>"
 
     def __hash__(self):
         return hash(
@@ -170,36 +171,17 @@ class GATrainerParams(AlgorithmParameters):
             )
         )
 
-    def bounds(self, param_names: List[str]) -> Tuple[List[float], List[float]]:
-        """
-        Get the lower bounds and upper bounds of each parameter in the order of param_names.
-
-        :param param_names:  A series of parameter names indicating the order to get the bounds
-        :return: lower bounds, upper bounds
-        """
-        ub_list: List[float] = []
-        lb_list: List[float] = []
-        for param_name in param_names:
-            params = list(filter(lambda p: p.name == param_name, self.parameters))
-            if len(params) == 1:
-                param = params[0]
-                ub_list.append(param.max)
-                lb_list.append(param.min)
-            else:
-                raise Exception(f"Parameters error: {params}, {self.parameters}")
-        return lb_list, ub_list
-
 
 class GACalibratorParams(AlgorithmParameters):
     def __init__(
-            self,
-            id: int,
-            number_of_path: int,
-            number_of_generation: int,
-            strategy_population: int,
-            mutation_prob: int,
-            strategy_param_code_length: int,
-            **kw,
+        self,
+        id: int,
+        number_of_path: int,
+        number_of_generation: int,
+        strategy_population: int,
+        mutation_prob: int,
+        strategy_param_code_length: int,
+        **kw,
     ):
         super().__init__(id, number_of_path)
 
@@ -211,7 +193,7 @@ class GACalibratorParams(AlgorithmParameters):
 
     @staticmethod
     def from_dataframe_record(
-            record: Dict[str, Union[int, float]]
+        record: Dict[str, Union[int, float]]
     ) -> "GACalibratorParams":
         s = GACalibratorParams(
             record["id"],
@@ -239,11 +221,11 @@ class GACalibratorParams(AlgorithmParameters):
 
 class GeneticAlgorithmTrainer(SearchingAlgorithm):
     def __init__(
-            self,
-            number_of_generation: int,
-            strategy_population_size: int,
-            mutation_prob: float,
-            strategy_param_code_length: int,
+        self,
+        number_of_generation: int,
+        strategy_population_size: int,
+        mutation_prob: float,
+        strategy_param_code_length: int,
     ):
         self.number_of_generation: int = number_of_generation
         self.strategy_population_size = strategy_population_size
@@ -259,12 +241,12 @@ class GeneticAlgorithmTrainer(SearchingAlgorithm):
         self.agent_result_properties: List[str] = []
 
     def set_parameters_agents(
-            self,
-            agent_num: int,
-            agent_params: int,
-            parameter_names: List[str],
-            agent_result_properties: List[str],
-            env_property_names: List[str],
+        self,
+        agent_num: int,
+        agent_params: int,
+        parameter_names: List[str],
+        agent_result_properties: List[str],
+        env_property_names: List[str],
     ):
         """
 
@@ -364,9 +346,9 @@ class GeneticAlgorithmTrainer(SearchingAlgorithm):
                 for param_index in range(self.agent_num * self.params_each_agent):
                     self.parameters_value[param_index] = translate_binary2real(
                         strategy[
-                        param_index
-                        * self.strategy_param_code_length: (param_index + 1)
-                                                           * self.strategy_param_code_length
+                            param_index
+                            * self.strategy_param_code_length : (param_index + 1)
+                            * self.strategy_param_code_length
                         ],
                         self.parameters_range[param_index][0],
                         self.parameters_range[param_index][1],
@@ -420,31 +402,31 @@ class GeneticAlgorithmTrainer(SearchingAlgorithm):
             env_params_meta.update(env_params_cov)
             agents_num = (
                 yield strategy_population,
-                      params,
-                      strategy_fitness,
-                      {
-                          "agent_trainer_result_cov": agent_trainer_result_cov,
-                          "env_trainer_result_cov": env_params_meta,
-                      },
+                params,
+                strategy_fitness,
+                {
+                    "agent_trainer_result_cov": agent_trainer_result_cov,
+                    "env_trainer_result_cov": env_params_meta,
+                },
             )
             for i in range(agents_num):
                 strategy_population[
-                :,
-                i
-                * self.strategy_param_code_length
-                * self.params_each_agent: i
-                                          * self.params_each_agent
-                                          * self.strategy_param_code_length
-                                          + self.params_each_agent * self.strategy_param_code_length,
-                ] = population_update(
-                    strategy_population[
                     :,
                     i
                     * self.strategy_param_code_length
-                    * self.params_each_agent: i
-                                              * self.params_each_agent
-                                              * self.strategy_param_code_length
-                                              + self.params_each_agent * self.strategy_param_code_length,
+                    * self.params_each_agent : i
+                    * self.params_each_agent
+                    * self.strategy_param_code_length
+                    + self.params_each_agent * self.strategy_param_code_length,
+                ] = population_update(
+                    strategy_population[
+                        :,
+                        i
+                        * self.strategy_param_code_length
+                        * self.params_each_agent : i
+                        * self.params_each_agent
+                        * self.strategy_param_code_length
+                        + self.params_each_agent * self.strategy_param_code_length,
                     ],
                     strategy_fitness[:, i],
                     self.mutation_prob,
@@ -454,11 +436,11 @@ class GeneticAlgorithmTrainer(SearchingAlgorithm):
 
 class GeneticAlgorithmCalibrator(SearchingAlgorithm):
     def __init__(
-            self,
-            number_of_generation: int,
-            strategy_population_size: int,
-            mutation_prob: float,
-            strategy_param_code_length: int,
+        self,
+        number_of_generation: int,
+        strategy_population_size: int,
+        mutation_prob: float,
+        strategy_param_code_length: int,
     ):
         self.number_of_generation: int = number_of_generation
         self.strategy_population_size = strategy_population_size
@@ -500,9 +482,9 @@ class GeneticAlgorithmCalibrator(SearchingAlgorithm):
                 for param_index in range(self.parameters_num):
                     parameters_value[param_index] = translate_binary2real(
                         strategy[
-                        param_index
-                        * self.strategy_param_code_length: (param_index + 1)
-                                                           * self.strategy_param_code_length
+                            param_index
+                            * self.strategy_param_code_length : (param_index + 1)
+                            * self.strategy_param_code_length
                         ],
                         self.parameters_range[param_index][0],
                         self.parameters_range[param_index][1],
@@ -547,3 +529,36 @@ class GeneticAlgorithmCalibrator(SearchingAlgorithm):
                 self.mutation_prob,
                 self.strategy_population_size,
             )
+
+
+class MelodieGA(GA):
+    def run(self, max_iter=None):
+        self.max_iter = max_iter or self.max_iter
+        best = []
+        for i in range(self.max_iter):
+            self.X = self.chrom2x(self.Chrom)
+            self.Y = self.x2y()
+            self.ranking()
+            self.selection()
+            self.crossover()
+            self.mutation()
+
+            # record the best ones
+            generation_best_index = self.FitV.argmax()
+            self.generation_best_X.append(self.X[generation_best_index, :])
+            self.generation_best_Y.append(self.Y[generation_best_index])
+            self.all_history_Y.append(self.Y)
+            self.all_history_FitV.append(self.FitV)
+
+            if self.early_stop:
+                best.append(min(self.generation_best_Y))
+                if len(best) >= self.early_stop:
+                    if best.count(min(best)) == len(best):
+                        break
+                    else:
+                        best.pop(0)
+
+        global_best_index = np.array(self.generation_best_Y).argmin()
+        self.best_x = self.generation_best_X[global_best_index]
+        self.best_y = self.generation_best_Y[global_best_index]
+        return self.best_x, self.best_y

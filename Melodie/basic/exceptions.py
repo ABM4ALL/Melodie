@@ -78,7 +78,7 @@ class MelodieExceptions:
 
             @staticmethod
             def FunctionArgsNumError(
-                    func: Callable, expected_arg_num: int, actual_arg_num: int
+                func: Callable, expected_arg_num: int, actual_arg_num: int
             ):
                 return MelodieException(
                     1021,
@@ -98,7 +98,7 @@ class MelodieExceptions:
 
         @staticmethod
         def CannotMoveToNewStateError(
-                old_state, new_state, all_possible_new_states: set
+            old_state, new_state, all_possible_new_states: set
         ):
             if len(list(all_possible_new_states)) == 0:
                 return MelodieException(
@@ -198,7 +198,7 @@ class MelodieExceptions:
 
         @staticmethod
         def ExcelAgentParamsRecordCountNotConsistentToScneario(
-                scenario_id, scenario_agents_num: int, param_table_name, param_num: int
+            scenario_id, scenario_agents_num: int, param_table_name, param_num: int
         ):
             return MelodieException(
                 1209,
@@ -289,10 +289,10 @@ class MelodieExceptions:
 
         @staticmethod
         def ObjectPropertyTypeUnMatchTheDataFrameError(
-                param_name: str,
-                param_type: type,
-                dataframe_dtypes: Dict[str, type],
-                agent: "Agent",
+            param_name: str,
+            param_type: type,
+            dataframe_dtypes: Dict[str, type],
+            agent: "Agent",
         ):
             return MelodieException(
                 1504,
@@ -318,7 +318,7 @@ class MelodieExceptions:
 
         @staticmethod
         def TableColumnDoesNotMatchObjectProperty(
-                table_name: str, column_name: str, obj: object
+            table_name: str, column_name: str, obj: object
         ):
             return MelodieException(
                 1507,

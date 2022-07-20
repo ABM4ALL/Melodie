@@ -1,21 +1,29 @@
-import abc
-import time
-from typing import Type, List, Optional, ClassVar, Iterator, Union, Tuple, Dict
-import copy
+from typing import (
+    Type,
+    List,
+    Optional,
+    ClassVar,
+    Iterator,
+    Union,
+    Dict,
+    TYPE_CHECKING,
+)
 import pandas as pd
 import logging
 from Melodie import (
     Model,
     Scenario,
     Config,
-    create_db_conn,
     GACalibratorParams,
     DataFrameLoader,
 )
-from Melodie.algorithms import GeneticAlgorithmCalibrator, SearchingAlgorithm
-from Melodie.basic import MelodieExceptions
+from Melodie.algorithms import SearchingAlgorithm
+from .algorithms.ga_calibrator import GACalibratorAlgorithm
+from .algorithms.meta import GACalibratorAlgorithmMeta
 from .simulator import BaseModellingManager
 
+if TYPE_CHECKING:
+    from Melodie.boost.basics import Environment
 logger = logging.getLogger(__name__)
 
 
@@ -25,11 +33,12 @@ class Calibrator(BaseModellingManager):
     """
 
     def __init__(
-        self,
-        config: "Config",
-        scenario_cls: "Optional[ClassVar[Scenario]]",
-        model_cls: "Optional[ClassVar[Model]]",
-        df_loader_cls: ClassVar["DataFrameLoader"],
+            self,
+            config: "Config",
+            scenario_cls: "Optional[ClassVar[Scenario]]",
+            model_cls: "Optional[ClassVar[Model]]",
+            df_loader_cls: ClassVar["DataFrameLoader"],
+            processors=1,
     ):
         super().__init__(
             config=config,
@@ -37,24 +46,19 @@ class Calibrator(BaseModellingManager):
             model_cls=model_cls,
             df_loader_cls=df_loader_cls,
         )
+        self.processes = processors
         self.training_strategy: "Optional[Type[SearchingAlgorithm]]" = None
         self.container_name: str = ""
 
         self.properties: List[str] = []
         self.watched_env_properties: List[str] = []
+        self.recorded_agent_properties: Dict[str, List[str]] = {}
         self.algorithm: Optional[Type[SearchingAlgorithm]] = None
-        self.algorithm_cls: Union[
-            ClassVar[SearchingAlgorithm]
-        ] = GeneticAlgorithmCalibrator
         self.algorithm_instance: Iterator[List[float]] = {}
 
         self.model: Optional[Model] = None
 
-        self.current_algorithm_meta = {
-            "calibrator_scenario_id": 1,
-            "path_id": 0,
-            "generation_id": 0,
-        }
+        self.current_algorithm_meta = GACalibratorAlgorithmMeta()
         self.df_loader: Optional["DataFrameLoader"] = None
         self.df_loader_cls = df_loader_cls
 
@@ -83,7 +87,7 @@ class Calibrator(BaseModellingManager):
         ), "No learning scenarios table specified!"
         return calibrator_scenarios_table.to_dict(orient="records")
 
-    def calibrate(self):
+    def calibrate_new(self):
         """
         The main method for calibrator.
         :return:
@@ -91,77 +95,36 @@ class Calibrator(BaseModellingManager):
         self.setup()
         self.pre_run()
 
-        assert self.algorithm_cls is not None
-        if self.algorithm_cls == GeneticAlgorithmCalibrator:
-            scenario_cls = GACalibratorParams
-        else:
-            raise NotImplementedError
+        scenario_cls = GACalibratorParams
         for scenario in self.scenarios:
-            self.current_algorithm_meta["calibrator_scenario_id"] = scenario.id
+            self.current_algorithm_meta.calibrator_scenario_id = scenario.id
             calibration_scenarios = self.get_params_scenarios()
             for calibrator_scenario in calibration_scenarios:
                 calibrator_scenario = scenario_cls.from_dataframe_record(
                     calibrator_scenario
                 )
-                self.current_algorithm_meta[
-                    "calibrator_params_scenario_id"
-                ] = calibrator_scenario.id
+                self.current_algorithm_meta.calibrator_params_id = (
+                    calibrator_scenario.id
+                )
                 for trainer_path_id in range(calibrator_scenario.number_of_path):
-                    self.current_algorithm_meta["path_id"] = trainer_path_id
+                    self.current_algorithm_meta.path_id = trainer_path_id
 
-                    self.run_once(scenario, calibrator_scenario)
+                    self.run_once_new(scenario, calibrator_scenario)
 
-    def run_once(self, scenario, calibration_scenario: GACalibratorParams):
-        """
-        Instantiate and run the model, then collect the value of target function.
+    def run_once_new(self, scenario, calibration_scenario: GACalibratorParams):
+        self.algorithm = GACalibratorAlgorithm(
+            self.properties,
+            self.watched_env_properties,
+            {},
+            calibration_scenario,
+            self.target_function,
+            manager=self,
+            processors=self.processes,
+        )
+        self.algorithm.run(scenario, self.current_algorithm_meta)
 
-        :param scenario:
-        :param calibration_scenario:
-        :return:
-        """
-        scenario.manager = self
-        self.model = self.model_cls(self.config, scenario)
-        self.model.setup()
-        if self.algorithm_cls == GeneticAlgorithmCalibrator:
-            self.algorithm = GeneticAlgorithmCalibrator(
-                calibration_scenario.number_of_generation,
-                calibration_scenario.strategy_population,
-                calibration_scenario.mutation_prob,
-                calibration_scenario.strategy_param_code_length,
-            )
-            iterations = calibration_scenario.number_of_generation
-        else:
-            raise NotImplementedError
-        self.algorithm.parameter_names = self.properties
-        self.algorithm.parameters_range = [
-            (parameter.min, parameter.max)
-            for parameter in calibration_scenario.parameters
-        ]
-        self.algorithm.parameters_num = len(self.algorithm.parameters_range)
-
-        self.algorithm_instance = self.algorithm.optimize(self.fitness, scenario)
-
-        for i in range(iterations):
-            self.current_algorithm_meta["generation_id"] = i
-            logger.info(
-                f"===================Calibrating step {i + 1}====================="
-            )
-            (
-                strategy_population,
-                params,
-                fitness,
-                meta,
-            ) = self.algorithm_instance.__next__()
-
-            calibrator_result_cov = copy.deepcopy(meta["env_params_cov"])
-            calibrator_result_cov.update(meta["env_params_mean"])
-            calibrator_result_cov["distance_mean"] = meta["distance_mean"]
-            calibrator_result_cov["distance_cov"] = meta["distance_cov"]
-
-            calibrator_result_cov.update(self.current_algorithm_meta)
-            create_db_conn(self.config).write_dataframe(
-                "calibrator_result_cov", pd.DataFrame([calibrator_result_cov])
-            )
+    def target_function(self, env: "Environment") -> Union[float, int]:
+        raise NotImplementedError
 
     def add_environment_calibrating_property(self, prop: str):
         """
@@ -171,7 +134,7 @@ class Calibrator(BaseModellingManager):
         :return:
         """
         assert (
-            prop not in self.properties
+                prop not in self.properties
         ), f'Property "{prop}" is already in the calibrating training_properties!'
         self.properties.append(prop)
 
@@ -184,54 +147,3 @@ class Calibrator(BaseModellingManager):
         """
         assert prop not in self.watched_env_properties
         self.watched_env_properties.append(prop)
-
-    def fitness(
-        self, params, scenario: Union[Type[Scenario], Scenario], **kwargs
-    ) -> Tuple[float, float]:
-        """
-        Calculate the fitness.
-
-        :param params:
-        :param scenario:
-        :param kwargs:
-        :return:
-        """
-        for i, prop_name in enumerate(self.properties):
-            assert scenario.__getattribute__(prop_name) is not None
-            scenario.__setattr__(prop_name, params[i])
-        scenario_properties_dict = {
-            prop_name: scenario.__dict__[prop_name] for prop_name in self.properties
-        }
-        self.model = self.model_cls(self.config, scenario)
-        self.model.setup()
-        meta = kwargs["meta"]
-        environment_record_dict = {}
-        environment_record_dict.update(self.current_algorithm_meta)
-        t0 = time.time()
-        self.model.run()
-        t1 = time.time()
-        logger.info(f"Model run, taking {t1 - t0}s")
-        env = self.model.environment
-        distance = self.distance(env)
-        fitness = self.convert_distance_to_fitness(distance)
-        MelodieExceptions.Assertions.NotNone("fitness", fitness)
-        environment_record_dict.update(scenario_properties_dict)
-        environment_record_dict["chromosome_id"] = meta["chromosome_id"]
-        environment_record_dict.update(
-            {prop: env.__dict__[prop] for prop in self.watched_env_properties}
-        )
-        environment_record_dict["distance"] = distance
-
-        create_db_conn(self.config).write_dataframe(
-            "calibrator_result",
-            pd.DataFrame([environment_record_dict]),
-            if_exists="append",
-        )
-        return fitness, distance
-
-    @abc.abstractmethod
-    def distance(self, environment) -> float:
-        return -1.0
-
-    def convert_distance_to_fitness(self, distance: float):
-        return -distance

@@ -60,3 +60,22 @@ class AlgorithmParameters:
             self.parameters.append(
                 AlgorithmParameters.Parameter(k, min_values[k], max_values[k])
             )
+
+    def bounds(self, param_names: List[str]) -> Tuple[List[float], List[float]]:
+        """
+        Get the lower bounds and upper bounds of each parameter in the order of param_names.
+
+        :param param_names:  A series of parameter names indicating the order to get the bounds
+        :return: lower bounds, upper bounds
+        """
+        ub_list: List[float] = []
+        lb_list: List[float] = []
+        for param_name in param_names:
+            params = list(filter(lambda p: p.name == param_name, self.parameters))
+            if len(params) == 1:
+                param = params[0]
+                ub_list.append(param.max)
+                lb_list.append(param.min)
+            else:
+                raise Exception(f"Parameters error: {params}, {self.parameters}")
+        return lb_list, ub_list

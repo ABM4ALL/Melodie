@@ -27,12 +27,12 @@ class Scenario(Element):
 
     class NumberParameter(BaseParameter):
         def __init__(
-                self,
-                name,
-                init_value: Union[int, float],
-                min_val: Optional[Union[int, float]] = None,
-                max_val: Optional[Union[int, float]] = None,
-                step: Optional[Union[int, float]] = None,
+            self,
+            name,
+            init_value: Union[int, float],
+            min_val: Optional[Union[int, float]] = None,
+            max_val: Optional[Union[int, float]] = None,
+            step: Optional[Union[int, float]] = None,
         ):
             super().__init__(name, "number", init_value)
             if min_val is None or max_val is None or step is None:
@@ -49,10 +49,10 @@ class Scenario(Element):
 
     class SelectionParameter(BaseParameter):
         def __init__(
-                self,
-                name,
-                init_value: Union[int, str, bool],
-                selections: List[Union[int, str, bool]],
+            self,
+            name,
+            init_value: Union[int, str, bool],
+            selections: List[Union[int, str, bool]],
         ):
             super().__init__(name, "selection", init_value)
             self.selections = selections
@@ -116,8 +116,8 @@ class Scenario(Element):
     #     return self.manager.scenarios_dataframe
 
     def add_interactive_parameters(
-            self,
-            parameters: List[Union[BaseParameter, NumberParameter, SelectionParameter]],
+        self,
+        parameters: List[Union[BaseParameter, NumberParameter, SelectionParameter]],
     ):
         self._parameters.extend(parameters)
         temp_set = set()

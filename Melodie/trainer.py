@@ -1,5 +1,15 @@
 import logging
-from typing import Type, List, Optional, ClassVar, Iterator, Union, Tuple, Dict, Callable
+from typing import (
+    Type,
+    List,
+    Optional,
+    ClassVar,
+    Iterator,
+    Union,
+    Tuple,
+    Dict,
+    Callable,
+)
 import pandas as pd
 
 from Melodie import Model, Scenario, Config, GATrainerParams
@@ -13,8 +23,13 @@ logger = logging.getLogger(__name__)
 
 
 class RelatedAgentContainerModel:
-    def __init__(self, container_name: str, used_properties: List[str], recorded_properties: List[str],
-                 agent_ids: Callable[[Scenario], List[int]]):
+    def __init__(
+        self,
+        container_name: str,
+        used_properties: List[str],
+        recorded_properties: List[str],
+        agent_ids: Callable[[Scenario], List[int]],
+    ):
         self.container_name = container_name
         self.used_properties = used_properties
         self.recorded_properties = recorded_properties
@@ -31,10 +46,13 @@ class AgentContainerManager:
     def __init__(self):
         self.agent_containers: List[RelatedAgentContainerModel] = []
 
-    def add_container(self, container_name: str,
-                      used_properties: List[str],
-                      recorded_properties: List[str],
-                      agent_ids: Callable[[Scenario], List[int]]):
+    def add_container(
+        self,
+        container_name: str,
+        used_properties: List[str],
+        recorded_properties: List[str],
+        agent_ids: Callable[[Scenario], List[int]],
+    ):
         """
         Add a container used in trainer.
 
@@ -45,7 +63,10 @@ class AgentContainerManager:
         :return:
         """
         self.agent_containers.append(
-            RelatedAgentContainerModel(container_name, used_properties, recorded_properties, agent_ids))
+            RelatedAgentContainerModel(
+                container_name, used_properties, recorded_properties, agent_ids
+            )
+        )
 
 
 class Trainer(BaseModellingManager):
@@ -54,12 +75,12 @@ class Trainer(BaseModellingManager):
     """
 
     def __init__(
-            self,
-            config: "Config",
-            scenario_cls: "Optional[ClassVar[Scenario]]",
-            model_cls: "Optional[ClassVar[Model]]",
-            df_loader_cls: "Optional[ClassVar[DataFrameLoader]]",
-            processors: int = 1
+        self,
+        config: "Config",
+        scenario_cls: "Optional[ClassVar[Scenario]]",
+        model_cls: "Optional[ClassVar[Model]]",
+        df_loader_cls: "Optional[ClassVar[DataFrameLoader]]",
+        processors: int = 1,
     ):
         super().__init__(
             config=config,
@@ -86,9 +107,13 @@ class Trainer(BaseModellingManager):
         self.current_algorithm_meta = None
         self.processors = processors
 
-    def add_container(self, container_name: str, used_properties: List[str],
-                      recorded_properties: List[str],
-                      agent_ids: Callable[[Scenario], List[int]]):
+    def add_container(
+        self,
+        container_name: str,
+        used_properties: List[str],
+        recorded_properties: List[str],
+        agent_ids: Callable[[Scenario], List[int]],
+    ):
         """
         Add a container into the trainer.
 
@@ -98,7 +123,9 @@ class Trainer(BaseModellingManager):
         :param agent_ids: The agent with id contained in `agent_ids` will be trained.
         :return: None
         """
-        self.container_manager.add_container(container_name, used_properties, recorded_properties, agent_ids)
+        self.container_manager.add_container(
+            container_name, used_properties, recorded_properties, agent_ids
+        )
 
     def setup(self):
         pass
@@ -108,7 +135,7 @@ class Trainer(BaseModellingManager):
         Get the class of trainer scenario.
         :return:
         """
-        assert self.algorithm_type in {'ga'}
+        assert self.algorithm_type in {"ga"}
 
         trainer_scenario_cls: Union[ClassVar[GATrainerParams]] = None
         if self.algorithm_type == "ga":
@@ -129,7 +156,9 @@ class Trainer(BaseModellingManager):
         self.current_algorithm_meta = GATrainerAlgorithmMeta()
         for scenario in self.scenarios:
             self.current_algorithm_meta.trainer_scenario_id = scenario.id
-            for trainer_params in self.generate_trainer_params_list(trainer_scenario_cls):
+            for trainer_params in self.generate_trainer_params_list(
+                trainer_scenario_cls
+            ):
                 self.current_algorithm_meta.trainer_params_id = trainer_params.id
                 for path_id in range(trainer_params.number_of_path):
                     self.current_algorithm_meta.path_id = path_id
@@ -148,17 +177,15 @@ class Trainer(BaseModellingManager):
         """
         from Melodie.algorithms.ga_trainer import GATrainerAlgorithm
 
-        self.algorithm = GATrainerAlgorithm(
-            trainer_params,
-            self,
-            self.processors
-        )
+        self.algorithm = GATrainerAlgorithm(trainer_params, self, self.processors)
         self.algorithm.recorded_env_properties = self.environment_properties
         for agent_container in self.container_manager.agent_containers:
-            self.algorithm.add_agent_container(agent_container.container_name,
-                                               agent_container.used_properties,
-                                               agent_container.recorded_properties,
-                                               agent_container.agent_ids(scenario))
+            self.algorithm.add_agent_container(
+                agent_container.container_name,
+                agent_container.used_properties,
+                agent_container.recorded_properties,
+                agent_container.agent_ids(scenario),
+            )
 
         self.algorithm.run(scenario, self.current_algorithm_meta)
 
@@ -187,16 +214,15 @@ class Trainer(BaseModellingManager):
         assert self.df_loader is not None
         return self.df_loader.generate_scenarios("trainer")
 
-    def generate_trainer_params_list(self, trainer_scenario_cls: ClassVar[GATrainerParams]) \
-            -> List[GATrainerParams]:
+    def generate_trainer_params_list(
+        self, trainer_scenario_cls: ClassVar[GATrainerParams]
+    ) -> List[GATrainerParams]:
         """
         Generate Trainer Params-Scenarios.
 
         :return:
         """
-        trainer_params_table = self.get_registered_dataframe(
-            "trainer_params_scenarios"
-        )
+        trainer_params_table = self.get_registered_dataframe("trainer_params_scenarios")
         assert isinstance(
             trainer_params_table, pd.DataFrame
         ), "No learning scenarios table specified!"

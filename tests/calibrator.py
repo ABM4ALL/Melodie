@@ -1,5 +1,5 @@
 import random
-from typing import List
+from typing import List, Union
 
 from Melodie import (
     Calibrator,
@@ -72,7 +72,7 @@ class CovidCalibrator(Calibrator):
         self.add_environment_result_property("accumulated_infection")
         self.algorithm_cls = GeneticAlgorithmCalibrator
 
-    def distance(self, environment: CovidEnvironment):
+    def target_function(self, environment: "CovidEnvironment") -> Union[float, int]:
         print(
             "infection_rate",
             environment.accumulated_infection / environment.scenario.agent_num,
