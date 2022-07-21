@@ -45,6 +45,10 @@ class MelodieExceptions:
                 f"{name} should be a {expected_type}, however it was {type(obj)}, value {obj}"
             )
 
+        @staticmethod
+        def NoAttributeError(obj, attr_name: str):
+            return AttributeError(f"Object {obj} has no attribute{attr_name}")
+
     class Program:
         """
         Errors related to programming

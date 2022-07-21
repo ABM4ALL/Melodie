@@ -1,3 +1,5 @@
+import time
+
 from Melodie import Model, AgentList
 from .scenario import RPSScenario
 from .agent import RPSAgent
@@ -23,8 +25,5 @@ class RPSModel(Model):
     def run(self):
         self.environment.setup_agents_action_probability(self.agent_list)
         for t in range(0, self.scenario.periods):
-            # print(f'Period = {t}')
             self.environment.run_game_rounds(self.agent_list)
             self.environment.calc_agents_total_account(self.agent_list)
-        #     self.data_collector.collect(t)
-        # self.data_collector.save()

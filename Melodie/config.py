@@ -1,4 +1,5 @@
 import os
+from typing import Any, Dict
 
 
 class Config:
@@ -22,6 +23,7 @@ class Config:
         self.excel_source_folder = self.setup_folder_path(excel_source_folder)
         self.output_folder = self.setup_folder_path(output_folder)
         self.sqlite_folder = self.setup_folder_path(sqlite_folder)
+
         if not os.path.exists(visualizer_entry) and visualizer_entry != "":
             raise FileNotFoundError(
                 f"Visualizer entry file {visualizer_entry} is defined, but not found. "
@@ -36,3 +38,19 @@ class Config:
 
     def setup(self):
         pass
+
+    def to_dict(self):
+        return self.__dict__
+
+    @staticmethod
+    def from_dict(d: Dict[str, Any]):
+
+        c = Config(
+            d["project_name"],
+            d["project_root"],
+            d["sqlite_folder"],
+            d["excel_source_folder"],
+            d["excel_source_folder"],
+            d["output_folder"],
+        )
+        return c

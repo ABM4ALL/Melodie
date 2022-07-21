@@ -94,6 +94,13 @@ class Scenario(Element):
             d[k] = v
         return d
 
+    def to_json(self):
+        d = {}
+        for k in self.__dict__.keys():
+            if k not in {"manager"}:
+                d[k] = self.__dict__[k]
+        return d
+
     def properties_as_parameters(self) -> List[BaseParameter]:
         return self._parameters
 

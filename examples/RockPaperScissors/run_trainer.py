@@ -14,5 +14,6 @@ if __name__ == "__main__":
         scenario_cls=RPSScenario,
         model_cls=RPSModel,
         df_loader_cls=RPSDataFrameLoader,
+        processors=1,
     )
     run_profile(trainer.train)

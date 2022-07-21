@@ -66,7 +66,18 @@ class BaseModellingManager(abc.ABC):
 
         return self.df_loader.registered_dataframes[table_name]
 
-    def pre_run(self):
+    def subworker_prerun(self):
+        self.df_loader: DataFrameLoader = self.df_loader_cls(
+            self, self.config, self.scenario_cls
+        )
+        self.df_loader.as_sub_worker = True
+        self.df_loader.register_scenario_dataframe()
+        self.df_loader.register_static_dataframes()
+        self.df_loader.register_generated_dataframes()
+
+        self.scenarios = self.generate_scenarios()
+
+    def pre_run(self, clear_db=True):
         """
         `pre_run` means this function should be executed before `run`, to initialize the scenario
         parameters.
@@ -74,9 +85,11 @@ class BaseModellingManager(abc.ABC):
         This method also clears database.
         :return:
         """
-        create_db_conn(self.config).clear_database()
+        if clear_db:
+            create_db_conn(self.config).clear_database()
         if self.df_loader_cls is not None:
             self.df_loader = self.df_loader_cls(self, self.config, self.scenario_cls)
+
             self.df_loader.register_scenario_dataframe()
             self.df_loader.register_static_dataframes()
             self.df_loader.register_generated_dataframes()

@@ -6,6 +6,7 @@ prof/
 *.py[cod]
 *$py.class
 .coverage
+.coverage.*
 # C extensions
 *.so
 .DS_Store

@@ -1,3 +1,5 @@
+from typing import Union
+
 from Melodie import Calibrator, GeneticAlgorithmCalibrator
 from .environment import CovidEnvironment
 
@@ -15,3 +17,6 @@ class CovidCalibrator(Calibrator):
         return (
             environment.accumulated_infection / environment.scenario.agent_num - 0.75
         ) ** 2
+
+    def target_function(self, env: CovidEnvironment) -> Union[float, int]:
+        return self.distance(env)
