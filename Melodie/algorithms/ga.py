@@ -372,7 +372,7 @@ class GeneticAlgorithmTrainer(SearchingAlgorithm):
                     meta={"chromosome_id": chromosome_id},
                 )
 
-                print(agents_fitness, env_params, agent_props_list)
+                # print(agents_fitness, env_params, agent_props_list)
                 strategy_fitness.append(agents_fitness)
                 agent_props_each_chromosome.extend(agent_props_list)
 

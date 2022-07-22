@@ -72,9 +72,4 @@ StandaloneHTMLBuilder.supported_image_types = [
     "image/jpeg",
 ]
 
-language = "en"  # language supported
-local_dirs = ["../locales/"]
-for dir in local_dirs:
-    assert os.path.exists(dir)
-gettext_compact = True  # optional.
-gettext_uuid = True  # optional.
+html_sidebars = {'**': ['globaltoc.html', 'relations.html', 'sourcelink.html', 'searchbox.html']}
