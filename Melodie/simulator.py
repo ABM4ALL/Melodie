@@ -95,7 +95,7 @@ class BaseModellingManager(abc.ABC):
             self.df_loader.register_generated_dataframes()
 
         self.scenarios = self.generate_scenarios()
-        if self.scenarios is None:
+        if self.scenarios is None or len(self.scenarios) == 0:
             MelodieExceptions.Scenario.NoValidScenarioGenerated(self.scenarios)
 
     @abc.abstractmethod
