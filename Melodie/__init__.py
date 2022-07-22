@@ -27,6 +27,6 @@ logging.basicConfig(
     datefmt="%a, %d %b %Y %H:%M:%S",
 )
 
-from .boost.agent_list import BaseAgentContainer, AgentList
+from .boost.agent_list import BaseAgentContainer, AgentList, AgentDict
 from .boost.basics import Environment, Element, Agent
 from .boost.grid import Grid, Spot, GridAgent, AgentIDManager

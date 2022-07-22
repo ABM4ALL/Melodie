@@ -1,17 +1,24 @@
+# cython:profile=True
 # cython:language_level=3
 # -*- coding:utf-8 -*-
 
 import logging
 import random
-
+from libc.stdlib cimport rand, RAND_MAX, srand, malloc, free
+from libc.stdint cimport uintptr_t
 import pandas as pd
 from pandas.api.types import is_integer_dtype, is_float_dtype, is_string_dtype
 import typing
 from typing import TYPE_CHECKING, ClassVar, List, Dict, Union, Set, Optional, TypeVar, Type, Generic
-from .basics import Agent
-from Melodie.basic import MelodieExceptions, MelodieException, binary_search, show_prettified_warning
+from .basics cimport Agent
+from Melodie.basic import MelodieExceptions, MelodieException, show_prettified_warning
 from collections.abc import Sequence
+from cython.operator cimport dereference as deref, preincrement as inc
+from cpython.ref cimport PyObject  # somewhere at the top
+from cpython cimport PyObject_GetAttr, PyObject_GetAttrString, \
+    PyObject_GetItem, PyList_GetItem, PyList_Size, PyObject_SetAttr, PyObject_CallFunction, PyObject_CallFunctionObjArgs
 from .fastrand import sample
+
 AgentGeneric = TypeVar('AgentGeneric')
 if TYPE_CHECKING:
     from .model import Model
@@ -19,6 +26,28 @@ if TYPE_CHECKING:
 
 logger = logging.getLogger(__name__)
 
+cdef bint bs_key(Agent agent):
+    return agent.id
+
+cdef long _binary_search_agents(list lis, long num):
+    cdef long left = 0
+    cdef long right = len(lis) - 1
+    cdef long mid = 0
+    cdef long agent_id = 0
+    while left <= right:
+        mid = (left + right) // 2
+        agent_id = bs_key(lis[mid])
+        if num < agent_id:
+            right = mid - 1
+        elif num > agent_id:
+            left = mid + 1
+        else:
+            return mid
+
+    if mid == 0:
+        return 0
+    else:
+        return -1
 
 cdef class SeqIter:
     """
@@ -35,6 +64,18 @@ cdef class SeqIter:
         next_item = self._seq[self._i]
         self._i += 1
         return next_item
+
+cdef class DictIter:
+    """
+    The iterator to deal with for-loops in AgentList or other agent containers
+    """
+
+    def __init__(self, dic):
+        self._dict = dic
+        self._iter = iter(dic.items())
+
+    def __next__(self):
+        return next(self._iter)[1]
 
 cdef class BaseAgentContainer():
     """
@@ -62,31 +103,7 @@ cdef class BaseAgentContainer():
         :return:
         """
 
-
-cdef class AgentList(BaseAgentContainer):
-    def __init__(self, agent_class: ClassVar[AgentGeneric], length: int, model: 'Model') -> None:
-        super(AgentList, self).__init__()
-        self._iter_index = 0
-        self.scenario = model.scenario
-        self.agent_class: ClassVar[AgentGeneric] = agent_class
-        self.initial_agent_num: int = length
-        self.model = model
-        self.agents: List[AgentGeneric] = self.init_agents()
-
-    def __repr__(self):
-        return f"<AgentList {self.agents}>"
-
-    def __len__(self):
-        return len(self.agents)
-
-    def __getitem__(self, item) -> AgentGeneric:
-        return self.agents.__getitem__(item)
-
-    def __iter__(self):
-        self._iter_index = 0
-        return SeqIter(self.agents)
-
-    def init_agents(self) -> List[AgentGeneric]:
+    cpdef list init_agents(self) except *:
         """
         Initialize all agents in the container, and call the `setup()` method
         
@@ -95,11 +112,45 @@ cdef class AgentList(BaseAgentContainer):
         agents: List['AgentGeneric'] = [self.agent_class(self.new_id()) for i in
                                         range(self.initial_agent_num)]
         scenario = self.model.scenario
-        for agent in agents:
+        
+        for i, agent in enumerate(agents):
             agent.scenario = scenario
             agent.model = self.model
             agent.setup()
         return agents
+
+    def _set_properties(self, props_df: pd.DataFrame):
+        """
+        Set parameters of all agents in current scenario.
+
+        :return:
+        """
+        MelodieExceptions.Assertions.Type('props_df', props_df, pd.DataFrame)
+
+        param_names = [param for param in props_df.columns if param not in
+                       {'scenario_id'}]
+
+        # props_df_cpy: Optional[pd.DataFrame] = None
+        if "scenario_id" in props_df.columns:
+            props_df_cpy = props_df.query(f"scenario_id == {self.scenario.id}").copy(True)
+        else:
+            props_df_cpy = props_df.copy()  # deep copy this dataframe.
+        props_df_cpy.reset_index(drop=True, inplace=True)
+        self.type_check(param_names, props_df_cpy)
+
+        # Assign parameters to properties for each agent.
+        for i, agent in enumerate(self):
+            params = {}
+            for agent_param_name in param_names:
+                # .item() method was applied to convert pandas/numpy data into python-builtin types.
+                item = props_df_cpy.loc[i, agent_param_name]
+                if isinstance(item, str):
+                    params[agent_param_name] = item
+                else:
+                    params[agent_param_name] = item.item()
+
+
+            agent.set_params(params)
 
     def type_check(self, param_names: List[str], agent_params_df: pd.DataFrame):
         """
@@ -122,7 +173,7 @@ cdef class AgentList(BaseAgentContainer):
             else:
                 show_prettified_warning(f"Cannot tell the type of column {col}.")
                 dataframe_dtypes[col] = None
-        for agent in self.agents:
+        for agent in self:
             for param_name in param_names:
                 # param_type = type(getattr(agent, param_name))
                 param_type = type(getattr(agent, param_name))
@@ -131,6 +182,94 @@ cdef class AgentList(BaseAgentContainer):
                 else:
                     raise MelodieExceptions.Data.ObjectPropertyTypeUnMatchTheDataFrameError(param_name, param_type,
                                                                                             dataframe_dtypes, agent)
+
+cdef class AgentDict(BaseAgentContainer):
+    def __init__(self, agent_class: ClassVar[AgentGeneric], length: int, model: 'Model') -> None:
+        super().__init__()
+        self.scenario = model.scenario
+        self.agent_class: ClassVar[AgentGeneric] = agent_class
+        self.initial_agent_num: int = length
+        self.model = model
+        self.agents = {agent.id: agent for agent in self.init_agents()}
+
+    def __repr__(self):
+        return f"<AgentList {self.agents}>"
+
+    def __len__(self):
+        return len(self.agents)
+
+    def __getitem__(self, item):
+        return self.agents.__getitem__(item)
+
+    def __iter__(self):
+        return DictIter(self.agents)
+    
+    cpdef Agent get_agent(self, long agent_id):
+        return self.agents.get(agent_id)
+
+    def add(self, agent=None, params=None):
+        self._add(agent, params)
+
+    cdef _add(self, Agent agent, dict params):
+        new_id = self.new_id()
+        if agent is not None:
+            assert isinstance(agent, Agent)
+        else:
+            agent = self.agent_class(new_id)
+
+        agent.scenario = self.model.scenario
+        agent.model = self.model
+        agent.setup()
+        if params is not None:
+            assert isinstance(params, dict)
+            if params.get('id') is not None:
+                show_prettified_warning(
+                    f"Warning, agent 'id'  {agent.id} passed in 'params' will be **overridden** by a new id {new_id} auto generated by {self.__class__.__name__}."
+                    )
+            agent.set_params(params)
+        agent.id = new_id        
+        self.agents[agent.id] = agent
+    
+    cpdef remove(self, Agent agent):
+        self.agents.pop(agent.id)
+
+    def set_properties(self, props_df: pd.DataFrame):
+        """
+        Extract properties from a dataframe, and Each row in the dataframe represents the property of an agent.
+        
+        :param props_df:
+        :return:
+        """
+        self._set_properties(props_df)
+
+cdef class AgentList(BaseAgentContainer):
+    def __init__(self, agent_class: ClassVar[AgentGeneric], length: int, model: 'Model') -> None:
+        super(AgentList, self).__init__()
+        self._iter_index = 0
+        self.scenario = model.scenario
+        self.agent_class: ClassVar[AgentGeneric] = agent_class
+        self.initial_agent_num: int = length
+        self.model = model
+        self._map = {}
+        self.indices = &self._map
+        self.agents: List[AgentGeneric] = self.init_agents()
+        for i, agent in enumerate(self.agents):
+            self._set_index(agent.id, i)
+      
+
+    def __repr__(self):
+        return f"<AgentList {self.agents}>"
+
+    def __len__(self):
+        return len(self.agents)
+
+    def __getitem__(self, item) -> AgentGeneric:
+        return self.agents.__getitem__(item)
+
+    def __iter__(self):
+        self._iter_index = 0
+        return SeqIter(self.agents)
+
 
     def random_sample(self, sample_num: int) -> List['AgentGeneric']:
         """
@@ -142,24 +281,43 @@ cdef class AgentList(BaseAgentContainer):
         return sample(self.agents, sample_num)
         
 
-    def remove(self, agent: 'AgentGeneric'):
+    cpdef remove(self, Agent agent) except *:
         """
         Remove the agent
 
         :param agent:
         :return:
         """
-        for i, a in enumerate(self.agents):
-            if a is agent:
-                self.agents.pop(i)
-                break
+        # print(deref(self.indices))
+        index = self._get_index(agent.id)
+        
+        self.agents.pop(index)
 
-    def add(self, agent: 'AgentGeneric' = None, params: Dict = None):
+        for i, a in enumerate(self.agents):
+            self._set_index(a.id, i)
+
+    cdef void _set_index(self, long agent_id, long index) except *:
+        # print(deref(self.indices))
+        deref(self.indices)[agent_id] = index
+
+    cdef long _get_index(self, long agent_id) except *:
+        cdef cpp_map[long, long]* indices = self.indices
+        # print("addr of indices:",<uintptr_t>&indices,<uintptr_t>&deref(self.indices), <uintptr_t>self.indices)
+        cdef long cnt = indices.count(agent_id)
+        if cnt < 1:
+            raise IndexError("Index error occurred in the get_index")
+        else:
+            return indices.at(agent_id)
+
+    def add(self, agent=None, params=None):
+        self._add(agent, params)
+
+    cpdef _add(self, Agent agent, dict params):
         """
         Add an agent to this AgentList
 
-        :param agent:
-        :param params:
+        :param agent: Optional
+        :param params: Optional
         :return:
         """
         new_id = self.new_id()
@@ -180,8 +338,10 @@ cdef class AgentList(BaseAgentContainer):
             agent.set_params(params)
         agent.id = new_id
         self.agents.append(agent)
+        
+        self._set_index(agent.id, len(self.agents) - 1)
 
-    def to_list(self, column_names: List[str] = None) -> List[Dict]:
+    def to_list(self, column_names: List[str]) -> List[Dict]:
         """
         Dump all agent and their properties into a list of dict.
         
@@ -193,8 +353,6 @@ cdef class AgentList(BaseAgentContainer):
         if len(self.agents) == 0:
             raise MelodieExceptions.Agents.AgentListEmpty(self)
 
-        if column_names is None:
-            column_names = list(self.__dict__.keys())
         agent0 = self.agents[0]
         for column_name in column_names:
             if not hasattr(agent0, column_name):
@@ -218,39 +376,6 @@ cdef class AgentList(BaseAgentContainer):
         df['id'] = df['id'].astype(int)
         return df
 
-    def _set_properties(self, props_df: pd.DataFrame):
-        """
-        Set parameters of all agents in current scenario.
-
-        :return:
-        """
-        MelodieExceptions.Assertions.Type('props_df', props_df, pd.DataFrame)
-
-        param_names = [param for param in props_df.columns if param not in
-                       {'scenario_id'}]
-
-        # props_df_cpy: Optional[pd.DataFrame] = None
-        if "scenario_id" in props_df.columns:
-            props_df_cpy = props_df.query(f"scenario_id == {self.scenario.id}").copy(True)
-        else:
-            props_df_cpy = props_df.copy()  # deep copy this dataframe.
-        props_df_cpy.reset_index(drop=True, inplace=True)
-        self.type_check(param_names, props_df_cpy)
-
-        # Assign parameters to properties for each agent.
-        for i, agent in enumerate(self.agents):
-            params = {}
-            for agent_param_name in param_names:
-                # .item() method was applied to convert pandas/numpy data into python-builtin types.
-                item = props_df_cpy.loc[i, agent_param_name]
-                if isinstance(item, str):
-                    params[agent_param_name] = item
-                else:
-                    params[agent_param_name] = item.item()
-
-
-            agent.set_params(params)
-
     def set_properties(self, props_df: pd.DataFrame):
         """
         Extract properties from a dataframe, and Each row in the dataframe represents the property of an agent.
@@ -272,14 +397,96 @@ cdef class AgentList(BaseAgentContainer):
 
 
 
-    def get_agent(self, agent_id: int):
+    # cpdef get_agent(self, long agent_id):
+    #     """
+    #     Get an agent from the agent list
+
+    #     :param agent_id:
+    #     """
+    #     index = _binary_search_agents(self.agents, agent_id)
+    #     if index == -1:
+    #         return None
+    #     else:
+    #         return self.agents[index]
+    
+    cpdef get_indices(self):
+        return deref(self.indices)
+
+    cpdef Agent get_agent(self, long agent_id):
         """
         Get an agent from the agent list
 
         :param agent_id:
         """
-        index = binary_search(self.agents, agent_id, key=lambda agent: agent.id)
+        index = self._get_index(agent_id)
         if index == -1:
             return None
         else:
             return self.agents[index]
+
+    # @cython.nonecheck(False)
+    # @cython.boundscheck(False)
+    cpdef method_foreach(self, str method_name, tuple args) except *:
+        method = getattr(self.agent_class, method_name)
+        cdef Agent agent
+        agent_num = len(self.agents) 
+        cdef PyObject* ptr
+        
+        for i in range(agent_num):
+            
+            agent = <Agent>PyList_GetItem(self.agents, <Py_ssize_t>(i))
+            ptr = <PyObject *>agent
+            PyObject_CallFunctionObjArgs(method, ptr, NULL)
+            # method(agent, *args)
+    cpdef vectorize(self, str prop_name) except *:
+        if len(self.agents)==0:
+            return
+        raise NotImplementedError
+
+cdef class Container:
+    cdef PyObject ** ptr
+    cdef Agent agent
+    cdef long size
+    cdef list mgr_list
+    def __init__(self, size):
+        self.ptr = <PyObject **> malloc(size * sizeof(PyObject*))
+        self.mgr_list = []
+        self.size = size
+        for i in range(size):
+            agent = Agent(i)
+            self.mgr_list.append(agent)
+            self.ptr[i] = <PyObject *>agent
+
+        # print(sizeof(Agent), sizeof(PyObject))
+        # for i in range(size):
+    cdef walk1(self) except *:
+        cdef long s = 0
+        for i in range(self.size):
+            self.agent = <Agent>self.ptr[i]
+            s+=self.agent.id
+            # print("agent_id", agent.id)
+
+    cdef walk2(self) except *:
+        cdef long s = 0
+        cdef long a = 0
+        for i in range(self.size):
+            a+=5*self.size
+            self.agent = <Agent>self.mgr_list[i]
+            s+=self.agent.id
+
+    def __del__(self):
+        free(self.ptr)
+
+cpdef test_container() except *:
+    import time
+    c = Container(10000)
+    M = 10000
+    t1 = time.time()
+    for i in range(M):
+        c.walk1()
+    t2 = time.time()
+    for i in range(M):
+        c.walk2()    
+    t3 = time.time()
+    print("walk1", t2-t1, 'walk2', t3-t2)
+    

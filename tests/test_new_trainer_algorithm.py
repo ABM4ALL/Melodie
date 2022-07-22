@@ -41,7 +41,7 @@ class MockTrainer(Trainer):
         )
 
     def target_function(self, agent: DemoAgent) -> float:
-        return agent.param1 ** 2 + agent.param2 ** 2
+        return agent.param1**2 + agent.param2**2
 
 
 @pytest.mark.timeout(30)

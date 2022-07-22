@@ -3,17 +3,19 @@ from .basics cimport Agent
 from .agent_list cimport AgentList
 cimport numpy as np
 from libcpp.vector cimport vector
-from libcpp.set cimport set as cpp_set
+from libcpp.unordered_set cimport unordered_set as cpp_set
 from libcpp.map cimport map as cpp_map
 from libcpp.string cimport string as cpp_string
 
 cdef class GridItem(Agent):
     cdef public long x
     cdef public long y
+    cdef public Grid grid
     cpdef void set_params(self, dict params) except *
 
 cdef class GridAgent(GridItem):
     cdef public long category
+    cpdef rand_move(self, int x_range, int y_range) except *
 
 cdef class Spot(GridItem):
     cdef public long role
@@ -26,8 +28,9 @@ cdef class AgentIDManager:
     cdef cpp_set[long] _empty_spots
     cdef bint allow_multi
     cdef public cpp_set[long] all_categories 
+    cdef void _add_agent(self, long agent_id, long category, long x, long y) except *
     cpdef add_agent(self, long agent_id, long category, long x, long y) except *
-    
+    cdef void _remove_agent(self, long agent_id, long category, long x, long y) except *
     cpdef remove_agent(self, long agent_id, long category, long x, long y) except *
 
     cdef long _convert_to_1d(self, long x, long y)
@@ -56,9 +59,9 @@ cdef class Grid:
     
     cdef AgentIDManager _agent_id_mgr
     cpdef  validate(self)
-    cpdef _add_agent_container(self, long category_id, AgentList category , str initial_placement) except *
+    cpdef _add_agent_container(self, long category_id, object category , str initial_placement) except *
     cdef AgentList get_agent_container(self, category_id) except *
-    cpdef get_spot(self, long x, long y)
+    cpdef Spot get_spot(self, long x, long y)
     # cpdef get_agent_ids(self, object category, long x, long y)
     cdef long _convert_to_1d(self, long x, long y)
     cdef bint _in_bounds(self, long x, long y)

@@ -1,6 +1,15 @@
+import os
+
 import setuptools
-import numpy as np
+
 from distutils.extension import Extension
+
+
+def get_include():
+    import numpy as np
+
+    return [np.get_include()]
+
 
 try:
     from Cython.Distutils import build_ext
@@ -49,13 +58,7 @@ try:
             "Melodie.boost.basics",
             ["Melodie/boost/basics.pyx"],
             language="c++",
-            # extra_compile_args=["-std=c++11"]
         ),
-        # Extension("Melodie.boost.containers.container",
-        #           ["Melodie/boost/containers/container.pyx"],
-        #           language="c++",
-        #           # extra_compile_args=["-std=c++11"]
-        #           ),
     ]
 except:
     import traceback
@@ -113,12 +116,14 @@ setuptools.setup(
         "sqlalchemy",
         "astunparse",
         "pprintast",
+        "cloudpickle",
         "cython==3.0.0a10",
+        "scikit-opt~=0.6",
     ],
-    python_requires=">=3.5",
+    python_requires=">=3.7",
     entry_points={"console_scripts": ["Melodie=Melodie.scripts.scripts:cli"]},
     include_package_data=True,
     ext_modules=ext_modules,
     cmdclass={"build_ext": build_ext},
-    include_dirs=[np.get_include()],
+    include_dirs=get_include(),
 )

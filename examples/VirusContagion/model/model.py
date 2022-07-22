@@ -1,9 +1,14 @@
 # -*- coding: utf-8 -*-
 __author__ = "Songmin"
 
+import os
+import time
+
+import psutil
+
 from Melodie import Model, AgentList, Grid, Spot
-from .agent import CovidAgent
-from .environment import CovidEnvironment
+from Melodie.boost import vectorize
+from .environment import CovidEnvironment, CovidAgent
 from .data_collector import CovidDataCollector
 from .scenario import CovidScenario
 
@@ -16,6 +21,7 @@ class CovidModel(Model):
             CovidAgent,
             self.scenario.agent_num,
             self.scenario.get_registered_dataframe("agent_params"),
+            "list",
         )
 
         with self.define_basic_components():
@@ -26,7 +32,7 @@ class CovidModel(Model):
                 Spot,
                 self.scenario.grid_x_size,
                 self.scenario.grid_y_size,
-                caching=False,
+                caching=True,
                 multi=True,
             )
             self.grid.add_agent_container(0, self.agent_list, "direct")

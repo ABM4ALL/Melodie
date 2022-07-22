@@ -2,7 +2,7 @@ import random
 
 import pandas as pd
 
-from Melodie import Agent, AgentList, GridAgent
+from Melodie import Agent, AgentList, GridAgent, AgentDict
 
 from .config import model
 
@@ -62,10 +62,21 @@ def test_properties():
 def test_add_del_agents():
     n = 20
     al = AgentList(TestAgent, n, model)
-
     al.remove(al[10])
     al.add()
     assert al[-1].id == 20
+    assert len(al) == 20
+    for agent in al:
+        assert al.get_agent(agent.id).id == agent.id
+    new_agent = TestAgent(100)
+    al.add(new_agent, {"id": 1000})
+
+
+def test_add_del_agents_dict():
+    n = 20
+    al = AgentDict(TestAgent, n, model)
+    al.remove(al[10])
+    al.add()
     assert len(al) == 20
     for agent in al:
         assert al.get_agent(agent.id).id == agent.id
@@ -95,24 +106,28 @@ def test_properties_with_scenario():
     """
     n = 10
     assert isinstance(model.scenario.id, int)
-    al = AgentList(TestAgent, n, model)
-    l = [j for j in range(n)]
-    random.shuffle(l)
-    df = pd.DataFrame(
-        [{"id": i, "scenario_id": 0, "a": random.randint(-100, 100)} for i in l]
-        + [
-            {"id": i, "scenario_id": model.scenario.id, "a": random.randint(-100, 100)}
-            for i in l
-        ]
-    )
-    al.set_properties(df)
-    assert len(al) == n
-    df_scenario = df.query(f"scenario_id == {model.scenario.id}")
-    for agent in al:
-        assert agent.a == (df_scenario[df_scenario["id"] == agent.id]["a"].item())
+    for al in [AgentList(TestAgent, n, model), AgentDict(TestAgent, n, model)]:
+        l = [j for j in range(n)]
+        random.shuffle(l)
+        df = pd.DataFrame(
+            [{"id": i, "scenario_id": 0, "a": random.randint(-100, 100)} for i in l]
+            + [
+                {
+                    "id": i,
+                    "scenario_id": model.scenario.id,
+                    "a": random.randint(-100, 100),
+                }
+                for i in l
+            ]
+        )
+        al.set_properties(df)
+        assert len(al) == n
+        df_scenario = df.query(f"scenario_id == {model.scenario.id}")
+        for agent in al:
+            assert agent.a == (df_scenario[df_scenario["id"] == agent.id]["a"].item())
 
-    assert al.new_id() == 10
-    print([a.id for a in al])
+        assert al.new_id() == 10
+        print([a.id for a in al])
 
 
 def test_grid_agents():

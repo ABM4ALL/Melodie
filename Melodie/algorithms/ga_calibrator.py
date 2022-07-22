@@ -32,14 +32,14 @@ class GACalibratorAlgorithm:
     """
 
     def __init__(
-            self,
-            env_param_names: List[str],
-            recorded_env_properties: List[str],
-            recorded_agent_properties: Dict[str, List[str]],
-            params: GACalibratorParams,
-            target_func: "Callable[[Environment], Union[float, int]]",
-            manager: "Calibrator" = None,
-            processors=1,
+        self,
+        env_param_names: List[str],
+        recorded_env_properties: List[str],
+        recorded_agent_properties: Dict[str, List[str]],
+        params: GACalibratorParams,
+        target_func: "Callable[[Environment], Union[float, int]]",
+        manager: "Calibrator" = None,
+        processors=1,
     ):
         global pool
         self.manager = manager
@@ -109,10 +109,10 @@ class GACalibratorAlgorithm:
         return env_parameters_dict
 
     def target_function_to_cache(
-            self,
-            env_data,
-            generation: int,
-            chromosome_id: int,
+        self,
+        env_data,
+        generation: int,
+        chromosome_id: int,
     ):
         """
         Extract the value of target functions from Model, and write them into cache.
@@ -136,10 +136,10 @@ class GACalibratorAlgorithm:
         return f
 
     def record_agent_properties(
-            self,
-            agent_data: Dict[str, List[Dict[str, Any]]],
-            env_data: Dict[str, Any],
-            meta: GACalibratorAlgorithmMeta,
+        self,
+        agent_data: Dict[str, List[Dict[str, Any]]],
+        env_data: Dict[str, Any],
+        meta: GACalibratorAlgorithmMeta,
     ):
         """
         Record the property of each agent in the current chromosome.
@@ -176,10 +176,10 @@ class GACalibratorAlgorithm:
         return agent_records, env_record
 
     def calc_cov_df(
-            self,
-            agent_container_df_dict: Dict[str, pd.DataFrame],
-            env_df: pd.DataFrame,
-            meta,
+        self,
+        agent_container_df_dict: Dict[str, pd.DataFrame],
+        env_df: pd.DataFrame,
+        meta,
     ):
         """
         Calculate the coefficient of variation

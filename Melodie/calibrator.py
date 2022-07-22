@@ -33,12 +33,12 @@ class Calibrator(BaseModellingManager):
     """
 
     def __init__(
-            self,
-            config: "Config",
-            scenario_cls: "Optional[ClassVar[Scenario]]",
-            model_cls: "Optional[ClassVar[Model]]",
-            df_loader_cls: ClassVar["DataFrameLoader"],
-            processors=1,
+        self,
+        config: "Config",
+        scenario_cls: "Optional[ClassVar[Scenario]]",
+        model_cls: "Optional[ClassVar[Model]]",
+        df_loader_cls: ClassVar["DataFrameLoader"],
+        processors=1,
     ):
         super().__init__(
             config=config,
@@ -87,7 +87,7 @@ class Calibrator(BaseModellingManager):
         ), "No learning scenarios table specified!"
         return calibrator_scenarios_table.to_dict(orient="records")
 
-    def calibrate_new(self):
+    def calibrate(self):
         """
         The main method for calibrator.
         :return:
@@ -134,7 +134,7 @@ class Calibrator(BaseModellingManager):
         :return:
         """
         assert (
-                prop not in self.properties
+            prop not in self.properties
         ), f'Property "{prop}" is already in the calibrating training_properties!'
         self.properties.append(prop)
 

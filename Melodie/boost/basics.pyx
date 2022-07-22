@@ -18,7 +18,7 @@ cdef class Element:
         :return:
         """
         for paramName, paramValue in params.items():
-            assert paramName in self.__dict__.keys(), f"param named {paramName}, value {paramValue} not in Agent.params:{self.__dict__.keys()}"
+            assert hasattr(self, paramName), f"param named {paramName}, value {paramValue} not in Agent.params"
             setattr(self, paramName, paramValue)
 
 
@@ -30,22 +30,6 @@ cdef class Agent(Element):
         self.id = agent_id
         self.scenario = None
         self.model = None
-
-
-    cpdef void set_params(self, dict params) except *:
-        """
-        As ``Agent.id`` is a Cython-compiled property, it cannot be modified by ``setattr()`` function. 
-        So this method is for overcoming this problem.
-
-        :param params: None
-        :return:
-        """
-        for paramName, paramValue in params.items():
-            if paramName=="id":
-                self.id = paramValue
-            else:
-                assert paramName in self.__dict__.keys(), f"param named {paramName}, value {paramValue} not in Agent.params:{self.__dict__.keys()}"
-                setattr(self, paramName, paramValue)
 
     def setup(self):
         """
@@ -74,6 +58,8 @@ cdef class Agent(Element):
         pass
 
     def __repr__(self) -> str:
+        if not hasattr(self, '__dict__'):
+            return super().__repr__()
         d = {k: v for k, v in self.__dict__.items() if
              not k.startswith("_")}
         d['id'] = self.id
@@ -106,11 +92,9 @@ cdef class Environment(Element):
         """
         cdef dict d
         cdef str property 
-        if properties is None:
-            properties = self.__dict__.keys()
         d = {}
         for property in properties:
-            d[property] = self.__dict__[property]
+            d[property] = getattr(self, property)
         return d
 
     cpdef to_dataframe(self, properties: List[str]):

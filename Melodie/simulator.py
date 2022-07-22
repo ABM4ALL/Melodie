@@ -151,6 +151,8 @@ class Simulator(BaseModellingManager):
             visualizer.start()
 
         t1 = time.time()
+        logger.info(f"Model setup, taking {t1 - t0} seconds.")
+        logger.info(f"Model is running...")
         model.run()
         if visualizer is not None:
             model.visualizer.finish()

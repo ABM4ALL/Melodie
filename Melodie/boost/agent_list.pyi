@@ -25,7 +25,7 @@ class SeqIter(Generic[AgentGeneric]):
         self._i = 0
     def __next__(self) -> AgentGeneric: ...
 
-class BaseAgentContainer(Generic[AgentGeneric]):
+class BaseAgentContainer(Iterable[Generic[AgentGeneric]]):
 
     _agent_ids = set()
 
@@ -33,6 +33,7 @@ class BaseAgentContainer(Generic[AgentGeneric]):
         self._id_offset = -1
         self.scenario: Union[Scenario, None] = None
         self.agents: Union[List[AgentGeneric], Set[AgentGeneric], None] = None
+    def __iter__(self) -> Generic[AgentGeneric]: ...
     def new_id(self) -> int: ...
     def all_agent_ids(self) -> List[int]: ...
     def to_list(self, column_names: List[str] = None) -> List[Dict]: ...

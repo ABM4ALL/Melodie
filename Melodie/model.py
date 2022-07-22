@@ -4,15 +4,15 @@ from typing import ClassVar, Optional, Union
 
 import pandas as pd
 
-from . import DBConn
 from .boost.basics import Agent, Environment
-from .boost.agent_list import AgentList, BaseAgentContainer
+from .boost.agent_list import AgentList, BaseAgentContainer, AgentDict
+from .boost.grid import GridAgent
 from .basic import MelodieExceptions, show_prettified_warning, show_link
 from .config import Config
 from .data_collector import DataCollector
 from .scenario_manager import Scenario
 from .table_generator import TableGenerator
-from .db import create_db_conn
+from .db import create_db_conn, DBConn
 from .visualizer import Visualizer
 
 logger = logging.getLogger(__name__)
@@ -90,6 +90,20 @@ class Model:
     def create_db_conn(self) -> "DBConn":
         return create_db_conn(self.config)
 
+    def check_grid_agents_initialized(self):
+        """
+        Check if grid agents are initialized
+        :return:
+        """
+        for prop_name, prop in self.__dict__.items():
+            if isinstance(prop, BaseAgentContainer):
+                for agent in prop:
+                    if isinstance(agent, GridAgent):
+                        assert agent.grid is not None, (
+                            "GridAgents created before running"
+                            "should be added onto the Grid."
+                        )
+
     @contextmanager
     def define_basic_components(self):
         """
@@ -111,6 +125,7 @@ class Model:
             )
             self.data_collector.model = self
             self.data_collector.setup()
+        # self.check_grid_agents_initialized()
 
     def create_agent_container(
         self,
@@ -132,6 +147,8 @@ class Model:
         agent_container_class: Union[ClassVar[AgentList], None]
         if container_type == "list":
             agent_container_class = AgentList
+        elif container_type == "dict":
+            agent_container_class = AgentDict
         else:
             raise NotImplementedError(
                 f"Container type '{container_type}' is not valid!"

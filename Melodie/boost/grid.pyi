@@ -14,6 +14,7 @@ class AgentIDManager:
 class GridItem(Agent):
     x: int
     y: int
+    grid: Grid
 
     def __init__(self, agent_id: int, x: int = 0, y: int = 0):
         pass
@@ -24,6 +25,8 @@ class GridAgent(GridItem):
     def __init__(self, agent_id: int, x: int = 0, y: int = 0, category: int = 0):
         super().__init__(agent_id, x, y)
     def setup(self):
+        pass
+    def rand_move(self, x_range: int, y_range: int):
         pass
 
 class Spot(GridItem):

@@ -1,9 +1,28 @@
+# cython: profile=True
+# cython:language_level=3
+# -*- coding:utf-8 -*-
+
 import random
+import time
 
 from typing import List, Tuple
-from Melodie import Environment, AgentList, Grid
-from .agent import CovidAgent
+
+import numpy
+
+from Melodie.boost import vectorize
 from .scenario import CovidScenario
+from Melodie import Environment, AgentList, GridAgent, Grid
+
+
+class CovidAgent(GridAgent):
+    def setup(self):
+        self.x = 0
+        self.y = 0
+        self.category = 0
+        self.condition = 0
+
+    def move(self):
+        self.rand_move(1, 1)
 
 
 class CovidEnvironment(Environment):
@@ -15,19 +34,20 @@ class CovidEnvironment(Environment):
         self.infection_probability: float = self.scenario.infection_probability
         self.accumulated_infection: int = 0
 
-    def agents_move(self, agent_list: "AgentList[CovidAgent]", grid: "Grid") -> None:
+    def agents_move(self, agent_list: "AgentList[CovidAgent]", grid: "Grid"):
+        agent_list: AgentList
+        agent: CovidAgent
         for agent in agent_list:
-            agent.move(grid)
+            agent.move()
 
-    def agents_infection(
-        self, agent_list: "AgentList[CovidAgent]", grid: "Grid"
-    ) -> None:
-
+    def agents_infection(self, agent_list: "AgentList[CovidAgent]", grid: "Grid"):
         for agent in agent_list:
             if agent.condition == 1:
                 pass
             else:
-                neighbors = grid.get_neighbors(agent.x, agent.y, 1, except_self=False)
+                neighbors: list = grid.get_neighbors(
+                    agent.x, agent.y, 1, moore=True, except_self=False
+                )
                 agent.condition = self.infect_from_neighbor(
                     agent.id, neighbors, grid, agent_list
                 )
@@ -36,22 +56,25 @@ class CovidEnvironment(Environment):
         self,
         current_agent_id: int,
         neighbors: List[Tuple[int, int]],
-        grid: "Grid",
+        grid: Grid,
         agent_list: "AgentList[CovidAgent]",
     ) -> int:
+
         for neighbor in neighbors:
-            agent_ids = grid.get_agent_ids(neighbor[0], neighbor[1])
+            x, y = neighbor[0], neighbor[1]
+            agent_ids = grid.get_agent_ids(x, y)
             for agent_id, agent_category in agent_ids:
                 if agent_id == current_agent_id:
                     continue
+                a: CovidAgent = agent_list.get_agent(agent_id)
                 if (
-                    agent_list.get_agent(agent_id).condition == 1
+                    a.condition == 1
                     and random.uniform(0, 1) < self.infection_probability
                 ):
                     return 1
         return 0
 
-    def calculate_accumulated_infection(self, agents):
+    def calculate_accumulated_infection(self, agents: AgentList):
         accumulated = 0
         for agent in agents:
             accumulated += agent.condition

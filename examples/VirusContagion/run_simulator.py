@@ -1,6 +1,6 @@
 import sys
 
-from Melodie import Simulator
+from Melodie import Simulator, run_profile
 
 sys.path.append("../..")
 from model.scenario import CovidScenario
@@ -16,4 +16,4 @@ if __name__ == "__main__":
         df_loader_cls=CovidDataFrameLoader,
     )
 
-    simulator.run()
+    run_profile(simulator.run)
