@@ -2,11 +2,11 @@
 Melodie: Agent-based Modeling in Python
 =======================================
 
-*Melodie* is an open-source library for developing, calibrating, and training agent-based models.
-It is located on `ABM4ALL <https://github.com/ABM4ALL>`_,
+**Melodie** is an open-source Python library for developing agent-based models.
+The repositories of Melodie and its example models are maintained on `ABM4ALL <https://github.com/ABM4ALL>`_,
 a developing community among agent-based modelers for sharing ideas and resources.
-The name *Melodie* comes from a beautiful example for explaining \"emergence\", the core concept of complexity theory.
 
+The name **Melodie** comes from a beautiful example which explains the core concept of complexity theory: \"`emergence`\".
 In his bold book *Emergent Evolution*, `C. Lloyd Morgan <https://en.wikipedia.org/wiki/C._Lloyd_Morgan>`_ wrote:
 \"The emergent step, though it may seem more or less saltatory [a leap], is best regarded as a qualitative change of direction,
 or critical turning-point, in the course of events.\" Then, Morgan poetically exemplified how *Melody* emerges from chords
@@ -19,21 +19,19 @@ by quoting a verse of Browning:
 
 Sitting in Karlsruhe, a lovely city in southern Germany, I take the German translation - \"Melodie\" - as the name of this library.
 
-.. Quick orientation:
-
-.. Citation:
+.. image:: image/karlsruhe.png
 
 .. toctree::
-    :maxdepth: 2
+    :hidden:
 
-    installation/_main
-    introduction/_main
-    tutorial/_main
-    gallery/_main
-    api/_main
-    changelog/_main
-    contribution/_main
-    about/_main
+    installation
+    introduction
+    tutorial/tutorial_index
+    api/api_index
+    gallery/gallery_index
+    changelog
+    contribution
+    about
 
 
 

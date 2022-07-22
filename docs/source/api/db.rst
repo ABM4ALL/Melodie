@@ -1,10 +1,8 @@
 
-Grid
+DB
 =============
 
-.. include spot
-
-.. automodule:: Melodie.boost.grid
+.. automodule:: Melodie.db
                :undoc-members:
                :members:
                :show-inheritance:
