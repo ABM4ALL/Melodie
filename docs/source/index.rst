@@ -27,6 +27,7 @@ Sitting in Karlsruhe, a lovely city in southern Germany, I take the German trans
     installation
     introduction
     tutorial/tutorial_index
+    techniques/techniques_index
     api/api_index
     gallery/gallery_index
     changelog
