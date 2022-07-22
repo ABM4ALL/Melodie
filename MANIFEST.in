@@ -1,4 +1,5 @@
 recursive-include Melodie/boost *.pyi *.pxd
+recursive-include Melodie *.txt
 include requirements.txt
 include pyproject.toml
 exclude Melodie/boost *.c

@@ -4,6 +4,5 @@ numpy >= "1.20"
 cython==3.0.0a10
 sphinx_rtd_theme
 recommonmark
-sphinxcontrib.mermaid
 sphinx_markdown_tables
 pytest-timeout

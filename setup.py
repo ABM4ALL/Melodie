@@ -18,14 +18,6 @@ try:
     import numpy
     import sys
 
-    print(
-        "cython version is",
-        Cython.__version__,
-        Cython.__file__,
-        sys.executable,
-        numpy.__version__,
-    )
-
     Options.annotate = True
     ext_modules = [
         Extension(
@@ -72,12 +64,15 @@ except:
         )
 
 
+with open("Melodie/version.txt", "r") as fv:
+    version = fv.read()
+
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
     name="Melodie",
-    version="0.1.0",
+    version=version,
     description="A general framework that can be used to establish agent-based models for specific uses.",
     long_description=long_description,
     long_description_content_type="text/markdown",

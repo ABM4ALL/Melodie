@@ -62,7 +62,7 @@ class GACalibratorAlgorithm:
         )
         self.cache: Dict[Tuple[int, int], float] = {}
         # self.agent_container_getters: Dict[str, Callable[[Model], AgentList]] = {}
-        # # self.agent_ids: Dict[str, List[int]] = {}  # {category : [agent_id]}
+        # self.agent_ids: Dict[str, List[int]] = {}  # {category : [agent_id]}
         # self.agent_params_defined: Dict[str, List[str]] = {}  # category: [param_name1, param_name2...]
         # self.recorded_agent_properties: Dict[str, List[str]] = {}  # category: [prop1, prop2...]
         # self.recorded_env_properties: List[str] = []  # category: [prop1, prop2...]

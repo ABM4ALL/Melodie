@@ -5,14 +5,13 @@ from Melodie.basic import MelodieExceptions
 parser = argparse.ArgumentParser()
 parser.add_argument(
     "action",
-    help="""[serve] for starting the management server;
-[run] for scanning code(NotImplemented)
+    help="""[action] for starting the management server;
 """,
 )
 
 
 def check_args(action: str):
-    if action not in {"studio"}:
+    if action not in {"studio", "info"}:
         raise MelodieExceptions.Program.Variable.VariableNotInSet(
             "Command-Line argument 'action'", action, {"studio"}
         )
@@ -24,3 +23,7 @@ if args.action == "studio":
     from MelodieStudio.main import studio_main
 
     studio_main()
+elif args.action == "info":
+    from Melodie import get_system_info
+
+    get_system_info()

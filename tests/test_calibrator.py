@@ -1,5 +1,3 @@
-import time
-
 import pytest
 
 from Melodie import DataFrameLoader
@@ -17,4 +15,3 @@ def test_calibrator():
         cfg_for_calibrator, CovidScenario, CovidModel, DFLoader
     )
     calibrator.calibrate()
-    pass

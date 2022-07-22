@@ -30,7 +30,7 @@ def sub_routine_calibrator(
         import logging
 
         logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
-        logger = logging.getLogger(f"Trainer-processor-{proc_id}")
+        logger = logging.getLogger(f"Calibrator-processor-{proc_id}")
         logger.info("subroutine started!")
 
         classes_dict = {}

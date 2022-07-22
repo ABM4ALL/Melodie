@@ -3,26 +3,12 @@
 # -*- coding:utf-8 -*-
 
 import random
-import time
-
 from typing import List, Tuple
 
-import numpy
+from Melodie import Environment, AgentList, Grid
 
-from Melodie.boost import vectorize
+from .agent import CovidAgent
 from .scenario import CovidScenario
-from Melodie import Environment, AgentList, GridAgent, Grid
-
-
-class CovidAgent(GridAgent):
-    def setup(self):
-        self.x = 0
-        self.y = 0
-        self.category = 0
-        self.condition = 0
-
-    def move(self):
-        self.rand_move(1, 1)
 
 
 class CovidEnvironment(Environment):

@@ -10,6 +10,7 @@ from Melodie import (
     GridAgent,
     Scenario,
     Grid,
+    DataCollector,
 )
 
 
@@ -58,8 +59,10 @@ class CovidModel(Model):
         self.agent_list: AgentList[CovidAgent] = self.create_agent_container(
             CovidAgent, 1000
         )
+
         with self.define_basic_components():
             self.environment = CovidEnvironment()
+            self.data_collector = DataCollector()
 
     def run(self):
         self.environment.env_run(self.agent_list)

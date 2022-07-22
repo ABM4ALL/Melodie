@@ -41,6 +41,9 @@ class BaseAgentContainer(Iterable[Generic[AgentGeneric]]):
     def set_properties(self, props_df: pd.DataFrame) -> None: ...
     def get_agent(self, agent_id: int) -> Optional[AgentGeneric]: ...
 
+class AgentDict(BaseAgentContainer):
+    pass
+
 class AgentList(BaseAgentContainer, Sequence, typing.Sequence[AgentGeneric]):
     def __init__(
         self, agent_class: ClassVar[AgentGeneric], length: int, model: "Model"

@@ -137,12 +137,29 @@ class DataCollector:
                 self.agent_properties_dict[container_name] = []
             self.agent_properties_dict[container_name].extend(agent_prop_list)
 
+    @property
+    def status(self):
+        """
+        If data collector is enabled.
+        Data collector is only enabled in the Simulator, because Trainer and Calibrator are only concerned over
+        the properties at the end of the model-running.
+
+        :return:
+        """
+        from .simulator import Simulator
+
+        operator = self.model.scenario.manager
+        return isinstance(operator, Simulator)
+
     def collect(self, step: int):
         """
         The main function to collect data.
+
         :param step:
         :return:
         """
+        if not self.status:
+            return
         t0 = time.time()
         env = self.model.environment
 
@@ -165,6 +182,8 @@ class DataCollector:
 
         :return:
         """
+        if not self.status:
+            return
         t0 = time.time()
         write_db_time = 0
         connection = self.model.create_db_conn()

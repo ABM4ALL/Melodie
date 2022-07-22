@@ -4,10 +4,7 @@ __author__ = "Songmin"
 import os
 import time
 
-import psutil
-
 from Melodie import Model, AgentList, Grid, Spot
-from Melodie.boost import vectorize
 from .environment import CovidEnvironment, CovidAgent
 from .data_collector import CovidDataCollector
 from .scenario import CovidScenario

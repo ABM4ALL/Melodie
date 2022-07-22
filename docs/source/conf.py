@@ -33,7 +33,6 @@ extensions = [
     "sphinx.ext.mathjax",
     "sphinx_rtd_theme",
     "recommonmark",
-    "sphinxcontrib.mermaid",
     "sphinx_markdown_tables",
 ]
 
@@ -58,7 +57,6 @@ html_theme_options = {"collapse_navigation": False}
 # so a data named "default.css" will overwrite the builtin "default.css".
 html_static_path = []
 html_css_files = []
-
 # This allows us to dynamically pick between gif and png images based on the build.
 # For example, when we have something like:
 # .. image:: that_directory/this_image.*
@@ -71,5 +69,6 @@ StandaloneHTMLBuilder.supported_image_types = [
     "image/png",
     "image/jpeg",
 ]
-
-html_sidebars = {'**': ['globaltoc.html', 'relations.html', 'sourcelink.html', 'searchbox.html']}
+html_sidebars = {
+    "**": ["globaltoc.html", "relations.html", "sourcelink.html", "searchbox.html"]
+}

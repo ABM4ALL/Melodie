@@ -6,12 +6,25 @@ from typing import List
 
 import pandas as pd
 
-from Melodie import Agent, DataCollector, Environment, Scenario, Simulator, Model
+from Melodie import (
+    Agent,
+    DataCollector,
+    Environment,
+    Scenario,
+    Simulator,
+    Model,
+    DataFrameLoader,
+)
 from Melodie.basic import MelodieException
-from .config import cfg_for_temp
+from .calibrator import CovidCalibrator, CovidScenario, CovidModel
+from .config import cfg_for_temp, cfg_for_calibrator
 
 AGENT_NUM_1 = 10
 AGENT_NUM_2 = 20
+
+
+class DFLoader(DataFrameLoader):
+    pass
 
 
 class TestAgent(Agent):
@@ -92,10 +105,23 @@ def test_model_run():
         scenario_cls=TestScenario,
     )
     sim.run()
+
     dc: DataCollector = data_collector
+    assert dc.status == True
     dc.collect(0)
     assert len(dc.agent_properties_dict["agent_list1"]) == AGENT_NUM_1
     assert len(dc.agent_properties_dict["agent_list2"]) == AGENT_NUM_2
     dc.collect(1)
     assert len(dc.agent_properties_dict["agent_list1"]) == AGENT_NUM_1 * 2
     assert len(dc.agent_properties_dict["agent_list2"]) == AGENT_NUM_2 * 2
+
+
+def test_status():
+    calibrator = CovidCalibrator(
+        cfg_for_calibrator, CovidScenario, CovidModel, DFLoader
+    )
+    model: CovidModel = calibrator.model_cls(
+        cfg_for_calibrator, calibrator.scenario_cls(0)
+    )
+    model.setup()
+    assert model.data_collector.status == False

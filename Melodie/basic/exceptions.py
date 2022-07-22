@@ -237,7 +237,7 @@ class MelodieExceptions:
         def AgentPropertyNameNotExist(property_name, agent):
             return MelodieException(
                 1302,
-                f"Agent {agent} does not have property {property_name}. All properties are:{list(agent.__dict__.keys())}",
+                f"Agent {agent} does not have property {property_name}.",
             )
 
         @staticmethod

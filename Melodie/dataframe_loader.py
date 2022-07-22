@@ -114,10 +114,9 @@ class DataFrameLoader:
         """
         Create a new generator
         :param table_name:
-        :param rows_in_scenario:
-            How many rows will be generated for a specific scenario.
-            This argument should be an integer as number of rows for each scenario, or a function with a parameter typed
-            `Scenario` and return an integer for how many rows to generate for this scenario .
+        :param rows_in_scenario: How many rows will be generated for a specific scenario. \
+            This argument should be an integer as number of rows for each scenario, or a function with a parameter \
+            with type `Scenario` and return an integer for how many rows to generate for this scenario .
         :return:
         """
         return TableGenerator(self, table_name, rows_in_scenario)
