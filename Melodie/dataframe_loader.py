@@ -31,7 +31,6 @@ class DataFrameLoader:
     def setup(self):
         pass
 
-    @abc.abstractmethod
     def register_scenario_dataframe(self) -> None:
         """
         This method must be overriden.
