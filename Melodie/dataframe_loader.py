@@ -1,7 +1,8 @@
 import abc
+import sqlalchemy
 import os
 from typing import Optional, Dict, List, ClassVar, Union, Callable
-
+from dataclasses import dataclass
 import pandas as pd
 
 from Melodie import TableGenerator, Scenario
@@ -9,6 +10,20 @@ from Melodie.basic import MelodieExceptions
 from Melodie.config import Config
 
 from Melodie.db import DBConn, create_db_conn
+
+
+@dataclass
+class DataFrameInfo:
+    df_name: str
+    file_name: str
+    columns: Dict[str, 'sqlalchemy.types']
+
+    @property
+    def data_types(self) -> dict:
+        dtypes = {}
+        for key, value in self.columns.items():
+            dtypes[key] = value
+        return dtypes
 
 
 class DataFrameLoader:
@@ -31,7 +46,6 @@ class DataFrameLoader:
     def setup(self):
         pass
 
-    @abc.abstractmethod
     def register_scenario_dataframe(self) -> None:
         """
         This method must be overriden.
@@ -55,7 +69,6 @@ class DataFrameLoader:
         self, table_name: str, data_frame: pd.DataFrame, data_types: dict = None
     ) -> None:
         """
-
         :param table_name:
         :param data_frame:
         :param data_types:
@@ -107,6 +120,9 @@ class DataFrameLoader:
         self.registered_dataframes[table_name] = create_db_conn(
             self.config
         ).read_dataframe(table_name)
+
+    def load_df(self, df_info: 'DataFrameInfo'):
+        self.load_dataframe(df_info.df_name, df_info.file_name, df_info.data_types)
 
     def table_generator(
         self, table_name: str, rows_in_scenario: Union[int, Callable[[Scenario], int]]
