@@ -10,7 +10,7 @@ from .db import DBConn, create_db_conn
 from .model import Model
 from .scenario_manager import Scenario
 from .table_generator import TableGenerator
-from .dataframe_loader import DataFrameLoader
+from .dataframe_loader import DataFrameInfo, DataFrameLoader
 from .simulator import Simulator
 from .calibrator import Calibrator
 from .visualizer import Visualizer, GridVisualizer
