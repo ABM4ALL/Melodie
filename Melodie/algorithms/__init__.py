@@ -2,8 +2,6 @@
 
 from .ga import (
     SearchingAlgorithm,
-    GeneticAlgorithmTrainer,
-    GeneticAlgorithmCalibrator,
     GATrainerParams,
     GACalibratorParams,
 )
