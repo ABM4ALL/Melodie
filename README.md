@@ -17,7 +17,8 @@ Songmin
   * create issues --> squash and merge, changelog
 * revise some names
   * get_registered_dataframe --> get_df (keep both and add expiring reminder)
-  * excel_source --> input (csv?)
+  * load_dataframe --> load_df (define MelodieDataframe)
+  * excel_source --> input
 
 
 Zhanyi
