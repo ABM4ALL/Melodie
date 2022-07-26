@@ -161,7 +161,7 @@ class DataFrameLoader:
                     scenario.__dict__[col_name] = value.item()
             scenarios.append(scenario)
         if len(scenarios) == 0:
-            raise MelodieExceptions.Scenario.ScenariosIsEmptyList()
+            raise MelodieExceptions.Scenario.NoValidScenarioGenerated(scenarios)
         return scenarios
 
     def generate_scenarios(self, manager_type: str) -> List["Scenario"]:

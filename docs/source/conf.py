@@ -72,3 +72,5 @@ StandaloneHTMLBuilder.supported_image_types = [
 html_sidebars = {
     "**": ["globaltoc.html", "relations.html", "sourcelink.html", "searchbox.html"]
 }
+
+autodoc_member_order = "bysource"

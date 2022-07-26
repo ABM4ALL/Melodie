@@ -7,6 +7,9 @@ if TYPE_CHECKING:
 
 
 def assert_exc_occurs(exc_id: int, func: Callable):
+    """
+    Assert that this exception will occur.
+    """
     try:
         func()
         assert False
@@ -25,33 +28,51 @@ class MelodieExceptions:
     class Assertions:
         @staticmethod
         def Type(name, obj, expected_type):
+            """
+            Assert that the type of `obj` is the `expected_type`.
+            """
             if not isinstance(obj, expected_type):
                 raise MelodieExceptions.General.TypeError(name, obj, expected_type)
 
         @staticmethod
         def IsNone(name, obj):
+            """
+            Assert variable `obj` is None.
+
+            """
             if obj is not None:
                 raise TypeError(f"{name} should be None, however it is not None.")
 
         @staticmethod
         def NotNone(name, obj):
+            """
+            Assert that the `obj` is not None
+            """
             if obj is None:
                 raise TypeError(f"{name} should not be None, however it is None.")
 
     class General:
         @staticmethod
         def TypeError(name, obj, expected_type: type):
+            """
+            The encapsulation of TypeError
+            """
             return TypeError(
                 f"{name} should be a {expected_type}, however it was {type(obj)}, value {obj}"
             )
 
         @staticmethod
         def NoAttributeError(obj, attr_name: str):
+            """
+            The encapsulation of AttributeError
+            """
             return AttributeError(f"Object {obj} has no attribute{attr_name}")
 
     class Program:
         """
         Errors related to programming
+
+        * code: 1000
         """
 
         ID = 1000
@@ -61,6 +82,11 @@ class MelodieExceptions:
 
             @staticmethod
             def VariableInvalid(var_desc: str, var_value: Any, expected_value: Any):
+                """
+                If this occurs, please check the value of variable
+
+                * code: 1011
+                """
                 return MelodieException(
                     1011,
                     f"Variable {var_desc} is {var_value}, but expected {expected_value} ",
@@ -68,6 +94,12 @@ class MelodieExceptions:
 
             @staticmethod
             def VariableNotInSet(var_desc: str, var_value: Any, allowed_set: Set[Any]):
+                """
+                Please check if variable is in the allowed set.
+
+                * code: 1012
+                * example: If the allowed set is {"apple", "pears"}, but the variable value is "banana"
+                """
                 return MelodieException(
                     1012,
                     f"Variable {var_desc} is {var_value}, not in allowed set {allowed_set} ",
@@ -80,6 +112,12 @@ class MelodieExceptions:
             def FunctionArgsNumError(
                 func: Callable, expected_arg_num: int, actual_arg_num: int
             ):
+                """
+                Function should have correct number of arguments. If not, this error will be raised.
+
+                * code: 1021
+                * example: Expecting 1 argument, but the function was ``lambda a, b: a+b``
+                """
                 return MelodieException(
                     1021,
                     f"There should be {expected_arg_num} for function {func}, "
@@ -91,6 +129,7 @@ class MelodieExceptions:
 
         @staticmethod
         def StateNotFoundError(state, all_states):
+            """ """
             return MelodieException(
                 1101,
                 f"State {repr(state)} is not defined. All states are: {all_states}",
@@ -124,27 +163,65 @@ class MelodieExceptions:
 
         @staticmethod
         def ScenarioIDDuplicatedError(scenario_id):
+            """
+            Scenario ID should be unique. If there are identical scenario-id in the scenario table or generated,
+            this error will be raised.
+
+            * code: 1201
+            * example: The scenario table below could make this error occur.
+
+            .. list-table:: Scenarios
+               :widths: 25 25 25 25
+               :header-rows: 1
+
+               * - ID
+                 - env_param_1
+                 - env_param_2
+                 - ...
+               * - 0
+                 - 10
+                 - 20
+                 - ...
+               * - 0
+                 - 15
+                 - 20
+                 - ...
+
+            In this table, the ids of scenarios are identical, which will cause this exception.
+
+            """
             return MelodieException(
                 1201, f"Scenario id {scenario_id} was duplicated, which is not allowed."
             )
 
         @staticmethod
         def ScenarioIDTypeError(scenario_id):
+            """
+            Scenario ID should be integer type.
+
+            * code: 1202
+            * hint: Please check carefully to make sure the scenario id is integer.
+            """
             return MelodieException(
                 1202,
-                f"Scenario id {scenario_id} should be int or str. However its type was {type(scenario_id)}.",
-            )
-
-        @staticmethod
-        def ScenarioIDNotAllNoneError(scenario_id_nones: int, scenario_nums: int):
-            return MelodieException(
-                1203,
-                f"{scenario_id_nones} scenario(s) has/have id None, However there are totally {scenario_nums} scenarios.\n"
-                f"If you would like to use self-increment user ids, please make sure all scenarios has id of None!",
+                f"Scenario id {scenario_id} should be int. However its type was {type(scenario_id)}.",
             )
 
         @staticmethod
         def NoValidScenarioGenerated(scenarios):
+            """
+            Operators (Simulator/Trainer/Calibrator) will generate a list of scenarios.
+            If no scenario has been generated, this error will be raised.
+
+            * code: 1204
+
+            Hint:
+
+            * If you overrode the ``generate_scenarios`` method of DataframeLoader, make sure valid value returned.
+            * If you are using ``xlsx`` tables, make sure the first page of ``<operator_type>_scenarios.xlsx``
+              is not empty.
+
+            """
             return MelodieException(
                 1204,
                 f"The scenario manager has not generated any valid scenarios. "
@@ -153,88 +230,63 @@ class MelodieExceptions:
             )
 
         @staticmethod
-        def ScenariosIsEmptyList():
+        def ParameterRedefinedError(parameter_name: str, all_params: List):
+            """
+            For the interactive parameters of Scenario, the name should be unique.
+            If two parameters has the same name, this exception will be raised.
+
+            * code: 1205
+            """
             return MelodieException(
                 1205,
-                f"The scenario manager generated an empty scenario list. "
-                f"Please make sure gen_scenarios() returns a list of Scenario.",
-            )
-
-        @staticmethod
-        def ScenarioIDNotOfSameTypeError(id1, id2_type):
-            return MelodieException(
-                1206,
-                f"Scenario id should be of same type, however types {type(id1)} and {id2_type}"
-                f" detected. ",
-            )
-
-        @staticmethod
-        def ScenarioListItemTypeError(item):
-            return MelodieException(
-                1207,
-                f"Scenario list elements are not Scenario() but a {type(item)} object with value {item}",
-            )
-
-        @staticmethod
-        def NoScenarioSheetInExcel(file_name: str):
-            return MelodieException(
-                1208,
-                f"Melodie excel file {file_name} should have a sheet named 'scenarios' ",
-            )
-
-        @staticmethod
-        def ParameterRedefinedError(parameter_name: str, all_params: List):
-            return MelodieException(
-                1209,
                 f'A parameter with same name "{parameter_name}" already existed! all parameters are: {all_params}',
             )
 
         # @staticmethod
-        # def UnusedTableInExcel(excel_file_name: str, other_sheets: List[str]):
-        #     return MelodieException(1209,
-        #                             f'Melodie detected you used \'agent_params\' sheet to assign same parameter to agents in '
-        #                             f'despite scenario changes. However in this case there is/are other sheet(s) {other_sheets} '
-        #                             f'in the excel data {excel_file_name} which is not allowed in Melodie.')
+        # def ExcelAgentParamsRecordCountNotConsistentToScneario(
+        #         scenario_id, scenario_agents_num: int, param_table_name, param_num: int
+        # ):
+        #     return MelodieException(
+        #         1209,
+        #         f"Agent parameter sheet `{param_table_name}` contains {param_num} agents' parameter records.\n"
+        #         f"However `scenarios` sheet says there should be {scenario_agents_num}  agents "
+        #         f"initially in the scenario {scenario_id}.",
+        #     )
 
-        @staticmethod
-        def ExcelAgentParamsRecordCountNotConsistentToScneario(
-            scenario_id, scenario_agents_num: int, param_table_name, param_num: int
-        ):
-            return MelodieException(
-                1209,
-                f"Agent parameter sheet `{param_table_name}` contains {param_num} agents' parameter records.\n"
-                f"However `scenarios` sheet says there should be {scenario_agents_num}  agents "
-                f"initially in the scenario {scenario_id}.",
-            )
+        # @staticmethod
+        # def ExcelLackAgentParamsSheet(agent_param_sheet_name, supposed_sheets=""):
+        #     return MelodieException(
+        #         1210,
+        #         f"There was no excel sheet named 'agent_params', so there is supposed to be "
+        #         f"sheets named {supposed_sheets} containing agent parameters for each scenario."
+        #         f" However parameter sheet `{agent_param_sheet_name}` was not found in any excel file.",
+        #     )
 
-        @staticmethod
-        def ExcelLackAgentParamsSheet(agent_param_sheet_name, supposed_sheets=""):
-            return MelodieException(
-                1210,
-                f"There was no excel sheet named 'agent_params', so there is supposed to be "
-                f"sheets named {supposed_sheets} containing agent parameters for each scenario."
-                f" However parameter sheet `{agent_param_sheet_name}` was not found in any excel file.",
-            )
-
-        @staticmethod
-        def NoExcelFileContainsScenario(sheet_names: Dict[str, List[str]]):
-            return MelodieException(
-                1211,
-                f"No excel file contains a sheet named 'scenarios'. All files and their sheetnames "
-                f"are: {json.dumps(sheet_names, indent=4)} ",
-            )
+        # @staticmethod
+        # def NoExcelFileContainsScenario(sheet_names: Dict[str, List[str]]):
+        #     return MelodieException(
+        #         1211,
+        #         f"No excel file contains a sheet named 'scenarios'. All files and their sheetnames "
+        #         f"are: {json.dumps(sheet_names, indent=4)} ",
+        #     )
 
     class Agents:
         ID = 1300
 
         @staticmethod
         def AgentListEmpty(agent_manager):
+            """
+            * code: 1301
+            """
             return MelodieException(
                 1301, f"Agent manager {agent_manager} contains no agents!"
             )
 
         @staticmethod
         def AgentPropertyNameNotExist(property_name, agent):
+            """
+            * code: 1302
+            """
             return MelodieException(
                 1302,
                 f"Agent {agent} does not have property {property_name}.",
@@ -242,6 +294,11 @@ class MelodieExceptions:
 
         @staticmethod
         def AgentIDConflict(agent_container_name: str, agent_ids: List[int]):
+            """
+            Agent ID should be unique.
+
+            * code: 1303
+            """
             c = Counter(agent_ids)
             duplicated_ids = [
                 agent_id for agent_id, times in c.most_common() if times > 1
@@ -254,13 +311,6 @@ class MelodieExceptions:
 
     class Environment:
         ID = 1400
-
-        @staticmethod
-        def NoAgentListDefined(environment):
-            return MelodieException(
-                1401,
-                f"Environment {environment} has no AgentList defined, which is not allowed!",
-            )
 
     class Data:
         """
@@ -278,6 +328,12 @@ class MelodieExceptions:
 
         @staticmethod
         def StaticTableNotRegistered(table_name: str, all_table_names: List[str]):
+            """
+            Static table should be registered before use.
+
+            * code: 1502
+            * hint: Make sure this table is correctly registered in the DataFrameLoader.
+            """
             return MelodieException(
                 1502,
                 f"Table '{table_name}' is not registered. All registered tables are: {all_table_names}.",
@@ -285,6 +341,10 @@ class MelodieExceptions:
 
         @staticmethod
         def AttemptingReadingFromUnexistedTable(table_name):
+            """
+            When reading the database, the table must exist in the database.
+            * code: 1503
+            """
             return MelodieException(1503, f"Table '{table_name}' does not in database.")
 
         @staticmethod
@@ -294,6 +354,12 @@ class MelodieExceptions:
             dataframe_dtypes: Dict[str, type],
             agent: "Agent",
         ):
+            """
+            Object type should match the type defined in dataframe.
+
+            * code: 1504
+            * example: If the dataframe has type float, and agent property was str.
+            """
             return MelodieException(
                 1504,
                 f"The Agent property '{param_name}' is of type {param_type}, but the corresponding column "
@@ -303,6 +369,13 @@ class MelodieExceptions:
 
         @staticmethod
         def TableNameInvalid(table_name):
+            """
+            The table name should be an identifier.
+
+            * code: 1505
+            * hint: Do not use "+", "-", "*", "/" or other special characters.
+            * example: ``table-123``; ``table+123``
+            """
             return MelodieException(
                 1505,
                 f"Table name '{table_name}' is invalid."
@@ -311,23 +384,22 @@ class MelodieExceptions:
 
         @staticmethod
         def TableNotFound(table_name: str, all_tables: dict):
+            """
+            Table may not be registered.
+
+            * code: 1506
+
+            """
             return MelodieException(
                 1506,
                 f"Table '{table_name}' is not found. All registered tables are: {set(all_tables.keys())}",
             )
 
         @staticmethod
-        def TableColumnDoesNotMatchObjectProperty(
-            table_name: str, column_name: str, obj: object
-        ):
-            return MelodieException(
-                1507,
-                f"No property of object {obj.__class__.__name__} matchs column '{column_name}' "
-                f"at table '{table_name}' ",
-            )
-
-        @staticmethod
         def InvalidDatabaseType(database: str, supported_db_types: Set[str]):
+            """
+            * code: 1508
+            """
             return MelodieException(
                 1508,
                 f"Melodie only support these kinds of databases: {supported_db_types}.\n"
@@ -338,6 +410,11 @@ class MelodieExceptions:
 
         @staticmethod
         def NoDataframeLoaderDefined():
+            """
+            Dataframe Loader must be defined if you want to use the static table.
+
+            * code: 1509
+            """
             return MelodieException(
                 1509,
                 f"No dataframe loader defined for the Simulator/Calibrator/Trainer.",
@@ -352,6 +429,11 @@ class MelodieExceptions:
 
         @staticmethod
         def MelodieStudioUnAvailable():
+            """
+            Melodie studio must be started before visualizer process start.
+
+            * code: 1601
+            """
             return MelodieException(
                 1601,
                 f"Connection to Melodie Studio was refused. It seems that Melodie studio is not "
@@ -370,6 +452,10 @@ class MelodieExceptions:
 
             @staticmethod
             def ChartNameAlreadyDefined(chart_name: str, all_chart_names: List[str]):
+                """
+                * code: 1701
+                """
                 return MelodieException(
-                    f"Chart name '{chart_name}' is already defined. All chart names are: {all_chart_names}"
+                    1701,
+                    f"Chart name '{chart_name}' is already defined. All chart names are: {all_chart_names}",
                 )

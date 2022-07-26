@@ -25,3 +25,4 @@ this chapter provides the main APIs for each module
     db
     studio
     analyzer
+    melodie_error_list

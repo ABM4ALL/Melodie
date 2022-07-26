@@ -1,4 +1,4 @@
-from Melodie import Trainer, GeneticAlgorithmTrainer
+from Melodie import Trainer
 from .agent import RPSAgent
 
 

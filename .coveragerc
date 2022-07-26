@@ -12,3 +12,6 @@ exclude_lines =
 ignore_errors = True
 omit =
     tests/*
+    Melodie/plotter.py
+    Melodie/analyzer.py
+    Melodie/basic/parallel.py

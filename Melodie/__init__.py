@@ -1,6 +1,4 @@
 from .algorithms import (
-    GeneticAlgorithmTrainer,
-    GeneticAlgorithmCalibrator,
     GATrainerParams,
     GACalibratorParams,
 )
