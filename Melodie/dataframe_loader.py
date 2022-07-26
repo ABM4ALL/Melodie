@@ -15,7 +15,7 @@ from Melodie.db import DBConn, create_db_conn
 @dataclass
 class DataFrameInfo:
     df_name: str
-    file_name: str
+    file_name: Optional[str]
     columns: Dict[str, 'sqlalchemy.types']
 
     @property
