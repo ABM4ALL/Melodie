@@ -111,7 +111,7 @@ def test_create_ba():
         {"k": 3, "p": 0.2},
     )
     for i in range(10):
-        neighbors = n.get_neighbors(i, "wolves")
+        neighbors = n.get_grid_neighbors(i, "wolves")
         print(neighbors)
     # for node in neighbors:
     #     print(n.all_agent_on_node(node))

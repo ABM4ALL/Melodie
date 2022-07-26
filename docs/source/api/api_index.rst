@@ -13,6 +13,7 @@ this chapter provides the main APIs for each module
 
     model
     scenario
+    dataframe_loader
     agent_list
     environment
     data_collector
@@ -22,6 +23,5 @@ this chapter provides the main APIs for each module
     calibrator
     trainer
     db
-    dataframe_loader
     studio
     analyzer
