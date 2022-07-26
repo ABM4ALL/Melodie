@@ -7,6 +7,7 @@ import pandas as pd
 
 if TYPE_CHECKING:
     from Melodie import Calibrator, Simulator
+    from .dataframe_loader import DataFrameInfo
 logger = logging.getLogger(__name__)
 
 
@@ -110,6 +111,10 @@ class Scenario(Element):
     def get_registered_dataframe(self, table_name) -> pd.DataFrame:
         assert self.manager is not None
         return self.manager.get_registered_dataframe(table_name)
+
+    def get_dataframe(self, df_info: 'DataFrameInfo') -> pd.DataFrame:
+        assert self.manager is not None
+        return self.manager.get_registered_dataframe(df_info.df_name)
 
     # def get_scenarios_table(self) -> pd.DataFrame:
     #     assert self.manager is not None
