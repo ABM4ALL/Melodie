@@ -85,7 +85,7 @@ class DataFrameLoader:
             self.config
         ).read_dataframe(table_name)
 
-    def load_dataframe(self, table_name: str, file_name: str, data_types: dict) -> None:
+    def load_dataframe(self, df_info: 'DataFrameInfo') -> None:
 
         """
         Register static table, saving it to `self.registered_dataframes`.
@@ -99,6 +99,9 @@ class DataFrameLoader:
         :param data_types: Type information in a dict
         :return:
         """
+        table_name = df_info.df_name
+        file_name = df_info.file_name
+        data_types = df_info.data_types
         _, ext = os.path.splitext(file_name)
         table: Optional[pd.DataFrame]
 
@@ -117,12 +120,7 @@ class DataFrameLoader:
                 if_exists="replace",
             )
 
-        self.registered_dataframes[table_name] = create_db_conn(
-            self.config
-        ).read_dataframe(table_name)
-
-    def load_df(self, df_info: 'DataFrameInfo'):
-        self.load_dataframe(df_info.df_name, df_info.file_name, df_info.data_types)
+        self.registered_dataframes[table_name] = create_db_conn(self.config).read_dataframe(table_name)
 
     def table_generator(
         self, table_name: str, rows_in_scenario: Union[int, Callable[[Scenario], int]]
