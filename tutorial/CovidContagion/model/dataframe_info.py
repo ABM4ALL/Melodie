@@ -15,6 +15,15 @@ simulator_scenarios = DataFrameInfo(
         "grid_y_size": sqlalchemy.Integer(),
         "initial_infected_percentage": sqlalchemy.Float(),
         "young_percentage": sqlalchemy.Float(),
+        "network_type": sqlalchemy.Integer(),
+        "network_param_k": sqlalchemy.Integer(),
+        "network_param_p": sqlalchemy.Float(),
+        "network_param_m": sqlalchemy.Integer(),
+        "network_param_threshold": sqlalchemy.Float(),
+        "vaccination_trust_percentage": sqlalchemy.Float(),
+        "vaccination_ad_percentage": sqlalchemy.Float(),
+        "vaccination_ad_success_prob": sqlalchemy.Float(),
+        "vaccination_action_prob": sqlalchemy.Float(),
         "infection_prob": sqlalchemy.Float(),
         "reinfection_prob": sqlalchemy.Float(),
         "vaccinated_infection_prob": sqlalchemy.Float(),
@@ -43,6 +52,15 @@ id_health_state = DataFrameInfo(
     }
 )
 
+id_network_type = DataFrameInfo(
+    df_name="id_network_type",
+    file_name="id_network_type.xlsx",
+    columns={
+        "id": sqlalchemy.Integer(),
+        "network_type": sqlalchemy.String()
+    }
+)
+
 agent_params = DataFrameInfo(
     df_name="agent_params",
     columns={
@@ -51,6 +69,7 @@ agent_params = DataFrameInfo(
         "x": sqlalchemy.Integer(),
         "y": sqlalchemy.Integer(),
         "age_group": sqlalchemy.Integer(),
-        "health_state": sqlalchemy.Integer()
+        "health_state": sqlalchemy.Integer(),
+        "vaccination_trust_state": sqlalchemy.Integer()
     }
 )

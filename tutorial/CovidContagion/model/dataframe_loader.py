@@ -13,6 +13,7 @@ class CovidDataFrameLoader(DataFrameLoader):
         self.load_dataframe(df_info.simulator_scenarios)
         self.load_dataframe(df_info.id_age_group)
         self.load_dataframe(df_info.id_health_state)
+        self.load_dataframe(df_info.id_network_type)
 
     @staticmethod
     def init_age_group(young_percentage: float):
@@ -34,6 +35,16 @@ class CovidDataFrameLoader(DataFrameLoader):
             pass
         return state
 
+    @staticmethod
+    def init_vaccination_trust(vaccination_trust_percentage: float):
+        vaccination_trust_state = 0
+        rand = np.random.uniform(0, 1)
+        if rand <= vaccination_trust_percentage:
+            vaccination_trust_state = 1
+        else:
+            pass
+        return vaccination_trust_state
+
     def register_generated_dataframes(self):
 
         with self.table_generator(df_info.agent_params.df_name, lambda scenario: scenario.agent_num) as g:
@@ -48,6 +59,7 @@ class CovidDataFrameLoader(DataFrameLoader):
                     "y": np.random.randint(0, scenario.grid_y_size),
                     "age_group": self.init_age_group(scenario.young_percentage),
                     "health_state": self.init_health_state(scenario.initial_infected_percentage),
+                    "vaccination_trust_state": self.init_vaccination_trust(scenario.vaccination_trust_percentage)
                 }
 
             g.set_row_generator(generator_func)

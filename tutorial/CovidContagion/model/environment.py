@@ -1,3 +1,4 @@
+import random
 from typing import TYPE_CHECKING
 from Melodie import Environment, AgentList
 
@@ -6,10 +7,11 @@ from .scenario import CovidScenario
 
 if TYPE_CHECKING:
     from .grid import CovidGrid
+    from .network import CovidNetwork
 
 
 class CovidEnvironment(Environment):
-    scenario: CovidScenario
+    scenario: CovidScenario  # 这行代码会被编译吗？
 
     def setup(self):
         self.s0 = 0
@@ -46,3 +48,19 @@ class CovidEnvironment(Environment):
                 self.s3 += 1
             else:
                 self.s4 += 1
+
+    def agents_update_vaccination_trust_from_ad(self, agents: 'AgentList[CovidAgent]'):
+        for agent in agents:
+            if random.uniform(0, 1) <= self.scenario.vaccination_ad_percentage:
+                agent.update_vaccination_trust_from_ad()
+
+    @staticmethod
+    def agents_update_vaccination_trust_from_neighbors(agents: 'AgentList[CovidAgent]', network: 'CovidNetwork'):
+        for agent in agents:
+            agent.update_vaccination_trust_from_neighbors(network)
+
+    @staticmethod
+    def agents_take_vaccination(agents: 'AgentList[CovidAgent]'):
+        for agent in agents:
+            agent.take_vaccination()
+

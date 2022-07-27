@@ -8,6 +8,8 @@ class CovidSpot(Spot):
 
 class CovidGrid(Grid):
 
+    # 需要让grid能够访问scenario
+
     # Grid功能：shuffle agent的位置？
     # 能不能站同一个格子？
 

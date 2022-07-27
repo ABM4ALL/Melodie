@@ -5,6 +5,7 @@ from .environment import CovidEnvironment
 from .data_collector import CovidDataCollector
 from .scenario import CovidScenario
 from .grid import CovidSpot, CovidGrid
+from .network import CovidEdge, CovidNetwork
 from tutorial.CovidContagion.model import dataframe_info as df_info
 
 if TYPE_CHECKING:
@@ -14,7 +15,7 @@ if TYPE_CHECKING:
 class CovidModel(Model):
     scenario: CovidScenario
 
-    def setup(self):
+    def setup(self):  # create和setup两个概念也需要统一
         self.agents: 'AgentList[CovidAgent]' = self.create_agent_container(
             CovidAgent,
             self.scenario.agent_num,
@@ -31,7 +32,8 @@ class CovidModel(Model):
         )
         self.grid.add_agent_container(0, self.agents, "direct")  # direct这个参数名不太清楚
         # grid的四边相连？模拟看到了x = -1
-        # 对spot的每个参数，用一张张x*y的表初始化。
+
+        # self.network =
 
         with self.define_basic_components():
             self.environment = CovidEnvironment()

@@ -6,19 +6,23 @@ if TYPE_CHECKING:
     from Melodie import AgentList
     from .scenario import CovidScenario
     from .grid import CovidGrid
+    from .network import CovidNetwork
 
 
 class CovidAgent(GridAgent):
     scenario: 'CovidScenario'
 
-    def set_category(self):  # 要求用户如果继承GridAgent则必须定义category，且用整数
+    def set_category(self):
+        # 要求用户如果继承GridAgent则必须定义category，且用整数
+        # category这个变量名字好不好？
         ...
 
     def setup(self):
-        self.x = 0
+        self.x = 0  # 继承GridAgent之后好像不需要定义这俩了？
         self.y = 0
         self.age_group = 0
         self.health_state = 0
+        self.vaccination_trust_state = 0
 
     def move(self):
         # check the stay_prob of spot, if not stay, then move
@@ -55,10 +59,21 @@ class CovidAgent(GridAgent):
         else:
             pass
 
-    def get_network_neighbors(self):
+    def update_vaccination_trust_from_ad(self):
+        if self.vaccination_trust_state == 0 and random.uniform(0, 1) <= self.scenario.vaccination_ad_success_prob:
+            self.vaccination_trust_state = 1
+        else:
+            pass
+
+    def get_network_neighbors(self, network: 'CovidNetwork'):
         pass
 
+    def update_vaccination_trust_from_neighbors(self, network: 'CovidNetwork'):
+        if self.vaccination_trust_state == 0:
+            neighbors = self.get_network_neighbors(network)
+        else:
+            pass
+
     def take_vaccination(self):
-        # 受一个中央信号影响，同时受网络上的邻居影响，决定是否接种疫苗
-        # 只有health_state = 0的人考虑打疫苗，然后health_state = 4
-        pass
+        if self.health_state == 0 and random.uniform(0, 1) <= self.scenario.vaccination_action_prob:
+            self.health_state = 4
