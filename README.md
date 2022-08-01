@@ -7,16 +7,17 @@ Songmin
   * 例1 - VirusContagion在tutorial里一步步讲：先把没有grid和network的部分讲完，跑通并呈现结果，然后再加另外两个模块。最后再加可视化什么的。
   * 例2 - Brock and Hommes的模型，calibrator + trainer都可以用，两个版本。也在Tutorial里详细分步讲，先simulator。 
   * clean analyzer and plotter --> 这两个还是不作为Melodie的部分一起发布了吧，可以放在examples/gallery里提到。
-* revise some names
-  * get_registered_dataframe --> get_df (keep both and add expiring reminder)
+* revision
+  * get_registered_dataframe --> get_df (changes like this: keep both and add expiring reminder)
   * load_dataframe --> load_df (define MelodieDataframe)
   * excel_source --> input, 去掉sqlite文件夹，放到output里，如果用户需要其他的，让他们自己弄。
-  * register_generated_dataframes --> generate_agent_dataframe (统一table和df的叫法，我们是在设计规范)，此外，table_generator也可以叫agent_dataframe_generator
+  * register_generated_dataframes --> generate_agent_dataframe (统一table和df的叫法)，此外，table_generator也可以叫agent_dataframe_generator
   * log信息时间取两位小数
   * define_basic_components这个名字也比较模糊，不如分拆成env和data_collector各一个了？
   * create_agent_container这里container也是多了一个概念
   * agent and env results --> order of columns, 把结果表里的step（从1开始？）改成period
   * ModelRunRoutine --> use "iterator" in the name, e.g. ModelIterator
+  * save df to output folder as excel files
 
 
 Zhanyi
