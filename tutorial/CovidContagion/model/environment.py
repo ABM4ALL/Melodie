@@ -20,22 +20,22 @@ class CovidEnvironment(Environment):
         self.s3 = 0
         self.s4 = 0
 
-    def agents_move(self, agents: 'AgentList[CovidAgent]'):
+    def agents_move(self, agents: "AgentList[CovidAgent]"):
         for agent in agents:
             agent.move()
 
-    def agents_infection(self, agents: 'AgentList[CovidAgent]', grid: 'CovidGrid'):
+    def agents_infection(self, agents: "AgentList[CovidAgent]", grid: "CovidGrid"):
         for agent in agents:
             infection_prob = self.scenario.get_infection_prob(agent.health_state)
             if infection_prob is not None and infection_prob > 0:
                 agent.infect_from_neighbors(infection_prob, grid, agents)
 
     @staticmethod
-    def agents_health_state_transition(agents: 'AgentList[CovidAgent]'):
+    def agents_health_state_transition(agents: "AgentList[CovidAgent]"):
         for agent in agents:
             agent.health_state_transition()
 
-    def calc_agents_health_state(self, agents: 'AgentList[CovidAgent]'):
+    def calc_agents_health_state(self, agents: "AgentList[CovidAgent]"):
         self.setup()
         for agent in agents:
             if agent.health_state == 0:
@@ -49,18 +49,19 @@ class CovidEnvironment(Environment):
             else:
                 self.s4 += 1
 
-    def agents_update_vaccination_trust_from_ad(self, agents: 'AgentList[CovidAgent]'):
+    def agents_update_vaccination_trust_from_ad(self, agents: "AgentList[CovidAgent]"):
         for agent in agents:
             if random.uniform(0, 1) <= self.scenario.vaccination_ad_percentage:
                 agent.update_vaccination_trust_from_ad()
 
     @staticmethod
-    def agents_update_vaccination_trust_from_neighbors(agents: 'AgentList[CovidAgent]', network: 'CovidNetwork'):
+    def agents_update_vaccination_trust_from_neighbors(
+        agents: "AgentList[CovidAgent]", network: "CovidNetwork"
+    ):
         for agent in agents:
             agent.update_vaccination_trust_from_neighbors(network)
 
     @staticmethod
-    def agents_take_vaccination(agents: 'AgentList[CovidAgent]'):
+    def agents_take_vaccination(agents: "AgentList[CovidAgent]"):
         for agent in agents:
             agent.take_vaccination()
-

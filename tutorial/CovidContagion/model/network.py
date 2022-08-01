@@ -24,7 +24,9 @@ class CovidNetwork(Network):
 
     # 需要让network能够访问scenario
 
-    def generate_network(self, agents: 'AgentList[CovidAgent]', scenario: 'CovidScenario'):
+    def generate_network(
+        self, agents: "AgentList[CovidAgent]", scenario: "CovidScenario"
+    ):
         if scenario.network_type == 0:
             k = scenario.network_param_k
             p = scenario.network_param_p
@@ -37,20 +39,16 @@ class CovidNetwork(Network):
             print(f"The id_network_type = {scenario.network_type} is not implemented.")
         return network
 
-    def generate_small_world_network(self, agents: 'AgentList[CovidAgent]', k: int, p: float):
+    def generate_small_world_network(
+        self, agents: "AgentList[CovidAgent]", k: int, p: float
+    ):
         network = self.from_agent_containers(
-            {'agents': agents},
-            'watts_strogatz_graph',
-            {'k': k, 'p': p}
+            {"agents": agents}, "watts_strogatz_graph", {"k": k, "p": p}
         )
         return network
 
-    def generate_scale_free_network(self, agents: 'AgentList[CovidAgent]', m: int):
+    def generate_scale_free_network(self, agents: "AgentList[CovidAgent]", m: int):
         network = self.from_agent_containers(
-            {'agents': agents},
-            'barabasi_albert_graph',
-            {'m': m}
+            {"agents": agents}, "barabasi_albert_graph", {"m": m}
         )
         return network
-
-

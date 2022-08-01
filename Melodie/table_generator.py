@@ -5,11 +5,11 @@ from typing import Callable, Union, TYPE_CHECKING, Optional
 
 import pandas as pd
 
-from Melodie.basic import MelodieExceptions, args_check
-from Melodie.scenario_manager import Scenario
+from .basic import MelodieExceptions, args_check
+from .scenario_manager import Scenario
 
 if TYPE_CHECKING:
-    from Melodie import DataFrameLoader
+    from .dataframe_loader import DataFrameLoader
 
 logger = logging.getLogger(__name__)
 

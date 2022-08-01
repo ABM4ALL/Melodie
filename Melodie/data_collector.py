@@ -1,8 +1,8 @@
+import logging
 import time
 from typing import List, ClassVar, TYPE_CHECKING, Dict, Tuple, Any, Optional
 
 import pandas as pd
-import logging
 
 from Melodie.basic import MelodieExceptions
 from Melodie.db import DBConn

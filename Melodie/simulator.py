@@ -6,27 +6,20 @@ import logging
 import threading
 import time
 from multiprocessing import Pool
-from typing import ClassVar, TYPE_CHECKING, Optional, List, Tuple
+from typing import ClassVar, Optional, List, Tuple
 
 import pandas as pd
 
-import Melodie.visualizer
 from .basic import show_prettified_warning
 from .basic.exceptions import MelodieExceptions
+from .config import Config
 from .dataframe_loader import DataFrameLoader
-from .visualizer import Visualizer
+from .db import create_db_conn
+from .model import Model
+from .scenario_manager import Scenario
+from .visualizer import Visualizer, MelodieModelReset
 
 logger = logging.getLogger(__name__)
-
-if TYPE_CHECKING:
-    from .model import Model
-    from .scenario_manager import Scenario
-    from .config import Config
-
-else:
-    from .scenario_manager import Scenario
-    from .config import Config
-    from .db import create_db_conn
 
 
 class BaseModellingManager(abc.ABC):
@@ -234,7 +227,7 @@ class Simulator(BaseModellingManager):
                 self.run_model(
                     self.config, scenario, 0, self.model_cls, visualizer=self.visualizer
                 )
-            except Melodie.visualizer.MelodieModelReset:
+            except MelodieModelReset:
 
                 self.visualizer.reset()
                 logger.info("Model reset.")

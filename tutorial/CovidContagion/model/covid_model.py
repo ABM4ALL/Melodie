@@ -16,7 +16,7 @@ class CovidModel(Model):
     scenario: CovidScenario
 
     def setup(self):  # create和setup两个概念也需要统一
-        self.agents: 'AgentList[CovidAgent]' = self.create_agent_container(
+        self.agents: "AgentList[CovidAgent]" = self.create_agent_container(
             CovidAgent,
             self.scenario.agent_num,
             self.scenario.get_dataframe(df_info.agent_params),
@@ -44,7 +44,9 @@ class CovidModel(Model):
     def run(self):
         self.scenario.setup_age_group_params()
         self.grid.setup_spots()
-        for t in self.routine(self.scenario.periods):  # 可以把scenario.periods传入self.routine。
+        for t in self.routine(
+            self.scenario.periods
+        ):  # 可以把scenario.periods传入self.routine。
             for hour in range(0, self.scenario.period_hours):
                 self.environment.agents_move(self.agents)
                 self.environment.agents_infection(self.agents, self.grid)
@@ -52,4 +54,3 @@ class CovidModel(Model):
             self.environment.calc_agents_health_state(self.agents)
             self.data_collector.collect(t)
         self.data_collector.save()
-

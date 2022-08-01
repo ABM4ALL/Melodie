@@ -13,7 +13,7 @@ result_queue = multiprocessing.Queue()
 
 
 def sub_routine_calibrator(
-        proc_id: int, modules: Dict[str, Tuple[str, str]], config_raw: Dict[str, Any]
+    proc_id: int, modules: Dict[str, Tuple[str, str]], config_raw: Dict[str, Any]
 ):
     """
     The sub routine callback for parallelized computing used in Trainer and Calibrator.
@@ -93,7 +93,7 @@ def sub_routine_calibrator(
 
 
 def sub_routine(
-        proc_id: int, modules: Dict[str, Tuple[str, str]], config_raw: Dict[str, Any]
+    proc_id: int, modules: Dict[str, Tuple[str, str]], config_raw: Dict[str, Any]
 ):
     """
     The sub routine callback for parallelized computing used in Trainer and Calibrator.

@@ -7,13 +7,11 @@ from Melodie import (
     Agent,
     Model,
     Scenario,
-    GATrainerParams,
     Trainer,
     DataFrameLoader,
     Environment,
 )
-from Melodie.algorithms.ga_trainer import GATrainerAlgorithm
-from Melodie.algorithms.meta import GATrainerAlgorithmMeta
+from Melodie.trainer import GATrainerAlgorithm, GATrainerAlgorithmMeta, GATrainerParams
 from .config import cfg
 
 

@@ -1,21 +1,21 @@
-import abc
-import sqlalchemy
 import os
-from typing import Optional, Dict, List, ClassVar, Union, Callable
 from dataclasses import dataclass
+from typing import Optional, Dict, List, ClassVar, Union, Callable
+
 import pandas as pd
+import sqlalchemy
 
-from Melodie import TableGenerator, Scenario
-from Melodie.basic import MelodieExceptions
-from Melodie.config import Config
-
-from Melodie.db import DBConn, create_db_conn
+from .basic import MelodieExceptions
+from .config import Config
+from .db import DBConn, create_db_conn
+from .scenario_manager import Scenario
+from .table_generator import TableGenerator
 
 
 @dataclass
 class DataFrameInfo:
     df_name: str
-    columns: Dict[str, 'sqlalchemy.types']
+    columns: Dict[str, "sqlalchemy.types"]
     file_name: Optional[str] = None
 
     @property
@@ -85,7 +85,7 @@ class DataFrameLoader:
             self.config
         ).read_dataframe(table_name)
 
-    def load_dataframe(self, df_info: 'DataFrameInfo') -> None:
+    def load_dataframe(self, df_info: "DataFrameInfo") -> None:
 
         """
         Register static table, saving it to `self.registered_dataframes`.
@@ -120,7 +120,9 @@ class DataFrameLoader:
                 if_exists="replace",
             )
 
-        self.registered_dataframes[table_name] = create_db_conn(self.config).read_dataframe(table_name)
+        self.registered_dataframes[table_name] = create_db_conn(
+            self.config
+        ).read_dataframe(table_name)
 
     def table_generator(
         self, table_name: str, rows_in_scenario: Union[int, Callable[[Scenario], int]]

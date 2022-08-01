@@ -11,5 +11,3 @@ class CovidDataCollector(DataCollector):
         self.add_environment_property("s2")
         self.add_environment_property("s3")
         self.add_environment_property("s4")
-
-

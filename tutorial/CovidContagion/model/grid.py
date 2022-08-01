@@ -25,4 +25,3 @@ class CovidGrid(Grid):
     def setup_spots(self):
         # self.setup_spots_attribute('stay_prob', 'grid_stay_prob.xlsx')
         ...
-

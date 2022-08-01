@@ -1,6 +1,7 @@
 from Melodie import Scenario
 from tutorial.CovidContagion.model import dataframe_info as df_info
 
+
 class CovidScenario(Scenario):
     def setup(self):
         self.periods = 0
@@ -25,14 +26,14 @@ class CovidScenario(Scenario):
 
     def setup_age_group_params(self):
         df = self.get_dataframe(df_info.id_age_group)
-        self.ag0_prob_s1_s1 = df.at[0, 'prob_s1_s1']
-        self.ag0_prob_s1_s2 = df.at[0, 'prob_s1_s2']
-        self.ag0_prob_s1_s3 = df.at[0, 'prob_s1_s3']
-        self.ag0_move_radius = df.at[0, 'move_radius']
-        self.ag1_prob_s1_s1 = df.at[1, 'prob_s1_s1']
-        self.ag1_prob_s1_s2 = df.at[1, 'prob_s1_s2']
-        self.ag1_prob_s1_s3 = df.at[1, 'prob_s1_s3']
-        self.ag1_move_radius = df.at[1, 'move_radius']
+        self.ag0_prob_s1_s1 = df.at[0, "prob_s1_s1"]
+        self.ag0_prob_s1_s2 = df.at[0, "prob_s1_s2"]
+        self.ag0_prob_s1_s3 = df.at[0, "prob_s1_s3"]
+        self.ag0_move_radius = df.at[0, "move_radius"]
+        self.ag1_prob_s1_s1 = df.at[1, "prob_s1_s1"]
+        self.ag1_prob_s1_s2 = df.at[1, "prob_s1_s2"]
+        self.ag1_prob_s1_s3 = df.at[1, "prob_s1_s3"]
+        self.ag1_move_radius = df.at[1, "move_radius"]
 
     def get_infection_prob(self, health_state: int) -> float:
         if health_state == 0:
