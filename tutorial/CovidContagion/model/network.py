@@ -22,7 +22,14 @@ class CovidEdge(Edge):
 
 class CovidNetwork(Network):
 
-    # 需要让network能够访问scenario
+    # def config_network()
+    #     self.set_network_type(self.scenario.network_type)
+    #     self.set_network_params({'k': self.scenario.network_param_k, 'p': scenario.network_param_p})
+
+
+
+    # def setup(agents)
+    #     self.create_network_among_agents()
 
     def generate_network(
         self, agents: "AgentList[CovidAgent]", scenario: "CovidScenario"

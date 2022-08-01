@@ -8,9 +8,15 @@ class CovidSpot(Spot):
 
 class CovidGrid(Grid):
 
-    # 需要让grid能够访问scenario
+    # 自动调用：
+    # def config_grid(self):
+    #     self.set_width(self.scenario.)
 
-    # 能不能站同一个格子？
+
+
+
+
+
 
     # def load_matrix(file_name: str)
 
