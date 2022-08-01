@@ -15,7 +15,7 @@ class CovidAgent(GridAgent):
     def set_category(self):
         # 要求用户如果继承GridAgent则必须定义category，且用整数
         # category这个变量名字好不好？
-        ...
+        self.category = 0
 
     def setup(self):
         self.x = 0  # 继承GridAgent之后好像不需要定义这俩了？

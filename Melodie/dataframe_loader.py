@@ -18,13 +18,6 @@ class DataFrameInfo:
     columns: Dict[str, "sqlalchemy.types"]
     file_name: Optional[str] = None
 
-    @property
-    def data_types(self) -> dict:
-        dtypes = {}
-        for key, value in self.columns.items():
-            dtypes[key] = value
-        return dtypes
-
 
 class DataFrameLoader:
     """

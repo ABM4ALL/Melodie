@@ -13,6 +13,7 @@ class CovidDataFrameLoader(DataFrameLoader):
         self.load_dataframe(df_info.id_age_group)
         self.load_dataframe(df_info.id_health_state)
         self.load_dataframe(df_info.id_network_type)
+        self.generate_dataframe()
 
     @staticmethod
     def init_age_group(young_percentage: float):
@@ -44,10 +45,9 @@ class CovidDataFrameLoader(DataFrameLoader):
             pass
         return vaccination_trust_state
 
-    def register_generated_dataframes(self):
-
+    def generate_dataframe(self):
         with self.table_generator(
-            df_info.agent_params.df_name, lambda scenario: scenario.agent_num
+                df_info.agent_params.df_name, lambda scenario: scenario.agent_num
         ) as g:
             # table_generator的名字不好，改成dataframe_generator
             # Melodie里只有dataframe和grid的matrix
@@ -69,3 +69,4 @@ class CovidDataFrameLoader(DataFrameLoader):
 
             g.set_row_generator(generator_func)
             g.set_column_data_types(df_info.agent_params.columns)
+

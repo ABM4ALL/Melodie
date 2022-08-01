@@ -10,7 +10,6 @@ class CovidGrid(Grid):
 
     # 需要让grid能够访问scenario
 
-    # Grid功能：shuffle agent的位置？
     # 能不能站同一个格子？
 
     # def load_matrix(file_name: str)
@@ -22,6 +21,7 @@ class CovidGrid(Grid):
     #     assert data_types of all values are same
     #     for x, y ...
 
-    def setup_spots(self):
+    def setup(self):
         # self.setup_spots_attribute('stay_prob', 'grid_stay_prob.xlsx')
+        # self.setup_agent_locations(agents: 'AgentList[Covid]')
         ...
