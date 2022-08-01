@@ -24,17 +24,20 @@ Melodie
 
 As a general framework for developing ABMs, **Melodie** has three groups of modules:
 
-* `Block`:  ``model``, ``scenario``, ``environment``, ``agent_list``, ``data_collector``, ``grid``, ``network``.
+* `Block`:  ``model``, ``scenario``, ``dataframe_loader``, ``environment``, ``agent_list``, ``data_collector``, ``grid``, ``network``.
 * `Operator`: ``simulator``, ``calibrator``, ``trainer``.
-* `Infrastructure`: ``db``, ``dataframe_loader``, ``studio``, ``analyzer``.
+* `Infrastructure`: ``db``, ``studio``.
+
+.. format a bit and link to the api reference pages
 
 Block modules
 ^^^^^^^^^^^^^
 
-The `Block` modules are used to construct an ABM, and five of them are always necessary.
+The `Block` modules are used to construct an ABM, and six of them are always necessary.
 
 * ``model`` is the container of the following components.
 * ``scenario`` contains the input data.
+* ``dataframe_loader`` loads the input data to ``scenario``.
 * ``agent_list`` contains the ``agents`` and one model can have several ``agent_list``.
 * ``environment`` contains the macro-level parameters and variables and controls the interaction and decision-making of agents.
 * ``data_collector`` collects the parameters and variables of the environment and the agents and saves them to the database.
@@ -48,6 +51,7 @@ According to the target system, ``model`` could also contain ``grid`` and ``netw
   For example, if the ABM models the information diffusion in a social network, then ``network`` can represent how
   the ``agents`` are connected. Besides, an ``edge`` can also have its own attributes,
   e.g. direction, communication frequency, etc.
+* ``visualizer``
 
 Operator modules
 ^^^^^^^^^^^^^^^^
@@ -65,9 +69,6 @@ Infrastructure modules
 `Infrastructure` modules provide supports the work of other modules or are used for results analysis.
 
 * ``db`` provides the functions for managing the .sqlite database.
-* ``dataframe_loader`` loads the input data to ``scenario``.
 * ``studio`` provides the interface to view data from the .sqlite database and displays the plot while running models.
-* ``analyzer`` provides the functions for results analysis (plotting).
-
 
 

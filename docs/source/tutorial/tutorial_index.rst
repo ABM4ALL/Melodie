@@ -12,8 +12,9 @@ shown in a table:
 .. toctree::
     :maxdepth: 1
 
-    virus_contagion
+    covid_contagion
     stock_market
+
 
 
 

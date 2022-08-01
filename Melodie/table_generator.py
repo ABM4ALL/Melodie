@@ -24,10 +24,10 @@ class TableGenerator:
         return
 
     def __init__(
-            self,
-            df_loader: "DataFrameLoader",
-            table_name: str,
-            num_generator: Union[int, Callable[[Scenario], int]],
+        self,
+        df_loader: "DataFrameLoader",
+        table_name: str,
+        num_generator: Union[int, Callable[[Scenario], int]],
     ):
         """
         :param df_loader:
@@ -72,7 +72,7 @@ class TableGenerator:
         self.data_types = data_types
 
     def convert_to_num_generator(
-            self, num_generator: Union[int, Callable[[Scenario], int]]
+        self, num_generator: Union[int, Callable[[Scenario], int]]
     ):
         if isinstance(num_generator, int):
             return lambda _: num_generator
@@ -83,7 +83,7 @@ class TableGenerator:
             raise TypeError
 
     def set_row_generator(
-            self, row_generator: Callable[[Scenario], Union[dict, object]]
+        self, row_generator: Callable[[Scenario], Union[dict, object]]
     ):
         """
         Set the geneator for each row. Every time the row_generator is called, this function

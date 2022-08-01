@@ -35,5 +35,11 @@ Sitting in Karlsruhe, a lovely city in southern Germany, I take the German trans
     about
     melodie_error_list
 
+Suggested reading path:
 
+introduction gives you a brief introduction of ABM and an overview of the modules in Melodie.
+Then, the first two chapters (examples) in the tutorial, all the modules are covered.
+However, for your first playing model, you can start with a simpler one (tutorial might too complicated).
+In the gallery, you can find it.
+You can also learn some techniques.
 

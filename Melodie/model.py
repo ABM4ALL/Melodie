@@ -184,8 +184,8 @@ class Model:
     def run_boost(self):
         pass
 
-    def routine(self):
-        return ModelRunRoutine(self.scenario.periods, self)
+    def routine(self, periods: int):
+        return ModelRunRoutine(periods, self)
 
     def visualizer_step(self, current_step: int):
         if (self.visualizer is not None) and (current_step > 0):

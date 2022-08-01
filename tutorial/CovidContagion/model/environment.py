@@ -1,62 +1,67 @@
 import random
-from typing import List, Tuple
-from Melodie import Environment, AgentList, Grid
+from typing import TYPE_CHECKING
+from Melodie import Environment, AgentList
 
-from model.agent import CovidAgent
-from model.scenario import CovidScenario
+from .agent import CovidAgent
+from .scenario import CovidScenario
+
+if TYPE_CHECKING:
+    from .grid import CovidGrid
+    from .network import CovidNetwork
 
 
 class CovidEnvironment(Environment):
-    scenario: CovidScenario
+    scenario: CovidScenario  # 这行代码会被编译吗？
 
     def setup(self):
-        self.grid_x_size: int = self.scenario.grid_x_size
-        self.grid_y_size: int = self.scenario.grid_y_size
-        self.infection_probability: float = self.scenario.infection_probability
-        self.accumulated_infection: int = 0
+        self.s0 = 0
+        self.s1 = 0
+        self.s2 = 0
+        self.s3 = 0
+        self.s4 = 0
 
-    def agents_move(self, agent_list: "AgentList[CovidAgent]", grid: "Grid"):
-        agent_list: AgentList
-        agent: CovidAgent
-        for agent in agent_list:
+    def agents_move(self, agents: "AgentList[CovidAgent]"):
+        for agent in agents:
             agent.move()
 
-    def agents_infection(self, agent_list: "AgentList[CovidAgent]", grid: "Grid"):
-        for agent in agent_list:
-            if agent.condition == 1:
-                pass
-            else:
-                neighbors: list = grid.get_neighbors(
-                    agent.x, agent.y, 1, moore=True, except_self=False
-                )
-                agent.condition = self.infect_from_neighbor(
-                    agent.id, neighbors, grid, agent_list
-                )
-
-    def infect_from_neighbor(
-        self,
-        current_agent_id: int,
-        neighbors: List[Tuple[int, int]],
-        grid: Grid,
-        agent_list: "AgentList[CovidAgent]",
-    ) -> int:
-
-        for neighbor in neighbors:
-            x, y = neighbor[0], neighbor[1]
-            agent_ids = grid.get_agent_ids(x, y)
-            for agent_id, agent_category in agent_ids:
-                if agent_id == current_agent_id:
-                    continue
-                a: CovidAgent = agent_list.get_agent(agent_id)
-                if (
-                    a.condition == 1
-                    and random.uniform(0, 1) < self.infection_probability
-                ):
-                    return 1
-        return 0
-
-    def calculate_accumulated_infection(self, agents: AgentList):
-        accumulated = 0
+    def agents_infection(self, agents: "AgentList[CovidAgent]", grid: "CovidGrid"):
         for agent in agents:
-            accumulated += agent.condition
-        self.accumulated_infection = accumulated
+            infection_prob = self.scenario.get_infection_prob(agent.health_state)
+            if infection_prob is not None and infection_prob > 0:
+                agent.infect_from_neighbors(infection_prob, grid, agents)
+
+    @staticmethod
+    def agents_health_state_transition(agents: "AgentList[CovidAgent]"):
+        for agent in agents:
+            agent.health_state_transition()
+
+    def calc_agents_health_state(self, agents: "AgentList[CovidAgent]"):
+        self.setup()
+        for agent in agents:
+            if agent.health_state == 0:
+                self.s0 += 1
+            elif agent.health_state == 1:
+                self.s1 += 1
+            elif agent.health_state == 2:
+                self.s2 += 1
+            elif agent.health_state == 3:
+                self.s3 += 1
+            else:
+                self.s4 += 1
+
+    def agents_update_vaccination_trust_from_ad(self, agents: "AgentList[CovidAgent]"):
+        for agent in agents:
+            if random.uniform(0, 1) <= self.scenario.vaccination_ad_percentage:
+                agent.update_vaccination_trust_from_ad()
+
+    @staticmethod
+    def agents_update_vaccination_trust_from_neighbors(
+        agents: "AgentList[CovidAgent]", network: "CovidNetwork"
+    ):
+        for agent in agents:
+            agent.update_vaccination_trust_from_neighbors(network)
+
+    @staticmethod
+    def agents_take_vaccination(agents: "AgentList[CovidAgent]"):
+        for agent in agents:
+            agent.take_vaccination()

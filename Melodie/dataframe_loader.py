@@ -5,18 +5,18 @@ from typing import Optional, Dict, List, ClassVar, Union, Callable
 import pandas as pd
 import sqlalchemy
 
-from Melodie.table_generator import TableGenerator
-from Melodie.scenario_manager import Scenario
-from Melodie.basic import MelodieExceptions
-from Melodie.config import Config
-from Melodie.db import DBConn, create_db_conn
+from .basic import MelodieExceptions
+from .config import Config
+from .db import DBConn, create_db_conn
+from .scenario_manager import Scenario
+from .table_generator import TableGenerator
 
 
 @dataclass
 class DataFrameInfo:
     df_name: str
-    file_name: str
     columns: Dict[str, "sqlalchemy.types"]
+    file_name: Optional[str] = None
 
     @property
     def data_types(self) -> dict:
@@ -66,7 +66,7 @@ class DataFrameLoader:
         pass
 
     def register_dataframe(
-            self, table_name: str, data_frame: pd.DataFrame, data_types: dict = None
+        self, table_name: str, data_frame: pd.DataFrame, data_types: dict = None
     ) -> None:
         """
         :param table_name:
@@ -85,7 +85,7 @@ class DataFrameLoader:
             self.config
         ).read_dataframe(table_name)
 
-    def load_dataframe(self, table_name: str, file_name: str, data_types: dict) -> None:
+    def load_dataframe(self, df_info: "DataFrameInfo") -> None:
 
         """
         Register static table, saving it to `self.registered_dataframes`.
@@ -99,6 +99,9 @@ class DataFrameLoader:
         :param data_types: Type information in a dict
         :return:
         """
+        table_name = df_info.df_name
+        file_name = df_info.file_name
+        data_types = df_info.data_types
         _, ext = os.path.splitext(file_name)
         table: Optional[pd.DataFrame]
 
@@ -121,11 +124,8 @@ class DataFrameLoader:
             self.config
         ).read_dataframe(table_name)
 
-    def load_df(self, df_info: "DataFrameInfo"):
-        self.load_dataframe(df_info.df_name, df_info.file_name, df_info.data_types)
-
     def table_generator(
-            self, table_name: str, rows_in_scenario: Union[int, Callable[[Scenario], int]]
+        self, table_name: str, rows_in_scenario: Union[int, Callable[[Scenario], int]]
     ):
         """
         Create a new generator
