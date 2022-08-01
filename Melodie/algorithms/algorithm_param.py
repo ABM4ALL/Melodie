@@ -1,5 +1,4 @@
-from abc import ABC
-from typing import Callable, List, Tuple, Union, Dict
+from typing import List, Tuple, Union, Dict
 
 
 class AlgorithmParameters:
