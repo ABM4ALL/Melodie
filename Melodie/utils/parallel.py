@@ -92,7 +92,7 @@ def sub_routine_calibrator(
             traceback.print_exc()
 
 
-def sub_routine(
+def sub_routine_trainer(
     proc_id: int, modules: Dict[str, Tuple[str, str]], config_raw: Dict[str, Any]
 ):
     """

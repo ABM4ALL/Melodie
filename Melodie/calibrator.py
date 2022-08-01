@@ -23,8 +23,8 @@ import pandas as pd
 
 from .algorithms import AlgorithmParameters
 from .algorithms.ga import MelodieGA
-from .basic import MelodieExceptions
-from .basic.parallel import params_queue, result_queue, sub_routine_calibrator
+from .utils import MelodieExceptions
+from .utils.parallel import params_queue, result_queue, sub_routine_calibrator
 from .config import Config
 from .dataframe_loader import DataFrameLoader
 from .db import create_db_conn

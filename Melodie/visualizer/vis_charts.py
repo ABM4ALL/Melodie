@@ -1,9 +1,5 @@
-from typing import Callable, List, Dict, Tuple, TYPE_CHECKING, Union, Optional
-
-if TYPE_CHECKING:
-    from Melodie import Model
-
 import logging
+from typing import Callable, List, Dict, Tuple, Union, Optional
 
 logger = logging.getLogger(__name__)
 

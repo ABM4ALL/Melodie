@@ -3,7 +3,7 @@ from typing import List, Optional, Union, TYPE_CHECKING
 
 import pandas as pd
 
-from .basic.exceptions import MelodieExceptions
+from .utils.exceptions import MelodieExceptions
 from .element import Element
 
 if TYPE_CHECKING:

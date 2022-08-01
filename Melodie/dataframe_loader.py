@@ -5,7 +5,7 @@ from typing import Optional, Dict, List, ClassVar, Union, Callable
 import pandas as pd
 import sqlalchemy
 
-from .basic import MelodieExceptions
+from .utils import MelodieExceptions
 from .config import Config
 from .db import DBConn, create_db_conn
 from .scenario_manager import Scenario

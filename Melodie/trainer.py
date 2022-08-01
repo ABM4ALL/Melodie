@@ -10,8 +10,8 @@ import pandas as pd
 
 from .algorithms import AlgorithmParameters
 from .algorithms.ga import MelodieGA
-from .basic import MelodieExceptions
-from .basic.parallel import params_queue, result_queue, sub_routine
+from .utils import MelodieExceptions
+from .utils.parallel import params_queue, result_queue, sub_routine_trainer
 from .boost.agent_list import AgentList
 from .boost.basics import Agent
 from .config import Config
@@ -217,7 +217,7 @@ class GATrainerAlgorithm:
                     self.manager.df_loader_cls.__module__,
                 ),
             }
-            pool.apply_async(sub_routine, [i, d, self.manager.config.to_dict()])
+            pool.apply_async(sub_routine_trainer, [i, d, self.manager.config.to_dict()])
 
     def add_agent_container(
         self,

@@ -10,8 +10,8 @@ from typing import ClassVar, Optional, List, Tuple
 
 import pandas as pd
 
-from .basic import show_prettified_warning
-from .basic.exceptions import MelodieExceptions
+from .utils import show_prettified_warning
+from .utils.exceptions import MelodieExceptions
 from .config import Config
 from .dataframe_loader import DataFrameLoader
 from .db import create_db_conn

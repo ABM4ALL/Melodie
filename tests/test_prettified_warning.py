@@ -1,7 +1,7 @@
 import sys
 
 sys.path.append("/Users/hzy/Documents/Projects/MelodieABM/Melodie")
-from Melodie.basic.pretty_warnings import ColorParseFSM, show_link
+from Melodie.utils.pretty_warnings import ColorParseFSM, show_link
 
 
 def test_prettified_print():

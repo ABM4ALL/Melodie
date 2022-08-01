@@ -1,6 +1,5 @@
-import json
-from typing import TYPE_CHECKING, Any, List, Callable, Dict, Set
 from collections import Counter
+from typing import TYPE_CHECKING, Any, List, Callable, Dict, Set
 
 if TYPE_CHECKING:
     from Melodie import Agent
@@ -110,7 +109,7 @@ class MelodieExceptions:
 
             @staticmethod
             def FunctionArgsNumError(
-                func: Callable, expected_arg_num: int, actual_arg_num: int
+                    func: Callable, expected_arg_num: int, actual_arg_num: int
             ):
                 """
                 Function should have correct number of arguments. If not, this error will be raised.
@@ -137,7 +136,7 @@ class MelodieExceptions:
 
         @staticmethod
         def CannotMoveToNewStateError(
-            old_state, new_state, all_possible_new_states: set
+                old_state, new_state, all_possible_new_states: set
         ):
             if len(list(all_possible_new_states)) == 0:
                 return MelodieException(
@@ -242,34 +241,6 @@ class MelodieExceptions:
                 f'A parameter with same name "{parameter_name}" already existed! all parameters are: {all_params}',
             )
 
-        # @staticmethod
-        # def ExcelAgentParamsRecordCountNotConsistentToScneario(
-        #         scenario_id, scenario_agents_num: int, param_table_name, param_num: int
-        # ):
-        #     return MelodieException(
-        #         1209,
-        #         f"Agent parameter sheet `{param_table_name}` contains {param_num} agents' parameter records.\n"
-        #         f"However `scenarios` sheet says there should be {scenario_agents_num}  agents "
-        #         f"initially in the scenario {scenario_id}.",
-        #     )
-
-        # @staticmethod
-        # def ExcelLackAgentParamsSheet(agent_param_sheet_name, supposed_sheets=""):
-        #     return MelodieException(
-        #         1210,
-        #         f"There was no excel sheet named 'agent_params', so there is supposed to be "
-        #         f"sheets named {supposed_sheets} containing agent parameters for each scenario."
-        #         f" However parameter sheet `{agent_param_sheet_name}` was not found in any excel file.",
-        #     )
-
-        # @staticmethod
-        # def NoExcelFileContainsScenario(sheet_names: Dict[str, List[str]]):
-        #     return MelodieException(
-        #         1211,
-        #         f"No excel file contains a sheet named 'scenarios'. All files and their sheetnames "
-        #         f"are: {json.dumps(sheet_names, indent=4)} ",
-        #     )
-
     class Agents:
         ID = 1300
 
@@ -349,10 +320,10 @@ class MelodieExceptions:
 
         @staticmethod
         def ObjectPropertyTypeUnMatchTheDataFrameError(
-            param_name: str,
-            param_type: type,
-            dataframe_dtypes: Dict[str, type],
-            agent: "Agent",
+                param_name: str,
+                param_type: type,
+                dataframe_dtypes: Dict[str, type],
+                agent: "Agent",
         ):
             """
             Object type should match the type defined in dataframe.

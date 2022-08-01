@@ -6,7 +6,7 @@ from pandas.api.types import is_integer_dtype, is_float_dtype
 from sqlalchemy.types import Integer
 
 from Melodie import create_db_conn, DBConn, Scenario
-from Melodie.basic import MelodieException
+from Melodie.utils import MelodieException
 from .config import cfg
 
 cfg = cfg

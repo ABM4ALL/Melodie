@@ -1,5 +1,6 @@
-from .vis_charts import JSONBase
 from typing import Dict, List
+
+from .vis_charts import JSONBase
 
 
 class AgentSeries(JSONBase):

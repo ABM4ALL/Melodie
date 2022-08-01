@@ -11,7 +11,7 @@ from pandas.api.types import is_integer_dtype, is_float_dtype, is_string_dtype
 import typing
 from typing import TYPE_CHECKING, ClassVar, List, Dict, Union, Set, Optional, TypeVar, Type, Generic
 from .basics cimport Agent
-from Melodie.basic import MelodieExceptions, MelodieException, show_prettified_warning
+from Melodie.utils import MelodieExceptions, MelodieException, show_prettified_warning
 from collections.abc import Sequence
 from cython.operator cimport dereference as deref, preincrement as inc
 from cpython.ref cimport PyObject  # somewhere at the top

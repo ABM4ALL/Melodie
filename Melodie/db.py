@@ -6,7 +6,7 @@ import pandas as pd
 import sqlalchemy
 from sqlalchemy.exc import OperationalError
 
-from Melodie.basic import MelodieExceptions
+from Melodie.utils import MelodieExceptions
 
 if TYPE_CHECKING:
     from Melodie.config import Config

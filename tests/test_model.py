@@ -1,7 +1,7 @@
 # -*- coding:utf-8 -*-
 import pandas as pd
 
-from Melodie.basic import MelodieException
+from Melodie.utils import MelodieException
 from Melodie import Agent, Model, Scenario
 from .config import cfg
 

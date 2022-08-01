@@ -4,7 +4,7 @@ from typing import ClassVar, Optional, Union
 
 import pandas as pd
 
-from .basic import MelodieExceptions, show_prettified_warning, show_link
+from .utils import MelodieExceptions, show_prettified_warning, show_link
 from .boost.agent_list import AgentList, BaseAgentContainer, AgentDict
 from .boost.basics import Agent, Environment
 from .boost.grid import GridAgent

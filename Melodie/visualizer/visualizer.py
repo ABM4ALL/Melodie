@@ -14,9 +14,9 @@ from typing import Dict, Tuple, List, Any, Callable, Union, Set, TYPE_CHECKING, 
 from websockets.exceptions import ConnectionClosedOK
 from websockets.legacy.server import WebSocketServerProtocol
 
-from .basic.exceptions import MelodieExceptions
-from .basic.vis_agent_series import AgentSeriesManager
-from .basic.vis_charts import ChartManager
+from ..utils import MelodieExceptions
+from .vis_agent_series import AgentSeriesManager
+from .vis_charts import ChartManager
 
 if TYPE_CHECKING:
     from Melodie import Scenario, Model, Grid

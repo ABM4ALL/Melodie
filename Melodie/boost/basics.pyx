@@ -4,7 +4,7 @@ from typing import Tuple, List, Dict, Optional, TYPE_CHECKING
 
 import pandas as pd
 
-from Melodie.basic import MelodieExceptions
+from Melodie.utils import MelodieExceptions
 
 from typing import Optional, TYPE_CHECKING
 

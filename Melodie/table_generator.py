@@ -5,7 +5,7 @@ from typing import Callable, Union, TYPE_CHECKING, Optional
 
 import pandas as pd
 
-from .basic import MelodieExceptions, args_check
+from .utils import MelodieExceptions, args_check
 from .scenario_manager import Scenario
 
 if TYPE_CHECKING:

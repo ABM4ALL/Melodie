@@ -1,6 +1,6 @@
 import json
 
-from Melodie.basic.vis_charts import ChartManager
+from Melodie.visualizer.vis_charts import ChartManager
 
 
 def test_chart_manager():
