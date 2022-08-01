@@ -1,14 +1,10 @@
 import logging
 import os
-import sqlite3
-import sqlalchemy
 from typing import Union, Dict, TYPE_CHECKING, Type, Optional
 
-from sqlalchemy.exc import OperationalError
-
 import pandas as pd
-
-import numpy as np
+import sqlalchemy
+from sqlalchemy.exc import OperationalError
 
 from Melodie.basic import MelodieExceptions
 

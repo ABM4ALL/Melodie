@@ -6,27 +6,20 @@ import logging
 import threading
 import time
 from multiprocessing import Pool
-from typing import ClassVar, TYPE_CHECKING, Optional, List, Tuple
+from typing import ClassVar, Optional, List, Tuple
 
 import pandas as pd
 
-import Melodie.visualizer
 from .basic import show_prettified_warning
 from .basic.exceptions import MelodieExceptions
+from .config import Config
 from .dataframe_loader import DataFrameLoader
-from .visualizer import Visualizer
+from .db import create_db_conn
+from .model import Model
+from .scenario_manager import Scenario
+from .visualizer import Visualizer, MelodieModelReset
 
 logger = logging.getLogger(__name__)
-
-if TYPE_CHECKING:
-    from .model import Model
-    from .scenario_manager import Scenario
-    from .config import Config
-
-else:
-    from .scenario_manager import Scenario
-    from .config import Config
-    from .db import create_db_conn
 
 
 class BaseModellingManager(abc.ABC):
@@ -35,11 +28,11 @@ class BaseModellingManager(abc.ABC):
     """
 
     def __init__(
-        self,
-        config: Config,
-        scenario_cls: ClassVar["Scenario"],
-        model_cls: ClassVar["Model"],
-        df_loader_cls: ClassVar[DataFrameLoader] = None,
+            self,
+            config: Config,
+            scenario_cls: ClassVar["Scenario"],
+            model_cls: ClassVar["Model"],
+            df_loader_cls: ClassVar[DataFrameLoader] = None,
     ):
         self.config: Optional[Config] = config
         self.scenario_cls = scenario_cls
@@ -105,11 +98,11 @@ class BaseModellingManager(abc.ABC):
 
 class Simulator(BaseModellingManager):
     def __init__(
-        self,
-        config: Config,
-        scenario_cls: "ClassVar[Scenario]",
-        model_cls: "ClassVar[Model]",
-        df_loader_cls: "ClassVar[DataFrameLoader]" = None,
+            self,
+            config: Config,
+            scenario_cls: "ClassVar[Scenario]",
+            model_cls: "ClassVar[Model]",
+            df_loader_cls: "ClassVar[DataFrameLoader]" = None,
     ):
         super(Simulator, self).__init__(
             config=config,
@@ -130,7 +123,7 @@ class Simulator(BaseModellingManager):
         return self.df_loader.generate_scenarios("simulator")
 
     def run_model(
-        self, config, scenario, run_id, model_class: ClassVar["Model"], visualizer=None
+            self, config, scenario, run_id, model_class: ClassVar["Model"], visualizer=None
     ):
         """
 
@@ -234,7 +227,7 @@ class Simulator(BaseModellingManager):
                 self.run_model(
                     self.config, scenario, 0, self.model_cls, visualizer=self.visualizer
                 )
-            except Melodie.visualizer.MelodieModelReset:
+            except MelodieModelReset:
 
                 self.visualizer.reset()
                 logger.info("Model reset.")

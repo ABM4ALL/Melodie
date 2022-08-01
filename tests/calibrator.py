@@ -81,8 +81,8 @@ class CovidCalibrator(Calibrator):
             environment.scenario.infection_probability,
         )
         return (
-                       environment.accumulated_infection / environment.scenario.agent_num - 0.75
-               ) ** 2
+            environment.accumulated_infection / environment.scenario.agent_num - 0.75
+        ) ** 2
 
     def generate_scenarios(self) -> List["Scenario"]:
         return [CovidScenario(0)]

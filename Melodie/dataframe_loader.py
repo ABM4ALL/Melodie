@@ -1,14 +1,14 @@
-import abc
-import sqlalchemy
 import os
-from typing import Optional, Dict, List, ClassVar, Union, Callable
 from dataclasses import dataclass
-import pandas as pd
+from typing import Optional, Dict, List, ClassVar, Union, Callable
 
-from Melodie import TableGenerator, Scenario
+import pandas as pd
+import sqlalchemy
+
+from Melodie.table_generator import TableGenerator
+from Melodie.scenario_manager import Scenario
 from Melodie.basic import MelodieExceptions
 from Melodie.config import Config
-
 from Melodie.db import DBConn, create_db_conn
 
 
@@ -16,7 +16,7 @@ from Melodie.db import DBConn, create_db_conn
 class DataFrameInfo:
     df_name: str
     file_name: str
-    columns: Dict[str, 'sqlalchemy.types']
+    columns: Dict[str, "sqlalchemy.types"]
 
     @property
     def data_types(self) -> dict:
@@ -66,7 +66,7 @@ class DataFrameLoader:
         pass
 
     def register_dataframe(
-        self, table_name: str, data_frame: pd.DataFrame, data_types: dict = None
+            self, table_name: str, data_frame: pd.DataFrame, data_types: dict = None
     ) -> None:
         """
         :param table_name:
@@ -121,11 +121,11 @@ class DataFrameLoader:
             self.config
         ).read_dataframe(table_name)
 
-    def load_df(self, df_info: 'DataFrameInfo'):
+    def load_df(self, df_info: "DataFrameInfo"):
         self.load_dataframe(df_info.df_name, df_info.file_name, df_info.data_types)
 
     def table_generator(
-        self, table_name: str, rows_in_scenario: Union[int, Callable[[Scenario], int]]
+            self, table_name: str, rows_in_scenario: Union[int, Callable[[Scenario], int]]
     ):
         """
         Create a new generator

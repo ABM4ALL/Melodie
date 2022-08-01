@@ -6,7 +6,6 @@ from model import dataframe_info
 
 
 class CovidDataFrameLoader(DataFrameLoader):
-
     def setup(self):
         self.load_df(dataframe_info.simulator_scenarios)
 
@@ -41,4 +40,3 @@ class CovidDataFrameLoader(DataFrameLoader):
                     "condition": sqlalchemy.Integer(),
                 }
             )
-

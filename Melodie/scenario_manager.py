@@ -1,9 +1,10 @@
 import logging
 from typing import List, Optional, Union, TYPE_CHECKING
 
-from Melodie.element import Element
-from .basic.exceptions import MelodieExceptions
 import pandas as pd
+
+from .basic.exceptions import MelodieExceptions
+from .element import Element
 
 if TYPE_CHECKING:
     from Melodie import Calibrator, Simulator

@@ -1,6 +1,6 @@
 from typing import Union
 
-from Melodie import Calibrator, GeneticAlgorithmCalibrator
+from Melodie.calibrator import Calibrator
 from .environment import CovidEnvironment
 
 

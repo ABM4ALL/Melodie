@@ -1,6 +1,5 @@
-from typing import Dict, Set, Union, List, Tuple, ClassVar, Callable
-
 import logging
+from typing import Dict, Set, Union, List, Tuple, ClassVar, Callable
 
 from .boost.agent_list import AgentList
 

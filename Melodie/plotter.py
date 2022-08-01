@@ -1,8 +1,9 @@
-import numpy as np
-from abc import ABC, abstractmethod
-from typing import Dict, List
-import seaborn as sns
+from abc import ABC
+from typing import Dict
+
 import matplotlib.pyplot as plt
+import numpy as np
+import seaborn as sns
 
 from .config import Config
 

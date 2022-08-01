@@ -4,15 +4,15 @@ from typing import ClassVar, Optional, Union
 
 import pandas as pd
 
-from .boost.basics import Agent, Environment
-from .boost.agent_list import AgentList, BaseAgentContainer, AgentDict
-from .boost.grid import GridAgent
 from .basic import MelodieExceptions, show_prettified_warning, show_link
+from .boost.agent_list import AgentList, BaseAgentContainer, AgentDict
+from .boost.basics import Agent, Environment
+from .boost.grid import GridAgent
 from .config import Config
 from .data_collector import DataCollector
+from .db import create_db_conn, DBConn
 from .scenario_manager import Scenario
 from .table_generator import TableGenerator
-from .db import create_db_conn, DBConn
 from .visualizer import Visualizer
 
 logger = logging.getLogger(__name__)

@@ -2,20 +2,6 @@ from abc import ABC
 from typing import Callable, List, Tuple, Union, Dict
 
 
-class SearchingAlgorithm(ABC):
-    def setup(self):
-        pass
-
-    def set_parameters(self, parameters_num: int):
-        pass
-
-    def set_parameters_agents(self, agent_num: int, agent_params: int):
-        pass
-
-    def optimize(self, fitness: Callable):
-        pass
-
-
 class AlgorithmParameters:
     """
     Learning scenario is used in Trainer and Calibrator for trainer/calibrator parameters.
