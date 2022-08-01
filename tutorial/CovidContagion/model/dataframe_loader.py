@@ -13,6 +13,7 @@ class CovidDataFrameLoader(DataFrameLoader):
         self.load_dataframe(df_info.id_age_group)
         self.load_dataframe(df_info.id_health_state)
         self.load_dataframe(df_info.id_network_type)
+        self.generate_dataframe()
 
     @staticmethod
     def init_age_group(young_percentage: float):

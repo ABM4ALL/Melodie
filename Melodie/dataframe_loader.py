@@ -18,13 +18,6 @@ class DataFrameInfo:
     columns: Dict[str, "sqlalchemy.types"]
     file_name: Optional[str] = None
 
-    @property
-    def data_types(self) -> dict:
-        dtypes = {}
-        for key, value in self.columns.items():
-            dtypes[key] = value
-        return dtypes
-
 
 class DataFrameLoader:
     """
@@ -41,6 +34,7 @@ class DataFrameLoader:
         self.scenario_cls = scenario_cls
         self.registered_dataframes: Optional[Dict[str, pd.DataFrame]] = {}
         self.manager = manager
+        self.manager.df_loader = self
         self.setup()
 
     def setup(self):
@@ -101,7 +95,7 @@ class DataFrameLoader:
         """
         table_name = df_info.df_name
         file_name = df_info.file_name
-        data_types = df_info.data_types
+        data_types = df_info.columns
         _, ext = os.path.splitext(file_name)
         table: Optional[pd.DataFrame]
 

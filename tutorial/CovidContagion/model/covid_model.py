@@ -27,13 +27,16 @@ class CovidModel(Model):
             CovidSpot,
             self.scenario.grid_x_size,
             self.scenario.grid_y_size,
-            caching=True,  # 设为默认参数值？
-            multi=True,  # 设为默认参数值？
+            multi=True
         )
         self.grid.add_agent_container(0, self.agents, "direct")  # direct这个参数名不太清楚
+
         # grid的四边相连？模拟看到了x = -1
 
-        # self.network =
+        # self.environment = self.setup_environment(CovidEnvironment)
+        # self.data_collector = self.setup_data_collector(CovidDataCollector)
+        # self.grid = self.setup_grid(CovidGrid, CovidSpot, self.scenario.grid_x_size, self.scenario.grid_y_size)
+        # self.network = self.setup_network(CovidNetwork, CovidEdge, ...)
 
         with self.define_basic_components():
             self.environment = CovidEnvironment()
@@ -43,7 +46,6 @@ class CovidModel(Model):
 
     def run(self):
         self.scenario.setup_age_group_params()
-        self.grid.setup_spots()
         for t in self.routine(
             self.scenario.periods
         ):  # 可以把scenario.periods传入self.routine。
