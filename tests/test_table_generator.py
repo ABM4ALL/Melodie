@@ -36,10 +36,10 @@ def test_table_generator():
 
     simulator.setup()
     simulator.pre_run()
-    with simulator.df_loader.table_generator("aaa", 100) as g:
+    with simulator.df_loader.dataframe_generator("aaa", 100) as g:
         g.set_row_generator(lambda scenario: {"id": g.increment(), "productivity": 0.5})
 
-    with simulator.df_loader.table_generator("bbb", lambda _: 200) as g:
+    with simulator.df_loader.dataframe_generator("bbb", lambda _: 200) as g:
 
         def f(s):
             o = obj1()

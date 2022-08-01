@@ -66,7 +66,6 @@ class BaseModellingManager(abc.ABC):
         self.df_loader.as_sub_worker = True
         self.df_loader.register_scenario_dataframe()
         self.df_loader.register_static_dataframes()
-        self.df_loader.register_generated_dataframes()
 
         self.scenarios = self.generate_scenarios()
 
@@ -85,7 +84,6 @@ class BaseModellingManager(abc.ABC):
 
             self.df_loader.register_scenario_dataframe()
             self.df_loader.register_static_dataframes()
-            self.df_loader.register_generated_dataframes()
 
         self.scenarios = self.generate_scenarios()
         if self.scenarios is None or len(self.scenarios) == 0:

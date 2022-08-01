@@ -34,7 +34,7 @@ class CovidDataFrameLoader(DataFrameLoader):
             scenarios_dict,
         )
 
-    def register_generated_dataframes(self):
+    def generate_dataframe(self):
         def init_condition(initial_infected_percentage: float):
             condition = 0
             rand = np.random.uniform(0, 1)
@@ -44,7 +44,7 @@ class CovidDataFrameLoader(DataFrameLoader):
                 pass
             return condition
 
-        with self.table_generator(
+        with self.dataframe_generator(
             "agent_params", lambda scenario: scenario.agent_num
         ) as g:
 

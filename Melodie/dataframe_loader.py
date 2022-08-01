@@ -9,7 +9,7 @@ from .utils import MelodieExceptions
 from .config import Config
 from .db import DBConn, create_db_conn
 from .scenario_manager import Scenario
-from .table_generator import TableGenerator
+from .table_generator import DataFrameGenerator
 
 
 @dataclass
@@ -59,7 +59,7 @@ class DataFrameLoader:
         """
         pass
 
-    def register_generated_dataframes(self) -> None:
+    def generate_dataframe(self) -> None:
         """
         The "agent_params" table can be registered in this method.
         """
@@ -124,7 +124,7 @@ class DataFrameLoader:
             self.config
         ).read_dataframe(table_name)
 
-    def table_generator(
+    def dataframe_generator(
         self, table_name: str, rows_in_scenario: Union[int, Callable[[Scenario], int]]
     ):
         """
@@ -135,7 +135,7 @@ class DataFrameLoader:
             with type `Scenario` and return an integer for how many rows to generate for this scenario .
         :return:
         """
-        return TableGenerator(self, table_name, rows_in_scenario)
+        return DataFrameGenerator(self, table_name, rows_in_scenario)
 
     def generate_scenarios_from_dataframe(self, df_name: str) -> List["Scenario"]:
         """

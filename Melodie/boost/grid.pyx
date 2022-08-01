@@ -59,6 +59,9 @@ cdef class GridAgent(GridItem):
     def __init__(self, agent_id: int, x: int = 0, y: int = 0, category: int = 0, grid = None):
         super().__init__(agent_id, grid, x, y)
         self.category = category
+    
+    def set_category(self):
+        raise NotImplementedError("Category should be set for GridAgent")
 
     cpdef rand_move(self, int x_range, int y_range) except *:
         if self.grid is None:
@@ -190,7 +193,9 @@ cdef class Grid:
 
         assert self._width > 0
         assert self._height > 0
-        
+
+    def setup(self):
+        pass    
 
     cpdef validate(self):
         """

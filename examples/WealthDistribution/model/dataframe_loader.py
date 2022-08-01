@@ -11,9 +11,9 @@ class GiniDataframeLoader(DataFrameLoader):
             "simulator_scenarios", "simulator_scenarios.xlsx", scenarios_dict
         )
 
-    def register_generated_dataframes(self):
+    def generate_dataframe(self):
 
-        with self.table_generator(
+        with self.dataframe_generator(
             "agent_params", lambda scenario: scenario.agent_num
         ) as g:
 

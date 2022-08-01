@@ -44,9 +44,9 @@ class CovidDataFrameLoader(DataFrameLoader):
             pass
         return vaccination_trust_state
 
-    def register_generated_dataframes(self):
+    def generate_dataframe(self):
 
-        with self.table_generator(
+        with self.dataframe_generator(
             df_info.agent_params.df_name, lambda scenario: scenario.agent_num
         ) as g:
             # table_generator的名字不好，改成dataframe_generator

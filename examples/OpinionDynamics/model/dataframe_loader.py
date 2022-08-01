@@ -25,8 +25,8 @@ class OpinionDynamicsDataframeLoader(DataFrameLoader):
             "simulator_scenarios", "simulator_scenarios.xlsx", scenarios_dict
         )
 
-    def register_generated_dataframes(self):
-        with self.table_generator(
+    def generate_dataframe(self):
+        with self.dataframe_generator(
             "agent_params", lambda scenario: scenario.agent_num
         ) as g:
 

@@ -12,7 +12,7 @@ from .config import Config
 from .data_collector import DataCollector
 from .db import create_db_conn, DBConn
 from .scenario_manager import Scenario
-from .table_generator import TableGenerator
+from .table_generator import DataFrameGenerator
 from .visualizer import Visualizer
 
 logger = logging.getLogger(__name__)
@@ -60,7 +60,7 @@ class Model:
 
         self.environment: Optional[Environment] = None
         self.data_collector: Optional[DataCollector] = None
-        self.table_generator: Optional[TableGenerator] = None
+        self.table_generator: Optional[DataFrameGenerator] = None
         self.run_id_in_scenario = run_id_in_scenario
 
         self.network = None

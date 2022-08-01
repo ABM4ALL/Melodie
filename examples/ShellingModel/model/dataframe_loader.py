@@ -8,5 +8,5 @@ class ShellingModelDataframeLoader(DataFrameLoader):
     def register_static_dataframes(self):
         pass
 
-    def register_generated_dataframes(self):
+    def generate_dataframe(self):
         pass

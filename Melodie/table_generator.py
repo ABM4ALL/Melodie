@@ -14,7 +14,7 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 
-class TableGenerator:
+class DataFrameGenerator:
     def __enter__(self):
         return self
 
