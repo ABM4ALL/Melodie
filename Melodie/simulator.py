@@ -44,7 +44,7 @@ class BaseModellingManager(abc.ABC):
         if df_loader_cls is not None:
             assert issubclass(df_loader_cls, DataFrameLoader), df_loader_cls
 
-    def get_registered_dataframe(self, table_name) -> pd.DataFrame:
+    def get_dataframe(self, table_name) -> pd.DataFrame:
         """
         Get a static table.
         :param table_name:

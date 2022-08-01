@@ -15,7 +15,7 @@ class OpinionDynamicsModel(Model):
         self.agent_list = self.create_agent_container(
             OpinionDynamicsAgent,
             self.scenario.agent_num,
-            self.scenario.get_registered_dataframe("agent_params"),
+            self.scenario.get_dataframe("agent_params"),
         )
 
         with self.define_basic_components():

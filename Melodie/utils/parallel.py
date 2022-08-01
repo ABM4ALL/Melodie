@@ -13,10 +13,10 @@ result_queue = multiprocessing.Queue()
 
 
 def sub_routine_calibrator(
-    proc_id: int, modules: Dict[str, Tuple[str, str]], config_raw: Dict[str, Any]
+        proc_id: int, modules: Dict[str, Tuple[str, str]], config_raw: Dict[str, Any]
 ):
     """
-    The sub routine callback for parallelized computing used in Trainer and Calibrator.
+    The sub iterator callback for parallelized computing used in Trainer and Calibrator.
 
     :param proc_id:
     :param modules:
@@ -65,9 +65,8 @@ def sub_routine_calibrator(
             model = classes_dict["model"](config, scenario)
             scenario.manager = trainer
             model.setup()
-            # print(env_params)
-            # {category: [{id: 0, param1: 1, param2: 2, ...}]}
             env: "Environment" = model.environment
+
             env.set_params(env_params)
             model.run()
             agent_data = {}
@@ -93,10 +92,10 @@ def sub_routine_calibrator(
 
 
 def sub_routine_trainer(
-    proc_id: int, modules: Dict[str, Tuple[str, str]], config_raw: Dict[str, Any]
+        proc_id: int, modules: Dict[str, Tuple[str, str]], config_raw: Dict[str, Any]
 ):
     """
-    The sub routine callback for parallelized computing used in Trainer and Calibrator.
+    The sub iterator callback for parallelized computing used in Trainer and Calibrator.
 
     :param proc_id:
     :param modules:

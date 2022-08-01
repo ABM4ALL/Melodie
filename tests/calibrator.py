@@ -58,10 +58,8 @@ class CovidModel(Model):
         self.agent_list: AgentList[CovidAgent] = self.create_agent_container(
             CovidAgent, 1000
         )
-
-        with self.define_basic_components():
-            self.environment = CovidEnvironment()
-            self.data_collector = DataCollector()
+        self.environment = self.create_environment(CovidEnvironment)
+        self.data_collector = self.create_data_collector(DataCollector)
 
     def run(self):
         self.environment.env_run(self.agent_list)
@@ -72,7 +70,6 @@ class CovidCalibrator(Calibrator):
     def setup(self):
         self.add_environment_calibrating_property("infection_probability")
         self.add_environment_result_property("accumulated_infection")
-        # self.algorithm_cls = GeneticAlgorithmCalibrator
 
     def target_function(self, environment: "CovidEnvironment") -> Union[float, int]:
         print(
@@ -81,8 +78,8 @@ class CovidCalibrator(Calibrator):
             environment.scenario.infection_probability,
         )
         return (
-            environment.accumulated_infection / environment.scenario.agent_num - 0.75
-        ) ** 2
+                       environment.accumulated_infection / environment.scenario.agent_num - 0.75
+               ) ** 2
 
     def generate_scenarios(self) -> List["Scenario"]:
         return [CovidScenario(0)]

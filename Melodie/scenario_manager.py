@@ -109,13 +109,13 @@ class Scenario(Element):
     def __repr__(self):
         return f"<{self.__class__.__name__} {self.__dict__}>"
 
-    def get_registered_dataframe(self, table_name) -> pd.DataFrame:
+    def get_dataframe(self, table_name) -> pd.DataFrame:
         assert self.manager is not None
-        return self.manager.get_registered_dataframe(table_name)
+        return self.manager.get_dataframe(table_name)
 
     def get_dataframe(self, df_info: "DataFrameInfo") -> pd.DataFrame:
         assert self.manager is not None
-        return self.manager.get_registered_dataframe(df_info.df_name)
+        return self.manager.get_dataframe(df_info.df_name)
 
     # def get_scenarios_table(self) -> pd.DataFrame:
     #     assert self.manager is not None

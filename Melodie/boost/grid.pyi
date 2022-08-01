@@ -38,6 +38,7 @@ class Spot(GridItem):
         pass
 
 class Grid:
+    scenario: "Scenario"
     def __init__(
         self,
         spot_cls: ClassVar[Spot],
@@ -53,6 +54,7 @@ class Grid:
             for y in range(self.height):
                 self._spots[y][x].setup()
         self._agent_ids: Dict[str, List[Set[int]]] = {}
+    def setup(self) -> None: ...
     def width(self) -> int: ...
     def height(self) -> int: ...
     def add_agent_container(

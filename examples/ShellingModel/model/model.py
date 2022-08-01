@@ -25,7 +25,7 @@ class ShellingModelModel(Model):
         self.grid.add_agent_container(CategoryB, self.agent_list_b, "random_single")
 
     def run(self):
-        for _ in self.routine():
+        for _ in self.iterator(self.scenario.periods):
             unsatisfied_a, unsatisfied_b = self.environment.calc_satisfactory(
                 self.grid, self.agent_list_a, self.agent_list_b
             )

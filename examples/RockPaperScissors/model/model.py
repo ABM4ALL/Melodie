@@ -15,7 +15,7 @@ class RPSModel(Model):
         self.agent_list: AgentList[RPSAgent] = self.create_agent_container(
             RPSAgent,
             self.scenario.agent_num,
-            self.scenario.get_registered_dataframe("agent_params"),
+            self.scenario.get_dataframe("agent_params"),
         )
 
         with self.define_basic_components():

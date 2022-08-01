@@ -657,7 +657,7 @@ class Trainer(BaseModellingManager):
 
         :return:
         """
-        trainer_params_table = self.get_registered_dataframe("trainer_params_scenarios")
+        trainer_params_table = self.get_dataframe("trainer_params_scenarios")
         assert isinstance(
             trainer_params_table, pd.DataFrame
         ), "No learning scenarios table specified!"

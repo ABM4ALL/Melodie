@@ -17,7 +17,7 @@ class CovidModel(Model):
         self.agent_list: AgentList[CovidAgent] = self.create_agent_container(
             CovidAgent,
             self.scenario.agent_num,
-            self.scenario.get_registered_dataframe("agent_params"),
+            self.scenario.get_dataframe("agent_params"),
             "list",
         )
 
@@ -42,7 +42,7 @@ class CovidModel(Model):
 
 
     def run(self):
-        for t in self.routine():
+        for t in self.iterator(self.scenario.periods):
             self.environment.agents_move(self.agent_list, self.grid)
             self.environment.agents_infection(self.agent_list, self.grid)
             self.environment.calculate_accumulated_infection(self.agent_list)

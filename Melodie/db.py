@@ -192,4 +192,4 @@ def create_db_conn(config: "Config") -> DBConn:
     :return:
     """
 
-    return DBConn(config.project_name, conn_params={"db_path": config.sqlite_folder})
+    return DBConn(config.project_name, conn_params={"db_path": config.output_folder})

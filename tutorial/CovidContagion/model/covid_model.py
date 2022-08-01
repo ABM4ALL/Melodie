@@ -16,14 +16,14 @@ class CovidModel(Model):
     scenario: CovidScenario
 
     def setup(self):  # create和setup两个概念也需要统一
-        self.agents: "AgentList[CovidAgent]" = self.create_agent_container(
+        self.agents: "AgentList[CovidAgent]" = self.create_agent_list(
             CovidAgent,
             self.scenario.agent_num,
             self.scenario.get_dataframe(df_info.agent_params),
-            "list",  # AgentDict是有什么好处？看目前还是空的。如果和加速有关，可以放在tips里介绍
         )
 
-        self.grid = CovidGrid(
+        self.grid = self.create_grid(
+            CovidGrid,
             CovidSpot,
             self.scenario.grid_x_size,
             self.scenario.grid_y_size,
@@ -33,22 +33,14 @@ class CovidModel(Model):
 
         # grid的四边相连？模拟看到了x = -1
 
-        # self.environment = self.setup_environment(CovidEnvironment)
-        # self.data_collector = self.setup_data_collector(CovidDataCollector)
-        # self.grid = self.setup_grid(CovidGrid, CovidSpot, self.scenario.grid_x_size, self.scenario.grid_y_size)
-        # self.network = self.setup_network(CovidNetwork, CovidEdge, ...)
-
-        with self.define_basic_components():
-            self.environment = CovidEnvironment()
-            self.data_collector = CovidDataCollector()
-        # self.environment = self.setup_environment(CovidEnvironment)
-        # self.data_collector = self.setup_data_collector(CovidDataCollector)
+        self.environment = self.create_environment(CovidEnvironment)
+        self.data_collector = self.create_data_collector(CovidDataCollector)
 
     def run(self):
         self.scenario.setup_age_group_params()
-        for t in self.routine(
-            self.scenario.periods
-        ):  # 可以把scenario.periods传入self.routine。
+        for t in self.iterator(
+                self.scenario.periods
+        ):  # 可以把scenario.periods传入self.iterator。
             for hour in range(0, self.scenario.period_hours):
                 self.environment.agents_move(self.agents)
                 self.environment.agents_infection(self.agents, self.grid)

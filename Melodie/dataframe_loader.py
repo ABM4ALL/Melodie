@@ -101,7 +101,7 @@ class DataFrameLoader:
 
         MelodieExceptions.Data.TableNameInvalid(table_name)
         if ext in {".xls", ".xlsx"}:
-            file_path_abs = os.path.join(self.config.excel_source_folder, file_name)
+            file_path_abs = os.path.join(self.config.input_folder, file_name)
             table = pd.read_excel(file_path_abs)
         else:
             raise NotImplemented(file_name)

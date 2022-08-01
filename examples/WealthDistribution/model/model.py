@@ -16,7 +16,7 @@ class GiniModel(Model):
         self.agent_list = self.create_agent_container(
             GiniAgent,
             self.scenario.agent_num,
-            self.scenario.get_registered_dataframe("agent_params"),
+            self.scenario.get_dataframe("agent_params"),
         )
 
         with self.define_basic_components():
@@ -24,8 +24,7 @@ class GiniModel(Model):
             self.data_collector = GiniDataCollector()
 
     def run(self):
-        # for t in range(0, self.scenario.periods):
-        for step in self.routine():
+        for step in self.iterator(self.scenario.periods):
             self.environment.go_money_produce(self.agent_list)
             self.environment.go_money_transfer(self.agent_list)
             self.environment.calc_wealth_and_gini(self.agent_list)

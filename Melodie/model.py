@@ -1,13 +1,13 @@
 import logging
 from contextlib import contextmanager
-from typing import ClassVar, Optional, Union
+from typing import ClassVar, Optional, Union, Type
 
 import pandas as pd
 
 from .utils import MelodieExceptions, show_prettified_warning, show_link
 from .boost.agent_list import AgentList, BaseAgentContainer, AgentDict
 from .boost.basics import Agent, Environment
-from .boost.grid import GridAgent
+from .boost.grid import GridAgent, Grid, Spot
 from .config import Config
 from .data_collector import DataCollector
 from .db import create_db_conn, DBConn
@@ -48,11 +48,11 @@ class ModelRunRoutine:
 
 class Model:
     def __init__(
-        self,
-        config: "Config",
-        scenario: "Scenario",
-        run_id_in_scenario: int = 0,
-        visualizer: Visualizer = None,
+            self,
+            config: "Config",
+            scenario: "Scenario",
+            run_id_in_scenario: int = 0,
+            visualizer: Visualizer = None,
     ):
 
         self.scenario = scenario
@@ -111,14 +111,14 @@ class Model:
         Environment or DataCollector should not be defined more than once
         :return:
         """
-        MelodieExceptions.Assertions.IsNone("self.environment", self.environment)
+        # MelodieExceptions.Assertions.IsNone("self.environment", self.environment)
         MelodieExceptions.Assertions.IsNone("self.data_collector", self.data_collector)
 
         yield self
         # MelodieExceptions.Assertions.Type('self.environment', self.environment, Environment)
-        self.environment.model = self
-        self.environment.scenario = self.scenario
-        self.environment.setup()
+        # self.environment.model = self
+        # self.environment.scenario = self.scenario
+        # self.environment.setup()
         if self.data_collector is not None:
             MelodieExceptions.Assertions.Type(
                 "self.data_collector", self.data_collector, DataCollector
@@ -127,12 +127,39 @@ class Model:
             self.data_collector.setup()
         # self.check_grid_agents_initialized()
 
+    def create_agent_list(self, agent_class: Type['Agent'], initial_num: int, params_df: pd.DataFrame = None
+                          ):
+        return self.create_agent_container(agent_class, initial_num, params_df)
+
+    def create_environment(self, env_class: Type['Environment']):
+        env = env_class()
+        env.model = self
+        env.scenario = self.scenario
+        env.setup()
+        return env
+
+    def create_grid(self, grid_cls: Type['Grid'], spot_cls: Type['Spot'],
+                    width: int, height: int, wrap=True, caching=True, multi=False):
+        grid = grid_cls(spot_cls, width, height, wrap=wrap, caching=caching, multi=multi)
+        # grid.scenario = self.scenario
+        grid.setup()
+        return grid
+
+    def create_network(self):
+        raise NotImplementedError
+
+    def create_data_collector(self, data_collector_cls: Type['DataCollector']):
+        data_collector = data_collector_cls()
+        data_collector.model = self
+        data_collector.setup()
+        return data_collector
+
     def create_agent_container(
-        self,
-        agent_class: ClassVar["Agent"],
-        initial_num: int,
-        params_df: pd.DataFrame = None,
-        container_type: str = "list",
+            self,
+            agent_class: ClassVar["Agent"],
+            initial_num: int,
+            params_df: pd.DataFrame = None,
+            container_type: str = "list",
     ) -> Union[AgentList]:
         """
         Create a container for agents
@@ -184,7 +211,7 @@ class Model:
     def run_boost(self):
         pass
 
-    def routine(self, periods: int):
+    def iterator(self, periods: int):
         return ModelRunRoutine(periods, self)
 
     def visualizer_step(self, current_step: int):

@@ -56,6 +56,7 @@ cdef class Grid:
     cdef dict _neighbors_cache
     cdef list _roles_list
     cdef list _agent_containers
+    cdef public object scenario
     
     cdef AgentIDManager _agent_id_mgr
     cpdef  validate(self)

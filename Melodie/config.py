@@ -10,19 +10,17 @@ class Config:
     """
 
     def __init__(
-        self,
-        project_name: str,
-        project_root: str,
-        sqlite_folder: str,
-        excel_source_folder: str,
-        output_folder: str,
-        visualizer_entry: str = "",
+            self,
+            project_name: str,
+            project_root: str,
+            input_folder: str,
+            output_folder: str,
+            visualizer_entry: str = "",
     ):
         self.project_name = project_name
         self.project_root = project_root
-        self.excel_source_folder = self.setup_folder_path(excel_source_folder)
         self.output_folder = self.setup_folder_path(output_folder)
-        self.sqlite_folder = self.setup_folder_path(sqlite_folder)
+        self.input_folder = self.setup_folder_path(input_folder)
 
         if not os.path.exists(visualizer_entry) and visualizer_entry != "":
             raise FileNotFoundError(
@@ -48,9 +46,7 @@ class Config:
         c = Config(
             d["project_name"],
             d["project_root"],
-            d["sqlite_folder"],
-            d["excel_source_folder"],
-            d["excel_source_folder"],
+            d["input_folder"],
             d["output_folder"],
         )
         return c

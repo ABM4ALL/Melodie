@@ -442,7 +442,7 @@ class Calibrator(BaseModellingManager):
 
         :return:
         """
-        calibrator_scenarios_table = self.get_registered_dataframe(
+        calibrator_scenarios_table = self.get_dataframe(
             "calibrator_params_scenarios"
         )
         assert isinstance(
