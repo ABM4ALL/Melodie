@@ -1,6 +1,7 @@
 import logging
+import queue
 from contextlib import contextmanager
-from typing import ClassVar, Optional, Union, Type
+from typing import ClassVar, Optional, Union, Type, List
 
 import pandas as pd
 
@@ -13,6 +14,7 @@ from .data_collector import DataCollector
 from .db import create_db_conn, DBConn
 from .scenario_manager import Scenario
 from .table_generator import DataFrameGenerator
+from .network import Network
 from .visualizer import Visualizer
 
 logger = logging.getLogger(__name__)
@@ -48,11 +50,11 @@ class ModelRunRoutine:
 
 class Model:
     def __init__(
-        self,
-        config: "Config",
-        scenario: "Scenario",
-        run_id_in_scenario: int = 0,
-        visualizer: Visualizer = None,
+            self,
+            config: "Config",
+            scenario: "Scenario",
+            run_id_in_scenario: int = 0,
+            visualizer: Visualizer = None,
     ):
 
         self.scenario = scenario
@@ -65,6 +67,7 @@ class Model:
 
         self.network = None
         self.visualizer = visualizer
+        self.initialization_queue: List[Union[AgentList, Grid, Environment, DataCollector, Network]] = []
 
     def __del__(self):
         """
@@ -76,6 +79,14 @@ class Model:
     def setup(self):
         """
         general method for setting up the model.
+        :return:
+        """
+        pass
+
+    def create(self):
+        """
+
+        This method will be called automatically before setup()
         :return:
         """
         pass
@@ -128,23 +139,21 @@ class Model:
         # self.check_grid_agents_initialized()
 
     def create_agent_list(
-        self,
-        agent_class: Type["Agent"],
-        initial_num: int,
-        params_df: pd.DataFrame = None,
+            self,
+            agent_class: Type["Agent"],
     ):
-        return self.create_agent_container(agent_class, initial_num, params_df)
+        return AgentList(agent_class, 0, model=self)
 
     def create_environment(self, env_class: Type["Environment"]):
         env = env_class()
         env.model = self
         env.scenario = self.scenario
-        env.setup()
+        self.initialization_queue.append(env)
         return env
 
     def create_grid(self, grid_cls: Type["Grid"], spot_cls: Type["Spot"]):
         grid = grid_cls(spot_cls, self.scenario)
-        grid.setup()
+        self.initialization_queue.append(grid)
         return grid
 
     def create_network(self):
@@ -153,15 +162,15 @@ class Model:
     def create_data_collector(self, data_collector_cls: Type["DataCollector"]):
         data_collector = data_collector_cls()
         data_collector.model = self
-        data_collector.setup()
+        self.initialization_queue.append(data_collector)
         return data_collector
 
     def create_agent_container(
-        self,
-        agent_class: ClassVar["Agent"],
-        initial_num: int,
-        params_df: pd.DataFrame = None,
-        container_type: str = "list",
+            self,
+            agent_class: ClassVar["Agent"],
+            initial_num: int,
+            params_df: pd.DataFrame = None,
+            container_type: str = "list",
     ) -> Union[AgentList]:
         """
         Create a container for agents
@@ -191,6 +200,7 @@ class Model:
                 f"No dataframe set for the {agent_container_class.__name__}.\n\t"
                 + show_link()
             )
+        self.initialization_queue.append(container)
         return container
 
     def check_agent_containers(self):
@@ -219,3 +229,9 @@ class Model:
     def visualizer_step(self, current_step: int):
         if (self.visualizer is not None) and (current_step > 0):
             self.visualizer.step(current_step)
+
+    def _setup(self):
+        self.create()
+        self.setup()
+        for component_to_init in self.initialization_queue:
+            component_to_init._setup()

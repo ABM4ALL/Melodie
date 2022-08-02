@@ -29,21 +29,21 @@ class BaseModellingManager(abc.ABC):
     """
 
     def __init__(
-        self,
-        config: Config,
-        scenario_cls: ClassVar["Scenario"],
-        model_cls: ClassVar["Model"],
-        df_loader_cls: ClassVar[DataLoader] = None,
+            self,
+            config: Config,
+            scenario_cls: ClassVar["Scenario"],
+            model_cls: ClassVar["Model"],
+            data_loader_cls: ClassVar[DataLoader] = None,
     ):
         self.config: Optional[Config] = config
         self.scenario_cls = scenario_cls
         self.model_cls = model_cls
 
         self.scenarios: Optional[List["Scenario"]] = None
-        self.df_loader_cls: Optional[ClassVar[DataLoader]] = df_loader_cls
+        self.df_loader_cls: Optional[ClassVar[DataLoader]] = data_loader_cls
         self.df_loader: Optional[DataLoader] = None
-        if df_loader_cls is not None:
-            assert issubclass(df_loader_cls, DataLoader), df_loader_cls
+        if data_loader_cls is not None:
+            assert issubclass(data_loader_cls, DataLoader), data_loader_cls
 
     def get_dataframe(self, table_name) -> pd.DataFrame:
         """
@@ -114,17 +114,17 @@ class BaseModellingManager(abc.ABC):
 
 class Simulator(BaseModellingManager):
     def __init__(
-        self,
-        config: Config,
-        scenario_cls: "ClassVar[Scenario]",
-        model_cls: "ClassVar[Model]",
-        df_loader_cls: "ClassVar[DataLoader]" = None,
+            self,
+            config: Config,
+            scenario_cls: "ClassVar[Scenario]",
+            model_cls: "ClassVar[Model]",
+            data_loader_cls: "ClassVar[DataLoader]" = None,
     ):
         super(Simulator, self).__init__(
             config=config,
             scenario_cls=scenario_cls,
             model_cls=model_cls,
-            df_loader_cls=df_loader_cls,
+            data_loader_cls=data_loader_cls,
         )
         self.server_thread: threading.Thread = None
         self.visualizer: Optional[Visualizer] = None
@@ -139,7 +139,7 @@ class Simulator(BaseModellingManager):
         return self.df_loader.generate_scenarios("simulator")
 
     def run_model(
-        self, config, scenario, run_id, model_class: ClassVar["Model"], visualizer=None
+            self, config, scenario, run_id, model_class: ClassVar["Model"], visualizer=None
     ):
         """
 
@@ -154,7 +154,7 @@ class Simulator(BaseModellingManager):
         if visualizer is not None:
             visualizer._model = model
 
-        model.setup()
+        model._setup()
 
         if visualizer is not None:
             visualizer.start()

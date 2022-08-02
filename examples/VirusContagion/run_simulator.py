@@ -13,7 +13,7 @@ if __name__ == "__main__":
         config=config,
         scenario_cls=CovidScenario,
         model_cls=CovidModel,
-        df_loader_cls=CovidDataFrameLoader,
+        data_loader_cls=CovidDataFrameLoader,
     )
 
     run_profile(simulator.run)

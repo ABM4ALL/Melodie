@@ -10,7 +10,7 @@ if __name__ == "__main__":
         config=config,
         scenario_cls=OpinionDynamicsScenario,
         model_cls=OpinionDynamicsModel,
-        df_loader_cls=OpinionDynamicsDataframeLoader,
+        data_loader_cls=OpinionDynamicsDataframeLoader,
     )
 
     simulator.run()

@@ -8,9 +8,6 @@ class CovidSpot(Spot):
 
 
 class CovidGrid(Grid):
-    def config_grid(self):
-        self.set_size(self.scenario.grid_x_size, self.scenario.grid_y_size)
-        self.set_multi(True)
 
     def setup(self):
         self.set_spot_attribute(

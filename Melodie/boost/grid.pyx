@@ -190,41 +190,33 @@ cdef class Grid:
         self._wrap = True
         self._multi = False
         self._caching = True
-        self.config_grid()
-        assert self._width > 0
-        assert self._height > 0
-        self.init_grid()
 
     def init_grid(self):
         self._spots = [[self._spot_cls(self._convert_to_1d(x, y), self, x, y) for x in range(self._width)] for y in range(self._height)]
         for x in range(self._width):
             for y in range(self._height):
                 self._spots[y][x].setup()
+
         self._neighbors_cache = {}# [None] * self._width * self._height
         self._roles_list = [[0 for j in range(4)] for i in range(self._width*self._height)]
         self._agent_id_mgr = AgentIDManager(self._width, self._height, allow_multi=self._multi)
         self._agent_containers = [None for i in range(100)]
+        
 
-
-    def config_grid(self):
-        raise NotImplementedError("method 'config_grid' must be called!")
-
-    def set_size(self, width: int, height: int):
+    def setup_params(self, width: int, height: int, wrap=True, caching=True, multi=True):
         self._width = width
         self._height = height
-    
-    def set_wrap(self, _wrap):
-        self._wrap = _wrap
-
-    def set_caching(self, caching):
+        self._wrap = wrap
         self._caching = caching
-
-    def set_multi(self, multi):
         self._multi = multi
+        self.init_grid()
 
     def setup(self):
         pass    
-
+    
+    def _setup(self):
+        self.setup()
+        
     cpdef validate(self):
         """
         Validate the container.
@@ -421,7 +413,7 @@ cdef class Grid:
             self._neighbors_cache[key] = neighbors
             return neighbors
 
-    cpdef list get_neighbor_ids(self, long x, long y, long radius=1, bint moore=True, bint except_self=True) except *:
+    cpdef list get_neighbors_info(self, long x, long y, long radius=1, bint moore=True, bint except_self=True) except *:
         """
         Get every agents' id out of neighborhood.
         """

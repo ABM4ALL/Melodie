@@ -19,7 +19,8 @@ class TestModel(Model):
         params_df = pd.DataFrame(
             [{"a": 123, "b": 456, "productivity": 0.0} for i in range(N)]
         )
-        self.agent_list1 = self.create_agent_container(TestAgent, N, params_df)
+        self.agent_list1 = self.create_agent_list(TestAgent)
+        self.agent_list1.setup_agents(N, params_df)
         self.agent_list1[2].id = 1
         self.agent_list1[3].id = 1
 

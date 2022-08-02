@@ -81,7 +81,7 @@ class DataLoader:
         pass
 
     def register_dataframe(
-        self, table_name: str, data_frame: pd.DataFrame, data_types: dict = None
+            self, table_name: str, data_frame: pd.DataFrame, data_types: dict = None
     ) -> None:
         """
         :param table_name:
@@ -155,7 +155,7 @@ class DataLoader:
         self.registered_matrices[matrix_info.mat_name] = array
 
     def dataframe_generator(
-        self, table_name: str, rows_in_scenario: Union[int, Callable[[Scenario], int]]
+            self, table_name: str, rows_in_scenario: Union[int, Callable[[Scenario], int]]
     ):
         """
         Create a new generator
@@ -181,6 +181,8 @@ class DataLoader:
         for i in range(scenarios_dataframe.shape[0]):
             scenario = self.scenario_cls()
             scenario.manager = self.manager
+            scenario.setup()
+
             for col_name in cols:
                 if col_name not in scenario.__dict__.keys():
                     raise MelodieExceptions.Data.TableColumnDoesNotMatchObjectProperty(

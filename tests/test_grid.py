@@ -158,7 +158,7 @@ def test_roles():
 
     agents = [TestGridAgent(i) for i in range(10)]
     grid2 = GridForRoles(Spot)
-
+    grid2.setup_params(5, 5, multi=True)
     for agent in agents:
         grid2.add_agent(agent)
 
@@ -170,13 +170,14 @@ def test_roles():
 
 def test_single_grid():
     class GridForTest(Grid):
-        def config_grid(self):
-            self.set_size(4, 4)
+        pass
 
     agents = [TestGridAgent(i) for i in range(15)]
+
     grid = GridForTest(
         Spot,
     )
+    grid.setup_params(4, 4)
     for i in range(4):
         for j in range(4):
             if i * 4 + j < 15:
@@ -189,7 +190,7 @@ def test_single_grid():
     grid.move_agent(agents[0], 3, 3)
     spot = grid.find_empty_spot()
     assert spot == (0, 0), spot
-    neighbors = grid.get_neighbor_ids(2, 2)
+    neighbors = grid.get_neighbors_info(2, 2)
     assert len(neighbors) == 8
     nbhd = grid.get_neighborhood(2, 2)
     assert len(nbhd) == 8 and isinstance(nbhd, list)
@@ -200,26 +201,26 @@ def test_agents_nojit():
     height = 20
 
     class Grid3(Grid):
-        def config_grid(self):
-            self.set_size(width, height)
+        pass
 
     grid = Grid3(Spot)
-
+    grid.setup_params(width, height)
     agents(grid)
     neighbors(grid)
     convert(grid)
 
 
 class Grid2(Grid):
-    def config_grid(self):
-        self.set_size(10, 10)
+    pass
 
 
 def test_containers():
     grid = Grid2(Spot)
+    grid.setup_params(10, 10)
     agent_list: AgentList[TestGridAgent] = model.create_agent_container(
         TestGridAgent, 10
     )
+    agent_list.setup_agents(10)
     for i in range(10):
         agent_list[i].x = i
         agent_list[i].y = i
@@ -239,13 +240,12 @@ def test_roles_2():
             self.b = 123.0
 
     class GridForRoles(Grid):
-        def config_grid(self):
-            self.set_size(100, 100)
-            self.set_multi(True)
+        pass
 
     # agents = [TestGridAgent(i) for i in range(10)]
     # agents_b = [TestGridAgent(i) for i in range(10)]
     grid = GridForRoles(MySpot)
+    grid.setup_params(100, 100, multi=True)
     grid.set_spot_attribute(
         "a",
         np.ones(

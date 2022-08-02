@@ -106,3 +106,6 @@ cdef class Environment(Element):
         """
         d = self.to_dict(properties)
         return pd.DataFrame([d])
+
+    def _setup(self):
+        self.setup()

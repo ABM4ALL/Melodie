@@ -62,6 +62,7 @@ def test_properties():
 def test_add_del_agents():
     n = 20
     al = AgentList(TestAgent, n, model)
+    al.setup_agents(n)
     al.remove(al[10])
     al.add()
     assert al[-1].id == 20
@@ -106,7 +107,7 @@ def test_properties_with_scenario():
     """
     n = 10
     assert isinstance(model.scenario.id, int)
-    for al in [AgentList(TestAgent, n, model), AgentDict(TestAgent, n, model)]:
+    for al in [AgentList(TestAgent, n, model)]:
         l = [j for j in range(n)]
         random.shuffle(l)
         df = pd.DataFrame(
@@ -120,6 +121,7 @@ def test_properties_with_scenario():
                 for i in l
             ]
         )
+        al.setup_agents(n)
         al.set_properties(df)
         assert len(al) == n
         df_scenario = df.query(f"scenario_id == {model.scenario.id}")
@@ -136,4 +138,5 @@ def test_grid_agents():
             self.category = 0
 
     al = AgentList(GridAgent1, 10, model)
+    al.setup_agents(10)
     al.to_list(["x"])

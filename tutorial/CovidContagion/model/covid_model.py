@@ -15,24 +15,25 @@ if TYPE_CHECKING:
 class CovidModel(Model):
     scenario: CovidScenario
 
-    def setup(self):
-        # self.agents = self.create_agent_list(CovidAgent)
+    def create(self):
         self.agents: "AgentList[CovidAgent]" = self.create_agent_list(
             CovidAgent,
-            self.scenario.agent_num,
-            self.scenario.get_dataframe(df_info.agent_params),
         )
         self.environment = self.create_environment(CovidEnvironment)
         self.data_collector = self.create_data_collector(CovidDataCollector)
         self.grid = self.create_grid(CovidGrid, CovidSpot)
-        self.config_components()
 
-    def config_components(self):
-
+    def setup(self):
+        self.agents.setup_agents(self.scenario.agent_num,
+                                  self.scenario.get_dataframe(df_info.agent_params))
+        self.grid.setup_params(self.scenario.grid_x_size,
+                                self.scenario.grid_y_size)
         self.grid.setup_agent_locations(self.agents)
 
-    def run(self):
         self.scenario.setup_age_group_params()
+
+    def run(self):
+
         for t in self.iterator(self.scenario.periods):
             for hour in range(0, self.scenario.period_hours):
                 self.environment.agents_move(self.agents)

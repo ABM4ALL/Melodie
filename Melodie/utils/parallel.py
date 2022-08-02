@@ -44,7 +44,7 @@ def sub_routine_calibrator(
             config=config,
             scenario_cls=classes_dict["scenario"],
             model_cls=classes_dict["model"],
-            df_loader_cls=classes_dict["df_loader"],
+            data_loader_cls=classes_dict["df_loader"],
         )
         trainer.setup()
         trainer.subworker_prerun()
@@ -61,10 +61,13 @@ def sub_routine_calibrator(
             chrom, d, env_params = json.loads(ret)
             logger.debug(f"processor {proc_id} got chrom {chrom}")
             scenario = classes_dict["scenario"]()
+            scenario.manager = trainer
+            scenario.setup()
             scenario.set_params(d)
             model = classes_dict["model"](config, scenario)
-            scenario.manager = trainer
-            model.setup()
+
+
+            model._setup()
             env: "Environment" = model.environment
 
             env.set_params(env_params)

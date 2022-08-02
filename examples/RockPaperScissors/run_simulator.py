@@ -12,7 +12,7 @@ if __name__ == "__main__":
         config=config,
         scenario_cls=RPSScenario,
         model_cls=RPSModel,
-        df_loader_cls=RPSDataFrameLoader,
+        data_loader_cls=RPSDataFrameLoader,
     )
 
     run_profile(simulator.run)

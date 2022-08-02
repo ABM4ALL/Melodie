@@ -31,6 +31,7 @@ def test_relationship_network():
     model = DemoModel(cfg, Scenario(0))
     model.setup()
     agent_list = AgentList(DemoAgent, 10, model)
+    agent_list.setup_agents(10)
     n = DemoNetwork()
     n.add_category("agents")
     for agent in agent_list:
@@ -42,9 +43,9 @@ def test_relationship_network():
     n.create_edge(agent_list[3].id, "agents", agent_list[4].id, "agents")
     neighbor_ids = n.get_neighbor_positions(agent_list[0].id, "agents")
     assert (
-        len(neighbor_ids) == 2
-        and ("agents", 1) in neighbor_ids
-        and ("agents", 2) in neighbor_ids
+            len(neighbor_ids) == 2
+            and ("agents", 1) in neighbor_ids
+            and ("agents", 2) in neighbor_ids
     )
 
     n.add_agent(11, "agents", 11)
@@ -60,6 +61,7 @@ def test_relationship_directed():
     model = DemoModel(cfg, Scenario(0))
     model.setup()
     agent_list = AgentList(DemoAgent, 10, model)
+    agent_list.setup_agents(10)
     n = DemoNetwork(directed=True)
     n.add_category("agents")
     for agent in agent_list:
@@ -71,9 +73,9 @@ def test_relationship_directed():
     n.create_edge(agent_list[3].id, "agents", agent_list[4].id, "agents")
     neighbor_ids = n.get_neighbor_positions(agent_list[0].id, "agents")
     assert (
-        len(neighbor_ids) == 2
-        and ("agents", 1) in neighbor_ids
-        and ("agents", 2) in neighbor_ids
+            len(neighbor_ids) == 2
+            and ("agents", 1) in neighbor_ids
+            and ("agents", 2) in neighbor_ids
     )
 
     n.add_agent(11, "agents", 11)

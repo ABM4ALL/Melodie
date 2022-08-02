@@ -1,11 +1,11 @@
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, List
 from Melodie import GridAgent
 import random
 
 if TYPE_CHECKING:
     from Melodie import AgentList
     from .scenario import CovidScenario
-    from .grid import CovidGrid
+    from .grid import CovidGrid, CovidSpot
     from .network import CovidNetwork
 
 
@@ -29,26 +29,15 @@ class CovidAgent(GridAgent):
         move_radius = self.scenario.get_move_radius(self.age_group)
         self.rand_move(move_radius, move_radius)  # 可以试试走得更远一点？
 
-    def get_grid_neighbors(self, grid: "CovidGrid"):
-        neighbors: list = grid.get_neighbor_positions(self.x, self.y, radius=1)
-        return neighbors
-
     def infect_from_neighbors(
-        self, infection_prob: float, grid: "CovidGrid", agents: "AgentList[CovidAgent]"
-    ) -> int:
-        neighbors = self.get_grid_neighbors(grid)
-        for neighbor in neighbors:  # neighbors不是CovidAgent的list嘛？
-            x, y = neighbor[0], neighbor[1]
-            agent_ids = grid.get_agent_ids(
-                x, y
-            )  # 因为可能站着多个agent？或者，应该是单数 - get_agent_id？
-            for agent_id, agent_category in agent_ids:  # 这里不清楚，为什么是多个agent？
-                # if agent_id == self.id:  # 为什么neighbors里会有自己？前面get_neighbors()已经排除了吧？
-                #     continue
-                a: CovidAgent = agents.get_agent(agent_id)
-                if a.health_state == 1 and random.uniform(0, 1) < infection_prob:
-                    self.health_state = 1
-                    break
+            self, infection_prob: float, grid: "CovidGrid", agents: "AgentList[CovidAgent]"
+    ):
+        neighbors = grid.get_neighbors_info(self.x, self.y)
+        for agent_id, agent_category in neighbors:
+            a: CovidAgent = agents.get_agent(agent_id)
+            if a.health_state == 1 and random.uniform(0, 1) < infection_prob:
+                self.health_state = 1
+                break
 
     def health_state_transition(self):
         if self.health_state == 1:
@@ -69,8 +58,8 @@ class CovidAgent(GridAgent):
 
     def update_vaccination_trust_from_ad(self):
         if (
-            self.vaccination_trust_state == 0
-            and random.uniform(0, 1) <= self.scenario.vaccination_ad_success_prob
+                self.vaccination_trust_state == 0
+                and random.uniform(0, 1) <= self.scenario.vaccination_ad_success_prob
         ):
             self.vaccination_trust_state = 1
         else:
@@ -87,7 +76,7 @@ class CovidAgent(GridAgent):
 
     def take_vaccination(self):
         if (
-            self.health_state == 0
-            and random.uniform(0, 1) <= self.scenario.vaccination_action_prob
+                self.health_state == 0
+                and random.uniform(0, 1) <= self.scenario.vaccination_action_prob
         ):
             self.health_state = 4

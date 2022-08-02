@@ -515,14 +515,14 @@ class Trainer(BaseModellingManager):
         config: "Config",
         scenario_cls: "Optional[ClassVar[Scenario]]",
         model_cls: "Optional[ClassVar[Model]]",
-        df_loader_cls: "Optional[ClassVar[DataLoader]]",
+        data_loader_cls: "Optional[ClassVar[DataLoader]]",
         processors: int = 1,
     ):
         super().__init__(
             config=config,
             scenario_cls=scenario_cls,
             model_cls=model_cls,
-            df_loader_cls=df_loader_cls,
+            data_loader_cls=data_loader_cls,
         )
         self.container_manager = AgentContainerManager()
 

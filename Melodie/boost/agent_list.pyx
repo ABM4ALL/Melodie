@@ -135,6 +135,7 @@ cdef class BaseAgentContainer():
             props_df_cpy = props_df.query(f"scenario_id == {self.scenario.id}").copy(True)
         else:
             props_df_cpy = props_df.copy()  # deep copy this dataframe.
+        
         props_df_cpy.reset_index(drop=True, inplace=True)
         self.type_check(param_names, props_df_cpy)
 
@@ -252,10 +253,21 @@ cdef class AgentList(BaseAgentContainer):
         self.model = model
         self._map = {}
         self.indices = &self._map
-        self.agents: List[AgentGeneric] = self.init_agents()
+        self.agents: List[AgentGeneric] = []
+
+    def setup_agents(self, agents_num: int, params_df: pd.DataFrame=None):
+        self.initial_agent_num = agents_num
+        self.agents = self.init_agents()
         for i, agent in enumerate(self.agents):
             self._set_index(agent.id, i)
-      
+        if params_df is not None:
+            self.set_properties(params_df)
+
+    def _setup(self):
+        self.setup()
+
+    def setup(self):
+        pass
 
     def __repr__(self):
         return f"<AgentList {self.agents}>"

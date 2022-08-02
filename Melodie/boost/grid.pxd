@@ -89,7 +89,7 @@ cdef class Grid:
     cpdef list get_agent_ids(self, long x, long y) except *
     cdef void _add_agent(self, long agent_id, long category, long x, long y) except *
     cdef void _remove_agent(self, long agent_id, long category,long x, long y) except *
-    cpdef list get_neighbor_ids(self, long x, long y, long radius=*, bint moore=*, bint except_self=*) except *
+    cpdef list get_neighbors_info(self, long x, long y, long radius=*, bint moore=*, bint except_self=*) except *
     
     # cpdef (long, long) get_agent_pos(self, long agent_id, object category)
     cpdef (long, long) rand_move(self, GridAgent agent, long category, long range_x, long range_y) except *

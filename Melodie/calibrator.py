@@ -400,14 +400,14 @@ class Calibrator(BaseModellingManager):
         config: "Config",
         scenario_cls: "Optional[ClassVar[Scenario]]",
         model_cls: "Optional[ClassVar[Model]]",
-        df_loader_cls: ClassVar["DataLoader"],
+        data_loader_cls: ClassVar["DataLoader"],
         processors=1,
     ):
         super().__init__(
             config=config,
             scenario_cls=scenario_cls,
             model_cls=model_cls,
-            df_loader_cls=df_loader_cls,
+            data_loader_cls=data_loader_cls,
         )
         self.processes = processors
         self.training_strategy: "Optional[Type[SearchingAlgorithm]]" = None
@@ -423,7 +423,7 @@ class Calibrator(BaseModellingManager):
 
         self.current_algorithm_meta = GACalibratorAlgorithmMeta()
         self.df_loader: Optional["DataLoader"] = None
-        self.df_loader_cls = df_loader_cls
+        self.df_loader_cls = data_loader_cls
 
     def setup(self):
         pass

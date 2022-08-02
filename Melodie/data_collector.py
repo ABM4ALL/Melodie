@@ -53,6 +53,9 @@ class DataCollector:
     def setup(self):
         pass
 
+    def _setup(self):
+        self.setup()
+
     def time_elapsed(self):
         """
         Get the time spent of collecting data.
@@ -61,7 +64,7 @@ class DataCollector:
         return self._time_elapsed
 
     def add_agent_property(
-        self, container_name: str, property_name: str, as_type: ClassVar = None
+            self, container_name: str, property_name: str, as_type: ClassVar = None
     ):
         """
         This method tells the data collector which property and in which agent container it should collect.

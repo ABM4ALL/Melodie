@@ -23,6 +23,7 @@ class CovidScenario(Scenario):
         self.infection_prob = 0.0
         self.reinfection_prob = 0.0
         self.vaccinated_infection_prob = 0.0
+        self.setup_age_group_params()
 
     def setup_age_group_params(self):
         df = self.get_dataframe(df_info.id_age_group)
