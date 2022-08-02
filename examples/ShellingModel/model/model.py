@@ -21,8 +21,8 @@ class ShellingModelModel(Model):
                 ShellingModelAgentTypeB
             ] = self.create_agent_container(ShellingModelAgentTypeB, 160)
         self.grid = Grid(Spot, 20, 20, multi=False)
-        self.grid.add_agent_container(CategoryA, self.agent_list_a, "random_single")
-        self.grid.add_agent_container(CategoryB, self.agent_list_b, "random_single")
+        self.grid.setup_agent_locations(CategoryA, self.agent_list_a, "random_single")
+        self.grid.setup_agent_locations(CategoryB, self.agent_list_b, "random_single")
 
     def run(self):
         for _ in self.iterator(self.scenario.periods):

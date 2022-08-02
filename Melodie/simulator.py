@@ -8,12 +8,13 @@ import time
 from multiprocessing import Pool
 from typing import ClassVar, Optional, List, Tuple
 
+import numpy as np
 import pandas as pd
 
 from .utils import show_prettified_warning
 from .utils.exceptions import MelodieExceptions
 from .config import Config
-from .dataframe_loader import DataFrameLoader
+from .dataframe_loader import DataLoader
 from .db import create_db_conn
 from .model import Model
 from .scenario_manager import Scenario
@@ -32,17 +33,17 @@ class BaseModellingManager(abc.ABC):
             config: Config,
             scenario_cls: ClassVar["Scenario"],
             model_cls: ClassVar["Model"],
-            df_loader_cls: ClassVar[DataFrameLoader] = None,
+            df_loader_cls: ClassVar[DataLoader] = None,
     ):
         self.config: Optional[Config] = config
         self.scenario_cls = scenario_cls
         self.model_cls = model_cls
 
         self.scenarios: Optional[List["Scenario"]] = None
-        self.df_loader_cls: Optional[ClassVar[DataFrameLoader]] = df_loader_cls
-        self.df_loader: Optional[DataFrameLoader] = None
+        self.df_loader_cls: Optional[ClassVar[DataLoader]] = df_loader_cls
+        self.df_loader: Optional[DataLoader] = None
         if df_loader_cls is not None:
-            assert issubclass(df_loader_cls, DataFrameLoader), df_loader_cls
+            assert issubclass(df_loader_cls, DataLoader), df_loader_cls
 
     def get_dataframe(self, table_name) -> pd.DataFrame:
         """
@@ -59,8 +60,23 @@ class BaseModellingManager(abc.ABC):
 
         return self.df_loader.registered_dataframes[table_name]
 
+    def get_matrix(self, matrix_name) -> np.ndarray:
+        """
+        Get a matrix.
+        :param matrix_name:
+        :return:
+        """
+        if self.df_loader is None:
+            raise MelodieExceptions.Data.NoDataframeLoaderDefined()
+        if matrix_name not in self.df_loader.registered_matrices:
+            raise MelodieExceptions.Data.StaticTableNotRegistered(
+                matrix_name, list(self.df_loader.registered_matrices.keys())
+            )
+
+        return self.df_loader.registered_matrices[matrix_name]
+
     def subworker_prerun(self):
-        self.df_loader: DataFrameLoader = self.df_loader_cls(
+        self.df_loader: DataLoader = self.df_loader_cls(
             self, self.config, self.scenario_cls
         )
         self.df_loader.as_sub_worker = True
@@ -80,7 +96,7 @@ class BaseModellingManager(abc.ABC):
         if clear_db:
             create_db_conn(self.config).clear_database()
         if self.df_loader_cls is not None:
-            self.df_loader: DataFrameLoader = self.df_loader_cls(self, self.config, self.scenario_cls)
+            self.df_loader: DataLoader = self.df_loader_cls(self, self.config, self.scenario_cls)
 
             self.df_loader.register_scenario_dataframe()
             self.df_loader.register_static_dataframes()
@@ -100,7 +116,7 @@ class Simulator(BaseModellingManager):
             config: Config,
             scenario_cls: "ClassVar[Scenario]",
             model_cls: "ClassVar[Model]",
-            df_loader_cls: "ClassVar[DataFrameLoader]" = None,
+            df_loader_cls: "ClassVar[DataLoader]" = None,
     ):
         super(Simulator, self).__init__(
             config=config,

@@ -22,7 +22,8 @@ class CovidScenario(Scenario):
 
 
 class CovidAgent(GridAgent):
-    category = 0
+    def set_category(self):
+        self.category = 0
 
     def setup(self):
         self.condition = 0

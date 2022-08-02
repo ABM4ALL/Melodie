@@ -25,25 +25,14 @@ class CovidModel(Model):
         self.grid = self.create_grid(
             CovidGrid,
             CovidSpot,
-            self.scenario.grid_x_size,
-            self.scenario.grid_y_size,
-            multi=True
         )
-        self.grid.add_agent_container(0, self.agents, "direct")
+        self.grid.setup_agent_locations(self.agents, "direct")
         # direct这个参数名不太清楚
         # 这个步骤移到grid.py的setup()下面
 
         # self.grid = self.create_grid(CovidGrid, CovidSpot)
 
-
-
-
-
         # self.network = self.create_network(CovidNetwork, CovidEdge)
-
-
-
-
 
         self.environment = self.create_environment(CovidEnvironment)
         self.data_collector = self.create_data_collector(CovidDataCollector)

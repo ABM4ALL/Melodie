@@ -1,10 +1,10 @@
 import sqlalchemy
 
-from Melodie import DataFrameLoader
+from Melodie import DataLoader
 from .scenario import GiniScenario
 
 
-class GiniDataframeLoader(DataFrameLoader):
+class GiniDataframeLoader(DataLoader):
     def register_scenario_dataframe(self):
         scenarios_dict = {}
         self.load_dataframe(

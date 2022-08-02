@@ -1,8 +1,8 @@
 import sys
 
+sys.path.append("../..")
 from Melodie import Simulator
 
-sys.path.append("../..")
 from model.scenario import CovidScenario
 from model.covid_model import CovidModel
 from model.dataframe_loader import CovidDataFrameLoader

@@ -18,7 +18,7 @@ cdef class GridAgent(GridItem):
     cpdef rand_move(self, int x_range, int y_range) except *
 
 cdef class Spot(GridItem):
-    cdef public long role
+    cdef public long colormap
 
 cdef class AgentIDManager:
     cdef long _width
@@ -49,7 +49,8 @@ cdef class Grid:
     cdef long _width
     cdef long _height
     cdef bint _multi
-    cdef bint wrap
+    cdef bint _caching
+    cdef bint _wrap
     cdef public dict _existed_agents
     cdef list _spots
     cdef dict _agent_ids
@@ -57,10 +58,11 @@ cdef class Grid:
     cdef list _roles_list
     cdef list _agent_containers
     cdef public object scenario
+    cdef public object _spot_cls
     
     cdef AgentIDManager _agent_id_mgr
     cpdef  validate(self)
-    cpdef _add_agent_container(self, long category_id, object category , str initial_placement) except *
+    cpdef _add_agent_container(self, object category , str initial_placement) except *
     cdef AgentList get_agent_container(self, category_id) except *
     cpdef Spot get_spot(self, long x, long y)
     # cpdef get_agent_ids(self, object category, long x, long y)
@@ -70,19 +72,25 @@ cdef class Grid:
     cdef (long, long) _bound_check(self, long x, long y) except *
     cdef (long, long) _coords_wrap(self, long x ,long y)
     cpdef (long, long) coords_wrap(self, long x, long y)
+
     cdef list _neighbors(self, long x, long y, long radius, bint moore, bint except_self)
     cdef long _get_neighbors_array_length(self, long radius, bint moore, bint except_self)
     cdef long _get_neighbors_key_hash(self, long x, long y, long radius, bint moore, bint except_self)
-    cpdef list get_neighbors(self, long x, long y, long radius=*, bint moore=*, bint except_self=*)
+    cpdef list get_neighbor_positions(self, long x, long y, long radius=*, bint moore=*, bint except_self=*)
+    
+
     cpdef long height(self)
     cpdef long width(self)
-    cpdef void add_agent(self, GridAgent agent, long category) except *
-    cpdef void remove_agent(self, GridAgent agent, long category) except *
-    cpdef void move_agent(self, GridAgent agent, long category, long target_x, long target_y) except *
+    
+    cpdef void add_agent(self, GridAgent agent) except *
+    cpdef void remove_agent(self, GridAgent agent) except *
+    cpdef void move_agent(self, GridAgent agent, long target_x, long target_y) except *
     cpdef list get_agents(self, long x, long y) except *
     cpdef list get_agent_ids(self, long x, long y) except *
     cdef void _add_agent(self, long agent_id, long category, long x, long y) except *
     cdef void _remove_agent(self, long agent_id, long category,long x, long y) except *
+    cpdef list get_neighbor_ids(self, long x, long y, long radius=*, bint moore=*, bint except_self=*) except *
+    
     # cpdef (long, long) get_agent_pos(self, long agent_id, object category)
     cpdef (long, long) rand_move(self, GridAgent agent, long category, long range_x, long range_y) except *
     cpdef tuple get_roles(self)

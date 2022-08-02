@@ -1,11 +1,11 @@
 import sqlalchemy
 import numpy as np
-from Melodie import DataFrameLoader
+from Melodie import DataLoader
 
 from .scenario import OpinionDynamicsScenario
 
 
-class OpinionDynamicsDataframeLoader(DataFrameLoader):
+class OpinionDynamicsDataframeLoader(DataLoader):
     def register_scenario_dataframe(self):
         scenarios_dict = {
             "id": sqlalchemy.Integer(),

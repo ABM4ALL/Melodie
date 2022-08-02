@@ -84,7 +84,7 @@ class Network:
         if not self.directed:
             self._adj[target_id].pop(source_id)
 
-    def get_neighbors(self, agent_id: int, category: str) -> List[int]:
+    def get_neighbor_positions(self, agent_id: int, category: str) -> List[int]:
         node_id = self.agent_pos(agent_id, category)
         neighbor_ids = self._adj.get(node_id)
         if neighbor_ids is None:

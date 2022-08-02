@@ -26,7 +26,7 @@ from .algorithms.ga import MelodieGA
 from .utils import MelodieExceptions
 from .utils.parallel import params_queue, result_queue, sub_routine_calibrator
 from .config import Config
-from .dataframe_loader import DataFrameLoader
+from .dataframe_loader import DataLoader
 from .db import create_db_conn
 from .model import Model
 from .scenario_manager import Scenario
@@ -400,7 +400,7 @@ class Calibrator(BaseModellingManager):
         config: "Config",
         scenario_cls: "Optional[ClassVar[Scenario]]",
         model_cls: "Optional[ClassVar[Model]]",
-        df_loader_cls: ClassVar["DataFrameLoader"],
+        df_loader_cls: ClassVar["DataLoader"],
         processors=1,
     ):
         super().__init__(
@@ -422,7 +422,7 @@ class Calibrator(BaseModellingManager):
         self.model: Optional[Model] = None
 
         self.current_algorithm_meta = GACalibratorAlgorithmMeta()
-        self.df_loader: Optional["DataFrameLoader"] = None
+        self.df_loader: Optional["DataLoader"] = None
         self.df_loader_cls = df_loader_cls
 
     def setup(self):

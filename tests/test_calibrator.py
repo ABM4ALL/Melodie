@@ -1,11 +1,11 @@
 import pytest
 
-from Melodie import DataFrameLoader
+from Melodie import DataLoader
 from .calibrator import CovidCalibrator, CovidModel, CovidScenario
 from .config import cfg_for_calibrator
 
 
-class DFLoader(DataFrameLoader):
+class DFLoader(DataLoader):
     pass
 
 

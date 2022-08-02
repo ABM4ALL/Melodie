@@ -1,6 +1,8 @@
+import numpy as np
+
 import sqlalchemy
 from Melodie import DataFrameInfo
-
+from Melodie.dataframe_loader import MatrixInfo
 
 simulator_scenarios = DataFrameInfo(
     df_name="simulator_scenarios",
@@ -66,4 +68,10 @@ agent_params = DataFrameInfo(
         "health_state": sqlalchemy.Integer(),
         "vaccination_trust_state": sqlalchemy.Integer(),
     },
+)
+
+grid_stay_prob = MatrixInfo(
+    mat_name="grid_stay_prob",
+    data_type=sqlalchemy.Float(),
+    file_name="grid_stay_prob.xlsx"
 )

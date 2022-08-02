@@ -1,11 +1,11 @@
 import numpy as np
 import sqlalchemy
 
-from Melodie import DataFrameLoader
+from Melodie import DataLoader
 from .scenario import CovidScenario
 
 
-class CovidDataFrameLoader(DataFrameLoader):
+class CovidDataFrameLoader(DataLoader):
     def register_scenario_dataframe(self):
         scenarios_dict = {
             "periods": sqlalchemy.Integer(),

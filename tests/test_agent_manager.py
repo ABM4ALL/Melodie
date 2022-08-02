@@ -131,5 +131,9 @@ def test_properties_with_scenario():
 
 
 def test_grid_agents():
-    al = AgentList(GridAgent, 10, model)
+    class GridAgent1(GridAgent):
+        def set_category(self):
+            self.category = 0
+
+    al = AgentList(GridAgent1, 10, model)
     al.to_list(["x"])

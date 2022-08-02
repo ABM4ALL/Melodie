@@ -1,7 +1,7 @@
-from Melodie import DataFrameLoader
+from Melodie import DataLoader
 
 
-class ShellingModelDataframeLoader(DataFrameLoader):
+class ShellingModelDataframeLoader(DataLoader):
     def register_scenario_dataframe(self):
         return
 

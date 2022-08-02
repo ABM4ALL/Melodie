@@ -303,7 +303,7 @@ class MelodieExceptions:
             Static table should be registered before use.
 
             * code: 1502
-            * hint: Make sure this table is correctly registered in the DataFrameLoader.
+            * hint: Make sure this table is correctly registered in the DataLoader.
             """
             return MelodieException(
                 1502,

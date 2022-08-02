@@ -1,6 +1,7 @@
 import logging
 from typing import List, Optional, Union, TYPE_CHECKING
 
+import numpy as np
 import pandas as pd
 
 from .utils.exceptions import MelodieExceptions
@@ -8,7 +9,7 @@ from .element import Element
 
 if TYPE_CHECKING:
     from Melodie import Calibrator, Simulator
-    from .dataframe_loader import DataFrameInfo
+    from .dataframe_loader import DataFrameInfo, MatrixInfo
 logger = logging.getLogger(__name__)
 
 
@@ -29,12 +30,12 @@ class Scenario(Element):
 
     class NumberParameter(BaseParameter):
         def __init__(
-            self,
-            name,
-            init_value: Union[int, float],
-            min_val: Optional[Union[int, float]] = None,
-            max_val: Optional[Union[int, float]] = None,
-            step: Optional[Union[int, float]] = None,
+                self,
+                name,
+                init_value: Union[int, float],
+                min_val: Optional[Union[int, float]] = None,
+                max_val: Optional[Union[int, float]] = None,
+                step: Optional[Union[int, float]] = None,
         ):
             super().__init__(name, "number", init_value)
             if min_val is None or max_val is None or step is None:
@@ -51,10 +52,10 @@ class Scenario(Element):
 
     class SelectionParameter(BaseParameter):
         def __init__(
-            self,
-            name,
-            init_value: Union[int, str, bool],
-            selections: List[Union[int, str, bool]],
+                self,
+                name,
+                init_value: Union[int, str, bool],
+                selections: List[Union[int, str, bool]],
         ):
             super().__init__(name, "selection", init_value)
             self.selections = selections
@@ -109,21 +110,17 @@ class Scenario(Element):
     def __repr__(self):
         return f"<{self.__class__.__name__} {self.__dict__}>"
 
-    def get_dataframe(self, table_name) -> pd.DataFrame:
-        assert self.manager is not None
-        return self.manager.get_dataframe(table_name)
-
     def get_dataframe(self, df_info: "DataFrameInfo") -> pd.DataFrame:
         assert self.manager is not None
         return self.manager.get_dataframe(df_info.df_name)
 
-    # def get_scenarios_table(self) -> pd.DataFrame:
-    #     assert self.manager is not None
-    #     return self.manager.scenarios_dataframe
+    def get_matrix(self, matrix_info: "MatrixInfo")->np.ndarray:
+        assert self.manager is not None
+        return self.manager.get_matrix(matrix_info.mat_name)
 
     def add_interactive_parameters(
-        self,
-        parameters: List[Union[BaseParameter, NumberParameter, SelectionParameter]],
+            self,
+            parameters: List[Union[BaseParameter, NumberParameter, SelectionParameter]],
     ):
         self._parameters.extend(parameters)
         temp_set = set()

@@ -6,6 +6,7 @@ from urllib.request import urlopen
 from urllib.error import URLError
 import threading
 import time
+from matplotlib.pyplot import colormaps
 import websockets
 import json
 from queue import Queue
@@ -598,9 +599,9 @@ class NetworkVisualizer(Visualizer):
         """
         assert parser is not None
         for node in node_info:
-            node_name, role = parser(node)
-            assert isinstance(role, int), "The role of node should be an int."
-            self.vertex_roles[node_name] = role
+            node_name, colormap = parser(node)
+            assert isinstance(colormap, int), "The role of node should be an int."
+            self.vertex_roles[node_name] = colormap
 
     def format(self):
         lst = []

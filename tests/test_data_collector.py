@@ -13,7 +13,7 @@ from Melodie import (
     Scenario,
     Simulator,
     Model,
-    DataFrameLoader,
+    DataLoader,
 )
 from Melodie.utils import MelodieException
 from .calibrator import CovidCalibrator, CovidScenario, CovidModel
@@ -23,7 +23,7 @@ AGENT_NUM_1 = 10
 AGENT_NUM_2 = 20
 
 
-class DFLoader(DataFrameLoader):
+class DFLoader(DataLoader):
     pass
 
 

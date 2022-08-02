@@ -8,7 +8,7 @@ from Melodie import (
     Model,
     Scenario,
     Trainer,
-    DataFrameLoader,
+    DataLoader,
     Environment,
 )
 from Melodie.trainer import GATrainerAlgorithm, GATrainerAlgorithmMeta, GATrainerParams
@@ -27,7 +27,7 @@ class NewModel(Model):
         self.agent_list = self.create_agent_container(DemoAgent, 10)
 
 
-class DFLoader(DataFrameLoader):
+class DFLoader(DataLoader):
     def generate_scenarios(self, manager_type: str) -> List["Scenario"]:
         return [Scenario(0)]
 

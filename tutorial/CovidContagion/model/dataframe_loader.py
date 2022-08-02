@@ -1,18 +1,19 @@
 from typing import TYPE_CHECKING
 import numpy as np
-from Melodie import DataFrameLoader
+from Melodie import DataLoader
 from tutorial.CovidContagion.model import dataframe_info as df_info
 
 if TYPE_CHECKING:
     from .scenario import CovidScenario
 
 
-class CovidDataFrameLoader(DataFrameLoader):
+class CovidDataFrameLoader(DataLoader):
     def setup(self):
         self.load_dataframe(df_info.simulator_scenarios)
         self.load_dataframe(df_info.id_age_group)
         self.load_dataframe(df_info.id_health_state)
         self.load_dataframe(df_info.id_network_type)
+        self.load_matrix(df_info.grid_stay_prob)
         self.generate_dataframe()
 
     @staticmethod
@@ -48,7 +49,7 @@ class CovidDataFrameLoader(DataFrameLoader):
     def generate_dataframe(self):
 
         with self.dataframe_generator(
-            df_info.agent_params.df_name, lambda scenario: scenario.agent_num
+                df_info.agent_params.df_name, lambda scenario: scenario.agent_num
         ) as g:
             # table_generator的名字不好，改成dataframe_generator
             # Melodie里只有dataframe和grid的matrix

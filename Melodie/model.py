@@ -138,10 +138,8 @@ class Model:
         env.setup()
         return env
 
-    def create_grid(self, grid_cls: Type['Grid'], spot_cls: Type['Spot'],
-                    width: int, height: int, wrap=True, caching=True, multi=False):
-        grid = grid_cls(spot_cls, width, height, wrap=wrap, caching=caching, multi=multi)
-        # grid.scenario = self.scenario
+    def create_grid(self, grid_cls: Type['Grid'], spot_cls: Type['Spot']):
+        grid = grid_cls(spot_cls, self.scenario)
         grid.setup()
         return grid
 

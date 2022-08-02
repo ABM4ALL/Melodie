@@ -2,6 +2,7 @@ import os
 from dataclasses import dataclass
 from typing import Optional, Dict, List, ClassVar, Union, Callable
 
+import numpy as np
 import pandas as pd
 import sqlalchemy
 
@@ -19,10 +20,27 @@ class DataFrameInfo:
     file_name: Optional[str] = None
 
 
-class DataFrameLoader:
+@dataclass
+class MatrixInfo:
+    mat_name: str
+    data_type: sqlalchemy.types
+    file_name: Optional[str] = None
+
+    @property
+    def dtype(self):
+        py_type = self.data_type.python_type
+        if issubclass(py_type, int):
+            return np.int
+        elif issubclass(py_type, float):
+            return np.float
+        else:
+            raise NotImplementedError(f"Cannot convert this type {self.data_type} to numpy data type!")
+
+
+class DataLoader:
     """
-    TableLoader loads tables
-    Simulator/Trainer/Calibrator will have reference to TableLoader for loading tables without defining tables multiple times.
+    DataLoader loads dataframes or matrices
+    Simulator/Trainer/Calibrator will have reference to DataLoader to avoid defining tables multiple times.
     """
 
     def __init__(self, manager, config: Config, scenario_cls: ClassVar[Scenario]):
@@ -33,6 +51,7 @@ class DataFrameLoader:
         self.config: Config = config
         self.scenario_cls = scenario_cls
         self.registered_dataframes: Optional[Dict[str, pd.DataFrame]] = {}
+        self.registered_matrices: Optional[Dict[str, np.ndarray]] = {}
         self.manager = manager
         self.manager.df_loader = self
         self.setup()
@@ -60,7 +79,7 @@ class DataFrameLoader:
         pass
 
     def register_dataframe(
-        self, table_name: str, data_frame: pd.DataFrame, data_types: dict = None
+            self, table_name: str, data_frame: pd.DataFrame, data_types: dict = None
     ) -> None:
         """
         :param table_name:
@@ -85,12 +104,9 @@ class DataFrameLoader:
         Register static table, saving it to `self.registered_dataframes`.
         The static table will be copied into database.
 
-        If the scenarios/agents parameter tables can also be registered by this method.
+        The scenarios/agents parameter tables can also be registered by this method.
 
-        :param table_name: The table name, and same the name of table in database. Table name should be an identifier.
-        :param file_name: The excel filename.
-            if ends with `.xls` or `.xlsx`, This file will be searched at Config.excel_folder
-        :param data_types: Type information in a dict
+        :param df_info:
         :return:
         """
         table_name = df_info.df_name
@@ -118,8 +134,24 @@ class DataFrameLoader:
             self.config
         ).read_dataframe(table_name)
 
+    def load_matrix(self, matrix_info: "MatrixInfo"):
+        """
+        Register static matrix, saving it to `self.registered_matrices`.
+
+        :param matrix_info:
+        :return:
+        """
+        _, ext = os.path.splitext(matrix_info.file_name)
+        if ext in {'.xls', ".xlsx"}:
+            file_path_abs = os.path.join(self.config.input_folder, matrix_info.file_name)
+            table: pd.DataFrame = pd.read_excel(file_path_abs, header=None)
+            array = table.to_numpy(matrix_info.dtype, copy=True)
+        else:
+            raise NotImplementedError(f"Cannot load file to matrix {ext}")
+        self.registered_matrices[matrix_info.mat_name] = array
+
     def dataframe_generator(
-        self, table_name: str, rows_in_scenario: Union[int, Callable[[Scenario], int]]
+            self, table_name: str, rows_in_scenario: Union[int, Callable[[Scenario], int]]
     ):
         """
         Create a new generator

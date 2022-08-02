@@ -1,7 +1,7 @@
 # -*- coding:utf-8 -*-
 import pandas as pd
 
-from Melodie import Simulator, Scenario, create_db_conn, Model, DataFrameLoader
+from Melodie import Simulator, Scenario, create_db_conn, Model, DataLoader
 from .config import cfg_for_temp
 
 
@@ -9,7 +9,7 @@ class TestModel(Model):
     pass
 
 
-class TestDataframeLoader(DataFrameLoader):
+class TestDataframeLoader(DataLoader):
     def register_scenario_dataframe(self) -> None:
         self.registered_dataframes["simulator_scenarios"] = pd.DataFrame(
             [{"id": 1, "periods": 1, "agent_num": 100}]

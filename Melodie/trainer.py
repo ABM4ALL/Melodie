@@ -15,7 +15,7 @@ from .utils.parallel import params_queue, result_queue, sub_routine_trainer
 from .boost.agent_list import AgentList
 from .boost.basics import Agent
 from .config import Config
-from .dataframe_loader import DataFrameLoader
+from .dataframe_loader import DataLoader
 from .db import create_db_conn
 from .model import Model
 from .scenario_manager import Scenario
@@ -219,7 +219,7 @@ class GATrainerAlgorithm:
             }
             pool.apply_async(sub_routine_trainer, [i, d, self.manager.config.to_dict()])
 
-    def add_agent_container(
+    def setup_agent_locations(
         self,
         container_name: str,
         param_names: List[str],
@@ -515,7 +515,7 @@ class Trainer(BaseModellingManager):
         config: "Config",
         scenario_cls: "Optional[ClassVar[Scenario]]",
         model_cls: "Optional[ClassVar[Model]]",
-        df_loader_cls: "Optional[ClassVar[DataFrameLoader]]",
+        df_loader_cls: "Optional[ClassVar[DataLoader]]",
         processors: int = 1,
     ):
         super().__init__(
@@ -615,7 +615,7 @@ class Trainer(BaseModellingManager):
         self.algorithm = GATrainerAlgorithm(trainer_params, self, self.processors)
         self.algorithm.recorded_env_properties = self.environment_properties
         for agent_container in self.container_manager.agent_containers:
-            self.algorithm.add_agent_container(
+            self.algorithm.setup_agent_locations(
                 agent_container.container_name,
                 agent_container.used_properties,
                 agent_container.recorded_properties,

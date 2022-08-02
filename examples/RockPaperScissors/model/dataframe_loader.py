@@ -1,11 +1,11 @@
 import numpy as np
 import sqlalchemy
 
-from Melodie import DataFrameLoader
+from Melodie import DataLoader
 from .scenario import RPSScenario
 
 
-class RPSDataFrameLoader(DataFrameLoader):
+class RPSDataFrameLoader(DataLoader):
     def register_scenario_dataframe(self):
         scenario_data_type_dict = {
             "number_of_run": sqlalchemy.Integer(),

@@ -30,7 +30,7 @@ class CovidAgent(GridAgent):
         self.rand_move(move_radius, move_radius)  # 可以试试走得更远一点？
 
     def get_grid_neighbors(self, grid: "CovidGrid"):
-        neighbors: list = grid.get_neighbors(self.x, self.y, radius=1)
+        neighbors: list = grid.get_neighbor_positions(self.x, self.y, radius=1)
         return neighbors
 
     def infect_from_neighbors(

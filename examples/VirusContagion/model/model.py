@@ -32,7 +32,7 @@ class CovidModel(Model):
                 caching=True,
                 multi=True,
             )
-            self.grid.add_agent_container(0, self.agent_list, "direct")
+            self.grid.setup_agent_locations(0, self.agent_list, "direct")
 
     def boost_run(self):
         accel_object = MelodieAllegro.load("agent.py", 'environment.py')
