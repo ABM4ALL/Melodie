@@ -442,9 +442,7 @@ class Calibrator(BaseModellingManager):
 
         :return:
         """
-        calibrator_scenarios_table = self.get_dataframe(
-            "calibrator_params_scenarios"
-        )
+        calibrator_scenarios_table = self.get_dataframe("calibrator_params_scenarios")
         assert isinstance(
             calibrator_scenarios_table, pd.DataFrame
         ), "No learning scenarios table specified!"

@@ -1,5 +1,5 @@
 from Melodie import Scenario
-from tutorial.CovidContagion.model import dataframe_info as df_info
+from tutorial.CovidContagion.model import data_info as df_info
 
 
 class CovidScenario(Scenario):

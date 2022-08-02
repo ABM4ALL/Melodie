@@ -1,13 +1,13 @@
 from typing import TYPE_CHECKING
 import numpy as np
 from Melodie import DataLoader
-from tutorial.CovidContagion.model import dataframe_info as df_info
+from tutorial.CovidContagion.model import data_info as df_info
 
 if TYPE_CHECKING:
     from .scenario import CovidScenario
 
 
-class CovidDataFrameLoader(DataLoader):
+class CovidDataLoader(DataLoader):
     def setup(self):
         self.load_dataframe(df_info.simulator_scenarios)
         self.load_dataframe(df_info.id_age_group)
@@ -49,11 +49,8 @@ class CovidDataFrameLoader(DataLoader):
     def generate_dataframe(self):
 
         with self.dataframe_generator(
-                df_info.agent_params.df_name, lambda scenario: scenario.agent_num
+            df_info.agent_params.df_name, lambda scenario: scenario.agent_num
         ) as g:
-            # table_generator的名字不好，改成dataframe_generator
-            # Melodie里只有dataframe和grid的matrix
-            # 参数也改成df_info, 下面set_column_data_types就自动内部实现了
 
             def generator_func(scenario: "CovidScenario"):
                 return {

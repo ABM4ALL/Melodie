@@ -73,5 +73,5 @@ agent_params = DataFrameInfo(
 grid_stay_prob = MatrixInfo(
     mat_name="grid_stay_prob",
     data_type=sqlalchemy.Float(),
-    file_name="grid_stay_prob.xlsx"
+    file_name="grid_stay_prob.xlsx",
 )

@@ -34,7 +34,9 @@ class MatrixInfo:
         elif issubclass(py_type, float):
             return np.float
         else:
-            raise NotImplementedError(f"Cannot convert this type {self.data_type} to numpy data type!")
+            raise NotImplementedError(
+                f"Cannot convert this type {self.data_type} to numpy data type!"
+            )
 
 
 class DataLoader:
@@ -79,7 +81,7 @@ class DataLoader:
         pass
 
     def register_dataframe(
-            self, table_name: str, data_frame: pd.DataFrame, data_types: dict = None
+        self, table_name: str, data_frame: pd.DataFrame, data_types: dict = None
     ) -> None:
         """
         :param table_name:
@@ -142,8 +144,10 @@ class DataLoader:
         :return:
         """
         _, ext = os.path.splitext(matrix_info.file_name)
-        if ext in {'.xls', ".xlsx"}:
-            file_path_abs = os.path.join(self.config.input_folder, matrix_info.file_name)
+        if ext in {".xls", ".xlsx"}:
+            file_path_abs = os.path.join(
+                self.config.input_folder, matrix_info.file_name
+            )
             table: pd.DataFrame = pd.read_excel(file_path_abs, header=None)
             array = table.to_numpy(matrix_info.dtype, copy=True)
         else:
@@ -151,7 +155,7 @@ class DataLoader:
         self.registered_matrices[matrix_info.mat_name] = array
 
     def dataframe_generator(
-            self, table_name: str, rows_in_scenario: Union[int, Callable[[Scenario], int]]
+        self, table_name: str, rows_in_scenario: Union[int, Callable[[Scenario], int]]
     ):
         """
         Create a new generator

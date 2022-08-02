@@ -26,8 +26,6 @@ class CovidNetwork(Network):
     #     self.set_network_type(self.scenario.network_type)
     #     self.set_network_params({'k': self.scenario.network_param_k, 'p': scenario.network_param_p})
 
-
-
     # def setup(agents)
     #     self.create_network_among_agents()
 

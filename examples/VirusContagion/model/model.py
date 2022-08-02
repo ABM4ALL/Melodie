@@ -35,11 +35,10 @@ class CovidModel(Model):
             self.grid.setup_agent_locations(0, self.agent_list, "direct")
 
     def boost_run(self):
-        accel_object = MelodieAllegro.load("agent.py", 'environment.py')
+        accel_object = MelodieAllegro.load("agent.py", "environment.py")
         self.set_accel_object_data(accel_object)
         accel_object.run()
         self.save_data_to_model(accel_object)
-
 
     def run(self):
         for t in self.iterator(self.scenario.periods):

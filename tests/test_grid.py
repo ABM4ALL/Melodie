@@ -54,7 +54,7 @@ def agents(grid: Union[Grid]):
     grid.remove_agent(a0)
 
     mammals_at_1_1 = grid.get_agent_ids(1, 1)
-    print('adasdadasdasdasdsa', mammals_at_1_1)
+    print("adasdadasdasdasdsa", mammals_at_1_1)
     assert (1, WOLVES) in mammals_at_1_1, mammals_at_1_1
 
     assert (2, WOLVES) in mammals_at_1_1
@@ -174,7 +174,9 @@ def test_single_grid():
             self.set_size(4, 4)
 
     agents = [TestGridAgent(i) for i in range(15)]
-    grid = GridForTest(Spot, )
+    grid = GridForTest(
+        Spot,
+    )
     for i in range(4):
         for j in range(4):
             if i * 4 + j < 15:
@@ -244,6 +246,16 @@ def test_roles_2():
     # agents = [TestGridAgent(i) for i in range(10)]
     # agents_b = [TestGridAgent(i) for i in range(10)]
     grid = GridForRoles(MySpot)
-    grid.set_spot_attribute('a', np.ones((100, 100,), dtype=np.int) * 100)
+    grid.set_spot_attribute(
+        "a",
+        np.ones(
+            (
+                100,
+                100,
+            ),
+            dtype=np.int,
+        )
+        * 100,
+    )
     spot = grid.get_spot(1, 1)
     print(spot)

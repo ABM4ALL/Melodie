@@ -29,11 +29,11 @@ class BaseModellingManager(abc.ABC):
     """
 
     def __init__(
-            self,
-            config: Config,
-            scenario_cls: ClassVar["Scenario"],
-            model_cls: ClassVar["Model"],
-            df_loader_cls: ClassVar[DataLoader] = None,
+        self,
+        config: Config,
+        scenario_cls: ClassVar["Scenario"],
+        model_cls: ClassVar["Model"],
+        df_loader_cls: ClassVar[DataLoader] = None,
     ):
         self.config: Optional[Config] = config
         self.scenario_cls = scenario_cls
@@ -96,7 +96,9 @@ class BaseModellingManager(abc.ABC):
         if clear_db:
             create_db_conn(self.config).clear_database()
         if self.df_loader_cls is not None:
-            self.df_loader: DataLoader = self.df_loader_cls(self, self.config, self.scenario_cls)
+            self.df_loader: DataLoader = self.df_loader_cls(
+                self, self.config, self.scenario_cls
+            )
 
             self.df_loader.register_scenario_dataframe()
             self.df_loader.register_static_dataframes()
@@ -112,11 +114,11 @@ class BaseModellingManager(abc.ABC):
 
 class Simulator(BaseModellingManager):
     def __init__(
-            self,
-            config: Config,
-            scenario_cls: "ClassVar[Scenario]",
-            model_cls: "ClassVar[Model]",
-            df_loader_cls: "ClassVar[DataLoader]" = None,
+        self,
+        config: Config,
+        scenario_cls: "ClassVar[Scenario]",
+        model_cls: "ClassVar[Model]",
+        df_loader_cls: "ClassVar[DataLoader]" = None,
     ):
         super(Simulator, self).__init__(
             config=config,
@@ -137,7 +139,7 @@ class Simulator(BaseModellingManager):
         return self.df_loader.generate_scenarios("simulator")
 
     def run_model(
-            self, config, scenario, run_id, model_class: ClassVar["Model"], visualizer=None
+        self, config, scenario, run_id, model_class: ClassVar["Model"], visualizer=None
     ):
         """
 

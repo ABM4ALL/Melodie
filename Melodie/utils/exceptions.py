@@ -109,7 +109,7 @@ class MelodieExceptions:
 
             @staticmethod
             def FunctionArgsNumError(
-                    func: Callable, expected_arg_num: int, actual_arg_num: int
+                func: Callable, expected_arg_num: int, actual_arg_num: int
             ):
                 """
                 Function should have correct number of arguments. If not, this error will be raised.
@@ -136,7 +136,7 @@ class MelodieExceptions:
 
         @staticmethod
         def CannotMoveToNewStateError(
-                old_state, new_state, all_possible_new_states: set
+            old_state, new_state, all_possible_new_states: set
         ):
             if len(list(all_possible_new_states)) == 0:
                 return MelodieException(
@@ -320,10 +320,10 @@ class MelodieExceptions:
 
         @staticmethod
         def ObjectPropertyTypeUnMatchTheDataFrameError(
-                param_name: str,
-                param_type: type,
-                dataframe_dtypes: Dict[str, type],
-                agent: "Agent",
+            param_name: str,
+            param_type: type,
+            dataframe_dtypes: Dict[str, type],
+            agent: "Agent",
         ):
             """
             Object type should match the type defined in dataframe.
