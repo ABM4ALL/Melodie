@@ -1,7 +1,9 @@
 from typing import TYPE_CHECKING
+
 import numpy as np
+
 from Melodie import DataLoader
-from tutorial.CovidContagion.model import data_info as df_info
+from tutorial.CovidContagion.source import data_info
 
 if TYPE_CHECKING:
     from .scenario import CovidScenario
@@ -9,11 +11,11 @@ if TYPE_CHECKING:
 
 class CovidDataLoader(DataLoader):
     def setup(self):
-        self.load_dataframe(df_info.simulator_scenarios)
-        self.load_dataframe(df_info.id_age_group)
-        self.load_dataframe(df_info.id_health_state)
-        self.load_dataframe(df_info.id_network_type)
-        self.load_matrix(df_info.grid_stay_prob)
+        self.load_dataframe(data_info.simulator_scenarios)
+        self.load_dataframe(data_info.id_age_group)
+        self.load_dataframe(data_info.id_health_state)
+        self.load_dataframe(data_info.id_network_type)
+        self.load_matrix(data_info.grid_stay_prob)
         self.generate_dataframe()
 
     @staticmethod
@@ -48,9 +50,8 @@ class CovidDataLoader(DataLoader):
 
     def generate_dataframe(self):
 
-        with self.dataframe_generator(
-            df_info.agent_params.df_name, lambda scenario: scenario.agent_num
-        ) as g:
+        with self.dataframe_generator(data_info.agent_params.df_name, lambda scenario: scenario.agent_num) as g:
+            # 第一个参数改成DataFrameInfo的类型
 
             def generator_func(scenario: "CovidScenario"):
                 return {
@@ -58,13 +59,9 @@ class CovidDataLoader(DataLoader):
                     "x": np.random.randint(0, scenario.grid_x_size),
                     "y": np.random.randint(0, scenario.grid_y_size),
                     "age_group": self.init_age_group(scenario.young_percentage),
-                    "health_state": self.init_health_state(
-                        scenario.initial_infected_percentage
-                    ),
-                    "vaccination_trust_state": self.init_vaccination_trust(
-                        scenario.vaccination_trust_percentage
-                    ),
+                    "health_state": self.init_health_state(scenario.initial_infected_percentage),
+                    "vaccination_trust_state": self.init_vaccination_trust(scenario.vaccination_trust_percentage),
                 }
 
             g.set_row_generator(generator_func)
-            g.set_column_data_types(df_info.agent_params.columns)
+            g.set_column_data_types(data_info.agent_params.columns)

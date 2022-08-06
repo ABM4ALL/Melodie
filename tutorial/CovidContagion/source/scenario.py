@@ -1,5 +1,5 @@
 from Melodie import Scenario
-from tutorial.CovidContagion.model import data_info as df_info
+from tutorial.CovidContagion.source import data_info as df_info
 
 
 class CovidScenario(Scenario):
@@ -44,8 +44,7 @@ class CovidScenario(Scenario):
         elif health_state == 4:
             return self.vaccinated_infection_prob
         else:
-            # This person won't be infected again, now.
-            pass
+            return 0
 
     def get_state_transition_prob(self, id_age_group: int) -> tuple:
         if id_age_group == 0:
@@ -53,8 +52,7 @@ class CovidScenario(Scenario):
         elif id_age_group == 1:
             return self.ag1_prob_s1_s1, self.ag1_prob_s1_s2, self.ag1_prob_s1_s3
         else:
-            # This person has wierd age group.
-            pass
+            raise ValueError('This person has wierd age group.')
 
     def get_move_radius(self, id_age_group: int) -> int:
         if id_age_group == 0:
@@ -62,5 +60,4 @@ class CovidScenario(Scenario):
         elif id_age_group == 1:
             return self.ag1_move_radius
         else:
-            # This person has wierd age group.
-            pass
+            raise ValueError('This person has wierd age group.')

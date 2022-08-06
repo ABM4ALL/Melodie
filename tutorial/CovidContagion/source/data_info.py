@@ -1,6 +1,5 @@
-import numpy as np
-
 import sqlalchemy
+
 from Melodie import DataFrameInfo
 from Melodie.dataframe_loader import MatrixInfo
 
