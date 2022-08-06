@@ -4,6 +4,7 @@ from typing import List, ClassVar, TYPE_CHECKING, Dict, Tuple, Any, Optional
 
 import pandas as pd
 
+from Melodie.global_configs import MelodieGlobalConfig
 from Melodie.utils import MelodieExceptions
 from Melodie.db import DBConn
 
@@ -132,13 +133,17 @@ class DataCollector:
         agent_property_names = self.agent_property_names()
         for container_name, container in agent_containers:
             agent_prop_list = container.to_list(agent_property_names[container_name])
-            for agent_prop in agent_prop_list:
-                agent_prop["step"] = step
-                agent_prop["run_id"] = run_id
-                agent_prop["scenario_id"] = scenario_id
+            length = len(agent_prop_list)
+            props_list = []
+            for i in range(length):
+                agent_props_dict = agent_prop_list[i]
+                tmp_dic = {"scenario_id": scenario_id, "run_id": run_id, "step": step, "id": agent_props_dict.pop('id')}
+                tmp_dic.update(agent_props_dict)
+                props_list.append(tmp_dic)
+
             if container_name not in self.agent_properties_dict:
                 self.agent_properties_dict[container_name] = []
-            self.agent_properties_dict[container_name].extend(agent_prop_list)
+            self.agent_properties_dict[container_name].extend(props_list)
 
     @property
     def status(self):
@@ -164,18 +169,13 @@ class DataCollector:
         if not self.status:
             return
         t0 = time.time()
-        env = self.model.environment
 
-        scenario = self.model.scenario
-        run_id = self.model.run_id_in_scenario
-        env_dic = env.to_dict(self.env_property_names())
-        env_dic["step"] = step
-        env_dic["scenario_id"] = scenario.id
-        env_dic["run_id"] = run_id
+        env_dic = {"scenario_id": self.model.scenario.id, "run_id": self.model.run_id_in_scenario, "step": step}
+        env_dic.update(self.model.environment.to_dict(self.env_property_names()))
 
         self.environment_properties_list.append(env_dic)
 
-        self.collect_agent_properties(step, run_id, scenario.id)
+        self.collect_agent_properties(step, self.model.run_id_in_scenario, self.model.scenario.id)
         t1 = time.time()
         self._time_elapsed += t1 - t0
 
@@ -211,6 +211,7 @@ class DataCollector:
         collect_time = self._time_elapsed
         self._time_elapsed += t1 - t0
         logger.info(
-            f"datacollector took {t1 - t0}s to format dataframe and write it to data.\n"
-            f"    {write_db_time} for writing into database, and {collect_time} for collect data."
+            f"datacollector took {MelodieGlobalConfig.Logger.round_elapsed_time(t1 - t0)}s to format dataframe and write it to data.\n"
+            f"    {MelodieGlobalConfig.Logger.round_elapsed_time(write_db_time)} for writing into database, and "
+            f"{MelodieGlobalConfig.Logger.round_elapsed_time(collect_time)} for collect data."
         )

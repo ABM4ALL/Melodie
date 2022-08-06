@@ -44,7 +44,7 @@ def sub_routine_calibrator(
             config=config,
             scenario_cls=classes_dict["scenario"],
             model_cls=classes_dict["model"],
-            data_loader_cls=classes_dict["df_loader"],
+            data_loader_cls=classes_dict["data_loader"],
         )
         trainer.setup()
         trainer.subworker_prerun()
@@ -126,7 +126,7 @@ def sub_routine_trainer(
             config=config,
             scenario_cls=classes_dict["scenario"],
             model_cls=classes_dict["model"],
-            df_loader_cls=classes_dict["df_loader"],
+            df_loader_cls=classes_dict["data_loader"],
         )
         trainer.setup()
         trainer.subworker_prerun()

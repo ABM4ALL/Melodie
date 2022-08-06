@@ -15,7 +15,7 @@ from .utils.parallel import params_queue, result_queue, sub_routine_trainer
 from .boost.agent_list import AgentList
 from .boost.basics import Agent
 from .config import Config
-from .dataframe_loader import DataLoader
+from .data_loader import DataLoader
 from .db import create_db_conn
 from .model import Model
 from .scenario_manager import Scenario
@@ -212,7 +212,7 @@ class GATrainerAlgorithm:
                     self.manager.__class__.__name__,
                     self.manager.__class__.__module__,
                 ),
-                "df_loader": (
+                "data_loader": (
                     self.manager.df_loader_cls.__name__,
                     self.manager.df_loader_cls.__module__,
                 ),
@@ -646,8 +646,8 @@ class Trainer(BaseModellingManager):
         Generate Scenarios for trainer
         :return:
         """
-        assert self.df_loader is not None
-        return self.df_loader.generate_scenarios("trainer")
+        assert self.data_loader is not None
+        return self.data_loader.generate_scenarios("trainer")
 
     def generate_trainer_params_list(
         self, trainer_scenario_cls: ClassVar[GATrainerParams]

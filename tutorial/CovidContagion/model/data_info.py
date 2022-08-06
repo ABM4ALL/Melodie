@@ -2,7 +2,7 @@ import numpy as np
 
 import sqlalchemy
 from Melodie import DataFrameInfo
-from Melodie.dataframe_loader import MatrixInfo
+from Melodie.data_loader import MatrixInfo
 
 simulator_scenarios = DataFrameInfo(
     df_name="simulator_scenarios",

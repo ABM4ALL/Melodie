@@ -9,7 +9,7 @@ from .utils import MelodieExceptions, args_check
 from .scenario_manager import Scenario
 
 if TYPE_CHECKING:
-    from .dataframe_loader import DataLoader
+    from .data_loader import DataLoader
 
 logger = logging.getLogger(__name__)
 
@@ -38,7 +38,7 @@ class DataFrameGenerator:
         self.table_name = table_name
         self._self_incremental_value = -1
         self.df_loader = df_loader
-        from Melodie.dataframe_loader import DataLoader
+        from Melodie.data_loader import DataLoader
 
         if not isinstance(self.df_loader, DataLoader):
             MelodieExceptions.Data.NoDataframeLoaderDefined()

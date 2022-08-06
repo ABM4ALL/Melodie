@@ -142,7 +142,7 @@ class Model:
             self,
             agent_class: Type["Agent"],
     ):
-        return AgentList(agent_class, 0, model=self)
+        return AgentList(agent_class, model=self)
 
     def create_environment(self, env_class: Type["Environment"]):
         env = env_class()
@@ -192,7 +192,7 @@ class Model:
                 f"Container type '{container_type}' is not valid!"
             )
 
-        container = agent_container_class(agent_class, initial_num, model=self)
+        container = agent_container_class(agent_class, model=self)
         if params_df is not None:
             container.set_properties(params_df)
         else:
