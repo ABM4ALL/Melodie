@@ -21,31 +21,22 @@ class CovidDataLoader(DataLoader):
     @staticmethod
     def init_age_group(young_percentage: float):
         age_group = 0
-        rand = np.random.uniform(0, 1)
-        if rand <= young_percentage:
-            pass
-        else:
+        if np.random.uniform(0, 1) > young_percentage:
             age_group = 1
         return age_group
 
     @staticmethod
     def init_health_state(initial_infected_percentage: float):
         state = 0
-        rand = np.random.uniform(0, 1)
-        if rand <= initial_infected_percentage:
+        if np.random.uniform(0, 1) <= initial_infected_percentage:
             state = 1
-        else:
-            pass
         return state
 
     @staticmethod
     def init_vaccination_trust(vaccination_trust_percentage: float):
         vaccination_trust_state = 0
-        rand = np.random.uniform(0, 1)
-        if rand <= vaccination_trust_percentage:
+        if np.random.uniform(0, 1) <= vaccination_trust_percentage:
             vaccination_trust_state = 1
-        else:
-            pass
         return vaccination_trust_state
 
     def generate_dataframe(self):
