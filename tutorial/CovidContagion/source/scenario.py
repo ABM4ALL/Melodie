@@ -1,5 +1,5 @@
 from Melodie import Scenario
-from tutorial.CovidContagion.source import data_info as df_info
+from tutorial.CovidContagion.source import data_info
 
 
 class CovidScenario(Scenario):
@@ -26,7 +26,7 @@ class CovidScenario(Scenario):
         self.setup_age_group_params()
 
     def setup_age_group_params(self):
-        df = self.get_dataframe(df_info.id_age_group)
+        df = self.get_dataframe(data_info.id_age_group)
         self.ag0_prob_s1_s1 = df.at[0, "prob_s1_s1"]
         self.ag0_prob_s1_s2 = df.at[0, "prob_s1_s2"]
         self.ag0_prob_s1_s3 = df.at[0, "prob_s1_s3"]
