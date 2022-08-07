@@ -11,10 +11,11 @@ from typing import ClassVar, Optional, List, Tuple
 import numpy as np
 import pandas as pd
 
+from .global_configs import MelodieGlobalConfig
 from .utils import show_prettified_warning
 from .utils.exceptions import MelodieExceptions
 from .config import Config
-from .dataframe_loader import DataLoader
+from .data_loader import DataLoader
 from .db import create_db_conn
 from .model import Model
 from .scenario_manager import Scenario
@@ -41,7 +42,7 @@ class BaseModellingManager(abc.ABC):
 
         self.scenarios: Optional[List["Scenario"]] = None
         self.df_loader_cls: Optional[ClassVar[DataLoader]] = data_loader_cls
-        self.df_loader: Optional[DataLoader] = None
+        self.data_loader: Optional[DataLoader] = None
         if data_loader_cls is not None:
             assert issubclass(data_loader_cls, DataLoader), data_loader_cls
 
@@ -51,14 +52,14 @@ class BaseModellingManager(abc.ABC):
         :param table_name:
         :return:
         """
-        if self.df_loader is None:
+        if self.data_loader is None:
             raise MelodieExceptions.Data.NoDataframeLoaderDefined()
-        if table_name not in self.df_loader.registered_dataframes:
+        if table_name not in self.data_loader.registered_dataframes:
             raise MelodieExceptions.Data.StaticTableNotRegistered(
-                table_name, list(self.df_loader.registered_dataframes.keys())
+                table_name, list(self.data_loader.registered_dataframes.keys())
             )
 
-        return self.df_loader.registered_dataframes[table_name]
+        return self.data_loader.registered_dataframes[table_name]
 
     def get_matrix(self, matrix_name) -> np.ndarray:
         """
@@ -66,22 +67,22 @@ class BaseModellingManager(abc.ABC):
         :param matrix_name:
         :return:
         """
-        if self.df_loader is None:
+        if self.data_loader is None:
             raise MelodieExceptions.Data.NoDataframeLoaderDefined()
-        if matrix_name not in self.df_loader.registered_matrices:
+        if matrix_name not in self.data_loader.registered_matrices:
             raise MelodieExceptions.Data.StaticTableNotRegistered(
-                matrix_name, list(self.df_loader.registered_matrices.keys())
+                matrix_name, list(self.data_loader.registered_matrices.keys())
             )
 
-        return self.df_loader.registered_matrices[matrix_name]
+        return self.data_loader.registered_matrices[matrix_name]
 
     def subworker_prerun(self):
-        self.df_loader: DataLoader = self.df_loader_cls(
+        self.data_loader: DataLoader = self.df_loader_cls(
             self, self.config, self.scenario_cls
         )
-        self.df_loader.as_sub_worker = True
-        self.df_loader.register_scenario_dataframe()
-        self.df_loader.register_static_dataframes()
+        self.data_loader.as_sub_worker = True
+        self.data_loader.register_scenario_dataframe()
+        self.data_loader.register_static_dataframes()
 
         self.scenarios = self.generate_scenarios()
 
@@ -96,12 +97,12 @@ class BaseModellingManager(abc.ABC):
         if clear_db:
             create_db_conn(self.config).clear_database()
         if self.df_loader_cls is not None:
-            self.df_loader: DataLoader = self.df_loader_cls(
+            self.data_loader: DataLoader = self.df_loader_cls(
                 self, self.config, self.scenario_cls
             )
 
-            self.df_loader.register_scenario_dataframe()
-            self.df_loader.register_static_dataframes()
+            self.data_loader.register_scenario_dataframe()
+            self.data_loader.register_static_dataframes()
 
         self.scenarios = self.generate_scenarios()
         if self.scenarios is None or len(self.scenarios) == 0:
@@ -134,9 +135,9 @@ class Simulator(BaseModellingManager):
         Generate scenarios from the dataframe_loader
         :return:
         """
-        if self.df_loader is None:
+        if self.data_loader is None:
             raise MelodieExceptions.Data.NoDataframeLoaderDefined()
-        return self.df_loader.generate_scenarios("simulator")
+        return self.data_loader.generate_scenarios("simulator")
 
     def run_model(
             self, config, scenario, run_id, model_class: ClassVar["Model"], visualizer=None
@@ -160,7 +161,7 @@ class Simulator(BaseModellingManager):
             visualizer.start()
 
         t1 = time.time()
-        logger.info(f"Model setup, taking {t1 - t0} seconds.")
+        logger.info(f"Model setup, taking {MelodieGlobalConfig.Logger.round_elapsed_time(t1 - t0)} seconds.")
         logger.info(f"Model is running...")
         model.run()
         if visualizer is not None:
@@ -175,10 +176,10 @@ class Simulator(BaseModellingManager):
             data_collect_time = 0.0
         model_run_time -= data_collect_time
         info = (
-            f"Running {run_id + 1} in scenario {scenario.id} completed with time elapsed(seconds):\n"
-            f"    model-setup   \t {round(model_setup_time, 6)}\n"
-            f"    model-run     \t {round(model_run_time, 6)}\n"
-            f"    data-collect  \t {round(data_collect_time, 6)}\n"
+            f"Running {run_id} in scenario {scenario.id} completed with time elapsed(seconds):\n"
+            f"    model-setup   \t {MelodieGlobalConfig.Logger.round_elapsed_time(model_setup_time)}\n"
+            f"    model-run     \t {MelodieGlobalConfig.Logger.round_elapsed_time(model_run_time)}\n"
+            f"    data-collect  \t {MelodieGlobalConfig.Logger.round_elapsed_time(data_collect_time)}\n"
         )
         logger.info(info)
 
@@ -214,7 +215,7 @@ class Simulator(BaseModellingManager):
 
         t2 = time.time()
         logger.info(
-            f"Melodie completed all runs, time elapsed totally {t2 - t0}s, and {t2 - t1}s for running."
+            f"Melodie completed all runs, time elapsed totally {round(t2 - t0, 3)}s, and {round(t2 - t1, 3)}s for running."
         )
 
     def run_visual(self):

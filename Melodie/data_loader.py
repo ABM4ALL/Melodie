@@ -55,7 +55,7 @@ class DataLoader:
         self.registered_dataframes: Optional[Dict[str, pd.DataFrame]] = {}
         self.registered_matrices: Optional[Dict[str, np.ndarray]] = {}
         self.manager = manager
-        self.manager.df_loader = self
+        self.manager.data_loader = self
         self.setup()
 
     def setup(self):

@@ -30,7 +30,7 @@ class DemoModel(Model):
 def test_relationship_network():
     model = DemoModel(cfg, Scenario(0))
     model.setup()
-    agent_list = AgentList(DemoAgent, 10, model)
+    agent_list = AgentList(DemoAgent, model)
     agent_list.setup_agents(10)
     n = DemoNetwork()
     n.add_category("agents")
@@ -60,7 +60,7 @@ def test_relationship_network():
 def test_relationship_directed():
     model = DemoModel(cfg, Scenario(0))
     model.setup()
-    agent_list = AgentList(DemoAgent, 10, model)
+    agent_list = AgentList(DemoAgent, model)
     agent_list.setup_agents(10)
     n = DemoNetwork(directed=True)
     n.add_category("agents")
@@ -95,7 +95,8 @@ def test_create_ba():
 
     model = DemoModel(cfg, Scenario(0))
     model.setup()
-    agent_list = AgentList(DemoAgent, 10, model)
+    agent_list = AgentList(DemoAgent, model)
+    agent_list.setup_agents(10)
     n = DemoNetwork.from_agent_containers(
         {"agents": agent_list}, "barabasi_albert_graph", {"m": 3}
     )
@@ -105,8 +106,8 @@ def test_create_ba():
     )
     assert len(n.all_agents()) == 10
 
-    agent_list2 = AgentList(DemoAgent, 10, model)
-
+    agent_list2 = AgentList(DemoAgent, model)
+    agent_list2.setup_agents(10)
     n = DemoNetwork.from_agent_containers(
         {"wolves": agent_list, "sheep": agent_list2},
         "watts_strogatz_graph",

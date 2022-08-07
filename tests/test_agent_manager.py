@@ -26,7 +26,7 @@ def test_repr():
 def test_agent_manager_type_hinting():
     ta = TestAgent(0)
     # ta.setup()
-    am = AgentList(TestAgent, 0, model)
+    am = AgentList(TestAgent, model)
     am.add(ta, {"a": 0})
     ta_2 = TestAgent(1)
     # ta_2.setup()
@@ -50,7 +50,7 @@ def test_agent_manager_type_hinting():
 
 def test_properties():
     n = random.randint(10, 1000)
-    al: AgentList[TestAgent] = AgentList(TestAgent, n, model)
+    al: AgentList[TestAgent] = AgentList(TestAgent, model)
     l = [j for j in range(n)]
     random.shuffle(l)
     df = pd.DataFrame([{"id": i, "a": random.randint(-100, 100)} for i in l])
@@ -61,7 +61,7 @@ def test_properties():
 
 def test_add_del_agents():
     n = 20
-    al = AgentList(TestAgent, n, model)
+    al = AgentList(TestAgent, model)
     al.setup_agents(n)
     al.remove(al[10])
     al.add()
@@ -87,7 +87,7 @@ def test_add_del_agents_dict():
 
 def test_agent_list_iteration():
     n = 20
-    al = AgentList(TestAgent, n, model)
+    al = AgentList(TestAgent, model)
     times = 0
     for _ in al:
         l = [a.id for a in al]
@@ -107,7 +107,7 @@ def test_properties_with_scenario():
     """
     n = 10
     assert isinstance(model.scenario.id, int)
-    for al in [AgentList(TestAgent, n, model)]:
+    for al in [AgentList(TestAgent, model)]:
         l = [j for j in range(n)]
         random.shuffle(l)
         df = pd.DataFrame(
@@ -137,6 +137,6 @@ def test_grid_agents():
         def set_category(self):
             self.category = 0
 
-    al = AgentList(GridAgent1, 10, model)
+    al = AgentList(GridAgent1, model)
     al.setup_agents(10)
     al.to_list(["x"])

@@ -34,7 +34,7 @@ pure_py_lst = [[PurePyCell() for i in range(XM)] for j in range(YM)]
 lst = pure_py_lst
 
 agent_manager = AgentList(
-    MyAgent, 200, MyModel(config=cfg, scenario=Scenario(id_scenario=0))
+    MyAgent, MyModel(config=cfg, scenario=Scenario(id_scenario=0))
 )
 
 

@@ -9,7 +9,7 @@ from .element import Element
 
 if TYPE_CHECKING:
     from Melodie import Calibrator, Simulator
-    from .dataframe_loader import DataFrameInfo, MatrixInfo
+    from .data_loader import DataFrameInfo, MatrixInfo
 logger = logging.getLogger(__name__)
 
 
