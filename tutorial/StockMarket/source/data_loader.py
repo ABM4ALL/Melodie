@@ -24,8 +24,7 @@ class StockDataLoader(DataLoader):
 
     def generate_agent_dataframe(self):
 
-        with self.dataframe_generator(data_info.agent_params.df_name, lambda scenario: scenario.agent_num) as g:
-            # 第一个参数改成DataFrameInfo的类型
+        with self.dataframe_generator(data_info.agent_params, lambda scenario: scenario.agent_num) as g:
 
             def generator_func(scenario: "StockScenario"):
                 return {
@@ -37,4 +36,3 @@ class StockDataLoader(DataLoader):
                 }
 
             g.set_row_generator(generator_func)
-            g.set_column_data_types(data_info.agent_params.columns)

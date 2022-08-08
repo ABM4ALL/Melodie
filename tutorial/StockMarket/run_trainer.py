@@ -12,4 +12,4 @@ if __name__ == "__main__":
         data_loader_cls=StockDataLoader,
         processors=1,  # 啥意思，默认值是多少？
     )
-    trainer.train()  # 可以叫main
+    trainer.run()

@@ -2,12 +2,6 @@
 
 ### Next steps
 
-**Minor**
-
-* simulator/calibrator/trainer的主函数名字统一为run
-
-**Major**
-
 * python版本适配
 * 设计network需要的功能
 * 过一遍visualizer需要的功能 --> 讲课可以没有
