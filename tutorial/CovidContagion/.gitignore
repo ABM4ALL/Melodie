@@ -2,4 +2,4 @@
 *.sqlite3
 .melodieconfig
 out.py
-output/*.png
+data/output/*.png
