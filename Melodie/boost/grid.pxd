@@ -40,7 +40,7 @@ cdef class AgentIDManager:
     cpdef set get_empty_spots(self)
     cpdef long agent_id_and_category_to_number(self, long agent_id, long category) except *
     cdef (long, long) num_to_2d_coor(self, long num) except *
-    cpdef (long, long) number_to_agent_id_and_category(self, long num) except *
+    cpdef (long, long) number_to_category_and_agent_id(self, long num) except *
 
     cpdef list agents_on_spot(self, long x, long y) except *
     cdef (long, long) find_empty_spot(self) except *

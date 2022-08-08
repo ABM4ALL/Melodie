@@ -38,7 +38,7 @@ class CovidAgent(GridAgent):
         infection_prob = self.scenario.get_infection_prob(self.health_state)
         if infection_prob > 0:
             neighbors_info = grid.get_neighbors(self.x, self.y)  # 还是叫get_neighbors吧，加上info也不知道具体是什么info
-            for agent_id, agent_category in neighbors_info:
+            for agent_category, agent_id in neighbors_info:
                 neighbor_agent: "CovidAgent" = agents.get_agent(agent_id)
                 if neighbor_agent.health_state == 1 and random.uniform(0, 1) < infection_prob:
                     self.health_state = 1

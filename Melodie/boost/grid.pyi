@@ -56,7 +56,7 @@ class Grid:
     wrap: bool
 
     def __init__(
-        self, spot_cls: Type[Spot], scenario: Optional[Scenario] = None
+            self, spot_cls: Type[Spot], scenario: Optional[Scenario] = None
     ): ...
 
     def setup_params(self, width: int, height: int,
@@ -69,7 +69,7 @@ class Grid:
     def set_spot_attribute(self, attr_name: str, array_2d): ...
 
     def setup_agent_locations(
-        self, agents: "AgentList", initial_placement: str = "none"
+            self, agents: "AgentList", initial_placement: str = "none"
     ): ...
 
     def width(self) -> int: ...
@@ -85,11 +85,11 @@ class Grid:
     def coords_wrap(self, x, y) -> Tuple[int, int]: ...
 
     def get_neighbors(
-        self, x, y, radius: int = 1, moore=True, except_self=True
+            self, x, y, radius: int = 1, moore=True, except_self=True
     ) -> List[Tuple[int, int]]: ...
 
     def get_neighbor_positions(
-        self, x: int, y: int, radius=1, moore=True, except_self=True
+            self, x: int, y: int, radius=1, moore=True, except_self=True
     ) -> List[Tuple[int, int]]: ...
 
     def add_agent(self, agent: GridAgent) -> None: ...
@@ -103,7 +103,7 @@ class Grid:
     def get_roles(self): ...
 
     def rand_move(
-        self, agent: GridAgent, category: int, x_range: int, y_range: int
+            self, agent: GridAgent, category: int, x_range: int, y_range: int
     ) -> Tuple[int, int]: ...
 
     def find_empty_spot(self) -> Tuple[int, int]: ...
@@ -112,13 +112,6 @@ class Grid:
 
     def validate(self): ...
 
-    def get_neighbors(
-        self, x: int, y: int, radius: int = 1, moore=True, except_self=True
-    ): ...
-
     def get_neighborhood(
-        self, x: int, y: int, radius: int = 1, moore=True, except_self=True
+            self, x: int, y: int, radius: int = 1, moore=True, except_self=True
     ) -> List[Spot]: ...
-
-    def get_neighbors(self, x: int, y: int, radius: int = 1,
-                         moore=True, except_self=True) -> List[Tuple[int, int]]: ...
