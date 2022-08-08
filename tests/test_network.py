@@ -14,9 +14,21 @@ class DemoNetwork(Network):
 
 
 class DemoAgent(Agent):
+    # def set_category(self):
+
     def setup(self):
         self.agent_a = 0
         self.agent_b = 0
+        self.category = 0
+
+
+class Wolf(Agent):
+    # def set_category(self):
+
+    def setup(self):
+        self.agent_a = 0
+        self.agent_b = 0
+        self.category = 1
 
 
 class DemoModel(Model):
@@ -97,24 +109,25 @@ def test_create_ba():
     model.setup()
     agent_list = AgentList(DemoAgent, model)
     agent_list.setup_agents(10)
-    n = DemoNetwork.from_agent_containers(
-        {"agents": agent_list}, "barabasi_albert_graph", {"m": 3}
+    n = DemoNetwork.from_agent_lists(
+        [agent_list], "barabasi_albert_graph", {"m": 3}
     )
     assert len(n.all_agents()) == 10
-    n = DemoNetwork.from_agent_containers(
-        {"agents": agent_list}, builder=network_creator
+    n = DemoNetwork.from_agent_lists(
+        [agent_list], builder=network_creator
     )
     assert len(n.all_agents()) == 10
 
-    agent_list2 = AgentList(DemoAgent, model)
+    agent_list2 = AgentList(Wolf, model)
     agent_list2.setup_agents(10)
-    n = DemoNetwork.from_agent_containers(
-        {"wolves": agent_list, "sheep": agent_list2},
+    n = DemoNetwork()
+    n.setup_agent_connections(
+        [agent_list, agent_list2],
         "watts_strogatz_graph",
         {"k": 3, "p": 0.2},
     )
     for i in range(10):
-        neighbors = n.get_neighbor_positions(i, "wolves")
+        neighbors = n.get_neighbor_positions(i, 1)
         print(neighbors)
     # for node in neighbors:
     #     print(n.all_agent_on_node(node))

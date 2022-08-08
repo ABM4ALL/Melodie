@@ -112,7 +112,7 @@ class Grid:
 
     def validate(self): ...
 
-    def get_neighbors_info(
+    def get_neighbors(
         self, x: int, y: int, radius: int = 1, moore=True, except_self=True
     ): ...
 
@@ -120,5 +120,5 @@ class Grid:
         self, x: int, y: int, radius: int = 1, moore=True, except_self=True
     ) -> List[Spot]: ...
 
-    def get_neighbors_info(self, x: int, y: int, radius: int = 1,
+    def get_neighbors(self, x: int, y: int, radius: int = 1,
                          moore=True, except_self=True) -> List[Tuple[int, int]]: ...

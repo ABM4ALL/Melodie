@@ -413,7 +413,7 @@ cdef class Grid:
             self._neighbors_cache[key] = neighbors
             return neighbors
 
-    cpdef list get_neighbors_info(self, long x, long y, long radius=1, bint moore=True, bint except_self=True) except *:
+    cpdef list get_neighbors(self, long x, long y, long radius=1, bint moore=True, bint except_self=True) except *:
         """
         Get every agents' id out of neighborhood.
         """

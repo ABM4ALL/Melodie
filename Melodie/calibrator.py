@@ -338,7 +338,7 @@ class GACalibratorAlgorithm:
         print("Algorithm will run with:")
         print("    Meta value", meta)
         print("    Recording environment parameters: ", self.recorded_env_properties)
-        print("    Recording Agent containers:", self.recorded_agent_properties)
+        print("    Recording Agent agent_lists:", self.recorded_agent_properties)
 
     def run(self, scenario: Scenario, meta: Union[GACalibratorAlgorithmMeta]):
         self.pre_check(meta)

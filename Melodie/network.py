@@ -1,6 +1,7 @@
 import logging
-from typing import Dict, Set, Union, List, Tuple, ClassVar, Callable
+from typing import Dict, Set, Union, List, Tuple, ClassVar, Callable, Type
 
+from .boost.basics import Agent
 from .boost.agent_list import AgentList
 
 logger = logging.getLogger(__name__)
@@ -8,12 +9,12 @@ logger = logging.getLogger(__name__)
 
 class Edge:
     def __init__(
-        self,
-        category_1: str,
-        agent_1_id: int,
-        category_2: str,
-        agent_2_id: int,
-        edge_properties: Dict[str, Union[int, str, float, bool]],
+            self,
+            category_1: int,
+            agent_1_id: int,
+            category_2: int,
+            agent_2_id: int,
+            edge_properties: Dict[str, Union[int, str, float, bool]],
     ):
         self.category_1 = category_1
         self.agent_1_id = agent_1_id
@@ -32,22 +33,26 @@ class Edge:
 
 
 class Network:
-    def __init__(self, directed=False):
+    def __init__(self, edge_cls: Type[Edge] = None, directed=False):
         self.simple = True
         self.directed = directed
         self._nodes: Set[int] = set()
         self._adj: Dict[int, Dict[int, Edge]] = {}
         self._agent_ids: Dict[
-            str, Dict[int, Set[int]]
-        ] = {}  # {'wolves': {0 : set(1, 2, 3)}}
-        self._agent_pos: Dict[str, Dict[int, int]] = {}  # {'wolves': {0: 1}}
-        self.edge_cls: ClassVar[Edge] = Edge
+            int, Dict[int, Set[int]]
+        ] = {}  # {category_id: {0 : set(1, 2, 3)}}
+        self._agent_pos: Dict[int, Dict[int, int]] = {}  # {'wolves': {0: 1}}
+        self.edge_cls: ClassVar[Edge] = edge_cls if edge_cls is not None else Edge
+        self.setup()
+        self._nx_edges = None
+
+    def _setup(self):
         self.setup()
 
     def setup(self):
         pass
 
-    def add_category(self, category_name: str):
+    def add_category(self, category_name: int):
         """
         Add category
         :param category_name:
@@ -84,7 +89,7 @@ class Network:
         if not self.directed:
             self._adj[target_id].pop(source_id)
 
-    def get_neighbor_positions(self, agent_id: int, category: str) -> List[int]:
+    def get_neighbor_positions(self, agent_id: int, category: int) -> List[Tuple[int, int]]:
         node_id = self.agent_pos(agent_id, category)
         neighbor_ids = self._adj.get(node_id)
         if neighbor_ids is None:
@@ -96,6 +101,10 @@ class Network:
                 neighbor_agent_ids_list.extend(agents)
             return neighbor_agent_ids_list
 
+    def get_neighbors(self, agent: Agent):
+        assert hasattr(agent, "category")
+        return self.get_neighbor_positions(agent.id, agent.category)
+
     def add_edges(self, edges: List[Tuple[int, int]]):
         """
         Add multiple edges onto the network.
@@ -105,7 +114,7 @@ class Network:
         for edge in edges:
             self.add_edge(edge[0], edge[1])
 
-    def add_agent(self, agent_id: int, category: str, node_id: int):
+    def add_agent(self, agent_id: int, category: int, node_id: int):
         """
 
         :param agent_id:
@@ -113,7 +122,7 @@ class Network:
         :param node_id:
         :return:
         """
-        assert agent_id not in self._agent_ids
+        # assert category not in self._agent_ids.keys()
         if node_id not in self._agent_ids[category]:
             self._agent_ids[category][node_id] = set()
         if node_id not in self._nodes:
@@ -121,7 +130,7 @@ class Network:
         self._agent_ids[category][node_id].add(agent_id)
         self._agent_pos[category][agent_id] = node_id
 
-    def remove_agent(self, agent_id: int, category: str):
+    def remove_agent(self, agent_id: int, category: int):
         """
 
         :param agent_id:
@@ -137,7 +146,7 @@ class Network:
             for target_node, edge in target_edges.items():
                 self._adj[target_node].pop(node_id)
 
-    def move_agent(self, agent_id: int, category: str, target_node_id: int):
+    def move_agent(self, agent_id: int, category: int, target_node_id: int):
         """
 
         :param agent_id:
@@ -148,7 +157,7 @@ class Network:
         self.remove_agent(agent_id, category)
         self.add_agent(agent_id, category, target_node_id)
 
-    def get_agents(self, category: str, node_id: int):
+    def get_agents(self, category: int, node_id: int):
         """
 
         :param category:
@@ -160,16 +169,16 @@ class Network:
         else:
             return self._agent_ids[category][node_id]
 
-    def agent_pos(self, agent_id: int, category: str):
+    def agent_pos(self, agent_id: int, category: int):
         return self._agent_pos[category][agent_id]
 
     def create_edge(
-        self,
-        agent_1_id: int,
-        category_1: str,
-        agent_2_id: int,
-        category_2: str,
-        **edge_properties,
+            self,
+            agent_1_id: int,
+            category_1: int,
+            agent_2_id: int,
+            category_2: int,
+            **edge_properties,
     ):
         edge = self.edge_cls(
             category_1, agent_1_id, category_2, agent_2_id, edge_properties
@@ -181,24 +190,55 @@ class Network:
     def all_agents(self) -> List[int]:
         return self._nodes
 
-    def all_agent_on_node(self, node_id) -> List[Tuple[str, int]]:
+    def all_agent_on_node(self, node_id) -> List[Tuple[int, int]]:
         l = []
-        for category_name, ids_in_category in self._agent_ids.items():
+        for category_id, ids_in_category in self._agent_ids.items():
             agent_ids = ids_in_category.get(node_id)
             if agent_ids is not None:
-                l.extend([(category_name, agent_id) for agent_id in agent_ids])
+                l.extend([(category_id, agent_id) for agent_id in agent_ids])
         return l
 
+    def setup_agent_connections(self,
+                                agent_lists: List[AgentList],
+                                network_type: str,
+                                network_params: dict = None
+                                ):
+        import networkx as nx
+
+        assert isinstance(agent_lists, list)
+        node_id = 0
+        for agent_list in agent_lists:
+            category = agent_list[0].category
+            assert isinstance(category, int)
+            self.add_category(category)
+            for agent in agent_list:
+                self.add_agent(agent.id, category, node_id)
+                node_id += 1
+
+        g = getattr(nx, network_type)(
+            len(self._nodes),
+            **network_params,
+        )
+
+        for edge in g.edges:
+            agent_src = list(self.all_agent_on_node(edge[0]))[0]
+            agent_dest = list(self.all_agent_on_node(edge[1]))[0]
+            edge_obj = self.edge_cls(
+                agent_src[0], agent_src[1], agent_dest[0], agent_dest[1], {}
+            )
+            self.add_edge(edge[0], edge[1], edge_obj)
+        self._nx_edges = list(g.edges)
+
     @classmethod
-    def from_agent_containers(
-        cls,
-        containers: "Dict[str,AgentList]",
-        network_name: str = "",
-        network_params: dict = "",
-        builder: Callable = None,
+    def from_agent_lists(
+            cls,
+            agent_lists: "List[AgentList]",
+            network_name: str = "",
+            network_params: dict = "",
+            builder: Callable = None,
     ):
         """
-        :param containers: container or a list of container
+        :param agent_lists: a list of AgentList
         :param network_name: The name of network.
         :param network_params: The parameters of network
         :param builder: The network builder function.
@@ -212,12 +252,13 @@ class Network:
         self = cls()
         import networkx as nx
 
-        assert isinstance(containers, dict)
+        assert isinstance(agent_lists, list)
         node_id = 0
-        for category, container in containers.items():
-            assert isinstance(category, str)
+        for agent_list in agent_lists:
+            category = agent_list[0].category
+            assert isinstance(category, int)
             self.add_category(category)
-            for agent in container:
+            for agent in agent_list:
                 self.add_agent(agent.id, category, node_id)
                 node_id += 1
 

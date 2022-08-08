@@ -409,7 +409,7 @@ class GATrainerAlgorithm:
         print("Algorithm will run with:")
         print("    Meta value", meta)
         print("    Recording environment parameters: ", self.recorded_env_properties)
-        print("    Recording Agent containers:", self.agent_container_getters)
+        print("    Recording Agent agent_lists:", self.agent_container_getters)
 
     def run(self, scenario: Scenario, meta: Union[GATrainerAlgorithmMeta]):
         self.pre_check(meta)
@@ -475,7 +475,7 @@ class RelatedAgentContainerModel:
 
 class AgentContainerManager:
     """
-    The manager class is designed to organize the metadata related to agent containers in the trainer.
+    The manager class is designed to organize the metadata related to agent agent_lists in the trainer.
 
     """
 

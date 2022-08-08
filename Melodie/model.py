@@ -14,7 +14,7 @@ from .data_collector import DataCollector
 from .db import create_db_conn, DBConn
 from .scenario_manager import Scenario
 from .table_generator import DataFrameGenerator
-from .network import Network
+from .network import Network, Edge
 from .visualizer import Visualizer
 
 logger = logging.getLogger(__name__)
@@ -156,8 +156,12 @@ class Model:
         self.initialization_queue.append(grid)
         return grid
 
-    def create_network(self):
-        raise NotImplementedError
+    def create_network(self, network_cls: Type["Network"] = None, edge_cls: Type['Edge'] = None):
+        if network_cls is None:
+            network_cls = Network
+        network = network_cls(edge_cls)
+        self.initialization_queue.append(network)
+        return network
 
     def create_data_collector(self, data_collector_cls: Type["DataCollector"]):
         data_collector = data_collector_cls()
@@ -205,7 +209,7 @@ class Model:
 
     def check_agent_containers(self):
         """
-        Check the agent containers in the model.
+        Check the agent agent_lists in the model.
         Check list is:
         - Each agent, no matter which container it was in, should have a unique id.
 

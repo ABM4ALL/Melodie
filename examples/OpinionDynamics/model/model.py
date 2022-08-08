@@ -20,7 +20,7 @@ class OpinionDynamicsModel(Model):
 
         with self.define_basic_components():
             self.environment = OpinionDynamicsEnvironment()
-            self.network = Network.from_agent_containers(
+            self.network = Network.from_agent_lists(
                 {"agent_list": self.agent_list},
                 "watts_strogatz_graph",
                 {

@@ -190,7 +190,7 @@ def test_single_grid():
     grid.move_agent(agents[0], 3, 3)
     spot = grid.find_empty_spot()
     assert spot == (0, 0), spot
-    neighbors = grid.get_neighbors_info(2, 2)
+    neighbors = grid.get_neighbors(2, 2)
     assert len(neighbors) == 8
     nbhd = grid.get_neighborhood(2, 2)
     assert len(nbhd) == 8 and isinstance(nbhd, list)
