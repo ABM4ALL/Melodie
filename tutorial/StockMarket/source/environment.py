@@ -95,6 +95,11 @@ class StockEnvironment(Environment):
         for agent in agents:
             agent.update_forecast_rule(self.fundamentalist_deviation, self.chartist_deviation)
 
+    def agents_update_wealth(self, agents: 'AgentList[StockAgent]', period: int):
+        current_price = self.order_book.price_history[period][self.scenario.period_ticks - 1]
+        for agent in agents:
+            agent.update_wealth(current_price)
+
 
 
 

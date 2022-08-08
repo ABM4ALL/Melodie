@@ -32,6 +32,7 @@ class StockModel(Model):
             self.environment.order_book.clear_orders()
             self.environment.calculate_forecast_rule_deviation(period)
             self.environment.agents_update_forecast_rule(self.agents)
+            self.environment.agents_update_wealth(self.agents, period)
             self.data_collector.collect(period)
         self.data_collector.save()
         self.data_collector.save_order_book(self.environment.order_book)

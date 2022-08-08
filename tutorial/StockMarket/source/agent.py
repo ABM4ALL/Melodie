@@ -22,7 +22,7 @@ class StockAgent(Agent):
         self.wealth_high = 0
         self.wealth_low = 0
 
-    def update_wealth_variation(self, current_stock_price: int):
+    def update_wealth(self, current_stock_price: int):
         self.wealth = self.cash_account + self.stock_account * current_stock_price
         self.wealth_high = max(self.wealth_high, self.wealth)
         self.wealth_low = min(self.wealth_low, self.wealth)
@@ -30,7 +30,6 @@ class StockAgent(Agent):
     def create_order(self, forecaster: 'Forecaster', latest_price: int) -> 'Order':
         order = Order(self.id)
         forecast = forecaster.get_forecast(self.forecast_rule_id)
-        # print(f'agent {self.id} --> forecast_rule_id = {self.forecast_rule_id}, forecast = {forecast}')
         if forecast >= latest_price:
             order.type = OrderType.BID
             order.price = random.randint(latest_price, forecast)
