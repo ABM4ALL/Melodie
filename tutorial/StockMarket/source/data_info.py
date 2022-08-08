@@ -13,13 +13,13 @@ simulator_scenarios = DataFrameInfo(
         "agent_num": sqlalchemy.Integer(),
         "chartist_percentage_start": sqlalchemy.Float(),
         "chartist_memory_length": sqlalchemy.Integer(),
-        "fundamentalist_price_benchmark": sqlalchemy.Integer(),
+        "fundamentalist_price_benchmark": sqlalchemy.Float(),
         "forecast_rule_evaluation_memory_length": sqlalchemy.Integer(),
         "switch_intensity": sqlalchemy.Float(),
-        "stock_price_start": sqlalchemy.Integer(),
+        "stock_price_start": sqlalchemy.Float(),
         "stock_trading_volume": sqlalchemy.Integer(),
         "stock_account_start": sqlalchemy.Integer(),
-        "cash_account_start": sqlalchemy.Integer(),
+        "cash_account_start": sqlalchemy.Float(),
     },
 )
 
@@ -40,6 +40,6 @@ agent_params = DataFrameInfo(
         "forecast_rule_id": sqlalchemy.Integer(),
         "switch_intensity": sqlalchemy.Float(),
         "stock_account": sqlalchemy.Integer(),
-        "cash_account": sqlalchemy.Integer(),
+        "cash_account": sqlalchemy.Float(),
     },
 )

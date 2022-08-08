@@ -18,7 +18,7 @@ class OrderType(Enum):
 class Order:
     agent_id: int
     type: 'OrderType' = None
-    price: int = None
+    price: float = None
     volume: int = None
 
 
@@ -28,7 +28,7 @@ class Transaction:
     tick: int
     buyer_id: int = None
     seller_id: int = None
-    price: int = None
+    price: float = None
     volume: int = None
 
 
@@ -87,20 +87,26 @@ class OrderBook:
         transaction = Transaction(period, tick)
         transaction.buyer_id = bid_order.agent_id
         transaction.seller_id = ask_order.agent_id
-        transaction.price = int(0.5 * (bid_order.price + ask_order.price))
+        transaction.price = 0.5 * (bid_order.price + ask_order.price)
         transaction.volume = bid_order.volume
         self.transactions.append(transaction)
         return transaction
 
     def insert_bid_order(self, coming_order: 'Order'):
-        for index, order in enumerate(self.bid_orders):
-            if order.price <= coming_order.price:
-                self.bid_orders.insert(index, coming_order)
+        if len(self.bid_orders) > 0:
+            for index, order in enumerate(self.bid_orders):
+                if order.price <= coming_order.price:
+                    self.bid_orders.insert(index, coming_order)
+        else:
+            self.bid_orders.append(coming_order)
 
     def insert_ask_order(self, coming_order: 'Order'):
-        for index, order in enumerate(self.ask_orders):
-            if order.price >= coming_order.price:
-                self.ask_orders.insert(index, coming_order)
+        if len(self.ask_orders) > 0:
+            for index, order in enumerate(self.ask_orders):
+                if order.price >= coming_order.price:
+                    self.ask_orders.insert(index, coming_order)
+        else:
+            self.ask_orders.append(coming_order)
 
     def clear_orders(self):
         self.bid_orders = []

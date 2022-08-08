@@ -25,10 +25,13 @@ class StockModel(Model):
 
     def run(self):
         for period in self.iterator(self.scenario.periods):
-            print(f'period = {period}')
+            # print(f'period = {period}')
             self.environment.update_forecasts(period)
             for tick in range(0, self.scenario.period_ticks):
                 self.environment.stock_trading(self.agents, period, tick)
+                print(f'period = {period}, tick = {tick}, '
+                      f'ask_orders = {self.environment.order_book.ask_orders}, '
+                      f'bid_orders = {self.environment.order_book.bid_orders}')
             self.environment.order_book.clear_orders()
             self.environment.calculate_forecast_rule_deviation(period)
             self.environment.agents_update_forecast_rule(self.agents)
