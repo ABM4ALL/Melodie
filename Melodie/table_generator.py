@@ -9,7 +9,7 @@ from .utils import MelodieExceptions, args_check
 from .scenario_manager import Scenario
 
 if TYPE_CHECKING:
-    from .data_loader import DataLoader
+    from .data_loader import DataLoader, DataFrameInfo
 
 logger = logging.getLogger(__name__)
 
@@ -20,22 +20,23 @@ class DataFrameGenerator:
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         new_df = self.gen_agent_param_table_each_scenario()
-        self.df_loader.register_dataframe(self.table_name, new_df, self.data_types)
+        self.df_loader.register_dataframe(self.df_info.df_name, new_df, self.df_info.columns)
         return
 
     def __init__(
-        self,
-        df_loader: "DataLoader",
-        table_name: str,
-        num_generator: Union[int, Callable[[Scenario], int]],
+            self,
+            df_loader: "DataLoader",
+            df_info: "DataFrameInfo",
+            num_generator: Union[int, Callable[[Scenario], int]],
     ):
         """
         :param df_loader:
-        :param table_name:
+        :param df_info:
+        :param num_generator
         """
 
         self.num_generator = self.convert_to_num_generator(num_generator)
-        self.table_name = table_name
+        self.df_info = df_info
         self._self_incremental_value = -1
         self.df_loader = df_loader
         from Melodie.data_loader import DataLoader
@@ -43,12 +44,12 @@ class DataFrameGenerator:
         if not isinstance(self.df_loader, DataLoader):
             MelodieExceptions.Data.NoDataframeLoaderDefined()
 
-        self.data_types = {}
         self._row_generator: Optional[Callable[[Scenario], Union[dict, object]]] = None
 
     def increment(self):
         """
         Get increment value.
+
         :return:
         """
         self._self_incremental_value += 1
@@ -57,22 +58,13 @@ class DataFrameGenerator:
     def reset_increment(self):
         """
         Reset increment
+
         :return:
         """
         self._self_incremental_value = -1
 
-    def set_column_data_types(self, data_types: dict):
-        """
-        Set data types of each column
-        :param data_types:
-        :return:
-        """
-        if len(self.data_types) > 0:
-            raise ValueError("Data types has been already defined!")
-        self.data_types = data_types
-
     def convert_to_num_generator(
-        self, num_generator: Union[int, Callable[[Scenario], int]]
+            self, num_generator: Union[int, Callable[[Scenario], int]]
     ):
         if isinstance(num_generator, int):
             return lambda _: num_generator
@@ -83,7 +75,7 @@ class DataFrameGenerator:
             raise TypeError
 
     def set_row_generator(
-        self, row_generator: Callable[[Scenario], Union[dict, object]]
+            self, row_generator: Callable[[Scenario], Union[dict, object]]
     ):
         """
         Set the geneator for each row. Every time the row_generator is called, this function

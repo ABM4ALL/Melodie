@@ -58,7 +58,7 @@ async def handler(ws: WebSocketServerProtocol, path):
             json.dumps(
                 {
                     "type": "error",
-                    "step": 0,
+                    "period": 0,
                     "data": f"The number of connections exceeds the upper limit {MAX_ACTIVE_CONNECTIONS}. "
                     f"Please shutdown unused webpage or modify the limit.",
                     "modelState": UNCONFIGURED,
@@ -251,7 +251,7 @@ class Visualizer:
             json.dumps(
                 {
                     "type": "initOption",
-                    "step": 0,
+                    "period": 0,
                     "data": self.get_visualizers_initial_options(),
                     "modelState": self.model_state,
                     "status": OK,
@@ -264,7 +264,7 @@ class Visualizer:
             json.dumps(
                 {
                     "type": "initPlotSeries",
-                    "step": 0,
+                    "period": 0,
                     "data": self.plot_charts.to_json(),
                     "modelState": self.model_state,
                     "status": OK,
@@ -284,7 +284,7 @@ class Visualizer:
             json.dumps(
                 {
                     "type": "params",
-                    "step": self.current_step,
+                    "period": self.current_step,
                     "data": params,
                     "modelState": self.model_state,
                     "status": OK,
@@ -299,7 +299,7 @@ class Visualizer:
         dumped = json.dumps(
             {
                 "type": "data",
-                "step": self.current_step,
+                "period": self.current_step,
                 "data": formatted,
                 "modelState": self.model_state,
                 "status": OK,
@@ -314,7 +314,7 @@ class Visualizer:
             json.dumps(
                 {
                     "type": "data",
-                    "step": self.current_step,
+                    "period": self.current_step,
                     "data": err_msg,
                     "modelState": 10,
                     "status": ERROR,
@@ -381,7 +381,7 @@ class Visualizer:
                 self.send_current_data()
                 if (
                     flag == STEP
-                ):  # If the flag was step, then go to step No.1. So there should be one
+                ):  # If the flag was period, then go to period No.1. So there should be one
                     # queue to put into the condition queue.
                     self.model_state = RUNNING
                     visualize_condition_queue_main.put((flag, {}, ws))
@@ -394,7 +394,7 @@ class Visualizer:
         self.current_step = current_step
         self.plot_charts.update(self.current_step)
         while 1:
-            logger.info("in step")
+            logger.info("in period")
             flag, data, ws = self.get_in_queue()
             if flag == STEP:
                 self.send_current_data()
@@ -402,7 +402,7 @@ class Visualizer:
             elif flag == CURRENT_DATA:
                 self.send_current_data()
             else:
-                self.send_error(f"Invalid command flag {flag} for function 'step'. ")
+                self.send_error(f"Invalid command flag {flag} for function 'period'. ")
 
     def finish(self):
         self.model_state = FINISHED

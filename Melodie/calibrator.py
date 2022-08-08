@@ -448,7 +448,7 @@ class Calibrator(BaseModellingManager):
         ), "No learning scenarios table specified!"
         return calibrator_scenarios_table.to_dict(orient="records")
 
-    def calibrate(self):
+    def run(self):
         """
         The main method for calibrator.
         :return:

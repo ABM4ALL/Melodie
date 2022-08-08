@@ -40,7 +40,7 @@ class Scenario(Element):
             super().__init__(name, "number", init_value)
             if min_val is None or max_val is None or step is None:
                 raise NotImplementedError(
-                    "This version of melodie does not support free bound or step yet"
+                    "This version of melodie does not support free bound or period yet"
                 )
             assert isinstance(init_value, (int, float))
             assert isinstance(max_val, (int, float))

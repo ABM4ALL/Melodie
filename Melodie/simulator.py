@@ -81,8 +81,6 @@ class BaseModellingManager(abc.ABC):
             self, self.config, self.scenario_cls
         )
         self.data_loader.as_sub_worker = True
-        self.data_loader.register_scenario_dataframe()
-        self.data_loader.register_static_dataframes()
 
         self.scenarios = self.generate_scenarios()
 
@@ -100,9 +98,6 @@ class BaseModellingManager(abc.ABC):
             self.data_loader: DataLoader = self.df_loader_cls(
                 self, self.config, self.scenario_cls
             )
-
-            self.data_loader.register_scenario_dataframe()
-            self.data_loader.register_static_dataframes()
 
         self.scenarios = self.generate_scenarios()
         if self.scenarios is None or len(self.scenarios) == 0:

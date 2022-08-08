@@ -26,7 +26,7 @@ class ModelRunRoutine:
     """
 
     def __init__(self, max_step: int, model: "Model"):
-        self._current_step = 0
+        self._current_step = -1
         self._max_step = max_step
         self.model: "Model" = model
 
@@ -34,7 +34,7 @@ class ModelRunRoutine:
         return self
 
     def __next__(self):
-        if self._current_step >= self._max_step:
+        if self._current_step >= self._max_step - 1:
             raise StopIteration
         self.model.visualizer_step(self._current_step)
         self._current_step += 1

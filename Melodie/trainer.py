@@ -507,7 +507,7 @@ class AgentContainerManager:
 
 class Trainer(BaseModellingManager):
     """
-    Individually calibrate agents' parameters
+    Individually run agents' parameters
     """
 
     def __init__(
@@ -579,7 +579,7 @@ class Trainer(BaseModellingManager):
         assert trainer_scenario_cls is not None
         return trainer_scenario_cls
 
-    def train(self):
+    def run(self):
         """
         The main method for Trainer.
 

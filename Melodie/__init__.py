@@ -1,6 +1,5 @@
 import logging
 
-from .analyzer import Analyzer
 from .utils import *
 from .boost.agent_list import BaseAgentContainer, AgentList, AgentDict
 from .boost.basics import Environment, Element, Agent
@@ -12,7 +11,6 @@ from .data_loader import DataFrameInfo, DataLoader
 from .db import DBConn, create_db_conn
 from .model import Model
 from .network import Edge, Network
-from .plotter import Plotter
 from .scenario_manager import Scenario
 from .simulator import Simulator
 from .table_generator import DataFrameGenerator

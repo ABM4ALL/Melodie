@@ -14,4 +14,4 @@ def test_calibrator():
     calibrator = CovidCalibrator(
         cfg_for_calibrator, CovidScenario, CovidModel, DFLoader
     )
-    calibrator.calibrate()
+    calibrator.run()
