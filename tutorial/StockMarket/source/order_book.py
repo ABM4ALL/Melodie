@@ -93,18 +93,22 @@ class OrderBook:
         return transaction
 
     def insert_bid_order(self, coming_order: 'Order'):
+        print(f'coming_bid_order = {coming_order}')
         if len(self.bid_orders) > 0:
             for index, order in enumerate(self.bid_orders):
                 if order.price <= coming_order.price:
                     self.bid_orders.insert(index, coming_order)
+                    break
         else:
             self.bid_orders.append(coming_order)
 
     def insert_ask_order(self, coming_order: 'Order'):
+        print(f'coming_ask_order = {coming_order}')
         if len(self.ask_orders) > 0:
             for index, order in enumerate(self.ask_orders):
                 if order.price >= coming_order.price:
                     self.ask_orders.insert(index, coming_order)
+                    break
         else:
             self.ask_orders.append(coming_order)
 
