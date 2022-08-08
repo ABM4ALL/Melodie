@@ -215,7 +215,7 @@ class DataCollector:
         t1 = time.time()
         collect_time = self._time_elapsed
         self._time_elapsed += t1 - t0
-        logger.info(
+        logger.debug(
             f"datacollector took {MelodieGlobalConfig.Logger.round_elapsed_time(t1 - t0)}s to format dataframe and write it to data.\n"
             f"    {MelodieGlobalConfig.Logger.round_elapsed_time(write_db_time)} for writing into database, and "
             f"{MelodieGlobalConfig.Logger.round_elapsed_time(collect_time)} for collect data."

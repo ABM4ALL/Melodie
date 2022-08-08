@@ -109,10 +109,10 @@ class DBConn:
         :return:
         """
         logger.info(f"Database contains tables: {self.connection.table_names()}")
-
-        for table_name in self.connection.table_names():
+        table_names = list(self.connection.table_names())
+        for table_name in table_names:
             self.connection.execute(f"drop table {table_name}")
-            logger.info(f"Table '{table_name}' in database has been droped!")
+        logger.info(f"Tables {table_names} in database have been dropped!")
 
     def write_dataframe(
             self,
@@ -176,7 +176,7 @@ class DBConn:
             sql = f"select * from {table_name}"
             if len(condition_phrases) != 0:
                 sql += " where " + " and ".join(condition_phrases)
-            logger.info("Querying database: "+sql)
+            logger.debug("Querying database: "+sql)
             return pd.read_sql(sql, self.connection)
         except OperationalError:
             import traceback

@@ -141,7 +141,7 @@ class Simulator(BaseModellingManager):
 
         :return:
         """
-        logger.info(f"Running {run_id + 1} times in scenario {scenario.id}.")
+        logger.info(f"Running simulator: scenario_id = {scenario.id}, run_id = {run_id}.")
         t0 = time.time()
 
         model: Model = model_class(
@@ -156,8 +156,6 @@ class Simulator(BaseModellingManager):
             visualizer.start()
 
         t1 = time.time()
-        logger.info(f"Model setup, taking {MelodieGlobalConfig.Logger.round_elapsed_time(t1 - t0)} seconds.")
-        logger.info(f"Model is running...")
         model.run()
         if visualizer is not None:
             model.visualizer.finish()
@@ -171,7 +169,7 @@ class Simulator(BaseModellingManager):
             data_collect_time = 0.0
         model_run_time -= data_collect_time
         info = (
-            f"Running {run_id} in scenario {scenario.id} completed with time elapsed(seconds):\n"
+            f"Simulation scenario = {scenario.id}, run_id = {run_id} completed with time elapsed (seconds):\n"
             f"    model-setup   \t {MelodieGlobalConfig.Logger.round_elapsed_time(model_setup_time)}\n"
             f"    model-run     \t {MelodieGlobalConfig.Logger.round_elapsed_time(model_run_time)}\n"
             f"    data-collect  \t {MelodieGlobalConfig.Logger.round_elapsed_time(data_collect_time)}\n"
@@ -196,7 +194,6 @@ class Simulator(BaseModellingManager):
             )
 
         self.pre_run()
-        logger.info("Loading scenarios and static tables...")
         t1 = time.time()
         for scenario_index, scenario in enumerate(self.scenarios):
             for run_id in range(scenario.number_of_run):
@@ -204,13 +201,9 @@ class Simulator(BaseModellingManager):
                     self.config, scenario, run_id, self.model_cls, visualizer=None
                 )
 
-            logger.info(
-                f"{scenario_index + 1} of {len(self.scenarios)} scenarios has completed."
-            )
-
         t2 = time.time()
         logger.info(
-            f"Melodie completed all runs, time elapsed totally {round(t2 - t0, 3)}s, and {round(t2 - t1, 3)}s for running."
+            f"Simulator completed, time elapsed {MelodieGlobalConfig.Logger.round_elapsed_time(t2 - t0)}s."
         )
 
     def run_visual(self):
@@ -293,7 +286,6 @@ class Simulator(BaseModellingManager):
         self.pre_run()
 
         t1 = time.time()
-        logger.info("Loading scenarios and static tables...")
         pool = Pool(cores)
 
         parameters: List[Tuple] = []
