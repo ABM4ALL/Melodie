@@ -65,10 +65,10 @@ cdef class GridAgent(GridItem):
     def set_category(self):
         raise NotImplementedError("Category should be set for GridAgent")
 
-    cpdef rand_move(self, int x_range, int y_range) except *:
+    cpdef rand_move_agent(self, int x_range, int y_range) except *:
         if self.grid is None:
             raise ValueError("Grid Agent has not been registered onto the grid!")
-        self.x, self.y = self.grid.rand_move(self, self.category, x_range, y_range)
+        self.x, self.y = self.grid.rand_move_agent(self, self.category, x_range, y_range)
 
 cdef class Spot(GridItem):
     def __init__(self, spot_id: int, grid: Grid, x: int = 0, y: int = 0):
@@ -76,8 +76,8 @@ cdef class Spot(GridItem):
         self.grid = grid
         self.colormap = 0
 
-    def get_agent_ids(self):
-        return self.grid.get_agent_ids(self.x, self.y)
+    def get_spot_agents(self):
+        return self.grid.get_spot_agents(self)
 
     def __repr__(self):
         return f"<{self.__class__.__name__} 'x': {self.x}, 'y': {self.y}, 'colormap': {self.colormap}, 'payload' : {self.__dict__}>"
@@ -163,8 +163,6 @@ cdef class AgentIDManager:
             if i==rand_value:
                 return self.num_to_2d_coor(item)
             i+=1
-        # cdef long v = deref(self._empty_spots.begin())
-        # return self.num_to_2d_coor(v)
 
 
 cdef class Grid:
@@ -197,7 +195,7 @@ cdef class Grid:
             for y in range(self._height):
                 self._spots[y][x].setup()
 
-        self._neighbors_cache = {}# [None] * self._width * self._height
+        self._neighbors_cache = {}
         self._roles_list = [[0 for j in range(4)] for i in range(self._width*self._height)]
         self._agent_id_mgr = AgentIDManager(self._width, self._height, allow_multi=self._multi)
         self._agent_containers = [None for i in range(100)]
@@ -216,19 +214,6 @@ cdef class Grid:
     
     def _setup(self):
         self.setup()
-        
-    cpdef validate(self):
-        """
-        Validate the container.
-        This method will be run at the beginning of model.run
-
-        1. All agents already in the container should be on the grid.
-
-        """
-        for container_id, container in enumerate(self._agent_containers):
-            if container is not None:
-                for agent in container:
-                    assert (agent.category, agent.id) in self.get_agent_ids(agent.x, agent.y), f"Agent id: {agent.id}, category: {agent.category} x: {agent.x}, y: {agent.y} is not on the grid."
 
     def setup_agent_locations(self, category ,initial_placement = "direct"):
         """
@@ -264,8 +249,6 @@ cdef class Grid:
             for agent in category:
                 self.add_agent(agent)
 
-    # @cython.boundscheck(False)
-    # @cython.wraparound(False)
     cpdef Spot get_spot(self, long x, long y):
         """
         Get a ``Spot`` at position ``(x, y)``
@@ -280,7 +263,7 @@ cdef class Grid:
         row = <list>PyList_GetItem(self._spots, <Py_ssize_t> (y))
         return <Spot>PyList_GetItem(row, <Py_ssize_t> (x))
 
-    cpdef list get_agent_ids(self, long x, long y) except *:
+    cpdef list get_spot_agents(self, Spot spot) except *:
         """
         Get all agent of a specific category from the spot at ``(x, y)``
 
@@ -289,13 +272,8 @@ cdef class Grid:
         :param y:
         :return: A set of int, the agent ids.
         """
-        return self._agent_id_mgr.agents_on_spot(x, y)
-    
-    cpdef list get_agents(self, long x, long y) except *:
-        agents = []
-        for agent_category, agent_id in self._agent_id_mgr.agents_on_spot(x, y):
-            agents.append(self.get_agent_container(agent_category).get_agent(agent_id))
-        return agents
+        return self._agent_id_mgr.agents_on_spot(spot.x, spot.y)
+
 
     cdef AgentList get_agent_container(self, category_id) except *:
         cdef AgentList ret = self._agent_containers[category_id]
@@ -387,12 +365,11 @@ cdef class Grid:
                     continue
                 if dx == 0 and dy == 0 and except_self:
                     continue
-                # coor_x, coor_y = self._bound_check(x + dx, y + dy)
                 neighbors[counter] = self._bound_check(x + dx, y + dy)
                 counter += 1
         return neighbors
 
-    cpdef list get_neighbor_positions(self, long x, long y, long radius = 1, bint moore=True, bint except_self=True):
+    cpdef list _get_neighbor_positions(self, long x, long y, long radius = 1, bint moore=True, bint except_self=True):
         """
         Get the neighbors of one spot at (x, y).
 
@@ -413,31 +390,37 @@ cdef class Grid:
             self._neighbors_cache[key] = neighbors
             return neighbors
 
-    cpdef list get_neighbors(self, long x, long y, long radius=1, bint moore=True, bint except_self=True) except *:
+    cpdef list get_neighbors(self, GridAgent agent, long radius=1, bint moore=True, bint except_self=True) except *:
         """
         Get every agents' id out of neighborhood.
         """
         neighbor_ids = []
-        neighbor_positions = self.get_neighbor_positions(x, y, radius, moore, except_self)
-        for neighbor_pos in neighbor_positions:  # neighbors不是CovidAgent的list嘛？
+        neighbor_positions = self._get_neighbor_positions(agent.x, agent.y, radius, moore, except_self)
+        for neighbor_pos in neighbor_positions:
             x, y = neighbor_pos
-            agent_ids = self.get_agent_ids(
-                x, y
+            agent_ids = self.get_spot_agents(
+                self.get_spot(x, y)
             )  
             neighbor_ids.extend(agent_ids)
         return neighbor_ids
     
-    def get_neighborhood(self, x, y, radius = 1, moore=True, except_self=True):
+    def _get_neighborhood(self, x, y, radius = 1, moore=True, except_self=True):
         """
         Get all spots around (x, y)
 
         """
-        neighbor_positions = self.get_neighbor_positions(x, y, radius, moore, except_self)
+        neighbor_positions = self._get_neighbor_positions(x, y, radius, moore, except_self)
         spots = []
         for pos in neighbor_positions:
             x, y = pos
             spots.append(self.get_spot(x, y))
         return spots
+
+    def get_agent_neighborhood(self, agent, radius = 1, moore=True, except_self=True):
+        return self._get_neighborhood(agent.x, agent.y, radius, moore, except_self)
+
+    def get_spot_neighborhood(self, spot, radius = 1, moore=True, except_self=True):
+        return self._get_neighborhood(spot.x, spot.y, radius, moore, except_self)
 
     cdef void _add_agent(self, long agent_id, long category, long x, long y) except *:
         """
@@ -495,7 +478,7 @@ cdef class Grid:
         agent.y = target_y
 
     @cython.cdivision(True)
-    cpdef (long, long) rand_move(self, GridAgent agent, long category, long range_x, long range_y) except *:
+    cpdef (long, long) rand_move_agent(self, GridAgent agent, long category, long range_x, long range_y) except *:
         """
         Randomly move an agent with maximum movement `range_x` in x axis and `range_y` in y axis.
         
@@ -555,7 +538,7 @@ cdef class Grid:
                 spot = self.get_spot(x, y)
                 setattr(spot, attr_name, value)
 
-    cpdef tuple get_roles(self):
+    cpdef tuple get_colormap(self):
         """
         Get the role of each spot.
 
@@ -600,4 +583,9 @@ cdef class Grid:
 
     cpdef (long, long) find_empty_spot(self) except *:
         return self._agent_id_mgr.find_empty_spot()
-    
+
+    cpdef list get_empty_spots(self) except *:
+        cdef list positions = []
+        for spot_pos_1d in self._agent_id_mgr.get_empty_spots():
+            positions.append(self._agent_id_mgr.num_to_2d_coor(spot_pos_1d))
+        return positions

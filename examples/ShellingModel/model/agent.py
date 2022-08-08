@@ -9,7 +9,7 @@ class BaseGridAgent(GridAgent):
     scenario: ShellingModelScenario
 
     def satisfy_with_neighbors(self, grid: Grid):
-        neighbors = grid.get_neighbor_positions(self.x, self.y)
+        neighbors = grid._get_neighbor_positions(self.x, self.y)
         count = 0
         count_other_category = 0
         for neighbor in neighbors:

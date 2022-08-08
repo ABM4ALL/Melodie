@@ -31,7 +31,7 @@ class GridAgent(GridItem):
     def setup(self):
         pass
 
-    def rand_move(self, x_range: int, y_range: int):
+    def rand_move_agent(self, x_range: int, y_range: int):
         pass
 
     def set_category(self):
@@ -47,7 +47,7 @@ class Spot(GridItem):
     def setup(self):
         pass
 
-    def get_agent_ids(self) -> List[Tuple[int, int]]:
+    def get_spot_agents(self) -> List[Tuple[int, int]]:
         pass
 
 
@@ -78,17 +78,15 @@ class Grid:
 
     def get_spot(self, x, y) -> "Spot": ...
 
-    def get_agents(self, x: int, y: int) -> List[GridAgent]: ...
-
-    def get_agent_ids(self, x: int, y: int) -> List[Tuple[int, int]]: ...
+    def get_spot_agents(self, spot: Spot) -> List[Tuple[int, int]]: ...
 
     def coords_wrap(self, x, y) -> Tuple[int, int]: ...
 
     def get_neighbors(
-            self, x, y, radius: int = 1, moore=True, except_self=True
+            self, agent: GridAgent, radius: int = 1, moore=True, except_self=True
     ) -> List[Tuple[int, int]]: ...
 
-    def get_neighbor_positions(
+    def _get_neighbor_positions(
             self, x: int, y: int, radius=1, moore=True, except_self=True
     ) -> List[Tuple[int, int]]: ...
 
@@ -100,18 +98,20 @@ class Grid:
 
     def to_2d_array(self, attr_name: str) -> np.ndarray: ...
 
-    def get_roles(self): ...
+    def get_colormap(self): ...
 
-    def rand_move(
+    def rand_move_agent(
             self, agent: GridAgent, category: int, x_range: int, y_range: int
     ) -> Tuple[int, int]: ...
 
     def find_empty_spot(self) -> Tuple[int, int]: ...
 
-    def choose_empty_place(self) -> Tuple[int, int]: ...
-
-    def validate(self): ...
-
-    def get_neighborhood(
+    def _get_neighborhood(
             self, x: int, y: int, radius: int = 1, moore=True, except_self=True
     ) -> List[Spot]: ...
+
+    def get_empty_spots(self) -> Set[Tuple[int, int]]: ...
+
+    def get_agent_neighborhood(self, agent: GridAgent, radius=1, moore=True, except_self=True): ...
+
+    def get_spot_neighborhood(self, spot: Spot, radius=1, moore=True, except_self=True): ...

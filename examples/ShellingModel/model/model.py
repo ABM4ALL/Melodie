@@ -58,7 +58,7 @@ class ShellingModelModel(Model):
             # for y in range(20):
             #     for x in range(20):
             #
-            #         agents = self.grid.get_agent_ids(x, y)
+            #         agents = self.grid.get_spot_agents(x, y)
             #         if len(agents) == 0:
             #             print("-", end="")
             #         elif agents[0][1] == 0:

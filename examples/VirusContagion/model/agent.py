@@ -9,4 +9,4 @@ class CovidAgent(GridAgent):
         self.condition = 0
 
     def move(self):
-        self.rand_move(1, 1)
+        self.rand_move_agent(1, 1)

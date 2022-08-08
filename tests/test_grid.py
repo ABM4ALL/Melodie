@@ -53,7 +53,7 @@ def agents(grid: Union[Grid]):
     #     pass
     grid.remove_agent(a0)
 
-    mammals_at_1_1 = grid.get_agent_ids(1, 1)
+    mammals_at_1_1 = grid.get_spot_agents(grid.get_spot(1, 1))
     print("adasdadasdasdasdsa", mammals_at_1_1)
     assert (WOLVES, 1) in mammals_at_1_1, mammals_at_1_1
 
@@ -63,12 +63,12 @@ def agents(grid: Union[Grid]):
     assert (SHEEP, 3) in mammals_at_1_1
 
     grid.move_agent(a3, 2, 2)
-    assert (SHEEP, 3) in grid.get_agent_ids(2, 2)
+    assert (SHEEP, 3) in grid.get_spot_agents(grid.get_spot(2, 2))
 
 
 def neighbors(grid: Grid):
     px, py = int(grid.width() / 2), int(grid.height() / 2)
-    neighbor_ids = grid.get_neighbor_positions(px, py, 1)
+    neighbor_ids = grid._get_neighbor_positions(px, py, 1)
 
     neighbor_ids = set(
         [(neighbor_ids[i][0], neighbor_ids[i][1]) for i in range(len(neighbor_ids))]
@@ -87,7 +87,7 @@ def neighbors(grid: Grid):
     assert x == grid.get_spot(x, y).x
     assert y == grid.get_spot(x, y).y
 
-    neighbor_ids = grid.get_neighbor_positions(grid.width() - 1, grid.height() - 1, 1)
+    neighbor_ids = grid._get_neighbor_positions(grid.width() - 1, grid.height() - 1, 1)
     grid.get_spot(0, 0)
 
 
@@ -111,7 +111,7 @@ def neighbors(grid: Grid):
 #     print(al1)
 #     n = grid._get_neighbor_positions(3, 3)
 #     print(n)
-#     ids = grid.get_agent_ids(4, 3)
+#     ids = grid.get_spot_agents(4, 3)
 #     print(ids)
 #     print(grid._agent_categories)
 
@@ -163,7 +163,7 @@ def test_roles():
         grid2.add_agent(agent)
 
     # for i in range(N):
-    roles = grid2.get_roles()
+    roles = grid2.get_colormap()
 
     print(roles)
 
@@ -178,6 +178,7 @@ def test_single_grid():
         Spot,
     )
     grid.setup_params(4, 4)
+    empty_count = 16
     for i in range(4):
         for j in range(4):
             if i * 4 + j < 15:
@@ -185,14 +186,23 @@ def test_single_grid():
                 agent.x = i
                 agent.y = j
                 grid.add_agent(agent)
+                empty_count -= 1
+                assert len(grid.get_empty_spots()) == empty_count
     spot = grid.find_empty_spot()
     assert spot == (3, 3), spot
     grid.move_agent(agents[0], 3, 3)
     spot = grid.find_empty_spot()
     assert spot == (0, 0), spot
-    neighbors = grid.get_neighbors(2, 2)
+    es = grid.get_empty_spots()
+    assert len(es) == 1
+    assert spot in es
+
+    neighbors = grid.get_neighbors(TestGridAgent(100, 2, 2))
     assert len(neighbors) == 8
-    nbhd = grid.get_neighborhood(2, 2)
+    nbhd = grid.get_spot_neighborhood(grid.get_spot(2, 2))
+    assert len(nbhd) == 8 and isinstance(nbhd, list)
+
+    nbhd = grid.get_agent_neighborhood(TestGridAgent(100, 2, 2))
     assert len(nbhd) == 8 and isinstance(nbhd, list)
 
 
@@ -226,11 +236,11 @@ def test_containers():
         agent_list[i].y = i
         agent_list[i].category = 0
     grid.setup_agent_locations(agent_list, "direct")
-    grid.validate()
-    agents_on_grid = grid.get_agents(1, 1)
+    agents_on_grid = grid.get_spot_agents(grid.get_spot(1, 1))
 
     assert len(agents_on_grid) == 1
-    assert agents_on_grid[0].x == 1, agents_on_grid[0].y == 1
+    a = agent_list.get_agent(agents_on_grid[0][1])
+    assert a.x == 1, a.y == 1
 
 
 def test_roles_2():

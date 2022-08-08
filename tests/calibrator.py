@@ -29,7 +29,7 @@ class CovidAgent(GridAgent):
         self.condition = 0
 
     def move(self, grid: "Grid"):
-        self.x, self.y = grid.rand_move(self, "agent_list", 1, 1)
+        self.x, self.y = grid.rand_move_agent(self, "agent_list", 1, 1)
         return
 
 

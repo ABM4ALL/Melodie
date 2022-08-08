@@ -440,7 +440,7 @@ class GridVisualizer(Visualizer):
         return x * self.height + y
 
     def parse_grid_series(self, grid: "Grid", grid_name: str):
-        grid_roles, agent_series_data = grid.get_roles()
+        grid_roles, agent_series_data = grid.get_colormap()
 
         for series_name, data in agent_series_data.items():
             self.agent_series_managers[grid_name].set_series_data(series_name, data)
