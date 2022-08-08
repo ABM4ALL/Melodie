@@ -24,32 +24,35 @@ class StockEnvironment(Environment):
         self.fundamentalist_deviation = 0
         self.chartist_deviation = 0
 
-    @staticmethod
-    def get_earliest_memory_period(memory_length: int, period: int):
-        if period >= memory_length:
-            earliest_memory_period = period - memory_length
+    def get_close_price_series_in_memory(self, period: int, memory_length: int):
+        if period == 0:
+            price_series = np.array([self.order_book.price_history[0][0]])
+        elif 0 < period < memory_length:
+            price_series = self.order_book.price_history[0:period, self.scenario.period_ticks - 1]
         else:
-            earliest_memory_period = 0
-        return earliest_memory_period
+            price_series = self.order_book.price_history[period - memory_length:period, self.scenario.period_ticks - 1]
+        return price_series
+
+    @staticmethod
+    def get_forecast_series_in_memory(forecasts: np.ndarray, period: int, memory_length: int):
+        if period == 0:
+            forecast_series = np.array([forecasts[0]])
+        elif 0 < period < memory_length:
+            forecast_series = forecasts[0:period + 1]
+        else:
+            forecast_series = forecasts[period - memory_length:period + 1]
+        return forecast_series
 
     def update_forecasts(self, period: int):
         self.update_fundamentalist_forecast(period)
         self.update_chartist_forecast(period)
 
     def update_fundamentalist_forecast(self, period: int):
-
-
-
-
         forecast = self.forecaster.update_fundamentalist_forecast()
         self.fundamentalist_forecasts[period] = forecast
 
     def update_chartist_forecast(self, period: int):
-        price_history = self.order_book.price_history
-        memory_length = self.scenario.chartist_memory_length
-        period_ticks = self.scenario.period_ticks
-        start_period = self.get_earliest_memory_period(memory_length, period)
-        price_series = price_history[start_period:period, period_ticks - 1]
+        price_series = self.get_close_price_series_in_memory(period, self.scenario.chartist_memory_length)
         forecast = self.forecaster.update_chartist_forecast(price_series)
         self.chartist_forecasts[period] = forecast
 
@@ -76,12 +79,10 @@ class StockEnvironment(Environment):
             self.order_book.volume_history[period][tick] = 0
 
     def calculate_forecast_rule_deviation(self, period: int):
-        memory_length = self.scenario.forecast_rule_evaluation_memory
-        period_ticks = self.scenario.period_ticks
-        start_period = self.get_earliest_memory_period(memory_length, period)
-        fundamentalist_forecasts = self.fundamentalist_forecasts[start_period:period]
-        chartist_forecasts = self.chartist_forecasts[start_period:period]
-        price_series = self.order_book.price_history[start_period:period, period_ticks - 1]
+        memory_length = self.scenario.forecast_rule_evaluation_memory_length
+        fundamentalist_forecasts = self.get_forecast_series_in_memory(self.fundamentalist_forecasts, period, memory_length)
+        chartist_forecasts = self.get_forecast_series_in_memory(self.chartist_forecasts, period, memory_length)
+        price_series = self.get_close_price_series_in_memory(period + 1, memory_length + 1)
         self.fundamentalist_deviation = self.calculate_deviation(fundamentalist_forecasts, price_series)
         self.chartist_deviation = self.calculate_deviation(chartist_forecasts, price_series)
 

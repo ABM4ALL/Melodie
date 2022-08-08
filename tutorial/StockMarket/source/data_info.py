@@ -14,7 +14,7 @@ simulator_scenarios = DataFrameInfo(
         "chartist_percentage_start": sqlalchemy.Float(),
         "chartist_memory_length": sqlalchemy.Integer(),
         "fundamentalist_price_benchmark": sqlalchemy.Integer(),
-        "forecast_rule_evaluation_memory": sqlalchemy.Integer(),
+        "forecast_rule_evaluation_memory_length": sqlalchemy.Integer(),
         "switch_intensity": sqlalchemy.Float(),
         "stock_price_start": sqlalchemy.Integer(),
         "stock_trading_volume": sqlalchemy.Integer(),

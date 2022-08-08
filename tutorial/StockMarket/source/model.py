@@ -25,6 +25,7 @@ class StockModel(Model):
 
     def run(self):
         for period in self.iterator(self.scenario.periods):
+            print(f'period = {period}')
             self.environment.update_forecasts(period)
             for tick in range(0, self.scenario.period_ticks):
                 self.environment.stock_trading(self.agents, period, tick)

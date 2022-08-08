@@ -18,4 +18,5 @@ class StockDataCollector(DataCollector):
     def save_order_book(self, order_book: "OrderBook"):
         price_volume_history_df = order_book.get_price_volume_history_df()
         transaction_history_df = order_book.get_transaction_history_df()
-        self.db.write_dataframe()
+        self.db.write_dataframe("price_volume_history", price_volume_history_df)
+        self.db.write_dataframe("transaction_history", transaction_history_df)
