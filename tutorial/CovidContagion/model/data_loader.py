@@ -49,7 +49,7 @@ class CovidDataLoader(DataLoader):
     def generate_dataframe(self):
 
         with self.dataframe_generator(
-            df_info.agent_params.df_name, lambda scenario: scenario.agent_num
+            df_info.agent_params, lambda scenario: scenario.agent_num
         ) as g:
 
             def generator_func(scenario: "CovidScenario"):
@@ -67,4 +67,3 @@ class CovidDataLoader(DataLoader):
                 }
 
             g.set_row_generator(generator_func)
-            g.set_column_data_types(df_info.agent_params.columns)

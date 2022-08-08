@@ -1,6 +1,6 @@
 import logging
 import os
-from typing import Union, Dict, TYPE_CHECKING, Type, Optional
+from typing import Union, Dict, TYPE_CHECKING, Type, Optional, List, Tuple
 
 import pandas as pd
 import sqlalchemy
@@ -31,7 +31,7 @@ class DBConn:
     RESERVED_TABLES = {"scenarios", "env_result"}
 
     def __init__(
-        self, db_name: str, db_type: str = "sqlite", conn_params: Dict[str, str] = None
+            self, db_name: str, db_type: str = "sqlite", conn_params: Dict[str, str] = None
     ):
         self.db_name = db_name
 
@@ -115,11 +115,11 @@ class DBConn:
             logger.info(f"Table '{table_name}' in database has been droped!")
 
     def write_dataframe(
-        self,
-        table_name: str,
-        data_frame: pd.DataFrame,
-        data_types: Optional[TABLE_DTYPES] = None,
-        if_exists="append",
+            self,
+            table_name: str,
+            data_frame: pd.DataFrame,
+            data_types: Optional[TABLE_DTYPES] = None,
+            if_exists="append",
     ):
         """
         Write a dataframe to database.
@@ -141,15 +141,46 @@ class DBConn:
             if_exists=if_exists,
         )
 
-    def read_dataframe(self, table_name: str) -> pd.DataFrame:
+    def read_dataframe(self, table_name: str,
+                       scenario_id: Optional[int] = None,
+                       run_id: Optional[int] = None,
+                       conditions: List[Tuple[str, str]] = None) -> pd.DataFrame:
         """
         Read a table and return all content as a dataframe.
+
+        For example:
+
+        .. code-block:: python
+            :linenos:
+
+            df = create_db_conn(config).read_dataframe('agent_params', scenario_id=0,
+                                                       conditions=[('id', "<=100"), ("health_state", '=1')])
+            print(df)
+
         :param table_name:
+        :param scenario_id:
+        :param run_id:
+        :param conditions:
         :return:
         """
+        where_condition_phrase = ""
+        condition_phrases = []
+        if conditions is not None:
+            condition_phrases.extend([item[0] + item[1] for item in conditions])
+        if scenario_id is not None:
+            # assert isinstance(scenario_id, int)
+            condition_phrases.append(f"scenario_id={scenario_id}")
+        if run_id is not None:
+            condition_phrases.append(f"run_id={scenario_id}")
         try:
-            return pd.read_sql(f"select * from {table_name}", self.connection)
+            sql = f"select * from {table_name}"
+            if len(condition_phrases) != 0:
+                sql += " where " + " and ".join(condition_phrases)
+            logger.info("Querying database: "+sql)
+            return pd.read_sql(sql, self.connection)
         except OperationalError:
+            import traceback
+            traceback.print_exc()
             raise MelodieExceptions.Data.AttemptingReadingFromUnexistedTable(table_name)
 
     def drop_table(self, table_name: str):
@@ -169,7 +200,7 @@ class DBConn:
         return pd.read_sql(sql, self.connection)
 
     def paramed_query(
-        self, table_name: str, conditions: Dict[str, Union[int, str, tuple, float]]
+            self, table_name: str, conditions: Dict[str, Union[int, str, tuple, float]]
     ) -> pd.DataFrame:
         conditions = {k: v for k, v in conditions.items() if v is not None}
         sql = f"select * from {table_name}"

@@ -11,4 +11,4 @@ if __name__ == "__main__":
     calibrator = CovidCalibrator(
         config, CovidScenario, CovidModel, CovidDataFrameLoader
     )
-    calibrator.calibrate()
+    calibrator.run()

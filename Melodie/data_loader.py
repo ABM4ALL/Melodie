@@ -61,25 +61,6 @@ class DataLoader:
     def setup(self):
         pass
 
-    def register_scenario_dataframe(self) -> None:
-        """
-        This method must be overriden.
-        The "scenarios" table will be registered in this method.
-        """
-        pass
-
-    def register_static_dataframes(self) -> None:
-        """
-        The "agent_params" table can be registered in this method.
-        """
-        pass
-
-    def generate_dataframe(self) -> None:
-        """
-        The "agent_params" table can be registered in this method.
-        """
-        pass
-
     def register_dataframe(
             self, table_name: str, data_frame: pd.DataFrame, data_types: dict = None
     ) -> None:
@@ -155,17 +136,18 @@ class DataLoader:
         self.registered_matrices[matrix_info.mat_name] = array
 
     def dataframe_generator(
-            self, table_name: str, rows_in_scenario: Union[int, Callable[[Scenario], int]]
+            self, df_info: DataFrameInfo, rows_in_scenario: Union[int, Callable[[Scenario], int]]
     ):
         """
         Create a new generator
-        :param table_name:
+
+        :param df_info:
         :param rows_in_scenario: How many rows will be generated for a specific scenario. \
             This argument should be an integer as number of rows for each scenario, or a function with a parameter \
             with type `Scenario` and return an integer for how many rows to generate for this scenario .
         :return:
         """
-        return DataFrameGenerator(self, table_name, rows_in_scenario)
+        return DataFrameGenerator(self, df_info, rows_in_scenario)
 
     def generate_scenarios_from_dataframe(self, df_name: str) -> List["Scenario"]:
         """

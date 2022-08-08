@@ -16,4 +16,4 @@ if __name__ == "__main__":
         df_loader_cls=RPSDataFrameLoader,
         processors=1,
     )
-    run_profile(trainer.train)
+    run_profile(trainer.run)

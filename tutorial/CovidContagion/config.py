@@ -1,6 +1,6 @@
 import os
 
-from Melodie import Config
+from Melodie import Config, create_db_conn
 
 config = Config(
     project_name="CovidContagion",
@@ -10,3 +10,4 @@ config = Config(
     input_folder="data/input",
     output_folder="data/output",
 )
+
