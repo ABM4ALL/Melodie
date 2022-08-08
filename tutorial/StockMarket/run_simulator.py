@@ -12,4 +12,4 @@ if __name__ == "__main__":
         scenario_cls=StockScenario,
         data_loader_cls=StockDataLoader,
     )
-    simulator.run()  # 可以叫main
+    simulator.run()

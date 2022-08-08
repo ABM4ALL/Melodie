@@ -4,17 +4,13 @@
 
 **Minor**
 
-* data_loader里没用的函数接口去掉
-* log信息时间取两位小数
-* agent and env results --> columns的顺序（scenario_id, run_id, step -> period），另外period是从1开始吗，我看别的都是从0开始，统一都是0吧
-* 在db里给read_dataframe加上按列值筛选的sql语句，这样比pd读完再筛选更快
+* simulator/calibrator/trainer的主函数名字统一为run
 
 **Major**
 
 * python版本适配
 * 设计network需要的功能
 * 过一遍visualizer需要的功能 --> 讲课可以没有
-* 删掉plotter和analyzer两个文件（之后放到某个例子里
 * 一个项目模板 -- 文件夹结构、CI、test等workflow 
 * 生成文档的api reference
   * 写批注

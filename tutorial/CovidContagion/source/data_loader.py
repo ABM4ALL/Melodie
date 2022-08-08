@@ -16,7 +16,7 @@ class CovidDataLoader(DataLoader):
         self.load_dataframe(data_info.id_health_state)
         self.load_dataframe(data_info.id_network_type)
         self.load_matrix(data_info.grid_stay_prob)
-        self.generate_dataframe()
+        self.generate_agent_dataframe()
 
     @staticmethod
     def init_age_group(young_percentage: float):
@@ -39,7 +39,7 @@ class CovidDataLoader(DataLoader):
             vaccination_trust_state = 1
         return vaccination_trust_state
 
-    def generate_dataframe(self):
+    def generate_agent_dataframe(self):
 
         with self.dataframe_generator(data_info.agent_params.df_name, lambda scenario: scenario.agent_num) as g:
             # 第一个参数改成DataFrameInfo的类型
