@@ -45,9 +45,9 @@ def test_relationship_network():
     agent_list = AgentList(DemoAgent, model)
     agent_list.setup_agents(10)
     n = DemoNetwork()
-    n.add_category("agents")
+    # n.add_category("agents")
     for agent in agent_list:
-        n.add_agent(agent.id, "agents", agent.id)
+        n._add_agent("agents", agent.id)
 
     n.create_edge(agent_list[0].id, "agents", agent_list[1].id, "agents")
     n.create_edge(agent_list[0].id, "agents", agent_list[2].id, "agents")
@@ -60,11 +60,11 @@ def test_relationship_network():
             and ("agents", 2) in neighbor_ids
     )
 
-    n.add_agent(11, "agents", 11)
+    n._add_agent("agents", 11)
     assert len(n.all_agents()) == 11
-    assert 11 in n.all_agents()
+    assert ('agents', 11) in n.all_agents()
 
-    n.remove_agent(0, "agents")
+    n._remove_agent("agents", 0)
 
     assert len(n.get_neighbor_positions(agent_list[1].id, "agents")) == 1
 
@@ -75,9 +75,8 @@ def test_relationship_directed():
     agent_list = AgentList(DemoAgent, model)
     agent_list.setup_agents(10)
     n = DemoNetwork(directed=True)
-    n.add_category("agents")
     for agent in agent_list:
-        n.add_agent(agent.id, "agents", agent.id)
+        n._add_agent("agents", agent.id, )
 
     n.create_edge(agent_list[0].id, "agents", agent_list[1].id, "agents")
     n.create_edge(agent_list[0].id, "agents", agent_list[2].id, "agents")
@@ -90,12 +89,11 @@ def test_relationship_directed():
             and ("agents", 2) in neighbor_ids
     )
 
-    n.add_agent(11, "agents", 11)
+    n._add_agent("agents", 11, )
     assert len(n.all_agents()) == 11
-    assert 11 in n.all_agents()
+    assert ('agents', 11) in n.all_agents()
 
-    n.remove_agent(0, "agents")
-    print(n._adj)
+    n._remove_agent("agents", 0, )
     assert len(n.get_neighbor_positions(agent_list[1].id, "agents")) == 1
 
 
@@ -109,14 +107,6 @@ def test_create_ba():
     model.setup()
     agent_list = AgentList(DemoAgent, model)
     agent_list.setup_agents(10)
-    n = DemoNetwork.from_agent_lists(
-        [agent_list], "barabasi_albert_graph", {"m": 3}
-    )
-    assert len(n.all_agents()) == 10
-    n = DemoNetwork.from_agent_lists(
-        [agent_list], builder=network_creator
-    )
-    assert len(n.all_agents()) == 10
 
     agent_list2 = AgentList(Wolf, model)
     agent_list2.setup_agents(10)
