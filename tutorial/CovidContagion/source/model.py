@@ -28,7 +28,7 @@ class CovidModel(Model):
         self.grid.setup_params(self.scenario.grid_x_size, self.scenario.grid_y_size)
         self.grid.setup_agent_locations(self.agents)
         self.network.setup_agent_connections([self.agents], "barabasi_albert_graph", {"m": 1})
-        print(aaaa)
+
         # self.network.set_network_type(self.scenario.network_type)
         # self.network.set_network_params({'k': self.scenario.network_param_k, 'p': self.scenario.network_param_p})
         # self.network.setup_agent_connections(self.agents)

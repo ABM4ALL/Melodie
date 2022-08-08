@@ -32,16 +32,20 @@ class Edge:
             setattr(self, prop_name, prop_value)
 
 
+NodeType = Tuple[int, int]
+
+
 class Network:
     def __init__(self, edge_cls: Type[Edge] = None, directed=False):
         self.simple = True
         self.directed = directed
-        self._nodes: Set[int] = set()
-        self._adj: Dict[int, Dict[int, Edge]] = {}
-        self._agent_ids: Dict[
-            int, Dict[int, Set[int]]
-        ] = {}  # {category_id: {0 : set(1, 2, 3)}}
-        self._agent_pos: Dict[int, Dict[int, int]] = {}  # {'wolves': {0: 1}}
+        self._nodes: Set[NodeType] = set()
+        self._edges: Dict[NodeType, Dict[NodeType, Edge]] = {}
+        # self._adj: Dict[int, Dict[int, Edge]] = {}
+        # self._agent_ids: Dict[
+        #     int, Dict[int, Set[int]]
+        # ] = {}  # {category_id: {0 : set(1, 2, 3)}}
+        # self._agent_pos: Dict[int, Dict[int, int]] = {}  # {'wolves': {0: 1}}
         self.edge_cls: ClassVar[Edge] = edge_cls if edge_cls is not None else Edge
         self.setup()
         self._nx_edges = None
@@ -52,16 +56,7 @@ class Network:
     def setup(self):
         pass
 
-    def add_category(self, category_name: int):
-        """
-        Add category
-        :param category_name:
-        :return:
-        """
-        self._agent_ids[category_name] = {}
-        self._agent_pos[category_name] = {}
-
-    def add_edge(self, source_id: int, target_id: int, edge: Edge):
+    def add_edge(self, source_id: NodeType, target_id: NodeType, edge: Edge):
         """
         Add an edge onto the network.
         :param source_id:
@@ -69,108 +64,82 @@ class Network:
         :param edge
         :return:
         """
-
-        if source_id not in self._adj.keys():
-            self._adj[source_id] = {}
-        if target_id not in self._adj.keys():
-            self._adj[target_id] = {}
-        self._adj[source_id][target_id] = edge
+        if source_id not in self._edges:
+            self._edges[source_id] = {}
+        self._edges[source_id][target_id] = edge
         if not self.directed:
-            self._adj[target_id][source_id] = edge
+            if target_id not in self._edges:
+                self._edges[target_id] = {}
+            self._edges[target_id][source_id] = edge
 
-    def remove_edge(self, source_id: int, target_id: int):
+    def get_edge_directed(self, source_id: NodeType, target_id: NodeType):
         """
-        Remove an edge from the network
+        Get an edge from the network
         :param source_id:
         :param target_id:
         :return:
         """
-        self._adj[source_id].pop(target_id)
+        return self._edges[source_id][target_id]
+
+    def get_edge(self, source_id: NodeType, target_id: NodeType):
+        try:
+            self.get_edge_directed(source_id, target_id)
+        except KeyError:
+            self.get_edge_directed(target_id, source_id)
+
+    def remove_edge(self, source_id: NodeType, target_id: NodeType):
+        """
+        Remove an edge from the network
+
+        :param source_id:
+        :param target_id:
+        :return:
+        """
+        self._edges[source_id].pop(target_id)
         if not self.directed:
-            self._adj[target_id].pop(source_id)
+            self._edges[target_id].pop(source_id)
 
     def get_neighbor_positions(self, agent_id: int, category: int) -> List[Tuple[int, int]]:
-        node_id = self.agent_pos(agent_id, category)
-        neighbor_ids = self._adj.get(node_id)
+        neighbor_ids = self._edges[(category, agent_id)]
         if neighbor_ids is None:
             return []
         else:
-            neighbor_agent_ids_list = []
-            for neighbor_id in neighbor_ids.keys():
-                agents = self.all_agent_on_node(neighbor_id)
-                neighbor_agent_ids_list.extend(agents)
-            return neighbor_agent_ids_list
+            return list(neighbor_ids.keys())
 
     def get_neighbors(self, agent: Agent):
         assert hasattr(agent, "category")
         return self.get_neighbor_positions(agent.id, agent.category)
 
-    def add_edges(self, edges: List[Tuple[int, int]]):
-        """
-        Add multiple edges onto the network.
-        :param edges:
-        :return:
-        """
-        for edge in edges:
-            self.add_edge(edge[0], edge[1])
-
-    def add_agent(self, agent_id: int, category: int, node_id: int):
+    def _add_agent(self, category: int, agent_id: int):
         """
 
         :param agent_id:
         :param category:
-        :param node_id:
+        :param agent_id:
         :return:
         """
-        # assert category not in self._agent_ids.keys()
-        if node_id not in self._agent_ids[category]:
-            self._agent_ids[category][node_id] = set()
-        if node_id not in self._nodes:
-            self._nodes.add(node_id)
-        self._agent_ids[category][node_id].add(agent_id)
-        self._agent_pos[category][agent_id] = node_id
+        agent_tuple: NodeType = (category, agent_id)
+        self._nodes.add(agent_tuple)
 
-    def remove_agent(self, agent_id: int, category: int):
+    def _remove_agent(self, category: int, agent_id: int):
         """
 
         :param agent_id:
         :param category:
         :return:
         """
-        assert category in self._agent_ids
-        node_id: int = self._agent_pos[category].pop(agent_id)
-        self._agent_ids[category][node_id].remove(agent_id)
-        self._nodes.remove(node_id)
-        target_edges = self._adj.pop(agent_id)
+        agent_tuple = (category, agent_id)
+        self._nodes.remove(agent_tuple)
+        target_edges = self._edges.pop(agent_tuple)
         if not self.directed:
             for target_node, edge in target_edges.items():
-                self._adj[target_node].pop(node_id)
+                self._edges[target_node].pop(agent_tuple)
 
-    def move_agent(self, agent_id: int, category: int, target_node_id: int):
-        """
+    def remove_agent(self, agent: Agent):
+        self._remove_agent(agent.category, agent.id)
 
-        :param agent_id:
-        :param category:
-        :param target_node_id:
-        :return:
-        """
-        self.remove_agent(agent_id, category)
-        self.add_agent(agent_id, category, target_node_id)
-
-    def get_agents(self, category: int, node_id: int):
-        """
-
-        :param category:
-        :param node_id:
-        :return:
-        """
-        if node_id not in self._agent_ids[category].keys():
-            return set()
-        else:
-            return self._agent_ids[category][node_id]
-
-    def agent_pos(self, agent_id: int, category: int):
-        return self._agent_pos[category][agent_id]
+    def add_agent(self, agent: Agent):
+        self._add_agent(agent.category, agent.id)
 
     def create_edge(
             self,
@@ -183,20 +152,20 @@ class Network:
         edge = self.edge_cls(
             category_1, agent_1_id, category_2, agent_2_id, edge_properties
         )
-        src_pos = self.agent_pos(agent_1_id, category_1)
-        dst_pos = self.agent_pos(agent_2_id, category_2)
+        src_pos = (category_1, agent_1_id)
+        dst_pos = (category_2, agent_2_id)
         self.add_edge(src_pos, dst_pos, edge)
 
-    def all_agents(self) -> List[int]:
+    def all_agents(self) -> Set[NodeType]:
         return self._nodes
 
-    def all_agent_on_node(self, node_id) -> List[Tuple[int, int]]:
-        l = []
-        for category_id, ids_in_category in self._agent_ids.items():
-            agent_ids = ids_in_category.get(node_id)
-            if agent_ids is not None:
-                l.extend([(category_id, agent_id) for agent_id in agent_ids])
-        return l
+    # def all_agent_on_node(self, node_id) -> List[Tuple[int, int]]:
+    #     l = []
+    #     for category_id, ids_in_category in self._agent_ids.items():
+    #         agent_ids = ids_in_category.get(node_id)
+    #         if agent_ids is not None:
+    #             l.extend([(category_id, agent_id) for agent_id in agent_ids])
+    #     return l
 
     def setup_agent_connections(self,
                                 agent_lists: List[AgentList],
@@ -207,12 +176,13 @@ class Network:
 
         assert isinstance(agent_lists, list)
         node_id = 0
+        node_id_to_node_type_map: Dict[int, NodeType] = {}
         for agent_list in agent_lists:
             category = agent_list[0].category
             assert isinstance(category, int)
-            self.add_category(category)
             for agent in agent_list:
-                self.add_agent(agent.id, category, node_id)
+                self._add_agent(category, agent.id)
+                node_id_to_node_type_map[node_id] = (category, agent.id)
                 node_id += 1
 
         g = getattr(nx, network_type)(
@@ -221,12 +191,12 @@ class Network:
         )
 
         for edge in g.edges:
-            agent_src = list(self.all_agent_on_node(edge[0]))[0]
-            agent_dest = list(self.all_agent_on_node(edge[1]))[0]
+            agent_src = node_id_to_node_type_map[edge[0]]
+            agent_dest = node_id_to_node_type_map[edge[1]]
             edge_obj = self.edge_cls(
                 agent_src[0], agent_src[1], agent_dest[0], agent_dest[1], {}
             )
-            self.add_edge(edge[0], edge[1], edge_obj)
+            self.add_edge(agent_src, agent_dest, edge_obj)
         self._nx_edges = list(g.edges)
 
     @classmethod
@@ -257,9 +227,8 @@ class Network:
         for agent_list in agent_lists:
             category = agent_list[0].category
             assert isinstance(category, int)
-            self.add_category(category)
             for agent in agent_list:
-                self.add_agent(agent.id, category, node_id)
+                self._add_agent(agent.id, category)
                 node_id += 1
 
         if builder is not None:
