@@ -139,11 +139,11 @@ cdef class AgentIDManager:
         return category*self._max_id + agent_id
 
     @cython.cdivision(True)
-    cpdef (long, long) number_to_agent_id_and_category(self, long num) except *:
+    cpdef (long, long) number_to_category_and_agent_id(self, long num) except *:
         """
         return: (agent_id, category_id)
         """
-        return num%self._max_id, num/self._max_id
+        return num/self._max_id, num%self._max_id
 
     @cython.cdivision(True)
     cdef (long, long) num_to_2d_coor(self, long num) except *:
@@ -153,7 +153,7 @@ cdef class AgentIDManager:
         cdef list l = []
         cdef long spot = 0
         for spot in self._agents[self._convert_to_1d(x, y)]:
-            l.append(self.number_to_agent_id_and_category(spot))
+            l.append(self.number_to_category_and_agent_id(spot))
         return l
 
     cdef (long, long) find_empty_spot(self) except *:
@@ -228,7 +228,7 @@ cdef class Grid:
         for container_id, container in enumerate(self._agent_containers):
             if container is not None:
                 for agent in container:
-                    assert (agent.id, agent.category) in self.get_agent_ids(agent.x, agent.y), f"Agent id: {agent.id}, category: {agent.category} x: {agent.x}, y: {agent.y} is not on the grid."
+                    assert (agent.category, agent.id) in self.get_agent_ids(agent.x, agent.y), f"Agent id: {agent.id}, category: {agent.category} x: {agent.x}, y: {agent.y} is not on the grid."
 
     def setup_agent_locations(self, category ,initial_placement = "direct"):
         """
@@ -293,7 +293,7 @@ cdef class Grid:
     
     cpdef list get_agents(self, long x, long y) except *:
         agents = []
-        for agent_id, agent_category in self._agent_id_mgr.agents_on_spot(x, y):
+        for agent_category, agent_id in self._agent_id_mgr.agents_on_spot(x, y):
             agents.append(self.get_agent_container(agent_category).get_agent(agent_id))
         return agents
 
@@ -582,7 +582,7 @@ cdef class Grid:
                 role_pos_list[1] = y
                 role_pos_list[2] = 0
                 role_pos_list[3] = spot.colormap
-                for agent_id, agent_category in self._agent_id_mgr.agents_on_spot(x, y):
+                for agent_category, agent_id in self._agent_id_mgr.agents_on_spot(x, y):
                     series_data_one_category = agents_series_data[agent_category]
                     series_data_one_category.append({
                         'value': [x, y],

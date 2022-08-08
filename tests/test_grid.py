@@ -55,15 +55,15 @@ def agents(grid: Union[Grid]):
 
     mammals_at_1_1 = grid.get_agent_ids(1, 1)
     print("adasdadasdasdasdsa", mammals_at_1_1)
-    assert (1, WOLVES) in mammals_at_1_1, mammals_at_1_1
+    assert (WOLVES, 1) in mammals_at_1_1, mammals_at_1_1
 
-    assert (2, WOLVES) in mammals_at_1_1
-    assert (3, WOLVES) not in mammals_at_1_1
+    assert (WOLVES, 2) in mammals_at_1_1
+    assert (WOLVES, 3) not in mammals_at_1_1
 
-    assert (3, SHEEP) in mammals_at_1_1
+    assert (SHEEP, 3) in mammals_at_1_1
 
     grid.move_agent(a3, 2, 2)
-    assert (3, SHEEP) in grid.get_agent_ids(2, 2)
+    assert (SHEEP, 3) in grid.get_agent_ids(2, 2)
 
 
 def neighbors(grid: Grid):
@@ -141,8 +141,8 @@ def test_agent_id_mgr():
     print(len(am.get_empty_spots()))
     am.add_agent(0, WOLF, 1, 1)
     print(am.agents_on_spot(1, 1))
-    assert (0, WOLF) in am.agents_on_spot(1, 1)
-    assert (0, SHEEP) in am.agents_on_spot(1, 1)
+    assert (WOLF, 0) in am.agents_on_spot(1, 1)
+    assert (SHEEP, 0) in am.agents_on_spot(1, 1)
     print(am.agents_on_spot(5, 5))
 
 
