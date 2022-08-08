@@ -33,7 +33,7 @@ class CovidEnvironment(Environment):
         for agent in agents:
             if random.uniform(0, 1) <= self.scenario.vaccination_ad_percentage:
                 agent.update_vaccination_trust_from_ad()
-            agent.update_vaccination_trust_from_neighbors(network)
+            agent.update_vaccination_trust_from_neighbors(network, agents)
 
     @staticmethod
     def agents_take_vaccination(agents: "AgentList[CovidAgent]"):

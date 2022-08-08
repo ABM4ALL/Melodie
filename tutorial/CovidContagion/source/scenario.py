@@ -11,14 +11,14 @@ class CovidScenario(Scenario):
         self.grid_y_size = 0
         self.initial_infected_percentage = 0.0
         self.young_percentage = 0.0
-        self.network_type = 0
+        self.network_type = ""
         self.network_param_k = 0
         self.network_param_p = 0.0
         self.network_param_m = 0
-        self.network_param_threshold = 0.0
         self.vaccination_trust_percentage = 0.0
         self.vaccination_ad_percentage = 0.0
         self.vaccination_ad_success_prob = 0.0
+        self.vaccination_neighbor_success_threshold = 0.0
         self.vaccination_action_prob = 0.0
         self.infection_prob = 0.0
         self.reinfection_prob = 0.0
