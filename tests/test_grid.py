@@ -109,7 +109,7 @@ def neighbors(grid: Grid):
 #     grid.add_agent(al2[3].id, 4, 3)
 #     print(al2)
 #     print(al1)
-#     n = grid.get_neighbor_positions(3, 3)
+#     n = grid._get_neighbor_positions(3, 3)
 #     print(n)
 #     ids = grid.get_agent_ids(4, 3)
 #     print(ids)

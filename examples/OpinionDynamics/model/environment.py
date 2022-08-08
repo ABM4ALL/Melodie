@@ -18,7 +18,7 @@ class OpinionDynamicsEnvironment(Environment):
     ) -> None:
         for agent in agent_list:
             agent.reset_communication_track()
-            agent_neighbors = network.get_neighbor_positions(agent.id, "agent_list")
+            agent_neighbors = network._get_neighbor_positions(agent.id, "agent_list")
             for neighbor in agent_neighbors:
                 if np.random.uniform(0, 1) <= self.scenario.communication_prob:
                     agent.update_opinion_level_with_neighbor(agent_list[neighbor[1]])

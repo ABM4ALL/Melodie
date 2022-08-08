@@ -31,6 +31,9 @@ class Edge:
         for prop_name, prop_value in self.properties.items():
             setattr(self, prop_name, prop_value)
 
+    def __repr__(self):
+        return f"<{self.__class__.__name__} {(self.category_1, self.agent_1_id)} --> {(self.category_2, self.agent_2_id)}>"
+
 
 NodeType = Tuple[int, int]
 
@@ -87,7 +90,7 @@ class Network:
         if not self.directed:
             self.edges[target_id].pop(source_id)
 
-    def get_neighbor_positions(self, agent_id: int, category: int) -> List[Tuple[int, int]]:
+    def _get_neighbor_positions(self, agent_id: int, category: int) -> List[Tuple[int, int]]:
         neighbor_ids = self.edges[(category, agent_id)]
         if neighbor_ids is None:
             return []
@@ -96,7 +99,7 @@ class Network:
 
     def get_neighbors(self, agent: Agent):
         assert hasattr(agent, "category")
-        return self.get_neighbor_positions(agent.id, agent.category)
+        return self._get_neighbor_positions(agent.id, agent.category)
 
     def _add_agent(self, category: int, agent_id: int):
         """
@@ -142,10 +145,19 @@ class Network:
         )
         src_pos = (category_1, agent_1_id)
         dst_pos = (category_2, agent_2_id)
+        assert src_pos in self.nodes
+        assert dst_pos in self.nodes
         self.add_edge(src_pos, dst_pos, edge)
 
     def all_agents(self) -> Set[NodeType]:
         return self.nodes
+
+    def get_node_edges(self, agent: Agent):
+        targets = self.edges[(agent.category, agent.id)]
+        edges: List[Edge] = []
+        for target_node, edge in targets.items():
+            edges.append(edge)
+        return edges
 
     def setup_agent_connections(self,
                                 agent_lists: List[AgentList],
@@ -178,62 +190,3 @@ class Network:
             )
             self.add_edge(agent_src, agent_dest, edge_obj)
         self._nx_edges = list(g.edges)
-
-    @classmethod
-    def from_agent_lists(
-            cls,
-            agent_lists: "List[AgentList]",
-            network_name: str = "",
-            network_params: dict = "",
-            builder: Callable = None,
-    ):
-        """
-        :param agent_lists: a list of AgentList
-        :param network_name: The name of network.
-        :param network_params: The parameters of network
-        :param builder: The network builder function.
-            - One argument, a list of int representing nodes;
-            - One return as nx.Graph
-
-        It is suggested to use builder argument for more freedom of customization.
-
-        :return:
-        """
-        self = cls()
-        import networkx as nx
-
-        assert isinstance(agent_lists, list)
-        node_id = 0
-        for agent_list in agent_lists:
-            category = agent_list[0].category
-            assert isinstance(category, int)
-            for agent in agent_list:
-                self._add_agent(agent.id, category)
-                node_id += 1
-
-        if builder is not None:
-            g = builder(self.nodes)
-        else:
-            if network_name == "barabasi_albert_graph":
-                g = nx.__getattribute__(network_name)(
-                    len(self.nodes),
-                    **network_params,
-                )
-            elif network_name == "watts_strogatz_graph":
-                g = nx.__getattribute__(network_name)(
-                    len(self.nodes),
-                    **network_params,
-                )
-            else:
-                raise NotImplementedError(
-                    f"Network name {network_name} is not implemented!"
-                )
-
-        for edge in g.edges:
-            agent_src = list(self.all_agent_on_node(edge[0]))[0]
-            agent_dest = list(self.all_agent_on_node(edge[1]))[0]
-            edge_obj = self.edge_cls(
-                agent_src[0], agent_src[1], agent_dest[0], agent_dest[1], {}
-            )
-            self.add_edge(edge[0], edge[1], edge_obj)
-        return self

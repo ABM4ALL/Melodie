@@ -53,7 +53,7 @@ def test_relationship_network():
     n.create_edge(agent_list[0].id, "agents", agent_list[2].id, "agents")
     n.create_edge(agent_list[1].id, "agents", agent_list[2].id, "agents")
     n.create_edge(agent_list[3].id, "agents", agent_list[4].id, "agents")
-    neighbor_ids = n.get_neighbor_positions(agent_list[0].id, "agents")
+    neighbor_ids = n._get_neighbor_positions(agent_list[0].id, "agents")
     assert (
             len(neighbor_ids) == 2
             and ("agents", 1) in neighbor_ids
@@ -66,7 +66,7 @@ def test_relationship_network():
 
     n._remove_agent("agents", 0)
 
-    assert len(n.get_neighbor_positions(agent_list[1].id, "agents")) == 1
+    assert len(n._get_neighbor_positions(agent_list[1].id, "agents")) == 1
 
 
 def test_relationship_directed():
@@ -82,7 +82,7 @@ def test_relationship_directed():
     n.create_edge(agent_list[0].id, "agents", agent_list[2].id, "agents")
     n.create_edge(agent_list[1].id, "agents", agent_list[2].id, "agents")
     n.create_edge(agent_list[3].id, "agents", agent_list[4].id, "agents")
-    neighbor_ids = n.get_neighbor_positions(agent_list[0].id, "agents")
+    neighbor_ids = n._get_neighbor_positions(agent_list[0].id, "agents")
     assert (
             len(neighbor_ids) == 2
             and ("agents", 1) in neighbor_ids
@@ -94,7 +94,7 @@ def test_relationship_directed():
     assert ('agents', 11) in n.all_agents()
 
     n._remove_agent("agents", 0, )
-    assert len(n.get_neighbor_positions(agent_list[1].id, "agents")) == 1
+    assert len(n._get_neighbor_positions(agent_list[1].id, "agents")) == 1
 
 
 def test_create_ba():
@@ -117,7 +117,8 @@ def test_create_ba():
         {"k": 3, "p": 0.2},
     )
     for i in range(10):
-        neighbors = n.get_neighbor_positions(i, 1)
+        neighbors = n._get_neighbor_positions(i, 1)
         print(neighbors)
+        print("edges", n.get_node_edges(agent_list2.get_agent(i)))
     # for node in neighbors:
     #     print(n.all_agent_on_node(node))
