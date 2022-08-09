@@ -2,23 +2,25 @@
 
 ### Next steps
 
+#### before launch
+
 * python版本适配
-* 设计network需要的功能
-* 过一遍visualizer需要的功能 --> 讲课可以没有
-* 一个项目模板 -- 文件夹结构、CI、test等workflow 
-* 生成文档的api reference
+* Songmin --> tutorial
+* Zhanyi --> 生成文档的api reference
   * 写批注
   * 给内置函数加下划线
-* 合并modules（参考docs里的overview
-* Plan ABM4ALL organization page
-  * library --> papers
-  * articles in Chinese? (from WeChat)
-  * discussion platform? (Q&A)
-* working with Git
-  * separate branch
-  * create issues --> squash and merge, changelog
+* calibrator and trainer
 
+#### organization page
+* library --> papers
+* articles in Chinese? (from WeChat)
+* discussion platform? --> Discussions at github
 
+#### long-term plan
+
+* 过一遍visualizer需要的功能 --> 讲课可以没有
+* 一个项目模板 -- 文件夹结构、gitignore 
+* tralibrator
 
 [![Build status](https://app.travis-ci.com/SongminYu/Melodie.svg?token=qNTghqDqnwadzvj4y4z7&branch=master&status=passed)](https://travis-ci.com/SongminYu)
 
