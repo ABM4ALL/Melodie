@@ -27,8 +27,8 @@ class DBConn:
     table_dtypes: Dict[str, TABLE_DTYPES] = {}
     EXPERIMENTS_TABLE = "melodie_experiments"
     SCENARIO_TABLE = "simulator_scenarios"
-    ENVIRONMENT_RESULT_TABLE = "env_result"
-    RESERVED_TABLES = {"scenarios", "env_result"}
+    ENVIRONMENT_RESULT_TABLE = "environment_result"
+    RESERVED_TABLES = {"scenarios", "environment_result"}
 
     def __init__(
             self, db_name: str, db_type: str = "sqlite", conn_params: Dict[str, str] = None
