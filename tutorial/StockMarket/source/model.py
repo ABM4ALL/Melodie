@@ -26,13 +26,18 @@ class StockModel(Model):
     def run(self):
         for period in self.iterator(self.scenario.periods):
             print(f'period = {period}')
-            self.environment.update_forecasts(period)
-            for tick in range(0, self.scenario.period_ticks):
-                self.environment.stock_trading(self.agents, period, tick)
             self.environment.order_book.clear_orders()
-            self.environment.calculate_forecast_rule_deviation(period)
-            self.environment.agents_update_forecast_rule(self.agents)
+            for tick in range(0, self.scenario.period_ticks):
+                agent = self.agents.random_sample(1)[0]
+                current_price = self.environment.order_book.get_current_price(period, tick)
+                order = agent.create_order(current_price)
+                transaction = self.environment.order_book.process_order(order, period, tick)
+                self.environment.order_book.process_transaction(self.agents, transaction, period, tick)
+            self.environment.record_period_trading_info(period)
             self.environment.agents_update_wealth(self.agents, period)
+            self.environment.agents_update_forecast(self.agents, period)
             self.data_collector.collect(period)
         self.data_collector.save()
-        self.data_collector.save_order_book(self.environment.order_book)
+        self.data_collector.save_transaction_history(self.environment.order_book)
+        self.data_collector.save_price_volume_history(self.environment.order_book)
+

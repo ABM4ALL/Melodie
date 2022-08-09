@@ -2,53 +2,55 @@ import random
 from typing import TYPE_CHECKING
 
 import math
+import numpy as np
 
 from Melodie import Agent
 from .order_book import OrderType, Order
 
 if TYPE_CHECKING:
     from .scenario import StockScenario
-    from .forecaster import Forecaster
+    from .environment import StockEnvironment
 
 
 class StockAgent(Agent):
     scenario: "StockScenario"
 
     def setup(self):
-        self.forecast_rule_id = 0
-        self.switch_intensity = 0.0
+        self.fundamentalist_weight = 0.0
+        self.fundamentalist_forecast = 0.0
+        self.chartist_forecast = 0.0
         self.stock_account = 0
         self.cash_account = 0.0
-        self.wealth = 0.0
-        self.wealth_high = 0.0
-        self.wealth_low = 0.0
+        self.wealth_period = 0.0
+        self.wealth = np.zeros((self.scenario.periods, ))
 
-    def update_wealth(self, current_stock_price: float):
-        self.wealth = self.cash_account + self.stock_account * current_stock_price
-        self.wealth_high = max(self.wealth_high, self.wealth)
-        self.wealth_low = min(self.wealth_low, self.wealth)
+    def update_wealth(self, period: int, period_close_price: float):
+        self.wealth_period = self.cash_account + self.stock_account * period_close_price
+        self.wealth[period] = self.wealth_period
 
-    def create_order(self, forecaster: 'Forecaster', latest_price: float) -> 'Order':
-        order = Order(self.id)
-        forecast = forecaster.get_forecast(self.forecast_rule_id)
-        if forecast >= latest_price:
+    def update_chartist_forecast(self, memorized_close_price_series: np.ndarray):
+        price_earliest = memorized_close_price_series[0]
+        price_latest = memorized_close_price_series[-1]
+        length = len(memorized_close_price_series)
+        price_change_rate = (price_latest - price_earliest) / (price_earliest * length)
+        self.chartist_forecast = price_latest * (1 + price_change_rate)
+
+    @property
+    def forecast(self):
+        forecast = self.fundamentalist_weight * self.fundamentalist_forecast + \
+                   (1 - self.fundamentalist_weight) * self.chartist_forecast
+        return forecast
+
+    def create_order(self, current_price: float) -> "Order":
+        order = Order(agent_id=self.id)
+        if self.forecast >= current_price:
             order.type = OrderType.BID
-            order.price = random.uniform(latest_price, forecast)
+            order.price = random.uniform(current_price, self.forecast)
             order.volume = self.scenario.stock_trading_volume
         else:
             order.type = OrderType.ASK
-            order.price = random.uniform(forecast, latest_price)
+            order.price = random.uniform(self.forecast, current_price)
             order.volume = self.scenario.stock_trading_volume
         return order
 
-    def update_forecast_rule(self, fundamentalist_deviation: int, chartist_deviation: int):
-        uf = chartist_deviation / (fundamentalist_deviation + chartist_deviation)
-        uc = 1 - uf
-        beta = self.switch_intensity
-        fundamentalist_prob = math.exp(beta * uf) / math.exp(beta * uf) + math.exp(beta * uc)
-        rand = random.uniform(0, 1)
-        if rand <= fundamentalist_prob:
-            self.forecast_rule_id = 0
-        else:
-            self.forecast_rule_id = 1
 

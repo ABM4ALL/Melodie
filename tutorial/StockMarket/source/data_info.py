@@ -11,11 +11,13 @@ simulator_scenarios = DataFrameInfo(
         "periods": sqlalchemy.Integer(),
         "period_ticks": sqlalchemy.Integer(),
         "agent_num": sqlalchemy.Integer(),
-        "chartist_percentage_start": sqlalchemy.Float(),
-        "chartist_memory_length": sqlalchemy.Integer(),
-        "fundamentalist_price_benchmark": sqlalchemy.Float(),
-        "forecast_rule_evaluation_memory_length": sqlalchemy.Integer(),
-        "switch_intensity": sqlalchemy.Float(),
+        "fundamentalist_weight_min": sqlalchemy.Float(),
+        "fundamentalist_weight_max": sqlalchemy.Float(),
+        "fundamentalist_forecast_min": sqlalchemy.Float(),
+        "fundamentalist_forecast_max": sqlalchemy.Float(),
+        "chartist_forecast_start_min": sqlalchemy.Float(),
+        "chartist_forecast_start_max": sqlalchemy.Float(),
+        "chartist_forecast_memory_length": sqlalchemy.Integer(),
         "stock_price_start": sqlalchemy.Float(),
         "stock_trading_volume": sqlalchemy.Integer(),
         "stock_account_start": sqlalchemy.Integer(),
@@ -23,22 +25,14 @@ simulator_scenarios = DataFrameInfo(
     },
 )
 
-id_forecast_rule = DataFrameInfo(
-    df_name="id_forecast_rule",
-    file_name="id_forecast_rule.xlsx",
-    columns={
-        "id": sqlalchemy.Integer(),
-        "forecast_rule": sqlalchemy.String()
-    }
-)
-
 agent_params = DataFrameInfo(
     df_name="agent_params",
     columns={
         "scenario_id": sqlalchemy.Integer(),
         "id": sqlalchemy.Integer(),
-        "forecast_rule_id": sqlalchemy.Integer(),
-        "switch_intensity": sqlalchemy.Float(),
+        "fundamentalist_weight": sqlalchemy.Integer(),
+        "fundamentalist_forecast": sqlalchemy.Float(),
+        "chartist_forecast": sqlalchemy.Float(),
         "stock_account": sqlalchemy.Integer(),
         "cash_account": sqlalchemy.Float(),
     },

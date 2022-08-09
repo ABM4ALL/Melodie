@@ -1,6 +1,5 @@
+import random
 from typing import TYPE_CHECKING
-
-import numpy as np
 
 from Melodie import DataLoader
 from tutorial.StockMarket.source import data_info
@@ -12,15 +11,25 @@ if TYPE_CHECKING:
 class StockDataLoader(DataLoader):
     def setup(self):
         self.load_dataframe(data_info.simulator_scenarios)
-        self.load_dataframe(data_info.id_forecast_rule)
         self.generate_agent_dataframe()
 
     @staticmethod
-    def init_forecast_rule_id(chartist_percentage: float):
-        forecast_rule_id = 0
-        if np.random.uniform(0, 1) <= chartist_percentage:
-            forecast_rule_id = 1
-        return forecast_rule_id
+    def init_fundamentalist_weight(scenario: "StockScenario"):
+        weight_min = scenario.fundamentalist_weight_min
+        weight_max = scenario.fundamentalist_weight_max
+        return random.uniform(weight_min, weight_max)
+
+    @staticmethod
+    def init_fundamentalist_forecast(scenario: "StockScenario"):
+        forecast_min = scenario.fundamentalist_forecast_min
+        forecast_max = scenario.fundamentalist_forecast_max
+        return random.uniform(forecast_min, forecast_max)
+
+    @staticmethod
+    def init_chartist_forecast(scenario: "StockScenario"):
+        forecast_min = scenario.chartist_forecast_start_min
+        forecast_max = scenario.chartist_forecast_start_max
+        return random.uniform(forecast_min, forecast_max)
 
     def generate_agent_dataframe(self):
 
@@ -29,8 +38,9 @@ class StockDataLoader(DataLoader):
             def generator_func(scenario: "StockScenario"):
                 return {
                     "id": g.increment(),
-                    "forecast_rule_id": self.init_forecast_rule_id(scenario.chartist_percentage_start),
-                    "switch_intensity": scenario.switch_intensity,
+                    "fundamentalist_weight": self.init_fundamentalist_weight(scenario),
+                    "fundamentalist_forecast": self.init_fundamentalist_forecast(scenario),
+                    "chartist_forecast": self.init_chartist_forecast(scenario),
                     "stock_account": scenario.stock_account_start,
                     "cash_account": scenario.cash_account_start
                 }

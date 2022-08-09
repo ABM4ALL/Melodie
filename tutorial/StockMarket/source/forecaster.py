@@ -11,8 +11,10 @@ class Forecaster:
 
     def __init__(self, scenario: 'StockScenario'):
         self.scenario = scenario
-        # self.fundamentalist_forecast = scenario.fundamentalist_price_benchmark
-        # self.chartist_forecast = 0
+        self.fundamentalist_forecast = scenario.fundamentalist_price_benchmark
+        self.chartist_forecast = random.uniform(
+            scenario.chartist_forecast_start_min, scenario.chartist_forecast_start_max
+        )
 
     def update_chartist_forecast(self, price_series: np.ndarray):
         price_earliest = price_series[0]
@@ -28,7 +30,7 @@ class Forecaster:
         self.fundamentalist_forecast = forecast
         return forecast
 
-    def get_forecast(self, forecast_rule_id: int) -> int:
+    def get_forecast(self, forecast_rule_id: int) -> float:
         if forecast_rule_id == 0:
             return self.fundamentalist_forecast
         elif forecast_rule_id == 1:
