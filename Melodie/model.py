@@ -166,6 +166,7 @@ class Model:
     def create_data_collector(self, data_collector_cls: Type["DataCollector"]):
         data_collector = data_collector_cls()
         data_collector.model = self
+        data_collector.scenario = self.scenario
         self.initialization_queue.append(data_collector)
         return data_collector
 

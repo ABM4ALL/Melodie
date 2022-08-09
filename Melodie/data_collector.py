@@ -11,7 +11,7 @@ from Melodie.db import DBConn
 logger = logging.getLogger(__name__)
 
 if TYPE_CHECKING:
-    from Melodie import Model, BaseAgentContainer
+    from Melodie import Model, Scenario, BaseAgentContainer
 
 
 class PropertyToCollect:
@@ -40,6 +40,7 @@ class DataCollector:
 
         self.target = target
         self.model: Optional[Model] = None
+        self.scenario: Optional["Scenario"] = None
         self._agent_properties_to_collect: Dict[str, List[PropertyToCollect]] = {}
         self._environment_properties_to_collect: List[PropertyToCollect] = []
 
