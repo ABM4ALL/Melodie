@@ -141,7 +141,7 @@ class Simulator(BaseModellingManager):
 
         :return:
         """
-        logger.info(f"Running simulator: scenario_id = {scenario.id}, run_id = {run_id}.")
+        logger.info(f"Simulation started - scenario_id = {scenario.id}, run_id = {run_id}")
         t0 = time.time()
 
         model: Model = model_class(
@@ -169,10 +169,10 @@ class Simulator(BaseModellingManager):
             data_collect_time = 0.0
         model_run_time -= data_collect_time
         info = (
-            f"Simulation scenario = {scenario.id}, run_id = {run_id} completed with time elapsed (seconds):\n"
-            f"    model-setup   \t {MelodieGlobalConfig.Logger.round_elapsed_time(model_setup_time)}\n"
-            f"    model-run     \t {MelodieGlobalConfig.Logger.round_elapsed_time(model_run_time)}\n"
-            f"    data-collect  \t {MelodieGlobalConfig.Logger.round_elapsed_time(data_collect_time)}\n"
+            f"Simulation completed - scenario_id = {scenario.id}, run_id = {run_id}\n"
+            f"    model-setup   \t {MelodieGlobalConfig.Logger.round_elapsed_time(model_setup_time)}s\n"
+            f"    model-run     \t {MelodieGlobalConfig.Logger.round_elapsed_time(model_run_time)}s\n"
+            f"    data-collect  \t {MelodieGlobalConfig.Logger.round_elapsed_time(data_collect_time)}s\n"
         )
         logger.info(info)
 

@@ -108,11 +108,11 @@ class DBConn:
         Clear the database, deleting all tables.
         :return:
         """
-        logger.info(f"Database contains tables: {self.connection.table_names()}")
+        logger.info(f"Database contains tables: {self.connection.table_names()}.")
         table_names = list(self.connection.table_names())
         for table_name in table_names:
             self.connection.execute(f"drop table {table_name}")
-        logger.info(f"Tables {table_names} in database have been dropped!")
+        logger.info(f"Database drops tables: {table_names}.")
 
     def write_dataframe(
             self,
