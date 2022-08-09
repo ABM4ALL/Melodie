@@ -7,7 +7,7 @@ if TYPE_CHECKING:
     from Melodie import AgentList
     from .scenario import CovidScenario
     from .grid import CovidGrid, CovidSpot
-    from .network import CovidNetwork
+    from Melodie import Network
 
 
 class CovidAgent(GridAgent):
@@ -49,7 +49,7 @@ class CovidAgent(GridAgent):
             if random.uniform(0, 1) <= self.scenario.vaccination_ad_success_prob:
                 self.vaccination_trust_state = 1
 
-    def update_vaccination_trust_from_neighbors(self, network: "CovidNetwork", agents: "AgentList[CovidAgent]"):
+    def update_vaccination_trust_from_neighbors(self, network: "Network", agents: "AgentList[CovidAgent]"):
         if self.vaccination_trust_state == 0:
             neighbors = network.get_neighbors(self)
             neighbor_trust_count = 0

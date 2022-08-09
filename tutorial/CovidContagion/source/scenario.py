@@ -61,3 +61,13 @@ class CovidScenario(Scenario):
             return self.ag1_move_radius
         else:
             raise ValueError('This person has wierd age group.')
+
+    def get_network_params(self):
+        if self.network_type == "barabasi_albert_graph":
+            network_params = {"m": self.network_param_m}
+        elif self.network_type == "watts_strogatz_graph":
+            network_params = {"k": self.network_param_k,
+                              "p": self.network_param_p}
+        else:
+            raise NotImplementedError
+        return network_params
