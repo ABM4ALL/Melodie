@@ -41,8 +41,8 @@ class OrderBook:
         self.bid_orders: List['Order'] = []
         self.ask_orders: List['Order'] = []
         self.transactions: List['Transaction'] = []
-        self.price_history = np.zeros((self.scenario.periods, self.scenario.period_ticks))
-        self.volume_history = np.zeros((self.scenario.periods, self.scenario.period_ticks))
+        self.price_history = np.zeros((self.scenario.period_num, self.scenario.period_ticks))
+        self.volume_history = np.zeros((self.scenario.period_num, self.scenario.period_ticks))
 
     def clear_orders(self):
         self.bid_orders = []

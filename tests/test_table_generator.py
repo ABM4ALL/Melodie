@@ -13,7 +13,7 @@ class TestDataframeLoader(DataLoader):
 
     def setup(self):
         self.registered_dataframes["simulator_scenarios"] = pd.DataFrame(
-            [{"id": 1, "periods": 1, "agent_num": 100}]
+            [{"id": 1, "period_num": 1, "agent_num": 100}]
         )
         # self.load_dataframe(DataFrameInfo())
 

@@ -4,7 +4,7 @@ from tutorial.CovidContagion.source import data_info
 
 class CovidScenario(Scenario):
     def setup(self):
-        self.periods = 0
+        self.period_num = 0
         self.period_hours = 0
         self.agent_num = 0
         self.grid_x_size = 0

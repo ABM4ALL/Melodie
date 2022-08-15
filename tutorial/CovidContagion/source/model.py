@@ -41,7 +41,7 @@ class CovidModel(Model):
         )
 
     def run(self):
-        for period in self.iterator(self.scenario.periods):
+        for period in self.iterator(self.scenario.period_num):
             for hour in range(0, self.scenario.period_hours):
                 self.environment.agents_move(self.agents)
                 self.environment.agents_infection(self.agents, self.grid)

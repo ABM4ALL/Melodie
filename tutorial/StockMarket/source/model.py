@@ -24,7 +24,7 @@ class StockModel(Model):
                                  self.scenario.get_dataframe(data_info.agent_params))
 
     def run(self):
-        for period in self.iterator(self.scenario.periods):
+        for period in self.iterator(self.scenario.period_num):
             print(f'period = {period}')
             self.environment.order_book.clear_orders()
             for tick in range(0, self.scenario.period_ticks):

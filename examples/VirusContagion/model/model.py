@@ -41,7 +41,7 @@ class CovidModel(Model):
         self.save_data_to_model(accel_object)
 
     def run(self):
-        for t in self.iterator(self.scenario.periods):
+        for t in self.iterator(self.scenario.period_num):
             self.environment.agents_move(self.agent_list, self.grid)
             self.environment.agents_infection(self.agent_list, self.grid)
             self.environment.calculate_accumulated_infection(self.agent_list)

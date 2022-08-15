@@ -8,7 +8,7 @@ from .scenario import CovidScenario
 class CovidDataFrameLoader(DataLoader):
     def register_scenario_dataframe(self):
         scenarios_dict = {
-            "periods": sqlalchemy.Integer(),
+            "period_num": sqlalchemy.Integer(),
             "agent_num": sqlalchemy.Integer(),
             "grid_x_size": sqlalchemy.Integer(),
             "grid_y_size": sqlalchemy.Integer(),

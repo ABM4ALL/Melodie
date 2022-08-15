@@ -1,22 +1,26 @@
 import sqlalchemy
 
-from Melodie import DataLoader
+from Melodie import DataLoader, DataFrameInfo
 from .scenario import GiniScenario
 
 
 class GiniDataframeLoader(DataLoader):
+    def setup(self):
+        self.register_scenario_dataframe()
+        self.generate_dataframe()
+
     def register_scenario_dataframe(self):
         scenarios_dict = {}
         self.load_dataframe(
-            "simulator_scenarios", "simulator_scenarios.xlsx", scenarios_dict
+            DataFrameInfo("simulator_scenarios", scenarios_dict, "simulator_scenarios.xlsx")
         )
 
     def generate_dataframe(self):
-
         with self.dataframe_generator(
-            "agent_params", lambda scenario: scenario.agent_num
+                DataFrameInfo("agent_params", {"id": sqlalchemy.Integer(),
+                                               "productivity": sqlalchemy.Float(),
+                                               "account": sqlalchemy.Float(), }), lambda scenario: scenario.agent_num
         ) as g:
-
             def generator_func(scenario: GiniScenario):
                 return {
                     "id": g.increment(),
@@ -25,10 +29,3 @@ class GiniDataframeLoader(DataLoader):
                 }
 
             g.set_row_generator(generator_func)
-            g.set_column_data_types(
-                {
-                    "id": sqlalchemy.Integer(),
-                    "productivity": sqlalchemy.Float(),
-                    "account": sqlalchemy.Float(),
-                }
-            )

@@ -36,8 +36,8 @@ class GiniEnvironment(Environment):
 
     def go_money_transfer(self, agent_list: "AgentList"):
         for sub_period in range(0, self.trade_num):
-            [agent_1, agent_2] = agent_list.random_sample(2)
-
+            # [agent_1, agent_2] = agent_list.random_sample(2)
+            [agent_1, agent_2] = random.sample(agent_list.agents, 2)
             rand = random.random()
             if rand <= self.win_prob:
                 who_win = "Rich"

@@ -34,7 +34,7 @@ class StockDataCollector(DataCollector):
 
     def save_price_volume_history(self, order_book: "OrderBook"):
         price_volume_history = []
-        for period in range(0, self.scenario.periods):
+        for period in range(0, self.scenario.period_num):
             for tick in range(0, self.scenario.period_ticks):
                 price_volume_history.append({
                     "period": period,

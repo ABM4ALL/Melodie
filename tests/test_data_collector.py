@@ -41,7 +41,7 @@ class TestEnv(Environment):
 
 class TestScenario(Scenario):
     def setup(self):
-        self.periods = 1
+        self.period_num = 1
         self.productivity = random.random()
 
 

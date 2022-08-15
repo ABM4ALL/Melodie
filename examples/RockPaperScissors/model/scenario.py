@@ -3,7 +3,7 @@ from Melodie import Scenario
 
 class RPSScenario(Scenario):
     def setup(self):
-        self.periods = 0
+        self.period_num = 0
         self.agent_num = 0
         self.payoff_win_min = 0.0
         self.payoff_win_max = 0.0

@@ -1,5 +1,4 @@
 import os
-from dataclasses import dataclass
 from typing import Optional, Dict, List, ClassVar, Union, Callable
 
 import numpy as np
@@ -13,18 +12,29 @@ from .scenario_manager import Scenario
 from .table_generator import DataFrameGenerator
 
 
-@dataclass
 class DataFrameInfo:
     df_name: str
     columns: Dict[str, "sqlalchemy.types"]
     file_name: Optional[str] = None
 
+    def __init__(self, df_name: str, columns: Dict[str, "sqlalchemy.types"], file_name: Optional[str] = None):
+        self.df_name: str = df_name
+        self.columns: Dict[str, "sqlalchemy.types"] = columns
+        self.file_name: Optional[str] = file_name
 
-@dataclass
+    def check_column_names(self, columns: List[str]):
+        if set(columns) != set(self.columns.keys()):
+            missing = set(self.columns.keys()).difference(set(columns))
+            undefined = set(set(columns)).difference(self.columns.keys())
+            raise MelodieExceptions.Data.ColumnNameConsistencyError(self.df_name, missing, undefined)
+
+
 class MatrixInfo:
-    mat_name: str
-    data_type: sqlalchemy.types
-    file_name: Optional[str] = None
+
+    def __init__(self, mat_name: str, data_type: sqlalchemy.types, file_name: Optional[str] = None):
+        self.mat_name: str = mat_name
+        self.data_type: sqlalchemy.types = data_type
+        self.file_name: Optional[str] = file_name
 
     @property
     def dtype(self):
@@ -102,6 +112,7 @@ class DataLoader:
         if ext in {".xls", ".xlsx"}:
             file_path_abs = os.path.join(self.config.input_folder, file_name)
             table = pd.read_excel(file_path_abs)
+            df_info.check_column_names(list(table.columns))
         else:
             raise NotImplemented(file_name)
         if not self.as_sub_worker:

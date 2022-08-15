@@ -3,7 +3,7 @@ from Melodie import Scenario
 
 class StockScenario(Scenario):
     def setup(self):
-        self.periods = 0
+        self.period_num = 0
         self.period_ticks = 0
         self.agent_num = 0
         self.fundamentalist_weight_min = 0.0

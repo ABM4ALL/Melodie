@@ -8,8 +8,8 @@ from .scenario import RPSScenario
 class RPSDataFrameLoader(DataLoader):
     def register_scenario_dataframe(self):
         scenario_data_type_dict = {
-            "number_of_run": sqlalchemy.Integer(),
-            "periods": sqlalchemy.Integer(),
+            "run_num": sqlalchemy.Integer(),
+            "period_num": sqlalchemy.Integer(),
             "agent_num": sqlalchemy.Integer(),
             "payoff_win_min": sqlalchemy.Float(),
             "payoff_win_max": sqlalchemy.Float(),

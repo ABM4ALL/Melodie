@@ -15,7 +15,7 @@ from Melodie import (
 
 class CovidScenario(Scenario):
     def setup(self):
-        self.periods = 1
+        self.period_num = 1
         self.agent_num = 1000
         self.initial_infected_percentage = 0.9
         self.infection_probability = 0.0

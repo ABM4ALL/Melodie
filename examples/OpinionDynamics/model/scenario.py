@@ -3,7 +3,7 @@ from Melodie import Scenario
 
 class OpinionDynamicsScenario(Scenario):
     def setup(self):
-        self.periods = 0
+        self.period_num = 0
         self.agent_num = 0
         self.network_param_k = 0
         self.network_param_p = 0.0

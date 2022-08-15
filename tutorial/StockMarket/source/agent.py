@@ -22,7 +22,7 @@ class StockAgent(Agent):
         self.stock_account = 0
         self.cash_account = 0.0
         self.wealth_period = 0.0
-        self.wealth = np.zeros((self.scenario.periods, ))
+        self.wealth = np.zeros((self.scenario.period_num, ))
 
     def update_wealth(self, period: int, period_close_price: float):
         self.wealth_period = self.cash_account + self.stock_account * period_close_price

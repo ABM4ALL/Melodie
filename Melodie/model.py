@@ -228,8 +228,8 @@ class Model:
     def run_boost(self):
         pass
 
-    def iterator(self, periods: int):
-        return ModelRunRoutine(periods, self)
+    def iterator(self, period_num: int):
+        return ModelRunRoutine(period_num, self)
 
     def visualizer_step(self, current_step: int):
         if (self.visualizer is not None) and (current_step > 0):

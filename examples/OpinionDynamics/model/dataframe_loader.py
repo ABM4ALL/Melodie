@@ -9,8 +9,8 @@ class OpinionDynamicsDataframeLoader(DataLoader):
     def register_scenario_dataframe(self):
         scenarios_dict = {
             "id": sqlalchemy.Integer(),
-            "number_of_run": sqlalchemy.Integer(),
-            "periods": sqlalchemy.Integer(),
+            "run_num": sqlalchemy.Integer(),
+            "period_num": sqlalchemy.Integer(),
             "agent_num": sqlalchemy.Integer(),
             "network_param_k": sqlalchemy.Integer(),
             "network_param_p": sqlalchemy.Float(),

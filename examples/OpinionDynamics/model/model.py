@@ -31,7 +31,7 @@ class OpinionDynamicsModel(Model):
             self.data_collector = OpinionDynamicsDataCollector()
 
     def run(self):
-        for t in range(0, self.scenario.periods):
+        for t in range(0, self.scenario.period_num):
             print(f"period = {t}")
             self.environment.agents_communication(self.agent_list, self.network)
             self.environment.calc_average_opinion_level(self.agent_list)

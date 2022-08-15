@@ -24,6 +24,6 @@ class RPSModel(Model):
 
     def run(self):
         self.environment.setup_agents_action_probability(self.agent_list)
-        for t in range(0, self.scenario.periods):
+        for t in range(0, self.scenario.period_num):
             self.environment.run_game_rounds(self.agent_list)
             self.environment.calc_agents_total_account(self.agent_list)

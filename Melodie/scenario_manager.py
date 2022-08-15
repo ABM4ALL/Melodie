@@ -70,8 +70,8 @@ class Scenario(Element):
         self._parameters = []
         self.manager: Union["Calibrator", "Simulator", None] = None
         self.id = id_scenario
-        self.number_of_run = 1
-        self.periods = 0
+        self.run_num = 1
+        self.period_num = 0
 
     def copy(self) -> "Scenario":
         new_scenario = self.__class__()

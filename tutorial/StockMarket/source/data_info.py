@@ -7,8 +7,8 @@ simulator_scenarios = DataFrameInfo(
     file_name="simulator_scenarios.xlsx",
     columns={
         "id": sqlalchemy.Integer(),
-        "number_of_run": sqlalchemy.Integer(),
-        "periods": sqlalchemy.Integer(),
+        "run_num": sqlalchemy.Integer(),
+        "period_num": sqlalchemy.Integer(),
         "period_ticks": sqlalchemy.Integer(),
         "agent_num": sqlalchemy.Integer(),
         "fundamentalist_weight_min": sqlalchemy.Float(),

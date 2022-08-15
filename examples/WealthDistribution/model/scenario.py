@@ -3,7 +3,7 @@ from Melodie import Scenario
 
 class GiniScenario(Scenario):
     def setup(self):
-        self.periods = 100
+        self.period_num = 100
         self.agent_num = 0
         self.agent_account_min = 0.0
         self.agent_account_max = 0.0

@@ -18,8 +18,8 @@ def test_init_database():
         [
             {
                 "id": scenario.id,
-                "number_of_run": scenario.number_of_run,
-                "periods": scenario.periods,
+                "run_num": scenario.run_num,
+                "period_num": scenario.period_num,
             }
             for scenario in scenarios
         ]
