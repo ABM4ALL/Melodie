@@ -58,13 +58,13 @@ except:
     traceback.print_exc()
     ext_modules = None
 
+
     def build_ext(_):
         return print(
             "Cython was not installed. With cython you may get better peformance boost!"
         )
 
-
-with open("Melodie/version.txt", "r") as fv:
+with open("Melodie/version.txt", "r", encoding='utf8') as fv:
     version = fv.read()
 
 with open("README.md", "r") as fh:
