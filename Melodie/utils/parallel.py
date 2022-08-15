@@ -2,6 +2,7 @@ import base64
 import importlib
 import json
 import multiprocessing
+import queue
 import sys
 import time
 from typing import Dict, Tuple, Any
@@ -9,13 +10,14 @@ from typing import Dict, Tuple, Any
 import cloudpickle
 
 from Melodie.global_configs import MelodieGlobalConfig
+from Melodie.utils.system_info import is_windows
 
-params_queue = multiprocessing.Queue()
-result_queue = multiprocessing.Queue()
+params_queue = multiprocessing.Queue() if not is_windows() else queue.Queue()
+result_queue = multiprocessing.Queue() if not is_windows() else queue.Queue()
 
 
 def sub_routine_calibrator(
-    proc_id: int, modules: Dict[str, Tuple[str, str]], config_raw: Dict[str, Any]
+        proc_id: int, modules: Dict[str, Tuple[str, str]], config_raw: Dict[str, Any]
 ):
     """
     The sub iterator callback for parallelized computing used in Trainer and Calibrator.
@@ -99,7 +101,7 @@ def sub_routine_calibrator(
 
 
 def sub_routine_trainer(
-    proc_id: int, modules: Dict[str, Tuple[str, str]], config_raw: Dict[str, Any]
+        proc_id: int, modules: Dict[str, Tuple[str, str]], config_raw: Dict[str, Any]
 ):
     """
     The sub iterator callback for parallelized computing used in Trainer and Calibrator.
