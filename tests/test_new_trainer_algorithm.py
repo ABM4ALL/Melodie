@@ -25,6 +25,7 @@ class NewModel(Model):
     def setup(self):
         self.environment = Environment()
         self.agent_list = self.create_agent_container(DemoAgent, 10)
+        self.agent_list.setup_agents(10)
 
 
 class DFLoader(DataLoader):
@@ -34,18 +35,18 @@ class DFLoader(DataLoader):
 
 class MockTrainer(Trainer):
     def setup(self):
-        self.add_container(
-            "agent_list", ["param1", "param2"], [], lambda s: [i for i in range(10)]
+        self.add_agent_training_property(
+            "agent_list", ["param1", "param2"], lambda s: [i for i in range(10)]
         )
 
-    def target_function(self, agent: DemoAgent) -> float:
-        return agent.param1**2 + agent.param2**2
+    def utility(self, agent: Agent) -> float:
+        return -(agent.param1 ** 2 + agent.param2 ** 2)
 
 
 @pytest.mark.timeout(30)
 def test_chrom_params_algorithm():
     params = GATrainerParams(
-        0, 5, 50, 20, 0.02, 20, param1_min=-1, param1_max=1, param2_min=-1, param2_max=1
+        0, 5, 20, 20, 0.02, 20, param1_min=-1, param1_max=1, param2_min=-1, param2_max=1
     )
     mgr = MockTrainer(cfg, Scenario, NewModel, DFLoader, 1)
     mgr.setup()

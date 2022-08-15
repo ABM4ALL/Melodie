@@ -44,16 +44,16 @@ class GACalibratorParams(AlgorithmParameters):
     def __init__(
         self,
         id: int,
-        number_of_path: int,
-        number_of_generation: int,
+        path_num: int,
+        generation_num: int,
         strategy_population: int,
         mutation_prob: int,
         strategy_param_code_length: int,
         **kw,
     ):
-        super().__init__(id, number_of_path)
+        super().__init__(id, path_num)
 
-        self.number_of_generation = number_of_generation
+        self.generation_num = generation_num
         self.strategy_population = strategy_population
         self.mutation_prob = mutation_prob
         self.strategy_param_code_length = strategy_param_code_length
@@ -65,8 +65,8 @@ class GACalibratorParams(AlgorithmParameters):
     ) -> "GACalibratorParams":
         s = GACalibratorParams(
             record["id"],
-            record["number_of_path"],
-            record["number_of_generation"],
+            record["path_num"],
+            record["generation_num"],
             record["strategy_population"],
             record["mutation_prob"],
             record["strategy_param_code_length"],
@@ -78,8 +78,8 @@ class GACalibratorParams(AlgorithmParameters):
         return hash(
             (
                 self.id,
-                self.number_of_path,
-                self.number_of_generation,
+                self.path_num,
+                self.generation_num,
                 self.strategy_population,
                 self.mutation_prob,
                 self.strategy_param_code_length,
@@ -99,7 +99,7 @@ class CalibratorAlgorithmMeta:
         self.calibrator_scenario_id = 0
         self.calibrator_params_id = 1
         self.path_id = 0
-        self.iteration = 0
+        self.generation = 0
 
     def to_dict(self, public_only=False):
 
@@ -157,7 +157,7 @@ class GACalibratorAlgorithm:
             self.generate_target_function(),
             len(self.env_param_names),
             self.params.strategy_population,
-            self.params.number_of_generation,
+            self.params.generation_num,
             self.params.mutation_prob,
             lb,
             ub,
@@ -343,13 +343,13 @@ class GACalibratorAlgorithm:
     def run(self, scenario: Scenario, meta: Union[GACalibratorAlgorithmMeta]):
         self.pre_check(meta)
 
-        for i in range(self.params.number_of_generation):
+        for i in range(self.params.generation_num):
             t0 = time.time()
             self._current_generation = i
-            meta.iteration = i
+            meta.generation = i
             print(
                 f"======================="
-                f"Path {meta.path_id} Iteration {i + 1}/{self.params.number_of_generation}"
+                f"Path {meta.path_id} Generation {i + 1}/{self.params.generation_num}"
                 f"======================="
             )
 
@@ -467,7 +467,7 @@ class Calibrator(BaseModellingManager):
                 self.current_algorithm_meta.calibrator_params_id = (
                     calibrator_scenario.id
                 )
-                for trainer_path_id in range(calibrator_scenario.number_of_path):
+                for trainer_path_id in range(calibrator_scenario.path_num):
                     self.current_algorithm_meta.path_id = trainer_path_id
 
                     self.run_once_new(scenario, calibrator_scenario)

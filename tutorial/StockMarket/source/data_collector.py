@@ -29,17 +29,19 @@ class StockDataCollector(DataCollector):
         self.add_environment_property("volume")
 
     def save_transaction_history(self, order_book: "OrderBook"):
-        transaction_history_df = order_book.get_transaction_history_df()
-        self.db.write_dataframe("transaction_history", transaction_history_df)
+        if self.status:
+            transaction_history_df = order_book.get_transaction_history_df()
+            self.db.write_dataframe("transaction_history", transaction_history_df)
 
     def save_price_volume_history(self, order_book: "OrderBook"):
-        price_volume_history = []
-        for period in range(0, self.scenario.period_num):
-            for tick in range(0, self.scenario.period_ticks):
-                price_volume_history.append({
-                    "period": period,
-                    "tick": tick,
-                    "price": order_book.price_history[period][tick],
-                    "volume": order_book.volume_history[period][tick]
-                })
-        self.db.write_dataframe("price_volume_history", pd.DataFrame(price_volume_history))
+        if self.status:
+            price_volume_history = []
+            for period in range(0, self.scenario.period_num):
+                for tick in range(0, self.scenario.period_ticks):
+                    price_volume_history.append({
+                        "period": period,
+                        "tick": tick,
+                        "price": order_book.price_history[period][tick],
+                        "volume": order_book.volume_history[period][tick]
+                    })
+            self.db.write_dataframe("price_volume_history", pd.DataFrame(price_volume_history))

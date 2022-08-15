@@ -55,11 +55,11 @@ class DataLoader:
     Simulator/Trainer/Calibrator will have reference to DataLoader to avoid defining tables multiple times.
     """
 
-    def __init__(self, manager, config: Config, scenario_cls: ClassVar[Scenario]):
+    def __init__(self, manager, config: Config, scenario_cls: ClassVar[Scenario], as_sub_worker=False):
         MelodieExceptions.Assertions.NotNone(
             scenario_cls, "Scenario class should not be None!"
         )
-        self.as_sub_worker = False  # If loader is loaded from sub worker.
+        self.as_sub_worker = as_sub_worker  # If loader is loaded from sub worker.
         self.config: Config = config
         self.scenario_cls = scenario_cls
         self.registered_dataframes: Optional[Dict[str, pd.DataFrame]] = {}

@@ -89,8 +89,8 @@ class CovidCalibrator(Calibrator):
         return [
             {
                 "id": 0,
-                "number_of_path": 1,
-                "number_of_generation": 1,
+                "path_num": 1,
+                "generation_num": 1,
                 "strategy_population": 100,
                 "mutation_prob": 0.02,
                 "strategy_param_code_length": 10,

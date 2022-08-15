@@ -11,6 +11,12 @@ if TYPE_CHECKING:
 class StockDataLoader(DataLoader):
     def setup(self):
         self.load_dataframe(data_info.simulator_scenarios)
+        self.load_dataframe(
+            data_info.trainer_scenarios
+        )
+        self.load_dataframe(
+            data_info.trainer_params_scenarios
+        )
         self.generate_agent_dataframe()
 
     @staticmethod

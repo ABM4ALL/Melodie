@@ -77,10 +77,10 @@ class BaseModellingManager(abc.ABC):
         return self.data_loader.registered_matrices[matrix_name]
 
     def subworker_prerun(self):
+
         self.data_loader: DataLoader = self.df_loader_cls(
-            self, self.config, self.scenario_cls
+            self, self.config, self.scenario_cls, as_sub_worker=True
         )
-        self.data_loader.as_sub_worker = True
 
         self.scenarios = self.generate_scenarios()
 

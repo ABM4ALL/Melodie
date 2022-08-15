@@ -25,7 +25,6 @@ class StockModel(Model):
 
     def run(self):
         for period in self.iterator(self.scenario.period_num):
-            print(f'period = {period}')
             self.environment.order_book.clear_orders()
             for tick in range(0, self.scenario.period_ticks):
                 agent = self.agents.random_sample(1)[0]

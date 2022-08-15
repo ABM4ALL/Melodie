@@ -15,9 +15,9 @@ class AlgorithmParameters:
         def __repr__(self):
             return f"<{self.__class__.__name__} '{self.name}', range ({self.min}, {self.max})>"
 
-    def __init__(self, id: int, number_of_path: int):
+    def __init__(self, id: int, path_num: int):
         self.id: int = id
-        self.number_of_path: int = number_of_path
+        self.path_num: int = path_num
         self.parameters: List[AlgorithmParameters.Parameter] = []
 
     def get_agents_parameters_range(self, agent_num) -> List[Tuple[float, float]]:

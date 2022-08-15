@@ -27,17 +27,17 @@ pool = None
 
 class GATrainerParams(AlgorithmParameters):
     def __init__(
-        self,
-        id: int,
-        number_of_path: int,
-        number_of_generation: int,
-        strategy_population: int,
-        mutation_prob: float,
-        strategy_param_code_length: int,
-        **kw,
+            self,
+            id: int,
+            path_num: int,
+            generation_num: int,
+            strategy_population: int,
+            mutation_prob: float,
+            strategy_param_code_length: int,
+            **kw,
     ):
-        super().__init__(id, number_of_path)
-        self.number_of_generation = number_of_generation
+        super().__init__(id, path_num)
+        self.generation_num = generation_num
         self.strategy_population = strategy_population
         self.mutation_prob = mutation_prob
         self.strategy_param_code_length = strategy_param_code_length
@@ -45,12 +45,12 @@ class GATrainerParams(AlgorithmParameters):
 
     @staticmethod
     def from_dataframe_record(
-        record: Dict[str, Union[int, float]]
+            record: Dict[str, Union[int, float]]
     ) -> "GATrainerParams":
         s = GATrainerParams(
             record["id"],
-            record["number_of_path"],
-            record["number_of_generation"],
+            record["path_num"],
+            record["generation_num"],
             record["strategy_population"],
             record["mutation_prob"],
             record["strategy_param_code_length"],
@@ -65,8 +65,8 @@ class GATrainerParams(AlgorithmParameters):
         return hash(
             (
                 self.id,
-                self.number_of_path,
-                self.number_of_generation,
+                self.path_num,
+                self.generation_num,
                 self.strategy_population,
                 self.mutation_prob,
                 self.strategy_param_code_length,
@@ -86,7 +86,7 @@ class TrainerAlgorithmMeta:
         self.trainer_scenario_id = 0
         self.trainer_params_id = 1
         self.path_id = 0
-        self.iteration = 0
+        self.generation = 0
 
     def to_dict(self, public_only=False):
 
@@ -133,19 +133,19 @@ class TargetFcnCache:
         self.current_chromosome_id = -1
 
     def lookup_agent_target_value(
-        self, agent_id: int, container_name: str, generation: int, chromosome_id: int
+            self, agent_id: int, container_name: str, generation: int, chromosome_id: int
     ):
         return self.target_fcn_record[(generation, chromosome_id)][
             (agent_id, container_name)
         ]
 
     def set_agent_target_value(
-        self,
-        agent_id: int,
-        container_name: str,
-        value: float,
-        generation: int,
-        chromosome_id: int,
+            self,
+            agent_id: int,
+            container_name: str,
+            value: float,
+            generation: int,
+            chromosome_id: int,
     ):
         # self.current_target_fcn_value[(agent_id, container_name)] = value
         if (generation, chromosome_id) not in self.target_fcn_record:
@@ -155,7 +155,7 @@ class TargetFcnCache:
         ] = value
 
     def best_value(
-        self, chromosome_num: int, generation: int, agent_id: int, agent_category: int
+            self, chromosome_num: int, generation: int, agent_id: int, agent_category: int
     ):
         values = [
             self.target_fcn_record[(generation, chromosome_id)][
@@ -174,7 +174,7 @@ class GATrainerAlgorithm:
     """
 
     def __init__(
-        self, params: GATrainerParams, manager: "Trainer" = None, processors=1
+            self, params: GATrainerParams, manager: "Trainer" = None, processors=1
     ):
         global pool
         self.manager = manager
@@ -220,11 +220,11 @@ class GATrainerAlgorithm:
             pool.apply_async(sub_routine_trainer, [i, d, self.manager.config.to_dict()])
 
     def setup_agent_locations(
-        self,
-        container_name: str,
-        param_names: List[str],
-        recorded_properties: List[str],
-        agent_id_list: List[int],
+            self,
+            container_name: str,
+            param_names: List[str],
+            recorded_properties: List[str],
+            agent_id_list: List[int],
     ):
         assert container_name not in self.agent_container_getters
         self.agent_container_getters[container_name] = lambda model: getattr(
@@ -236,7 +236,7 @@ class GATrainerAlgorithm:
                 func=self.generate_target_function(agent_id, container_name),
                 n_dim=len(param_names),
                 size_pop=self.params.strategy_population,
-                max_iter=self.params.number_of_generation,
+                max_iter=self.params.generation_num,
                 prob_mut=self.params.mutation_prob,
                 lb=lb,
                 ub=ub,
@@ -267,10 +267,10 @@ class GATrainerAlgorithm:
         return params
 
     def target_function_to_cache(
-        self,
-        agent_target_function_values: Dict[str, List[Dict[str, Any]]],
-        generation: int,
-        chromosome_id: int,
+            self,
+            agent_target_function_values: Dict[str, List[Dict[str, Any]]],
+            generation: int,
+            chromosome_id: int,
     ):
         """
         Extract the value of target functions from Model, and write them into cache.
@@ -278,8 +278,8 @@ class GATrainerAlgorithm:
         :return:
         """
         for (
-            container_category,
-            container_getter,
+                container_category,
+                container_getter,
         ) in self.agent_container_getters.items():
             agent_props_list = agent_target_function_values[container_category]
             for agent_props in agent_props_list:
@@ -292,7 +292,7 @@ class GATrainerAlgorithm:
                 )
 
     def generate_target_function(
-        self, agent_id: int, container_name: str
+            self, agent_id: int, container_name: str
     ) -> Callable[[], float]:
         def f(*args):
             self._chromosome_counter += 1
@@ -307,10 +307,10 @@ class GATrainerAlgorithm:
         return f
 
     def record_agent_properties(
-        self,
-        agent_data: Dict[str, List[Dict[str, Any]]],
-        env_data: Dict[str, Any],
-        meta: GATrainerAlgorithmMeta,
+            self,
+            agent_data: Dict[str, List[Dict[str, Any]]],
+            env_data: Dict[str, Any],
+            meta: GATrainerAlgorithmMeta,
     ):
         """
         Record the property of each agent in the current chromosome.
@@ -325,16 +325,17 @@ class GATrainerAlgorithm:
         meta_dict = meta.to_dict(public_only=True)
 
         for (
-            container_name,
-            agent_container_getter,
+                container_name,
+                agent_container_getter,
         ) in self.agent_container_getters.items():
             agent_records[container_name] = []
             data = agent_data[container_name]
             for agent_container_data in data:
                 d = {}
                 d.update(meta_dict)
+                d['agent_id'] = agent_container_data['agent_id']
                 d.update(agent_container_data)
-
+                d.pop('target_function_value')
                 agent_records[container_name].append(d)
             create_db_conn(self.manager.config).write_dataframe(
                 f"{container_name}_trainer_result",
@@ -350,10 +351,10 @@ class GATrainerAlgorithm:
         return agent_records, env_record
 
     def calc_cov_df(
-        self,
-        agent_container_df_dict: Dict[str, pd.DataFrame],
-        env_df: pd.DataFrame,
-        meta,
+            self,
+            agent_container_df_dict: Dict[str, pd.DataFrame],
+            env_df: pd.DataFrame,
+            meta,
     ):
         """
         Calculate the coefficient of variation
@@ -377,7 +378,7 @@ class GATrainerAlgorithm:
                 cov_records.update(meta_dict)
                 cov_records["agent_id"] = agent_id
                 for prop_name in self.recorded_agent_properties[container_name] + [
-                    "target_function_value"
+                    'utility'
                 ]:
                     p: pd.Series = agent_data[prop_name]
                     mean = p.mean()
@@ -414,12 +415,12 @@ class GATrainerAlgorithm:
     def run(self, scenario: Scenario, meta: Union[GATrainerAlgorithmMeta]):
         self.pre_check(meta)
 
-        for i in range(self.params.number_of_generation):
+        for i in range(self.params.generation_num):
             self._current_generation = i
-            meta.iteration = i
+            meta.generation = i
             print(
                 f"======================="
-                f"Path {meta.path_id} Iteration {i + 1}/{self.params.number_of_generation}"
+                f"Path {meta.path_id} Generation {i + 1}/{self.params.generation_num}"
                 f"======================="
             )
 
@@ -460,11 +461,11 @@ class GATrainerAlgorithm:
 
 class RelatedAgentContainerModel:
     def __init__(
-        self,
-        container_name: str,
-        used_properties: List[str],
-        recorded_properties: List[str],
-        agent_ids: Callable[[Scenario], List[int]],
+            self,
+            container_name: str,
+            used_properties: List[str],
+            recorded_properties: List[str],
+            agent_ids: Callable[[Scenario], List[int]],
     ):
         self.container_name = container_name
         self.used_properties = used_properties
@@ -483,11 +484,10 @@ class AgentContainerManager:
         self.agent_containers: List[RelatedAgentContainerModel] = []
 
     def add_container(
-        self,
-        container_name: str,
-        used_properties: List[str],
-        recorded_properties: List[str],
-        agent_ids: Callable[[Scenario], List[int]],
+            self,
+            container_name: str,
+            used_properties: List[str],
+            agent_ids: Callable[[Scenario], List[int]],
     ):
         """
         Add a container used in trainer.
@@ -500,9 +500,15 @@ class AgentContainerManager:
         """
         self.agent_containers.append(
             RelatedAgentContainerModel(
-                container_name, used_properties, recorded_properties, agent_ids
+                container_name, used_properties, [], agent_ids
             )
         )
+
+    def get_agent_container(self, agent_container_name: str) -> RelatedAgentContainerModel:
+        for agent_container_model in self.agent_containers:
+            if agent_container_model.container_name == agent_container_name:
+                return agent_container_model
+        raise KeyError(agent_container_name)
 
 
 class Trainer(BaseModellingManager):
@@ -511,12 +517,12 @@ class Trainer(BaseModellingManager):
     """
 
     def __init__(
-        self,
-        config: "Config",
-        scenario_cls: "Optional[ClassVar[Scenario]]",
-        model_cls: "Optional[ClassVar[Model]]",
-        data_loader_cls: "Optional[ClassVar[DataLoader]]",
-        processors: int = 1,
+            self,
+            config: "Config",
+            scenario_cls: "Optional[ClassVar[Scenario]]",
+            model_cls: "Optional[ClassVar[Model]]",
+            data_loader_cls: "Optional[ClassVar[DataLoader]]",
+            processors: int = 1,
     ):
         super().__init__(
             config=config,
@@ -543,24 +549,22 @@ class Trainer(BaseModellingManager):
         self.current_algorithm_meta = None
         self.processors = processors
 
-    def add_container(
-        self,
-        container_name: str,
-        used_properties: List[str],
-        recorded_properties: List[str],
-        agent_ids: Callable[[Scenario], List[int]],
+    def add_agent_training_property(
+            self,
+            container_name: str,
+            used_properties: List[str],
+            agent_ids: Callable[[Scenario], List[int]],
     ):
         """
         Add a container into the trainer.
 
         :param container_name: The name of agent container.
         :param used_properties: The properties used in training.
-        :param recorded_properties: The property to record into the database.
         :param agent_ids: The agent with id contained in `agent_ids` will be trained.
         :return: None
         """
         self.container_manager.add_container(
-            container_name, used_properties, recorded_properties, agent_ids
+            container_name, used_properties, agent_ids
         )
 
     def setup(self):
@@ -579,6 +583,14 @@ class Trainer(BaseModellingManager):
         assert trainer_scenario_cls is not None
         return trainer_scenario_cls
 
+    def collect_data(self):
+        """
+        Set the agent and environment properties to be collected.
+
+        :return:
+        """
+        pass
+
     def run(self):
         """
         The main method for Trainer.
@@ -586,6 +598,7 @@ class Trainer(BaseModellingManager):
         :return:
         """
         self.setup()
+        self.collect_data()
         self.pre_run()
 
         trainer_scenario_cls = self.get_trainer_scenario_cls()
@@ -593,10 +606,10 @@ class Trainer(BaseModellingManager):
         for scenario in self.scenarios:
             self.current_algorithm_meta.trainer_scenario_id = scenario.id
             for trainer_params in self.generate_trainer_params_list(
-                trainer_scenario_cls
+                    trainer_scenario_cls
             ):
                 self.current_algorithm_meta.trainer_params_id = trainer_params.id
-                for path_id in range(trainer_params.number_of_path):
+                for path_id in range(trainer_params.path_num):
                     self.current_algorithm_meta.path_id = path_id
                     logger.info(
                         f"trainer_scenario_id = {scenario.id}, path_id = {path_id}"
@@ -624,6 +637,15 @@ class Trainer(BaseModellingManager):
 
         self.algorithm.run(scenario, self.current_algorithm_meta)
 
+    def utility(self, agent: Agent) -> float:
+        """
+        The utility is to be maximized.
+
+        :param agent:
+        :return:
+        """
+        raise NotImplementedError("Trainer.utility(agent) must be overridden in sub-class!")
+
     def target_function(self, agent: Agent) -> float:
         """
         The target function to be minimized.
@@ -631,9 +653,18 @@ class Trainer(BaseModellingManager):
         :param agent:
         :return:
         """
-        raise NotImplementedError
+        return -self.utility(agent)
 
-    def add_environment_result_property(self, prop: str):
+    def add_agent_property(self, agent_list_name: str, prop: str):
+        """
+
+        :param agent_list_name:
+        :param prop:
+        :return:
+        """
+        self.container_manager.get_agent_container(agent_list_name).recorded_properties.append(prop)
+
+    def add_environment_property(self, prop: str):
         """
 
         :return:
@@ -650,7 +681,7 @@ class Trainer(BaseModellingManager):
         return self.data_loader.generate_scenarios("trainer")
 
     def generate_trainer_params_list(
-        self, trainer_scenario_cls: ClassVar[GATrainerParams]
+            self, trainer_scenario_cls: ClassVar[GATrainerParams]
     ) -> List[GATrainerParams]:
         """
         Generate Trainer Params-Scenarios.

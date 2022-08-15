@@ -8,8 +8,8 @@ def test_trainer_params():
     data = [
         {
             "id": 0,
-            "number_of_path": 1,
-            "number_of_generation": 1,
+            "path_num": 1,
+            "generation_num": 1,
             "strategy_population": 10,
             "mutation_prob": 0.02,
             "strategy_param_code_length": 1,
@@ -28,8 +28,8 @@ def test_calibrator_params():
     data = [
         {
             "id": 0,
-            "number_of_path": 1,
-            "number_of_generation": 1,
+            "path_num": 1,
+            "generation_num": 1,
             "strategy_population": 10,
             "mutation_prob": 0.02,
             "strategy_param_code_length": 1,

@@ -10,6 +10,6 @@ if __name__ == "__main__":
         model_cls=StockModel,
         scenario_cls=StockScenario,
         data_loader_cls=StockDataLoader,
-        processors=1,  # 啥意思，默认值是多少？
+        processors=4,  # 啥意思，默认值是多少？
     )
     trainer.run()

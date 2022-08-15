@@ -17,3 +17,4 @@ class StockCalibrator(Calibrator):
     def target_function(self, env: 'StockEnvironment') -> Union[float, int]:
         # return self.distance(env)
         ...
+

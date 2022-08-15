@@ -10,7 +10,7 @@ class RPSAnalyzer(Analyzer):
         self.env_trainer_result_cov = "env_trainer_result_cov"
 
     def plot_agent_strategy_convergence(
-        self, trainer_scenario_id, number_of_generation
+        self, trainer_scenario_id, generation_num
     ):
         agent_trainer_result_cov = self.read_dataframe(self.agent_trainer_result_cov)
         strategy_params = ["strategy_param_1", "strategy_param_2", "strategy_param_3"]
@@ -32,7 +32,7 @@ class RPSAnalyzer(Analyzer):
             fig_suffix=fig_suffix_heatmap,
         )
 
-        last_generation_id = number_of_generation - 1
+        last_generation_id = generation_num - 1
         fig_suffix_heatmap = (
             "_TS" + str(trainer_scenario_id) + "G" + str(last_generation_id)
         )
