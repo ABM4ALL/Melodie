@@ -47,4 +47,3 @@ class StockAnalyzer:
             bottom += values
         ax.legend(fontsize=12)
         self.save_fig(figure, f"PopulationInfection_S{scenario_id}R{run_id}")
-

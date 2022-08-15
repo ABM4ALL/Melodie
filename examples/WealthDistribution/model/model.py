@@ -16,8 +16,10 @@ class GiniModel(Model):
         self.agent_list = self.create_agent_list(
             GiniAgent,
         )
-        self.agent_list.setup_agents(self.scenario.agent_num,
-                                     self.scenario.get_dataframe(DataFrameInfo("agent_params", {})))
+        self.agent_list.setup_agents(
+            self.scenario.agent_num,
+            self.scenario.get_dataframe(DataFrameInfo("agent_params", {})),
+        )
         # with self.define_basic_components():
         self.environment = self.create_environment(GiniEnvironment)
         self.data_collector = self.create_data_collector(GiniDataCollector)

@@ -9,7 +9,6 @@ if TYPE_CHECKING:
     from .scenario import StockScenario
 
 
-
 class StockDataCollector(DataCollector):
     scenario: "StockScenario"
 
@@ -38,10 +37,14 @@ class StockDataCollector(DataCollector):
             price_volume_history = []
             for period in range(0, self.scenario.period_num):
                 for tick in range(0, self.scenario.period_ticks):
-                    price_volume_history.append({
-                        "period": period,
-                        "tick": tick,
-                        "price": order_book.price_history[period][tick],
-                        "volume": order_book.volume_history[period][tick]
-                    })
-            self.db.write_dataframe("price_volume_history", pd.DataFrame(price_volume_history))
+                    price_volume_history.append(
+                        {
+                            "period": period,
+                            "tick": tick,
+                            "price": order_book.price_history[period][tick],
+                            "volume": order_book.volume_history[period][tick],
+                        }
+                    )
+            self.db.write_dataframe(
+                "price_volume_history", pd.DataFrame(price_volume_history)
+            )

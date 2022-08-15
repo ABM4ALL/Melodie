@@ -9,6 +9,7 @@ if __name__ == "__main__":
         config=config,
         model_cls=StockModel,
         scenario_cls=StockScenario,
-        data_loader_cls=StockDataLoader
+        data_loader_cls=StockDataLoader,
+        processors=8,
     )
     calibrator.run()

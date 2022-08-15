@@ -10,12 +10,12 @@ class Config:
     """
 
     def __init__(
-            self,
-            project_name: str,
-            project_root: str,
-            input_folder: str,
-            output_folder: str,
-            visualizer_entry: str = "",
+        self,
+        project_name: str,
+        project_root: str,
+        input_folder: str,
+        output_folder: str,
+        visualizer_entry: str = "",
     ):
         self.project_name = project_name
         self.project_root = project_root

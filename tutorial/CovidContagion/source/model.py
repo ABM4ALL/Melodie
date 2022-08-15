@@ -25,19 +25,18 @@ class CovidModel(Model):
     def setup(self):
         self.agents.setup_agents(
             agents_num=self.scenario.agent_num,
-            params_df=self.scenario.get_dataframe(data_info.agent_params)
+            params_df=self.scenario.get_dataframe(data_info.agent_params),
         )
 
         self.grid.setup_params(
-            width=self.scenario.grid_x_size,
-            height=self.scenario.grid_y_size
+            width=self.scenario.grid_x_size, height=self.scenario.grid_y_size
         )
         self.grid.setup_agent_locations(self.agents)
 
         self.network.setup_agent_connections(
             agent_lists=[self.agents],
             network_type=self.scenario.network_type,
-            network_params=self.scenario.get_network_params()
+            network_params=self.scenario.get_network_params(),
         )
 
     def run(self):

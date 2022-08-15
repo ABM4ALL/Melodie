@@ -12,7 +12,7 @@ if TYPE_CHECKING:
 
 
 class StockEnvironment(Environment):
-    scenario: 'StockScenario'
+    scenario: "StockScenario"
 
     def setup(self):
         self.order_book = OrderBook(self.scenario)
@@ -23,14 +23,16 @@ class StockEnvironment(Environment):
         self.close = 0.0
         self.volume = 0.0
 
-    def agents_update_wealth(self, agents: 'AgentList[StockAgent]', period: int):
+    def agents_update_wealth(self, agents: "AgentList[StockAgent]", period: int):
         price = self.order_book.get_period_close_price(period)
         for agent in agents:
             agent.update_wealth(period, price)
 
-    def agents_update_forecast(self, agents: 'AgentList[StockAgent]', period: int):
+    def agents_update_forecast(self, agents: "AgentList[StockAgent]", period: int):
         memory_length = self.scenario.chartist_forecast_memory_length
-        price_series = self.order_book.get_memorized_close_price_series(period, memory_length)
+        price_series = self.order_book.get_memorized_close_price_series(
+            period, memory_length
+        )
         for agent in agents:
             agent.update_chartist_forecast(price_series)
 
@@ -44,3 +46,6 @@ class StockEnvironment(Environment):
         self.close = prices[-1]
         self.volume = np.sum(volumes)
 
+    @property
+    def fundamentalist_weight_max(self):
+        return self.scenario.fundamentalist_weight_max

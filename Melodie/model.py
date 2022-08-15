@@ -50,11 +50,11 @@ class ModelRunRoutine:
 
 class Model:
     def __init__(
-            self,
-            config: "Config",
-            scenario: "Scenario",
-            run_id_in_scenario: int = 0,
-            visualizer: Visualizer = None,
+        self,
+        config: "Config",
+        scenario: "Scenario",
+        run_id_in_scenario: int = 0,
+        visualizer: Visualizer = None,
     ):
 
         self.scenario = scenario
@@ -67,7 +67,9 @@ class Model:
 
         self.network = None
         self.visualizer = visualizer
-        self.initialization_queue: List[Union[AgentList, Grid, Environment, DataCollector, Network]] = []
+        self.initialization_queue: List[
+            Union[AgentList, Grid, Environment, DataCollector, Network]
+        ] = []
 
     def __del__(self):
         """
@@ -139,8 +141,8 @@ class Model:
         # self.check_grid_agents_initialized()
 
     def create_agent_list(
-            self,
-            agent_class: Type["Agent"],
+        self,
+        agent_class: Type["Agent"],
     ):
         return AgentList(agent_class, model=self)
 
@@ -156,7 +158,9 @@ class Model:
         self.initialization_queue.append(grid)
         return grid
 
-    def create_network(self, network_cls: Type["Network"] = None, edge_cls: Type['Edge'] = None):
+    def create_network(
+        self, network_cls: Type["Network"] = None, edge_cls: Type["Edge"] = None
+    ):
         if network_cls is None:
             network_cls = Network
         network = network_cls(edge_cls)
@@ -171,11 +175,11 @@ class Model:
         return data_collector
 
     def create_agent_container(
-            self,
-            agent_class: ClassVar["Agent"],
-            initial_num: int,
-            params_df: pd.DataFrame = None,
-            container_type: str = "list",
+        self,
+        agent_class: ClassVar["Agent"],
+        initial_num: int,
+        params_df: pd.DataFrame = None,
+        container_type: str = "list",
     ) -> Union[AgentList]:
         """
         Create a container for agents

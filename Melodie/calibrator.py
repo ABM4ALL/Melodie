@@ -36,7 +36,6 @@ if TYPE_CHECKING:
     from .boost.basics import Environment
 logger = logging.getLogger(__name__)
 
-
 pool = None
 
 
@@ -253,7 +252,7 @@ class GACalibratorAlgorithm:
         :return:
         """
         agent_records = {}
-        env_record = {}
+        environment_record = {}
         meta_dict = meta.to_dict(public_only=True)
 
         for container_name, _ in self.recorded_agent_properties.items():
@@ -266,17 +265,20 @@ class GACalibratorAlgorithm:
 
                 agent_records[container_name].append(d)
             create_db_conn(self.manager.config).write_dataframe(
-                f"{container_name}_trainer_result",
+                f"{container_name}_calibrator_result",
                 pd.DataFrame(agent_records[container_name]),
                 if_exists="append",
             )
-        env_record.update(meta_dict)
-        env_record.update(env_data)
+        environment_record.update(meta_dict)
+        environment_record.update(env_data)
+        environment_record.pop("target_function_value")
 
         create_db_conn(self.manager.config).write_dataframe(
-            "env_trainer_result", pd.DataFrame([env_record]), if_exists="append"
+            "environment_calibrator_result",
+            pd.DataFrame([environment_record]),
+            if_exists="append",
         )
-        return agent_records, env_record
+        return agent_records, environment_record
 
     def calc_cov_df(
         self,
@@ -306,7 +308,7 @@ class GACalibratorAlgorithm:
                 cov_records.update(meta_dict)
                 cov_records["agent_id"] = agent_id
                 for prop_name in self.recorded_agent_properties[container_name] + [
-                    "target_function_value"
+                    "distance"
                 ]:
                     p: pd.Series = agent_data[prop_name]
                     mean = p.mean()
@@ -316,18 +318,22 @@ class GACalibratorAlgorithm:
                     )
                 container_agent_record_list.append(cov_records)
             create_db_conn(self.manager.config).write_dataframe(
-                f"{container_name}_trainer_result_cov",
+                f"{container_name}_calibrator_result_cov",
                 pd.DataFrame(container_agent_record_list),
                 if_exists="append",
             )
         env_record = {}
         env_record.update(meta_dict)
-        for prop_name in self.recorded_env_properties:
+        for prop_name in (
+            self.env_param_names + self.recorded_env_properties + ["distance"]
+        ):
             mean = env_df[prop_name].mean()
             cov = env_df[prop_name].std() / env_df[prop_name].mean()
             env_record.update({prop_name + "_mean": mean, prop_name + "_cov": cov})
         create_db_conn(self.manager.config).write_dataframe(
-            "env_trainer_result_cov", pd.DataFrame([env_record]), if_exists="append"
+            "environment_calibrator_result_cov",
+            pd.DataFrame([env_record]),
+            if_exists="append",
         )
 
     def pre_check(self, meta):
@@ -422,10 +428,17 @@ class Calibrator(BaseModellingManager):
         self.model: Optional[Model] = None
 
         self.current_algorithm_meta = GACalibratorAlgorithmMeta()
-        self.df_loader: Optional["DataLoader"] = None
         self.df_loader_cls = data_loader_cls
 
     def setup(self):
+        pass
+
+    def collect_data(self):
+        """
+        Set the agent and environment properties to be collected.
+
+        :return:
+        """
         pass
 
     def generate_scenarios(self) -> List["Scenario"]:
@@ -434,7 +447,9 @@ class Calibrator(BaseModellingManager):
 
         :return:
         """
-        return self.df_loader.generate_scenarios_from_dataframe("calibrator_scenarios")
+        return self.data_loader.generate_scenarios_from_dataframe(
+            "calibrator_scenarios"
+        )
 
     def get_params_scenarios(self) -> Dict:
         """
@@ -485,9 +500,14 @@ class Calibrator(BaseModellingManager):
         self.algorithm.run(scenario, self.current_algorithm_meta)
 
     def target_function(self, env: "Environment") -> Union[float, int]:
-        raise NotImplementedError
+        return self.distance(env)
 
-    def add_environment_calibrating_property(self, prop: str):
+    def distance(self, env: "Environment") -> float:
+        raise NotImplementedError(
+            "Trainer.distance(environment) must be overridden in sub-class!"
+        )
+
+    def add_scenario_calibrating_property(self, prop: str):
         """
         Add a property to be calibrated, and the property should be a property of environment.
 
@@ -499,7 +519,7 @@ class Calibrator(BaseModellingManager):
         ), f'Property "{prop}" is already in the calibrating training_properties!'
         self.properties.append(prop)
 
-    def add_environment_result_property(self, prop: str):
+    def add_environment_property(self, prop: str):
         """
         Add a property of environment to be recorded in the calibration voyage.
 

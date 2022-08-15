@@ -15,7 +15,7 @@ result_queue = multiprocessing.Queue()
 
 
 def sub_routine_calibrator(
-        proc_id: int, modules: Dict[str, Tuple[str, str]], config_raw: Dict[str, Any]
+    proc_id: int, modules: Dict[str, Tuple[str, str]], config_raw: Dict[str, Any]
 ):
     """
     The sub iterator callback for parallelized computing used in Trainer and Calibrator.
@@ -49,7 +49,7 @@ def sub_routine_calibrator(
             data_loader_cls=classes_dict["data_loader"],
         )
         calibrator.setup()
-        # trainer.collect_data()
+        calibrator.collect_data()
         calibrator.subworker_prerun()
     except BaseException:
         import traceback
@@ -67,12 +67,10 @@ def sub_routine_calibrator(
             scenario.manager = calibrator
             scenario.setup()
             scenario.set_params(d)
+            scenario.set_params(env_params)
             model = classes_dict["model"](config, scenario)
-
+            model.create()
             model._setup()
-            env: "Environment" = model.environment
-
-            env.set_params(env_params)
             model.run()
             agent_data = {}
             for container_name, props in calibrator.recorded_agent_properties.items():
@@ -82,8 +80,11 @@ def sub_routine_calibrator(
                 for row in df:
                     row["agent_id"] = row.pop("id")
             env: Environment = model.environment
-            env_data = env.to_dict(calibrator.properties + calibrator.watched_env_properties)
+            env_data = env.to_dict(
+                calibrator.properties + calibrator.watched_env_properties
+            )
             env_data["target_function_value"] = calibrator.target_function(env)
+            env_data["distance"] = calibrator.distance(env)
             # env_data["utility"] = trainer.utility(env)
             dumped = cloudpickle.dumps((chrom, agent_data, env_data))
             t1 = time.time()
@@ -98,7 +99,7 @@ def sub_routine_calibrator(
 
 
 def sub_routine_trainer(
-        proc_id: int, modules: Dict[str, Tuple[str, str]], config_raw: Dict[str, Any]
+    proc_id: int, modules: Dict[str, Tuple[str, str]], config_raw: Dict[str, Any]
 ):
     """
     The sub iterator callback for parallelized computing used in Trainer and Calibrator.
@@ -166,11 +167,9 @@ def sub_routine_trainer(
                 df = agent_container.to_list(container.recorded_properties)
                 agent_data[container.container_name] = df
                 for row in df:
-                    agent = agent_container.get_agent(row['id'])
-                    row["target_function_value"] = trainer.target_function(
-                        agent
-                    )
-                    row['utility'] = trainer.utility(agent)
+                    agent = agent_container.get_agent(row["id"])
+                    row["target_function_value"] = trainer.target_function(agent)
+                    row["utility"] = trainer.utility(agent)
                     row["agent_id"] = row.pop("id")
             env: Environment = model.environment
             env_data = env.to_dict(trainer.environment_properties)

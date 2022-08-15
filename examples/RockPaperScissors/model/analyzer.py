@@ -9,9 +9,7 @@ class RPSAnalyzer(Analyzer):
         self.env_trainer_result = "env_trainer_result"
         self.env_trainer_result_cov = "env_trainer_result_cov"
 
-    def plot_agent_strategy_convergence(
-        self, trainer_scenario_id, generation_num
-    ):
+    def plot_agent_strategy_convergence(self, trainer_scenario_id, generation_num):
         agent_trainer_result_cov = self.read_dataframe(self.agent_trainer_result_cov)
         strategy_params = ["strategy_param_1", "strategy_param_2", "strategy_param_3"]
         strategy_params_labels = [

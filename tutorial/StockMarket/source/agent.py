@@ -22,7 +22,7 @@ class StockAgent(Agent):
         self.stock_account = 0
         self.cash_account = 0.0
         self.wealth_period = 0.0
-        self.wealth = np.zeros((self.scenario.period_num, ))
+        self.wealth = np.zeros((self.scenario.period_num,))
 
     def update_wealth(self, period: int, period_close_price: float):
         self.wealth_period = self.cash_account + self.stock_account * period_close_price
@@ -37,8 +37,10 @@ class StockAgent(Agent):
 
     @property
     def forecast(self):
-        forecast = self.fundamentalist_weight * self.fundamentalist_forecast + \
-                   (1 - self.fundamentalist_weight) * self.chartist_forecast
+        forecast = (
+            self.fundamentalist_weight * self.fundamentalist_forecast
+            + (1 - self.fundamentalist_weight) * self.chartist_forecast
+        )
         return forecast
 
     def create_order(self, current_price: float) -> "Order":
@@ -52,5 +54,3 @@ class StockAgent(Agent):
             order.price = random.uniform(self.forecast, current_price)
             order.volume = self.scenario.stock_trading_volume
         return order
-
-

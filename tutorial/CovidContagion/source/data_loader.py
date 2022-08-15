@@ -41,7 +41,9 @@ class CovidDataLoader(DataLoader):
 
     def generate_agent_dataframe(self):
 
-        with self.dataframe_generator(data_info.agent_params, lambda scenario: scenario.agent_num) as g:
+        with self.dataframe_generator(
+            data_info.agent_params, lambda scenario: scenario.agent_num
+        ) as g:
 
             def generator_func(scenario: "CovidScenario"):
                 return {
@@ -49,8 +51,12 @@ class CovidDataLoader(DataLoader):
                     "x": np.random.randint(0, scenario.grid_x_size),
                     "y": np.random.randint(0, scenario.grid_y_size),
                     "age_group": self.init_age_group(scenario.young_percentage),
-                    "health_state": self.init_health_state(scenario.initial_infected_percentage),
-                    "vaccination_trust_state": self.init_vaccination_trust(scenario.vaccination_trust_percentage),
+                    "health_state": self.init_health_state(
+                        scenario.initial_infected_percentage
+                    ),
+                    "vaccination_trust_state": self.init_vaccination_trust(
+                        scenario.vaccination_trust_percentage
+                    ),
                 }
 
             g.set_row_generator(generator_func)

@@ -20,14 +20,16 @@ class DataFrameGenerator:
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         new_df = self.gen_agent_param_table_each_scenario()
-        self.df_loader.register_dataframe(self.df_info.df_name, new_df, self.df_info.columns)
+        self.df_loader.register_dataframe(
+            self.df_info.df_name, new_df, self.df_info.columns
+        )
         return
 
     def __init__(
-            self,
-            df_loader: "DataLoader",
-            df_info: "DataFrameInfo",
-            num_generator: Union[int, Callable[[Scenario], int]],
+        self,
+        df_loader: "DataLoader",
+        df_info: "DataFrameInfo",
+        num_generator: Union[int, Callable[[Scenario], int]],
     ):
         """
         :param df_loader:
@@ -64,7 +66,7 @@ class DataFrameGenerator:
         self._self_incremental_value = -1
 
     def convert_to_num_generator(
-            self, num_generator: Union[int, Callable[[Scenario], int]]
+        self, num_generator: Union[int, Callable[[Scenario], int]]
     ):
         if isinstance(num_generator, int):
             return lambda _: num_generator
@@ -75,7 +77,7 @@ class DataFrameGenerator:
             raise TypeError
 
     def set_row_generator(
-            self, row_generator: Callable[[Scenario], Union[dict, object]]
+        self, row_generator: Callable[[Scenario], Union[dict, object]]
     ):
         """
         Set the geneator for each row. Every time the row_generator is called, this function

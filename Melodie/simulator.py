@@ -30,11 +30,11 @@ class BaseModellingManager(abc.ABC):
     """
 
     def __init__(
-            self,
-            config: Config,
-            scenario_cls: ClassVar["Scenario"],
-            model_cls: ClassVar["Model"],
-            data_loader_cls: ClassVar[DataLoader] = None,
+        self,
+        config: Config,
+        scenario_cls: ClassVar["Scenario"],
+        model_cls: ClassVar["Model"],
+        data_loader_cls: ClassVar[DataLoader] = None,
     ):
         self.config: Optional[Config] = config
         self.scenario_cls = scenario_cls
@@ -110,11 +110,11 @@ class BaseModellingManager(abc.ABC):
 
 class Simulator(BaseModellingManager):
     def __init__(
-            self,
-            config: Config,
-            scenario_cls: "ClassVar[Scenario]",
-            model_cls: "ClassVar[Model]",
-            data_loader_cls: "ClassVar[DataLoader]" = None,
+        self,
+        config: Config,
+        scenario_cls: "ClassVar[Scenario]",
+        model_cls: "ClassVar[Model]",
+        data_loader_cls: "ClassVar[DataLoader]" = None,
     ):
         super(Simulator, self).__init__(
             config=config,
@@ -135,13 +135,15 @@ class Simulator(BaseModellingManager):
         return self.data_loader.generate_scenarios("simulator")
 
     def run_model(
-            self, config, scenario, run_id, model_class: ClassVar["Model"], visualizer=None
+        self, config, scenario, run_id, model_class: ClassVar["Model"], visualizer=None
     ):
         """
 
         :return:
         """
-        logger.info(f"Simulation started - scenario_id = {scenario.id}, run_id = {run_id}")
+        logger.info(
+            f"Simulation started - scenario_id = {scenario.id}, run_id = {run_id}"
+        )
         t0 = time.time()
 
         model: Model = model_class(

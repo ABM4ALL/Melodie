@@ -12,15 +12,24 @@ class GiniDataframeLoader(DataLoader):
     def register_scenario_dataframe(self):
         scenarios_dict = {}
         self.load_dataframe(
-            DataFrameInfo("simulator_scenarios", scenarios_dict, "simulator_scenarios.xlsx")
+            DataFrameInfo(
+                "simulator_scenarios", scenarios_dict, "simulator_scenarios.xlsx"
+            )
         )
 
     def generate_dataframe(self):
         with self.dataframe_generator(
-                DataFrameInfo("agent_params", {"id": sqlalchemy.Integer(),
-                                               "productivity": sqlalchemy.Float(),
-                                               "account": sqlalchemy.Float(), }), lambda scenario: scenario.agent_num
+            DataFrameInfo(
+                "agent_params",
+                {
+                    "id": sqlalchemy.Integer(),
+                    "productivity": sqlalchemy.Float(),
+                    "account": sqlalchemy.Float(),
+                },
+            ),
+            lambda scenario: scenario.agent_num,
         ) as g:
+
             def generator_func(scenario: GiniScenario):
                 return {
                     "id": g.increment(),

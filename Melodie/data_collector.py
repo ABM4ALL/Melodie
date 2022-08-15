@@ -66,7 +66,7 @@ class DataCollector:
         return self._time_elapsed
 
     def add_agent_property(
-            self, container_name: str, property_name: str, as_type: ClassVar = None
+        self, container_name: str, property_name: str, as_type: ClassVar = None
     ):
         """
         This method tells the data collector which property and in which agent container it should collect.
@@ -138,8 +138,12 @@ class DataCollector:
             props_list = []
             for i in range(length):
                 agent_props_dict = agent_prop_list[i]
-                tmp_dic = {"scenario_id": scenario_id, "run_id": run_id, "period": period,
-                           "id": agent_props_dict.pop('id')}
+                tmp_dic = {
+                    "scenario_id": scenario_id,
+                    "run_id": run_id,
+                    "period": period,
+                    "id": agent_props_dict.pop("id"),
+                }
                 tmp_dic.update(agent_props_dict)
                 props_list.append(tmp_dic)
 
@@ -172,12 +176,18 @@ class DataCollector:
             return
         t0 = time.time()
 
-        env_dic = {"scenario_id": self.model.scenario.id, "run_id": self.model.run_id_in_scenario, "period": period}
+        env_dic = {
+            "scenario_id": self.model.scenario.id,
+            "run_id": self.model.run_id_in_scenario,
+            "period": period,
+        }
         env_dic.update(self.model.environment.to_dict(self.env_property_names()))
 
         self.environment_properties_list.append(env_dic)
 
-        self.collect_agent_properties(period, self.model.run_id_in_scenario, self.model.scenario.id)
+        self.collect_agent_properties(
+            period, self.model.run_id_in_scenario, self.model.scenario.id
+        )
         t1 = time.time()
         self._time_elapsed += t1 - t0
 

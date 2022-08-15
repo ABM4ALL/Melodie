@@ -29,7 +29,9 @@ class CovidEnvironment(Environment):
         for agent in agents:
             agent.infect_from_neighbors(grid, agents)
 
-    def agents_update_vaccination_trust(self, agents: "AgentList[CovidAgent]", network: "Network"):
+    def agents_update_vaccination_trust(
+        self, agents: "AgentList[CovidAgent]", network: "Network"
+    ):
         for agent in agents:
             if random.uniform(0, 1) <= self.scenario.vaccination_ad_percentage:
                 agent.update_vaccination_trust_from_ad()

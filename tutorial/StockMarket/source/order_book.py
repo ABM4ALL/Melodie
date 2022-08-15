@@ -19,7 +19,7 @@ class OrderType(Enum):
 @dataclass
 class Order:
     agent_id: int
-    type: 'OrderType' = None
+    type: "OrderType" = None
     price: float = None
     volume: int = None
 
@@ -35,14 +35,17 @@ class Transaction:
 
 
 class OrderBook:
-
-    def __init__(self, scenario: 'StockScenario'):
+    def __init__(self, scenario: "StockScenario"):
         self.scenario = scenario
-        self.bid_orders: List['Order'] = []
-        self.ask_orders: List['Order'] = []
-        self.transactions: List['Transaction'] = []
-        self.price_history = np.zeros((self.scenario.period_num, self.scenario.period_ticks))
-        self.volume_history = np.zeros((self.scenario.period_num, self.scenario.period_ticks))
+        self.bid_orders: List["Order"] = []
+        self.ask_orders: List["Order"] = []
+        self.transactions: List["Transaction"] = []
+        self.price_history = np.zeros(
+            (self.scenario.period_num, self.scenario.period_ticks)
+        )
+        self.volume_history = np.zeros(
+            (self.scenario.period_num, self.scenario.period_ticks)
+        )
 
     def clear_orders(self):
         self.bid_orders = []
@@ -65,19 +68,19 @@ class OrderBook:
         if period == 0:
             price_series = np.array([close_price_series[0]])
         elif 0 < period < memory_length:
-            price_series = close_price_series[0:period + 1]
+            price_series = close_price_series[0 : period + 1]
         else:
-            price_series = close_price_series[period - memory_length:period + 1]
+            price_series = close_price_series[period - memory_length : period + 1]
         return price_series
 
-    def process_order(self, order: 'Order', period: int, tick: int):
+    def process_order(self, order: "Order", period: int, tick: int):
         if order.type == OrderType.BID:
             transaction = self.process_bid_order(period, tick, order)
         else:
             transaction = self.process_ask_order(period, tick, order)
         return transaction
 
-    def process_bid_order(self, period: int, tick: int, bid_order: 'Order'):
+    def process_bid_order(self, period: int, tick: int, bid_order: "Order"):
         transaction = None
         if len(self.ask_orders) > 0:
             if self.ask_orders[0].price <= bid_order.price:
@@ -89,7 +92,7 @@ class OrderBook:
             self.insert_bid_order(bid_order)
         return transaction
 
-    def process_ask_order(self, period: int, tick: int, ask_order: 'Order'):
+    def process_ask_order(self, period: int, tick: int, ask_order: "Order"):
         transaction = None
         if len(self.bid_orders) > 0:
             if self.bid_orders[0].price >= ask_order.price:
@@ -101,7 +104,9 @@ class OrderBook:
             self.insert_ask_order(ask_order)
         return transaction
 
-    def match_orders(self, period: int, tick: int, bid_order: 'Order', ask_order: 'Order'):
+    def match_orders(
+        self, period: int, tick: int, bid_order: "Order", ask_order: "Order"
+    ):
         transaction = Transaction(period, tick)
         transaction.buyer_id = bid_order.agent_id
         transaction.seller_id = ask_order.agent_id
@@ -110,7 +115,7 @@ class OrderBook:
         self.transactions.append(transaction)
         return transaction
 
-    def insert_bid_order(self, coming_order: 'Order'):
+    def insert_bid_order(self, coming_order: "Order"):
         if len(self.bid_orders) > 0:
             for index, order in enumerate(self.bid_orders):
                 if order.price <= coming_order.price:
@@ -119,7 +124,7 @@ class OrderBook:
         else:
             self.bid_orders.append(coming_order)
 
-    def insert_ask_order(self, coming_order: 'Order'):
+    def insert_ask_order(self, coming_order: "Order"):
         if len(self.ask_orders) > 0:
             for index, order in enumerate(self.ask_orders):
                 if order.price >= coming_order.price:
@@ -128,9 +133,13 @@ class OrderBook:
         else:
             self.ask_orders.append(coming_order)
 
-    def process_transaction(self, agents: 'AgentList[StockAgent]',
-                            transaction: Union['None', 'Transaction'],
-                            period: int, tick: int):
+    def process_transaction(
+        self,
+        agents: "AgentList[StockAgent]",
+        transaction: Union["None", "Transaction"],
+        period: int,
+        tick: int,
+    ):
         if transaction is not None:
             buyer = agents.get_agent(transaction.buyer_id)
             buyer.cash_account -= transaction.price * transaction.volume
@@ -145,7 +154,9 @@ class OrderBook:
             self.volume_history[period][tick] = 0
 
     def get_transaction_history_df(self):
-        transaction_history = [transaction.__dict__ for transaction in self.transactions]
+        transaction_history = [
+            transaction.__dict__ for transaction in self.transactions
+        ]
         df = pd.DataFrame(transaction_history)
         return df
 

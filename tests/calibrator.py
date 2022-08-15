@@ -69,10 +69,10 @@ class CovidModel(Model):
 
 class CovidCalibrator(Calibrator):
     def setup(self):
-        self.add_environment_calibrating_property("infection_probability")
-        self.add_environment_result_property("accumulated_infection")
+        self.add_scenario_calibrating_property("infection_probability")
+        self.add_environment_property("accumulated_infection")
 
-    def target_function(self, environment: "CovidEnvironment") -> Union[float, int]:
+    def distance(self, environment: CovidEnvironment) -> float:
         print(
             "infection_rate",
             environment.accumulated_infection / environment.scenario.agent_num,

@@ -41,30 +41,3 @@ agent_manager = AgentList(
 def python_step():
     for agent in agent_manager:
         agent.a += 1
-
-
-def compare_collect_attribute_time():
-    steps = 500 * 5  # 200 agents, 500 steps, 5 experiments
-
-    t0 = time.time()
-    for i in range(steps):
-        python_step()
-    t1 = time.time()
-
-    for i in range(steps):
-        a_vec = vectorize(agent_manager.agents, "b")
-        a_vec += 1
-        apply(agent_manager.agents, "a", a_vec)
-
-    t2 = time.time()
-
-    for i in range(steps):
-        c_vec = vectorize(agent_manager.agents, "c")
-        c_vec += 1
-        apply(agent_manager.agents, "c", c_vec)
-
-    t3 = time.time()
-
-    print("use_python_time", t1 - t0)
-    print("use_cython_time_float", t2 - t1)
-    print("use_cython_time_int", t2 - t1)

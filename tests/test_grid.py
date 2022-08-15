@@ -256,7 +256,7 @@ def test_roles_2():
     # agents_b = [TestGridAgent(i) for i in range(10)]
     grid = GridForRoles(MySpot)
     grid.setup_params(100, 100, multi=True)
-    grid.set_spot_attribute(
+    grid.set_spot_property(
         "a",
         np.ones(
             (

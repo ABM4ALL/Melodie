@@ -1,20 +1,19 @@
 from typing import Union
-
+import numpy as np
+from Melodie import create_db_conn
 from Melodie.calibrator import Calibrator
 from .environment import StockEnvironment
+from tutorial.StockMarket.source import data_info
 
 
 class StockCalibrator(Calibrator):
     def setup(self):
-        self.add_environment_calibrating_property("infection_probability")
-        self.add_environment_result_property("accumulated_infection")
+        self.add_scenario_calibrating_property("fundamentalist_weight_max")
 
-    def distance(self, environment: 'StockEnvironment'):
-        # distance =
-        # return distance
-        ...
+    def collect_data(self):
+        self.add_environment_property("close")
 
-    def target_function(self, env: 'StockEnvironment') -> Union[float, int]:
-        # return self.distance(env)
-        ...
-
+    def distance(self, environment: "StockEnvironment"):
+        std1 = np.std(self.get_dataframe(data_info.calibrator_target.df_name)["close"])
+        std2 = np.std(environment.order_book.price_history[:, -1])
+        return abs(std1 - std2)

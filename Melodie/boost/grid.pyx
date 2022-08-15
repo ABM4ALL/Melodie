@@ -504,11 +504,11 @@ cdef class Grid:
 
     def to_2d_array(self, attr_name: str) -> np.ndarray:
         """
-        Collect attribute of each spot and write the attribute value into an 2d np.array.
+        Collect property of each spot and write the property value into an 2d np.array.
 
         Notice:
 
-        - The attribute to collect should be float/int/bool, not other types such as str.
+        - The property to collect should be float/int/bool, not other types such as str.
         - If you would like to get an element from the returned array, please write like this:
         
         .. code-block:: python
@@ -521,14 +521,14 @@ cdef class Grid:
             spot_at_x_5_y_10 = arr[x][y] # INCORRECT. You will get the value of spot at `x = 10, y = 5`
         
 
-        :param attr_name: the attribute name to collect for this model.
+        :param attr_name: the property name to collect for this model.
         :return:
         """
         return vectorize_2d(self._spots, attr_name)
 
-    def set_spot_attribute(self, attr_name: str, array_2d):
+    def set_spot_property(self, attr_name: str, array_2d):
         """
-        Set attribute from an 2d-numpy-array to each spot.
+        Set property from an 2d-numpy-array to each spot.
 
         """
         assert len(array_2d) == self._height

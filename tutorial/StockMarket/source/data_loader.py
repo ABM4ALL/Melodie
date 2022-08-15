@@ -11,12 +11,11 @@ if TYPE_CHECKING:
 class StockDataLoader(DataLoader):
     def setup(self):
         self.load_dataframe(data_info.simulator_scenarios)
-        self.load_dataframe(
-            data_info.trainer_scenarios
-        )
-        self.load_dataframe(
-            data_info.trainer_params_scenarios
-        )
+        self.load_dataframe(data_info.trainer_scenarios)
+        self.load_dataframe(data_info.trainer_params_scenarios)
+        self.load_dataframe(data_info.calibrator_target)
+        self.load_dataframe(data_info.calibrator_scenarios)
+        self.load_dataframe(data_info.calibrator_params_scenarios)
         self.generate_agent_dataframe()
 
     @staticmethod
@@ -39,16 +38,20 @@ class StockDataLoader(DataLoader):
 
     def generate_agent_dataframe(self):
 
-        with self.dataframe_generator(data_info.agent_params, lambda scenario: scenario.agent_num) as g:
+        with self.dataframe_generator(
+            data_info.agent_params, lambda scenario: scenario.agent_num
+        ) as g:
 
             def generator_func(scenario: "StockScenario"):
                 return {
                     "id": g.increment(),
                     "fundamentalist_weight": self.init_fundamentalist_weight(scenario),
-                    "fundamentalist_forecast": self.init_fundamentalist_forecast(scenario),
+                    "fundamentalist_forecast": self.init_fundamentalist_forecast(
+                        scenario
+                    ),
                     "chartist_forecast": self.init_chartist_forecast(scenario),
                     "stock_account": scenario.stock_account_start,
-                    "cash_account": scenario.cash_account_start
+                    "cash_account": scenario.cash_account_start,
                 }
 
             g.set_row_generator(generator_func)

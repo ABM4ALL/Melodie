@@ -17,5 +17,3 @@ class StockScenario(Scenario):
         self.stock_trading_volume = 0
         self.stock_account_start = 0
         self.cash_account_start = 0.0
-
-

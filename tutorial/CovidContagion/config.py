@@ -8,4 +8,3 @@ config = Config(
     input_folder="data/input",
     output_folder="data/output",
 )
-

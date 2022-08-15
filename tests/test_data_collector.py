@@ -124,8 +124,6 @@ def test_status():
     )
     scenario = calibrator.scenario_cls(0)
     scenario.setup()
-    model: CovidModel = calibrator.model_cls(
-        cfg_for_calibrator, scenario
-    )
+    model: CovidModel = calibrator.model_cls(cfg_for_calibrator, scenario)
     model.setup()
     assert model.data_collector.status == False

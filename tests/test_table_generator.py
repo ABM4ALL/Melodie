@@ -1,7 +1,14 @@
 # -*- coding:utf-8 -*-
 import pandas as pd
 
-from Melodie import Simulator, Scenario, create_db_conn, Model, DataLoader, DataFrameInfo
+from Melodie import (
+    Simulator,
+    Scenario,
+    create_db_conn,
+    Model,
+    DataLoader,
+    DataFrameInfo,
+)
 from .config import cfg_for_temp
 
 
@@ -10,7 +17,6 @@ class TestModel(Model):
 
 
 class TestDataframeLoader(DataLoader):
-
     def setup(self):
         self.registered_dataframes["simulator_scenarios"] = pd.DataFrame(
             [{"id": 1, "period_num": 1, "agent_num": 100}]
@@ -38,10 +44,15 @@ def test_table_generator():
 
     simulator.setup()
     simulator.pre_run()
-    with simulator.data_loader.dataframe_generator(DataFrameInfo(df_name="aaa", columns={}), 100) as g:
+    with simulator.data_loader.dataframe_generator(
+        DataFrameInfo(df_name="aaa", columns={}), 100
+    ) as g:
         g.set_row_generator(lambda scenario: {"id": g.increment(), "productivity": 0.5})
 
-    with simulator.data_loader.dataframe_generator(DataFrameInfo(df_name="bbb", columns={}), lambda _: 200) as g:
+    with simulator.data_loader.dataframe_generator(
+        DataFrameInfo(df_name="bbb", columns={}), lambda _: 200
+    ) as g:
+
         def f(s):
             o = obj1()
             o.id = g.increment()

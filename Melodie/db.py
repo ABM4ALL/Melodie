@@ -31,7 +31,7 @@ class DBConn:
     RESERVED_TABLES = {"scenarios", "environment_result"}
 
     def __init__(
-            self, db_name: str, db_type: str = "sqlite", conn_params: Dict[str, str] = None
+        self, db_name: str, db_type: str = "sqlite", conn_params: Dict[str, str] = None
     ):
         self.db_name = db_name
 
@@ -115,11 +115,11 @@ class DBConn:
         logger.info(f"Database drops tables: {table_names}.")
 
     def write_dataframe(
-            self,
-            table_name: str,
-            data_frame: pd.DataFrame,
-            data_types: Optional[TABLE_DTYPES] = None,
-            if_exists="append",
+        self,
+        table_name: str,
+        data_frame: pd.DataFrame,
+        data_types: Optional[TABLE_DTYPES] = None,
+        if_exists="append",
     ):
         """
         Write a dataframe to database.
@@ -141,10 +141,13 @@ class DBConn:
             if_exists=if_exists,
         )
 
-    def read_dataframe(self, table_name: str,
-                       scenario_id: Optional[int] = None,
-                       run_id: Optional[int] = None,
-                       conditions: List[Tuple[str, str]] = None) -> pd.DataFrame:
+    def read_dataframe(
+        self,
+        table_name: str,
+        scenario_id: Optional[int] = None,
+        run_id: Optional[int] = None,
+        conditions: List[Tuple[str, str]] = None,
+    ) -> pd.DataFrame:
         """
         Read a table and return all content as a dataframe.
 
@@ -176,10 +179,11 @@ class DBConn:
             sql = f"select * from {table_name}"
             if len(condition_phrases) != 0:
                 sql += " where " + " and ".join(condition_phrases)
-            logger.debug("Querying database: "+sql)
+            logger.debug("Querying database: " + sql)
             return pd.read_sql(sql, self.connection)
         except OperationalError:
             import traceback
+
             traceback.print_exc()
             raise MelodieExceptions.Data.AttemptingReadingFromUnexistedTable(table_name)
 
@@ -200,7 +204,7 @@ class DBConn:
         return pd.read_sql(sql, self.connection)
 
     def paramed_query(
-            self, table_name: str, conditions: Dict[str, Union[int, str, tuple, float]]
+        self, table_name: str, conditions: Dict[str, Union[int, str, tuple, float]]
     ) -> pd.DataFrame:
         conditions = {k: v for k, v in conditions.items() if v is not None}
         sql = f"select * from {table_name}"

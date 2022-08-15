@@ -9,12 +9,12 @@ logger = logging.getLogger(__name__)
 
 class Edge:
     def __init__(
-            self,
-            category_1: int,
-            agent_1_id: int,
-            category_2: int,
-            agent_2_id: int,
-            edge_properties: Dict[str, Union[int, str, float, bool]],
+        self,
+        category_1: int,
+        agent_1_id: int,
+        category_2: int,
+        agent_2_id: int,
+        edge_properties: Dict[str, Union[int, str, float, bool]],
     ):
         self.category_1 = category_1
         self.agent_1_id = agent_1_id
@@ -90,7 +90,9 @@ class Network:
         if not self.directed:
             self.edges[target_id].pop(source_id)
 
-    def _get_neighbor_positions(self, agent_id: int, category: int) -> List[Tuple[int, int]]:
+    def _get_neighbor_positions(
+        self, agent_id: int, category: int
+    ) -> List[Tuple[int, int]]:
         neighbor_ids = self.edges[(category, agent_id)]
         if neighbor_ids is None:
             return []
@@ -133,12 +135,12 @@ class Network:
         self._add_agent(agent.category, agent.id)
 
     def create_edge(
-            self,
-            agent_1_id: int,
-            category_1: int,
-            agent_2_id: int,
-            category_2: int,
-            **edge_properties,
+        self,
+        agent_1_id: int,
+        category_1: int,
+        agent_2_id: int,
+        category_2: int,
+        **edge_properties,
     ):
         edge = self.edge_cls(
             category_1, agent_1_id, category_2, agent_2_id, edge_properties
@@ -159,11 +161,12 @@ class Network:
             edges.append(edge)
         return edges
 
-    def setup_agent_connections(self,
-                                agent_lists: List[AgentList],
-                                network_type: str,
-                                network_params: dict = None
-                                ):
+    def setup_agent_connections(
+        self,
+        agent_lists: List[AgentList],
+        network_type: str,
+        network_params: dict = None,
+    ):
         import networkx as nx
 
         assert isinstance(agent_lists, list)

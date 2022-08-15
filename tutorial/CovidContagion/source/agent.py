@@ -40,7 +40,10 @@ class CovidAgent(GridAgent):
             neighbors = grid.get_neighbors(self)
             for neighbor_category, neighbor_id in neighbors:
                 neighbor_agent: "CovidAgent" = agents.get_agent(neighbor_id)
-                if neighbor_agent.health_state == 1 and random.uniform(0, 1) < infection_prob:
+                if (
+                    neighbor_agent.health_state == 1
+                    and random.uniform(0, 1) < infection_prob
+                ):
                     self.health_state = 1
                     break
 
@@ -49,7 +52,9 @@ class CovidAgent(GridAgent):
             if random.uniform(0, 1) <= self.scenario.vaccination_ad_success_prob:
                 self.vaccination_trust_state = 1
 
-    def update_vaccination_trust_from_neighbors(self, network: "Network", agents: "AgentList[CovidAgent]"):
+    def update_vaccination_trust_from_neighbors(
+        self, network: "Network", agents: "AgentList[CovidAgent]"
+    ):
         if self.vaccination_trust_state == 0:
             neighbors = network.get_neighbors(self)
             neighbor_trust_count = 0
@@ -57,7 +62,10 @@ class CovidAgent(GridAgent):
                 neighbor_agent = agents.get_agent(neighbor_id)
                 if neighbor_agent.vaccination_trust_state == 1:
                     neighbor_trust_count += 1
-            if neighbor_trust_count / len(neighbors) >= self.scenario.vaccination_neighbor_success_threshold:
+            if (
+                neighbor_trust_count / len(neighbors)
+                >= self.scenario.vaccination_neighbor_success_threshold
+            ):
                 self.vaccination_trust_state = 1
 
     def take_vaccination(self):

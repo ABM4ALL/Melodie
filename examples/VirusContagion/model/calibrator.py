@@ -6,8 +6,8 @@ from .environment import CovidEnvironment
 
 class CovidCalibrator(Calibrator):
     def setup(self):
-        self.add_environment_calibrating_property("infection_probability")
-        self.add_environment_result_property("accumulated_infection")
+        self.add_scenario_calibrating_property("infection_probability")
+        self.add_environment_property("accumulated_infection")
 
     def distance(self, environment: CovidEnvironment):
         print(

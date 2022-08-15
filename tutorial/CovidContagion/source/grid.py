@@ -8,8 +8,7 @@ class CovidSpot(Spot):
 
 
 class CovidGrid(Grid):
-
     def setup(self):
-        self.set_spot_attribute("stay_prob", self.scenario.get_matrix(df_info.grid_stay_prob))
-
-
+        self.set_spot_property(
+            "stay_prob", self.scenario.get_matrix(df_info.grid_stay_prob)
+        )

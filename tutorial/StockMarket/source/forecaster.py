@@ -8,8 +8,7 @@ if TYPE_CHECKING:
 
 
 class Forecaster:
-
-    def __init__(self, scenario: 'StockScenario'):
+    def __init__(self, scenario: "StockScenario"):
         self.scenario = scenario
         self.fundamentalist_forecast = scenario.fundamentalist_price_benchmark
         self.chartist_forecast = random.uniform(
@@ -20,13 +19,15 @@ class Forecaster:
         price_earliest = price_series[0]
         price_latest = price_series[-1]
         length = len(price_series)
-        price_change_rate = (price_latest - price_earliest)/(price_earliest * length)
+        price_change_rate = (price_latest - price_earliest) / (price_earliest * length)
         forecast = price_latest * (1 + price_change_rate * random.uniform(0.9, 1.1))
         self.chartist_forecast = forecast
         return forecast
 
     def update_fundamentalist_forecast(self):
-        forecast = self.scenario.fundamentalist_price_benchmark * random.uniform(0.9, 1.1)
+        forecast = self.scenario.fundamentalist_price_benchmark * random.uniform(
+            0.9, 1.1
+        )
         self.fundamentalist_forecast = forecast
         return forecast
 
@@ -36,7 +37,6 @@ class Forecaster:
         elif forecast_rule_id == 1:
             return self.chartist_forecast
         else:
-            raise NotImplementedError(f"Not implemented --> forecast_rule_id = {forecast_rule_id}")
-
-
-
+            raise NotImplementedError(
+                f"Not implemented --> forecast_rule_id = {forecast_rule_id}"
+            )
