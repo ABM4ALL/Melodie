@@ -9,7 +9,6 @@
 * Zhanyi --> 生成文档的api reference
   * 写批注
   * 给内置函数加下划线
-* calibrator and trainer
 
 #### organization page
 * library --> papers
@@ -18,6 +17,7 @@
 
 #### long-term plan
 
+* trainer和calibrator有可以抽象共用的东西
 * 过一遍visualizer需要的功能 --> 讲课可以没有
 * 一个项目模板 -- 文件夹结构、gitignore 
 * tralibrator
