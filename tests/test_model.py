@@ -32,7 +32,7 @@ def test_agent_container_id_check():
     tm = TestModel(config=cfg, scenario=Scenario(id_scenario=0))
     tm.setup()
     try:
-        tm.check_agent_containers()
+        tm._check_agent_containers()
     except MelodieException as e:
         assert e.id == 1303
 

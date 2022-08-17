@@ -6,6 +6,6 @@ Grid
 
 .. automodule:: Melodie.boost.grid
                :undoc-members:
-               :members:
+               :members: Spot, GridAgent, Grid
                :show-inheritance:
 

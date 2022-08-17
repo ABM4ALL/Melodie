@@ -17,7 +17,7 @@ result_queue = multiprocessing.Queue() if not is_windows() else queue.Queue()
 
 
 def sub_routine_calibrator(
-        proc_id: int, modules: Dict[str, Tuple[str, str]], config_raw: Dict[str, Any]
+    proc_id: int, modules: Dict[str, Tuple[str, str]], config_raw: Dict[str, Any]
 ):
     """
     The sub iterator callback for parallelized computing used in Trainer and Calibrator.
@@ -101,7 +101,7 @@ def sub_routine_calibrator(
 
 
 def sub_routine_trainer(
-        proc_id: int, modules: Dict[str, Tuple[str, str]], config_raw: Dict[str, Any]
+    proc_id: int, modules: Dict[str, Tuple[str, str]], config_raw: Dict[str, Any]
 ):
     """
     The sub iterator callback for parallelized computing used in Trainer and Calibrator.

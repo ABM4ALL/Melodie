@@ -62,10 +62,23 @@ cdef class GridAgent(GridItem):
         self.set_category()
         assert self.category >= 0, "Category should be larger or "
     
-    def set_category(self):
+    def set_category(self) -> int:
+        """
+        Set the category of GridAgent.
+
+        As there may be more than one types of agent wandering around the grid, `category` is used to tell the type of
+        `GridAgent`. So be sure to inherit this method in custom GridAgent implementation.
+
+        :return: int
+        """
         raise NotImplementedError("Category should be set for GridAgent")
 
     cpdef rand_move_agent(self, int x_range, int y_range) except *:
+        """
+        Randomly move to a new position within x and y range.
+
+        :return: None
+        """
         if self.grid is None:
             raise ValueError("Grid Agent has not been registered onto the grid!")
         self.x, self.y = self.grid.rand_move_agent(self, self.category, x_range, y_range)
@@ -77,6 +90,11 @@ cdef class Spot(GridItem):
         self.colormap = 0
 
     def get_spot_agents(self):
+        """
+        Get agents on the spot
+
+        :return: a list of grid agent.
+        """
         return self.grid.get_spot_agents(self)
 
     def __repr__(self):
@@ -190,6 +208,11 @@ cdef class Grid:
         self._caching = True
 
     def init_grid(self):
+        """
+        Initialize the grid.
+
+        :return: None
+        """
         self._spots = [[self._spot_cls(self._convert_to_1d(x, y), self, x, y) for x in range(self._width)] for y in range(self._height)]
         for x in range(self._width):
             for y in range(self._height):
@@ -202,6 +225,18 @@ cdef class Grid:
         
 
     def setup_params(self, width: int, height: int, wrap=True, caching=True, multi=True):
+        """
+        Setup the parameters of grid.
+
+        :param width: int
+        :param height: int
+        :param wrap: bool, True by default.
+        If True, GridAgent will re-enter the grid on the other side if it moves out of the grid on one side.
+        :param caching: bool, True by default. If true, the grid caches the neighbor of each spot.
+        :param multi: bool, True by default. If true, more than one agent could stand on one spot. If false, error will
+        be raised when attempting to place multiple agents on one spot.
+        :return: None
+        """
         self._width = width
         self._height = height
         self._wrap = wrap
@@ -210,12 +245,17 @@ cdef class Grid:
         self.init_grid()
 
     def setup(self):
+        """
+        Be sure to inherit this function.
+
+        :return: None
+        """
         pass    
     
     def _setup(self):
         self.setup()
 
-    def setup_agent_locations(self, category ,initial_placement = "direct"):
+    def setup_agent_locations(self, category ,initial_placement = "direct")->None:
         """
         Add an agent category.
         
@@ -226,7 +266,7 @@ cdef class Grid:
         :param category_id: The id of new category.
         :param category: An AgentList object
         :param initial_placement: A str object stand for initial placement.
-        :return:
+        :return: None
         """
         initial_placement = initial_placement.lower()
         self._add_agent_container(category, initial_placement)
@@ -370,16 +410,6 @@ cdef class Grid:
         return neighbors
 
     cpdef list _get_neighbor_positions(self, long x, long y, long radius = 1, bint moore=True, bint except_self=True):
-        """
-        Get the neighbors of one spot at (x, y).
-
-        :param x:
-        :param y:
-        :param radius:
-        :param moore:
-        :param except_self:
-        :return:  A list of the neighbor coordinates.
-        """
         cdef list neighbors 
         cdef tuple key
         key = (x, y, radius, moore, except_self)
@@ -392,7 +422,14 @@ cdef class Grid:
 
     cpdef list get_neighbors(self, GridAgent agent, long radius=1, bint moore=True, bint except_self=True) except *:
         """
-        Get every agents' id out of neighborhood.
+        Get the neighbors of one spot at (x, y).
+
+        :param x:
+        :param y:
+        :param radius:
+        :param moore:
+        :param except_self:
+        :return:  A list of the tuple: (`Agent category`, `Agent id`).
         """
         neighbor_ids = []
         neighbor_positions = self._get_neighbor_positions(agent.x, agent.y, radius, moore, except_self)
@@ -456,7 +493,7 @@ cdef class Grid:
 
         :param agent: An GridAgent object.
         :param category: A string, the name of category. The category should be registered. 
-        :return:
+        :return: None
         """
         agent.grid = None
         self._remove_agent(agent.id, agent.category, agent.x, agent.y)
@@ -469,7 +506,7 @@ cdef class Grid:
         :param category: A string, the name of category. The category should be registered. 
         :param target_x: The target x coordinate
         :param target_y: The target y coordinate
-        :return:
+        :return: None
         """
         
         self._remove_agent(agent.id, agent.category, agent.x, agent.y)
@@ -576,15 +613,35 @@ cdef class Grid:
         return self._roles_list, agents_series_data
     
     cpdef long height(self):
+        """
+        Get height
+
+        :return: int
+        """
         return self._height
     
     cpdef long width(self):
+        """
+        Get width
+
+        :return: int
+        """
         return self._width
 
     cpdef (long, long) find_empty_spot(self) except *:
+        """
+        Get a coordinate (x, y) of a spot without any agent on it.
+
+        :return: A tuple, (x, y)
+        """
         return self._agent_id_mgr.find_empty_spot()
 
     cpdef list get_empty_spots(self) except *:
+        """
+        Get the empty spots from grid.
+
+        :return: a list of empty spot coordinate.
+        """
         cdef list positions = []
         for spot_pos_1d in self._agent_id_mgr.get_empty_spots():
             positions.append(self._agent_id_mgr.num_to_2d_coor(spot_pos_1d))

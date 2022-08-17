@@ -95,7 +95,9 @@ class ColorParseFSM(FSM):
                     end="",
                 )
             elif self.current_state == self.BOLD:
-                cprint(char, color=font_color, on_color=on_color, attrs=["bold"], end="")
+                cprint(
+                    char, color=font_color, on_color=on_color, attrs=["bold"], end=""
+                )
             elif self.current_state == self.REVERSE:
                 cprint(
                     char, color=font_color, on_color=on_color, attrs=["reverse"], end=""

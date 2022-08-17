@@ -89,6 +89,7 @@ cdef class BaseAgentContainer():
     def new_id(self):
         """
         Create a new auto-increment ID
+
         :return:
         """
         self._id_offset += 1
@@ -100,14 +101,14 @@ cdef class BaseAgentContainer():
         Convert all agent properties to a list of dict.
         
         :param column_names:  property names
-        :return:
+        :return: None
         """
 
     cpdef list init_agents(self) except *:
         """
         Initialize all agents in the container, and call the `setup()` method
         
-        :return:
+        :return: None
         """
         agents: List['AgentGeneric'] = [self.agent_class(self.new_id()) for i in
                                         range(self.initial_agent_num)]
@@ -123,7 +124,7 @@ cdef class BaseAgentContainer():
         """
         Set parameters of all agents in current scenario.
 
-        :return:
+        :return: None
         """
         MelodieExceptions.Assertions.Type('props_df', props_df, pd.DataFrame)
 
@@ -160,7 +161,7 @@ cdef class BaseAgentContainer():
         :param agent_sample:
         :param param_names:
         :param agent_params_df:
-        :return:
+        :return: None
         """
         dtypes = agent_params_df.dtypes
         dataframe_dtypes = {}
@@ -256,6 +257,13 @@ cdef class AgentList(BaseAgentContainer):
         self.agents: List[AgentGeneric] = []
 
     def setup_agents(self, agents_num: int, params_df: pd.DataFrame=None):
+        """
+        Setup agents with specific number, and initialize their property by a dataframe if a dataframe is passed.
+
+        :param agents_num: A integer.
+        :param params_df:
+        :return:
+        """
         self.initial_agent_num = agents_num
         self.agents = self.init_agents()
         for i, agent in enumerate(self.agents):
@@ -267,6 +275,11 @@ cdef class AgentList(BaseAgentContainer):
         self.setup()
 
     def setup(self):
+        """
+        The setup method.
+
+        If you would like to define custom AgentList, please be sure to inherit this method.
+        """
         pass
 
     def __repr__(self):
@@ -321,7 +334,13 @@ cdef class AgentList(BaseAgentContainer):
         else:
             return indices.at(agent_id)
 
-    def add(self, agent=None, params=None):
+    def add(self, agent=None, params=None) -> None:
+        """
+        Add an agent with same type onto this agent list.
+
+        :param agent: If None, an agent of corresponding type will be automatically created.
+        :return: None
+        """
         self._add(agent, params)
 
     cpdef _add(self, Agent agent, dict params):
@@ -420,9 +439,6 @@ cdef class AgentList(BaseAgentContainer):
     #         return None
     #     else:
     #         return self.agents[index]
-    
-    cpdef get_indices(self):
-        return deref(self.indices)
 
     cpdef Agent get_agent(self, long agent_id):
         """
@@ -439,6 +455,13 @@ cdef class AgentList(BaseAgentContainer):
     # @cython.nonecheck(False)
     # @cython.boundscheck(False)
     cpdef method_foreach(self, str method_name, tuple args) except *:
+        """
+        For each agent, execute theirs method `method_name` with arguments `args`
+
+        :param method_name:
+        :param args:
+        :return: None
+        """
         method = getattr(self.agent_class, method_name)
         cdef Agent agent
         agent_num = len(self.agents) 
@@ -450,7 +473,14 @@ cdef class AgentList(BaseAgentContainer):
             ptr = <PyObject *>agent
             PyObject_CallFunctionObjArgs(method, ptr, NULL)
             # method(agent, *args)
+
     cpdef vectorize(self, str prop_name) except *:
+        """
+        Generate an numpy array from this list, where the values come from the property defined by `prop_name`.
+
+        :param prop_name:
+        :return: An 1-D Numpy array
+        """
         if len(self.agents)==0:
             return
         raise NotImplementedError

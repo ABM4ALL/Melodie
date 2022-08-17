@@ -8,7 +8,7 @@ import platform
 
 
 def is_windows() -> bool:
-    return platform.system().lower().find('windows') != -1
+    return platform.system().lower().find("windows") != -1
 
 
 def melodie_version() -> str:
@@ -18,7 +18,7 @@ def melodie_version() -> str:
     """
     try:
         with open(
-                os.path.join(os.path.dirname(os.path.dirname(__file__)), "version.txt")
+            os.path.join(os.path.dirname(os.path.dirname(__file__)), "version.txt")
         ) as f:
             return f.read()
     except FileNotFoundError:

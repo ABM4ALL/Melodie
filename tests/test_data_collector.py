@@ -56,19 +56,12 @@ class DCTestModel(Model):
         params_df_3 = pd.DataFrame(
             [{"a": 1.0, "b": 1, "productivity": 0} for i in range(20)]
         )
-
-        with self.define_basic_components():
-            self.agent_list1 = self.create_agent_container(TestAgent, 10, params_df_1)
-            self.agent_list1.setup_agents(10, params_df_1)
-            self.agent_list2 = self.create_agent_container(TestAgent, 20, params_df_2)
-            self.agent_list2.setup_agents(20, params_df_2)
-            self.environment = TestEnv()
-            self.data_collector = DataCollector1()
-            # try:
-            #     self.create_agent_container(TestAgent, 20, params_df_3)
-            #     assert False, "Above code should have raised an exception."
-            # except MelodieException as e:
-            #     assert e.id == 1504
+        self.agent_list1 = self.create_agent_container(TestAgent, 10, params_df_1)
+        self.agent_list1.setup_agents(10, params_df_1)
+        self.agent_list2 = self.create_agent_container(TestAgent, 20, params_df_2)
+        self.agent_list2.setup_agents(20, params_df_2)
+        self.environment = self.create_environment(TestEnv)
+        self.data_collector = self.create_data_collector(DataCollector1)
 
 
 class Simulator4Test(Simulator):

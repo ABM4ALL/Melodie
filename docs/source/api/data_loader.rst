@@ -1,10 +1,10 @@
 
-DataFrameLoader
+DataLoader
 ===============
 
 .. include table_generator
 
-.. automodule:: Melodie.dataframe_loader
+.. automodule:: Melodie.data_loader
                :members:
                :undoc-members:
                :show-inheritance:

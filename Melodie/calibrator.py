@@ -45,14 +45,14 @@ th_on_thread = None  # for windows
 
 class GACalibratorParams(AlgorithmParameters):
     def __init__(
-            self,
-            id: int,
-            path_num: int,
-            generation_num: int,
-            strategy_population: int,
-            mutation_prob: int,
-            strategy_param_code_length: int,
-            **kw,
+        self,
+        id: int,
+        path_num: int,
+        generation_num: int,
+        strategy_population: int,
+        mutation_prob: int,
+        strategy_param_code_length: int,
+        **kw,
     ):
         super().__init__(id, path_num)
 
@@ -64,7 +64,7 @@ class GACalibratorParams(AlgorithmParameters):
 
     @staticmethod
     def from_dataframe_record(
-            record: Dict[str, Union[int, float]]
+        record: Dict[str, Union[int, float]]
     ) -> "GACalibratorParams":
         s = GACalibratorParams(
             record["id"],
@@ -138,14 +138,14 @@ class GACalibratorAlgorithm:
     """
 
     def __init__(
-            self,
-            env_param_names: List[str],
-            recorded_env_properties: List[str],
-            recorded_agent_properties: Dict[str, List[str]],
-            params: GACalibratorParams,
-            target_func: "Callable[[Environment], Union[float, int]]",
-            manager: "Calibrator" = None,
-            processors=1,
+        self,
+        env_param_names: List[str],
+        recorded_env_properties: List[str],
+        recorded_agent_properties: Dict[str, List[str]],
+        params: GACalibratorParams,
+        target_func: "Callable[[Environment], Union[float, int]]",
+        manager: "Calibrator" = None,
+        processors=1,
     ):
         global pool, th_on_thread
         self.manager = manager
@@ -205,10 +205,13 @@ class GACalibratorAlgorithm:
             if processors > 1:
                 show_prettified_warning(
                     "Unluckily, Melodie does not support multi-core calibration on Windows, and this "
-                    "feature will be implemented later. If iteration speed is of great importance " 
-                    "for you now, please try this code on a Unix-like machine, such as Linux or Mac")
-            th_on_thread = threading.Thread(target=sub_routine_calibrator,
-                                            args=[0, d, self.manager.config.to_dict()])
+                    "feature will be implemented later. If iteration speed is of great importance "
+                    "for you now, please try this code on a Unix-like machine, such as Linux or Mac"
+                )
+            th_on_thread = threading.Thread(
+                target=sub_routine_calibrator,
+                args=[0, d, self.manager.config.to_dict()],
+            )
 
             th_on_thread.setDaemon(True)
             th_on_thread.start()
@@ -227,10 +230,10 @@ class GACalibratorAlgorithm:
         return env_parameters_dict
 
     def target_function_to_cache(
-            self,
-            env_data,
-            generation: int,
-            chromosome_id: int,
+        self,
+        env_data,
+        generation: int,
+        chromosome_id: int,
     ):
         """
         Extract the value of target functions from Model, and write them into cache.
@@ -254,10 +257,10 @@ class GACalibratorAlgorithm:
         return f
 
     def record_agent_properties(
-            self,
-            agent_data: Dict[str, List[Dict[str, Any]]],
-            env_data: Dict[str, Any],
-            meta: GACalibratorAlgorithmMeta,
+        self,
+        agent_data: Dict[str, List[Dict[str, Any]]],
+        env_data: Dict[str, Any],
+        meta: GACalibratorAlgorithmMeta,
     ):
         """
         Record the property of each agent in the current chromosome.
@@ -297,10 +300,10 @@ class GACalibratorAlgorithm:
         return agent_records, environment_record
 
     def calc_cov_df(
-            self,
-            agent_container_df_dict: Dict[str, pd.DataFrame],
-            env_df: pd.DataFrame,
-            meta,
+        self,
+        agent_container_df_dict: Dict[str, pd.DataFrame],
+        env_df: pd.DataFrame,
+        meta,
     ):
         """
         Calculate the coefficient of variation
@@ -341,7 +344,7 @@ class GACalibratorAlgorithm:
         env_record = {}
         env_record.update(meta_dict)
         for prop_name in (
-                self.env_param_names + self.recorded_env_properties + ["distance"]
+            self.env_param_names + self.recorded_env_properties + ["distance"]
         ):
             mean = env_df[prop_name].mean()
             cov = env_df[prop_name].std() / env_df[prop_name].mean()
@@ -418,12 +421,12 @@ class Calibrator(BaseModellingManager):
     """
 
     def __init__(
-            self,
-            config: "Config",
-            scenario_cls: "Optional[ClassVar[Scenario]]",
-            model_cls: "Optional[ClassVar[Model]]",
-            data_loader_cls: ClassVar["DataLoader"],
-            processors=1,
+        self,
+        config: "Config",
+        scenario_cls: "Optional[ClassVar[Scenario]]",
+        model_cls: "Optional[ClassVar[Model]]",
+        data_loader_cls: ClassVar["DataLoader"],
+        processors=1,
     ):
         super().__init__(
             config=config,
@@ -482,6 +485,7 @@ class Calibrator(BaseModellingManager):
     def run(self):
         """
         The main method for calibrator.
+
         :return:
         """
         self.setup()
@@ -503,12 +507,19 @@ class Calibrator(BaseModellingManager):
 
                     self.run_once_new(scenario, calibrator_scenario)
 
-    def run_once_new(self, scenario, calibration_scenario: GACalibratorParams):
+    def run_once_new(self, scenario: Scenario, calibration_params: GACalibratorParams):
+        """
+        Run for one calibration path
+
+        :param scenario: Scenario
+        :param calibration_params: GACalibratorParams
+        :return: None
+        """
         self.algorithm = GACalibratorAlgorithm(
             self.properties,
             self.watched_env_properties,
             {},
-            calibration_scenario,
+            calibration_params,
             self.target_function,
             manager=self,
             processors=self.processes,
@@ -516,9 +527,23 @@ class Calibrator(BaseModellingManager):
         self.algorithm.run(scenario, self.current_algorithm_meta)
 
     def target_function(self, env: "Environment") -> Union[float, int]:
+        """
+        The target function to minimize
+
+        :param env:
+        :return:
+        """
         return self.distance(env)
 
     def distance(self, env: "Environment") -> float:
+        """
+        The optimization of calibrator is to minimize the distance.
+
+        Be sure to inherit this function in custom calibrator, and return a float value.
+
+        :param env: Environment of the model.
+        :return: None
+        """
         raise NotImplementedError(
             "Trainer.distance(environment) must be overridden in sub-class!"
         )
@@ -527,11 +552,11 @@ class Calibrator(BaseModellingManager):
         """
         Add a property to be calibrated, and the property should be a property of environment.
 
-        :param prop:
-        :return:
+        :param prop: Property name
+        :return: None
         """
         assert (
-                prop not in self.properties
+            prop not in self.properties
         ), f'Property "{prop}" is already in the calibrating training_properties!'
         self.properties.append(prop)
 
@@ -539,8 +564,8 @@ class Calibrator(BaseModellingManager):
         """
         Add a property of environment to be recorded in the calibration voyage.
 
-        :param prop:
-        :return:
+        :param prop: Property name
+        :return: None
         """
         assert prop not in self.watched_env_properties
         self.watched_env_properties.append(prop)

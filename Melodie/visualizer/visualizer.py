@@ -306,6 +306,7 @@ class Visualizer:
             }
         )
         t1 = time.time()
+        print(formatted)
         logger.info(f"Formatting current data takes:{t1 - t0} seconds")
         self.send_message(dumped)
 
@@ -351,7 +352,7 @@ class Visualizer:
         """
         self.current_websocket = ws
         if cmd_type == GET_PARAMS:
-            self.send_scenario_params(self.current_scenario.properties_as_parameters())
+            self.send_scenario_params(self.current_scenario.get_parameters())
             return True
         elif cmd_type == RESET:
             self.scenario_param = {k: v["value"] for k, v in data["params"].items()}  #

@@ -48,7 +48,8 @@ class BaseModellingManager(abc.ABC):
 
     def get_dataframe(self, table_name) -> pd.DataFrame:
         """
-        Get a static table.
+        Get a static data frame from data loader.
+
         :param table_name:
         :return:
         """
@@ -63,7 +64,8 @@ class BaseModellingManager(abc.ABC):
 
     def get_matrix(self, matrix_name) -> np.ndarray:
         """
-        Get a matrix.
+        Get a matrix from data loader.
+
         :param matrix_name:
         :return:
         """
@@ -77,7 +79,11 @@ class BaseModellingManager(abc.ABC):
         return self.data_loader.registered_matrices[matrix_name]
 
     def subworker_prerun(self):
+        """
+        If run as sub-worker, run this function to avoid deleting the existing tables in database.
 
+        :return:
+        """
         self.data_loader: DataLoader = self.df_loader_cls(
             self, self.config, self.scenario_cls, as_sub_worker=True
         )
@@ -128,6 +134,7 @@ class Simulator(BaseModellingManager):
     def generate_scenarios(self) -> List["Scenario"]:
         """
         Generate scenarios from the dataframe_loader
+
         :return:
         """
         if self.data_loader is None:
@@ -138,6 +145,7 @@ class Simulator(BaseModellingManager):
         self, config, scenario, run_id, model_class: ClassVar["Model"], visualizer=None
     ):
         """
+        Run a model once.
 
         :return:
         """
@@ -179,11 +187,18 @@ class Simulator(BaseModellingManager):
         logger.info(info)
 
     def setup(self):
+        """
+        Setup method of simulator, usually need not to inherit.
+
+        :return: None
+        """
         pass
 
     def run(self):
         """
-        Main function for running model!
+        Main function for running model.
+
+        :return: None
         """
         t0 = time.time()
         Visualizer.enabled = False
@@ -211,6 +226,8 @@ class Simulator(BaseModellingManager):
     def run_visual(self):
         """
         Main function for running model with studio.
+
+        :return: None
         """
         t0 = time.time()
 
@@ -252,7 +269,7 @@ class Simulator(BaseModellingManager):
         one scenario, it will be run by the main-thread to verify the model and initialize the database.
         After the first shot, subprocesses will be created as many as the value of parameter `cores`.
 
-        :param cores
+        :param cores:
           determines how many subprocesses will be created after the first shot.
 
           - It is suggested that this parameter should be NO MORE THAN the 'physical cores' of your computer.
@@ -282,7 +299,7 @@ class Simulator(BaseModellingManager):
         will the subprocesses be launched.
 
 
-        :return:
+        :return: None
         """
         t0 = time.time()
         self.pre_run()

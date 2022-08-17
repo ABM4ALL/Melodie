@@ -40,7 +40,6 @@ class MockTrainer(Trainer):
             "agent_list", ["param1", "param2"], lambda s: [i for i in range(10)]
         )
 
-
     def utility(self, agent: Agent) -> float:
         return -(agent.param1**2 + agent.param2**2)
 
