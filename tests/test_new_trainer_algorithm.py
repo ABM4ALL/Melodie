@@ -57,14 +57,4 @@ def test_chrom_params_algorithm():
     scenario = Scenario(0)
     meta = GATrainerAlgorithmMeta()
     mgr.pre_run()
-    while 1:
-        if params_queue.qsize() > 0:
-            params_queue.get()
-        else:
-            break
-    while 1:
-        if result_queue.qsize() > 0:
-            result_queue.get()
-        else:
-            break
-    # ta.run(scenario, meta)
+    ta.run(scenario, meta)
