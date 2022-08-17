@@ -67,7 +67,7 @@ except:
 with open("Melodie/version.txt", "r", encoding='utf8') as fv:
     version = fv.read()
 
-with open("README.md", "r") as fh:
+with open("README.md", "r", encoding="utf8") as fh:
     long_description = fh.read()
 
 setuptools.setup(

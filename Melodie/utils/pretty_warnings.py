@@ -74,6 +74,8 @@ class ColorParseFSM(FSM):
         self.state_change(d[self.current_state])
 
     def parse(self, content: str):
+        font_color = "magenta"
+        on_color = None
         for i, char in enumerate(content):
             if char == "*":
                 self.on_star()
@@ -87,19 +89,19 @@ class ColorParseFSM(FSM):
                 # cprint(char, on_color='on_yellow', attrs=['underline'], end="")
                 cprint(
                     char,
-                    color="grey",
-                    on_color="on_yellow",
+                    color=font_color,
+                    on_color=on_color,
                     attrs=["underline"],
                     end="",
                 )
             elif self.current_state == self.BOLD:
-                cprint(char, color="grey", on_color="on_yellow", attrs=["bold"], end="")
+                cprint(char, color=font_color, on_color=on_color, attrs=["bold"], end="")
             elif self.current_state == self.REVERSE:
                 cprint(
-                    char, color="grey", on_color="on_yellow", attrs=["reverse"], end=""
+                    char, color=font_color, on_color=on_color, attrs=["reverse"], end=""
                 )
             else:
-                cprint(char, color="grey", on_color="on_yellow", end="")
+                cprint(char, color=font_color, on_color=on_color, end="")
         print("\n", end="")
 
 
@@ -121,5 +123,4 @@ def show_link(stackdepth=1):
 
 
 def show_prettified_warning(warning: str):
-    return
     ColorParseFSM().parse("WARNING: " + warning)

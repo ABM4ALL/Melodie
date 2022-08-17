@@ -12,7 +12,8 @@ from Melodie import (
     Environment,
 )
 from Melodie.trainer import GATrainerAlgorithm, GATrainerAlgorithmMeta, GATrainerParams
-from .config import cfg
+from Melodie.utils.parallel import result_queue, params_queue
+from .config import cfg_for_trainer
 
 
 class DemoAgent(Agent):
@@ -39,6 +40,7 @@ class MockTrainer(Trainer):
             "agent_list", ["param1", "param2"], lambda s: [i for i in range(10)]
         )
 
+
     def utility(self, agent: Agent) -> float:
         return -(agent.param1**2 + agent.param2**2)
 
@@ -48,11 +50,21 @@ def test_chrom_params_algorithm():
     params = GATrainerParams(
         0, 5, 20, 20, 0.02, 20, param1_min=-1, param1_max=1, param2_min=-1, param2_max=1
     )
-    mgr = MockTrainer(cfg, Scenario, NewModel, DFLoader, 1)
+    mgr = MockTrainer(cfg_for_trainer, Scenario, NewModel, DFLoader, 1)
     mgr.setup()
     mgr.pre_run()
     ta = GATrainerAlgorithm(params, mgr)
     scenario = Scenario(0)
     meta = GATrainerAlgorithmMeta()
-
-    ta.run(scenario, meta)
+    mgr.pre_run()
+    while 1:
+        if params_queue.qsize() > 0:
+            params_queue.get()
+        else:
+            break
+    while 1:
+        if result_queue.qsize() > 0:
+            result_queue.get()
+        else:
+            break
+    # ta.run(scenario, meta)
