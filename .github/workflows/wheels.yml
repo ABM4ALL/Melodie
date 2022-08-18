@@ -24,8 +24,10 @@ jobs:
 
       - name: Build wheels
         env:
-          CIBW_BUILD: "cp37-* cp38-* cp39-*"
+          CIBW_BUILD: "cp37-* cp38-* cp39-* cp310-*"
           CIBW_BEFORE_BUILD: "pip install -r build_requirements.txt"
+          CIBW_ARCHS_WINDOWS: "AMD64"
+          CIBW_ARCHS_MACOS: "x86_64 arm64"
         run: python -m cibuildwheel --output-dir wheelhouse
         # to supply options, put them in 'env', like:
 

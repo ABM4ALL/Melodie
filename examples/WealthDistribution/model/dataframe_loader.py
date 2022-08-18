@@ -10,7 +10,17 @@ class GiniDataframeLoader(DataLoader):
         self.generate_dataframe()
 
     def register_scenario_dataframe(self):
-        scenarios_dict = {}
+        scenarios_dict = {
+            "trade_num": sqlalchemy.Integer(),
+            "agent_num": sqlalchemy.Integer(),
+            "agent_account_min": sqlalchemy.Float(),
+            "agent_account_max": sqlalchemy.Float(),
+            "id": sqlalchemy.Integer(),
+            "rich_win_prob": sqlalchemy.Float(),
+            "periods": sqlalchemy.Integer(),
+            "number_of_run": sqlalchemy.Integer(),
+            "agent_productivity": sqlalchemy.Integer(),
+        }
         self.load_dataframe(
             DataFrameInfo(
                 "simulator_scenarios", scenarios_dict, "simulator_scenarios.xlsx"

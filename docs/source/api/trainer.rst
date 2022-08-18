@@ -3,7 +3,7 @@ Trainer
 ============
 
 .. automodule:: Melodie.trainer
-               :members:
+               :members: Trainer
                :undoc-members:
                :show-inheritance:
 

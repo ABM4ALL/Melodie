@@ -26,9 +26,9 @@ class GiniModel(Model):
 
     def run(self):
         for period in self.iterator(self.scenario.period_num):
-            # self.environment.go_money_produce(self.agent_list)
+            self.environment.go_money_produce(self.agent_list)
             self.environment.go_money_transfer(self.agent_list)
-            # self.environment.calc_wealth_and_gini(self.agent_list)
+            self.environment.calc_wealth_and_gini(self.agent_list)
             # self.data_collector.collect(period - 1)
-            # print("period", period, self.scenario.agent_productivity)
+            print("period", period, self.scenario.agent_productivity)
         # self.data_collector.save()

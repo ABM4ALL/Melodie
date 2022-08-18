@@ -3,6 +3,7 @@ import copy
 import json
 import logging
 import multiprocessing
+import threading
 import time
 from typing import (
     Dict,
@@ -21,6 +22,7 @@ from typing import (
 import cloudpickle
 import pandas as pd
 
+from . import show_prettified_warning
 from .algorithms import AlgorithmParameters
 from .algorithms.ga import MelodieGA
 from .utils import MelodieExceptions
@@ -31,12 +33,14 @@ from .db import create_db_conn
 from .model import Model
 from .scenario_manager import Scenario
 from .simulator import BaseModellingManager
+from .utils.system_info import is_windows
 
 if TYPE_CHECKING:
     from .boost.basics import Environment
 logger = logging.getLogger(__name__)
 
-pool = None
+pool = None  # on *nix
+th_on_thread = None  # for windows
 
 
 class GACalibratorParams(AlgorithmParameters):
@@ -143,7 +147,7 @@ class GACalibratorAlgorithm:
         manager: "Calibrator" = None,
         processors=1,
     ):
-        global pool
+        global pool, th_on_thread
         self.manager = manager
         self.params = params
         self.chromosomes = 20
@@ -172,30 +176,45 @@ class GACalibratorAlgorithm:
         self._chromosome_counter = 0
         self._current_generation = 0
         self.processors = processors
-        if pool is None:
-            pool = multiprocessing.Pool(processes=processors)
-        for i in range(processors):
-            d = {
-                "model": (
-                    self.manager.model_cls.__name__,
-                    self.manager.model_cls.__module__,
-                ),
-                "scenario": (
-                    self.manager.scenario_cls.__name__,
-                    self.manager.scenario_cls.__module__,
-                ),
-                "trainer": (
-                    self.manager.__class__.__name__,
-                    self.manager.__class__.__module__,
-                ),
-                "data_loader": (
-                    self.manager.df_loader_cls.__name__,
-                    self.manager.df_loader_cls.__module__,
-                ),
-            }
-            pool.apply_async(
-                sub_routine_calibrator, [i, d, self.manager.config.to_dict()]
+        d = {
+            "model": (
+                self.manager.model_cls.__name__,
+                self.manager.model_cls.__module__,
+            ),
+            "scenario": (
+                self.manager.scenario_cls.__name__,
+                self.manager.scenario_cls.__module__,
+            ),
+            "trainer": (
+                self.manager.__class__.__name__,
+                self.manager.__class__.__module__,
+            ),
+            "data_loader": (
+                self.manager.df_loader_cls.__name__,
+                self.manager.df_loader_cls.__module__,
+            ),
+        }
+        if not is_windows():
+            if pool is None:
+                pool = multiprocessing.Pool(processes=processors)
+            for i in range(processors):
+                pool.apply_async(
+                    sub_routine_calibrator, [i, d, self.manager.config.to_dict()]
+                )
+        else:
+            if processors > 1:
+                show_prettified_warning(
+                    "Unluckily, Melodie does not support multi-core calibration on Windows, and this "
+                    "feature will be implemented later. If iteration speed is of great importance "
+                    "for you now, please try this code on a Unix-like machine, such as Linux or Mac"
+                )
+            th_on_thread = threading.Thread(
+                target=sub_routine_calibrator,
+                args=[0, d, self.manager.config.to_dict()],
             )
+
+            th_on_thread.setDaemon(True)
+            th_on_thread.start()
 
     def get_params(self, chromosome_id: int) -> Dict[str, Any]:
         """
@@ -466,6 +485,7 @@ class Calibrator(BaseModellingManager):
     def run(self):
         """
         The main method for calibrator.
+
         :return:
         """
         self.setup()
@@ -487,12 +507,19 @@ class Calibrator(BaseModellingManager):
 
                     self.run_once_new(scenario, calibrator_scenario)
 
-    def run_once_new(self, scenario, calibration_scenario: GACalibratorParams):
+    def run_once_new(self, scenario: Scenario, calibration_params: GACalibratorParams):
+        """
+        Run for one calibration path
+
+        :param scenario: Scenario
+        :param calibration_params: GACalibratorParams
+        :return: None
+        """
         self.algorithm = GACalibratorAlgorithm(
             self.properties,
             self.watched_env_properties,
             {},
-            calibration_scenario,
+            calibration_params,
             self.target_function,
             manager=self,
             processors=self.processes,
@@ -500,9 +527,23 @@ class Calibrator(BaseModellingManager):
         self.algorithm.run(scenario, self.current_algorithm_meta)
 
     def target_function(self, env: "Environment") -> Union[float, int]:
+        """
+        The target function to minimize
+
+        :param env:
+        :return:
+        """
         return self.distance(env)
 
     def distance(self, env: "Environment") -> float:
+        """
+        The optimization of calibrator is to minimize the distance.
+
+        Be sure to inherit this function in custom calibrator, and return a float value.
+
+        :param env: Environment of the model.
+        :return: None
+        """
         raise NotImplementedError(
             "Trainer.distance(environment) must be overridden in sub-class!"
         )
@@ -511,8 +552,8 @@ class Calibrator(BaseModellingManager):
         """
         Add a property to be calibrated, and the property should be a property of environment.
 
-        :param prop:
-        :return:
+        :param prop: Property name
+        :return: None
         """
         assert (
             prop not in self.properties
@@ -523,8 +564,8 @@ class Calibrator(BaseModellingManager):
         """
         Add a property of environment to be recorded in the calibration voyage.
 
-        :param prop:
-        :return:
+        :param prop: Property name
+        :return: None
         """
         assert prop not in self.watched_env_properties
         self.watched_env_properties.append(prop)

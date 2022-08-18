@@ -25,9 +25,19 @@ class Edge:
         self.post_setup()
 
     def setup(self):
+        """
+        Setup method. Be sure to inherit it for custom Edge.
+
+        :return: None
+        """
         pass
 
     def post_setup(self):
+        """
+        This method is executed after `setup()`
+
+        :return: None
+        """
         for prop_name, prop_value in self.properties.items():
             setattr(self, prop_name, prop_value)
 
@@ -51,15 +61,21 @@ class Network:
         self.setup()
 
     def setup(self):
+        """
+        Setup function of network. Be sure to inherit this method for custom implementation.
+
+        :return: None
+        """
         pass
 
     def add_edge(self, source_id: NodeType, target_id: NodeType, edge: Edge):
         """
         Add an edge onto the network.
+
         :param source_id:
         :param target_id:
         :param edge
-        :return:
+        :return: None
         """
         if source_id not in self.edges:
             self.edges[source_id] = {}
@@ -72,9 +88,10 @@ class Network:
     def get_edge(self, source_id: NodeType, target_id: NodeType):
         """
         Get an edge from the network
+
         :param source_id:
         :param target_id:
-        :return:
+        :return: An `Edge` object
         """
         return self.edges[source_id][target_id]
 
@@ -84,7 +101,7 @@ class Network:
 
         :param source_id:
         :param target_id:
-        :return:
+        :return: None
         """
         self.edges[source_id].pop(target_id)
         if not self.directed:
@@ -100,6 +117,12 @@ class Network:
             return list(neighbor_ids.keys())
 
     def get_neighbors(self, agent: Agent):
+        """
+        Get surrounding neighbors of agent.
+
+        :param agent:
+        :return:
+        """
         assert hasattr(agent, "category")
         return self._get_neighbor_positions(agent.id, agent.category)
 
@@ -129,9 +152,23 @@ class Network:
                 self.edges[target_node].pop(agent_tuple)
 
     def remove_agent(self, agent: Agent):
+        """
+        Remove agent from network
+
+        :param agent: Agent
+        :return: None
+        """
+        assert hasattr(agent, "category")
         self._remove_agent(agent.category, agent.id)
 
     def add_agent(self, agent: Agent):
+        """
+        Add an agent onto the network.
+
+        :param agent:
+        :return:
+        """
+        assert hasattr(agent, "category")
         self._add_agent(agent.category, agent.id)
 
     def create_edge(
@@ -142,6 +179,16 @@ class Network:
         category_2: int,
         **edge_properties,
     ):
+        """
+        Create a new edge from one agent to another agent.
+
+        :param agent_1_id:
+        :param category_1:
+        :param agent_2_id:
+        :param category_2:
+        :param edge_properties:
+        :return:
+        """
         edge = self.edge_cls(
             category_1, agent_1_id, category_2, agent_2_id, edge_properties
         )
@@ -152,9 +199,20 @@ class Network:
         self.add_edge(src_pos, dst_pos, edge)
 
     def all_agents(self) -> Set[NodeType]:
+        """
+        Get all agents on the network.
+
+        :return: A list of (`Agent category`, `Agent id`)
+        """
         return self.nodes
 
     def get_node_edges(self, agent: Agent):
+        """
+        Get the edges from one node.
+
+        :param agent:
+        :return:
+        """
         targets = self.edges[(agent.category, agent.id)]
         edges: List[Edge] = []
         for target_node, edge in targets.items():
@@ -167,6 +225,14 @@ class Network:
         network_type: str,
         network_params: dict = None,
     ):
+        """
+        Set up the connection between agents.
+
+        :param agent_lists:
+        :param network_type: str, describing the type of network, which should be the corresponding to networkx.
+        :param network_params: A dictionary for parameter values.
+        :return: None
+        """
         import networkx as nx
 
         assert isinstance(agent_lists, list)

@@ -2,7 +2,7 @@
 Melodie Errors
 ===============
 
-.. automodule:: Melodie.basic.exceptions
+.. automodule:: Melodie.utils.exceptions
                :members:
                :undoc-members:
                :show-inheritance:

@@ -7,6 +7,10 @@ import os.path
 import platform
 
 
+def is_windows() -> bool:
+    return platform.system().lower().find("windows") != -1
+
+
 def melodie_version() -> str:
     """
     Get the version of Melodie.

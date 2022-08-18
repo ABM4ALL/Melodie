@@ -5,7 +5,7 @@ AgentList
 .. include agent
 
 .. automodule:: Melodie.boost.agent_list
-               :members:
+               :members:  BaseAgentContainer, AgentList
                :undoc-members:
                :show-inheritance:
 

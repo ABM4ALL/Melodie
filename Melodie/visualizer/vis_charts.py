@@ -106,6 +106,7 @@ class ChartManager(JSONBase):
                 }
                 chart_series_data.append(s)
             current_data.append({"chartName": chart_name, "series": chart_series_data})
+        print("current_data", current_data)
         return current_data
 
     def reset(self):

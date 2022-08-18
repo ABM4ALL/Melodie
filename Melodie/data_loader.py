@@ -92,10 +92,12 @@ class DataLoader:
         self, table_name: str, data_frame: pd.DataFrame, data_types: dict = None
     ) -> None:
         """
-        :param table_name:
-        :param data_frame:
-        :param data_types:
-        :return:
+        Add a pandas dataframe.
+
+        :param table_name: Name of dataframe
+        :param data_frame: A pandas dataframe
+        :param data_types: A dictionary describing data types.
+        :return: None
         """
         if data_types is None:
             data_types = {}
@@ -117,7 +119,7 @@ class DataLoader:
         The scenarios/agents parameter tables can also be registered by this method.
 
         :param df_info:
-        :return:
+        :return: None
         """
         table_name = df_info.df_name
         file_name = df_info.file_name
@@ -145,12 +147,12 @@ class DataLoader:
             self.config
         ).read_dataframe(table_name)
 
-    def load_matrix(self, matrix_info: "MatrixInfo"):
+    def load_matrix(self, matrix_info: "MatrixInfo") -> None:
         """
         Register static matrix, saving it to `self.registered_matrices`.
 
         :param matrix_info:
-        :return:
+        :return: None
         """
         _, ext = os.path.splitext(matrix_info.file_name)
         if ext in {".xls", ".xlsx"}:
@@ -167,7 +169,7 @@ class DataLoader:
         self,
         df_info: DataFrameInfo,
         rows_in_scenario: Union[int, Callable[[Scenario], int]],
-    ):
+    ) -> DataFrameGenerator:
         """
         Create a new generator
 
@@ -175,14 +177,15 @@ class DataLoader:
         :param rows_in_scenario: How many rows will be generated for a specific scenario. \
             This argument should be an integer as number of rows for each scenario, or a function with a parameter \
             with type `Scenario` and return an integer for how many rows to generate for this scenario .
-        :return:
+        :return: A dataframe generator object
         """
         return DataFrameGenerator(self, df_info, rows_in_scenario)
 
     def generate_scenarios_from_dataframe(self, df_name: str) -> List["Scenario"]:
         """
         Generate scenario objects by the parameter from static tables
-        :return:
+
+        :return: A list of scenario object.
         """
         scenarios_dataframe = self.registered_dataframes.get(df_name)
         if scenarios_dataframe is None:
@@ -196,10 +199,6 @@ class DataLoader:
             scenario.setup()
 
             for col_name in cols:
-                if col_name not in scenario.__dict__.keys():
-                    raise MelodieExceptions.Data.TableColumnDoesNotMatchObjectProperty(
-                        df_name, col_name, scenario
-                    )
                 value = scenarios_dataframe.loc[i, col_name]
                 if isinstance(value, str):
                     scenario.__dict__[col_name] = value
@@ -213,7 +212,8 @@ class DataLoader:
     def generate_scenarios(self, manager_type: str) -> List["Scenario"]:
         """
         Generate scenario objects by the parameter from static tables or scenarios_dataframe.
-        :return:
+
+        :return: A list of scenario object.
         """
         if manager_type not in {"simulator", "trainer", "calibrator"}:
             MelodieExceptions.Program.Variable.VariableNotInSet(

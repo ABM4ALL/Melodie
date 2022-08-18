@@ -48,7 +48,6 @@ cdef class AgentList(BaseAgentContainer):
 
     # Unordered map is more efficient than cythonized binary search or python dict
     cpdef Agent get_agent(self, long agent_id)
-    cpdef get_indices(self)
 
     cdef long _get_index(self, long agent_id) except *
     cdef void _set_index(self, long agent_id, long index) except *

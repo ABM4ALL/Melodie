@@ -88,6 +88,7 @@ class DBConn:
         """
         Get the data type of a table.
         If table data type is not specified, return an empty dict.
+
         :param table_name:
         :return:
         """
@@ -99,6 +100,7 @@ class DBConn:
     def close(self):
         """
         Close DB connection.
+
         :return:
         """
         self.connection.dispose()
@@ -106,6 +108,7 @@ class DBConn:
     def clear_database(self):
         """
         Clear the database, deleting all tables.
+
         :return:
         """
         logger.info(f"Database contains tables: {self.connection.table_names()}.")
@@ -190,6 +193,7 @@ class DBConn:
     def drop_table(self, table_name: str):
         """
         Drop table if it exists.
+
         :param table_name:
         :return:
         """
@@ -198,32 +202,17 @@ class DBConn:
     def query(self, sql) -> pd.DataFrame:
         """
         Execute sql command and return the result by pd.DataFrame.
+
         :param sql:
         :return:
         """
         return pd.read_sql(sql, self.connection)
 
-    def paramed_query(
-        self, table_name: str, conditions: Dict[str, Union[int, str, tuple, float]]
-    ) -> pd.DataFrame:
-        conditions = {k: v for k, v in conditions.items() if v is not None}
-        sql = f"select * from {table_name}"
-        if len(conditions) > 0:
-            sql += " where"
-            conditions_count = 0
-            for k, v in conditions.items():
-                if conditions_count == 0:
-                    sql += f" {k}={v}"
-                else:
-                    sql += f" and {k}={v}"
-
-                conditions_count += 1
-        return self.query(sql)
-
 
 def create_db_conn(config: "Config") -> DBConn:
     """
     create a Database by current config
+
     :return:
     """
 

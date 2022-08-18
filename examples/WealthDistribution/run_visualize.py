@@ -9,7 +9,7 @@ if __name__ == "__main__":
         config=config,
         scenario_cls=GiniScenario,
         model_cls=GiniModel,
-        df_loader_cls=GiniDataframeLoader,
+        data_loader_cls=GiniDataframeLoader,
     )
 
     simulator.run_visual()

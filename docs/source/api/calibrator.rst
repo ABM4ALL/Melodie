@@ -3,6 +3,6 @@ Calibrator
 ==========
 
 .. automodule:: Melodie.calibrator
-               :members:
+               :members: Calibrator
                :undoc-members:
                :show-inheritance:

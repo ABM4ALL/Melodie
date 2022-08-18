@@ -3,11 +3,13 @@ import copy
 import json
 import logging
 import multiprocessing
+import threading
 from typing import Dict, Tuple, Callable, Union, List, Any, Optional, ClassVar, Iterator
 
 import cloudpickle
 import pandas as pd
 
+from . import show_prettified_warning
 from .algorithms import AlgorithmParameters
 from .algorithms.ga import MelodieGA
 from .utils import MelodieExceptions
@@ -20,9 +22,11 @@ from .db import create_db_conn
 from .model import Model
 from .scenario_manager import Scenario
 from .simulator import BaseModellingManager
+from .utils.system_info import is_windows
 
 logger = logging.getLogger(__name__)
-pool = None
+pool = None  # for *nix
+th_on_thread = None  # for windows
 
 
 class GATrainerParams(AlgorithmParameters):
@@ -176,7 +180,7 @@ class GATrainerAlgorithm:
     def __init__(
         self, params: GATrainerParams, manager: "Trainer" = None, processors=1
     ):
-        global pool
+        global pool, th_on_thread
         self.manager = manager
         self.params = params
         self.chromosomes = 20
@@ -196,8 +200,7 @@ class GATrainerAlgorithm:
         self._chromosome_counter = 0
         self._current_generation = 0
         self.processors = processors
-        if pool is None:
-            pool = multiprocessing.Pool(processes=processors)
+
         for i in range(processors):
             d = {
                 "model": (
@@ -217,7 +220,26 @@ class GATrainerAlgorithm:
                     self.manager.df_loader_cls.__module__,
                 ),
             }
-            pool.apply_async(sub_routine_trainer, [i, d, self.manager.config.to_dict()])
+            if not is_windows():
+                if pool is None:
+                    pool = multiprocessing.Pool(processes=processors)
+                pool.apply_async(
+                    sub_routine_trainer, [i, d, self.manager.config.to_dict()]
+                )
+            else:
+                if processors > 1:
+                    show_prettified_warning(
+                        "Unluckily, Melodie does not support multi-core calibration on Windows, and this "
+                        "feature will be implemented later. If iteration speed is of great importance "
+                        "for you now, please try this code on a Unix-like machine, such as Linux or Mac"
+                    )
+                th_on_thread = threading.Thread(
+                    target=sub_routine_trainer,
+                    args=[0, d, self.manager.config.to_dict()],
+                )
+
+                th_on_thread.setDaemon(True)
+                th_on_thread.start()
 
     def setup_agent_locations(
         self,
@@ -348,6 +370,7 @@ class GATrainerAlgorithm:
         create_db_conn(self.manager.config).write_dataframe(
             "env_trainer_result", pd.DataFrame([env_record]), if_exists="append"
         )
+
         return agent_records, env_record
 
     def calc_cov_df(
@@ -668,6 +691,7 @@ class Trainer(BaseModellingManager):
 
     def add_environment_property(self, prop: str):
         """
+        Add a property of environment to be recorded in the training voyage.
 
         :return:
         """
@@ -677,6 +701,7 @@ class Trainer(BaseModellingManager):
     def generate_scenarios(self):
         """
         Generate Scenarios for trainer
+
         :return:
         """
         assert self.data_loader is not None
@@ -686,7 +711,7 @@ class Trainer(BaseModellingManager):
         self, trainer_scenario_cls: ClassVar[GATrainerParams]
     ) -> List[GATrainerParams]:
         """
-        Generate Trainer Params-Scenarios.
+        Generate Trainer Parameters.
 
         :return:
         """

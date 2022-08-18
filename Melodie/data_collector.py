@@ -53,6 +53,11 @@ class DataCollector:
         self._time_elapsed = 0
 
     def setup(self):
+        """
+        Setup method, be sure to inherit it.
+
+        :return:
+        """
         pass
 
     def _setup(self):
@@ -61,6 +66,7 @@ class DataCollector:
     def time_elapsed(self):
         """
         Get the time spent of collecting data.
+
         :return:
         """
         return self._time_elapsed
@@ -71,6 +77,7 @@ class DataCollector:
         """
         This method tells the data collector which property and in which agent container it should collect.
         It can also be determined what type the data could be represented as in the database.
+
         :param container_name:
         :param property_name:
         :param as_type:
@@ -87,6 +94,7 @@ class DataCollector:
     def add_environment_property(self, property_name: str, as_type: ClassVar = None):
         """
         This method tells the data collector which property of environment should be collected.
+
         :param property_name:
         :param as_type:
         :return:
@@ -95,17 +103,19 @@ class DataCollector:
             PropertyToCollect(property_name, as_type)
         )
 
-    def env_property_names(self):
+    def env_property_names(self) -> List[str]:
         """
+        Get the environment property names to collect
 
-        :return:
+        :return: List of environment property names
         """
         return [prop.property_name for prop in self._environment_properties_to_collect]
 
-    def agent_property_names(self):
+    def agent_property_names(self) -> Dict[str, List[str]]:
         """
+        Get the agent property names to collect
 
-        :return:
+        :return: Dictionary agent_container_name --> properties_to_gather[]
         """
         return {
             container_name: [prop.property_name for prop in props]
@@ -114,6 +124,7 @@ class DataCollector:
 
     def agent_containers(self) -> List[Tuple[str, "BaseAgentContainer"]]:
         """
+        Get all agent containers from model.
 
         :return:
         """
@@ -124,11 +135,12 @@ class DataCollector:
 
     def collect_agent_properties(self, period: int, run_id: int, scenario_id: int):
         """
+        Collect agent properties.
 
         :param period:
         :param run_id:
         :param scenario_id:
-        :return:
+        :return: None
         """
         agent_containers = self.agent_containers()
         agent_property_names = self.agent_property_names()
@@ -152,25 +164,25 @@ class DataCollector:
             self.agent_properties_dict[container_name].extend(props_list)
 
     @property
-    def status(self):
+    def status(self) -> bool:
         """
         If data collector is enabled.
         Data collector is only enabled in the Simulator, because Trainer and Calibrator are only concerned over
         the properties at the end of the model-running.
 
-        :return:
+        :return: bool.
         """
         from .simulator import Simulator
 
         operator = self.model.scenario.manager
         return isinstance(operator, Simulator)
 
-    def collect(self, period: int):
+    def collect(self, period: int) -> None:
         """
         The main function to collect data.
 
         :param period:
-        :return:
+        :return: None
         """
         if not self.status:
             return
@@ -193,6 +205,11 @@ class DataCollector:
 
     @property
     def db(self):
+        """
+        Create a database connection
+
+        :return:
+        """
         return self.model.create_db_conn()
 
     def save(self):
