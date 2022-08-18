@@ -48,3 +48,4 @@ class StockDataCollector(DataCollector):
             self.db.write_dataframe(
                 "price_volume_history", pd.DataFrame(price_volume_history)
             )
+
