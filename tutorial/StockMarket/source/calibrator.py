@@ -1,9 +1,8 @@
-from typing import Union
 import numpy as np
-from Melodie import create_db_conn
+
 from Melodie.calibrator import Calibrator
-from .environment import StockEnvironment
 from tutorial.StockMarket.source import data_info
+from .environment import StockEnvironment
 
 
 class StockCalibrator(Calibrator):

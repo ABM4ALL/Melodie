@@ -31,16 +31,10 @@ class StockModel(Model):
             self.environment.order_book.clear_orders()
             for tick in range(0, self.scenario.period_ticks):
                 agent = self.agents.random_sample(1)[0]
-                current_price = self.environment.order_book.get_current_price(
-                    period, tick
-                )
+                current_price = self.environment.order_book.get_current_price(period, tick)
                 order = agent.create_order(current_price)
-                transaction = self.environment.order_book.process_order(
-                    order, period, tick
-                )
-                self.environment.order_book.process_transaction(
-                    self.agents, transaction, period, tick
-                )
+                transaction = self.environment.order_book.process_order(order, period, tick)
+                self.environment.order_book.process_transaction(self.agents, transaction, period, tick)
             self.environment.record_period_trading_info(period)
             self.environment.agents_update_wealth(self.agents, period)
             self.environment.agents_update_forecast(self.agents, period)
