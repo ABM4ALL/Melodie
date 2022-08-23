@@ -8,7 +8,6 @@ if TYPE_CHECKING:
     from Melodie import AgentList
     from .scenario import CovidScenario
     from .grid import CovidGrid, CovidSpot
-    from Melodie import Network
 
 
 class CovidAgent(GridAgent, NetworkAgent):
@@ -35,10 +34,10 @@ class CovidAgent(GridAgent, NetworkAgent):
             move_radius = self.scenario.get_move_radius(self.age_group)
             self.rand_move_agent(move_radius, move_radius)
 
-    def infect_from_neighbors(self, grid: "CovidGrid", agents: "AgentList[CovidAgent]"):
+    def infect_from_neighbors(self, agents: "AgentList[CovidAgent]"):
         infection_prob = self.scenario.get_infection_prob(self.health_state)
         if infection_prob > 0:
-            neighbors = grid.get_neighbors(self)
+            neighbors = self.grid.get_neighbors(self)
             for neighbor_category, neighbor_id in neighbors:
                 neighbor_agent: "CovidAgent" = agents.get_agent(neighbor_id)
                 if (
@@ -53,11 +52,10 @@ class CovidAgent(GridAgent, NetworkAgent):
             if random.uniform(0, 1) <= self.scenario.vaccination_ad_success_prob:
                 self.vaccination_trust_state = 1
 
-    def update_vaccination_trust_from_neighbors(
-        self, network: "Network", agents: "AgentList[CovidAgent]"
-    ):
+    def update_vaccination_trust_from_neighbors(self, agents: "AgentList[CovidAgent]"):
+
         if self.vaccination_trust_state == 0:
-            neighbors = network.get_neighbors(self)
+            neighbors = self.network.get_neighbors(self)
             neighbor_trust_count = 0
             for neighbor_category, neighbor_id in neighbors:
                 neighbor_agent = agents.get_agent(neighbor_id)

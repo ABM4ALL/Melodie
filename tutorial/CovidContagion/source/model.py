@@ -43,8 +43,8 @@ class CovidModel(Model):
         for period in self.iterator(self.scenario.period_num):
             for hour in range(0, self.scenario.period_hours):
                 self.environment.agents_move(self.agents)
-                self.environment.agents_infection(self.agents, self.grid)
-            self.environment.agents_update_vaccination_trust(self.agents, self.network)
+                self.environment.agents_infection(self.agents)
+            self.environment.agents_update_vaccination_trust(self.agents)
             self.environment.agents_take_vaccination(self.agents)
             self.environment.agents_health_state_transition(self.agents)
             self.environment.calc_population_infection_state(self.agents)
