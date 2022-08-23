@@ -6,6 +6,7 @@ from typing import Union
 import numpy as np
 
 from Melodie import Grid, Spot, GridAgent, Agent, AgentList
+from Melodie.utils.exceptions import assert_exc_occurs
 from .config import model
 
 logger = logging.getLogger(__name__)
@@ -269,3 +270,51 @@ def test_roles_2():
     )
     spot = grid.get_spot(1, 1)
     print(spot)
+    try:
+        grid.set_spot_property(
+            "a",
+            np.ones(
+                (
+                    100,
+                    10,
+                ),
+                dtype=np.int,
+            )
+            * 100,
+        )
+        assert False
+    except AssertionError as e:
+        assert 'width' in str(e)
+
+    try:
+        grid.set_spot_property(
+            "a",
+            np.ones(
+                (
+                    10,
+                    100,
+                ),
+                dtype=np.int,
+            )
+            * 100,
+        )
+        assert False
+    except AssertionError as e:
+        assert 'height' in str(e)
+
+    try:
+        grid.set_spot_property(
+            "a",
+            np.ones(
+                (
+                    10,
+                    100,
+                    1
+                ),
+                dtype=np.int,
+            )
+            * 100,
+        )
+        assert False
+    except AssertionError as e:
+        assert '2-dimensional' in str(e)

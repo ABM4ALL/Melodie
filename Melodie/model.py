@@ -15,7 +15,7 @@ from .db import create_db_conn, DBConn
 from .scenario_manager import Scenario
 from .table_generator import DataFrameGenerator
 from .network import Network, Edge
-from .visualizer import Visualizer
+from .visualizer import Visualizer, GridVisualizer
 
 logger = logging.getLogger(__name__)
 
@@ -52,11 +52,11 @@ class ModelRunRoutine:
 
 class Model:
     def __init__(
-        self,
-        config: "Config",
-        scenario: "Scenario",
-        run_id_in_scenario: int = 0,
-        visualizer: Visualizer = None,
+            self,
+            config: "Config",
+            scenario: "Scenario",
+            run_id_in_scenario: int = 0,
+            visualizer: Visualizer = None,
     ):
 
         self.scenario = scenario
@@ -68,7 +68,7 @@ class Model:
         self.run_id_in_scenario = run_id_in_scenario
 
         self.network = None
-        self.visualizer = visualizer
+        self.visualizer: "GridVisualizer" = visualizer
         self.initialization_queue: List[
             Union[AgentList, Grid, Environment, DataCollector, Network]
         ] = []
@@ -106,8 +106,8 @@ class Model:
         return create_db_conn(self.config)
 
     def create_agent_list(
-        self,
-        agent_class: Type["Agent"],
+            self,
+            agent_class: Type["Agent"],
     ):
         """
         Create one agent list of model.
@@ -130,7 +130,7 @@ class Model:
         self.initialization_queue.append(env)
         return env
 
-    def create_grid(self, grid_cls: Type["Grid"], spot_cls: Type["Spot"]):
+    def create_grid(self, grid_cls: Type["Grid"] = None, spot_cls: Type["Spot"] = None):
         """
         Create the grid of model
 
@@ -138,12 +138,14 @@ class Model:
         :param spot_cls:
         :return: Grid object created
         """
+        grid_cls = grid_cls if grid_cls is not None else Grid
+        spot_cls = spot_cls if spot_cls is not None else Spot
         grid = grid_cls(spot_cls, self.scenario)
         self.initialization_queue.append(grid)
         return grid
 
     def create_network(
-        self, network_cls: Type["Network"] = None, edge_cls: Type["Edge"] = None
+            self, network_cls: Type["Network"] = None, edge_cls: Type["Edge"] = None
     ):
         """
         Create the network of model
@@ -172,11 +174,11 @@ class Model:
         return data_collector
 
     def create_agent_container(
-        self,
-        agent_class: ClassVar["Agent"],
-        initial_num: int,
-        params_df: pd.DataFrame = None,
-        container_type: str = "list",
+            self,
+            agent_class: ClassVar["Agent"],
+            initial_num: int,
+            params_df: pd.DataFrame = None,
+            container_type: str = "list",
     ) -> Union[AgentList]:
         """
         Create a container for agents
@@ -251,6 +253,14 @@ class Model:
         """
         if (self.visualizer is not None) and (current_step > 0):
             self.visualizer.step(current_step)
+
+    def init_visualize(self):
+        """
+        Be sure to implement it if you would like to use visualizer.
+
+        :return:
+        """
+        raise NotImplementedError
 
     def _setup(self):
         """

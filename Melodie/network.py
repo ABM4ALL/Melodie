@@ -227,6 +227,9 @@ class Network:
     ):
         """
         Set up the connection between agents.
+        The name and parameters come from NetworkX package. For example, The documentation for BA scale-free network
+        is here: https://networkx.org/documentation/stable/reference/generated/networkx.generators.random_graphs.barabasi_albert_graph.html.
+        To create it, network_type is `barabasi_albert_graph`, and parameters should be a dict {"n": 100, "m": 3}.
 
         :param agent_lists:
         :param network_type: str, describing the type of network, which should be the corresponding to networkx.

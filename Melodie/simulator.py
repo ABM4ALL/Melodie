@@ -6,7 +6,7 @@ import logging
 import threading
 import time
 from multiprocessing import Pool
-from typing import ClassVar, Optional, List, Tuple
+from typing import ClassVar, Optional, List, Tuple, Type
 
 import numpy as np
 import pandas as pd
@@ -30,11 +30,11 @@ class BaseModellingManager(abc.ABC):
     """
 
     def __init__(
-        self,
-        config: Config,
-        scenario_cls: ClassVar["Scenario"],
-        model_cls: ClassVar["Model"],
-        data_loader_cls: ClassVar[DataLoader] = None,
+            self,
+            config: Config,
+            scenario_cls: ClassVar["Scenario"],
+            model_cls: ClassVar["Model"],
+            data_loader_cls: ClassVar[DataLoader] = None,
     ):
         self.config: Optional[Config] = config
         self.scenario_cls = scenario_cls
@@ -116,11 +116,12 @@ class BaseModellingManager(abc.ABC):
 
 class Simulator(BaseModellingManager):
     def __init__(
-        self,
-        config: Config,
-        scenario_cls: "ClassVar[Scenario]",
-        model_cls: "ClassVar[Model]",
-        data_loader_cls: "ClassVar[DataLoader]" = None,
+            self,
+            config: Config,
+            scenario_cls: "ClassVar[Scenario]",
+            model_cls: "ClassVar[Model]",
+            data_loader_cls: "ClassVar[DataLoader]" = None,
+            visualizer_cls: "Type[Visualizer]" = None
     ):
         super(Simulator, self).__init__(
             config=config,
@@ -129,7 +130,8 @@ class Simulator(BaseModellingManager):
             data_loader_cls=data_loader_cls,
         )
         self.server_thread: threading.Thread = None
-        self.visualizer: Optional[Visualizer] = None
+
+        self.visualizer: Optional[Visualizer] = None if visualizer_cls is None else visualizer_cls()
 
     def generate_scenarios(self) -> List["Scenario"]:
         """
@@ -142,7 +144,7 @@ class Simulator(BaseModellingManager):
         return self.data_loader.generate_scenarios("simulator")
 
     def run_model(
-        self, config, scenario, run_id, model_class: ClassVar["Model"], visualizer=None
+            self, config, scenario, run_id, model_class: ClassVar["Model"], visualizer=None
     ):
         """
         Run a model once.
@@ -158,12 +160,10 @@ class Simulator(BaseModellingManager):
             config, scenario, run_id_in_scenario=run_id, visualizer=visualizer
         )
         if visualizer is not None:
-            visualizer._model = model
-
-        model._setup()
-
-        if visualizer is not None:
+            visualizer.set_model(model)
             visualizer.start()
+        else:
+            model._setup()
 
         t1 = time.time()
         model.run()
@@ -232,6 +232,8 @@ class Simulator(BaseModellingManager):
         t0 = time.time()
 
         self.setup()
+        if self.visualizer is not None:
+            self.visualizer.setup()
         self.pre_run()
 
         t1 = time.time()
@@ -255,11 +257,6 @@ class Simulator(BaseModellingManager):
 
                 self.visualizer.reset()
                 logger.info("Model reset.")
-
-        t2 = time.time()
-        logger.info(
-            f"Melodie completed all runs, time elapsed totally {t2 - t0}s, and {t2 - t1}s for running."
-        )
 
     def run_parallel(self, cores: int = 2):
         """

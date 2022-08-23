@@ -9,6 +9,7 @@
 * Zhanyi --> 生成文档的api reference
   * 写批注
   * 给内置函数加下划线
+  * 使Network上的Agent可以访问Network
 * calibrator and trainer
 
 #### organization page

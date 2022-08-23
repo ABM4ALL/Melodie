@@ -50,3 +50,7 @@ class CovidModel(Model):
             self.environment.calc_population_infection_state(self.agents)
             self.data_collector.collect(period)
         self.data_collector.save()
+
+    def init_visualize(self):
+        self.visualizer.add_visualize_component('grid', self.grid, {})
+        self.visualizer.add_agent_series("grid", 0, "scatter", "#00ff00")

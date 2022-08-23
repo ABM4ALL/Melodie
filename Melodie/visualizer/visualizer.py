@@ -20,8 +20,9 @@ from .vis_agent_series import AgentSeriesManager
 from .vis_charts import ChartManager
 
 if TYPE_CHECKING:
-    from Melodie import Scenario, Model, Grid
+    from Melodie import Scenario, Model, Grid, Network
 
+    ComponentType = Union[Grid, Network]
 logger = logging.getLogger(__name__)
 
 # Command code
@@ -60,7 +61,7 @@ async def handler(ws: WebSocketServerProtocol, path):
                     "type": "error",
                     "period": 0,
                     "data": f"The number of connections exceeds the upper limit {MAX_ACTIVE_CONNECTIONS}. "
-                    f"Please shutdown unused webpage or modify the limit.",
+                            f"Please shutdown unused webpage or modify the limit.",
                     "modelState": UNCONFIGURED,
                     "status": ERROR,
                 }
@@ -135,7 +136,7 @@ class Visualizer:
         self.current_scenario: "Scenario" = None
         self._model: "Model" = None
         self.scenario_param: Dict[str, Union[int, str, float]] = {}
-        self.visualizer_components: List[Tuple[str, str, Dict]] = []
+        self.visualizer_components: List[Tuple["ComponentType", str, Dict]] = []
 
         self.plot_charts: ChartManager = ChartManager()
         self.agent_series_managers: Dict[str, AgentSeriesManager] = {}
@@ -183,10 +184,10 @@ class Visualizer:
             raise ValueError(f"chart name '{chart_name}' already existed!")
 
     def set_chart_data_source(
-        self,
-        chart_name: str,
-        series_name: str,
-        source: "Callable[[Model], Union[int, float]]",
+            self,
+            chart_name: str,
+            series_name: str,
+            source: "Callable[[Model], Union[int, float]]",
     ):
         self.plot_charts.get_chart(chart_name).get_series(series_name).set_data_source(
             source
@@ -210,6 +211,24 @@ class Visualizer:
                 current_step,
                 len(series.data),
             )
+
+    def _re_init(self):
+        self.agent_series_managers = {}
+        self.plot_charts = ChartManager()
+        self.scenario_param = {}
+        self.visualizer_components = []
+
+    def set_model(self, model: "Model"):
+        """
+        Set model of visualizer. This is called every time the model resets
+
+        :param model:
+        :return:
+        """
+        self._model = model
+        model._setup()
+        self._re_init()
+        self._model.init_visualize()
 
     def send_initial_msg(self, ws: WebSocketServerProtocol):
         formatted = self.format()
@@ -341,7 +360,7 @@ class Visualizer:
                 pass
 
     def generic_handler(
-        self, cmd_type: int, data: Dict[str, Any], ws: WebSocketServerProtocol
+            self, cmd_type: int, data: Dict[str, Any], ws: WebSocketServerProtocol
     ) -> bool:
         """
         The handler for viewing current data, getting scenario parameters.
@@ -381,7 +400,7 @@ class Visualizer:
             if flag in {STEP, CURRENT_DATA}:
                 self.send_current_data()
                 if (
-                    flag == STEP
+                        flag == STEP
                 ):  # If the flag was period, then go to period No.1. So there should be one
                     # queue to put into the condition queue.
                     self.model_state = RUNNING
@@ -445,31 +464,39 @@ class GridVisualizer(Visualizer):
 
         for series_name, data in agent_series_data.items():
             self.agent_series_managers[grid_name].set_series_data(series_name, data)
+        categories = {
+            0: {"name": "healthy", "type": "scatter", "data": [], "itemStyle": {"color": "#0000ff"}, "symbol": "rect"},
+            1: {"name": "infected", "type": "scatter", "data": [], "itemStyle": {"color": "#ff0000"}, "symbol": "rect"},
+            2: {"name": "healthy", "type": "scatter", "data": [], "itemStyle": {"color": "#00ff00"}, "symbol": "rect"},
+            3: {"name": "dead", "type": "scatter", "data": [], "itemStyle": {"color": "#bbbbbb"}, "symbol": "rect"},
+            4: {"name": "vaccinated", "type": "scatter", "data": [], "itemStyle": {"color": "#ff00ff"}, "symbol": "rect"},
+        }
+        for k, series in self.agent_series_managers[grid_name].to_dict().items():
+            for item in series['data']:
+                categories[self._model.agents[item['id']].health_state]['data'].append(item)
+            # series['itemStyle'] =
+            # lst.append(series)
+
         return {
             "name": "grid",
             "type": "grid",
             "data": {
                 "series": [
-                    {
-                        "data": grid_roles,
-                    },
-                ]
-                + [
-                    series
-                    for k, series in self.agent_series_managers[grid_name]
-                    .to_dict()
-                    .items()
-                ]
+                              {
+                                  "data": grid_roles,
+                              },
+                          ]
+                          + [category for _, category in categories.items()]
             },
         }
 
     def add_agent_series(
-        self,
-        component_name: str,
-        series_id: int,
-        series_type: str,
-        color: str,
-        symbol="rect",
+            self,
+            component_name: str,
+            series_id: int,
+            series_type: str,
+            color: str,
+            symbol="rect",
     ):
         if series_type not in {"scatter"}:
             MelodieExceptions.Program.Variable.VariableNotInSet(
@@ -482,9 +509,15 @@ class GridVisualizer(Visualizer):
         )
 
     def add_visualize_component(
-        self, component: str, type: str, color_categories: Dict[int, str]
+            self,
+            name: str,
+            component: "ComponentType",
+
+            color_categories: Dict[int, str]
     ):
-        assert type in {"grid", "network"}
+        from ..boost.grid import Grid
+        from ..network import Network
+        MelodieExceptions.Assertions.Type(f"argument \"component\"", component, (Grid, Network))
 
         chart_options = {
             "animation": False,
@@ -510,14 +543,15 @@ class GridVisualizer(Visualizer):
                 }
             ],
         }
-        self.visualizer_components.append((component, type, chart_options))
+        self.visualizer_components.append((component, name, chart_options))
 
     def format(self):
+        from ..boost.grid import Grid
         visualizers = []
-        for vis_component_name, vis_component_type, _ in self.visualizer_components:
-            if vis_component_type == "grid":
+        for vis_component, vis_component_name, _ in self.visualizer_components:
+            if isinstance(vis_component, Grid):
                 r = self.parse_grid_series(
-                    getattr(self._model, vis_component_name), vis_component_name
+                    vis_component, vis_component_name
                 )
                 visualizers.append(r)
             else:
@@ -575,9 +609,9 @@ class NetworkVisualizer(Visualizer):
             self.edge_roles[edge] = pos
 
     def parse_layout(
-        self,
-        node_info: List[Any],
-        parser: Callable[[Any], Tuple[Union[str, int], Tuple[float, float]]] = None,
+            self,
+            node_info: List[Any],
+            parser: Callable[[Any], Tuple[Union[str, int], Tuple[float, float]]] = None,
     ):
         """
 

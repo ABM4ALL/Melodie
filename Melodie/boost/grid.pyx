@@ -274,7 +274,9 @@ cdef class Grid:
     cpdef _add_agent_container(self, object category, str initial_placement) except *:
         cdef GridAgent agent
         cdef tuple pos
-        category_id = category[0].category
+        assert category is not None, f"Agent Container was None"
+        agent = category[0]
+        category_id = agent.category
         assert 0<=category_id<100, f"Category ID {category_id} should be a int between [0, 100)"
         assert self._agent_containers[category_id] is None, f"Category ID {category_id} already existed!"
         self._agent_containers[category_id] = category
@@ -568,8 +570,9 @@ cdef class Grid:
         Set property from an 2d-numpy-array to each spot.
 
         """
-        assert len(array_2d) == self._height
-        assert len(array_2d[0]) == self._width
+        assert len(array_2d.shape) == 2, f"The spot property array should be 2-dimensional, but got shape: {array_2d.shape}"
+        assert len(array_2d) == self._height, f"The rows of spot property matrix is {len(array_2d)} while the height of grid is {self._height}."
+        assert len(array_2d[0]) == self._width, f"The columns of spot property matrix is {len(array_2d[0])} while the width of grid is {self._width}."
         for y, row in enumerate(array_2d):
             for x, value in enumerate(row):
                 spot = self.get_spot(x, y)
