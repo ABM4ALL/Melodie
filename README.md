@@ -10,6 +10,11 @@
   * 写批注
   * 给内置函数加下划线
 
+* agent可以访问self.network
+* 以render_building为例，data_collector的时间记录：自定义函数算在了model-run里(加装饰符或删掉分部分计时？)
+* create_grid和create_network的默认参数grid_cls, spot_cls...
+* 把各种xxx_id改成id_xxx
+
 #### organization page
 * library --> papers
 * articles in Chinese? (from WeChat)
