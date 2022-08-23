@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING
 
-from Melodie import Model, Network, Edge
+from Melodie import Model
 from tutorial.CovidContagion.source import data_info
 from .agent import CovidAgent
 from .data_collector import CovidDataCollector
