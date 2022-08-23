@@ -59,7 +59,7 @@ id_network_type = DataFrameInfo(
 agent_params = DataFrameInfo(
     df_name="agent_params",
     columns={
-        "scenario_id": sqlalchemy.Integer(),
+        "id_scenario": sqlalchemy.Integer(),
         "id": sqlalchemy.Integer(),
         "x": sqlalchemy.Integer(),
         "y": sqlalchemy.Integer(),

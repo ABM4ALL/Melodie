@@ -162,7 +162,7 @@ class MelodieExceptions:
         ID = 1200
 
         @staticmethod
-        def ScenarioIDDuplicatedError(scenario_id):
+        def ScenarioIDDuplicatedError(id_scenario):
             """
             Scenario ID should be unique. If there are identical scenario-id in the scenario table or generated,
             this error will be raised.
@@ -191,11 +191,11 @@ class MelodieExceptions:
 
             """
             return MelodieException(
-                1201, f"Scenario id {scenario_id} was duplicated, which is not allowed."
+                1201, f"Scenario id {id_scenario} was duplicated, which is not allowed."
             )
 
         @staticmethod
-        def ScenarioIDTypeError(scenario_id):
+        def ScenarioIDTypeError(id_scenario):
             """
             Scenario ID should be integer type.
 
@@ -204,7 +204,7 @@ class MelodieExceptions:
             """
             return MelodieException(
                 1202,
-                f"Scenario id {scenario_id} should be int. However its type was {type(scenario_id)}.",
+                f"Scenario id {id_scenario} should be int. However its type was {type(id_scenario)}.",
             )
 
         @staticmethod

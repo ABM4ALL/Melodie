@@ -115,7 +115,7 @@ class DataFrameGenerator:
         """
         data_list = []
         for agent_id in range(0, self.num_generator(scenario)):
-            d = {"scenario_id": scenario.id, "id": agent_id}
+            d = {"id_scenario": scenario.id, "id": agent_id}
             generated = self._row_generator(scenario)
             if isinstance(generated, dict):
                 d.update(generated)

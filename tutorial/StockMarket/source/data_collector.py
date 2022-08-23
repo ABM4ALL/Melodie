@@ -32,6 +32,7 @@ class StockDataCollector(DataCollector):
             transaction_history_df = order_book.get_transaction_history_df()
             self.db.write_dataframe("transaction_history", transaction_history_df)
 
+    @DataCollector.calc_time
     def save_price_volume_history(self, order_book: "OrderBook"):
         if self.status:
             price_volume_history = []
@@ -48,4 +49,3 @@ class StockDataCollector(DataCollector):
             self.db.write_dataframe(
                 "price_volume_history", pd.DataFrame(price_volume_history)
             )
-

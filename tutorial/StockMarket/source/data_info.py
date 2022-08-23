@@ -119,7 +119,7 @@ calibrator_target = DataFrameInfo(
 agent_params = DataFrameInfo(
     df_name="agent_params",
     columns={
-        "scenario_id": sqlalchemy.Integer(),
+        "id_scenario": sqlalchemy.Integer(),
         "id": sqlalchemy.Integer(),
         "fundamentalist_weight": sqlalchemy.Integer(),
         "fundamentalist_forecast": sqlalchemy.Float(),

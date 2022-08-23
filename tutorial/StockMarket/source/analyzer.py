@@ -20,9 +20,9 @@ class StockAnalyzer:
         )
         plt.close(fig)
 
-    def plot_health_state_share(self, scenario_id: int = 0, run_id: int = 0):
+    def plot_health_state_share(self, id_scenario: int = 0, id_run: int = 0):
         df = self.db.read_dataframe("env_result")
-        df = df.loc[(df["scenario_id"] == scenario_id) & (df["run_id"] == run_id)]
+        df = df.loc[(df["id_scenario"] == id_scenario) & (df["id_run"] == id_run)]
         values_dict = {
             "Not-infected": df["s0"],
             "Infected": df["s1"],
@@ -46,4 +46,4 @@ class StockAnalyzer:
             )
             bottom += values
         ax.legend(fontsize=12)
-        self.save_fig(figure, f"PopulationInfection_S{scenario_id}R{run_id}")
+        self.save_fig(figure, f"PopulationInfection_S{id_scenario}R{id_run}")

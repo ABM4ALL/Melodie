@@ -7,14 +7,27 @@ from .boost.agent_list import AgentList
 logger = logging.getLogger(__name__)
 
 
+class NetworkAgent(Agent):
+    id: int
+    category: int
+
+    def set_category(self):
+        """
+        Set the category of network agent.
+
+        :return:
+        """
+        raise NotImplementedError
+
+
 class Edge:
     def __init__(
-        self,
-        category_1: int,
-        agent_1_id: int,
-        category_2: int,
-        agent_2_id: int,
-        edge_properties: Dict[str, Union[int, str, float, bool]],
+            self,
+            category_1: int,
+            agent_1_id: int,
+            category_2: int,
+            agent_2_id: int,
+            edge_properties: Dict[str, Union[int, str, float, bool]],
     ):
         self.category_1 = category_1
         self.agent_1_id = agent_1_id
@@ -108,7 +121,7 @@ class Network:
             self.edges[target_id].pop(source_id)
 
     def _get_neighbor_positions(
-        self, agent_id: int, category: int
+            self, agent_id: int, category: int
     ) -> List[Tuple[int, int]]:
         neighbor_ids = self.edges[(category, agent_id)]
         if neighbor_ids is None:
@@ -168,16 +181,16 @@ class Network:
         :param agent:
         :return:
         """
-        assert hasattr(agent, "category")
+        assert isinstance(agent, NetworkAgent)
         self._add_agent(agent.category, agent.id)
 
     def create_edge(
-        self,
-        agent_1_id: int,
-        category_1: int,
-        agent_2_id: int,
-        category_2: int,
-        **edge_properties,
+            self,
+            agent_1_id: int,
+            category_1: int,
+            agent_2_id: int,
+            category_2: int,
+            **edge_properties,
     ):
         """
         Create a new edge from one agent to another agent.
@@ -213,6 +226,7 @@ class Network:
         :param agent:
         :return:
         """
+        assert isinstance(agent, NetworkAgent)
         targets = self.edges[(agent.category, agent.id)]
         edges: List[Edge] = []
         for target_node, edge in targets.items():
@@ -220,10 +234,10 @@ class Network:
         return edges
 
     def setup_agent_connections(
-        self,
-        agent_lists: List[AgentList],
-        network_type: str,
-        network_params: dict = None,
+            self,
+            agent_lists: List[AgentList],
+            network_type: str,
+            network_params: dict = None,
     ):
         """
         Set up the connection between agents.

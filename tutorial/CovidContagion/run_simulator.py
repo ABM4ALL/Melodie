@@ -13,5 +13,5 @@ if __name__ == "__main__":
         data_loader_cls=CovidDataLoader,
         visualizer_cls=GridVisualizer
     )
-    # simulator.run()
-    simulator.run_visual()
+    simulator.run()
+    # simulator.run_visual()

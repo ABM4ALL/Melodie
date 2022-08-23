@@ -71,20 +71,20 @@ def test_sqlalchemy_data_types():
 #
 # def test_get_agent_results():
 #     agents_df = create_db_conn(cfg).query_agent_results(
-#         "agent", scenario_id=0, agent_id=1
+#         "agent", id_scenario=0, agent_id=1
 #     )
 #     assert agents_df.shape[0] == 200
-#     agents_df = create_db_conn(cfg).query_agent_results("agent", scenario_id=0, period=1)
+#     agents_df = create_db_conn(cfg).query_agent_results("agent", id_scenario=0, period=1)
 #     assert agents_df.shape[0] == 100
 
 
 # def test_get_env_results():
 #     env_df = create_db_conn(cfg).query_env_results()
 #     assert env_df.shape[0] == 600
-#     env_df = create_db_conn(cfg).query_env_results(scenario_id=0)
+#     env_df = create_db_conn(cfg).query_env_results(id_scenario=0)
 #     assert env_df.shape[0] == 200
 #     print(env_df)
-#     env_df = create_db_conn(cfg).query_env_results(scenario_id=0, period=1)
+#     env_df = create_db_conn(cfg).query_env_results(id_scenario=0, period=1)
 #     assert env_df.shape[0] == 1
 #     assert env_df["period"][0] == 1
 

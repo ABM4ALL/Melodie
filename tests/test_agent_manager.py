@@ -101,7 +101,7 @@ def test_properties_with_scenario():
     """
     Test when target scenario id is 100.
 
-    The agent list should load the data with scenario_id==100, and should not load the data with scenario_id==0
+    The agent list should load the data with id_scenario==100, and should not load the data with id_scenario==0
 
     :return:
     """
@@ -111,11 +111,11 @@ def test_properties_with_scenario():
         l = [j for j in range(n)]
         random.shuffle(l)
         df = pd.DataFrame(
-            [{"id": i, "scenario_id": 0, "a": random.randint(-100, 100)} for i in l]
+            [{"id": i, "id_scenario": 0, "a": random.randint(-100, 100)} for i in l]
             + [
                 {
                     "id": i,
-                    "scenario_id": model.scenario.id,
+                    "id_scenario": model.scenario.id,
                     "a": random.randint(-100, 100),
                 }
                 for i in l
@@ -124,7 +124,7 @@ def test_properties_with_scenario():
         al.setup_agents(n)
         al.set_properties(df)
         assert len(al) == n
-        df_scenario = df.query(f"scenario_id == {model.scenario.id}")
+        df_scenario = df.query(f"id_scenario == {model.scenario.id}")
         for agent in al:
             assert agent.a == (df_scenario[df_scenario["id"] == agent.id]["a"].item())
 

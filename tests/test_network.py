@@ -1,4 +1,5 @@
 from Melodie import AgentList, Agent, Model, Scenario, Edge, Network
+from Melodie.network import NetworkAgent
 from tests.config import cfg
 
 
@@ -22,7 +23,7 @@ class DemoAgent(Agent):
         self.category = 0
 
 
-class Wolf(Agent):
+class Wolf(NetworkAgent):
     # def set_category(self):
 
     def setup(self):

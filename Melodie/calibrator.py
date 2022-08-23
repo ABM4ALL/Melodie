@@ -99,7 +99,7 @@ class CalibratorAlgorithmMeta:
 
     def __init__(self):
         self._freeze = False
-        self.calibrator_scenario_id = 0
+        self.calibrator_id_scenario = 0
         self.calibrator_params_id = 1
         self.path_id = 0
         self.generation = 0
@@ -493,7 +493,7 @@ class Calibrator(BaseModellingManager):
 
         scenario_cls = GACalibratorParams
         for scenario in self.scenarios:
-            self.current_algorithm_meta.calibrator_scenario_id = scenario.id
+            self.current_algorithm_meta.calibrator_id_scenario = scenario.id
             calibration_scenarios = self.get_params_scenarios()
             for calibrator_scenario in calibration_scenarios:
                 calibrator_scenario = scenario_cls.from_dataframe_record(

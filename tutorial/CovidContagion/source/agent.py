@@ -2,6 +2,7 @@ import random
 from typing import TYPE_CHECKING
 
 from Melodie import GridAgent
+from Melodie.network import NetworkAgent
 
 if TYPE_CHECKING:
     from Melodie import AgentList
@@ -10,7 +11,7 @@ if TYPE_CHECKING:
     from Melodie import Network
 
 
-class CovidAgent(GridAgent):
+class CovidAgent(GridAgent, NetworkAgent):
     scenario: "CovidScenario"
     grid: "CovidGrid"
     spot: "CovidSpot"

@@ -145,8 +145,8 @@ class DBConn:
     def read_dataframe(
         self,
         table_name: str,
-        scenario_id: Optional[int] = None,
-        run_id: Optional[int] = None,
+        id_scenario: Optional[int] = None,
+        id_run: Optional[int] = None,
         conditions: List[Tuple[str, str]] = None,
     ) -> pd.DataFrame:
         """
@@ -157,13 +157,13 @@ class DBConn:
         .. code-block:: python
             :linenos:
 
-            df = create_db_conn(config).read_dataframe('agent_params', scenario_id=0,
+            df = create_db_conn(config).read_dataframe('agent_params', id_scenario=0,
                                                        conditions=[('id', "<=100"), ("health_state", '=1')])
             print(df)
 
         :param table_name:
-        :param scenario_id:
-        :param run_id:
+        :param id_scenario:
+        :param id_run:
         :param conditions:
         :return:
         """
@@ -171,11 +171,11 @@ class DBConn:
         condition_phrases = []
         if conditions is not None:
             condition_phrases.extend([item[0] + item[1] for item in conditions])
-        if scenario_id is not None:
-            # assert isinstance(scenario_id, int)
-            condition_phrases.append(f"scenario_id={scenario_id}")
-        if run_id is not None:
-            condition_phrases.append(f"run_id={scenario_id}")
+        if id_scenario is not None:
+            # assert isinstance(id_scenario, int)
+            condition_phrases.append(f"id_scenario={id_scenario}")
+        if id_run is not None:
+            condition_phrases.append(f"id_run={id_scenario}")
         try:
             sql = f"select * from {table_name}"
             if len(condition_phrases) != 0:

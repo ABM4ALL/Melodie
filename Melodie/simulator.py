@@ -144,7 +144,7 @@ class Simulator(BaseModellingManager):
         return self.data_loader.generate_scenarios("simulator")
 
     def run_model(
-            self, config, scenario, run_id, model_class: ClassVar["Model"], visualizer=None
+            self, config, scenario, id_run, model_class: ClassVar["Model"], visualizer=None
     ):
         """
         Run a model once.
@@ -152,12 +152,12 @@ class Simulator(BaseModellingManager):
         :return:
         """
         logger.info(
-            f"Simulation started - scenario_id = {scenario.id}, run_id = {run_id}"
+            f"Simulation started - id_scenario = {scenario.id}, id_run = {id_run}"
         )
         t0 = time.time()
 
         model: Model = model_class(
-            config, scenario, run_id_in_scenario=run_id, visualizer=visualizer
+            config, scenario, run_id_in_scenario=id_run, visualizer=visualizer
         )
         if visualizer is not None:
             visualizer.set_model(model)
@@ -179,7 +179,7 @@ class Simulator(BaseModellingManager):
             data_collect_time = 0.0
         model_run_time -= data_collect_time
         info = (
-            f"Simulation completed - scenario_id = {scenario.id}, run_id = {run_id}\n"
+            f"Simulation completed - id_scenario = {scenario.id}, id_run = {id_run}\n"
             f"    model-setup   \t {MelodieGlobalConfig.Logger.round_elapsed_time(model_setup_time)}s\n"
             f"    model-run     \t {MelodieGlobalConfig.Logger.round_elapsed_time(model_run_time)}s\n"
             f"    data-collect  \t {MelodieGlobalConfig.Logger.round_elapsed_time(data_collect_time)}s\n"
@@ -213,9 +213,9 @@ class Simulator(BaseModellingManager):
         self.pre_run()
         t1 = time.time()
         for scenario_index, scenario in enumerate(self.scenarios):
-            for run_id in range(scenario.run_num):
+            for id_run in range(scenario.run_num):
                 self.run_model(
-                    self.config, scenario, run_id, self.model_cls, visualizer=None
+                    self.config, scenario, id_run, self.model_cls, visualizer=None
                 )
 
         t2 = time.time()
@@ -306,11 +306,11 @@ class Simulator(BaseModellingManager):
 
         parameters: List[Tuple] = []
         for scenario_index, scenario in enumerate(self.scenarios):
-            for run_id in range(scenario.run_num):
+            for id_run in range(scenario.run_num):
                 params = (
                     self.config,
                     scenario,
-                    run_id,
+                    id_run,
                     self.model_cls,
                 )
                 parameters.append(params)

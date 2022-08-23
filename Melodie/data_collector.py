@@ -72,7 +72,7 @@ class DataCollector:
         return self._time_elapsed
 
     def add_agent_property(
-        self, container_name: str, property_name: str, as_type: ClassVar = None
+            self, container_name: str, property_name: str, as_type: ClassVar = None
     ):
         """
         This method tells the data collector which property and in which agent container it should collect.
@@ -133,13 +133,13 @@ class DataCollector:
             containers.append((container_name, getattr(self.model, container_name)))
         return containers
 
-    def collect_agent_properties(self, period: int, run_id: int, scenario_id: int):
+    def collect_agent_properties(self, period: int, id_run: int, id_scenario: int):
         """
         Collect agent properties.
 
         :param period:
-        :param run_id:
-        :param scenario_id:
+        :param id_run:
+        :param id_scenario:
         :return: None
         """
         agent_containers = self.agent_containers()
@@ -151,8 +151,8 @@ class DataCollector:
             for i in range(length):
                 agent_props_dict = agent_prop_list[i]
                 tmp_dic = {
-                    "scenario_id": scenario_id,
-                    "run_id": run_id,
+                    "id_scenario": id_scenario,
+                    "id_run": id_run,
                     "period": period,
                     "id": agent_props_dict.pop("id"),
                 }
@@ -189,8 +189,8 @@ class DataCollector:
         t0 = time.time()
 
         env_dic = {
-            "scenario_id": self.model.scenario.id,
-            "run_id": self.model.run_id_in_scenario,
+            "id_scenario": self.model.scenario.id,
+            "id_run": self.model.run_id_in_scenario,
             "period": period,
         }
         env_dic.update(self.model.environment.to_dict(self.env_property_names()))
@@ -211,6 +211,24 @@ class DataCollector:
         :return:
         """
         return self.model.create_db_conn()
+
+    @staticmethod
+    def calc_time(method):
+        """
+        Works as a decorator.
+        If you would like to define a custom data-collect method, please use `DataCollector.calc_time` as a decorator.
+
+        :return:
+        """
+
+        def wrapper(obj: DataCollector, *args, **kwargs):
+            t0 = time.time()
+            ret = method(obj, *args, **kwargs)
+            t1 = time.time()
+            obj._time_elapsed += t1 - t0
+            return ret
+
+        return wrapper
 
     def save(self):
         """

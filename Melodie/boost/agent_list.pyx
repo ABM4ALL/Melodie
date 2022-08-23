@@ -129,11 +129,11 @@ cdef class BaseAgentContainer():
         MelodieExceptions.Assertions.Type('props_df', props_df, pd.DataFrame)
 
         param_names = [param for param in props_df.columns if param not in
-                       {'scenario_id'}]
+                       {'id_scenario'}]
 
         # props_df_cpy: Optional[pd.DataFrame] = None
-        if "scenario_id" in props_df.columns:
-            props_df_cpy = props_df.query(f"scenario_id == {self.scenario.id}").copy(True)
+        if "id_scenario" in props_df.columns:
+            props_df_cpy = props_df.query(f"id_scenario == {self.scenario.id}").copy(True)
         else:
             props_df_cpy = props_df.copy()  # deep copy this dataframe.
         

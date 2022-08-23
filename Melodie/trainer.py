@@ -87,7 +87,7 @@ class TrainerAlgorithmMeta:
 
     def __init__(self):
         self._freeze = False
-        self.trainer_scenario_id = 0
+        self.trainer_id_scenario = 0
         self.trainer_params_id = 1
         self.path_id = 0
         self.generation = 0
@@ -625,7 +625,7 @@ class Trainer(BaseModellingManager):
         trainer_scenario_cls = self.get_trainer_scenario_cls()
         self.current_algorithm_meta = GATrainerAlgorithmMeta()
         for scenario in self.scenarios:
-            self.current_algorithm_meta.trainer_scenario_id = scenario.id
+            self.current_algorithm_meta.trainer_id_scenario = scenario.id
             for trainer_params in self.generate_trainer_params_list(
                 trainer_scenario_cls
             ):
@@ -633,7 +633,7 @@ class Trainer(BaseModellingManager):
                 for path_id in range(trainer_params.path_num):
                     self.current_algorithm_meta.path_id = path_id
                     logger.info(
-                        f"trainer_scenario_id = {scenario.id}, path_id = {path_id}"
+                        f"trainer_id_scenario = {scenario.id}, path_id = {path_id}"
                     )
                     self.run_once_new(scenario, trainer_params)
 
