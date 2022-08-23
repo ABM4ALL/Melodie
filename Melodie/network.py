@@ -10,6 +10,10 @@ logger = logging.getLogger(__name__)
 class NetworkAgent(Agent):
     id: int
     category: int
+    network: "Network"
+
+    def _set_network(self, network: "Network"):
+        self.network = network
 
     def set_category(self):
         """
@@ -182,6 +186,7 @@ class Network:
         :return:
         """
         assert isinstance(agent, NetworkAgent)
+        agent._set_network(self)
         self._add_agent(agent.category, agent.id)
 
     def create_edge(
@@ -260,6 +265,7 @@ class Network:
             assert isinstance(category, int)
             for agent in agent_list:
                 self._add_agent(category, agent.id)
+                agent._set_network(self)
                 node_id_to_node_type_map[node_id] = (category, agent.id)
                 node_id += 1
 

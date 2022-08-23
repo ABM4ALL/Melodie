@@ -10,7 +10,7 @@ from .data_collector import DataCollector
 from .data_loader import DataFrameInfo, DataLoader
 from .db import DBConn, create_db_conn
 from .model import Model
-from .network import Edge, Network
+from .network import Edge, Network, NetworkAgent
 from .scenario_manager import Scenario
 from .simulator import Simulator
 from .table_generator import DataFrameGenerator

@@ -2,7 +2,7 @@ import random
 from typing import TYPE_CHECKING
 
 from Melodie import GridAgent
-from Melodie.network import NetworkAgent
+from Melodie import NetworkAgent
 
 if TYPE_CHECKING:
     from Melodie import AgentList
