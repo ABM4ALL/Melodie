@@ -21,7 +21,7 @@ class NetworkAgent(Agent):
 
         :return:
         """
-        raise NotImplementedError
+        raise NotImplementedError("Method `set_category` should be implemented for custom NetworkAgent.")
 
 
 class Edge:
@@ -186,6 +186,7 @@ class Network:
         :return:
         """
         assert isinstance(agent, NetworkAgent)
+        agent.set_category()
         agent._set_network(self)
         self._add_agent(agent.category, agent.id)
 
@@ -261,12 +262,12 @@ class Network:
         node_id = 0
         node_id_to_node_type_map: Dict[int, NodeType] = {}
         for agent_list in agent_lists:
-            category = agent_list[0].category
-            assert isinstance(category, int)
+            # category = agent_list[0].category
+            # assert isinstance(category, int)
             for agent in agent_list:
-                self._add_agent(category, agent.id)
+                self.add_agent(agent)
                 agent._set_network(self)
-                node_id_to_node_type_map[node_id] = (category, agent.id)
+                node_id_to_node_type_map[node_id] = (agent.category, agent.id)
                 node_id += 1
 
         g = getattr(nx, network_type)(

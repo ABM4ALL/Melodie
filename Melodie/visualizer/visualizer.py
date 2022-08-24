@@ -20,7 +20,7 @@ from .vis_agent_series import AgentSeriesManager
 from .vis_charts import ChartManager
 
 if TYPE_CHECKING:
-    from Melodie import Scenario, Model, Grid, Network
+    from Melodie import Scenario, Model, Grid, Network, Agent
 
     ComponentType = Union[Grid, Network]
 logger = logging.getLogger(__name__)
@@ -136,7 +136,7 @@ class Visualizer:
         self.current_scenario: "Scenario" = None
         self._model: "Model" = None
         self.scenario_param: Dict[str, Union[int, str, float]] = {}
-        self.visualizer_components: List[Tuple["ComponentType", str, Dict]] = []
+        self.visualizer_components: List[Tuple["ComponentType", str, Dict, Dict, Callable[['Agent'], int]]] = []
 
         self.plot_charts: ChartManager = ChartManager()
         self.agent_series_managers: Dict[str, AgentSeriesManager] = {}
@@ -258,7 +258,7 @@ class Visualizer:
 
     def get_visualizers_initial_options(self):
         initial_options = []
-        for component_name, component_type, options in self.visualizer_components:
+        for component_name, component_type, options, _1, _2 in self.visualizer_components:
             if component_type == "grid":
                 initial_options.append(options)
             else:
@@ -459,21 +459,27 @@ class GridVisualizer(Visualizer):
     def convert_to_1d(self, x, y):
         return x * self.height + y
 
-    def parse_grid_series(self, grid: "Grid", grid_name: str):
+    def parse_grid_series(self, grid: "Grid", grid_name: str, agent_roles: Dict[int, Dict[str, Any]],
+                          roles_getter: Callable[['Agent'], int]):
         grid_roles, agent_series_data = grid.get_colormap()
-
+        categories = agent_roles.copy()
+        for k, v in categories.items():
+            v['data'] = []
         for series_name, data in agent_series_data.items():
             self.agent_series_managers[grid_name].set_series_data(series_name, data)
-        categories = {
-            0: {"name": "healthy", "type": "scatter", "data": [], "itemStyle": {"color": "#0000ff"}, "symbol": "rect"},
-            1: {"name": "infected", "type": "scatter", "data": [], "itemStyle": {"color": "#ff0000"}, "symbol": "rect"},
-            2: {"name": "healthy", "type": "scatter", "data": [], "itemStyle": {"color": "#00ff00"}, "symbol": "rect"},
-            3: {"name": "dead", "type": "scatter", "data": [], "itemStyle": {"color": "#bbbbbb"}, "symbol": "rect"},
-            4: {"name": "vaccinated", "type": "scatter", "data": [], "itemStyle": {"color": "#ff00ff"}, "symbol": "rect"},
-        }
+        # categories = {
+        #     0: {"name": "healthy", "type": "scatter", "data": [], "itemStyle": {"color": "#0000ff"}, "symbol": "rect"},
+        #     1: {"name": "infected", "type": "scatter", "data": [], "itemStyle": {"color": "#ff0000"}, "symbol": "rect"},
+        #     2: {"name": "healthy", "type": "scatter", "data": [], "itemStyle": {"color": "#00ff00"}, "symbol": "rect"},
+        #     3: {"name": "dead", "type": "scatter", "data": [], "itemStyle": {"color": "#bbbbbb"}, "symbol": "rect"},
+        #     4: {"name": "vaccinated", "type": "scatter", "data": [], "itemStyle": {"color": "#ff00ff"},
+        #         "symbol": "rect"},
+        # }
+
         for k, series in self.agent_series_managers[grid_name].to_dict().items():
             for item in series['data']:
-                categories[self._model.agents[item['id']].health_state]['data'].append(item)
+                role = roles_getter(self._model.agents[item['id']])
+                categories[role]['data'].append(item)
             # series['itemStyle'] =
             # lst.append(series)
 
@@ -494,8 +500,10 @@ class GridVisualizer(Visualizer):
             self,
             component_name: str,
             series_id: int,
-            series_type: str,
-            color: str,
+            role_getter: Callable[["Agent"], int],
+            roles_repr: Dict,
+            series_type: str = "scatter",
+            color: str = "#000000",
             symbol="rect",
     ):
         if series_type not in {"scatter"}:
@@ -505,7 +513,7 @@ class GridVisualizer(Visualizer):
         if component_name not in self.agent_series_managers:
             self.agent_series_managers[component_name] = AgentSeriesManager()
         self.agent_series_managers[component_name].add_series(
-            series_id, series_type, color, symbol
+            series_id, series_type, role_getter, roles_repr, color, symbol
         )
 
     def add_visualize_component(
@@ -513,7 +521,10 @@ class GridVisualizer(Visualizer):
             name: str,
             component: "ComponentType",
 
-            color_categories: Dict[int, str]
+            color_categories: Dict[int, str],
+            agent_roles: Dict[int, Dict[str, Any]],
+            roles_getter: Callable[['Agent'], int]
+
     ):
         from ..boost.grid import Grid
         from ..network import Network
@@ -543,15 +554,15 @@ class GridVisualizer(Visualizer):
                 }
             ],
         }
-        self.visualizer_components.append((component, name, chart_options))
+        self.visualizer_components.append((component, name, chart_options, agent_roles, roles_getter))
 
     def format(self):
         from ..boost.grid import Grid
         visualizers = []
-        for vis_component, vis_component_name, _ in self.visualizer_components:
+        for vis_component, vis_component_name, _1, agent_roles, roles_getter in self.visualizer_components:
             if isinstance(vis_component, Grid):
                 r = self.parse_grid_series(
-                    vis_component, vis_component_name
+                    vis_component, vis_component_name, agent_roles, roles_getter
                 )
                 visualizers.append(r)
             else:

@@ -2,7 +2,7 @@ import random
 
 import pandas as pd
 
-from Melodie import Agent, AgentList, GridAgent, AgentDict
+from Melodie import Agent, AgentList, GridAgent, AgentDict, NetworkAgent
 
 from .config import model
 
@@ -10,6 +10,7 @@ from .config import model
 class TestAgent(Agent):
     def setup(self):
         self.a = 0
+
 
 
 def test_repr():
