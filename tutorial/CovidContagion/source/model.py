@@ -52,22 +52,15 @@ class CovidModel(Model):
         self.data_collector.save()
 
     def init_visualize(self):
-        self.visualizer.add_visualize_component('grid', self.grid, {}, {
-            0: {"name": "healthy", "type": "scatter",
-                "itemStyle": {"color": "#0000ff"}, "symbol": "rect"},
-            1: {"name": "infected", "type": "scatter",
-                "itemStyle": {"color": "#ff0000"}, "symbol": "rect"},
-            2: {"name": "healthy", "type": "scatter",
-                "itemStyle": {"color": "#00ff00"}, "symbol": "rect"},
-            3: {"name": "dead", "type": "scatter",
-                "itemStyle": {"color": "#bbbbbb"}, "symbol": "rect"},
-            4: {"name": "vaccinated", "type": "scatter",
-                "itemStyle": {"color": "#ff00ff"},
-                "symbol": "rect"},
-        },lambda agent: agent.health_state,
-                                                )
-        self.visualizer.add_agent_series("grid",
-                                         0,
-                                         lambda agent: agent.health_state,
-                                         {}
-                                         )
+        self.visualizer. \
+            add_visualize_component(
+            'grid', self.grid, {},
+            {
+                0: {"name": "healthy", "type": "scatter", "itemStyle": {"color": "#0000ff"}, "symbol": "rect"},
+                1: {"name": "infected", "type": "scatter", "itemStyle": {"color": "#ff0000"}, "symbol": "rect"},
+                2: {"name": "healthy", "type": "scatter", "itemStyle": {"color": "#00ff00"}, "symbol": "rect"},
+                3: {"name": "dead", "type": "scatter", "itemStyle": {"color": "#bbbbbb"}, "symbol": "rect"},
+                4: {"name": "vaccinated", "type": "scatter", "itemStyle": {"color": "#ff00ff"}, "symbol": "rect"},
+            },
+            lambda agent: agent.health_state)
+        self.visualizer.add_agent_series("grid", 0, self.agents)

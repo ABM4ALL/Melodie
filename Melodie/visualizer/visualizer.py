@@ -20,7 +20,7 @@ from .vis_agent_series import AgentSeriesManager
 from .vis_charts import ChartManager
 
 if TYPE_CHECKING:
-    from Melodie import Scenario, Model, Grid, Network, Agent
+    from Melodie import Scenario, Model, Grid, Network, Agent, AgentList
 
     ComponentType = Union[Grid, Network]
 logger = logging.getLogger(__name__)
@@ -140,6 +140,7 @@ class Visualizer:
 
         self.plot_charts: ChartManager = ChartManager()
         self.agent_series_managers: Dict[str, AgentSeriesManager] = {}
+        self.agent_lists: Dict[int, "AgentList"] = {}
 
         self.current_websocket: Optional[WebSocketServerProtocol] = None
         self.th: Optional[threading.Thread] = None
@@ -467,21 +468,11 @@ class GridVisualizer(Visualizer):
             v['data'] = []
         for series_name, data in agent_series_data.items():
             self.agent_series_managers[grid_name].set_series_data(series_name, data)
-        # categories = {
-        #     0: {"name": "healthy", "type": "scatter", "data": [], "itemStyle": {"color": "#0000ff"}, "symbol": "rect"},
-        #     1: {"name": "infected", "type": "scatter", "data": [], "itemStyle": {"color": "#ff0000"}, "symbol": "rect"},
-        #     2: {"name": "healthy", "type": "scatter", "data": [], "itemStyle": {"color": "#00ff00"}, "symbol": "rect"},
-        #     3: {"name": "dead", "type": "scatter", "data": [], "itemStyle": {"color": "#bbbbbb"}, "symbol": "rect"},
-        #     4: {"name": "vaccinated", "type": "scatter", "data": [], "itemStyle": {"color": "#ff00ff"},
-        #         "symbol": "rect"},
-        # }
 
         for k, series in self.agent_series_managers[grid_name].to_dict().items():
             for item in series['data']:
-                role = roles_getter(self._model.agents[item['id']])
+                role = roles_getter(self.agent_lists[k][item['id']])
                 categories[role]['data'].append(item)
-            # series['itemStyle'] =
-            # lst.append(series)
 
         return {
             "name": "grid",
@@ -500,8 +491,9 @@ class GridVisualizer(Visualizer):
             self,
             component_name: str,
             series_id: int,
-            role_getter: Callable[["Agent"], int],
-            roles_repr: Dict,
+            agent_container: Union["AgentList"],
+            role_getter: Callable[["Agent"], int] = None,
+            roles_repr: Dict = None,
             series_type: str = "scatter",
             color: str = "#000000",
             symbol="rect",
@@ -515,6 +507,7 @@ class GridVisualizer(Visualizer):
         self.agent_series_managers[component_name].add_series(
             series_id, series_type, role_getter, roles_repr, color, symbol
         )
+        self.agent_lists[series_id] = agent_container
 
     def add_visualize_component(
             self,
