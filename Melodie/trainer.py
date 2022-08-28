@@ -8,6 +8,7 @@ from typing import Dict, Tuple, Callable, Union, List, Any, Optional, ClassVar, 
 
 import cloudpickle
 import pandas as pd
+from sko import GA
 
 from . import show_prettified_warning
 from .algorithms import AlgorithmParameters
@@ -22,6 +23,7 @@ from .db import create_db_conn
 from .model import Model
 from .scenario_manager import Scenario
 from .simulator import BaseModellingManager
+from .utils.parallel_manager import ParallelManager
 from .utils.system_info import is_windows
 
 logger = logging.getLogger(__name__)
@@ -31,14 +33,14 @@ th_on_thread = None  # for windows
 
 class GATrainerParams(AlgorithmParameters):
     def __init__(
-        self,
-        id: int,
-        path_num: int,
-        generation_num: int,
-        strategy_population: int,
-        mutation_prob: float,
-        strategy_param_code_length: int,
-        **kw,
+            self,
+            id: int,
+            path_num: int,
+            generation_num: int,
+            strategy_population: int,
+            mutation_prob: float,
+            strategy_param_code_length: int,
+            **kw,
     ):
         super().__init__(id, path_num)
         self.generation_num = generation_num
@@ -49,7 +51,7 @@ class GATrainerParams(AlgorithmParameters):
 
     @staticmethod
     def from_dataframe_record(
-        record: Dict[str, Union[int, float]]
+            record: Dict[str, Union[int, float]]
     ) -> "GATrainerParams":
         s = GATrainerParams(
             record["id"],
@@ -137,19 +139,19 @@ class TargetFcnCache:
         self.current_chromosome_id = -1
 
     def lookup_agent_target_value(
-        self, agent_id: int, container_name: str, generation: int, chromosome_id: int
+            self, agent_id: int, container_name: str, generation: int, chromosome_id: int
     ):
         return self.target_fcn_record[(generation, chromosome_id)][
             (agent_id, container_name)
         ]
 
     def set_agent_target_value(
-        self,
-        agent_id: int,
-        container_name: str,
-        value: float,
-        generation: int,
-        chromosome_id: int,
+            self,
+            agent_id: int,
+            container_name: str,
+            value: float,
+            generation: int,
+            chromosome_id: int,
     ):
         # self.current_target_fcn_value[(agent_id, container_name)] = value
         if (generation, chromosome_id) not in self.target_fcn_record:
@@ -159,7 +161,7 @@ class TargetFcnCache:
         ] = value
 
     def best_value(
-        self, chromosome_num: int, generation: int, agent_id: int, agent_category: int
+            self, chromosome_num: int, generation: int, agent_id: int, agent_category: int
     ):
         values = [
             self.target_fcn_record[(generation, chromosome_id)][
@@ -178,7 +180,7 @@ class GATrainerAlgorithm:
     """
 
     def __init__(
-        self, params: GATrainerParams, manager: "Trainer" = None, processors=1
+            self, params: GATrainerParams, manager: "Trainer" = None, processors=1
     ):
         global pool, th_on_thread
         self.manager = manager
@@ -201,52 +203,37 @@ class GATrainerAlgorithm:
         self._current_generation = 0
         self.processors = processors
 
-        for i in range(processors):
-            d = {
-                "model": (
-                    self.manager.model_cls.__name__,
-                    self.manager.model_cls.__module__,
-                ),
-                "scenario": (
-                    self.manager.scenario_cls.__name__,
-                    self.manager.scenario_cls.__module__,
-                ),
-                "trainer": (
-                    self.manager.__class__.__name__,
-                    self.manager.__class__.__module__,
-                ),
-                "data_loader": (
-                    self.manager.df_loader_cls.__name__,
-                    self.manager.df_loader_cls.__module__,
-                ),
-            }
-            if not is_windows():
-                if pool is None:
-                    pool = multiprocessing.Pool(processes=processors)
-                pool.apply_async(
-                    sub_routine_trainer, [i, d, self.manager.config.to_dict()]
-                )
-            else:
-                if processors > 1:
-                    show_prettified_warning(
-                        "Unluckily, Melodie does not support multi-core calibration on Windows, and this "
-                        "feature will be implemented later. If iteration speed is of great importance "
-                        "for you now, please try this code on a Unix-like machine, such as Linux or Mac"
-                    )
-                th_on_thread = threading.Thread(
-                    target=sub_routine_trainer,
-                    args=[0, d, self.manager.config.to_dict()],
-                )
+        # for i in range(processors):
+        d = {
+            "model": (
+                self.manager.model_cls.__name__,
+                self.manager.model_cls.__module__,
+            ),
+            "scenario": (
+                self.manager.scenario_cls.__name__,
+                self.manager.scenario_cls.__module__,
+            ),
+            "trainer": (
+                self.manager.__class__.__name__,
+                self.manager.__class__.__module__,
+            ),
+            "data_loader": (
+                self.manager.df_loader_cls.__name__,
+                self.manager.df_loader_cls.__module__,
+            ),
+        }
+        self.parallel_manager = ParallelManager(self.processors, configs=(d, self.manager.config.to_dict()))
+        self.parallel_manager.run("trainer")
 
-                th_on_thread.setDaemon(True)
-                th_on_thread.start()
+    def __del__(self):
+        self.parallel_manager.close()
 
     def setup_agent_locations(
-        self,
-        container_name: str,
-        param_names: List[str],
-        recorded_properties: List[str],
-        agent_id_list: List[int],
+            self,
+            container_name: str,
+            param_names: List[str],
+            recorded_properties: List[str],
+            agent_id_list: List[int],
     ):
         assert container_name not in self.agent_container_getters
         self.agent_container_getters[container_name] = lambda model: getattr(
@@ -289,10 +276,10 @@ class GATrainerAlgorithm:
         return params
 
     def target_function_to_cache(
-        self,
-        agent_target_function_values: Dict[str, List[Dict[str, Any]]],
-        generation: int,
-        chromosome_id: int,
+            self,
+            agent_target_function_values: Dict[str, List[Dict[str, Any]]],
+            generation: int,
+            chromosome_id: int,
     ):
         """
         Extract the value of target functions from Model, and write them into cache.
@@ -300,8 +287,8 @@ class GATrainerAlgorithm:
         :return:
         """
         for (
-            container_category,
-            container_getter,
+                container_category,
+                container_getter,
         ) in self.agent_container_getters.items():
             agent_props_list = agent_target_function_values[container_category]
             for agent_props in agent_props_list:
@@ -314,7 +301,7 @@ class GATrainerAlgorithm:
                 )
 
     def generate_target_function(
-        self, agent_id: int, container_name: str
+            self, agent_id: int, container_name: str
     ) -> Callable[[], float]:
         def f(*args):
             self._chromosome_counter += 1
@@ -329,10 +316,10 @@ class GATrainerAlgorithm:
         return f
 
     def record_agent_properties(
-        self,
-        agent_data: Dict[str, List[Dict[str, Any]]],
-        env_data: Dict[str, Any],
-        meta: GATrainerAlgorithmMeta,
+            self,
+            agent_data: Dict[str, List[Dict[str, Any]]],
+            env_data: Dict[str, Any],
+            meta: GATrainerAlgorithmMeta,
     ):
         """
         Record the property of each agent in the current chromosome.
@@ -347,8 +334,8 @@ class GATrainerAlgorithm:
         meta_dict = meta.to_dict(public_only=True)
 
         for (
-            container_name,
-            agent_container_getter,
+                container_name,
+                agent_container_getter,
         ) in self.agent_container_getters.items():
             agent_records[container_name] = []
             data = agent_data[container_name]
@@ -374,10 +361,10 @@ class GATrainerAlgorithm:
         return agent_records, env_record
 
     def calc_cov_df(
-        self,
-        agent_container_df_dict: Dict[str, pd.DataFrame],
-        env_df: pd.DataFrame,
-        meta,
+            self,
+            agent_container_df_dict: Dict[str, pd.DataFrame],
+            env_df: pd.DataFrame,
+            meta,
     ):
         """
         Calculate the coefficient of variation
@@ -449,9 +436,10 @@ class GATrainerAlgorithm:
 
             for chromosome_id in range(self.params.strategy_population):
                 params = self.get_agent_params(chromosome_id)
-                params_queue.put(
-                    json.dumps((chromosome_id, scenario.to_json(), params))
-                )
+                self.parallel_manager.put_task((chromosome_id, scenario.to_json(), params))
+                # params_queue.put(
+                #     json.dumps()
+                # )
 
             agent_records_collector: Dict[str, List[Dict[str, Any]]] = {
                 container_name: [] for container_name in self.agent_ids.keys()
@@ -459,9 +447,9 @@ class GATrainerAlgorithm:
             env_records_list: List[Dict[str, Any]] = []
 
             for _chromosome_id in range(self.params.strategy_population):
-                v = result_queue.get()
+                # v = result_queue.get()
 
-                chrom, agents_data, env_data = cloudpickle.loads(base64.b64decode(v))
+                chrom, agents_data, env_data = self.parallel_manager.get_result()  # cloudpickle.loads(base64.b64decode(v))
                 meta.chromosome_id = chrom
                 agent_records, env_record = self.record_agent_properties(
                     agents_data, env_data, meta
@@ -484,11 +472,11 @@ class GATrainerAlgorithm:
 
 class RelatedAgentContainerModel:
     def __init__(
-        self,
-        container_name: str,
-        used_properties: List[str],
-        recorded_properties: List[str],
-        agent_ids: Callable[[Scenario], List[int]],
+            self,
+            container_name: str,
+            used_properties: List[str],
+            recorded_properties: List[str],
+            agent_ids: Callable[[Scenario], List[int]],
     ):
         self.container_name = container_name
         self.used_properties = used_properties
@@ -507,10 +495,10 @@ class AgentContainerManager:
         self.agent_containers: List[RelatedAgentContainerModel] = []
 
     def add_container(
-        self,
-        container_name: str,
-        used_properties: List[str],
-        agent_ids: Callable[[Scenario], List[int]],
+            self,
+            container_name: str,
+            used_properties: List[str],
+            agent_ids: Callable[[Scenario], List[int]],
     ):
         """
         Add a container used in trainer.
@@ -526,7 +514,7 @@ class AgentContainerManager:
         )
 
     def get_agent_container(
-        self, agent_container_name: str
+            self, agent_container_name: str
     ) -> RelatedAgentContainerModel:
         for agent_container_model in self.agent_containers:
             if agent_container_model.container_name == agent_container_name:
@@ -540,12 +528,12 @@ class Trainer(BaseModellingManager):
     """
 
     def __init__(
-        self,
-        config: "Config",
-        scenario_cls: "Optional[ClassVar[Scenario]]",
-        model_cls: "Optional[ClassVar[Model]]",
-        data_loader_cls: "Optional[ClassVar[DataLoader]]",
-        processors: int = 1,
+            self,
+            config: "Config",
+            scenario_cls: "Optional[ClassVar[Scenario]]",
+            model_cls: "Optional[ClassVar[Model]]",
+            data_loader_cls: "Optional[ClassVar[DataLoader]]",
+            processors: int = 1,
     ):
         super().__init__(
             config=config,
@@ -573,10 +561,10 @@ class Trainer(BaseModellingManager):
         self.processors = processors
 
     def add_agent_training_property(
-        self,
-        container_name: str,
-        used_properties: List[str],
-        agent_ids: Callable[[Scenario], List[int]],
+            self,
+            container_name: str,
+            used_properties: List[str],
+            agent_ids: Callable[[Scenario], List[int]],
     ):
         """
         Add a container into the trainer.
@@ -627,7 +615,7 @@ class Trainer(BaseModellingManager):
         for scenario in self.scenarios:
             self.current_algorithm_meta.trainer_id_scenario = scenario.id
             for trainer_params in self.generate_trainer_params_list(
-                trainer_scenario_cls
+                    trainer_scenario_cls
             ):
                 self.current_algorithm_meta.trainer_params_id = trainer_params.id
                 for path_id in range(trainer_params.path_num):
@@ -708,7 +696,7 @@ class Trainer(BaseModellingManager):
         return self.data_loader.generate_scenarios("trainer")
 
     def generate_trainer_params_list(
-        self, trainer_scenario_cls: ClassVar[GATrainerParams]
+            self, trainer_scenario_cls: ClassVar[GATrainerParams]
     ) -> List[GATrainerParams]:
         """
         Generate Trainer Parameters.

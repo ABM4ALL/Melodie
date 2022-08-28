@@ -33,6 +33,7 @@ from .db import create_db_conn
 from .model import Model
 from .scenario_manager import Scenario
 from .simulator import BaseModellingManager
+from .utils.parallel_manager import tasks, ParallelManager
 from .utils.system_info import is_windows
 
 if TYPE_CHECKING:
@@ -45,14 +46,14 @@ th_on_thread = None  # for windows
 
 class GACalibratorParams(AlgorithmParameters):
     def __init__(
-        self,
-        id: int,
-        path_num: int,
-        generation_num: int,
-        strategy_population: int,
-        mutation_prob: int,
-        strategy_param_code_length: int,
-        **kw,
+            self,
+            id: int,
+            path_num: int,
+            generation_num: int,
+            strategy_population: int,
+            mutation_prob: int,
+            strategy_param_code_length: int,
+            **kw,
     ):
         super().__init__(id, path_num)
 
@@ -64,7 +65,7 @@ class GACalibratorParams(AlgorithmParameters):
 
     @staticmethod
     def from_dataframe_record(
-        record: Dict[str, Union[int, float]]
+            record: Dict[str, Union[int, float]]
     ) -> "GACalibratorParams":
         s = GACalibratorParams(
             record["id"],
@@ -138,14 +139,14 @@ class GACalibratorAlgorithm:
     """
 
     def __init__(
-        self,
-        env_param_names: List[str],
-        recorded_env_properties: List[str],
-        recorded_agent_properties: Dict[str, List[str]],
-        params: GACalibratorParams,
-        target_func: "Callable[[Environment], Union[float, int]]",
-        manager: "Calibrator" = None,
-        processors=1,
+            self,
+            env_param_names: List[str],
+            recorded_env_properties: List[str],
+            recorded_agent_properties: Dict[str, List[str]],
+            params: GACalibratorParams,
+            target_func: "Callable[[Environment], Union[float, int]]",
+            manager: "Calibrator" = None,
+            processors=1,
     ):
         global pool, th_on_thread
         self.manager = manager
@@ -194,27 +195,12 @@ class GACalibratorAlgorithm:
                 self.manager.df_loader_cls.__module__,
             ),
         }
-        if not is_windows():
-            if pool is None:
-                pool = multiprocessing.Pool(processes=processors)
-            for i in range(processors):
-                pool.apply_async(
-                    sub_routine_calibrator, [i, d, self.manager.config.to_dict()]
-                )
-        else:
-            if processors > 1:
-                show_prettified_warning(
-                    "Unluckily, Melodie does not support multi-core calibration on Windows, and this "
-                    "feature will be implemented later. If iteration speed is of great importance "
-                    "for you now, please try this code on a Unix-like machine, such as Linux or Mac"
-                )
-            th_on_thread = threading.Thread(
-                target=sub_routine_calibrator,
-                args=[0, d, self.manager.config.to_dict()],
-            )
 
-            th_on_thread.setDaemon(True)
-            th_on_thread.start()
+        self.parallel_manager = ParallelManager(self.processors, configs=(d, self.manager.config.to_dict()))
+        self.parallel_manager.run("calibrator")
+
+    def __del__(self):
+        self.parallel_manager.close()
 
     def get_params(self, chromosome_id: int) -> Dict[str, Any]:
         """
@@ -230,10 +216,10 @@ class GACalibratorAlgorithm:
         return env_parameters_dict
 
     def target_function_to_cache(
-        self,
-        env_data,
-        generation: int,
-        chromosome_id: int,
+            self,
+            env_data,
+            generation: int,
+            chromosome_id: int,
     ):
         """
         Extract the value of target functions from Model, and write them into cache.
@@ -257,10 +243,10 @@ class GACalibratorAlgorithm:
         return f
 
     def record_agent_properties(
-        self,
-        agent_data: Dict[str, List[Dict[str, Any]]],
-        env_data: Dict[str, Any],
-        meta: GACalibratorAlgorithmMeta,
+            self,
+            agent_data: Dict[str, List[Dict[str, Any]]],
+            env_data: Dict[str, Any],
+            meta: GACalibratorAlgorithmMeta,
     ):
         """
         Record the property of each agent in the current chromosome.
@@ -300,10 +286,10 @@ class GACalibratorAlgorithm:
         return agent_records, environment_record
 
     def calc_cov_df(
-        self,
-        agent_container_df_dict: Dict[str, pd.DataFrame],
-        env_df: pd.DataFrame,
-        meta,
+            self,
+            agent_container_df_dict: Dict[str, pd.DataFrame],
+            env_df: pd.DataFrame,
+            meta,
     ):
         """
         Calculate the coefficient of variation
@@ -344,7 +330,7 @@ class GACalibratorAlgorithm:
         env_record = {}
         env_record.update(meta_dict)
         for prop_name in (
-            self.env_param_names + self.recorded_env_properties + ["distance"]
+                self.env_param_names + self.recorded_env_properties + ["distance"]
         ):
             mean = env_df[prop_name].mean()
             cov = env_df[prop_name].std() / env_df[prop_name].mean()
@@ -380,9 +366,10 @@ class GACalibratorAlgorithm:
 
             for chromosome_id in range(self.params.strategy_population):
                 params = self.get_params(chromosome_id)
-                params_queue.put(
-                    json.dumps((chromosome_id, scenario.to_json(), params))
-                )
+                # params_queue.put(
+                #     json.dumps((chromosome_id, scenario.to_json(), params))
+                # )
+                self.parallel_manager.put_task((chromosome_id, scenario.to_json(), params))
 
             agent_records_collector: Dict[str, List[Dict[str, Any]]] = {
                 container_name: []
@@ -391,9 +378,7 @@ class GACalibratorAlgorithm:
             env_records_list: List[Dict[str, Any]] = []
 
             for _chromosome_id in range(self.params.strategy_population):
-                v = result_queue.get()
-
-                chrom, agents_data, env_data = cloudpickle.loads(base64.b64decode(v))
+                chrom, agents_data, env_data = self.parallel_manager.get_result()
                 meta.chromosome_id = chrom
                 agent_records, env_record = self.record_agent_properties(
                     agents_data, env_data, meta
@@ -421,12 +406,12 @@ class Calibrator(BaseModellingManager):
     """
 
     def __init__(
-        self,
-        config: "Config",
-        scenario_cls: "Optional[ClassVar[Scenario]]",
-        model_cls: "Optional[ClassVar[Model]]",
-        data_loader_cls: ClassVar["DataLoader"],
-        processors=1,
+            self,
+            config: "Config",
+            scenario_cls: "Optional[ClassVar[Scenario]]",
+            model_cls: "Optional[ClassVar[Model]]",
+            data_loader_cls: ClassVar["DataLoader"],
+            processors=1,
     ):
         super().__init__(
             config=config,
@@ -556,7 +541,7 @@ class Calibrator(BaseModellingManager):
         :return: None
         """
         assert (
-            prop not in self.properties
+                prop not in self.properties
         ), f'Property "{prop}" is already in the calibrating training_properties!'
         self.properties.append(prop)
 

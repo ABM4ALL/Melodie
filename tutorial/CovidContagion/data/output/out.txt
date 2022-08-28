@@ -1,0 +1,7 @@
+============================= test session starts ==============================
+platform darwin -- Python 3.8.12, pytest-6.2.5, py-1.11.0, pluggy-1.0.0
+rootdir: /Users/hzy/Documents/Projects/MelodieABM/Melodie
+plugins: cython-0.2.0, timeout-2.1.0, cov-3.0.0
+collected 0 items
+
+============================ no tests ran in 0.01s =============================

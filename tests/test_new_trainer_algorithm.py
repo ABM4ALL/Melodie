@@ -49,7 +49,7 @@ def test_chrom_params_algorithm():
     params = GATrainerParams(
         0, 5, 20, 20, 0.02, 20, param1_min=-1, param1_max=1, param2_min=-1, param2_max=1
     )
-    mgr = MockTrainer(cfg_for_trainer, Scenario, NewModel, DFLoader, 1)
+    mgr = MockTrainer(cfg_for_trainer, Scenario, NewModel, DFLoader, 4)
     mgr.setup()
     mgr.pre_run()
     ta = GATrainerAlgorithm(params, mgr)
