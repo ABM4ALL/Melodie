@@ -6,7 +6,6 @@ from urllib.request import urlopen
 from urllib.error import URLError
 import threading
 import time
-from matplotlib.pyplot import colormaps
 import websockets
 import json
 from queue import Queue
@@ -18,7 +17,7 @@ from websockets.legacy.server import WebSocketServerProtocol
 from ..utils import MelodieExceptions
 from .vis_agent_series import AgentSeriesManager
 from .vis_charts import ChartManager
-
+from ..boost.grid import Spot
 if TYPE_CHECKING:
     from Melodie import Scenario, Model, Grid, Network, Agent, AgentList
 
@@ -81,9 +80,7 @@ async def handler(ws: WebSocketServerProtocol, path):
                     visualize_condition_queue_main.put((cmd, data, ws), timeout=1)
                 except:
                     import traceback
-
                     traceback.print_exc()
-                    print("last_cmd_content", content)
             else:
                 raise NotImplementedError(cmd)
         except (asyncio.TimeoutError, ConnectionRefusedError):
@@ -326,7 +323,6 @@ class Visualizer:
             }
         )
         t1 = time.time()
-        print(formatted)
         logger.info(f"Formatting current data takes:{t1 - t0} seconds")
         self.send_message(dumped)
 
@@ -460,31 +456,35 @@ class GridVisualizer(Visualizer):
     def convert_to_1d(self, x, y):
         return x * self.height + y
 
-    def parse_grid_series(self, grid: "Grid", grid_name: str, agent_roles: Dict[int, Dict[str, Any]],
-                          roles_getter: Callable[['Agent'], int]):
-        grid_roles, agent_series_data = grid.get_colormap()
-        categories = agent_roles.copy()
-        for k, v in categories.items():
-            v['data'] = []
-        for series_name, data in agent_series_data.items():
-            self.agent_series_managers[grid_name].set_series_data(series_name, data)
+    def parse_grid_series(self, grid: "Grid"):
 
-        for k, series in self.agent_series_managers[grid_name].to_dict().items():
-            for item in series['data']:
-                role = roles_getter(self.agent_lists[k][item['id']])
-                categories[role]['data'].append(item)
+        agents_vis_dicts = []
+        spots = []
 
+        spot_attributes = ['id', 'x', 'y'] + list(grid.get_spot(0, 0).__dict__.keys())
+        if type(grid.get_spot(0, 0)) == Spot:
+            for x in range(grid.width()):
+                for y in range(grid.height()):
+                    spot = grid.get_spot(x, y)
+                    spots.append({
+                        "data": spot.to_dict(spot_attributes),
+                        "style": spot.get_style()
+                    })
+        for agent_list_name, agent_list in self.agent_lists.items():
+            if len(agent_list) == 0:
+                continue
+            first_agent = agent_list[0]
+            attributes = ['id', 'x', 'y', 'category'] + list(first_agent.__dict__.keys())
+            for agent in agent_list:
+                agents_vis_dicts.append({
+                    "data": agent.to_dict(attributes),
+                    "style": agent.get_style()
+                })
         return {
             "name": "grid",
             "type": "grid",
-            "data": {
-                "series": [
-                              {
-                                  "data": grid_roles,
-                              },
-                          ]
-                          + [category for _, category in categories.items()]
-            },
+            "agents": agents_vis_dicts,
+            "spots": spots
         }
 
     def add_agent_series(
@@ -546,6 +546,9 @@ class GridVisualizer(Visualizer):
                     "type": "heatmap",
                 }
             ],
+            "name": name,
+            "columns": component.width(),
+            "rows": component.height()
         }
         self.visualizer_components.append((component, name, chart_options, agent_roles, roles_getter))
 
@@ -555,7 +558,7 @@ class GridVisualizer(Visualizer):
         for vis_component, vis_component_name, _1, agent_roles, roles_getter in self.visualizer_components:
             if isinstance(vis_component, Grid):
                 r = self.parse_grid_series(
-                    vis_component, vis_component_name, agent_roles, roles_getter
+                    vis_component
                 )
                 visualizers.append(r)
             else:

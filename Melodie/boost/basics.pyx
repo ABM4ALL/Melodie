@@ -65,6 +65,26 @@ cdef class Agent(Element):
         d['id'] = self.id
         return "<%s %s>" % (self.__class__.__name__, d)
 
+    cpdef dict to_dict(self, list properties) except *:
+        """
+        Dump Agent to a plain dict.
+
+        :param properties: List[str]
+        :return:
+        """
+        cdef dict d
+        cdef str property
+        d = {"id": self.id}
+        for property in properties:
+            attr = getattr(self, property)
+            if isinstance(attr, (int, float, bool, str)):
+                d[property] = attr
+            else:
+                d[property] = f"<Type {type(attr)}>"
+        return d
+
+    def get_style(self):
+        raise NotImplementedError("Method `get_style` should be inherited if visualizer is implemented!")
 
 cdef class Environment(Element):
     def __init__(self):

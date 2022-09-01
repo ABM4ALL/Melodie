@@ -15,6 +15,7 @@ cdef class Element:
 cdef class Agent(Element):
     cdef public long id
     cdef public object model, scenario
+    cpdef dict to_dict(self, list properties) except *
 
 
 cdef class Environment(Element):

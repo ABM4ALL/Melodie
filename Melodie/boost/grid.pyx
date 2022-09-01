@@ -100,6 +100,12 @@ cdef class Spot(GridItem):
     def __repr__(self):
         return f"<{self.__class__.__name__} 'x': {self.x}, 'y': {self.y}, 'colormap': {self.colormap}, 'payload' : {self.__dict__}>"
 
+    def get_style(self):
+        return {
+            "backgroundColor": "#ffffff"
+        }
+
+
 cdef class AgentIDManager:
     def __init__(self, long width, long height, bint allow_multi=False):
         self._agents = [set() for i in range(width*height)]
@@ -539,7 +545,7 @@ cdef class Grid:
         target_x = source_x+dx
         target_y = source_y+dy
         self._add_agent(agent.id, category, target_x, target_y)
-        return target_x, target_y
+        return self._coords_wrap(target_x, target_y)
 
     def to_2d_array(self, attr_name: str) -> np.ndarray:
         """
