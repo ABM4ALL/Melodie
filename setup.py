@@ -114,6 +114,7 @@ setuptools.setup(
         "cloudpickle",
         "cython==3.0.0a10",
         "scikit-opt~=0.6",
+        "rpyc"
     ],
     python_requires=">=3.7",
     entry_points={"console_scripts": ["Melodie=Melodie.scripts.scripts:cli"]},
