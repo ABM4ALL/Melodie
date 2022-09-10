@@ -20,3 +20,4 @@ melodiestudio
 setuptools
 cloudpickle~=2.0
 scikit-opt~=0.6
+rpyc
