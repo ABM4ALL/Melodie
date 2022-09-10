@@ -112,6 +112,7 @@ class MelodieModelReset(BaseException):
 def execute_only_enabled(func):
     """
     Execute the decorated function only if the Visualizer.enabled() is True.
+
     :param func:
     :return:
     """
@@ -212,7 +213,7 @@ class Visualizer:
 
     def _re_init(self):
         self.agent_series_managers = {}
-        self.plot_charts = ChartManager()
+        self.plot_charts = self.plot_charts
         self.scenario_param = {}
         self.visualizer_components = []
 
@@ -277,6 +278,7 @@ class Visualizer:
         )
 
     def send_plot_series(self):
+        print(self.plot_charts.to_json())
         self.send_message(
             json.dumps(
                 {
