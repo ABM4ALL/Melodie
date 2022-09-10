@@ -130,8 +130,11 @@ class Simulator(BaseModellingManager):
             data_loader_cls=data_loader_cls,
         )
         self.server_thread: threading.Thread = None
+        self.visualizer_cls = visualizer_cls
+        self.visualizer = None
 
-        self.visualizer: Optional[Visualizer] = None if visualizer_cls is None else visualizer_cls()
+    def _init_visualizer(self):
+        self.visualizer: Optional[Visualizer] = None if self.visualizer_cls is None else self.visualizer_cls()
 
     def generate_scenarios(self) -> List["Scenario"]:
         """
@@ -203,11 +206,11 @@ class Simulator(BaseModellingManager):
         t0 = time.time()
         Visualizer.enabled = False
         self.setup()
-        if self.visualizer is not None:
+        if self.visualizer_cls is not None:
             show_prettified_warning(
                 "You are using `Simulator.run()` method to run model, but you have also defined visualizer.\n"
                 "If you would like to visualize this model, please use `Simulator.run_visual()` "
-                "instead of `Simulator.run` "
+                "instead of `Simulator.run()` "
             )
 
         self.pre_run()
@@ -230,7 +233,7 @@ class Simulator(BaseModellingManager):
         :return: None
         """
         t0 = time.time()
-
+        self._init_visualizer()
         self.setup()
         if self.visualizer is not None:
             self.visualizer.setup()
