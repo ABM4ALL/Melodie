@@ -1,24 +1,24 @@
 from typing import TYPE_CHECKING
 
 from Melodie import Model
-from tutorial.CovidContagion.source import data_info
-from .agent import CovidAgent
-from .data_collector import CovidDataCollector
-from .environment import CovidEnvironment
+from tutorial.CovidGridContagion.source import data_info
+from .agent import CovidGridAgent
+from .data_collector import CovidGridDataCollector
+from .environment import CovidGridEnvironment
 from .grid import CovidGrid, CovidSpot
-from .scenario import CovidScenario
+from .scenario import CovidGridScenario
 
 if TYPE_CHECKING:
     from Melodie import AgentList
 
 
-class CovidModel(Model):
-    scenario: CovidScenario
+class CovidGridModel(Model):
+    scenario: CovidGridScenario
 
     def create(self):
-        self.agents: "AgentList[CovidAgent]" = self.create_agent_list(CovidAgent)
-        self.environment = self.create_environment(CovidEnvironment)
-        self.data_collector = self.create_data_collector(CovidDataCollector)
+        self.agents: "AgentList[CovidGridAgent]" = self.create_agent_list(CovidGridAgent)
+        self.environment = self.create_environment(CovidGridEnvironment)
+        self.data_collector = self.create_data_collector(CovidGridDataCollector)
         self.grid = self.create_grid(CovidGrid, CovidSpot)
 
     def setup(self):
