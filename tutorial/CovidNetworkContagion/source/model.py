@@ -2,22 +2,22 @@ from typing import TYPE_CHECKING
 
 from Melodie import Model
 from tutorial.CovidContagion.source import data_info
-from .agent import CovidAgent
-from .data_collector import CovidDataCollector
-from .environment import CovidEnvironment
-from .scenario import CovidScenario
+from .agent import CovidNetworkAgent
+from .data_collector import CovidNetworkDataCollector
+from .environment import CovidNetworkEnvironment
+from .scenario import CovidNetworkScenario
 
 if TYPE_CHECKING:
     from Melodie import AgentList
 
 
-class CovidModel(Model):
-    scenario: CovidScenario
+class CovidNetworkModel(Model):
+    scenario: CovidNetworkScenario
 
     def create(self):
-        self.agents: "AgentList[CovidAgent]" = self.create_agent_list(CovidAgent)
-        self.environment = self.create_environment(CovidEnvironment)
-        self.data_collector = self.create_data_collector(CovidDataCollector)
+        self.agents: "AgentList[CovidNetworkAgent]" = self.create_agent_list(CovidNetworkAgent)
+        self.environment = self.create_environment(CovidNetworkEnvironment)
+        self.data_collector = self.create_data_collector(CovidNetworkDataCollector)
         self.network = self.create_network()
 
     def setup(self):

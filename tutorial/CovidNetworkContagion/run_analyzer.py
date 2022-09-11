@@ -1,5 +1,6 @@
 from config import config
-from source.analyzer import CovidAnalyzer
+from tutorial.CovidContagion.source.analyzer import CovidAnalyzer
+
 
 if __name__ == "__main__":
 
