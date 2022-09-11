@@ -12,6 +12,10 @@ simulator_scenarios = DataFrameInfo(
         "agent_num": sqlalchemy.Integer(),
         "initial_infected_percentage": sqlalchemy.Float(),
         "young_percentage": sqlalchemy.Float(),
+        "network_type": sqlalchemy.String(),
+        "network_param_k": sqlalchemy.Integer(),
+        "network_param_p": sqlalchemy.Float(),
+        "network_param_m": sqlalchemy.Integer(),
         "infection_prob": sqlalchemy.Float(),
     },
 )
