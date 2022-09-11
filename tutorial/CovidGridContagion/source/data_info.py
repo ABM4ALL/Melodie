@@ -2,7 +2,8 @@ import sqlalchemy
 
 from Melodie import DataFrameInfo
 from Melodie import MatrixInfo
-from tutorial.CovidContagion.source.data_info import id_age_group, id_health_state
+from tutorial.CovidContagion.source.data_info import id_age_group
+from tutorial.CovidContagion.source.data_info import id_health_state
 
 simulator_scenarios = DataFrameInfo(
     df_name="simulator_scenarios",
@@ -33,7 +34,6 @@ agent_params = DataFrameInfo(
         "y": sqlalchemy.Integer(),
         "age_group": sqlalchemy.Integer(),
         "health_state": sqlalchemy.Integer(),
-        "vaccination_trust_state": sqlalchemy.Integer(),
     },
 )
 
