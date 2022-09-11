@@ -4,7 +4,6 @@ from typing import TYPE_CHECKING
 from Melodie import Agent
 
 if TYPE_CHECKING:
-    from Melodie import AgentList
     from .scenario import CovidScenario
 
 
