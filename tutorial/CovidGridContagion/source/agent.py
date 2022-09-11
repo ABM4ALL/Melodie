@@ -18,6 +18,12 @@ class CovidGridAgent(CovidAgent, GridAgent):
     def set_category(self):
         self.category = 0
 
+    def setup(self):
+        self.x = 0
+        self.y = 0
+        self.age_group = 0
+        self.health_state = 0
+
     def move(self):
         spot: "CovidSpot" = self.grid.get_spot(self.x, self.y)
         stay_prob = spot.stay_prob
