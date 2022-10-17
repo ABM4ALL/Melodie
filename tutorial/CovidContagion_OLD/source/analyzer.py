@@ -28,10 +28,11 @@ class CovidAnalyzer:
             "Infected": df["s1"],
             "Recovered": df["s2"],
             "Dead": df["s3"],
+            "Vaccinated": df["s4"],
         }
+
         figure = plt.figure(figsize=(12, 6))
         ax = figure.add_axes((0.1, 0.1, 0.8, 0.8))
-        ax.set_ylim(0, 1000)
         ax.set_xlabel("Period", fontsize=15)
         ax.set_ylabel("Count", fontsize=15)
         x = [i for i in range(0, len(list(values_dict.values())[0]))]

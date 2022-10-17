@@ -1,3 +1,5 @@
+import random
+
 from Melodie import Environment, AgentList
 from .agent import CovidAgent
 from .scenario import CovidScenario
@@ -11,12 +13,27 @@ class CovidEnvironment(Environment):
         self.s1 = 0
         self.s2 = 0
         self.s3 = 0
+        self.s4 = 0
 
-    def agents_infection(self, agents: "AgentList[CovidAgent]"):
-        infection_prob = (self.s1 / self.scenario.agent_num) * self.scenario.infection_prob
+    def agents_move(self, agents: "AgentList[CovidAgent]"):
         for agent in agents:
-            if agent.health_state == 0:
-                agent.infection(infection_prob)
+            agent.move()
+
+    @staticmethod
+    def agents_infection(agents: "AgentList[CovidAgent]"):
+        for agent in agents:
+            agent.infect_from_neighbors(agents)
+
+    def agents_update_vaccination_trust(self, agents: "AgentList[CovidAgent]"):
+        for agent in agents:
+            if random.uniform(0, 1) <= self.scenario.vaccination_ad_percentage:
+                agent.update_vaccination_trust_from_ad()
+            agent.update_vaccination_trust_from_neighbors(agents)
+
+    @staticmethod
+    def agents_take_vaccination(agents: "AgentList[CovidAgent]"):
+        for agent in agents:
+            agent.take_vaccination()
 
     @staticmethod
     def agents_health_state_transition(agents: "AgentList[CovidAgent]"):
@@ -32,5 +49,7 @@ class CovidEnvironment(Environment):
                 self.s1 += 1
             elif agent.health_state == 2:
                 self.s2 += 1
-            else:
+            elif agent.health_state == 3:
                 self.s3 += 1
+            else:
+                self.s4 += 1

@@ -24,7 +24,7 @@ Melodie
 
 As a general framework for developing ABMs, **Melodie** has three groups of modules:
 
-* `Block`:  ``model``, ``scenario``, ``dataframe_loader``, ``environment``, ``agent_list``, ``data_collector``, ``grid``, ``network``.
+* `Block`:  ``model``, ``scenario``, ``data_loader``, ``environment``, ``agent_list``, ``data_collector``, ``grid``, ``network``.
 * `Operator`: ``simulator``, ``calibrator``, ``trainer``.
 * `Infrastructure`: ``db``, ``studio``.
 
@@ -37,7 +37,7 @@ The `Block` modules are used to construct an ABM, and six of them are always nec
 
 * ``model`` is the container of the following components.
 * ``scenario`` contains the input data.
-* ``dataframe_loader`` loads the input data to ``scenario``.
+* ``data_loader`` loads the input data to ``scenario``.
 * ``agent_list`` contains the ``agents`` and one model can have several ``agent_list``.
 * ``environment`` contains the macro-level parameters and variables and controls the interaction and decision-making of agents.
 * ``data_collector`` collects the parameters and variables of the environment and the agents and saves them to the database.

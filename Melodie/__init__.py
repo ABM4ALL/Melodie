@@ -7,7 +7,7 @@ from .boost.grid import Grid, Spot, GridAgent, AgentIDManager
 from .calibrator import Calibrator
 from .config import Config
 from .data_collector import DataCollector
-from .data_loader import DataFrameInfo, DataLoader
+from .data_loader import DataLoader, DataFrameInfo, MatrixInfo
 from .db import DBConn, create_db_conn
 from .model import Model
 from .network import Edge, Network, NetworkAgent
