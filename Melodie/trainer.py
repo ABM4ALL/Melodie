@@ -4,7 +4,7 @@ import json
 import logging
 import multiprocessing
 import threading
-from typing import Dict, Tuple, Callable, Union, List, Any, Optional, ClassVar, Iterator
+from typing import Dict, Tuple, Callable, Union, List, Any, Optional, Type, Iterator, Type
 
 import cloudpickle
 import pandas as pd
@@ -530,9 +530,9 @@ class Trainer(BaseModellingManager):
     def __init__(
             self,
             config: "Config",
-            scenario_cls: "Optional[ClassVar[Scenario]]",
-            model_cls: "Optional[ClassVar[Model]]",
-            data_loader_cls: "Optional[ClassVar[DataLoader]]",
+            scenario_cls: "Optional[Type[Scenario]]",
+            model_cls: "Optional[Type[Model]]",
+            data_loader_cls: "Optional[Type[DataLoader]]",
             processors: int = 1,
     ):
         super().__init__(
@@ -586,7 +586,7 @@ class Trainer(BaseModellingManager):
         """
         assert self.algorithm_type in {"ga"}
 
-        trainer_scenario_cls: Union[ClassVar[GATrainerParams]] = None
+        trainer_scenario_cls: Union[Type[GATrainerParams]] = None
         if self.algorithm_type == "ga":
             trainer_scenario_cls = GATrainerParams
         assert trainer_scenario_cls is not None
@@ -696,7 +696,7 @@ class Trainer(BaseModellingManager):
         return self.data_loader.generate_scenarios("trainer")
 
     def generate_trainer_params_list(
-            self, trainer_scenario_cls: ClassVar[GATrainerParams]
+            self, trainer_scenario_cls: Type[GATrainerParams]
     ) -> List[GATrainerParams]:
         """
         Generate Trainer Parameters.

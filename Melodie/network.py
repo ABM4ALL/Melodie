@@ -1,5 +1,5 @@
 import logging
-from typing import Dict, Set, Union, List, Tuple, ClassVar, Callable, Type
+from typing import Dict, Set, Union, List, Tuple, Type
 
 from .boost.basics import Agent
 from .boost.agent_list import AgentList
@@ -71,7 +71,7 @@ class Network:
         self.directed = directed
         self.nodes: Set[NodeType] = set()
         self.edges: Dict[NodeType, Dict[NodeType, Edge]] = {}
-        self.edge_cls: ClassVar[Edge] = edge_cls if edge_cls is not None else Edge
+        self.edge_cls: Type[Edge] = edge_cls if edge_cls is not None else Edge
         self.setup()
 
     def _setup(self):

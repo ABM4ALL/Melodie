@@ -2,7 +2,6 @@ from Melodie import Model, Scenario
 import pandas as pd
 import typing
 from typing import (
-    ClassVar,
     List,
     Dict,
     Union,
@@ -43,11 +42,11 @@ class AgentDict(BaseAgentContainer):
     pass
 
 class AgentList(BaseAgentContainer, Sequence, typing.Sequence[AgentGeneric]):
-    def __init__(self, agent_class: ClassVar[AgentGeneric], model: "Model") -> None:
+    def __init__(self, agent_class: typing.Type[AgentGeneric], model: "Model") -> None:
         super(AgentList, self).__init__()
         self._iter_index = 0
         self.scenario = model.scenario
-        self.agent_class: ClassVar[AgentGeneric] = agent_class
+        self.agent_class: typing.Type[AgentGeneric] = agent_class
         self.initial_agent_num: int = -1
         self.model = model
         self.agents: List[AgentGeneric] = self.init_agents()

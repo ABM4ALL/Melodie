@@ -9,7 +9,7 @@ from libc.stdint cimport uintptr_t
 import pandas as pd
 from pandas.api.types import is_integer_dtype, is_float_dtype, is_string_dtype
 import typing
-from typing import TYPE_CHECKING, ClassVar, List, Dict, Union, Set, Optional, TypeVar, Type, Generic
+from typing import TYPE_CHECKING, Type, List, Dict, Union, Set, Optional, TypeVar, Type, Generic
 from .basics cimport Agent
 from Melodie.utils import MelodieExceptions, MelodieException, show_prettified_warning
 from collections.abc import Sequence
@@ -186,10 +186,10 @@ cdef class BaseAgentContainer():
                                                                                             dataframe_dtypes, agent)
 
 cdef class AgentDict(BaseAgentContainer):
-    def __init__(self, agent_class: ClassVar[AgentGeneric], length: int, model: 'Model') -> None:
+    def __init__(self, agent_class: Type[AgentGeneric], length: int, model: 'Model') -> None:
         super().__init__()
         self.scenario = model.scenario
-        self.agent_class: ClassVar[AgentGeneric] = agent_class
+        self.agent_class: Type[AgentGeneric] = agent_class
         self.initial_agent_num: int = length
         self.model = model
         self.agents = {agent.id: agent for agent in self.init_agents()}
@@ -245,11 +245,11 @@ cdef class AgentDict(BaseAgentContainer):
         self._set_properties(props_df)
 
 cdef class AgentList(BaseAgentContainer):
-    def __init__(self, agent_class: ClassVar[AgentGeneric], model: 'Model') -> None:
+    def __init__(self, agent_class: Type[AgentGeneric], model: 'Model') -> None:
         super(AgentList, self).__init__()
         self._iter_index = 0
         self.scenario = model.scenario
-        self.agent_class: ClassVar[AgentGeneric] = agent_class
+        self.agent_class: Type[AgentGeneric] = agent_class
         self.initial_agent_num: int = -1
         self.model = model
         self._map = {}

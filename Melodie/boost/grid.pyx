@@ -7,7 +7,7 @@ cdef extern from "Python.h":
     const char* PyUnicode_AsUTF8(object unicode)
 
 import functools
-from typing import ClassVar, Set, Dict, List, Tuple
+from typing import Type, Set, Dict, List, Tuple
 from Melodie.boost.vectorize import vectorize_2d
 from cpython.ref cimport PyObject
 from cpython cimport PyObject_GetAttr, PyObject_GetAttrString, \
@@ -195,7 +195,7 @@ cdef class Grid:
     Grid contains many `Spot`s, each `Spot` could contain several agents_series_data.
     """
 
-    def __init__(self, spot_cls: ClassVar[Spot], scenario=None):
+    def __init__(self, spot_cls: Type[Spot], scenario=None):
         """
 
         :param spot_cls: The class of Spot

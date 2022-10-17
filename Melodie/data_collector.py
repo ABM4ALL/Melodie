@@ -1,6 +1,6 @@
 import logging
 import time
-from typing import List, ClassVar, TYPE_CHECKING, Dict, Tuple, Any, Optional
+from typing import List, Type, TYPE_CHECKING, Dict, Tuple, Any, Optional, Type
 
 import pandas as pd
 
@@ -20,7 +20,7 @@ class PropertyToCollect:
     stores class and
     """
 
-    def __init__(self, property_name: str, as_type: ClassVar):
+    def __init__(self, property_name: str, as_type: Type):
         self.property_name = property_name
         self.as_type = as_type
 
@@ -72,7 +72,7 @@ class DataCollector:
         return self._time_elapsed
 
     def add_agent_property(
-            self, container_name: str, property_name: str, as_type: ClassVar = None
+            self, container_name: str, property_name: str, as_type: Type = None
     ):
         """
         This method tells the data collector which property and in which agent container it should collect.
@@ -91,7 +91,7 @@ class DataCollector:
             PropertyToCollect(property_name, as_type)
         )
 
-    def add_environment_property(self, property_name: str, as_type: ClassVar = None):
+    def add_environment_property(self, property_name: str, as_type: Type = None):
         """
         This method tells the data collector which property of environment should be collected.
 

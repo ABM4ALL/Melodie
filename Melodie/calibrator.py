@@ -1,9 +1,6 @@
-import base64
 import copy
-import json
+import copy
 import logging
-import multiprocessing
-import threading
 import time
 from typing import (
     Dict,
@@ -15,26 +12,21 @@ from typing import (
     Optional,
     TYPE_CHECKING,
     Type,
-    ClassVar,
     Iterator,
 )
 
-import cloudpickle
 import pandas as pd
 
-from . import show_prettified_warning
 from .algorithms import AlgorithmParameters
 from .algorithms.ga import MelodieGA
-from .utils import MelodieExceptions
-from .utils.parallel import params_queue, result_queue, sub_routine_calibrator
 from .config import Config
 from .data_loader import DataLoader
 from .db import create_db_conn
 from .model import Model
 from .scenario_manager import Scenario
 from .simulator import BaseModellingManager
-from .utils.parallel_manager import tasks, ParallelManager
-from .utils.system_info import is_windows
+from .utils import MelodieExceptions
+from .utils.parallel_manager import ParallelManager
 
 if TYPE_CHECKING:
     from .boost.basics import Environment
@@ -408,9 +400,9 @@ class Calibrator(BaseModellingManager):
     def __init__(
             self,
             config: "Config",
-            scenario_cls: "Optional[ClassVar[Scenario]]",
-            model_cls: "Optional[ClassVar[Model]]",
-            data_loader_cls: ClassVar["DataLoader"],
+            scenario_cls: "Optional[Type[Scenario]]",
+            model_cls: "Optional[Type[Model]]",
+            data_loader_cls: Type["DataLoader"],
             processors=1,
     ):
         super().__init__(

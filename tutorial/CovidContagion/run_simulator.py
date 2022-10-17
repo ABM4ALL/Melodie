@@ -1,3 +1,5 @@
+import sys
+sys.path.append("/Users/hzy/Documents/Projects/MelodieABM/Melodie")
 from Melodie import Simulator
 from config import config
 from source.visualizer import CovidVisualizer
@@ -13,5 +15,5 @@ if __name__ == "__main__":
         data_loader_cls=CovidDataLoader,
         visualizer_cls=CovidVisualizer
     )
-    simulator.run()
-    # simulator.run_visual()
+    # simulator.run()
+    simulator.run_visual()

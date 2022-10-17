@@ -1,7 +1,7 @@
 import logging
 import queue
 from contextlib import contextmanager
-from typing import ClassVar, Optional, Union, Type, List
+from typing import Type, Optional, Union, Type, List
 
 import pandas as pd
 
@@ -175,7 +175,7 @@ class Model:
 
     def create_agent_container(
             self,
-            agent_class: ClassVar["Agent"],
+            agent_class: Type["Agent"],
             initial_num: int,
             params_df: pd.DataFrame = None,
             container_type: str = "list",
@@ -191,7 +191,7 @@ class Model:
         """
         from Melodie import AgentList
 
-        agent_container_class: Union[ClassVar[AgentList], None]
+        agent_container_class: Union[Type[AgentList], Type[AgentDict], None]
         if container_type == "list":
             agent_container_class = AgentList
         elif container_type == "dict":

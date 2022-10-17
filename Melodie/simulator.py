@@ -6,7 +6,7 @@ import logging
 import threading
 import time
 from multiprocessing import Pool
-from typing import ClassVar, Optional, List, Tuple, Type
+from typing import Optional, List, Tuple, Type
 
 import numpy as np
 import pandas as pd
@@ -32,16 +32,16 @@ class BaseModellingManager(abc.ABC):
     def __init__(
             self,
             config: Config,
-            scenario_cls: ClassVar["Scenario"],
-            model_cls: ClassVar["Model"],
-            data_loader_cls: ClassVar[DataLoader] = None,
+            scenario_cls: Type["Scenario"],
+            model_cls: Type["Model"],
+            data_loader_cls: Type[DataLoader] = None,
     ):
         self.config: Optional[Config] = config
         self.scenario_cls = scenario_cls
         self.model_cls = model_cls
 
         self.scenarios: Optional[List["Scenario"]] = None
-        self.df_loader_cls: Optional[ClassVar[DataLoader]] = data_loader_cls
+        self.df_loader_cls: Optional[Type[DataLoader]] = data_loader_cls
         self.data_loader: Optional[DataLoader] = None
         if data_loader_cls is not None:
             assert issubclass(data_loader_cls, DataLoader), data_loader_cls
@@ -118,10 +118,10 @@ class Simulator(BaseModellingManager):
     def __init__(
             self,
             config: Config,
-            scenario_cls: "ClassVar[Scenario]",
-            model_cls: "ClassVar[Model]",
-            data_loader_cls: "ClassVar[DataLoader]" = None,
-            visualizer_cls: "Type[Visualizer]" = None
+            scenario_cls: "Type[Scenario]",
+            model_cls: "Type[Model]",
+            data_loader_cls: "Type[DataLoader]" = None,
+            visualizer_cls: "type[Visualizer]" = None
     ):
         super(Simulator, self).__init__(
             config=config,
@@ -147,7 +147,7 @@ class Simulator(BaseModellingManager):
         return self.data_loader.generate_scenarios("simulator")
 
     def run_model(
-            self, config, scenario, id_run, model_class: ClassVar["Model"], visualizer=None
+            self, config, scenario, id_run, model_class: Type["Model"], visualizer=None
     ):
         """
         Run a model once.

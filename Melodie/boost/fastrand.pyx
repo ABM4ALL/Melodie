@@ -2,7 +2,7 @@
 # -*- coding:utf-8 -*-
 
 import functools
-from typing import ClassVar, Set, Dict, List, Tuple
+from typing import Type, Set, Dict, List, Tuple
 from cpython.ref cimport PyObject  # somewhere at the top
 from cpython cimport PyObject_GetAttr, PyObject_GetAttrString, \
     PyObject_GetItem, PyList_GetItem, PyList_Size, PyObject_SetAttr

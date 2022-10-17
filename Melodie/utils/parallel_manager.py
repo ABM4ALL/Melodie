@@ -65,6 +65,12 @@ class ParallelManager:
         self.server.start()
 
     def run(self, role: str):
+        """
+        Run subprocesses
+
+        :param role: run as calibrator or trainer
+        :return:
+        """
         assert role in {'calibrator', 'trainer'}
         self.th_server.setDaemon(True)
         self.th_server.start()
@@ -79,6 +85,11 @@ class ParallelManager:
             self.processes.append(p)
 
     def close(self):
+        """
+        Close all subprocesses
+
+        :return:
+        """
         for p in self.processes:
             p.terminate()
         self.server.close()
@@ -87,8 +98,6 @@ class ParallelManager:
 
 
 class TimeService(Service):
-
-    # 对于服务端来说， 只有以"exposed_"打头的方法才能被客户端调用，所以要提供给客户端的方法都得加"exposed_"
     def exposed_get_time(self):
         return time.ctime()  # time模块中的一个内置方法
 
@@ -101,8 +110,3 @@ class TimeService(Service):
 
     def exposed_get_config(self):
         return json.dumps(tasks.get_config())
-
-
-if __name__ == "__main__":
-    ParallelManager().run()
-    time.sleep(5)
