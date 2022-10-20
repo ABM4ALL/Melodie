@@ -11,7 +11,7 @@ if __name__ == "__main__":
         model_cls=CovidModel,
         scenario_cls=CovidScenario,
         data_loader_cls=CovidDataLoader,
-        visualizer_cls=CovidVisualizer
+        visualizer_cls=CovidVisualizer,
     )
     simulator.run()
     # simulator.run_visual()

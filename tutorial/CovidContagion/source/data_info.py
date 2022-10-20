@@ -31,10 +31,7 @@ id_age_group = DataFrameInfo(
 id_health_state = DataFrameInfo(
     df_name="id_health_state",
     file_name="id_health_state.xlsx",
-    columns={
-        "id": sqlalchemy.Integer(),
-        "health_state": sqlalchemy.String()
-    },
+    columns={"id": sqlalchemy.Integer(), "health_state": sqlalchemy.String()},
 )
 
 agent_params = DataFrameInfo(

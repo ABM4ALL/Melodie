@@ -15,4 +15,3 @@ def test_calibrator():
         cfg_for_calibrator, CovidScenario, CovidModel, DFLoader
     )
     calibrator.run()
-

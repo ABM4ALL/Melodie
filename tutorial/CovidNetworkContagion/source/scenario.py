@@ -2,7 +2,6 @@ from tutorial.CovidContagion.source.scenario import CovidScenario
 
 
 class CovidNetworkScenario(CovidScenario):
-
     def setup(self):
         self.period_num = 0
         self.agent_num = 0

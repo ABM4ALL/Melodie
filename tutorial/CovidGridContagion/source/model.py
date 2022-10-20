@@ -16,16 +16,21 @@ class CovidGridModel(Model):
     scenario: CovidGridScenario
 
     def create(self):
-        self.agents: "AgentList[CovidGridAgent]" = self.create_agent_list(CovidGridAgent)
+        self.agents: "AgentList[CovidGridAgent]" = self.create_agent_list(
+            CovidGridAgent
+        )
         self.environment = self.create_environment(CovidGridEnvironment)
         self.data_collector = self.create_data_collector(CovidGridDataCollector)
         self.grid = self.create_grid(CovidGrid, CovidSpot)
 
     def setup(self):
-        self.agents.setup_agents(agents_num=self.scenario.agent_num,
-                                 params_df=self.scenario.get_dataframe(data_info.agent_params),)
-        self.grid.setup_params(width=self.scenario.grid_x_size,
-                               height=self.scenario.grid_y_size)
+        self.agents.setup_agents(
+            agents_num=self.scenario.agent_num,
+            params_df=self.scenario.get_dataframe(data_info.agent_params),
+        )
+        self.grid.setup_params(
+            width=self.scenario.grid_x_size, height=self.scenario.grid_y_size
+        )
         self.grid.setup_agent_locations(self.agents)
 
     def run(self):

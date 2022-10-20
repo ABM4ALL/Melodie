@@ -38,14 +38,14 @@ th_on_thread = None  # for windows
 
 class GACalibratorParams(AlgorithmParameters):
     def __init__(
-            self,
-            id: int,
-            path_num: int,
-            generation_num: int,
-            strategy_population: int,
-            mutation_prob: int,
-            strategy_param_code_length: int,
-            **kw,
+        self,
+        id: int,
+        path_num: int,
+        generation_num: int,
+        strategy_population: int,
+        mutation_prob: int,
+        strategy_param_code_length: int,
+        **kw,
     ):
         super().__init__(id, path_num)
 
@@ -57,7 +57,7 @@ class GACalibratorParams(AlgorithmParameters):
 
     @staticmethod
     def from_dataframe_record(
-            record: Dict[str, Union[int, float]]
+        record: Dict[str, Union[int, float]]
     ) -> "GACalibratorParams":
         s = GACalibratorParams(
             record["id"],
@@ -131,14 +131,14 @@ class GACalibratorAlgorithm:
     """
 
     def __init__(
-            self,
-            env_param_names: List[str],
-            recorded_env_properties: List[str],
-            recorded_agent_properties: Dict[str, List[str]],
-            params: GACalibratorParams,
-            target_func: "Callable[[Environment], Union[float, int]]",
-            manager: "Calibrator" = None,
-            processors=1,
+        self,
+        env_param_names: List[str],
+        recorded_env_properties: List[str],
+        recorded_agent_properties: Dict[str, List[str]],
+        params: GACalibratorParams,
+        target_func: "Callable[[Environment], Union[float, int]]",
+        manager: "Calibrator" = None,
+        processors=1,
     ):
         global pool, th_on_thread
         self.manager = manager
@@ -188,7 +188,9 @@ class GACalibratorAlgorithm:
             ),
         }
 
-        self.parallel_manager = ParallelManager(self.processors, configs=(d, self.manager.config.to_dict()))
+        self.parallel_manager = ParallelManager(
+            self.processors, configs=(d, self.manager.config.to_dict())
+        )
         self.parallel_manager.run("calibrator")
 
     def __del__(self):
@@ -208,10 +210,10 @@ class GACalibratorAlgorithm:
         return env_parameters_dict
 
     def target_function_to_cache(
-            self,
-            env_data,
-            generation: int,
-            chromosome_id: int,
+        self,
+        env_data,
+        generation: int,
+        chromosome_id: int,
     ):
         """
         Extract the value of target functions from Model, and write them into cache.
@@ -235,10 +237,10 @@ class GACalibratorAlgorithm:
         return f
 
     def record_agent_properties(
-            self,
-            agent_data: Dict[str, List[Dict[str, Any]]],
-            env_data: Dict[str, Any],
-            meta: GACalibratorAlgorithmMeta,
+        self,
+        agent_data: Dict[str, List[Dict[str, Any]]],
+        env_data: Dict[str, Any],
+        meta: GACalibratorAlgorithmMeta,
     ):
         """
         Record the property of each agent in the current chromosome.
@@ -278,10 +280,10 @@ class GACalibratorAlgorithm:
         return agent_records, environment_record
 
     def calc_cov_df(
-            self,
-            agent_container_df_dict: Dict[str, pd.DataFrame],
-            env_df: pd.DataFrame,
-            meta,
+        self,
+        agent_container_df_dict: Dict[str, pd.DataFrame],
+        env_df: pd.DataFrame,
+        meta,
     ):
         """
         Calculate the coefficient of variation
@@ -322,7 +324,7 @@ class GACalibratorAlgorithm:
         env_record = {}
         env_record.update(meta_dict)
         for prop_name in (
-                self.env_param_names + self.recorded_env_properties + ["distance"]
+            self.env_param_names + self.recorded_env_properties + ["distance"]
         ):
             mean = env_df[prop_name].mean()
             cov = env_df[prop_name].std() / env_df[prop_name].mean()
@@ -361,7 +363,9 @@ class GACalibratorAlgorithm:
                 # params_queue.put(
                 #     json.dumps((chromosome_id, scenario.to_json(), params))
                 # )
-                self.parallel_manager.put_task((chromosome_id, scenario.to_json(), params))
+                self.parallel_manager.put_task(
+                    (chromosome_id, scenario.to_json(), params)
+                )
 
             agent_records_collector: Dict[str, List[Dict[str, Any]]] = {
                 container_name: []
@@ -398,12 +402,12 @@ class Calibrator(BaseModellingManager):
     """
 
     def __init__(
-            self,
-            config: "Config",
-            scenario_cls: "Optional[Type[Scenario]]",
-            model_cls: "Optional[Type[Model]]",
-            data_loader_cls: Type["DataLoader"],
-            processors=1,
+        self,
+        config: "Config",
+        scenario_cls: "Optional[Type[Scenario]]",
+        model_cls: "Optional[Type[Model]]",
+        data_loader_cls: Type["DataLoader"],
+        processors=1,
     ):
         super().__init__(
             config=config,
@@ -533,7 +537,7 @@ class Calibrator(BaseModellingManager):
         :return: None
         """
         assert (
-                prop not in self.properties
+            prop not in self.properties
         ), f'Property "{prop}" is already in the calibrating training_properties!'
         self.properties.append(prop)
 

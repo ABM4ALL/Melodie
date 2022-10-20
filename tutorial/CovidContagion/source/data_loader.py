@@ -31,11 +31,15 @@ class CovidDataLoader(DataLoader):
         return state
 
     def generate_agent_dataframe(self):
-        with self.dataframe_generator(data_info.agent_params, lambda scenario: scenario.agent_num) as g:
+        with self.dataframe_generator(
+            data_info.agent_params, lambda scenario: scenario.agent_num
+        ) as g:
+
             def generator_func(scenario: "CovidScenario"):
                 return {
                     "id": g.increment(),
                     "age_group": self.init_age_group(scenario),
                     "health_state": self.init_health_state(scenario),
                 }
+
             g.set_row_generator(generator_func)

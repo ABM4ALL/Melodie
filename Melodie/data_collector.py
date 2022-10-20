@@ -72,7 +72,7 @@ class DataCollector:
         return self._time_elapsed
 
     def add_agent_property(
-            self, container_name: str, property_name: str, as_type: Type = None
+        self, container_name: str, property_name: str, as_type: Type = None
     ):
         """
         This method tells the data collector which property and in which agent container it should collect.

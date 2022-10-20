@@ -18,6 +18,7 @@ from ..utils import MelodieExceptions
 from .vis_agent_series import AgentSeriesManager
 from .vis_charts import ChartManager
 from ..boost.grid import Spot
+
 if TYPE_CHECKING:
     from Melodie import Scenario, Model, Grid, Network, Agent, AgentList
 
@@ -60,7 +61,7 @@ async def handler(ws: WebSocketServerProtocol, path):
                     "type": "error",
                     "period": 0,
                     "data": f"The number of connections exceeds the upper limit {MAX_ACTIVE_CONNECTIONS}. "
-                            f"Please shutdown unused webpage or modify the limit.",
+                    f"Please shutdown unused webpage or modify the limit.",
                     "modelState": UNCONFIGURED,
                     "status": ERROR,
                 }
@@ -80,6 +81,7 @@ async def handler(ws: WebSocketServerProtocol, path):
                     visualize_condition_queue_main.put((cmd, data, ws), timeout=1)
                 except:
                     import traceback
+
                     traceback.print_exc()
             else:
                 raise NotImplementedError(cmd)
@@ -134,7 +136,9 @@ class Visualizer:
         self.current_scenario: "Scenario" = None
         self._model: "Model" = None
         self.scenario_param: Dict[str, Union[int, str, float]] = {}
-        self.visualizer_components: List[Tuple["ComponentType", str, Dict, Dict, Callable[['Agent'], int]]] = []
+        self.visualizer_components: List[
+            Tuple["ComponentType", str, Dict, Dict, Callable[["Agent"], int]]
+        ] = []
 
         self.plot_charts: ChartManager = ChartManager()
         self.agent_series_managers: Dict[str, AgentSeriesManager] = {}
@@ -183,10 +187,10 @@ class Visualizer:
             raise ValueError(f"chart name '{chart_name}' already existed!")
 
     def set_chart_data_source(
-            self,
-            chart_name: str,
-            series_name: str,
-            source: "Callable[[Model], Union[int, float]]",
+        self,
+        chart_name: str,
+        series_name: str,
+        source: "Callable[[Model], Union[int, float]]",
     ):
         self.plot_charts.get_chart(chart_name).get_series(series_name).set_data_source(
             source
@@ -257,7 +261,13 @@ class Visualizer:
 
     def get_visualizers_initial_options(self):
         initial_options = []
-        for component_name, component_type, options, _1, _2 in self.visualizer_components:
+        for (
+            component_name,
+            component_type,
+            options,
+            _1,
+            _2,
+        ) in self.visualizer_components:
             if component_type == "grid":
                 initial_options.append(options)
             else:
@@ -359,7 +369,7 @@ class Visualizer:
                 pass
 
     def generic_handler(
-            self, cmd_type: int, data: Dict[str, Any], ws: WebSocketServerProtocol
+        self, cmd_type: int, data: Dict[str, Any], ws: WebSocketServerProtocol
     ) -> bool:
         """
         The handler for viewing current data, getting scenario parameters.
@@ -399,7 +409,7 @@ class Visualizer:
             if flag in {STEP, CURRENT_DATA}:
                 self.send_current_data()
                 if (
-                        flag == STEP
+                    flag == STEP
                 ):  # If the flag was period, then go to period No.1. So there should be one
                     # queue to put into the condition queue.
                     self.model_state = RUNNING
@@ -463,42 +473,45 @@ class GridVisualizer(Visualizer):
         agents_vis_dicts = []
         spots = []
 
-        spot_attributes = ['id', 'x', 'y'] + list(grid.get_spot(0, 0).__dict__.keys())
+        spot_attributes = ["id", "x", "y"] + list(grid.get_spot(0, 0).__dict__.keys())
         if type(grid.get_spot(0, 0)) == Spot:
             for x in range(grid.width()):
                 for y in range(grid.height()):
                     spot = grid.get_spot(x, y)
-                    spots.append({
-                        "data": spot.to_dict(spot_attributes),
-                        "style": spot.get_style()
-                    })
+                    spots.append(
+                        {
+                            "data": spot.to_dict(spot_attributes),
+                            "style": spot.get_style(),
+                        }
+                    )
         for agent_list_name, agent_list in self.agent_lists.items():
             if len(agent_list) == 0:
                 continue
             first_agent = agent_list[0]
-            attributes = ['id', 'x', 'y', 'category'] + list(first_agent.__dict__.keys())
+            attributes = ["id", "x", "y", "category"] + list(
+                first_agent.__dict__.keys()
+            )
             for agent in agent_list:
-                agents_vis_dicts.append({
-                    "data": agent.to_dict(attributes),
-                    "style": agent.get_style()
-                })
+                agents_vis_dicts.append(
+                    {"data": agent.to_dict(attributes), "style": agent.get_style()}
+                )
         return {
             "name": "grid",
             "type": "grid",
             "agents": agents_vis_dicts,
-            "spots": spots
+            "spots": spots,
         }
 
     def add_agent_series(
-            self,
-            component_name: str,
-            series_id: int,
-            agent_container: Union["AgentList"],
-            role_getter: Callable[["Agent"], int] = None,
-            roles_repr: Dict = None,
-            series_type: str = "scatter",
-            color: str = "#000000",
-            symbol="rect",
+        self,
+        component_name: str,
+        series_id: int,
+        agent_container: Union["AgentList"],
+        role_getter: Callable[["Agent"], int] = None,
+        roles_repr: Dict = None,
+        series_type: str = "scatter",
+        color: str = "#000000",
+        symbol="rect",
     ):
         if series_type not in {"scatter"}:
             MelodieExceptions.Program.Variable.VariableNotInSet(
@@ -512,18 +525,19 @@ class GridVisualizer(Visualizer):
         self.agent_lists[series_id] = agent_container
 
     def add_visualize_component(
-            self,
-            name: str,
-            component: "ComponentType",
-
-            color_categories: Dict[int, str],
-            agent_roles: Dict[int, Dict[str, Any]],
-            roles_getter: Callable[['Agent'], int]
-
+        self,
+        name: str,
+        component: "ComponentType",
+        color_categories: Dict[int, str],
+        agent_roles: Dict[int, Dict[str, Any]],
+        roles_getter: Callable[["Agent"], int],
     ):
         from ..boost.grid import Grid
         from ..network import Network
-        MelodieExceptions.Assertions.Type(f"argument \"component\"", component, (Grid, Network))
+
+        MelodieExceptions.Assertions.Type(
+            f'argument "component"', component, (Grid, Network)
+        )
 
         chart_options = {
             "animation": False,
@@ -550,18 +564,25 @@ class GridVisualizer(Visualizer):
             ],
             "name": name,
             "columns": component.width(),
-            "rows": component.height()
+            "rows": component.height(),
         }
-        self.visualizer_components.append((component, name, chart_options, agent_roles, roles_getter))
+        self.visualizer_components.append(
+            (component, name, chart_options, agent_roles, roles_getter)
+        )
 
     def format(self):
         from ..boost.grid import Grid
+
         visualizers = []
-        for vis_component, vis_component_name, _1, agent_roles, roles_getter in self.visualizer_components:
+        for (
+            vis_component,
+            vis_component_name,
+            _1,
+            agent_roles,
+            roles_getter,
+        ) in self.visualizer_components:
             if isinstance(vis_component, Grid):
-                r = self.parse_grid_series(
-                    vis_component
-                )
+                r = self.parse_grid_series(vis_component)
                 visualizers.append(r)
             else:
                 raise NotImplementedError
@@ -618,9 +639,9 @@ class NetworkVisualizer(Visualizer):
             self.edge_roles[edge] = pos
 
     def parse_layout(
-            self,
-            node_info: List[Any],
-            parser: Callable[[Any], Tuple[Union[str, int], Tuple[float, float]]] = None,
+        self,
+        node_info: List[Any],
+        parser: Callable[[Any], Tuple[Union[str, int], Tuple[float, float]]] = None,
     ):
         """
 

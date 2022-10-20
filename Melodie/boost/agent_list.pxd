@@ -56,4 +56,6 @@ cdef class AgentList(BaseAgentContainer):
     cpdef method_foreach(self, str method_name, tuple args) except *
     cpdef list init_agents(self) except *
     cpdef vectorize(self, str prop_name) except *
+    cpdef list filter(self, condition) except *
+    
 cpdef test_container() except *

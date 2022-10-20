@@ -284,7 +284,7 @@ def test_roles_2():
         )
         assert False
     except AssertionError as e:
-        assert 'width' in str(e)
+        assert "width" in str(e)
 
     try:
         grid.set_spot_property(
@@ -300,21 +300,17 @@ def test_roles_2():
         )
         assert False
     except AssertionError as e:
-        assert 'height' in str(e)
+        assert "height" in str(e)
 
     try:
         grid.set_spot_property(
             "a",
             np.ones(
-                (
-                    10,
-                    100,
-                    1
-                ),
+                (10, 100, 1),
                 dtype=np.int,
             )
             * 100,
         )
         assert False
     except AssertionError as e:
-        assert '2-dimensional' in str(e)
+        assert "2-dimensional" in str(e)

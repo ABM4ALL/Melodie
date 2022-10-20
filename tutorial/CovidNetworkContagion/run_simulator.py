@@ -9,6 +9,6 @@ if __name__ == "__main__":
         config=config,
         model_cls=CovidNetworkModel,
         scenario_cls=CovidNetworkScenario,
-        data_loader_cls=CovidNetworkDataLoader
+        data_loader_cls=CovidNetworkDataLoader,
     )
     simulator.run()

@@ -5,8 +5,10 @@ import pandas as pd
 
 class MyData:
     def __init__(self, df: pd.DataFrame):
-        self.records = df.to_dict('records')
-        self.indices = {"id": {record['id']: {row} for row, record in enumerate(self.records)}}
+        self.records = df.to_dict("records")
+        self.indices = {
+            "id": {record["id"]: {row} for row, record in enumerate(self.records)}
+        }
 
     def get_data(self, **kwargs):
         s: set = None
@@ -25,7 +27,7 @@ class MyData:
 
 
 df = pd.DataFrame([{"a": 1, "b": 1, "id": i} for i in range(10000)])
-df.set_index(['id'])
+df.set_index(["id"])
 
 M = 100000
 
@@ -36,7 +38,7 @@ def df_getitem_speed():
     for i in range(M):
         a = df.loc[9999, "b"]
         # s += a
-    print('df:', time.time() - t0)
+    print("df:", time.time() - t0)
 
 
 def mycls_getitem_speed():
@@ -45,8 +47,8 @@ def mycls_getitem_speed():
     t0 = time.time()
     for i in range(M):
         a = my_data.get_data(id=9999)
-        s += a['b']
-    print('mycls', time.time() - t0)
+        s += a["b"]
+    print("mycls", time.time() - t0)
 
 
 df_getitem_speed()

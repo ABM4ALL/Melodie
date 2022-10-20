@@ -2,6 +2,7 @@ from Melodie import Model, Scenario
 import pandas as pd
 import typing
 from typing import (
+    Callable,
     List,
     Dict,
     Union,
@@ -66,3 +67,6 @@ class AgentList(BaseAgentContainer, Sequence, typing.Sequence[AgentGeneric]):
     def to_list(self, column_names: List[str] = None) -> List[Dict]: ...
     def to_dataframe(self, column_names: List[str] = None) -> pd.DataFrame: ...
     def set_properties(self, props_df: pd.DataFrame): ...
+    def filter(
+        self, condition: Callable[["AgentGeneric"], bool]
+    ) -> List["AgentGeneric"]: ...

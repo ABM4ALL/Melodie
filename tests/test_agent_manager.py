@@ -12,6 +12,11 @@ class TestAgent(Agent):
         self.a = 0
 
 
+class TestAgentToFilter(Agent):
+    def setup(self):
+        self.a = 0
+        self.b = 0.001
+
 
 def test_repr():
     ta = TestAgent(0)
@@ -22,6 +27,21 @@ def test_repr():
     assert "'a'" in ret
     assert "'id'" in ret
     assert isinstance(ta.id, int)
+
+
+def test_agent_manager_filter():
+
+    am = AgentList(TestAgentToFilter, model)
+    for i in range(10):
+        ta = TestAgentToFilter(0)
+        # ta.setup()
+
+        am.add(ta)
+        ta.a = i
+        ta.b = float(i)
+    ret = am.filter(lambda agent: agent.a < 5 and agent.b > 2)
+
+    assert len(ret) == 2
 
 
 def test_agent_manager_type_hinting():

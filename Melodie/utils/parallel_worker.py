@@ -27,9 +27,9 @@ from Melodie.global_configs import MelodieGlobalConfig
 class ParallelWorker:
     def __init__(self):
         self.role = args.role
-        assert self.role in {'trainer', 'calibrator'}
+        assert self.role in {"trainer", "calibrator"}
         self.core_id = args.core_id
-        self.conn = rpyc.connect('localhost', 12233)
+        self.conn = rpyc.connect("localhost", 12233)
 
     def get_config(self):
         return json.loads(self.conn.root.get_config())
@@ -51,7 +51,7 @@ class ParallelWorker:
 
     def run(self):
         config = self.get_config()
-        print('paths', sys.path)
+        print("paths", sys.path)
         if self.role == "calibrator":
             sub_routine_calibrator(self.core_id, config[0], config[1], self)
         elif self.role == "trainer":
@@ -61,8 +61,10 @@ class ParallelWorker:
 
 
 def sub_routine_trainer(
-    proc_id: int, modules: Dict[str, Tuple[str, str]], config_raw: Dict[str, Any],
-        worker: ParallelWorker
+    proc_id: int,
+    modules: Dict[str, Tuple[str, str]],
+    config_raw: Dict[str, Any],
+    worker: ParallelWorker,
 ):
     """
     The sub iterator callback for parallelized computing used in Trainer and Calibrator.
@@ -149,8 +151,10 @@ def sub_routine_trainer(
 
 
 def sub_routine_calibrator(
-        proc_id: int, modules: Dict[str, Tuple[str, str]], config_raw: Dict[str, Any],
-        worker: ParallelWorker
+    proc_id: int,
+    modules: Dict[str, Tuple[str, str]],
+    config_raw: Dict[str, Any],
+    worker: ParallelWorker,
 ):
     """
     The sub iterator callback for parallelized computing used in Trainer and Calibrator.
@@ -162,6 +166,7 @@ def sub_routine_calibrator(
     """
     from Melodie import Config, Environment, Calibrator
     import tests.calibrator
+
     try:
         config = Config.from_dict(config_raw)
         import logging

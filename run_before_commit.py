@@ -4,4 +4,4 @@ import sys
 import Melodie
 
 os.system(f"{sys.executable} -m black .")
-os.system("pytest -s")
+# os.system("pytest -s")

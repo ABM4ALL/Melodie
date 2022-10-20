@@ -9,6 +9,6 @@ if __name__ == "__main__":
         config=config,
         model_cls=CovidGridModel,
         scenario_cls=CovidGridScenario,
-        data_loader_cls=CovidGridDataLoader
+        data_loader_cls=CovidGridDataLoader,
     )
     simulator.run()

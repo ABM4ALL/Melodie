@@ -58,9 +58,9 @@ def test_relationship_network():
     n.create_edge(agent_list[3].id, "agents", agent_list[4].id, "agents")
     neighbor_ids = n._get_neighbor_positions(agent_list[0].id, "agents")
     assert (
-            len(neighbor_ids) == 2
-            and ("agents", 1) in neighbor_ids
-            and ("agents", 2) in neighbor_ids
+        len(neighbor_ids) == 2
+        and ("agents", 1) in neighbor_ids
+        and ("agents", 2) in neighbor_ids
     )
 
     n._add_agent("agents", 11)
@@ -90,9 +90,9 @@ def test_relationship_directed():
     n.create_edge(agent_list[3].id, "agents", agent_list[4].id, "agents")
     neighbor_ids = n._get_neighbor_positions(agent_list[0].id, "agents")
     assert (
-            len(neighbor_ids) == 2
-            and ("agents", 1) in neighbor_ids
-            and ("agents", 2) in neighbor_ids
+        len(neighbor_ids) == 2
+        and ("agents", 1) in neighbor_ids
+        and ("agents", 2) in neighbor_ids
     )
 
     n._add_agent(

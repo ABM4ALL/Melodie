@@ -8,10 +8,8 @@ if TYPE_CHECKING:
 
 
 class CovidNetworkDataLoader(CovidDataLoader):
-
     def setup(self):
         self.load_dataframe(data_info.simulator_scenarios)
         self.load_dataframe(data_info.id_age_group)
         self.load_dataframe(data_info.id_health_state)
         self.generate_agent_dataframe()
-

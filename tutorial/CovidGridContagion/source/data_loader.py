@@ -10,7 +10,6 @@ if TYPE_CHECKING:
 
 
 class CovidGridDataLoader(CovidDataLoader):
-
     def setup(self):
         self.load_dataframe(data_info.simulator_scenarios)
         self.load_dataframe(data_info.id_age_group)
@@ -19,7 +18,10 @@ class CovidGridDataLoader(CovidDataLoader):
         self.generate_agent_dataframe()
 
     def generate_agent_dataframe(self):
-        with self.dataframe_generator(data_info.agent_params, lambda scenario: scenario.agent_num) as g:
+        with self.dataframe_generator(
+            data_info.agent_params, lambda scenario: scenario.agent_num
+        ) as g:
+
             def generator_func(scenario: "CovidGridScenario"):
                 return {
                     "id": g.increment(),
@@ -28,4 +30,5 @@ class CovidGridDataLoader(CovidDataLoader):
                     "age_group": self.init_age_group(scenario),
                     "health_state": self.init_health_state(scenario),
                 }
+
             g.set_row_generator(generator_func)

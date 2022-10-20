@@ -15,4 +15,3 @@ class CovidGridEnvironment(CovidEnvironment):
         for agent in agents:
             if agent.health_state == 0:
                 agent.infection(agents)
-

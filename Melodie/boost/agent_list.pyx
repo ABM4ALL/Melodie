@@ -333,6 +333,18 @@ cdef class AgentList(BaseAgentContainer):
             raise IndexError("Index error occurred in the get_index")
         else:
             return indices.at(agent_id)
+    
+    cpdef list filter(self, condition) except *:
+        """
+        Filter agents satisfying the condition
+
+        :return: a list of filtered agents
+        """
+        filtered_agents = []
+        for agent in self.agents:
+            if condition(agent):
+                filtered_agents.append(agent)
+        return filtered_agents
 
     def add(self, agent=None, params=None) -> None:
         """

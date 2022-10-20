@@ -61,7 +61,9 @@ class ParallelManager:
         return tasks.get_result()
 
     def run_server(self):
-        self.server = ThreadedServer(service=TimeService, port=12233, auto_register=False)
+        self.server = ThreadedServer(
+            service=TimeService, port=12233, auto_register=False
+        )
         self.server.start()
 
     def run(self, role: str):
@@ -71,17 +73,22 @@ class ParallelManager:
         :param role: run as calibrator or trainer
         :return:
         """
-        assert role in {'calibrator', 'trainer'}
+        assert role in {"calibrator", "trainer"}
         self.th_server.setDaemon(True)
         self.th_server.start()
         for core_id in range(self.cores):
             p = subprocess.Popen(
-                [sys.executable,
-                 os.path.join(os.path.dirname(__file__), "parallel_worker.py"),
-                 "--core_id", str(core_id),
-                 "--workdirs", json.dumps([os.getcwd()]),
-                 "--role", role
-                 ])
+                [
+                    sys.executable,
+                    os.path.join(os.path.dirname(__file__), "parallel_worker.py"),
+                    "--core_id",
+                    str(core_id),
+                    "--workdirs",
+                    json.dumps([os.getcwd()]),
+                    "--role",
+                    role,
+                ]
+            )
             self.processes.append(p)
 
     def close(self):

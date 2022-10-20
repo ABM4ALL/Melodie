@@ -30,11 +30,11 @@ class BaseModellingManager(abc.ABC):
     """
 
     def __init__(
-            self,
-            config: Config,
-            scenario_cls: Type["Scenario"],
-            model_cls: Type["Model"],
-            data_loader_cls: Type[DataLoader] = None,
+        self,
+        config: Config,
+        scenario_cls: Type["Scenario"],
+        model_cls: Type["Model"],
+        data_loader_cls: Type[DataLoader] = None,
     ):
         self.config: Optional[Config] = config
         self.scenario_cls = scenario_cls
@@ -116,12 +116,12 @@ class BaseModellingManager(abc.ABC):
 
 class Simulator(BaseModellingManager):
     def __init__(
-            self,
-            config: Config,
-            scenario_cls: "Type[Scenario]",
-            model_cls: "Type[Model]",
-            data_loader_cls: "Type[DataLoader]" = None,
-            visualizer_cls: "type[Visualizer]" = None
+        self,
+        config: Config,
+        scenario_cls: "Type[Scenario]",
+        model_cls: "Type[Model]",
+        data_loader_cls: "Type[DataLoader]" = None,
+        visualizer_cls: "type[Visualizer]" = None,
     ):
         super(Simulator, self).__init__(
             config=config,
@@ -134,7 +134,9 @@ class Simulator(BaseModellingManager):
         self.visualizer = None
 
     def _init_visualizer(self):
-        self.visualizer: Optional[Visualizer] = None if self.visualizer_cls is None else self.visualizer_cls()
+        self.visualizer: Optional[Visualizer] = (
+            None if self.visualizer_cls is None else self.visualizer_cls()
+        )
 
     def generate_scenarios(self) -> List["Scenario"]:
         """
@@ -147,7 +149,7 @@ class Simulator(BaseModellingManager):
         return self.data_loader.generate_scenarios("simulator")
 
     def run_model(
-            self, config, scenario, id_run, model_class: Type["Model"], visualizer=None
+        self, config, scenario, id_run, model_class: Type["Model"], visualizer=None
     ):
         """
         Run a model once.
