@@ -13,6 +13,7 @@ from typing import (
     TYPE_CHECKING,
     Type,
     Iterator,
+    cast,
 )
 
 import pandas as pd
@@ -150,7 +151,7 @@ class GACalibratorAlgorithm:
         self.recorded_agent_properties = recorded_agent_properties
         lb, ub = self.params.bounds(self.env_param_names)
         self.algorithm: Optional[MelodieGA] = MelodieGA(
-            self.generate_target_function(),
+            cast("function", self.generate_target_function()),
             len(self.env_param_names),
             self.params.strategy_population,
             self.params.generation_num,

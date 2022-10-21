@@ -1,7 +1,7 @@
 # -*- coding:utf-8 -*-
 
 import logging
-from typing import Callable, Union, TYPE_CHECKING, Optional
+from typing import Callable, Union, TYPE_CHECKING, Optional, Dict, Any
 
 import pandas as pd
 
@@ -77,7 +77,7 @@ class DataFrameGenerator:
             raise TypeError
 
     def set_row_generator(
-        self, row_generator: Callable[[Scenario], Union[dict, object]]
+        self, row_generator: Callable[[Union[Any, Scenario]], Union[Dict[str, Any]]]
     ):
         """
         Set the geneator for each row. Every time the row_generator is called, this function

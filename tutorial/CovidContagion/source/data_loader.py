@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Dict, Any
 
 import numpy as np
 
@@ -35,7 +35,7 @@ class CovidDataLoader(DataLoader):
             data_info.agent_params, lambda scenario: scenario.agent_num
         ) as g:
 
-            def generator_func(scenario: "CovidScenario"):
+            def generator_func(scenario: "CovidScenario") -> Dict[str, Any]:
                 return {
                     "id": g.increment(),
                     "age_group": self.init_age_group(scenario),

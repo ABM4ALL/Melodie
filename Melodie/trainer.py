@@ -15,6 +15,7 @@ from typing import (
     Type,
     Iterator,
     Type,
+    cast,
 )
 
 import cloudpickle
@@ -255,7 +256,9 @@ class GATrainerAlgorithm:
         lb, ub = self.params.bounds(param_names)
         for agent_id in agent_id_list:
             self.algorithms_dict[(agent_id, container_name)] = MelodieGA(
-                func=self.generate_target_function(agent_id, container_name),
+                func=cast(
+                    "function", self.generate_target_function(agent_id, container_name)
+                ),
                 n_dim=len(param_names),
                 size_pop=self.params.strategy_population,
                 max_iter=self.params.generation_num,
@@ -607,7 +610,7 @@ class Trainer(BaseModellingManager):
         """
         assert self.algorithm_type in {"ga"}
 
-        trainer_scenario_cls: Union[Type[GATrainerParams]] = None
+        trainer_scenario_cls: Optional[Union[Type[GATrainerParams]]] = None
         if self.algorithm_type == "ga":
             trainer_scenario_cls = GATrainerParams
         assert trainer_scenario_cls is not None

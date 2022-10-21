@@ -56,7 +56,7 @@ class Model:
         config: "Config",
         scenario: "Scenario",
         run_id_in_scenario: int = 0,
-        visualizer: Visualizer = None,
+        visualizer: GridVisualizer = None,
     ):
 
         self.scenario = scenario

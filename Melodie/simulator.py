@@ -129,7 +129,7 @@ class Simulator(BaseModellingManager):
             model_cls=model_cls,
             data_loader_cls=data_loader_cls,
         )
-        self.server_thread: threading.Thread = None
+        self.server_thread: Optional[threading.Thread] = None
         self.visualizer_cls = visualizer_cls
         self.visualizer = None
 
