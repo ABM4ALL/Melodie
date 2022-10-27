@@ -341,10 +341,10 @@ class GACalibratorAlgorithm:
         Check at the beginning of run()
         :return:
         """
-        print("Algorithm will run with:")
-        print("    Meta value", meta)
-        print("    Recording environment parameters: ", self.recorded_env_properties)
-        print("    Recording Agent agent_lists:", self.recorded_agent_properties)
+        logger.info(f"""Algorithm will run with:
+        Meta value: {meta}
+        Recording environment parameters: {self.recorded_env_properties}
+        Recording Agent agent_lists: {self.recorded_agent_properties}\n""")
 
     def run(self, scenario: Scenario, meta: Union[GACalibratorAlgorithmMeta]):
         self.pre_check(meta)
@@ -353,7 +353,7 @@ class GACalibratorAlgorithm:
             t0 = time.time()
             self._current_generation = i
             meta.generation = i
-            print(
+            logger.info(
                 f"======================="
                 f"Path {meta.path_id} Generation {i + 1}/{self.params.generation_num}"
                 f"======================="
@@ -394,7 +394,7 @@ class GACalibratorAlgorithm:
             self._chromosome_counter = -1
             self.algorithm.run(1)
             t1 = time.time()
-            print("=" * 20, "Time Elapsed", t1 - t0, "=" * 20)
+            logger.info("=" * 20, "Time Elapsed", t1 - t0, "=" * 20)
 
 
 class Calibrator(BaseModellingManager):

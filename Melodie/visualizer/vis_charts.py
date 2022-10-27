@@ -60,6 +60,7 @@ class ChartSeries(JSONBase):
 class Chart(JSONBase):
     def __init__(self, series_names: List[str]):
         self._index = {series_name: i for i, series_name in enumerate(series_names)}
+        self.type = "line"
         self.series: Tuple[ChartSeries] = tuple(
             [ChartSeries(name) for name in series_names]
         )
@@ -78,13 +79,77 @@ class Chart(JSONBase):
         for series in self.series:
             series.update(current_step)
 
+    def get_series_data(self):
+        chart_series_data = []
+        for i in range(len(self.series)):
+            s = {
+                "name": self.get_series_by_index(i).seriesName,
+                "value": self.get_series(
+                    self.get_series_by_index(i).seriesName
+                ).latest_data,
+            }
+            chart_series_data.append(s)
+        return chart_series_data
+
+
+class Gauge(JSONBase):
+    def __init__(self, source: Callable[[], Union[int, float, Dict]]):
+        self._sources: Dict[str, Callable[[], Union[int, float]]] = {}
+        self.value: Dict[str, Union[int, float]] = {}
+
+    def reset(self):
+        pass
+
+    def update(self, current_step):
+        self.value = self._source()
+
+
+class PieChart(JSONBase):
+    def __init__(self):
+        self.type = "pie"
+        self._sources: Dict[str, Callable[[], Union[int, float]]] = {}
+        self.value: Dict[str, Union[int, float]] = {}
+
+    def add_variable(self, variable_name: str, source: Callable[[], Union[int, float]]):
+        self.value[variable_name] = 0
+        self._sources[variable_name] = source
+
+    def update(self, current_step):
+        assert isinstance(self.value, dict)
+        for varname in self._sources.keys():
+            self.value[varname] = self._sources[varname]()
+        # assert len(self._variables) == len(self.value.keys()), f"New value {self.value.keys()} does not match variables" \
+        #                                                        f"{self._variables}" \
+        #                                                        f"inside the piechart."
+
+    def reset(self):
+        self.value = {}
+
+    def to_json(self):
+        return {'type': self.type, 'series': self.get_series_data()}
+
+    def get_series_data(self):
+        return [{"name": k, 'value': v} for k, v in self.value.items()]
+
+
+class BarChart(PieChart):
+    def __init__(self):
+        super(BarChart, self).__init__()
+        self.type = 'bar'
+
 
 class ChartManager(JSONBase):
     def __init__(self):
-        self.charts: Dict[str, Chart] = {}
+        self.charts: Dict[str, Union[Chart, Gauge]] = {}
 
     def add_chart(self, chart_name: str, series_names: List[str]):
         self.charts[chart_name] = Chart(series_names)
+
+    def add_piechart(self, chart_name: str):
+        self.charts[chart_name] = PieChart()
+
+    def add_barchart(self, chart_name: str):
+        self.charts[chart_name] = BarChart()
 
     def all_chart_names(self):
         return set(self.charts.keys())
@@ -96,17 +161,17 @@ class ChartManager(JSONBase):
         current_data = []
         for chart_name in self.all_chart_names():
             chart = self.get_chart(chart_name)
-            chart_series_data = []
-            for i in range(len(chart.series)):
-                s = {
-                    "name": chart.get_series_by_index(i).seriesName,
-                    "value": chart.get_series(
-                        chart.get_series_by_index(i).seriesName
-                    ).latest_data,
-                }
-                chart_series_data.append(s)
-            current_data.append({"chartName": chart_name, "series": chart_series_data})
-        print("current_data", current_data)
+            # chart_series_data = []
+            # for i in range(len(chart.series)):
+            #     s = {
+            #         "name": chart.get_series_by_index(i).seriesName,
+            #         "value": chart.get_series(
+            #             chart.get_series_by_index(i).seriesName
+            #         ).latest_data,
+            #     }
+            #     chart_series_data.append(s)
+            current_data.append({"chartName": chart_name, "series": chart.get_series_data()})
+        # print("current_data", current_data)
         return current_data
 
     def reset(self):

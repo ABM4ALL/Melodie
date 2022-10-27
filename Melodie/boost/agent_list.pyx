@@ -336,7 +336,7 @@ cdef class AgentList(BaseAgentContainer):
     
     cpdef list filter(self, condition) except *:
         """
-        Filter agents satisfying the condition
+        Filter agents satisfying the condition Callable[[Agent], bool]
 
         :return: a list of filtered agents
         """

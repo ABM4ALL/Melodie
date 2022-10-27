@@ -39,7 +39,6 @@ class AlgorithmParameters:
             for name, value in record.items()
             if name.endswith("_min")
         }
-        print(max_values, min_values)
         assert len(max_values) == len(min_values)
         for k in max_values.keys():
             self.parameters.append(

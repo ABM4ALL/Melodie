@@ -1,5 +1,5 @@
 from collections import Counter
-from typing import TYPE_CHECKING, Any, List, Callable, Dict, Set, Optional
+from typing import TYPE_CHECKING, Any, List, Callable, Dict, Set
 
 if TYPE_CHECKING:
     from Melodie import Agent
@@ -13,7 +13,8 @@ def assert_exc_occurs(exc_id: int, func: Callable):
         func()
         assert False
     except MelodieException as e:
-        print(e)
+        import traceback
+        traceback.print_exc()
         assert e.id == exc_id
 
 

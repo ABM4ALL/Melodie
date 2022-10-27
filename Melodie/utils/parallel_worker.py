@@ -51,7 +51,6 @@ class ParallelWorker:
 
     def run(self):
         config = self.get_config()
-        print("paths", sys.path)
         if self.role == "calibrator":
             sub_routine_calibrator(self.core_id, config[0], config[1], self)
         elif self.role == "trainer":
