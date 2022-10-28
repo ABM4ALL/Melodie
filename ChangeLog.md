@@ -5,6 +5,9 @@ ChangeLog
 ### Current Major version
 - Add file `.gexf` format for network.
 - Optimize and re-arrange the visualizer API.
+- Modify id_run and id_scneario inside the data collector.
+- Change the name of the base class of Simulator to `ModelRunningManager`
+- Change name: DataCollector.status -> `DataCollector.running_manager_mode`
 
 
 ### v0.3.0

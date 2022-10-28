@@ -108,7 +108,9 @@ class PieChart(JSONBase):
     def __init__(self):
         self.type = "pie"
         self._sources: Dict[str, Callable[[], Union[int, float]]] = {}
+        self._source: Optional[Callable[[], Dict[Union[int, float]]]] = None
         self.value: Dict[str, Union[int, float]] = {}
+        self._mode = 'single'
 
     def add_variable(self, variable_name: str, source: Callable[[], Union[int, float]]):
         self.value[variable_name] = 0
@@ -116,8 +118,11 @@ class PieChart(JSONBase):
 
     def update(self, current_step):
         assert isinstance(self.value, dict)
-        for varname in self._sources.keys():
-            self.value[varname] = self._sources[varname]()
+        if self._mode == 'single':
+            for varname in self._sources.keys():
+                self.value[varname] = self._sources[varname]()
+        else:
+            self.value = self._source()
         # assert len(self._variables) == len(self.value.keys()), f"New value {self.value.keys()} does not match variables" \
         #                                                        f"{self._variables}" \
         #                                                        f"inside the piechart."
@@ -136,6 +141,10 @@ class BarChart(PieChart):
     def __init__(self):
         super(BarChart, self).__init__()
         self.type = 'bar'
+        self._mode = 'single'
+
+    def add_variables_source(self, variables_source: Callable[[], Dict[str, Union[int, float]]]):
+        self._source = variables_source
 
 
 class ChartManager(JSONBase):

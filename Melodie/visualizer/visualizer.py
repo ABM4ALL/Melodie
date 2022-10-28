@@ -16,7 +16,7 @@ from websockets.legacy.server import WebSocketServerProtocol
 
 from ..utils import MelodieExceptions
 from .vis_agent_series import AgentSeriesManager
-from .vis_charts import ChartManager, Chart, PieChart
+from .vis_charts import ChartManager, Chart, PieChart, BarChart
 from ..boost.grid import Spot
 
 if TYPE_CHECKING:
@@ -205,6 +205,14 @@ class Visualizer:
             chart.get_series(series_name).set_data_source(source)
         elif isinstance(chart, PieChart):
             chart.add_variable(series_name, source)
+        else:
+            raise NotImplementedError(chart)
+
+    def set_chart_data_multisource(self, chart_name: str,
+                                   source: "Callable[[Model],Dict[str, Union[int, float]]]", ):
+        chart = self.plot_charts.get_chart(chart_name)
+        if isinstance(chart, BarChart):
+            chart.add_variables_source(source)
         else:
             raise NotImplementedError(chart)
 
