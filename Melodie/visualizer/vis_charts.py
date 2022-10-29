@@ -145,6 +145,7 @@ class BarChart(PieChart):
 
     def add_variables_source(self, variables_source: Callable[[], Dict[str, Union[int, float]]]):
         self._source = variables_source
+        self._mode = 'multi'
 
 
 class ChartManager(JSONBase):
