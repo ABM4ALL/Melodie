@@ -160,12 +160,12 @@ class Visualizer:
         self.th.setDaemon(True)
         self.th.start()
 
-        try:
-            urlopen("http://localhost:8089/api/tools/test")
-        except ConnectionRefusedError:
-            raise MelodieExceptions.Tools.MelodieStudioUnAvailable()
-        except URLError:
-            raise MelodieExceptions.Tools.MelodieStudioUnAvailable()
+        # try:
+        #     urlopen("http://localhost:8089/api/tools/test")
+        # except ConnectionRefusedError:
+        #     raise MelodieExceptions.Tools.MelodieStudioUnAvailable()
+        # except URLError:
+        #     raise MelodieExceptions.Tools.MelodieStudioUnAvailable()
 
     def setup(self):
         pass
