@@ -167,13 +167,26 @@ class Simulator(BaseModellingManager):
         )
         if visualizer is not None:
             visualizer.set_model(model)
-            self.visualizer.params_manager.write_obj_attrs_to_params_list(model.scenario,
-                                                                          self.visualizer.params_manager.params)
-            with open('test.json', 'w') as f:
-                json.dump({
-                    'model': self.visualizer.params_manager.to_json(),
-                    'params-values': self.visualizer.params_manager.to_value_json()
-                }, f, indent=4)
+            if not self.visualizer.params_manager._initialized:
+                self.visualizer.params_manager.write_obj_attrs_to_params_list(model.scenario,
+                                                                              self.visualizer.params_manager.params)
+                self.visualizer.params_manager._initialized = True
+            else:
+                self.visualizer.params_manager.modify_scenario(model.scenario)
+            # with open('test.json', 'w') as f:
+            #     json.dump({
+            #         'model': self.visualizer.params_manager.to_json(),
+            #         'params-values': self.visualizer.params_manager.to_value_json()
+            #     }, f, indent=4)
+            # with open('123.json') as f:
+            #     self.visualizer.params_manager.from_json(json.load(f))
+            # with open('out.json', 'w') as f:
+            #     json.dump({
+            #         'model': self.visualizer.params_manager.to_json(),
+            #         'params-values': self.visualizer.params_manager.to_value_json()
+            #     }, f, indent=4)
+            # self.visualizer.params_manager.modify_scenario(scenario)
+            print('aaa',self.visualizer.params_manager.to_value_json()[0])
             visualizer.start()
         else:
             model._setup()
@@ -258,8 +271,8 @@ class Simulator(BaseModellingManager):
 
             scenario = self.scenarios[0].copy()
             scenario.manager = self
-            for k, v in self.visualizer.scenario_param.items():
-                scenario.__setattr__(k, v)
+            # for k, v in self.visualizer.scenario_param.items():
+            #     scenario.__setattr__(k, v)
             logger.info(f"Scenario parameters: {scenario.to_dict()}")
             try:
                 self.visualizer.current_scenario = scenario  # set studio scenario.

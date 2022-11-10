@@ -325,11 +325,12 @@ class Visualizer:
         )
 
     def send_scenario_params(self, params_list: List["Scenario.BaseParameter"]):
-        param_models = []  # name, type, min, max, step
-        initial_params: Dict[str, Dict[str, int]] = {}
-        for param in params_list:
-            initial_params[param.name] = {"value": param.init}
-            param_models.append(param.to_dict())
+        # param_models = []  # name, type, min, max, step
+        # initial_params: Dict[str, Dict[str, int]] = {}
+        # for param in params_list:
+        #     initial_params[param.name] = {"value": param.init}
+        #     param_models.append(param.to_dict())
+        print(self.params_manager.to_value_json()[0])
         params = {"initialParams": self.params_manager.to_value_json(),
                   "paramModels": self.params_manager.to_form_model()}
         # params = {"initialParams": initial_params, "paramModels": param_models}
@@ -408,7 +409,8 @@ class Visualizer:
             self.send_scenario_params(self.current_scenario.get_parameters())
             return True
         elif cmd_type == RESET:
-            self.scenario_param = {k: v["value"] for k, v in data["params"].items()}  #
+            self.params_manager.from_json(data['params'])
+            # self.scenario_param = {k: v["value"] for k, v in data["params"].items()}  #
             raise MelodieModelReset
         elif cmd_type == INIT_OPTIONS:
             self.send_chart_options()

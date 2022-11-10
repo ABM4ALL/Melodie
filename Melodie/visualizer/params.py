@@ -20,8 +20,6 @@ BasicType = Union[str, int, float, bool]
 ParamsType = 'Union[Param, IntParam, FloatParam, BoolParam, StringParam, ArrayParam]'
 
 
-
-
 class UnInitialized:
     pass
 
@@ -48,7 +46,7 @@ class Param(JSONBase):
         self._getter_from_obj: GetterType = getter if callable(getter) else \
             lambda obj: getattr(obj, getter)
         self._setter_to_obj: SetterType = setter if callable(setter) else \
-            lambda obj, param: setattr(obj, setter, param.value)
+            lambda obj, param: setattr(obj, setter, param)
 
     @property
     def value(self):
@@ -88,7 +86,11 @@ class Param(JSONBase):
         :param obj:
         :return:
         """
-        self._setter_to_obj(obj, self)
+        self._setter_to_obj(obj, self.value)
+
+    def from_json(self, d: Dict):
+        self.value = d['value']
+        print(self.name, self.value, d['value'])
 
 
 class IntParam(Param):
@@ -136,6 +138,9 @@ class BoolParam(Param):
         super().__init__(name, getter, setter, readonly, label, component)
         self.type = 'bool'
 
+    def _converter(self, new_val):
+        return bool(new_val)
+
 
 class StringParam(Param):
     """
@@ -149,6 +154,9 @@ class StringParam(Param):
                  component='auto', ):
         super().__init__(name, getter, setter, readonly, label, component)
         self.type = 'str'
+
+    def _converter(self, new_val):
+        return str(new_val)
 
 
 class FloatParam(Param):
@@ -176,10 +184,10 @@ class FloatParam(Param):
             raise ValueError(
                 f"Float parameter named {self.name}, value {new_val} out of range {self.min}<= x <={self.max}")
 
-    # def _converter(self, new_val):
-    #     if self.precision < 0:
-    #         return new_val
-    #     return round(new_val, self.precision)
+    def _converter(self, new_val):
+        # if self.precision < 0:
+        #     return new_val
+        return float(new_val)
 
 
 class ArrayParam(Param):
@@ -229,19 +237,32 @@ class ArrayParam(Param):
             # subobj = param._getter_from_obj(obj)
             param.extract_value(obj)
 
+    def from_json(self, d: List[Union[List, Dict]]):
+        assert isinstance(d['value'], list)
+        assert len(d['value']) == len(self._value)
+        for i, param in enumerate(self._value):
+            param.from_json(d['value'][i])
+
+    def modify_object(self, obj: 'object'):
+        for param in self._value:
+            param.modify_object(obj)
+
 
 class ParamsManager:
     def __init__(self):
+        self._initialized = False
         self._unique_name_map: Dict[str, Param] = {}
         self.params: List[ParamsType] = []
 
     def add_param(self, param: ParamsType):
         self.params.append(param)
 
-    # def load_scenario(self, scenario: 'Scenario'):
-    # for param
     def to_json(self):
         return [param.to_json() for param in self.params]
+
+    def modify_scenario(self, scenario: 'Scenario'):
+        for param in self.params:
+            param.modify_object(scenario)
 
     @staticmethod
     def write_obj_attrs_to_params_list(obj: object, params: List[ParamsType]):
@@ -267,23 +288,12 @@ class ParamsManager:
                 callback(abs_name, param)
 
     def to_form_model(self):
-        new_params_list = []
-
-        # def for_each_callback(param_name: str, param: Param):
-        #     d = param.to_json()
-        #     d['name'] = param_name
-        #     new_params_list.append(d)
-        #
-        # ParamsManager.for_each_param(self.params, "", for_each_callback)
         return [param.to_json() for param in self.params]
 
     def to_value_json(self):
-        # new_params_list = []
-
-        # def for_each_callback(param_name: str, param: Param):
-        #     d = param.to_value_json()
-        #     d['name'] = param_name
-        #     new_params_list.append(d)
-        #
-        # ParamsManager.for_each_param(self.params, "", for_each_callback)
         return [param.to_value_json() for param in self.params]
+
+    def from_json(self, l: List[Union[Dict, List]]):
+        assert len(l) == len(self.params)
+        for i, param in enumerate(self.params):
+            param.from_json(l[i])
