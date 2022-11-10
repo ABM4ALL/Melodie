@@ -14,6 +14,7 @@ from typing import Dict, Tuple, List, Any, Callable, Union, Set, TYPE_CHECKING, 
 from websockets.exceptions import ConnectionClosedOK
 from websockets.legacy.server import WebSocketServerProtocol
 
+from .params import ParamsManager
 from ..utils import MelodieExceptions
 from .vis_agent_series import AgentSeriesManager
 from .vis_charts import ChartManager, Chart, PieChart, BarChart
@@ -135,6 +136,7 @@ class Visualizer:
         self.model_state = UNCONFIGURED
         self.current_scenario: "Scenario" = None
         self._model: "Model" = None
+        self.params_manager: ParamsManager = ParamsManager()
         self.scenario_param: Dict[str, Union[int, str, float]] = {}
         self.visualizer_components: List[
             Tuple["ComponentType", str, Dict, Dict, Callable[["Agent"], int]]
@@ -323,12 +325,14 @@ class Visualizer:
         )
 
     def send_scenario_params(self, params_list: List["Scenario.BaseParameter"]):
-        param_models = []
-        initial_params = {}
+        param_models = []  # name, type, min, max, step
+        initial_params: Dict[str, Dict[str, int]] = {}
         for param in params_list:
             initial_params[param.name] = {"value": param.init}
             param_models.append(param.to_dict())
-        params = {"initialParams": initial_params, "paramModels": param_models}
+        params = {"initialParams": self.params_manager.to_value_json(),
+                  "paramModels": self.params_manager.to_form_model()}
+        # params = {"initialParams": initial_params, "paramModels": param_models}
 
         self.send_message(
             json.dumps(

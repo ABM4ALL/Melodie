@@ -1,3 +1,2 @@
-from test_calibrator import test_calibrator
-
-test_calibrator()
+from test_params import test_array_params
+test_array_params()
