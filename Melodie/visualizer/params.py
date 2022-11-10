@@ -20,6 +20,8 @@ BasicType = Union[str, int, float, bool]
 ParamsType = 'Union[Param, IntParam, FloatParam, BoolParam, StringParam, ArrayParam]'
 
 
+
+
 class UnInitialized:
     pass
 
@@ -171,7 +173,8 @@ class FloatParam(Param):
 
     def _validator(self, new_val: int):
         if not self.min - 10 ** -9 <= new_val <= self.max + 10 ** -9:
-            raise ValueError(f"Float parameter named {self.name}, value {new_val} out of range {self.min}<= x <={self.max}")
+            raise ValueError(
+                f"Float parameter named {self.name}, value {new_val} out of range {self.min}<= x <={self.max}")
 
     # def _converter(self, new_val):
     #     if self.precision < 0:
@@ -275,7 +278,7 @@ class ParamsManager:
         return [param.to_json() for param in self.params]
 
     def to_value_json(self):
-        new_params_list = []
+        # new_params_list = []
 
         # def for_each_callback(param_name: str, param: Param):
         #     d = param.to_value_json()

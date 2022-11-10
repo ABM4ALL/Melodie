@@ -2,6 +2,7 @@
 This data stores the run function for model running, storing global variables and other services.
 """
 import abc
+import json
 import logging
 import threading
 import time
@@ -166,6 +167,13 @@ class Simulator(BaseModellingManager):
         )
         if visualizer is not None:
             visualizer.set_model(model)
+            self.visualizer.params_manager.write_obj_attrs_to_params_list(model.scenario,
+                                                                          self.visualizer.params_manager.params)
+            with open('test.json', 'w') as f:
+                json.dump({
+                    'model': self.visualizer.params_manager.to_json(),
+                    'params-values': self.visualizer.params_manager.to_value_json()
+                }, f, indent=4)
             visualizer.start()
         else:
             model._setup()
@@ -249,8 +257,6 @@ class Simulator(BaseModellingManager):
             )
 
             scenario = self.scenarios[0].copy()
-            print(self.visualizer.params_manager.write_obj_attrs_to_params_list(scenario,
-                                                                                self.visualizer.params_manager.params))
             scenario.manager = self
             for k, v in self.visualizer.scenario_param.items():
                 scenario.__setattr__(k, v)
