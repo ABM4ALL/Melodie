@@ -10,18 +10,19 @@ class Config:
     """
 
     def __init__(
-        self,
-        project_name: str,
-        project_root: str,
-        input_folder: str,
-        output_folder: str,
-        visualizer_entry: str = "",
-        **kwargs,
+            self,
+            project_name: str,
+            project_root: str,
+            input_folder: str,
+            output_folder: str,
+            visualizer_entry: str = "",
+            **kwargs,
     ):
         self.project_name = project_name
         self.project_root = project_root
         self.output_folder = self.setup_folder_path(output_folder)
         self.input_folder = self.setup_folder_path(input_folder)
+        self.temp_folder = "melodie_tempfiles"
 
         self.studio_port = kwargs.get("studio_port", 8089)
         self.visualizer_port = kwargs.get("visualizer_port", 8765)
@@ -32,7 +33,16 @@ class Config:
                 f"Visualizer entry file {visualizer_entry} is defined, but not found. "
             )
         self.visualizer_entry = visualizer_entry
+        self.visualizer_tmpdir = os.path.join(self.temp_folder, "visualizer")
+        self.init_temp_folders()
+
         self.setup()
+
+    def init_temp_folders(self):
+        if not os.path.exists(self.temp_folder):
+            os.makedirs(self.temp_folder)
+        if not os.path.exists(self.visualizer_tmpdir):
+            os.makedirs(self.visualizer_tmpdir)
 
     def setup_folder_path(self, folder_path):
         if not os.path.exists(folder_path):

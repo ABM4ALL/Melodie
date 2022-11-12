@@ -136,7 +136,7 @@ class Simulator(BaseModellingManager):
 
     def _init_visualizer(self):
         self.visualizer: Optional[Visualizer] = (
-            None if self.visualizer_cls is None else self.visualizer_cls()
+            None if self.visualizer_cls is None else self.visualizer_cls(self.config)
         )
 
     def generate_scenarios(self) -> List["Scenario"]:
@@ -168,11 +168,11 @@ class Simulator(BaseModellingManager):
         if visualizer is not None:
             visualizer.set_model(model)
             if not self.visualizer.params_manager._initialized:
-                self.visualizer.params_manager.write_obj_attrs_to_params_list(model.scenario,
+                self.visualizer.params_manager.write_obj_attrs_to_params_list(scenario,
                                                                               self.visualizer.params_manager.params)
                 self.visualizer.params_manager._initialized = True
             else:
-                self.visualizer.params_manager.modify_scenario(model.scenario)
+                self.visualizer.params_manager.modify_scenario(scenario)
             # with open('test.json', 'w') as f:
             #     json.dump({
             #         'model': self.visualizer.params_manager.to_json(),
@@ -186,7 +186,7 @@ class Simulator(BaseModellingManager):
             #         'params-values': self.visualizer.params_manager.to_value_json()
             #     }, f, indent=4)
             # self.visualizer.params_manager.modify_scenario(scenario)
-            print('aaa',self.visualizer.params_manager.to_value_json()[0])
+            print('aaa', self.visualizer.params_manager.to_value_json()[0])
             visualizer.start()
         else:
             model._setup()
@@ -271,6 +271,8 @@ class Simulator(BaseModellingManager):
 
             scenario = self.scenarios[0].copy()
             scenario.manager = self
+
+
             # for k, v in self.visualizer.scenario_param.items():
             #     scenario.__setattr__(k, v)
             logger.info(f"Scenario parameters: {scenario.to_dict()}")

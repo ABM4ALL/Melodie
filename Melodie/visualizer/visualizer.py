@@ -1,5 +1,6 @@
 import logging
 import asyncio
+import os
 import queue
 from copy import deepcopy
 from urllib.request import urlopen
@@ -14,6 +15,7 @@ from typing import Dict, Tuple, List, Any, Callable, Union, Set, TYPE_CHECKING, 
 from websockets.exceptions import ConnectionClosedOK
 from websockets.legacy.server import WebSocketServerProtocol
 
+from ..config import Config
 from .params import ParamsManager
 from ..utils import MelodieExceptions
 from .vis_agent_series import AgentSeriesManager
@@ -34,6 +36,8 @@ START = 3
 GET_PARAMS = 4
 SET_PARAMS = 5
 INIT_OPTIONS = 6
+SAVE_PARAMS = 7
+GENERAL_COMMAND = 10
 
 UNCONFIGURED = 0
 READY = 1
@@ -77,7 +81,7 @@ async def handler(ws: WebSocketServerProtocol, path):
             rec = json.loads(content)
             cmd = rec["cmd"]
             data = rec["data"]
-            if 0 <= cmd <= 6:
+            if 0 <= cmd <= 10:
                 try:
                     visualize_condition_queue_main.put((cmd, data, ws), timeout=1)
                 except:
@@ -131,7 +135,8 @@ class Visualizer:
     enabled = True  # If in the Simulator.run() or Simulator.run_parallel(), this flag will be set to False
     ws_port = 8765  # The websocket port that is desired to transfer data.
 
-    def __init__(self):
+    def __init__(self, config: Config):
+        self.config = config
         self.current_step = 0
         self.model_state = UNCONFIGURED
         self.current_scenario: "Scenario" = None
@@ -311,6 +316,20 @@ class Visualizer:
             )
         )
 
+    def send_notification(self, message: str, type: str = 'info', title="Notice"):
+        assert type in {'success', 'info', 'warning', 'error'}
+        self.send_message(
+            json.dumps(
+                {
+                    "type": "notification",
+                    "period": 0,
+                    "data": {"type": type, "title": title, "message": message},
+                    "modelState": self.model_state,
+                    "status": OK,
+                }
+            )
+        )
+
     def send_plot_series(self):
         self.send_message(
             json.dumps(
@@ -324,16 +343,20 @@ class Visualizer:
             )
         )
 
-    def send_scenario_params(self, params_list: List["Scenario.BaseParameter"]):
-        # param_models = []  # name, type, min, max, step
-        # initial_params: Dict[str, Dict[str, int]] = {}
-        # for param in params_list:
-        #     initial_params[param.name] = {"value": param.init}
-        #     param_models.append(param.to_dict())
+    def send_scenario_params(self, params_set_name: str):
         print(self.params_manager.to_value_json()[0])
+        all_param_names = [os.path.splitext(filename)[0] for filename in
+                           os.listdir(os.path.join(self.config.visualizer_tmpdir, 'params'))]
+        if params_set_name in all_param_names:
+            with open(os.path.join(self.config.visualizer_tmpdir, 'params', params_set_name + '.json')) as f:
+                params_json = json.load(f)
+                self.params_manager.from_json(params_json)
+                print('params updated by paramset', params_set_name)
+                self.send_notification(f"Parameters updated to param set {params_set_name}")
+
         params = {"initialParams": self.params_manager.to_value_json(),
-                  "paramModels": self.params_manager.to_form_model()}
-        # params = {"initialParams": initial_params, "paramModels": param_models}
+                  "paramModels": self.params_manager.to_form_model(),
+                  "allParamSetNames": all_param_names}
 
         self.send_message(
             json.dumps(
@@ -406,7 +429,7 @@ class Visualizer:
         """
         self.current_websocket = ws
         if cmd_type == GET_PARAMS:
-            self.send_scenario_params(self.current_scenario.get_parameters())
+            self.send_scenario_params(data.get('name'))
             return True
         elif cmd_type == RESET:
             self.params_manager.from_json(data['params'])
@@ -416,6 +439,16 @@ class Visualizer:
             self.send_chart_options()
             self.send_plot_series()
             return True
+        elif cmd_type == SAVE_PARAMS:
+            print(data, "save params!")
+            params_dir = os.path.join(self.config.visualizer_tmpdir, 'params')
+            if not os.path.exists(params_dir):
+                os.makedirs(params_dir)
+            file = os.path.join(params_dir, f"{data['name']}.json")
+            with open(file, 'w') as f:
+                json.dump(data['params'], f, indent=4)
+            return True
+
         else:
             return False
 
@@ -478,8 +511,8 @@ class Visualizer:
 
 
 class GridVisualizer(Visualizer):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, config: Config):
+        super().__init__(config)
         self.height = 0
         self.width = 0
 
