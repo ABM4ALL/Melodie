@@ -4,6 +4,7 @@ This data stores the run function for model running, storing global variables an
 import abc
 import json
 import logging
+import os
 import threading
 import time
 from multiprocessing import Pool
@@ -17,7 +18,7 @@ from .utils import show_prettified_warning
 from .utils.exceptions import MelodieExceptions
 from .config import Config
 from .data_loader import DataLoader
-from .db import create_db_conn
+from .db import create_db_conn, get_sqlite_filename
 from .model import Model
 from .scenario_manager import Scenario
 from .visualizer import Visualizer, MelodieModelReset
@@ -136,7 +137,7 @@ class Simulator(BaseModellingManager):
 
     def _init_visualizer(self):
         self.visualizer: Optional[Visualizer] = (
-            None if self.visualizer_cls is None else self.visualizer_cls(self.config)
+            None if self.visualizer_cls is None else self.visualizer_cls(self.config, self)
         )
 
     def generate_scenarios(self) -> List["Scenario"]:
@@ -258,9 +259,10 @@ class Simulator(BaseModellingManager):
         t0 = time.time()
         self._init_visualizer()
         self.setup()
+
+        self.pre_run()
         if self.visualizer is not None:
             self.visualizer.setup()
-        self.pre_run()
 
         t1 = time.time()
         logger.info(f"Simulator start up cost: {t1 - t0}s")
@@ -268,10 +270,12 @@ class Simulator(BaseModellingManager):
             logger.info(
                 f"Visualizer interactive paramerters for this scenario are: {self.visualizer.scenario_param}"
             )
-
+            # create_db_conn(self.config).clear_database()
+            # create_db_conn()
+            fn = get_sqlite_filename(self.config)
+            os.remove(fn)
             scenario = self.scenarios[0].copy()
             scenario.manager = self
-
 
             # for k, v in self.visualizer.scenario_param.items():
             #     scenario.__setattr__(k, v)

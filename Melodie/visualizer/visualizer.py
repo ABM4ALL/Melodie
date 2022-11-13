@@ -1,7 +1,9 @@
+import base64
 import logging
 import asyncio
 import os
 import queue
+import shutil
 from copy import deepcopy
 from urllib.request import urlopen
 from urllib.error import URLError
@@ -16,6 +18,7 @@ from websockets.exceptions import ConnectionClosedOK
 from websockets.legacy.server import WebSocketServerProtocol
 
 from ..config import Config
+from ..db import get_sqlite_filename
 from .params import ParamsManager
 from ..utils import MelodieExceptions
 from .vis_agent_series import AgentSeriesManager
@@ -23,7 +26,7 @@ from .vis_charts import ChartManager, Chart, PieChart, BarChart
 from ..boost.grid import Spot
 
 if TYPE_CHECKING:
-    from Melodie import Scenario, Model, Grid, Network, Agent, AgentList
+    from Melodie import Scenario, Model, Grid, Network, Agent, AgentList, Simulator
 
     ComponentType = Union[Grid, Network]
 logger = logging.getLogger(__name__)
@@ -37,6 +40,8 @@ GET_PARAMS = 4
 SET_PARAMS = 5
 INIT_OPTIONS = 6
 SAVE_PARAMS = 7
+SAVE_DATABASE = 8
+DOWNLOAD_DATA = 9
 GENERAL_COMMAND = 10
 
 UNCONFIGURED = 0
@@ -135,11 +140,20 @@ class Visualizer:
     enabled = True  # If in the Simulator.run() or Simulator.run_parallel(), this flag will be set to False
     ws_port = 8765  # The websocket port that is desired to transfer data.
 
-    def __init__(self, config: Config):
+    def __init__(self, config: Config, simulator: "Simulator"):
         self.config = config
+        self.simulator = simulator
         self.current_step = 0
         self.model_state = UNCONFIGURED
         self.current_scenario: "Scenario" = None
+
+        self.params_dir = os.path.join(config.visualizer_tmpdir, 'params')
+        self.sim_data_dir = os.path.join(config.visualizer_tmpdir, 'sim_data')
+        if not os.path.exists(self.params_dir):
+            os.makedirs(self.params_dir)
+        if not os.path.exists(self.sim_data_dir):
+            os.makedirs(self.sim_data_dir)
+
         self._model: "Model" = None
         self.params_manager: ParamsManager = ParamsManager()
         self.scenario_param: Dict[str, Union[int, str, float]] = {}
@@ -346,9 +360,9 @@ class Visualizer:
     def send_scenario_params(self, params_set_name: str):
         print(self.params_manager.to_value_json()[0])
         all_param_names = [os.path.splitext(filename)[0] for filename in
-                           os.listdir(os.path.join(self.config.visualizer_tmpdir, 'params'))]
+                           os.listdir(self.params_dir)]
         if params_set_name in all_param_names:
-            with open(os.path.join(self.config.visualizer_tmpdir, 'params', params_set_name + '.json')) as f:
+            with open(os.path.join(self.params_dir, params_set_name + '.json')) as f:
                 params_json = json.load(f)
                 self.params_manager.from_json(params_json)
                 print('params updated by paramset', params_set_name)
@@ -428,6 +442,7 @@ class Visualizer:
         :return:
         """
         self.current_websocket = ws
+        print('received cmd', cmd_type)
         if cmd_type == GET_PARAMS:
             self.send_scenario_params(data.get('name'))
             return True
@@ -440,15 +455,35 @@ class Visualizer:
             self.send_plot_series()
             return True
         elif cmd_type == SAVE_PARAMS:
-            print(data, "save params!")
-            params_dir = os.path.join(self.config.visualizer_tmpdir, 'params')
-            if not os.path.exists(params_dir):
-                os.makedirs(params_dir)
-            file = os.path.join(params_dir, f"{data['name']}.json")
+            file = os.path.join(self.params_dir, f"{data['name']}.json")
             with open(file, 'w') as f:
                 json.dump(data['params'], f, indent=4)
+            self.send_notification("Parameters saved successfully", "success")
             return True
+        elif cmd_type == SAVE_DATABASE:
 
+            exported_file = os.path.join(self.sim_data_dir, f"{data['name']}.sqlite")
+            shutil.copy(get_sqlite_filename(self.config), exported_file)
+            self.send_notification("Database saved successfully!", "success")
+            return True
+        elif cmd_type == DOWNLOAD_DATA:
+            sqlite_file = get_sqlite_filename(self.config)
+            print("start to export", sqlite_file)
+            with open(sqlite_file, 'rb') as f:
+                self.send_message(
+                    json.dumps(
+                        {
+                            "type": "file",
+                            "period": self.current_step,
+                            "data": {"name": data['name'] + '.sqlite',
+                                     "content": base64.b64encode(f.read()).decode('ascii')},
+                            "modelState": 10,
+                            "status": ERROR,
+                        }
+                    )
+                )
+            self.send_notification("Database exported successfully!", "success")
+            return True
         else:
             return False
 
@@ -511,8 +546,8 @@ class Visualizer:
 
 
 class GridVisualizer(Visualizer):
-    def __init__(self, config: Config):
-        super().__init__(config)
+    def __init__(self, config: Config, simulator):
+        super().__init__(config, simulator)
         self.height = 0
         self.width = 0
 

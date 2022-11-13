@@ -29,7 +29,7 @@ class DBConn:
     ENVIRONMENT_RESULT_TABLE = "environment_result"
 
     def __init__(
-        self, db_name: str, db_type: str = "sqlite", conn_params: Dict[str, str] = None
+            self, db_name: str, db_type: str = "sqlite", conn_params: Dict[str, str] = None
     ):
         self.db_name = db_name
 
@@ -128,11 +128,11 @@ class DBConn:
         logger.info(f"Database drops tables: {table_names}.")
 
     def write_dataframe(
-        self,
-        table_name: str,
-        data_frame: pd.DataFrame,
-        data_types: Optional[TABLE_DTYPES] = None,
-        if_exists="append",
+            self,
+            table_name: str,
+            data_frame: pd.DataFrame,
+            data_types: Optional[TABLE_DTYPES] = None,
+            if_exists="append",
     ):
         """
         Write a dataframe to database.
@@ -155,11 +155,11 @@ class DBConn:
         )
 
     def read_dataframe(
-        self,
-        table_name: str,
-        id_scenario: Optional[int] = None,
-        id_run: Optional[int] = None,
-        conditions: List[Tuple[str, str]] = None,
+            self,
+            table_name: str,
+            id_scenario: Optional[int] = None,
+            id_run: Optional[int] = None,
+            conditions: List[Tuple[str, str]] = None,
     ) -> pd.DataFrame:
         """
         Read a table and return all content as a dataframe.
@@ -227,3 +227,7 @@ def create_db_conn(config: "Config") -> DBConn:
     """
 
     return DBConn(config.project_name, conn_params={"db_path": config.output_folder})
+
+
+def get_sqlite_filename(config: "Config") -> str:
+    return os.path.join(config.output_folder, config.project_name + SQLITE_FILE_SUFFIX)

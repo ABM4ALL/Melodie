@@ -8,7 +8,7 @@ from .calibrator import Calibrator
 from .config import Config
 from .data_collector import DataCollector
 from .data_loader import DataLoader, DataFrameInfo, MatrixInfo
-from .db import DBConn, create_db_conn
+from .db import DBConn, create_db_conn, get_sqlite_filename
 from .model import Model
 from .network import Edge, Network, NetworkAgent
 from .scenario_manager import Scenario
