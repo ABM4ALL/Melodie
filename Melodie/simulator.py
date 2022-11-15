@@ -18,7 +18,7 @@ from .utils import show_prettified_warning
 from .utils.exceptions import MelodieExceptions
 from .config import Config
 from .data_loader import DataLoader
-from .db import create_db_conn, get_sqlite_filename
+from .db import create_db_conn, get_sqlite_filename, DBConn
 from .model import Model
 from .scenario_manager import Scenario
 from .visualizer import Visualizer, MelodieModelReset
@@ -273,7 +273,12 @@ class Simulator(BaseModellingManager):
             # create_db_conn(self.config).clear_database()
             # create_db_conn()
             fn = get_sqlite_filename(self.config)
-            os.remove(fn)
+            if os.path.exists(fn):
+                os.remove(fn)
+            self.data_loader = None
+            self.scenarios = None
+            DBConn.table_dtypes = {}
+            self.pre_run()
             scenario = self.scenarios[0].copy()
             scenario.manager = self
 

@@ -447,8 +447,12 @@ class Visualizer:
             self.send_scenario_params(data.get('name'))
             return True
         elif cmd_type == RESET:
-            self.params_manager.from_json(data['params'])
-            # self.scenario_param = {k: v["value"] for k, v in data["params"].items()}  #
+            try:
+                self.params_manager.from_json(data['params'])
+            except Exception as e:
+                self.send_notification("Parameter value error:" + str(e), "error")
+                return True
+                # self.scenario_param = {k: v["value"] for k, v in data["params"].items()}  #
             raise MelodieModelReset
         elif cmd_type == INIT_OPTIONS:
             self.send_chart_options()
@@ -469,20 +473,23 @@ class Visualizer:
         elif cmd_type == DOWNLOAD_DATA:
             sqlite_file = get_sqlite_filename(self.config)
             print("start to export", sqlite_file)
-            with open(sqlite_file, 'rb') as f:
-                self.send_message(
-                    json.dumps(
-                        {
-                            "type": "file",
-                            "period": self.current_step,
-                            "data": {"name": data['name'] + '.sqlite',
-                                     "content": base64.b64encode(f.read()).decode('ascii')},
-                            "modelState": 10,
-                            "status": ERROR,
-                        }
+            if os.path.exists(sqlite_file):
+                with open(sqlite_file, 'rb') as f:
+                    self.send_message(
+                        json.dumps(
+                            {
+                                "type": "file",
+                                "period": self.current_step,
+                                "data": {"name": data['name'] + '.sqlite',
+                                         "content": base64.b64encode(f.read()).decode('ascii')},
+                                "modelState": 10,
+                                "status": ERROR,
+                            }
+                        )
                     )
-                )
-            self.send_notification("Database exported successfully!", "success")
+                self.send_notification("Database exported successfully!", "success")
+            else:
+                self.send_notification("Database exported error: No database file found!", "error")
             return True
         else:
             return False
