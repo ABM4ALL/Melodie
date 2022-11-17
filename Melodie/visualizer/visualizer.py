@@ -210,6 +210,8 @@ class Visualizer:
                 self.plot_charts.add_piechart(chart_name)
             elif chart_type == 'bar':
                 self.plot_charts.add_barchart(chart_name)
+            elif chart_type == 'candlestick':
+                self.plot_charts.add_candlestick_chart(chart_name)
             else:
                 raise NotImplementedError(chart_type)
         else:

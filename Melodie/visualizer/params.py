@@ -29,6 +29,7 @@ class Param(JSONBase):
         assert isinstance(f, str) or callable(f), 'Argument `getter` and `setter` should be callable or string'
 
     def __init__(self, name: str, getter: GetterArgType, setter: SetterArgType, readonly=False, label="",
+                 description="No description about this parameter...",
                  component='auto'):
         self.name = name
         self.label = label
@@ -42,6 +43,7 @@ class Param(JSONBase):
         self.validate_getter_or_setter(setter)
         self._value: Any = UnInitialized()
         self.readonly = readonly
+        self.description = description
 
         self._getter_from_obj: GetterType = getter if callable(getter) else \
             lambda obj: getattr(obj, getter)
@@ -110,8 +112,9 @@ class IntParam(Param):
 
     def __init__(self, name: str, value_range: Tuple[int, int], getter: GetterArgType = "", setter: SetterArgType = "",
                  readonly=False, label="",
+                 description="",
                  component='auto', ):
-        super().__init__(name, getter, setter, readonly, label, component)
+        super().__init__(name, getter, setter, readonly, label, description, component)
 
         self.min = value_range[0]
         self.max = value_range[1]
@@ -134,8 +137,9 @@ class BoolParam(Param):
 
     def __init__(self, name: str, getter: GetterArgType = "", setter: SetterArgType = "",
                  readonly=False, label="",
+                 description="",
                  component='auto', ):
-        super().__init__(name, getter, setter, readonly, label, component)
+        super().__init__(name, getter, setter, readonly, label, description, component)
         self.type = 'bool'
 
     def _converter(self, new_val):
@@ -151,8 +155,9 @@ class StringParam(Param):
 
     def __init__(self, name: str, getter: GetterArgType = "", setter: SetterArgType = "",
                  readonly=False, label="",
+                 description="",
                  component='auto', ):
-        super().__init__(name, getter, setter, readonly, label, component)
+        super().__init__(name, getter, setter, readonly, label, description, component)
         self.type = 'str'
 
     def _converter(self, new_val):
@@ -171,8 +176,9 @@ class FloatParam(Param):
                  getter: GetterArgType = "",
                  setter: SetterArgType = "",
                  readonly=False, label="",
+                 description="",
                  component='auto', ):
-        super().__init__(name, getter, setter, readonly, label, component)
+        super().__init__(name, getter, setter, readonly, label, description, component)
 
         self.min = value_range[0]
         self.max = value_range[1]
@@ -198,8 +204,9 @@ class ArrayParam(Param):
     _value: "List[Union[IntParam, FloatParam, ArrayParam]]"
 
     def __init__(self, name: str, value: "List[Union[IntParam, FloatParam, ArrayParam]]", getter: GetterArgType = '',
-                 setter: SetterArgType = '', readonly=False, label="", component='auto'):
-        super().__init__(name, getter, setter, readonly, label, component)
+                 setter: SetterArgType = '', readonly=False, label="", description="", component='auto'):
+        super().__init__(name, getter, setter, readonly, label, description,
+                         component)
         self._value = value
         self.type = 'array'
         for val in self._value:

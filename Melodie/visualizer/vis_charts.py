@@ -92,6 +92,19 @@ class Chart(JSONBase):
         return chart_series_data
 
 
+class CandleStickChart(Chart):
+    def __init__(self):
+        self.type = "candlestick"
+        self._series_name = 'series'
+        self.series: Tuple[ChartSeries] = (ChartSeries(self._series_name),)
+
+    def get_series(self, series_name: str) -> ChartSeries:
+        if series_name == self._series_name:
+            return self.series[0]
+        else:
+            raise ValueError(series_name)
+
+
 class Gauge(JSONBase):
     def __init__(self, source: Callable[[], Union[int, float, Dict]]):
         self._sources: Dict[str, Callable[[], Union[int, float]]] = {}
@@ -160,6 +173,9 @@ class ChartManager(JSONBase):
 
     def add_barchart(self, chart_name: str):
         self.charts[chart_name] = BarChart()
+
+    def add_candlestick_chart(self, chart_name: str):
+        self.charts[chart_name] = CandleStickChart()
 
     def all_chart_names(self):
         return set(self.charts.keys())
