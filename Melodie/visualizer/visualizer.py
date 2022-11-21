@@ -15,10 +15,8 @@ from typing import Dict, Tuple, List, Any, Callable, Union, Set, TYPE_CHECKING, 
 from websockets.exceptions import ConnectionClosedOK
 from .ws_protocol import MelodieVisualizerProtocol
 
-from MelodieInfra.config.config import Config
-from MelodieInfra import get_sqlite_filename
+from MelodieInfra import get_sqlite_filename, MelodieExceptions, Config
 from .params import ParamsManager
-from ..utils import MelodieExceptions
 from .vis_agent_series import AgentSeriesManager
 from .vis_charts import ChartManager, Chart, PieChart, BarChart
 from ..boost.grid import Spot

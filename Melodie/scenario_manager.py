@@ -4,7 +4,7 @@ from typing import List, Optional, Union, TYPE_CHECKING
 import numpy as np
 import pandas as pd
 
-from .utils.exceptions import MelodieExceptions
+from MelodieInfra import MelodieExceptions
 from .element import Element
 
 if TYPE_CHECKING:

@@ -5,10 +5,8 @@ import numpy as np
 import pandas as pd
 import sqlalchemy
 
-from MelodieInfra import DBConn, create_db_conn
+from MelodieInfra import DBConn, create_db_conn, MelodieExceptions, Config
 
-from .utils import MelodieExceptions
-from MelodieInfra.config.config import Config
 from .scenario_manager import Scenario
 from .table_generator import DataFrameGenerator
 
@@ -19,10 +17,10 @@ class DataFrameInfo:
     file_name: Optional[str] = None
 
     def __init__(
-        self,
-        df_name: str,
-        columns: Dict[str, "sqlalchemy.types"],
-        file_name: Optional[str] = None,
+            self,
+            df_name: str,
+            columns: Dict[str, "sqlalchemy.types"],
+            file_name: Optional[str] = None,
     ):
         self.df_name: str = df_name
         self.columns: Dict[str, "sqlalchemy.types"] = columns
@@ -39,10 +37,10 @@ class DataFrameInfo:
 
 class MatrixInfo:
     def __init__(
-        self,
-        mat_name: str,
-        data_type: sqlalchemy.types,
-        file_name: Optional[str] = None,
+            self,
+            mat_name: str,
+            data_type: sqlalchemy.types,
+            file_name: Optional[str] = None,
     ):
         self.mat_name: str = mat_name
         self.data_type: sqlalchemy.types = data_type
@@ -68,11 +66,11 @@ class DataLoader:
     """
 
     def __init__(
-        self,
-        manager,
-        config: Config,
-        scenario_cls: Type[Scenario],
-        as_sub_worker=False,
+            self,
+            manager,
+            config: Config,
+            scenario_cls: Type[Scenario],
+            as_sub_worker=False,
     ):
         MelodieExceptions.Assertions.NotNone(
             scenario_cls, "Scenario class should not be None!"
@@ -90,7 +88,7 @@ class DataLoader:
         pass
 
     def register_dataframe(
-        self, table_name: str, data_frame: pd.DataFrame, data_types: dict = None
+            self, table_name: str, data_frame: pd.DataFrame, data_types: dict = None
     ) -> None:
         """
         Add a pandas dataframe.
@@ -167,9 +165,9 @@ class DataLoader:
         self.registered_matrices[matrix_info.mat_name] = array
 
     def dataframe_generator(
-        self,
-        df_info: DataFrameInfo,
-        rows_in_scenario: Union[int, Callable[[Scenario], int]],
+            self,
+            df_info: DataFrameInfo,
+            rows_in_scenario: Union[int, Callable[[Scenario], int]],
     ) -> DataFrameGenerator:
         """
         Create a new generator

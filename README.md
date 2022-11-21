@@ -97,3 +97,8 @@ studio_main(config)
 
 then visit `http://localhost:8089/` with browser
 
+```mermaid
+graph TD
+Melodie-.->MelodieInfra
+MelodieStudio-.->MelodieInfra
+```

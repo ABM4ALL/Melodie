@@ -1,7 +1,7 @@
 import logging
 from typing import Callable
 
-from .exceptions import MelodieExceptions
+from MelodieInfra.exceptions.exceptions import MelodieExceptions
 
 logger = logging.getLogger(__name__)
 

@@ -4,10 +4,9 @@ from typing import List, TYPE_CHECKING, Dict, Tuple, Any, Optional, Type
 
 import pandas as pd
 
-from MelodieInfra import DBConn
+from MelodieInfra import DBConn, MelodieExceptions
 
 from Melodie.global_configs import MelodieGlobalConfig
-from Melodie.utils import MelodieExceptions
 
 
 logger = logging.getLogger(__name__)

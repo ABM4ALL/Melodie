@@ -3,9 +3,7 @@ from typing import Optional, Union, Type, List
 
 import pandas as pd
 
-from MelodieInfra import create_db_conn, DBConn
-
-from .utils import MelodieExceptions, show_prettified_warning, show_link
+from MelodieInfra import create_db_conn, DBConn, MelodieExceptions, show_prettified_warning, show_link
 from .boost.agent_list import AgentList, BaseAgentContainer, AgentDict
 from .boost.basics import Agent, Environment
 from .boost.grid import Grid, Spot

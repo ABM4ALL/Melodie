@@ -15,7 +15,6 @@ from Melodie import (
     Model,
     DataLoader,
 )
-from Melodie.utils import MelodieException
 from .calibrator import CovidCalibrator, CovidScenario, CovidModel
 from .config import cfg_for_temp, cfg_for_calibrator
 

@@ -1,12 +1,10 @@
 # -*- coding:utf-8 -*-
 import logging
-import time
 from typing import Union
 
 import numpy as np
 
 from Melodie import Grid, Spot, GridAgent, Agent, AgentList
-from Melodie.utils.exceptions import assert_exc_occurs
 from .config import model
 
 logger = logging.getLogger(__name__)

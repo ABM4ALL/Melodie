@@ -1,6 +1,6 @@
 import argparse
 
-from Melodie.utils import MelodieExceptions
+from MelodieInfra import MelodieExceptions
 
 parser = argparse.ArgumentParser()
 parser.add_argument(
