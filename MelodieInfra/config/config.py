@@ -33,7 +33,7 @@ class Config:
                 f"Visualizer entry file {visualizer_entry} is defined, but not found. "
             )
         self.visualizer_entry = visualizer_entry
-        self.visualizer_tmpdir = os.path.join(self.temp_folder, "visualizer")
+        self.visualizer_tmpdir = os.path.join(self.temp_folder, "../../Melodie/visualizer")
         self.init_temp_folders()
 
         self.setup()

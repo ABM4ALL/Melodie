@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 from Melodie import Config
-from Melodie import db
+from MelodieInfra.db import db
 
 
 class CovidAnalyzer:

@@ -5,9 +5,10 @@ import numpy as np
 import pandas as pd
 import sqlalchemy
 
+from MelodieInfra import DBConn, create_db_conn
+
 from .utils import MelodieExceptions
-from .config import Config
-from .db import DBConn, create_db_conn
+from MelodieInfra.config.config import Config
 from .scenario_manager import Scenario
 from .table_generator import DataFrameGenerator
 

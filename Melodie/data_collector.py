@@ -1,12 +1,14 @@
 import logging
 import time
-from typing import List, Type, TYPE_CHECKING, Dict, Tuple, Any, Optional, Type
+from typing import List, TYPE_CHECKING, Dict, Tuple, Any, Optional, Type
 
 import pandas as pd
 
+from MelodieInfra import DBConn
+
 from Melodie.global_configs import MelodieGlobalConfig
 from Melodie.utils import MelodieExceptions
-from Melodie.db import DBConn
+
 
 logger = logging.getLogger(__name__)
 

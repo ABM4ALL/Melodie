@@ -5,7 +5,8 @@ import pandas as pd
 from pandas.api.types import is_integer_dtype, is_float_dtype
 from sqlalchemy.types import Integer
 
-from Melodie import create_db_conn, DBConn, Scenario
+from MelodieInfra import create_db_conn, DBConn
+from Melodie import Scenario
 from Melodie.utils import MelodieException
 from .config import cfg
 
@@ -59,7 +60,6 @@ def test_sqlalchemy_data_types():
     assert isinstance(data_with_types[0][1], int)
     db.close()
     os.remove("test_db.sqlite")
-
 
 # def test_get_scenarios():
 #     scenarios = create_db_conn(cfg).query("select * from simulator_scenarios;")

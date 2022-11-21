@@ -98,7 +98,7 @@ setuptools.setup(
     project_urls={
         "Documentation": "https://Melodie.readthedocs.io/en/latest/index.html",
     },
-    packages=setuptools.find_namespace_packages(include=["Melodie", "Melodie.*"]),
+    packages=setuptools.find_namespace_packages(include=["Melodie", "Melodie.*", "MelodieInfra", "MelodieInfra."]),
     install_requires=[
         "chardet",
         "numpy",

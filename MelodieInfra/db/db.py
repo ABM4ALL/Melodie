@@ -9,7 +9,7 @@ from sqlalchemy.exc import OperationalError
 from Melodie.utils import MelodieExceptions
 
 if TYPE_CHECKING:
-    from Melodie.config import Config
+    from MelodieInfra.config.config import Config
 
 TABLE_DTYPES = Dict[
     str,

@@ -1,21 +1,21 @@
 import logging
-import queue
-from contextlib import contextmanager
-from typing import Type, Optional, Union, Type, List
+from typing import Optional, Union, Type, List
 
 import pandas as pd
+
+from MelodieInfra import create_db_conn, DBConn
 
 from .utils import MelodieExceptions, show_prettified_warning, show_link
 from .boost.agent_list import AgentList, BaseAgentContainer, AgentDict
 from .boost.basics import Agent, Environment
-from .boost.grid import GridAgent, Grid, Spot
-from .config import Config
+from .boost.grid import Grid, Spot
+from MelodieInfra.config.config import Config
 from .data_collector import DataCollector
-from .db import create_db_conn, DBConn
+
 from .scenario_manager import Scenario
 from .table_generator import DataFrameGenerator
 from .network import Network, Edge
-from .visualizer import Visualizer, GridVisualizer
+from .visualizer import GridVisualizer
 
 logger = logging.getLogger(__name__)
 
@@ -52,11 +52,11 @@ class ModelRunRoutine:
 
 class Model:
     def __init__(
-        self,
-        config: "Config",
-        scenario: "Scenario",
-        run_id_in_scenario: int = 0,
-        visualizer: GridVisualizer = None,
+            self,
+            config: "Config",
+            scenario: "Scenario",
+            run_id_in_scenario: int = 0,
+            visualizer: GridVisualizer = None,
     ):
 
         self.scenario = scenario
@@ -106,8 +106,8 @@ class Model:
         return create_db_conn(self.config)
 
     def create_agent_list(
-        self,
-        agent_class: Type["Agent"],
+            self,
+            agent_class: Type["Agent"],
     ):
         """
         Create one agent list of model.
@@ -145,7 +145,7 @@ class Model:
         return grid
 
     def create_network(
-        self, network_cls: Type["Network"] = None, edge_cls: Type["Edge"] = None
+            self, network_cls: Type["Network"] = None, edge_cls: Type["Edge"] = None
     ):
         """
         Create the network of model
@@ -174,11 +174,11 @@ class Model:
         return data_collector
 
     def create_agent_container(
-        self,
-        agent_class: Type["Agent"],
-        initial_num: int,
-        params_df: pd.DataFrame = None,
-        container_type: str = "list",
+            self,
+            agent_class: Type["Agent"],
+            initial_num: int,
+            params_df: pd.DataFrame = None,
+            container_type: str = "list",
     ) -> Union[AgentList]:
         """
         Create a container for agents

@@ -2,7 +2,6 @@
 This data stores the run function for model running, storing global variables and other services.
 """
 import abc
-import json
 import logging
 import os
 import threading
@@ -13,12 +12,13 @@ from typing import Optional, List, Tuple, Type
 import numpy as np
 import pandas as pd
 
+from MelodieInfra import create_db_conn, get_sqlite_filename, DBConn
+
 from .global_configs import MelodieGlobalConfig
 from .utils import show_prettified_warning
 from .utils.exceptions import MelodieExceptions
-from .config import Config
+from MelodieInfra.config.config import Config
 from .data_loader import DataLoader
-from .db import create_db_conn, get_sqlite_filename, DBConn
 from .model import Model
 from .scenario_manager import Scenario
 from .visualizer import Visualizer, MelodieModelReset

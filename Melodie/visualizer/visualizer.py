@@ -5,8 +5,6 @@ import os
 import queue
 import shutil
 from copy import deepcopy
-from urllib.request import urlopen
-from urllib.error import URLError
 import threading
 import time
 import websockets
@@ -15,10 +13,10 @@ from queue import Queue
 from typing import Dict, Tuple, List, Any, Callable, Union, Set, TYPE_CHECKING, Optional
 
 from websockets.exceptions import ConnectionClosedOK
-from websockets.legacy.server import WebSocketServerProtocol
+from .ws_protocol import MelodieVisualizerProtocol
 
-from ..config import Config
-from ..db import get_sqlite_filename
+from MelodieInfra.config.config import Config
+from MelodieInfra import get_sqlite_filename
 from .params import ParamsManager
 from ..utils import MelodieExceptions
 from .vis_agent_series import AgentSeriesManager
@@ -53,16 +51,16 @@ FINISHED = 3
 OK = 0
 ERROR = 1
 
-QUEUE_ELEM = Tuple[int, WebSocketServerProtocol]
+QUEUE_ELEM = Tuple[int, MelodieVisualizerProtocol]
 
 MAX_ACTIVE_CONNECTIONS = 8
 visualize_condition_queue_main = Queue(10)
-visualize_result_queues: Dict[WebSocketServerProtocol, Queue] = {}
+visualize_result_queues: Dict[MelodieVisualizerProtocol, Queue] = {}
 
-socks: Set[WebSocketServerProtocol] = set()
+socks: Set[MelodieVisualizerProtocol] = set()
 
 
-async def handler(ws: WebSocketServerProtocol, path):
+async def handler(ws: MelodieVisualizerProtocol, path):
     global socks
     if len(socks) >= MAX_ACTIVE_CONNECTIONS:
         await ws.send(
@@ -112,12 +110,12 @@ async def handler(ws: WebSocketServerProtocol, path):
             pass
 
 
-async def send_message(sock: WebSocketServerProtocol, msg):
+async def send_message(sock: MelodieVisualizerProtocol, msg):
     await sock.send(msg)
 
 
 class MelodieModelReset(BaseException):
-    def __init__(self, ws: WebSocketServerProtocol = None):
+    def __init__(self, ws: MelodieVisualizerProtocol = None):
         self.ws = ws
 
 
@@ -165,14 +163,18 @@ class Visualizer:
         self.agent_series_managers: Dict[str, AgentSeriesManager] = {}
         self.agent_lists: Dict[int, "AgentList"] = {}
 
-        self.current_websocket: Optional[WebSocketServerProtocol] = None
+        self.current_websocket: Optional[MelodieVisualizerProtocol] = None
         self.th: Optional[threading.Thread] = None
 
         self.start_websocket()
 
     @execute_only_enabled
     def start_websocket(self):
-        start_server = websockets.serve(handler, "localhost", self.ws_port)
+        server_logger = logging.getLogger('websocket-server')
+        server_logger.setLevel(logging.ERROR)
+        start_server = websockets.serve(handler, "localhost", self.ws_port, create_protocol=MelodieVisualizerProtocol,
+                                        logger=server_logger
+                                        )
         asyncio.get_event_loop().run_until_complete(start_server)
         asyncio_serve = asyncio.get_event_loop().run_forever
 
@@ -239,27 +241,6 @@ class Visualizer:
         else:
             raise NotImplementedError(chart)
 
-    # def set_
-
-    # def set_plot_data(self, current_step: int, chart_name: str, series_values: Dict):
-    #     """
-    #     Set plot data
-    #     :param current_step:
-    #     :param chart_name:
-    #     :param series_values:
-    #     :return:
-    #     """
-    #     MelodieExceptions.Visualizer.Charts.ChartNameAlreadyDefined(
-    #         chart_name, self.plot_charts.all_chart_names()
-    #     )
-    #     for series_name, series_value in series_values.items():
-    #         series = self.plot_charts.get_chart(chart_name).get_series(series_name)
-    #         series.add_data_value(series_value)
-    #         assert current_step == len(series.data) - 1, (
-    #             current_step,
-    #             len(series.data),
-    #         )
-
     def _re_init(self):
         self.agent_series_managers = {}
         self.plot_charts = self.plot_charts
@@ -278,7 +259,7 @@ class Visualizer:
         self._re_init()
         self._model.init_visualize()
 
-    def send_initial_msg(self, ws: WebSocketServerProtocol):
+    def send_initial_msg(self, ws: MelodieVisualizerProtocol):
         formatted = self.format()
         self.send_message(json.dumps(formatted))
 
@@ -290,7 +271,7 @@ class Visualizer:
         :param msg:
         :return:
         """
-        closed_websockets: Set[WebSocketServerProtocol] = set()
+        closed_websockets: Set[MelodieVisualizerProtocol] = set()
         for ws, q in visualize_result_queues.items():
             if ws.closed:
                 closed_websockets.add(ws)
@@ -364,7 +345,7 @@ class Visualizer:
         all_param_names = [os.path.splitext(filename)[0] for filename in
                            os.listdir(self.params_dir)]
         if params_set_name in all_param_names:
-            with open(os.path.join(self.params_dir, params_set_name + '.json')) as f:
+            with open(os.path.join(self.params_dir, params_set_name + '.json'), encoding='utf8', errors='replace') as f:
                 params_json = json.load(f)
                 self.params_manager.from_json(params_json)
                 print('params updated by paramset', params_set_name)
@@ -416,7 +397,7 @@ class Visualizer:
             )
         )
 
-    def get_in_queue(self) -> Tuple[int, Dict[str, Any], WebSocketServerProtocol]:
+    def get_in_queue(self) -> Tuple[int, Dict[str, Any], MelodieVisualizerProtocol]:
         """
         `while 1` statement was for checking the sigterm signal.
         :return:
@@ -434,7 +415,7 @@ class Visualizer:
                 pass
 
     def generic_handler(
-            self, cmd_type: int, data: Dict[str, Any], ws: WebSocketServerProtocol
+            self, cmd_type: int, data: Dict[str, Any], ws: MelodieVisualizerProtocol
     ) -> bool:
         """
         The handler for viewing current data, getting scenario parameters.
@@ -451,19 +432,20 @@ class Visualizer:
         elif cmd_type == RESET:
             try:
                 self.params_manager.from_json(data['params'])
+                raise MelodieModelReset
             except Exception as e:
+                import traceback
+                traceback.print_exc()
                 self.send_notification("Parameter value error:" + str(e), "error")
                 return True
-                # self.scenario_param = {k: v["value"] for k, v in data["params"].items()}  #
-            raise MelodieModelReset
         elif cmd_type == INIT_OPTIONS:
             self.send_chart_options()
             self.send_plot_series()
             return True
         elif cmd_type == SAVE_PARAMS:
             file = os.path.join(self.params_dir, f"{data['name']}.json")
-            with open(file, 'w') as f:
-                json.dump(data['params'], f, indent=4)
+            with open(file, 'w', encoding='utf-8', errors='replace') as f:
+                json.dump(data['params'], f, indent=4, ensure_ascii=False)
             self.send_notification("Parameters saved successfully", "success")
             return True
         elif cmd_type == SAVE_DATABASE:

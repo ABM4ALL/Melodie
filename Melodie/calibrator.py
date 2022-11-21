@@ -1,5 +1,4 @@
 import copy
-import copy
 import logging
 import time
 from typing import (
@@ -18,11 +17,12 @@ from typing import (
 
 import pandas as pd
 
+from MelodieInfra import create_db_conn
+
 from .algorithms import AlgorithmParameters
 from .algorithms.ga import MelodieGA
-from .config import Config
+from MelodieInfra.config.config import Config
 from .data_loader import DataLoader
-from .db import create_db_conn
 from .model import Model
 from .scenario_manager import Scenario
 from .simulator import BaseModellingManager
