@@ -18,6 +18,20 @@ def assert_exc_occurs(exc_id: int, func: Callable):
         assert e.id == exc_id
 
 
+def assert_exc_type_occurs(exc_type: BaseException, func: Callable):
+    """
+    Assert that exception of `exc_type` must occur.
+
+    """
+    try:
+        func()
+        assert False
+    except BaseException as e:
+        import traceback
+        traceback.print_exc()
+        assert isinstance(e, exc_type)
+
+
 class MelodieException(Exception):
     def __init__(self, exc_id: int, text: str):
         text = f"{text} <Error ID {exc_id}>"
@@ -111,7 +125,7 @@ class MelodieExceptions:
 
             @staticmethod
             def FunctionArgsNumError(
-                func: Callable, expected_arg_num: int, actual_arg_num: int
+                    func: Callable, expected_arg_num: int, actual_arg_num: int
             ):
                 """
                 Function should have correct number of arguments. If not, this error will be raised.
@@ -138,7 +152,7 @@ class MelodieExceptions:
 
         @staticmethod
         def CannotMoveToNewStateError(
-            old_state, new_state, all_possible_new_states: set
+                old_state, new_state, all_possible_new_states: set
         ):
             if len(list(all_possible_new_states)) == 0:
                 return MelodieException(
@@ -322,10 +336,10 @@ class MelodieExceptions:
 
         @staticmethod
         def ObjectPropertyTypeUnMatchTheDataFrameError(
-            param_name: str,
-            param_type: type,
-            dataframe_dtypes: Dict[str, type],
-            agent: "Agent",
+                param_name: str,
+                param_type: type,
+                dataframe_dtypes: Dict[str, type],
+                agent: "Agent",
         ):
             """
             Object type should match the type defined in dataframe.
@@ -395,7 +409,7 @@ class MelodieExceptions:
 
         @staticmethod
         def ColumnNameConsistencyError(
-            df_name: str, missing: Set[str], undefined: Set[str]
+                df_name: str, missing: Set[str], undefined: Set[str]
         ):
             """
             The column name in code should be consistent to the table.
