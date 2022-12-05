@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING
 import numpy as np
 
 from Melodie import DataLoader
-from tutorial.CovidContagion_OLD.source import data_info
+from . import data_info
 
 if TYPE_CHECKING:
     from .scenario import CovidScenario

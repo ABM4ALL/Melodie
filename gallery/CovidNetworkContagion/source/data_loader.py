@@ -1,7 +1,7 @@
 from typing import TYPE_CHECKING
 
 from tutorial.CovidContagion.source.data_loader import CovidDataLoader
-from tutorial.CovidNetworkContagion.source import data_info
+from gallery.CovidNetworkContagion.source import data_info
 
 if TYPE_CHECKING:
     pass

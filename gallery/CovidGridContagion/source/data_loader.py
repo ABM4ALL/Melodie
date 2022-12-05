@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING
 import numpy as np
 
 from tutorial.CovidContagion.source.data_loader import CovidDataLoader
-from tutorial.CovidGridContagion.source import data_info
+from . import data_info
 
 if TYPE_CHECKING:
     from .scenario import CovidGridScenario

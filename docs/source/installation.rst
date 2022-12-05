@@ -1,6 +1,3 @@
-.. Melodie documentation installation instructions.
-
-.. installation:
 
 Installation
 ============
@@ -17,7 +14,7 @@ You can install Melodie via `pip`:
 
 Developer Installation
 ----------------------
-To install Melodie for development, first clone the repository and then install
+To install for development, first clone the repository and then install
 via pip's development mode.
 
 .. code-block:: shell
@@ -39,6 +36,7 @@ To keep your local repository up to date, please follow these steps below:
 .. code-block:: shell
 
    git pull origin <branch-name>
+
    # Re-build Cython packages
    python setup.py build_ext -i
 

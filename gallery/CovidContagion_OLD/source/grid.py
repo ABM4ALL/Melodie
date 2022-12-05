@@ -1,5 +1,5 @@
 from Melodie import Spot, Grid
-import tutorial.CovidContagion_OLD.source.data_info as df_info
+import gallery.CovidContagion_OLD.source.data_info as df_info
 
 
 class CovidSpot(Spot):

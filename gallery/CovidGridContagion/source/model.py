@@ -1,7 +1,7 @@
 from typing import TYPE_CHECKING
 
 from Melodie import Model
-from tutorial.CovidGridContagion.source import data_info
+from . import data_info
 from .agent import CovidGridAgent
 from .data_collector import CovidGridDataCollector
 from .environment import CovidGridEnvironment

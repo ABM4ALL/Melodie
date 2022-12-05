@@ -3,6 +3,7 @@ from tutorial.CovidContagion.source import data_info
 
 
 class CovidScenario(Scenario):
+
     def setup(self):
         self.period_num = 0
         self.agent_num = 0
