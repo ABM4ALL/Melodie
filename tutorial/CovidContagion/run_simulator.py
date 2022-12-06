@@ -1,6 +1,6 @@
 import sys
 
-sys.path.append("/Users/hzy/Documents/Projects/MelodieABM/Melodie")
+# sys.path.append("/Users/songminyu/Documents/Projects/MelodieABM/Melodie")
 from Melodie import Simulator
 from config import config
 from source.data_loader import CovidDataLoader

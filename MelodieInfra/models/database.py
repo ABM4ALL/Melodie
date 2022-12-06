@@ -3,6 +3,7 @@
 # @Author: Zhanyi Hou
 # @Email: 1295752786@qq.com
 # @File: database.py
+
 from jsonobject import JsonObject, StringProperty
 
 class DatabaseBasicRequest(JsonObject):

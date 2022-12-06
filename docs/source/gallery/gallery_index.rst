@@ -2,14 +2,14 @@
 Model Gallery
 ==============
 
-examples in which more modules are used than in the tutorial
+Under development.
 
 .. toctree::
     :caption: Content
     :maxdepth: 1
 
-    covid_grid_contagion
-    covid_network_contagion
+    .. comment:: covid_grid_contagion
+    .. comment:: covid_network_contagion
 
 .. toctree::
 
