@@ -40,9 +40,9 @@ Now, let's start the journey :)
     installation
     introduction
     tutorial
-    gallery/gallery_index
-    .. comment:: techniques/techniques_index
-    api/api_index
+    gallery/_index
+    advanced/_index
+    api/_index
     changelog
     contribution
     about
