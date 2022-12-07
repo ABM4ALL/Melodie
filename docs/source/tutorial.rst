@@ -235,7 +235,7 @@ Please note that,
            self.young_percentage: float = 0.0
            self.infection_prob: float = 0.0
 
-Finally, as introduced in the :ref:`Introduction:Modelling Manager` section and shown below,
+Finally, as introduced in the :ref:`Modelling Manager` section and shown below,
 the ``CovidScenario`` and ``CovidDataLoader`` class variables are used to construct the ``simulator``.
 So, **Melodie** will initialize all the scenarios defined in ``simulator_scenarios`` dataframe automatically.
 Then, the model will be run with these scenarios one by one.
@@ -421,11 +421,12 @@ we need to define the ``infection`` and ``health_state_transition`` functions in
 As shown in the ``health_state_transition`` function, the ``agent`` also has access to ``scenario`` and can get necessary data.
 On the other side, the ``CovidScenario`` class needs to prepare the data in the structure that is easy to use,
 as shown in the function ``setup_transition_probs`` below (Line 14).
+Besides, ``Melodie.Scenario`` has a function ``get_dataframe`` to read registered and loaded dataframes from the database (Line 15).
 
 .. code-block:: Python
    :caption: scenario.py
    :linenos:
-   :emphasize-lines: 14
+   :emphasize-lines: 14, 15
 
    from Melodie import Scenario
    from source import data_info
@@ -458,15 +459,19 @@ as shown in the function ``setup_transition_probs`` below (Line 14).
        def get_transition_probs(self, id_age_group: int):
            return self.transition_probs[id_age_group]
 
-Besides, ``Melodie.Scenario`` has a function ``get_dataframe`` to read registered and loaded dataframes from the database.
 The idea of the ``Scenario`` class in the ``Melodie`` framework is
-(1) to use it as the channel for other objects accessing input data,
-and (2) to easily iterate through a batch of scenarios.
+(1) to use it as the channel for other objects accessing input data, and
+(2) to easily iterate through a batch of scenarios.
+
+If you recall the **Scenario Cluster** introduced in the :ref:`Melodie Framework` section,
+the ``Scenario`` and ``DataLoader`` classes focus on formatting, importing, and delivering the input data to the model.
+The ``DataFrameInfo`` and ``MatrixInfo`` are just pre-defined data structure to store the information of the input data,
+so that the functions of ``Scenario`` and ``DataLoader`` can work with the data easily.
 
 DataCollector
 _____________
 
-Finally, to collect all the micro- and macro-level results stored by the ``agents`` and the ``environment``,
+Finally, to collect all the micro- and macro-level results stored by the ``agents`` and the ``environment`` and save them into the database,
 the ``CovidDataCollector`` class is defined as below.
 
 .. code-block:: Python
@@ -488,11 +493,12 @@ the ``CovidDataCollector`` class is defined as below.
 The two functions ``add_agent_property`` and ``add_environment_property`` are provided by ``Melodie``.
 For ``add_agent_property``, we should also pass in the name of the agent list,
 so the ``data_collector`` knows which agent list to look at.
-In some ABMs, there can be multiple agent lists.
+In some ABMs, there can be multiple agent lists (e.g., wolves, sheep, etc.).
 
 With the ``data_collector``, the results will saved in the ``CovidContagion.sqlite`` file in a pre-defined format.
 The macro-level results are indexed with ``id_scenario``, ``id_run``, and ``period``.
-The micro-level results are further indexed with the ``id`` of agents.
+The micro-level results are further indexed with the ``id`` of agents. After running the model,
+you can find two tables in ``CovidContagion.sqlite`` named as ``environment_result`` and ``agents_result``.
 
 In the example project, we also prepared a simple ``analyzer.py`` file that produces two figures based on the results.
 Since it is mainly based on other packages instead of ``Melodie``, we won't introduce the details here.
@@ -500,11 +506,17 @@ Since it is mainly based on other packages instead of ``Melodie``, we won't intr
 Last Words
 __________
 
-OK, that's it :)
+If the :ref:`Melodie Framework` section was too brief to follow,
+I hope this tutorial can give you a clearer picture about
+(1) why the modules are organized into those clusters, and
+(2) how they fit together.
+As said before, for simplicity, not all the modules are used in this example,
+but it does show a clear structure of an ABM developed with ``Melodie``.
+You can find more examples using other modules in the :ref:`Model Gallery` section.
 
-I hope the explanation of the ``CovidContagion`` model is clear and useful,
-and most importantly, brings you the interest to join the ABM community!
+So, that's it :)
 
+We really hope this tutorial is clear and useful, and most importantly, brings you the interest to join the ABM community!
 If you have any questions, please don't hesitate to contact us!
 
 

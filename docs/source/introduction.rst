@@ -80,6 +80,14 @@ At last, by calling the ``simulator.run`` function, the simulation starts.
 Studio
 ~~~~~~
 
+Optional modules for visualization, incl. interactive figures and database.
+Or, shall we make it open-source at all? The three clusters above are already well enough for research.
+
+We can plan a few separate modules surrounding **Melodie** for developing products like AMETS for business.
+
+* MelodieStudio
+* MelodieData - RenderDict, DataFrameInfo, etc.
+
 The **Studio Cluster** includes the modules
 
 * ``Visualizer`` -
@@ -87,6 +95,8 @@ The **Studio Cluster** includes the modules
 
 Infrastructure
 ~~~~~~~~~~~~~~
+
+The users may not notice them at all. So, we can just provide a list here.
 
 The last **Infrastructure Cluster** includes the modules that provide support for the modules mentioned above.
 

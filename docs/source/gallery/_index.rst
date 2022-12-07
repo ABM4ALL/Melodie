@@ -1,6 +1,6 @@
 
 Model Gallery
-==============
+=============
 
 Under development.
 

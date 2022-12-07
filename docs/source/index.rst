@@ -34,7 +34,7 @@ I take the German translation - \"Melodie\" - as the name of this package.
 
   * **Model Gallery**, which provides examples with more modules are used than in the tutorial. You can start developing your own model with the one that is similar to your case.
   * **Advanced Topics**, which provides some advanced techniques in using **Melodie**, e.g., empty project creation, speed improvement, etc.
-  * **API Reference**, which provides the help document of **Melodie**.
+  * **API Reference**, which provides the help documentation of **Melodie**.
 
 Now, let's start the journey :)
 

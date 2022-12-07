@@ -4,6 +4,10 @@ API Reference
 
 Under development.
 
+In the list below, we can release only from model to simulator.
+The calibrator and trainer come later when we add example models in the gallery. Write "under development" on their pages.
+I am not sure if it is necessary to release the APIs for infrastructure modules.
+
 .. toctree::
     :caption: Content
     :maxdepth: 1
@@ -21,3 +25,4 @@ Under development.
     .. comment:: trainer
     .. comment:: db
     .. comment:: melodie_error_list
+
