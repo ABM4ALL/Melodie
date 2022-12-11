@@ -18,7 +18,7 @@ def run_profile(callback):
         pass
     pr.disable()
     s = io.StringIO()
-    sortby = pstats.SortKey.TIME
+    sortby = pstats.SortKey.CUMULATIVE
     ps = pstats.Stats(pr, stream=s).sort_stats(sortby)
-    ps.print_stats(100)
+    ps.print_stats()
     print(s.getvalue())

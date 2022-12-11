@@ -15,7 +15,7 @@ from .scenario_manager import Scenario
 from .simulator import Simulator
 from .table_generator import DataFrameGenerator
 from .trainer import Trainer
-from .visualizer import Visualizer, GridVisualizer
+from .visualizer import *
 
 logging.basicConfig(
     level=logging.INFO,

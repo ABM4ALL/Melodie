@@ -1,6 +1,6 @@
 import datetime
 
-from jsonobject import StringProperty, BooleanProperty, DateTimeProperty, ListProperty, unicode, JsonObject, \
+from MelodieInfra.jsonobject import StringProperty, BooleanProperty, DateTimeProperty, ListProperty, unicode, JsonObject, \
     DefaultProperty
 
 # https://github.com/dimagi/jsonobject

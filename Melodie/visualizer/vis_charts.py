@@ -5,9 +5,11 @@ logger = logging.getLogger(__name__)
 
 
 class JSONBase:
+    names_map = {}
     def to_json(self):
         d = {}
         for k, v in self.__dict__.items():
+            k = k if k not in self.__class__.names_map else self.__class__.names_map[k]
             if k.startswith("_"):
                 continue
             elif hasattr(v, "to_json"):

@@ -6,7 +6,7 @@
 import math
 from typing import Callable, Any, TYPE_CHECKING, Tuple, Union, List, Dict
 
-from Melodie.visualizer import JSONBase
+from .vis_charts import JSONBase
 
 if TYPE_CHECKING:
     from Melodie import Scenario

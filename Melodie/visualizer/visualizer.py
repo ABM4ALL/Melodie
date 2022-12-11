@@ -13,6 +13,8 @@ from queue import Queue
 from typing import Dict, Tuple, List, Any, Callable, Union, Set, TYPE_CHECKING, Optional
 
 from websockets.exceptions import ConnectionClosedOK
+
+from .actions import Action
 from .ws_protocol import MelodieVisualizerProtocol
 
 from MelodieInfra import get_sqlite_filename, MelodieExceptions, Config
@@ -142,6 +144,7 @@ class Visualizer:
         self.current_step = 0
         self.model_state = UNCONFIGURED
         self.current_scenario: "Scenario" = None
+        self.actions: List[Action] = []
 
         self.params_dir = os.path.join(config.visualizer_tmpdir, 'params')
         self.sim_data_dir = os.path.join(config.visualizer_tmpdir, 'sim_data')
@@ -187,6 +190,9 @@ class Visualizer:
         #     raise MelodieExceptions.Tools.MelodieStudioUnAvailable()
         # except URLError:
         #     raise MelodieExceptions.Tools.MelodieStudioUnAvailable()
+
+    def add_action(self, action: Action):
+        self.actions.append(action)
 
     def setup(self):
         pass
@@ -257,9 +263,22 @@ class Visualizer:
         self._re_init()
         self._model.init_visualize()
 
-    def send_initial_msg(self, ws: MelodieVisualizerProtocol):
-        formatted = self.format()
-        self.send_message(json.dumps(formatted))
+    # def send_initial_msg(self, ws: MelodieVisualizerProtocol):
+    #     formatted = self.format()
+    #     self.send_message({
+    #         "type": "actions",
+    #         "status": OK,
+    #         "data": json.dumps(formatted)})
+
+    def send_actions(self):
+        data = [action.to_json() for action in self.actions]
+        self.send_message(
+            json.dumps({
+                "type": "actions",
+                "status": OK,
+                "data": data
+            })
+        )
 
     def send_message(self, msg):
         """
@@ -439,6 +458,7 @@ class Visualizer:
         elif cmd_type == INIT_OPTIONS:
             self.send_chart_options()
             self.send_plot_series()
+            self.send_actions()
             return True
         elif cmd_type == SAVE_PARAMS:
             file = os.path.join(self.params_dir, f"{data['name']}.json")

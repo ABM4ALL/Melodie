@@ -19,8 +19,8 @@ def test_read_sqlite():
     print(resp.to_json())
 
 
-@pytest.mark.skipif(skip_env_dependent, reason="Mysql connection is ignored!")
-def test_read_mysql():
-    resp = DatabaseService.execute_sql("mysql+pymysql://root:123456@127.0.0.1/monitor_data?charset=utf8mb4",
-                                       "show tables;")
-    print(resp.iloc[:, 0].tolist())
+# @pytest.mark.skipif(skip_env_dependent, reason="Mysql connection is ignored!")
+# def test_read_mysql():
+#     resp = DatabaseService.execute_sql("mysql+pymysql://root:123456@127.0.0.1/monitor_data?charset=utf8mb4",
+#                                        "show tables;")
+#     print(resp.iloc[:, 0].tolist())

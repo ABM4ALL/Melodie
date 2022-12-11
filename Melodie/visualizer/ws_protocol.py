@@ -4,19 +4,42 @@
 # @Email: 1295752786@qq.com
 # @File: ws_protocol.py
 import http
+import logging
+import os.path
 from typing import Optional
-
+import mimetypes
 from websockets.datastructures import Headers
 from websockets.legacy.server import WebSocketServerProtocol, HTTPResponse
+
+from .actions import Action
+
+logger = logging.getLogger(__name__)
+
+
+def create_file_response(filepath: str):
+    basename, ext = os.path.splitext(filepath)
+    mime = mimetypes.types_map[ext]
+    logger.info('ext-mime' + f'{mime}')
+    with open(filepath, 'rb') as f:
+        content = f.read()
+    return (http.HTTPStatus.OK, [("Access-Control-Allow-Origin", "*"), ('Content-Type', mime)],
+            content)
+
+
+def create_failed_response(msg: str):
+    return http.HTTPStatus.BAD_REQUEST, [("Access-Control-Allow-Origin", "*")], msg.encode('utf8')
 
 
 class MelodieVisualizerProtocol(WebSocketServerProtocol):
     async def process_request(
             self, path: str, request_headers: Headers
     ) -> Optional[HTTPResponse]:
-        print(path)
-        if path != "/":
-            return (http.HTTPStatus.OK, [("Access-Control-Allow-Origin", "*")],
-                    f"requested at path {path}\n".encode('utf-8', errors='replace'))
+        print('request fs', path)
+        if path.startswith("/fs/"):
+            filepath = path[4:]
+            return create_file_response(filepath)
+        elif path.startswith("/action/"):
+            action = path[len('/action/'):]
+            return Action.dispatch(action)
         ret = await super().process_request(path, request_headers)
         return ret

@@ -1,5 +1,6 @@
 import base64
 import json
+import logging
 import os.path
 import queue
 import sys
@@ -11,6 +12,8 @@ import cloudpickle
 from rpyc import Service
 from rpyc.utils.server import ThreadedServer
 import subprocess
+
+logger = logging.getLogger("ParallelManager-MainThread")
 
 
 class Tasks:
@@ -61,10 +64,16 @@ class ParallelManager:
         return tasks.get_result()
 
     def run_server(self):
-        self.server = ThreadedServer(
-            service=TimeService, port=12233, auto_register=False
-        )
-        self.server.start()
+        try:
+            self.server = ThreadedServer(
+                service=TimeService, port=12233, auto_register=False
+            )
+            self.server.start()
+        except OSError as e:
+            import traceback
+            traceback.print_exc()
+            # print()
+            raise Exception("Server Error Occurred, exiting...")
 
     def run(self, role: str):
         """
@@ -99,9 +108,15 @@ class ParallelManager:
         """
         for p in self.processes:
             p.terminate()
-        self.server.close()
+        if self.server is not None:
+            self.server.close()
+            logger.info("Server closed!")
         global tasks
+        time.sleep(3)
+        # last_tasks = tasks
         tasks = None
+        # tasks = Tasks()
+        # tasks.config = last_tasks.config
 
 
 class TimeService(Service):

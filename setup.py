@@ -52,17 +52,27 @@ try:
             language="c++",
         ),
     ]
+    ext = ".pyx"
+    jsonobj_ext_modules = [
+        Extension('MelodieInfra.jsonobject.api', ["MelodieInfra/jsonobject/api" + ext], ),
+        Extension('MelodieInfra.jsonobject.base', ["MelodieInfra/jsonobject/base" + ext], ),
+        Extension('MelodieInfra.jsonobject.base_properties', ["MelodieInfra/jsonobject/base_properties" + ext], ),
+        Extension('MelodieInfra.jsonobject.containers', ["MelodieInfra/jsonobject/containers" + ext], ),
+        Extension('MelodieInfra.jsonobject.properties', ["MelodieInfra/jsonobject/properties" + ext], ),
+        Extension('MelodieInfra.jsonobject.utils', ["MelodieInfra/jsonobject/utils" + ext], ),
+    ]
+    ext_modules = ext_modules + jsonobj_ext_modules
 except:
     import traceback
 
     traceback.print_exc()
     ext_modules = None
 
+
     def build_ext(_):
         return print(
             "Cython was not installed. With cython you may get better peformance boost!"
         )
-
 
 with open("Melodie/version.txt", "r", encoding="utf8") as fv:
     version = fv.read()
@@ -98,7 +108,7 @@ setuptools.setup(
     project_urls={
         "Documentation": "https://Melodie.readthedocs.io/en/latest/index.html",
     },
-    packages=setuptools.find_namespace_packages(include=["Melodie", "Melodie.*", "MelodieInfra", "MelodieInfra."]),
+    packages=setuptools.find_namespace_packages(include=["Melodie", "Melodie.*", "MelodieInfra", "MelodieInfra.*"]),
     install_requires=[
         "chardet",
         "numpy",
@@ -115,7 +125,6 @@ setuptools.setup(
         "cython==3.0.0a10",
         "scikit-opt~=0.6",
         "rpyc",
-        "jsonobject"
     ],
     python_requires=">=3.7",
     entry_points={"console_scripts": ["Melodie=Melodie.scripts.scripts:cli"]},
