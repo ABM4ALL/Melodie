@@ -1,7 +1,0 @@
-
-About
-=============
-
-motivation
-
-authors introduction
