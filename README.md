@@ -3,89 +3,29 @@
 
 [![Build](https://github.com/ABM4ALL/Melodie/actions/workflows/wheels.yml/badge.svg?branch=dist)](https://github.com/ABM4ALL/Melodie/actions/workflows/wheels.yml)
 
-**Melodie** is a general framework for developing agent-based models (ABMs) in Python.
-Melodie and its example repositories are maintained on [ABM4ALL](https://github.com/ABM4ALL),
-a developing community among agent-based modelers for sharing ideas and resources.
+**Melodie** is a framework for developing agent-based models (ABMs) in Python.
+The package and its examples are maintained on [ABM4ALL](https://github.com/ABM4ALL).
+For introduction and tutorial of the package, please visit our documentation page.
 
+The package name **Melodie** comes from an example which poetically explains the core concept of complexity theory: **Emergence**.
+In his bold book *Emergent Evolution*, [C. Lloyd Morgan](https://en.wikipedia.org/wiki/C._Lloyd_Morgan) wrote:
+*The emergent step, though it may seem more or less saltatory [a leap], is best regarded as a qualitative change of direction,
+or critical turning-point, in the course of events.* Then, Morgan exemplified how melody emerges from chords by quoting *Abt Vogler* of
+[Robert Browning](https://en.wikipedia.org/wiki/Robert_Browning):
 
-### To-dos:
+*"And I know not if,*
 
-* Songmin - update readme.md
-* Zhanyi - travis and other badges
-* Zhanyi - publish Melodie repo and upload to pypi
-* Songmin - polish contribution, write About, update readme.md
-* Zhanyi - publish docs with GitHub Pages and use abm4all.com
-* upload tutorial example - CovidContagion
-* update model gallery and upload CovidGridContagion, CovidNetworkContagion
-* Zhanyi - api
+*save in this,*
 
+*such gift be allowed to man,*
 
+*That out of three sounds he frame,*
 
+*not a fourth sound,*
 
+*but a star."*
 
+Sitting in Karlsruhe, a lovely city in southern Germany,
+I take the German translation - ***Melodie*** - as the name of this package.
 
-### Supported Python Versions
-
-Python from 3.7~3.9
-
-PyPy interpreter is also supported. But Melodie is not designed for PyPy interpreter, so the performance may not be
-improved significantly.
-
-### Run this project
-
-```shell
-git clone xxxx
-pip install Cython pytest
-python.exe setup.py build_ext --inplace
-pytest
-```
-
-### Build docs
-
-```shell
-cd docs
-sphinx-autobuild source build/html
-# click the link appeared in the console to view the documentation website.
-```
-
-As for auto-generated API Documentation, run this command to update:
-```shell
-python setup.py build_ext -i
-sphinx-build source build/html -E -a
-```
-
-### Melodie studio
-
-Melodie has an integrated web-based GUI tool for creating new projects and database viewing. you could start it with
-this command:
-
-```sh
-python -m Melodie studio
-```
-
-or if you have created a project, you could use the studio in a Python script:
-
-```python3
-import os
-
-from Melodie.studio.main import studio_main
-from Melodie import Config
-
-config = Config(
-    project_name='DemoProject',
-    project_root=os.path.dirname(__file__),
-    sqlite_folder='data/sqlite',
-    excel_source_folder='data/excel_source',
-    output_folder='data/output',
-)
-
-studio_main(config)
-```
-
-then visit `http://localhost:8089/` with browser
-
-```mermaid
-graph TD
-Melodie-.->MelodieInfra
-MelodieStudio-.->MelodieInfra
-```
+![Karlsruhe](docs/source/image/karlsruhe.png)

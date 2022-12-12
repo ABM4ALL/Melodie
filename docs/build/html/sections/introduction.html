@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Introduction &mdash; Melodie 1.0.0 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+        <script>mermaid.initialize({startOnLoad:true});</script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Tutorial" href="tutorial/tutorial_index.html" />
+    <link rel="prev" title="Installation" href="installation.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> Melodie
+            <img src="../_static/logo.jpg" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#user-installation">User Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#developer-installation">Developer Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#dependency-note">Dependency Note</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Introduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#agent-based-models">Agent-based models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#melodie">Melodie</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#block-modules">Block modules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#operator-modules">Operator modules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#infrastructure-modules">Infrastructure modules</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial/tutorial_index.html">Tutorial</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tutorial/virus_contagion.html">Virus Contagion</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="tutorial/virus_contagion.html#agent">Agent</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorial/virus_contagion.html#environment">Environment</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorial/virus_contagion.html#datacollector">DataCollector</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorial/virus_contagion.html#scenario">Scenario</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorial/virus_contagion.html#model">Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorial/virus_contagion.html#dataframeloader">DataFrameLoader</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorial/virus_contagion.html#simulator">Simulator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorial/virus_contagion.html#results">Results</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial/stock_market.html">Stock Market</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="tutorial/stock_market.html#agent">Agent</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorial/stock_market.html#environment">Environment</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorial/stock_market.html#datacollector">DataCollector</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorial/stock_market.html#scenario">Scenario</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorial/stock_market.html#model">Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorial/stock_market.html#dataframeloader">DataFrameLoader</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorial/stock_market.html#simulator">Simulator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorial/stock_market.html#results">Results</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="gallery/gallery_index.html">Model Gallery</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="gallery/technology_search.html">Technology Search</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gallery/opinion_dynamics.html">Opinion Dynamics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gallery/rock_paper_scissors.html">Rock-Paper-Scissors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gallery/shelling_segregation.html">Schelling Segregation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api/api_index.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/model.html">Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/scenario.html">Scenario</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/agent_list.html">AgentList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/environment.html">Environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/data_collector.html">DataCollector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/grid.html">Grid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/network.html">Network</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/simulator.html">Simulator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/calibrator.html">Calibrator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/trainer.html">Trainer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/db.html">DB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/dataframe_loader.html">DataFrameLoader</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/studio.html">Studio</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/analyzer.html">Analyzer</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contribution.html">Contribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="about.html">About</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Melodie</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Introduction</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/sections/introduction.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="introduction">
+<h1>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline"></a></h1>
+<p>This document gives a brief introduction of agent-based models and an overview of the main modules in the Melodie library.</p>
+<section id="agent-based-models">
+<h2>Agent-based models<a class="headerlink" href="#agent-based-models" title="Permalink to this headline"></a></h2>
+<p>Agent-based models (ABMs) characterize physical, biological, and social economic systems as dynamic <cite>interactions</cite>
+among <cite>agents</cite> from a bottom-up perspective. The <cite>agents</cite> can be molecules, animals, or human beings. The <cite>interactions</cite>
+can be water molecules forming a vortex, ants searching for their food, or people trading stocks in the market.</p>
+<p>Agents’ interactions can bring emergent properties to a system and turn it into a complex system.
+This is the first reason why we use an ABM to model a target system.
+Furthermore, for the social economic systems, ABMs can model agents’
+(1) attribute and behavior heterogeneity, based on micro-level empirical evidence; and
+(2) bounded rationality and adaptation behavior, based on psychological and behavioral studies.
+These advantages support agent-based modeling to be an alternative paradigm for the neo-classical economics.</p>
+</section>
+<section id="melodie">
+<h2>Melodie<a class="headerlink" href="#melodie" title="Permalink to this headline"></a></h2>
+<p>As a general framework for developing ABMs, <strong>Melodie</strong> has three groups of modules:</p>
+<ul class="simple">
+<li><p><cite>Block</cite>:  <code class="docutils literal notranslate"><span class="pre">model</span></code>, <code class="docutils literal notranslate"><span class="pre">scenario</span></code>, <code class="docutils literal notranslate"><span class="pre">environment</span></code>, <code class="docutils literal notranslate"><span class="pre">agent_list</span></code>, <code class="docutils literal notranslate"><span class="pre">data_collector</span></code>, <code class="docutils literal notranslate"><span class="pre">grid</span></code>, <code class="docutils literal notranslate"><span class="pre">network</span></code>.</p></li>
+<li><p><cite>Operator</cite>: <code class="docutils literal notranslate"><span class="pre">simulator</span></code>, <code class="docutils literal notranslate"><span class="pre">calibrator</span></code>, <code class="docutils literal notranslate"><span class="pre">trainer</span></code>.</p></li>
+<li><p><cite>Infrastructure</cite>: <code class="docutils literal notranslate"><span class="pre">db</span></code>, <code class="docutils literal notranslate"><span class="pre">dataframe_loader</span></code>, <code class="docutils literal notranslate"><span class="pre">studio</span></code>, <code class="docutils literal notranslate"><span class="pre">analyzer</span></code>.</p></li>
+</ul>
+<section id="block-modules">
+<h3>Block modules<a class="headerlink" href="#block-modules" title="Permalink to this headline"></a></h3>
+<p>The <cite>block</cite> modules are used to construct an ABM, and five of them are always necessary:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">model</span></code> is the container of the following components.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">scenario</span></code> contains the input data.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">agent_list</span></code> contains the <code class="docutils literal notranslate"><span class="pre">agents</span></code> and one model can have several <code class="docutils literal notranslate"><span class="pre">agent_list</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">environment</span></code> contains the macro-level parameters and variables and controls the interaction and decision-making of agents.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">data_collector</span></code> collects the parameters and variables of the environment and the agents and saves them to the database.</p></li>
+</ul>
+<p>According to the target system, <code class="docutils literal notranslate"><span class="pre">model</span></code> could also contain <code class="docutils literal notranslate"><span class="pre">grid</span></code> and <code class="docutils literal notranslate"><span class="pre">network</span></code>.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">grid</span></code> is consisted of <code class="docutils literal notranslate"><span class="pre">spots</span></code> and represents the geographic surface in the system.
+For example, if the ABM models a city, then <code class="docutils literal notranslate"><span class="pre">grid</span></code> can represent the land in the city,
+which consists of 100 <code class="docutils literal notranslate"><span class="pre">spots</span></code> (pieces of land). Each <code class="docutils literal notranslate"><span class="pre">spot</span></code> can have its own attributes, e.g. available resources.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">network</span></code> is consisted of <code class="docutils literal notranslate"><span class="pre">edges</span></code> and represents the connection among the <code class="docutils literal notranslate"><span class="pre">agents</span></code>.
+For example, if the ABM models the information diffusion in a social network, then <code class="docutils literal notranslate"><span class="pre">network</span></code> can represent how
+the <code class="docutils literal notranslate"><span class="pre">agents</span></code> are connected. Besides, an <code class="docutils literal notranslate"><span class="pre">edge</span></code> can also have its own attributes,
+e.g. direction, communication frequency, etc.</p></li>
+</ul>
+</section>
+<section id="operator-modules">
+<h3>Operator modules<a class="headerlink" href="#operator-modules" title="Permalink to this headline"></a></h3>
+<p>With <strong>Melodie</strong>, and ABM can be run in different modes by using different operator modules.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">simulator</span></code> runs the model simply following the flow written in <code class="docutils literal notranslate"><span class="pre">model</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">calibrator</span></code> runs the model iteratively to find the values for a set of parameters by minimizing the
+<cite>distance</cite> between the <cite>model output</cite> and a <cite>target value</cite>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">trainer</span></code> runs the model iteratively to train the <cite>agents</cite> to find smarter strategies.</p></li>
+</ul>
+</section>
+<section id="infrastructure-modules">
+<h3>Infrastructure modules<a class="headerlink" href="#infrastructure-modules" title="Permalink to this headline"></a></h3>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="installation.html" class="btn btn-neutral float-left" title="Installation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="tutorial/tutorial_index.html" class="btn btn-neutral float-right" title="Tutorial" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021-2022, ABM4ALL.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
