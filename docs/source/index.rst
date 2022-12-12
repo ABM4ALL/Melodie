@@ -28,7 +28,7 @@ I take the German translation - \"Melodie\" - as the name of this package.
 
 **Suggested reading path**
 
-* First, you might want to start with the **Introduction** section in which you can (1) get a brief idea what agent-based modeling is about, and (2) see which modules are included in the Melodie framework and how they can fit together.
+* First, you might want to start with the **Introduction** section in which you can, first, get a brief idea what agent-based modeling is about; second, get an overview of the modules in Melodie and how they fit together.
 * Second, you can continue with the **Tutorial** section, in which you can find a minimum agent-based model developed with Melodie. We hope it is simple enough to follow, and on the other hand, we believe it shows a clear structure and the most important components to develop an ABM with Melodie.
 * Third, for your information, we are also working following sections:
 
