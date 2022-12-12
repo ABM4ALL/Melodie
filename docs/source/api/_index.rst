@@ -30,6 +30,7 @@ pages below should be aligned with the Introduction page:
     :caption: Content
     :maxdepth: 1
 
+    model
     agent
     agent_list
     environment
@@ -42,7 +43,7 @@ pages below should be aligned with the Introduction page:
     simulator
     db
     exceptions
-    model
+
     .. comment:: calibrator
     .. comment:: trainer
 
