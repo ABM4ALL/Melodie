@@ -16,6 +16,11 @@ _______
 Major Version 0.x
 _________________
 
+v0.4.1 (Dec. 12, 2022)
+~~~~~~
+
+- Documentation finished and the project is released!
+
 v0.4.0 (Nov. 15, 2022)
 ~~~~~~
 
