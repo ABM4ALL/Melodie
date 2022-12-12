@@ -19,7 +19,9 @@ from sphinx.builders.html import StandaloneHTMLBuilder
 project = "Melodie"
 copyright = "2021-2022, ABM4ALL"
 author = "Songmin Yu, Zhanyi Hou"
-release = "1.0.0"
+with open(os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'Melodie', 'version.txt'),
+          encoding='utf8', errors='replace') as f:
+    release = f.read()
 
 # -- General configuration ---------------------------------------------------
 

@@ -21,4 +21,4 @@ help:
 	@$(SPHINXBUILD) -M $@ "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
 
 autobuild:
-	$(SPHINX_AUTOBUILD) source build/html
+	$(SPHINX_AUTOBUILD) source html

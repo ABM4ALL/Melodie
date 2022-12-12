@@ -106,7 +106,7 @@ setuptools.setup(
         "Topic :: Scientific/Engineering :: Artificial Intelligence",
     ],
     project_urls={
-        "Documentation": "https://Melodie.readthedocs.io/en/latest/index.html",
+        "Documentation": "http://docs.abm4all.com",
     },
     packages=setuptools.find_namespace_packages(include=["Melodie", "Melodie.*", "MelodieInfra", "MelodieInfra.*"]),
     install_requires=[

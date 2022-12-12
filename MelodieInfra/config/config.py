@@ -22,7 +22,7 @@ class Config:
         self.project_root = project_root
         self.output_folder = self.setup_folder_path(output_folder)
         self.input_folder = self.setup_folder_path(input_folder)
-        self.temp_folder = "melodie_tempfiles"
+        self.temp_folder = ".melodie"
 
         self.studio_port = kwargs.get("studio_port", 8089)
         self.visualizer_port = kwargs.get("visualizer_port", 8765)
