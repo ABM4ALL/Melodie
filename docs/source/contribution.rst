@@ -51,48 +51,19 @@ may provide you a solution.
 
 Report documentation bugs
 ^^^^^^^^^^^^^^^^
-System information is unnecessary for documentation bugs.
+System information is unnecessary for documentation bugs, feel free to post a new issue with just a screenshot containing bugs.
+
 
 Ask for Functionalities
 ^^^^^^^^^^^^^^^^
-...
-
-Types of contributions
----------------------
-
-Fix bugs
-^^^^^^^^^^^^^^^^^^^^^^^^
-...
-
-Implement features
-^^^^^^^^^^^^^^^^^^^^^^^^
-...
-
-Write documentation
-^^^^^^^^^^^^^^^^^^^^^^^^
-...
-
-Submit feedback
-^^^^^^^^^^^^^^^^^^^^^^^^
-...
+If you need functionalities that has not been implemented yet, feel free to suggest features that need to be integrated in a new issue.
 
 How to contribute
 ---------------------
-Ready to contribute? Here’s how to set up agentpy for local development.
+If you have idea in fixing bugs or adding new features, you could make your own contribution. Here is the guide:
 
-* Fork the agentpy repository on GitHub: https://github.com/SongminYu/Melodie
+* Fork the Melodie repository on GitHub: https://github.com/SongminYu/Melodie
 * Install with the developer installation.
 * Make your changes locally.
 * Run pytest command to test the changes
 * Push to your repo, and submit a pull-request on GitHub.
-
-Pull request guidelines
---------------------------
-Before you submit a pull request, check that it meets these guidelines:
-
-The pull request should include tests. For more information, check out the tests directory and https://docs.pytest.org/.
-
-If the pull request adds functionality, the docs should be updated. Put your new functionality into a function with a docstring, and add the feature to docs/changelog.rst.
-
-The pull request should pass the automatic tests on travis-ci. Check https://travis-ci.com/JoelForamitti/agentpy/pull_requests and make sure that the tests pass for all supported Python versions.
-
