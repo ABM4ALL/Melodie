@@ -135,7 +135,6 @@
              
   <section id="contribution">
 <h1>Contribution<a class="headerlink" href="#contribution" title="Permalink to this heading"></a></h1>
-<p>&lt;Words for pleasantries&gt;</p>
 <section id="report-bugs">
 <h2>Report Bugs<a class="headerlink" href="#report-bugs" title="Permalink to this heading"></a></h2>
 <p>Feel free to report bugs at <a class="reference external" href="https://github.com/ABM4ALL/Melodie/issues">https://github.com/ABM4ALL/Melodie/issues</a>.</p>
@@ -143,25 +142,20 @@
 <h3>Report Melodie Bugs<a class="headerlink" href="#report-melodie-bugs" title="Permalink to this heading"></a></h3>
 <p>The bug report should contain these information below:</p>
 <ul>
-<li><p>System information</p>
+<li><p>System information, including</p>
 <blockquote>
 <div><ul class="simple">
-<li><p>Version of Melodie</p></li>
-<li><p>Operating system</p></li>
-<li><p>Python version and the architecture of python executable. The architecture of python executable <strong>MAY NOT</strong> be the same as the architecture of your computer, especially
-if you are using a Apple Computer with M1 chip.</p></li>
+<li><p>Version of Melodie.</p></li>
+<li><p>Operating system.</p></li>
+<li><p>Python version and the architecture of python executable. The architecture of python executable <strong>MAY NOT</strong> be the same as the architecture of your computer, especially if you are using an Apple Computer with M1 chip.</p></li>
 <li><p>Version of Cython, Numpy and any other third-party packages that you think is vital to reproduce this bug.</p></li>
 </ul>
 </div></blockquote>
 </li>
 <li><p>Steps to reproduce the bug.</p></li>
-<li><p>Any other things that you think might be helpful in troubleshooting.</p></li>
+<li><p>Any other things that you think might be helpful for troubleshooting.</p></li>
 </ul>
-<p>If Melodie has been successfully installed, just gather the system information within one command:</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>python -m Melodie info
-</pre></div>
-</div>
-<p>The result is:</p>
+<p>If Melodie has been successfully installed, you can also gather the system information within one command <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-m</span> <span class="pre">Melodie</span> <span class="pre">info</span></code>:</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>awesome-researcher@loyal-computer goodproject % python -m Melodie info
 
 Here is the information for Melodie
@@ -174,30 +168,34 @@ Cython Version   :  3.0.0a10
 Numpy Version    :  1.21.5
 </pre></div>
 </div>
-<p>Just copy &amp; paste the result into the issue. However, if this command fails, we are sorry that you have to gather the information
-manually. If you are not familiar with how to collect the information, the
-<a class="reference external" href="https://github.com/SongminYu/Melodie/blob/master/Melodie/tools/system_info.py">interals of “Melodie info” command</a>
-may provide you a solution.</p>
+<p>Just copy &amp; paste the information into the issue.
+If this command fails, we are sorry that you have to gather the information manually,
+and this <a class="reference external" href="https://github.com/ABM4ALL/Melodie/blob/master/Melodie/tools/system_info.py">link</a> might be helpful.</p>
 </section>
 <section id="report-documentation-bugs">
 <h3>Report Documentation Bugs<a class="headerlink" href="#report-documentation-bugs" title="Permalink to this heading"></a></h3>
-<p>System information is unnecessary for documentation bugs, feel free to post a new issue with just a screenshot containing bugs.</p>
+<p>System information is not necessary for documentation bugs,
+feel free to post a new issue with just a screenshot containing the bug.</p>
 </section>
 </section>
 <section id="ask-for-functionalities">
 <h2>Ask for Functionalities<a class="headerlink" href="#ask-for-functionalities" title="Permalink to this heading"></a></h2>
-<p>If you need functionalities that has not been implemented yet, feel free to suggest features that need to be integrated in a new issue.</p>
+<p>If you need functionalities that has not been implemented yet,
+feel free to suggest new features by creating new issues.</p>
 </section>
 <section id="how-to-contribute">
 <h2>How to Contribute<a class="headerlink" href="#how-to-contribute" title="Permalink to this heading"></a></h2>
-<p>If you have idea in fixing bugs or adding new features, you could make your own contribution. Here is the guide:</p>
+<p>If you have idea in fixing bugs or adding new features, you could make your own contribution.</p>
+<p>Here is the guide:</p>
 <ul class="simple">
-<li><p>Fork the Melodie repository on GitHub: <a class="reference external" href="https://github.com/ABM4ALL/Melodie">https://github.com/ABM4ALL/Melodie</a></p></li>
+<li><p>Fork the Melodie repository on GitHub: <a class="reference external" href="https://github.com/ABM4ALL/Melodie">https://github.com/ABM4ALL/Melodie</a>.</p></li>
 <li><p>Install with the developer installation.</p></li>
 <li><p>Make your changes locally.</p></li>
-<li><p>Run pytest command to test the changes</p></li>
+<li><p>Run pytest command to test the changes.</p></li>
 <li><p>Push to your repo, and submit a pull-request on GitHub.</p></li>
 </ul>
+<p>Besides, we are also happy if you would like to publish your model developed with <strong>Melodie</strong> on ABM4ALL.
+At the same time, welcome to add a page for your model in the <a class="reference internal" href="gallery/_index.html#model-gallery"><span class="std std-ref">Model Gallery</span></a> section.</p>
 </section>
 </section>
 
