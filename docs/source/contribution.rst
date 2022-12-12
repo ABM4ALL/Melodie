@@ -5,11 +5,13 @@ Contribution
 <Words for pleasantries>
 
 Report Bugs
----------------
-Feel free to report bugs at https://github.com/SongminYu/Melodie/issues.
+___________
+
+Feel free to report bugs at https://github.com/ABM4ALL/Melodie/issues.
 
 Report Melodie Bugs
-^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~
+
 The bug report should contain these information below:
 
 * System information
@@ -49,20 +51,23 @@ manually. If you are not familiar with how to collect the information, the
 `interals of "Melodie info" command <https://github.com/SongminYu/Melodie/blob/master/Melodie/tools/system_info.py>`_
 may provide you a solution.
 
-Report documentation bugs
-^^^^^^^^^^^^^^^^
+Report Documentation Bugs
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
 System information is unnecessary for documentation bugs, feel free to post a new issue with just a screenshot containing bugs.
 
 
 Ask for Functionalities
-^^^^^^^^^^^^^^^^
+_______________________
+
 If you need functionalities that has not been implemented yet, feel free to suggest features that need to be integrated in a new issue.
 
-How to contribute
----------------------
+How to Contribute
+_________________
+
 If you have idea in fixing bugs or adding new features, you could make your own contribution. Here is the guide:
 
-* Fork the Melodie repository on GitHub: https://github.com/SongminYu/Melodie
+* Fork the Melodie repository on GitHub: https://github.com/ABM4ALL/Melodie
 * Install with the developer installation.
 * Make your changes locally.
 * Run pytest command to test the changes

@@ -14,7 +14,7 @@ With these assumptions, this CovidContagion model is a minimum example of Melodi
 but shows a clear project structure and the use of most important modules.
 
 Project Structure
-_____
+_________________
 
 The full structure of the project is as below, including the produced database and figures.
 
