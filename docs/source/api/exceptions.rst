@@ -1,6 +1,6 @@
 
-Melodie Errors
-===============
+Melodie Exceptions
+==================
 
 .. automodule:: Melodie.utils.exceptions
                :members:

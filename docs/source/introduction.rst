@@ -19,8 +19,8 @@ Melodie Framework
 -----------------
 
 As a general framework for developing agent-based models (ABMs),
-**Melodie** is designed in a modular structure and the modules are organized into five clusters:
-**Model**, **Scenario**, **Modeling Manager**, **Studio**, and **Infrastructure**.
+**Melodie** is designed in a modular structure and the modules are organized into four clusters:
+**Model**, **Scenario**, **Modeling Manager**, and **Infrastructure**.
 
 Model
 ~~~~~
@@ -77,32 +77,32 @@ the class variables of the ``model``, the ``scenario``, and the ``data_loader``.
 
 At last, by calling the ``simulator.run`` function, the simulation starts.
 
-Studio
-~~~~~~
+.. comment::
 
-Optional modules for visualization, incl. interactive figures and database.
-Or, shall we make it open-source at all? The three clusters above are already well enough for research.
+    Studio
+    ~~~~~~
 
-We can plan a few separate modules surrounding **Melodie** for developing products like AMETS for business.
+    Optional modules for visualization, incl. interactive figures and database.
+    Or, shall we make it open-source at all? The three clusters above are already well enough for research.
 
-* MelodieStudio
-* MelodieData - RenderDict, DataFrameInfo, etc.
+    We can plan a few separate modules surrounding **Melodie** for developing products like AMETS for business.
 
-The **Studio Cluster** includes the modules
+    * MelodieStudio
+    * MelodieData - RenderDict, DataFrameInfo, etc.
 
-* ``Visualizer`` -
-* ``MelodieStudio`` -
+    The **Studio Cluster** includes the modules
+
+    * ``Visualizer`` -
+    * ``MelodieStudio`` -
 
 Infrastructure
 ~~~~~~~~~~~~~~
 
-The users may not notice them at all. So, we can just provide a list here.
-
 The last **Infrastructure Cluster** includes the modules that provide support for the modules mentioned above.
 
-* ``Config`` -
-* ``DBConn`` -
-* ``MelodieException`` -
+* ``Config`` - provides the channel to define project information, e.g., project name, folder paths.
+* ``DBConn`` - provides the functions to write to or read from the database.
+* ``MelodieException`` - provides the pre-defined exceptions in Melodie to support debugging.
 
 
 

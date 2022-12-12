@@ -24,5 +24,5 @@ I am not sure if it is necessary to release the APIs for infrastructure modules.
     .. comment:: calibrator
     .. comment:: trainer
     .. comment:: db
-    .. comment:: melodie_error_list
+    .. comment:: exceptions
 
