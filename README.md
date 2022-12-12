@@ -7,12 +7,10 @@
 The package and its example models are maintained on [ABM4ALL](https://github.com/ABM4ALL).
 For detailed introduction and tutorial of the package, please visit our documentation page.
 
-The name **Melodie** comes from a beautiful example which explains the core concept of complexity theory: **emergence**.
+The package name **Melodie** comes from a beautiful example which explains the core concept of complexity theory: **Emergence**.
 In his bold book *Emergent Evolution*, [C. Lloyd Morgan](https://en.wikipedia.org/wiki/C._Lloyd_Morgan) wrote:
 *The emergent step, though it may seem more or less saltatory [a leap], is best regarded as a qualitative change of direction,
-or critical turning-point, in the course of events.*
-
-Then, Morgan poetically exemplified how melody emerges from chords by quoting *Abt Vogler* of
+or critical turning-point, in the course of events.* Then, Morgan poetically exemplified how melody emerges from chords by quoting *Abt Vogler* of
 [Robert Browning](https://en.wikipedia.org/wiki/Robert_Browning):
 
 *"And I know not if,*
