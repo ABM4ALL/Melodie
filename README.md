@@ -7,6 +7,23 @@ Melodie and its example repositories are maintained on [ABM4ALL](https://github.
 a developing community among agent-based modelers for sharing ideas and resources.
 
 
+### To-dos:
+
+* Songmin - finalize docs - introduction, tutorial
+* Zhanyi - finalize docs - api, installation
+* Zhanyi - write changelog (move to docs)
+* Zhanyi - write contribution
+* Songmin - write About
+* publish Melodie repo and upload to pypi
+* publish docs with GitHub Pages and use abm4all.com
+* upload tutorial example - CovidContagion
+* update model gallery and upload CovidGridContagion, CovidNetworkContagion
+
+
+
+
+
+
 
 ### Supported Python Versions
 
