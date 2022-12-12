@@ -6,3 +6,4 @@
 from .table_files import *
 from .web import DataServiceStatus, DataServiceState
 from .database import DatabaseQueryRequest, DatabaseBasicRequest
+from .typeutils import NUMERICAL_TYPE

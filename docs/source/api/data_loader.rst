@@ -6,7 +6,7 @@ DataLoader
 
 .. automodule:: Melodie.data_loader
                :members:
-               :undoc-members:
+               :undoc-members: MatrixInfo, DataFrameInfo
                :show-inheritance:
 
 

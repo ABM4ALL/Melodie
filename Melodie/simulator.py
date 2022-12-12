@@ -18,7 +18,7 @@ from .global_configs import MelodieGlobalConfig
 from .data_loader import DataLoader
 from .model import Model
 from .scenario_manager import Scenario
-from .visualizer import Visualizer, MelodieModelReset
+from .visualizer import BaseVisualizer, MelodieModelReset
 
 logger = logging.getLogger(__name__)
 
@@ -120,7 +120,7 @@ class Simulator(BaseModellingManager):
             scenario_cls: "Type[Scenario]",
             model_cls: "Type[Model]",
             data_loader_cls: "Type[DataLoader]" = None,
-            visualizer_cls: "type[Visualizer]" = None,
+            visualizer_cls: "type[BaseVisualizer]" = None,
     ):
         super(Simulator, self).__init__(
             config=config,
@@ -133,7 +133,7 @@ class Simulator(BaseModellingManager):
         self.visualizer = None
 
     def _init_visualizer(self):
-        self.visualizer: Optional[Visualizer] = (
+        self.visualizer: Optional[BaseVisualizer] = (
             None if self.visualizer_cls is None else self.visualizer_cls(self.config, self)
         )
 
@@ -225,7 +225,7 @@ class Simulator(BaseModellingManager):
         :return: None
         """
         t0 = time.time()
-        Visualizer.enabled = False
+        BaseVisualizer.enabled = False
         self.setup()
         if self.visualizer_cls is not None:
             show_prettified_warning(

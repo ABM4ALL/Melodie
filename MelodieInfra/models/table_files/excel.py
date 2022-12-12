@@ -6,7 +6,7 @@
 import os
 from typing import List
 
-from jsonobject import StringProperty, JsonObject, DefaultProperty, ObjectProperty
+from MelodieInfra.jsonobject import StringProperty, JsonObject, DefaultProperty, ObjectProperty
 from .base import ExcelMeta
 
 

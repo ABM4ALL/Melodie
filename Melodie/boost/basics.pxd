@@ -21,7 +21,6 @@ cdef class Agent(Element):
 cdef class Environment(Element):
     cdef public object model
     cdef public object scenario
-    cpdef void setup(self)
 
     cpdef dict to_dict(self, list properties)
 

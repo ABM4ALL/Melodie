@@ -4,13 +4,10 @@
 # @Email: 1295752786@qq.com
 # @File: db.py
 import json
-import os
-import tempfile
-from typing import Dict, List
+from typing import List
 
 import pandas as pd
 import sqlalchemy
-from flask import Response, request
 from sqlalchemy.exc import OperationalError
 from MelodieInfra.models import DatabaseQueryRequest, DataServiceStatus, DataServiceState, DatabaseBasicRequest
 
@@ -65,10 +62,3 @@ class DatabaseService():
     def execute_sql(conn_string, sql: str):
         engine = sqlalchemy.create_engine(conn_string)
         return pd.read_sql(sql, engine)
-
-    @staticmethod
-    def get_all_tables(engine, table_name: str, db_type: str):
-        if db_type != 'sqlite':
-            return pd.read_sql(f'select * from {table_name}').resp.iloc[:, 0].tolist()
-        else:
-            return

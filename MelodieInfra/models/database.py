@@ -4,7 +4,7 @@
 # @Email: 1295752786@qq.com
 # @File: database.py
 
-from jsonobject import JsonObject, StringProperty
+from MelodieInfra.jsonobject import JsonObject, StringProperty
 
 class DatabaseBasicRequest(JsonObject):
     connection_string = StringProperty(name="connectionString", required=True)

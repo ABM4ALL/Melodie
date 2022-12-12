@@ -31,16 +31,19 @@ pages below should be aligned with the Introduction page:
     :maxdepth: 1
 
     model
-    scenario
-    data_loader
+    agent
     agent_list
     environment
     data_collector
     grid
     network
+    data_info
+    data_loader
+    scenario
     simulator
-    .. comment:: calibrator
-    .. comment:: trainer
     db
     exceptions
+
+    .. comment:: calibrator
+    .. comment:: trainer
 

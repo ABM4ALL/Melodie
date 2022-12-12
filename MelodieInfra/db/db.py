@@ -24,6 +24,10 @@ logger = logging.getLogger(__name__)
 
 
 class DBConn:
+    """
+    DBConn provides API to write to/read from the database.
+
+    """
     table_dtypes: Dict[str, TABLE_DTYPES] = {}
     SCENARIO_TABLE = "simulator_scenarios"
     ENVIRONMENT_RESULT_TABLE = "environment_result"

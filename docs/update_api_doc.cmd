@@ -1,5 +1,5 @@
 cd ..
-python3 setup.py build_ext -i
+python setup.py build_ext -i
 
 cd docs/
-sphinx-build source build/html -E -a
+python -m sphinx -E -a source build/html

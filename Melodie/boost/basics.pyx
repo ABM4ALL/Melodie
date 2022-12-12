@@ -91,7 +91,7 @@ cdef class Environment(Element):
         self.model: Optional['Model'] = None
         self.scenario: Optional['Scenario'] = None
 
-    cpdef void setup(self):
+    def setup(self):
         """
         The setup method of the environment.
 

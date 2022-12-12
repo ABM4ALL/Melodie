@@ -1,13 +1,20 @@
 import logging
-from typing import Callable, List, Dict, Tuple, Union, Optional
+
+from typing import Any, Callable, List, Dict, TYPE_CHECKING, Tuple, TypeVar, Union, Optional
+
+from MelodieInfra import NUMERICAL_TYPE
+from MelodieInfra.models.typeutils import REAL_NUM_TYPE
 
 logger = logging.getLogger(__name__)
 
 
 class JSONBase:
+    names_map = {}
+
     def to_json(self):
         d = {}
         for k, v in self.__dict__.items():
+            k = k if k not in self.__class__.names_map else self.__class__.names_map[k]
             if k.startswith("_"):
                 continue
             elif hasattr(v, "to_json"):
@@ -33,6 +40,25 @@ class JSONBase:
         return d
 
 
+class ChartBase:
+
+    def reset(self):
+        pass
+
+    def set_data_source(self, *args, **kwargs) -> Any:
+        """
+        Set the data source of chart
+
+        :param args:
+        :param kwargs:
+        :return:
+        """
+        return self
+
+    def update(self):
+        pass
+
+
 class ChartSeries(JSONBase):
     def __init__(self, name: str, source: "Callable[[], int]" = None):
         self.seriesName = name
@@ -48,7 +74,7 @@ class ChartSeries(JSONBase):
         self.data = []
         self.latest_data = None
 
-    def set_data_source(self, datasource: "Callable[[], int]"):
+    def set_data_source(self, datasource: "Callable[[], Any]"):
         self._source = datasource
 
     def update(self, current_step: int):
@@ -57,13 +83,26 @@ class ChartSeries(JSONBase):
         assert current_step == len(self.data), (current_step, len(self.data))
 
 
-class Chart(JSONBase):
-    def __init__(self, series_names: List[str]):
-        self._index = {series_name: i for i, series_name in enumerate(series_names)}
+class Chart(JSONBase, ChartBase):
+    def __init__(self):
+        self._index = {}
         self.type = "line"
-        self.series: Tuple[ChartSeries] = tuple(
-            [ChartSeries(name) for name in series_names]
-        )
+        self.series: Optional[List[ChartSeries]] = None
+
+    def set_series(self, series_names: List[str]):
+        self._index = {series_name: i for i, series_name in enumerate(series_names)}
+        self.series: List[ChartSeries] = [ChartSeries(name) for name in series_names]
+        return self
+
+    def set_data_source(self, data_source: Dict[str, Callable[[], REAL_NUM_TYPE]]):
+        """
+        Set data source of each series
+
+        :param data_source:
+        :return:
+        """
+
+        return self
 
     def get_series(self, series_name: str) -> ChartSeries:
         return self.series[self._index[series_name]]
@@ -91,8 +130,20 @@ class Chart(JSONBase):
             chart_series_data.append(s)
         return chart_series_data
 
+    def set_series_data_source(self, series_name: str, datasource):
+        """
+        Set data source for one series
+
+        :param series_name:
+        :param datasource:
+        :return:
+        """
+        self.get_series(series_name).set_data_source(datasource)
+        return self
+
 
 class CandleStickChart(Chart):
+
     def __init__(self):
         self.type = "candlestick"
         self._series_name = 'series'
@@ -104,8 +155,18 @@ class CandleStickChart(Chart):
         else:
             raise ValueError(series_name)
 
+    def set_data_source(self, datasource: Callable[
+        [], Tuple[REAL_NUM_TYPE, REAL_NUM_TYPE, REAL_NUM_TYPE, REAL_NUM_TYPE]]) -> 'CandleStickChart':
+        """
 
-class Gauge(JSONBase):
+        :param datasource: Callable, should return a tuple with four real number -- (open, close, low, high)
+        :return:
+        """
+        self.get_series('series').set_data_source(datasource)
+        return self
+
+
+class Gauge(JSONBase, ChartBase):
     def __init__(self, source: Callable[[], Union[int, float, Dict]]):
         self._sources: Dict[str, Callable[[], Union[int, float]]] = {}
         self.value: Dict[str, Union[int, float]] = {}
@@ -117,7 +178,7 @@ class Gauge(JSONBase):
         self.value = self._source()
 
 
-class PieChart(JSONBase):
+class PieChart(JSONBase, ChartBase):
     def __init__(self):
         self.type = "pie"
         self._sources: Dict[str, Callable[[], Union[int, float]]] = {}
@@ -136,9 +197,6 @@ class PieChart(JSONBase):
                 self.value[varname] = self._sources[varname]()
         else:
             self.value = self._source()
-        # assert len(self._variables) == len(self.value.keys()), f"New value {self.value.keys()} does not match variables" \
-        #                                                        f"{self._variables}" \
-        #                                                        f"inside the piechart."
 
     def reset(self):
         self.value = {}
@@ -156,26 +214,31 @@ class BarChart(PieChart):
         self.type = 'bar'
         self._mode = 'single'
 
-    def add_variables_source(self, variables_source: Callable[[], Dict[str, Union[int, float]]]):
-        self._source = variables_source
+    def set_data_source(self, data_source: Callable[[], Dict[str, Union[int, float]]]):
+        self._source = data_source
         self._mode = 'multi'
+        return self
 
 
 class ChartManager(JSONBase):
     def __init__(self):
         self.charts: Dict[str, Union[Chart, Gauge]] = {}
 
-    def add_chart(self, chart_name: str, series_names: List[str]):
-        self.charts[chart_name] = Chart(series_names)
+    def add_chart(self, chart_name: str, chart):
+        self.charts[chart_name] = chart
+        return chart
 
-    def add_piechart(self, chart_name: str):
-        self.charts[chart_name] = PieChart()
+    def add_line_chart(self, chart_name: str) -> Chart:
+        return self.add_chart(chart_name, Chart())
 
-    def add_barchart(self, chart_name: str):
-        self.charts[chart_name] = BarChart()
+    def add_piechart(self, chart_name: str) -> PieChart:
+        return self.add_chart(chart_name, PieChart())
 
-    def add_candlestick_chart(self, chart_name: str):
-        self.charts[chart_name] = CandleStickChart()
+    def add_barchart(self, chart_name: str) -> BarChart:
+        return self.add_chart(chart_name, BarChart())
+
+    def add_candlestick_chart(self, chart_name: str) -> CandleStickChart:
+        return self.add_chart(chart_name, CandleStickChart())
 
     def all_chart_names(self):
         return set(self.charts.keys())

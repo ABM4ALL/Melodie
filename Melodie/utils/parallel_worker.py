@@ -5,12 +5,15 @@ import importlib
 import json
 import sys
 import time
-from typing import Dict, List, Tuple, Any
+from typing import Dict, List, Tuple, Any, Type, Union, TYPE_CHECKING
 
 import rpyc
 import argparse
 
 import cloudpickle
+
+if TYPE_CHECKING:
+    from Melodie import Calibrator, Trainer, Scenario, Model
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--core_id", help="ID of core")
@@ -59,11 +62,33 @@ class ParallelWorker:
             raise NotImplementedError(f"Unrecognized role `{self.role}`")
 
 
+def get_scenario_manager(config, modules: Dict) -> Tuple[
+    Union["Trainer", "Calibrator"], Type["Model"], Type["Scenario"]]:
+    from Melodie import Trainer, Calibrator
+    classes_dict = {}
+    for module_type, content in modules.items():
+        class_name, module_name = content
+        module = importlib.import_module(module_name)
+        cls = getattr(module, class_name)
+        classes_dict[module_type] = cls
+
+    trainer: Union[Trainer, Calibrator] = classes_dict["trainer"](
+        config=config,
+        scenario_cls=classes_dict["scenario"],
+        model_cls=classes_dict["model"],
+        data_loader_cls=classes_dict["data_loader"],
+    )
+    trainer.setup()
+    trainer.collect_data()
+    trainer.subworker_prerun()
+    return trainer, classes_dict['scenario'], classes_dict['model']
+
+
 def sub_routine_trainer(
-    proc_id: int,
-    modules: Dict[str, Tuple[str, str]],
-    config_raw: Dict[str, Any],
-    worker: ParallelWorker,
+        proc_id: int,
+        modules: Dict[str, Tuple[str, str]],
+        config_raw: Dict[str, Any],
+        worker: ParallelWorker,
 ):
     """
     The sub iterator callback for parallelized computing used in Trainer and Calibrator.
@@ -74,46 +99,31 @@ def sub_routine_trainer(
     :return:
     """
     from Melodie import Config, Trainer, Environment, AgentList, Agent
+    import logging
 
+    logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
+    logger = logging.getLogger(f"Trainer-processor-{proc_id}")
+    logger.info("subroutine started!")
     try:
         config = Config.from_dict(config_raw)
-        import logging
-
-        logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
-        logger = logging.getLogger(f"Trainer-processor-{proc_id}")
-        logger.info("subroutine started!")
-
-        classes_dict = {}
-        for module_type, content in modules.items():
-            class_name, module_name = content
-            module = importlib.import_module(module_name)
-            cls = getattr(module, class_name)
-            classes_dict[module_type] = cls
-
-        trainer: Trainer = classes_dict["trainer"](
-            config=config,
-            scenario_cls=classes_dict["scenario"],
-            model_cls=classes_dict["model"],
-            data_loader_cls=classes_dict["data_loader"],
-        )
-        trainer.setup()
-        trainer.collect_data()
-        trainer.subworker_prerun()
+        trainer: Trainer
+        trainer, scenario_cls, model_cls = get_scenario_manager(config, modules)
     except BaseException:
         import traceback
 
         traceback.print_exc()
         return
+
     while 1:
         try:
             t0 = time.time()
 
             chrom, d, agent_params = worker.get_task()
             logger.debug(f"processor {proc_id} got chrom {chrom}")
-            scenario = classes_dict["scenario"]()
+            scenario = scenario_cls()
             scenario.setup()
             scenario.set_params(d)
-            model = classes_dict["model"](config, scenario)
+            model = model_cls(config, scenario)
             scenario.manager = trainer
             model.create()
             model._setup()
@@ -142,7 +152,6 @@ def sub_routine_trainer(
                 f"Processor {proc_id}, chromosome {chrom}, time: {MelodieGlobalConfig.Logger.round_elapsed_time(t1 - t0)}s"
             )
             worker.put_result(base64.b64encode(dumped))
-            # result_queue.put(base64.b64encode(dumped))
         except Exception:
             import traceback
 
@@ -150,10 +159,10 @@ def sub_routine_trainer(
 
 
 def sub_routine_calibrator(
-    proc_id: int,
-    modules: Dict[str, Tuple[str, str]],
-    config_raw: Dict[str, Any],
-    worker: ParallelWorker,
+        proc_id: int,
+        modules: Dict[str, Tuple[str, str]],
+        config_raw: Dict[str, Any],
+        worker: ParallelWorker,
 ):
     """
     The sub iterator callback for parallelized computing used in Trainer and Calibrator.
@@ -163,33 +172,15 @@ def sub_routine_calibrator(
     :param config_raw:
     :return:
     """
-    from Melodie import Config, Environment, Calibrator
-    import tests.calibrator
+    from Melodie import Config, Environment
+    import logging
 
+    logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
+    logger = logging.getLogger(f"Calibrator-processor-{proc_id}")
+    logger.info("subroutine started!")
     try:
         config = Config.from_dict(config_raw)
-        import logging
-
-        logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
-        logger = logging.getLogger(f"Calibrator-processor-{proc_id}")
-        logger.info("subroutine started!")
-
-        classes_dict = {}
-        for module_type, content in modules.items():
-            class_name, module_name = content
-            module = importlib.import_module(module_name)
-            cls = getattr(module, class_name)
-            classes_dict[module_type] = cls
-
-        calibrator: Calibrator = classes_dict["trainer"](
-            config=config,
-            scenario_cls=classes_dict["scenario"],
-            model_cls=classes_dict["model"],
-            data_loader_cls=classes_dict["data_loader"],
-        )
-        calibrator.setup()
-        calibrator.collect_data()
-        calibrator.subworker_prerun()
+        calibrator, scenario_cls, model_cls = get_scenario_manager(config, modules)
     except BaseException:
         import traceback
 
@@ -201,12 +192,12 @@ def sub_routine_calibrator(
             t0 = time.time()
             chrom, d, env_params = ret
             logger.debug(f"processor {proc_id} got chrom {chrom}")
-            scenario = classes_dict["scenario"]()
+            scenario = scenario_cls()
             scenario.manager = calibrator
             scenario.setup()
             scenario.set_params(d)
             scenario.set_params(env_params)
-            model = classes_dict["model"](config, scenario)
+            model = model_cls(config, scenario)
             model.create()
             model._setup()
             model.run()

@@ -13,7 +13,7 @@ from .data_collector import DataCollector
 from .scenario_manager import Scenario
 from .table_generator import DataFrameGenerator
 from .network import Network, Edge
-from .visualizer import GridVisualizer
+from .visualizer import Visualizer
 
 logger = logging.getLogger(__name__)
 
@@ -54,7 +54,7 @@ class Model:
             config: "Config",
             scenario: "Scenario",
             run_id_in_scenario: int = 0,
-            visualizer: GridVisualizer = None,
+            visualizer: Visualizer = None,
     ):
 
         self.scenario = scenario
@@ -66,7 +66,7 @@ class Model:
         self.run_id_in_scenario = run_id_in_scenario
 
         self.network = None
-        self.visualizer: "GridVisualizer" = visualizer
+        self.visualizer: "Visualizer" = visualizer
         self.initialization_queue: List[
             Union[AgentList, Grid, Environment, DataCollector, Network]
         ] = []

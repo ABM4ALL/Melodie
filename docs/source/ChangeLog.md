@@ -8,18 +8,20 @@ ChangeLog
 - Modify id_run and id_scneario inside the data collector.
 - Change the name of the base class of Simulator to `ModelRunningManager`
 - Change name: DataCollector.status -> `DataCollector.running_manager_mode`
+- Visualizer port should be dynamically allocated. The only port needed to be configured is the port of MelodieStudio. 
+- Multiple graph types support!
 
+-
+## Major version 0.x
+
+### v0.4.0
+- Separated the MelodieInfra package containing infrastructure.
+- Added HTTP Get support in the websocket protocol.
+- Support for connection string in `DBConn` class.
 
 ### v0.3.0
 - Batch load API for `DataframeInfo`.
 - Logger API.
-- Visualizer port should be dynamically allocated. The only port needed to be configured is the port of MelodieStudio. 
-- Multiple graph types support!
-- 
-
-## Major version 0.x
-### Version 0.1 ChangeLog
-#### v0.3.0
 
 #### v0.2.0
 - DB module supported reading from specific directories.
