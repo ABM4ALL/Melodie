@@ -43,7 +43,7 @@ and delivering the input data to the ``model``. The modules include
 
 * ``DataFrameInfo`` and ``MatrixInfo`` - provide standard format for input tables as parameters.
 * ``DataLoader`` - whose object loads all the input data into the ``model``.
-* ``Scenario`` - whose object contains all the input data that is needed to run the model, and can be accessed by the ``model``, the ``environment``, and each ``agent``.
+* ``Scenario`` - whose object contains all the input data that is needed to run the model, and can be accessed by the ``model``, the ``environment``, the ``data_collector``, and each ``agent``.
 
 Modelling Manager
 ~~~~~~~~~~~~~~~~~
@@ -98,7 +98,7 @@ At last, by calling the ``simulator.run`` function, the simulation starts.
 Infrastructure
 ~~~~~~~~~~~~~~
 
-The last **Infrastructure Cluster** includes the modules that provide support for the modules mentioned above.
+The last **Infrastructure Cluster** includes the modules that provide support for the modules above.
 
 * ``Config`` - provides the channel to define project information, e.g., project name, folder paths.
 * ``DBConn`` - provides the functions to write to or read from the database.

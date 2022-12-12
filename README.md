@@ -10,16 +10,14 @@ a developing community among agent-based modelers for sharing ideas and resource
 
 ### To-dos:
 
-* Songmin - finalize docs - introduction, tutorial
-* Zhanyi - finalize docs - api, installation
-* Zhanyi - write changelog (move to docs)
-* Zhanyi - write contribution
-* Songmin - write About
-* publish Melodie repo and upload to pypi
-* publish docs with GitHub Pages and use abm4all.com
+* Songmin - update readme.md
+* Zhanyi - travis and other badges
+* Zhanyi - publish Melodie repo and upload to pypi
+* Songmin - polish contribution, write About, update readme.md
+* Zhanyi - publish docs with GitHub Pages and use abm4all.com
 * upload tutorial example - CovidContagion
 * update model gallery and upload CovidGridContagion, CovidNetworkContagion
-
+* Zhanyi - api
 
 
 
