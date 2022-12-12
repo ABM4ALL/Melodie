@@ -1,9 +1,11 @@
 
 About
-=============
+=====
 
-motivation
+**Melodie** is created by *Songmin Yu* and *Zhanyi Hou* under MIT License.
 
-authors introduction
+Contact: abm4all@outlook.com
+
+
 
 
