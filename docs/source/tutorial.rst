@@ -2,8 +2,11 @@
 Tutorial
 ========
 
-This tutorial provides an example modeling the contagion process of Covid-19 in a population of agents.
-We make following assumptions in the model:
+This tutorial provides a detailed explanation for an example model developed with **Melodie**:
+CovidContagion, which models the contagion process of Covid-19 in a population of agents.
+You can find the code of the model in this `repo <https://github.com/ABM4ALL/CovidContagion>`_.
+
+We make the following assumptions in the model:
 
 * Each agent has two attributes: ``health_state`` and ``age_group``.
 * We consider four **health states** numbered from 0 to 3, meaning "not infected", "infected", "recovered", and "dead", respectively.

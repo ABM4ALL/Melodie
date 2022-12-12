@@ -8,8 +8,8 @@ Under development.
     :caption: Content
     :maxdepth: 1
 
-    covid_grid_contagion
-    covid_network_contagion
+    .. comment:: covid_grid_contagion
+    .. comment:: covid_network_contagion
 
 .. toctree::
 
