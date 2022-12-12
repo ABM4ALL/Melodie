@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AgentList &mdash; Melodie 1.0.0 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> Melodie
+            <img src="../_static/logo.jpg" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#user-installation">User Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#developer-installation">Developer Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#dependency-note">Dependency Note</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction.html">Introduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../introduction.html#agent-based-model-abm">Agent-based Model (ABM)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../introduction.html#melodie-framework">Melodie Framework</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../introduction.html#model">Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../introduction.html#scenario">Scenario</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../introduction.html#modelling-manager">Modelling Manager</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../introduction.html#infrastructure">Infrastructure</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">Tutorial</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial.html#project-structure">Project Structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial.html#agent">Agent</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial.html#scenario">Scenario</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../tutorial.html#generate-agent-params">Generate <code class="docutils literal notranslate"><span class="pre">agent_params</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../tutorial.html#load-simulator-scenarios">Load <code class="docutils literal notranslate"><span class="pre">simulator_scenarios</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial.html#model">Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial.html#environment">Environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial.html#datacollector">DataCollector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial.html#last-words">Last Words</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../gallery/_index.html">Model Gallery</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../gallery/covid_grid_contagion.html">Covid Grid Contagion</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gallery/covid_network_contagion.html">Covid Network Contagion</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/_index.html">Advanced Topics</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="_index.html">API Reference</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Change Log</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../changelog.html#roadmap">Roadmap</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../changelog.html#major-version-0-x">Major Version 0.x</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../changelog.html#v0-4-0-nov-15-2022">v0.4.0 (Nov. 15, 2022)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../changelog.html#v0-3-0-oct-28-2022">v0.3.0 (Oct. 28, 2022)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../changelog.html#v0-2-0-oct-24-2022">v0.2.0 (Oct. 24, 2022)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../changelog.html#v0-1-1-aug-23-2022">v0.1.1 (Aug. 23, 2022)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../changelog.html#v0-1-0-jul-22-2022">v0.1.0 (Jul. 22, 2022)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../changelog.html#start-may-10-2021">Start (May. 10, 2021)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../contribution.html">Contribution</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../contribution.html#report-bugs">Report Bugs</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../contribution.html#report-melodie-bugs">Report Melodie Bugs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../contribution.html#report-documentation-bugs">Report Documentation Bugs</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../contribution.html#ask-for-functionalities">Ask for Functionalities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../contribution.html#how-to-contribute">How to Contribute</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../about.html">About</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Melodie</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>AgentList</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/agent_list.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="agentlist">
+<h1>AgentList<a class="headerlink" href="#agentlist" title="Permalink to this heading"></a></h1>
+<span class="target" id="module-Melodie.boost.agent_list"></span><dl class="py class">
+<dt class="sig sig-object py" id="Melodie.boost.agent_list.BaseAgentContainer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Melodie.boost.agent_list.</span></span><span class="sig-name descname"><span class="pre">BaseAgentContainer</span></span><a class="headerlink" href="#Melodie.boost.agent_list.BaseAgentContainer" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>The base class that contains agents</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="Melodie.boost.agent_list.BaseAgentContainer.init_agents">
+<span class="sig-name descname"><span class="pre">init_agents</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.boost.agent_list.BaseAgentContainer.init_agents" title="Permalink to this definition"></a></dt>
+<dd><p>Initialize all agents in the container, and call the <cite>setup()</cite> method</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Melodie.boost.agent_list.BaseAgentContainer.new_id">
+<span class="sig-name descname"><span class="pre">new_id</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.boost.agent_list.BaseAgentContainer.new_id" title="Permalink to this definition"></a></dt>
+<dd><p>Create a new auto-increment ID</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Melodie.boost.agent_list.BaseAgentContainer.to_list">
+<span class="sig-name descname"><span class="pre">to_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">column_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#Melodie.boost.agent_list.BaseAgentContainer.to_list" title="Permalink to this definition"></a></dt>
+<dd><p>Convert all agent properties to a list of dict.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>column_names</strong> – property names</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Melodie.boost.agent_list.BaseAgentContainer.type_check">
+<span class="sig-name descname"><span class="pre">type_check</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">param_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agent_params_df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.boost.agent_list.BaseAgentContainer.type_check" title="Permalink to this definition"></a></dt>
+<dd><p>Check if the parameters in the data frame has corresponding type with param_name</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>agent_sample</strong> – </p></li>
+<li><p><strong>param_names</strong> – </p></li>
+<li><p><strong>agent_params_df</strong> – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="Melodie.boost.agent_list.AgentList">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Melodie.boost.agent_list.</span></span><span class="sig-name descname"><span class="pre">AgentList</span></span><a class="headerlink" href="#Melodie.boost.agent_list.AgentList" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#Melodie.boost.agent_list.BaseAgentContainer" title="Melodie.boost.agent_list.BaseAgentContainer"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseAgentContainer</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="Melodie.boost.agent_list.AgentList.add">
+<span class="sig-name descname"><span class="pre">add</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#Melodie.boost.agent_list.AgentList.add" title="Permalink to this definition"></a></dt>
+<dd><p>Add an agent with same type onto this agent list.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>agent</strong> – If None, an agent of corresponding type will be automatically created.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Melodie.boost.agent_list.AgentList.agents">
+<span class="sig-name descname"><span class="pre">agents</span></span><a class="headerlink" href="#Melodie.boost.agent_list.AgentList.agents" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Melodie.boost.agent_list.AgentList.all_agent_ids">
+<span class="sig-name descname"><span class="pre">all_agent_ids</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#Melodie.boost.agent_list.AgentList.all_agent_ids" title="Permalink to this definition"></a></dt>
+<dd><p>Get id of all agents.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Melodie.boost.agent_list.AgentList.filter">
+<span class="sig-name descname"><span class="pre">filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">condition</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.boost.agent_list.AgentList.filter" title="Permalink to this definition"></a></dt>
+<dd><p>Filter agents satisfying the condition Callable[[Agent], bool]</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>a list of filtered agents</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Melodie.boost.agent_list.AgentList.get_agent">
+<span class="sig-name descname"><span class="pre">get_agent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent_id</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.boost.agent_list.AgentList.get_agent" title="Permalink to this definition"></a></dt>
+<dd><p>Get an agent from the agent list</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>agent_id</strong> – </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Melodie.boost.agent_list.AgentList.method_foreach">
+<span class="sig-name descname"><span class="pre">method_foreach</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">method_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.boost.agent_list.AgentList.method_foreach" title="Permalink to this definition"></a></dt>
+<dd><p>For each agent, execute theirs method <cite>method_name</cite> with arguments <cite>args</cite></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>method_name</strong> – </p></li>
+<li><p><strong>args</strong> – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Melodie.boost.agent_list.AgentList.random_sample">
+<span class="sig-name descname"><span class="pre">random_sample</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sample_num</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">AgentGeneric</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#Melodie.boost.agent_list.AgentList.random_sample" title="Permalink to this definition"></a></dt>
+<dd><p>Randomly sample <cite>sample_num</cite> agents from the container</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>sample_num</strong> – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Melodie.boost.agent_list.AgentList.remove">
+<span class="sig-name descname"><span class="pre">remove</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.boost.agent_list.AgentList.remove" title="Permalink to this definition"></a></dt>
+<dd><p>Remove the agent</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>agent</strong> – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Melodie.boost.agent_list.AgentList.set_properties">
+<span class="sig-name descname"><span class="pre">set_properties</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">props_df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.boost.agent_list.AgentList.set_properties" title="Permalink to this definition"></a></dt>
+<dd><p>Extract properties from a dataframe, and Each row in the dataframe represents the property of an agent.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>props_df</strong> – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Melodie.boost.agent_list.AgentList.setup">
+<span class="sig-name descname"><span class="pre">setup</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.boost.agent_list.AgentList.setup" title="Permalink to this definition"></a></dt>
+<dd><p>The setup method.</p>
+<p>If you would like to define custom AgentList, please be sure to inherit this method.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Melodie.boost.agent_list.AgentList.setup_agents">
+<span class="sig-name descname"><span class="pre">setup_agents</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agents_num</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params_df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">DataFrame</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.boost.agent_list.AgentList.setup_agents" title="Permalink to this definition"></a></dt>
+<dd><p>Setup agents with specific number, and initialize their property by a dataframe if a dataframe is passed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>agents_num</strong> – A integer.</p></li>
+<li><p><strong>params_df</strong> – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Melodie.boost.agent_list.AgentList.to_dataframe">
+<span class="sig-name descname"><span class="pre">to_dataframe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">column_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="headerlink" href="#Melodie.boost.agent_list.AgentList.to_dataframe" title="Permalink to this definition"></a></dt>
+<dd><p>Store all agent values to dataframe.
+This method is always called by the data collector.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>column_names</strong> – property names to store</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Melodie.boost.agent_list.AgentList.to_list">
+<span class="sig-name descname"><span class="pre">to_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">column_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#Melodie.boost.agent_list.AgentList.to_list" title="Permalink to this definition"></a></dt>
+<dd><p>Dump all agent and their properties into a list of dict.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>column_names</strong> – The property name to be dumped.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Melodie.boost.agent_list.AgentList.vectorize">
+<span class="sig-name descname"><span class="pre">vectorize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prop_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.boost.agent_list.AgentList.vectorize" title="Permalink to this definition"></a></dt>
+<dd><p>Generate an numpy array from this list, where the values come from the property defined by <cite>prop_name</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>prop_name</strong> – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>An 1-D Numpy array</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021-2022, ABM4ALL.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

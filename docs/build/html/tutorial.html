@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tutorial &mdash; Melodie 1.0.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="author" title="About these documents" href="about.html" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Model Gallery" href="gallery/_index.html" />
+    <link rel="prev" title="Introduction" href="introduction.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> Melodie
+            <img src="_static/logo.jpg" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#user-installation">User Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#developer-installation">Developer Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#dependency-note">Dependency Note</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="introduction.html#agent-based-model-abm">Agent-based Model (ABM)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="introduction.html#melodie-framework">Melodie Framework</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="introduction.html#model">Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="introduction.html#scenario">Scenario</a></li>
+<li class="toctree-l3"><a class="reference internal" href="introduction.html#modelling-manager">Modelling Manager</a></li>
+<li class="toctree-l3"><a class="reference internal" href="introduction.html#infrastructure">Infrastructure</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Tutorial</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#project-structure">Project Structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#agent">Agent</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#scenario">Scenario</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#generate-agent-params">Generate <code class="docutils literal notranslate"><span class="pre">agent_params</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#load-simulator-scenarios">Load <code class="docutils literal notranslate"><span class="pre">simulator_scenarios</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#model">Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#environment">Environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#datacollector">DataCollector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#last-words">Last Words</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="gallery/_index.html">Model Gallery</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="gallery/covid_grid_contagion.html">Covid Grid Contagion</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gallery/covid_network_contagion.html">Covid Network Contagion</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="advanced/_index.html">Advanced Topics</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api/_index.html">API Reference</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Change Log</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#roadmap">Roadmap</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#major-version-0-x">Major Version 0.x</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#v0-4-0-nov-15-2022">v0.4.0 (Nov. 15, 2022)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#v0-3-0-oct-28-2022">v0.3.0 (Oct. 28, 2022)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#v0-2-0-oct-24-2022">v0.2.0 (Oct. 24, 2022)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#v0-1-1-aug-23-2022">v0.1.1 (Aug. 23, 2022)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#v0-1-0-jul-22-2022">v0.1.0 (Jul. 22, 2022)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#start-may-10-2021">Start (May. 10, 2021)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="contribution.html">Contribution</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="contribution.html#report-bugs">Report Bugs</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="contribution.html#report-melodie-bugs">Report Melodie Bugs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="contribution.html#report-documentation-bugs">Report Documentation Bugs</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="contribution.html#ask-for-functionalities">Ask for Functionalities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contribution.html#how-to-contribute">How to Contribute</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="about.html">About</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Melodie</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Tutorial</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/tutorial.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="tutorial">
+<h1>Tutorial<a class="headerlink" href="#tutorial" title="Permalink to this heading"></a></h1>
+<p>This tutorial provides an example modeling the contagion process of Covid-19 in a population of agents.
+We make following assumptions in the model:</p>
+<ul class="simple">
+<li><p>Each agent has two attributes: <code class="docutils literal notranslate"><span class="pre">health_state</span></code> and <code class="docutils literal notranslate"><span class="pre">age_group</span></code>.</p></li>
+<li><p>We consider four <strong>health states</strong> numbered from 0 to 3, meaning “not infected”, “infected”, “recovered”, and “dead”, respectively.</p></li>
+<li><p>We consider two <strong>age groups</strong> numbered from 0 to 1, meaning “young” and “old”, respectively. A young person has a higher probability to recover from infection, and an old person has a lower probability to recover from infection.</p></li>
+<li><p>A “not infected” person can be infected by a “infected” person. The probability is an exogenous parameter <code class="docutils literal notranslate"><span class="pre">infection_prob</span></code>. When 10% of the people are infected, we assume a “not infected” person has 0.1 probability to contact with a “infected” person, so the total infection probability is 0.1 <span class="math notranslate nohighlight">\(\times\)</span> <code class="docutils literal notranslate"><span class="pre">infection_prob</span></code>.</p></li>
+</ul>
+<p>With these assumptions, this CovidContagion model is a minimum example of Melodie
+but shows a clear project structure and the use of most important modules.</p>
+<section id="project-structure">
+<h2>Project Structure<a class="headerlink" href="#project-structure" title="Permalink to this heading"></a></h2>
+<p>The full structure of the project is as below, including the produced database and figures.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>CovidContagion
+├── data
+│   ├── input
+│   │   ├── SimulatorScenarios.xlsx
+│   │   ├── ID_HealthState.xlsx
+│   │   ├── ID_AgeGroup.xlsx
+│   │   └── Parameter_AgeGroup_TransitionProb.xlsx
+│   └── output
+│       ├── CovidContagion.sqlite
+│       ├── PopulationInfection_S0R0.png
+│       └── PopulationInfection_S1R0.png
+├── source
+│   ├── agent.py
+│   ├── environment.py
+│   ├── data_collector.py
+│   ├── data_info.py
+│   ├── data_loader.py
+│   ├── scenario.py
+│   ├── model.py
+│   └── analyzer.py
+├── config.py
+├── run_simulator.py
+├── run_analyzer.py
+└── readme.md
+</pre></div>
+</div>
+<p>In the <code class="docutils literal notranslate"><span class="pre">config.py</span></code>, you can define how the input and output files are organized.</p>
+<div class="literal-block-wrapper docutils container" id="id1">
+<div class="code-block-caption"><span class="caption-text">config.py</span><a class="headerlink" href="#id1" title="Permalink to this code"></a></div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="kn">import</span> <span class="nn">os</span>
+<span class="linenos">2</span><span class="kn">from</span> <span class="nn">Melodie</span> <span class="kn">import</span> <span class="n">Config</span>
+<span class="linenos">3</span>
+<span class="linenos">4</span><span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">(</span>
+<span class="hll"><span class="linenos">5</span>    <span class="n">project_name</span><span class="o">=</span><span class="s2">&quot;CovidContagion&quot;</span><span class="p">,</span>
+</span><span class="linenos">6</span>    <span class="n">project_root</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">),</span>
+<span class="linenos">7</span>    <span class="n">input_folder</span><span class="o">=</span><span class="s2">&quot;data/input&quot;</span><span class="p">,</span>
+<span class="linenos">8</span>    <span class="n">output_folder</span><span class="o">=</span><span class="s2">&quot;data/output&quot;</span>
+<span class="linenos">9</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>If the <code class="docutils literal notranslate"><span class="pre">config.project_name</span></code> attribute is different,
+then the name of <code class="docutils literal notranslate"><span class="pre">CovidContagion.sqlite</span></code> will also be changed accordingly.</p>
+</section>
+<section id="agent">
+<h2>Agent<a class="headerlink" href="#agent" title="Permalink to this heading"></a></h2>
+<p>To create the <code class="docutils literal notranslate"><span class="pre">CovidAgent</span></code> class, <code class="docutils literal notranslate"><span class="pre">Melodie</span></code> provides the <code class="docutils literal notranslate"><span class="pre">Agent</span></code> class that can be inherited.
+In Line 6, <code class="docutils literal notranslate"><span class="pre">CovidAgent.setup</span></code> overrides the <code class="docutils literal notranslate"><span class="pre">Agent.setup</span></code> function from <code class="docutils literal notranslate"><span class="pre">Melodie</span></code>
+and will be automatically called when setting up the agent objects.</p>
+<div class="literal-block-wrapper docutils container" id="id2">
+<div class="code-block-caption"><span class="caption-text">agent.py</span><a class="headerlink" href="#id2" title="Permalink to this code"></a></div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="kn">from</span> <span class="nn">Melodie</span> <span class="kn">import</span> <span class="n">Agent</span>
+<span class="linenos">2</span>
+<span class="linenos">3</span>
+<span class="linenos">4</span><span class="k">class</span> <span class="nc">CovidAgent</span><span class="p">(</span><span class="n">Agent</span><span class="p">):</span>
+<span class="linenos">5</span>
+<span class="hll"><span class="linenos">6</span>    <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span class="linenos">7</span>        <span class="bp">self</span><span class="o">.</span><span class="n">health_state</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="linenos">8</span>        <span class="bp">self</span><span class="o">.</span><span class="n">age_group</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+</pre></div>
+</div>
+</div>
+<p>The attributes of the agent should be defined in this <code class="docutils literal notranslate"><span class="pre">setup</span></code> function.
+But the values do not matter, as they will be initialized (changed) later.</p>
+</section>
+<section id="scenario">
+<h2>Scenario<a class="headerlink" href="#scenario" title="Permalink to this heading"></a></h2>
+<p>As introduced in the <a class="reference internal" href="#scenario"><span class="std std-ref">Scenario</span></a> section, <code class="docutils literal notranslate"><span class="pre">scenario</span></code> contains all the input data that is needed to run the model,
+and can be accessed by the <code class="docutils literal notranslate"><span class="pre">model</span></code>, the <code class="docutils literal notranslate"><span class="pre">environment</span></code>, the <code class="docutils literal notranslate"><span class="pre">data_collector</span></code>, and each <code class="docutils literal notranslate"><span class="pre">agent</span></code>.
+All the data are stored in dataframes, which are</p>
+<ul class="simple">
+<li><p>First, <strong>registered</strong> in the <code class="docutils literal notranslate"><span class="pre">data_info.py</span></code>;</p></li>
+<li><p>Second, <strong>generated</strong> or <strong>loaded</strong> in the <code class="docutils literal notranslate"><span class="pre">data_loader.py</span></code>.</p></li>
+</ul>
+<section id="generate-agent-params">
+<h3>Generate <code class="docutils literal notranslate"><span class="pre">agent_params</span></code><a class="headerlink" href="#generate-agent-params" title="Permalink to this heading"></a></h3>
+<p>To initialize the two attributes of all the agents, a dataframe <code class="docutils literal notranslate"><span class="pre">agent_params</span></code> is first registered in the <code class="docutils literal notranslate"><span class="pre">data_info.py</span></code> and then generated in the <code class="docutils literal notranslate"><span class="pre">data_loader.py</span></code>.
+Each row of this dataframe contains the values of <code class="docutils literal notranslate"><span class="pre">health_state</span></code> and <code class="docutils literal notranslate"><span class="pre">age_group</span></code> to initialize one agent.</p>
+<p>The figure below shows the first 19 rows of <code class="docutils literal notranslate"><span class="pre">agent_params</span></code>.</p>
+<img alt="_images/agent_params.png" src="_images/agent_params.png" />
+<p>In the file <code class="docutils literal notranslate"><span class="pre">data_info.py</span></code>, <code class="docutils literal notranslate"><span class="pre">agent_params</span></code> is registered as an instance of the <code class="docutils literal notranslate"><span class="pre">DataFrameInfo</span></code> class.</p>
+<div class="literal-block-wrapper docutils container" id="id3">
+<div class="code-block-caption"><span class="caption-text">data_info.py</span><a class="headerlink" href="#id3" title="Permalink to this code"></a></div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span> <span class="nn">sqlalchemy</span>
+<span class="linenos"> 2</span>
+<span class="linenos"> 3</span><span class="kn">from</span> <span class="nn">Melodie</span> <span class="kn">import</span> <span class="n">DataFrameInfo</span>
+<span class="linenos"> 4</span>
+<span class="linenos"> 5</span>
+<span class="linenos"> 6</span><span class="n">agent_params</span> <span class="o">=</span> <span class="n">DataFrameInfo</span><span class="p">(</span>
+<span class="linenos"> 7</span>    <span class="n">df_name</span><span class="o">=</span><span class="s2">&quot;Parameter_AgentParams&quot;</span><span class="p">,</span>
+<span class="linenos"> 8</span>    <span class="n">columns</span><span class="o">=</span><span class="p">{</span>
+<span class="hll"><span class="linenos"> 9</span>        <span class="s2">&quot;id_scenario&quot;</span><span class="p">:</span> <span class="n">sqlalchemy</span><span class="o">.</span><span class="n">Integer</span><span class="p">(),</span>  <span class="c1"># id of each scenario</span>
+</span><span class="linenos">10</span>        <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="n">sqlalchemy</span><span class="o">.</span><span class="n">Integer</span><span class="p">(),</span>  <span class="c1"># id of each agent</span>
+<span class="linenos">11</span>        <span class="s2">&quot;health_state&quot;</span><span class="p">:</span> <span class="n">sqlalchemy</span><span class="o">.</span><span class="n">Integer</span><span class="p">(),</span>
+<span class="linenos">12</span>        <span class="s2">&quot;age_group&quot;</span><span class="p">:</span> <span class="n">sqlalchemy</span><span class="o">.</span><span class="n">Integer</span><span class="p">()</span>
+<span class="linenos">13</span>
+<span class="linenos">14</span>    <span class="p">},</span>
+<span class="linenos">15</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>As shown, <code class="docutils literal notranslate"><span class="pre">agent_params</span></code> includes an <code class="docutils literal notranslate"><span class="pre">id_scenario</span></code> column.
+This applies to the cases when agents’ attributes are scenario-dependently initialized.
+Melodie supports batching scenario runs and can automatically select the right part of <code class="docutils literal notranslate"><span class="pre">agent_params</span></code> for each scenario and initialize the agents.</p>
+<p>This <strong>CovidContagion</strong> model is exactly an example of the case when “agents’ attributes are scenario-dependently initialized”.
+The values of agents’ <code class="docutils literal notranslate"><span class="pre">health_state</span></code> and <code class="docutils literal notranslate"><span class="pre">age_group</span></code> rely on two parameters of the scenario:
+<code class="docutils literal notranslate"><span class="pre">initial_infected_percentage</span></code> and <code class="docutils literal notranslate"><span class="pre">young_percentage</span></code>.</p>
+<p>So, we need to write how <code class="docutils literal notranslate"><span class="pre">agent_params</span></code> is generated based on the <code class="docutils literal notranslate"><span class="pre">scenario</span></code> object.
+This is done in the <code class="docutils literal notranslate"><span class="pre">data_loader.py</span></code> file, as shown below, in Line 35-47.</p>
+<div class="literal-block-wrapper docutils container" id="id4">
+<div class="code-block-caption"><span class="caption-text">data_loader.py</span><a class="headerlink" href="#id4" title="Permalink to this code"></a></div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">TYPE_CHECKING</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span>
+<span class="linenos"> 2</span>
+<span class="linenos"> 3</span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="linenos"> 4</span>
+<span class="linenos"> 5</span><span class="kn">from</span> <span class="nn">Melodie</span> <span class="kn">import</span> <span class="n">DataLoader</span>
+<span class="linenos"> 6</span><span class="kn">from</span> <span class="nn">source</span> <span class="kn">import</span> <span class="n">data_info</span>
+<span class="linenos"> 7</span>
+<span class="linenos"> 8</span><span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
+<span class="linenos"> 9</span>    <span class="kn">from</span> <span class="nn">source.scenario</span> <span class="kn">import</span> <span class="n">CovidScenario</span>
+<span class="linenos">10</span>
+<span class="linenos">11</span>
+<span class="linenos">12</span><span class="k">class</span> <span class="nc">CovidDataLoader</span><span class="p">(</span><span class="n">DataLoader</span><span class="p">):</span>
+<span class="linenos">13</span>
+<span class="linenos">14</span>    <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="hll"><span class="linenos">15</span>        <span class="bp">self</span><span class="o">.</span><span class="n">load_dataframe</span><span class="p">(</span><span class="n">data_info</span><span class="o">.</span><span class="n">simulator_scenarios</span><span class="p">)</span>
+</span><span class="hll"><span class="linenos">16</span>        <span class="bp">self</span><span class="o">.</span><span class="n">load_dataframe</span><span class="p">(</span><span class="n">data_info</span><span class="o">.</span><span class="n">id_health_state</span><span class="p">)</span>
+</span><span class="hll"><span class="linenos">17</span>        <span class="bp">self</span><span class="o">.</span><span class="n">load_dataframe</span><span class="p">(</span><span class="n">data_info</span><span class="o">.</span><span class="n">id_age_group</span><span class="p">)</span>
+</span><span class="hll"><span class="linenos">18</span>        <span class="bp">self</span><span class="o">.</span><span class="n">load_dataframe</span><span class="p">(</span><span class="n">data_info</span><span class="o">.</span><span class="n">transition_prob</span><span class="p">)</span>
+</span><span class="hll"><span class="linenos">19</span>        <span class="bp">self</span><span class="o">.</span><span class="n">generate_agent_dataframe</span><span class="p">()</span>
+</span><span class="linenos">20</span>
+<span class="linenos">21</span>    <span class="nd">@staticmethod</span>
+<span class="linenos">22</span>    <span class="k">def</span> <span class="nf">init_health_state</span><span class="p">(</span><span class="n">scenario</span><span class="p">:</span> <span class="s2">&quot;CovidScenario&quot;</span><span class="p">):</span>
+<span class="linenos">23</span>        <span class="n">state</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="linenos">24</span>        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">scenario</span><span class="o">.</span><span class="n">initial_infected_percentage</span><span class="p">:</span>
+<span class="linenos">25</span>            <span class="n">state</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="linenos">26</span>        <span class="k">return</span> <span class="n">state</span>
+<span class="linenos">27</span>
+<span class="linenos">28</span>    <span class="nd">@staticmethod</span>
+<span class="linenos">29</span>    <span class="k">def</span> <span class="nf">init_age_group</span><span class="p">(</span><span class="n">scenario</span><span class="p">:</span> <span class="s2">&quot;CovidScenario&quot;</span><span class="p">):</span>
+<span class="linenos">30</span>        <span class="n">age_group</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="linenos">31</span>        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">scenario</span><span class="o">.</span><span class="n">young_percentage</span><span class="p">:</span>
+<span class="linenos">32</span>            <span class="n">age_group</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="linenos">33</span>        <span class="k">return</span> <span class="n">age_group</span>
+<span class="linenos">34</span>
+<span class="hll"><span class="linenos">35</span>    <span class="k">def</span> <span class="nf">generate_agent_dataframe</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span class="hll"><span class="linenos">36</span>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">dataframe_generator</span><span class="p">(</span>
+</span><span class="hll"><span class="linenos">37</span>            <span class="n">data_info</span><span class="o">.</span><span class="n">agent_params</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">scenario</span><span class="p">:</span> <span class="n">scenario</span><span class="o">.</span><span class="n">agent_num</span>
+</span><span class="linenos">38</span>        <span class="p">)</span> <span class="k">as</span> <span class="n">g</span><span class="p">:</span>
+<span class="linenos">39</span>
+<span class="linenos">40</span>            <span class="k">def</span> <span class="nf">generator_func</span><span class="p">(</span><span class="n">scenario</span><span class="p">:</span> <span class="s2">&quot;CovidScenario&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="linenos">41</span>                <span class="k">return</span> <span class="p">{</span>
+<span class="hll"><span class="linenos">42</span>                    <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="n">g</span><span class="o">.</span><span class="n">increment</span><span class="p">(),</span>
+</span><span class="linenos">43</span>                    <span class="s2">&quot;health_state&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">init_health_state</span><span class="p">(</span><span class="n">scenario</span><span class="p">),</span>
+<span class="linenos">44</span>                    <span class="s2">&quot;age_group&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">init_age_group</span><span class="p">(</span><span class="n">scenario</span><span class="p">)</span>
+<span class="linenos">45</span>                <span class="p">}</span>
+<span class="linenos">46</span>
+<span class="hll"><span class="linenos">47</span>            <span class="n">g</span><span class="o">.</span><span class="n">set_row_generator</span><span class="p">(</span><span class="n">generator_func</span><span class="p">)</span>
+</span></pre></div>
+</div>
+</div>
+<p>To generate <code class="docutils literal notranslate"><span class="pre">agent_params</span></code>, <code class="docutils literal notranslate"><span class="pre">Melodie</span></code> provides the <code class="docutils literal notranslate"><span class="pre">dataframe_generator</span></code>, which takes three inputs:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">data_info.agent_params</span></code> (Line 37), which contains the information of <code class="docutils literal notranslate"><span class="pre">agent_params</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">lambda</span> <span class="pre">scenario:</span> <span class="pre">scenario.agent_num</span></code> (Line 37), based on which, in Line 42, the <code class="docutils literal notranslate"><span class="pre">g.increment</span></code> function is provided by the <code class="docutils literal notranslate"><span class="pre">dataframe_generator</span></code> to generate the <code class="docutils literal notranslate"><span class="pre">id</span></code> for all the agents.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">generator_func</span></code> (Line 47), which takes the <code class="docutils literal notranslate"><span class="pre">scenario</span></code> object as the parameter and returns a dictionary, i.e., one row in <code class="docutils literal notranslate"><span class="pre">agent_params</span></code>.</p></li>
+</ul>
+<p>The <code class="docutils literal notranslate"><span class="pre">generate_agent_dataframe</span></code> function is attached to <code class="docutils literal notranslate"><span class="pre">CovidDataLoader.setup</span></code> (Line 19).
+So, it is also called automatically by <code class="docutils literal notranslate"><span class="pre">Melodie</span></code>.
+Please note that, this whole <code class="docutils literal notranslate"><span class="pre">agent_params</span></code> dataframe is generated by the <code class="docutils literal notranslate"><span class="pre">data_loader</span></code> for all the scenarios before running any of them.</p>
+</section>
+<section id="load-simulator-scenarios">
+<h3>Load <code class="docutils literal notranslate"><span class="pre">simulator_scenarios</span></code><a class="headerlink" href="#load-simulator-scenarios" title="Permalink to this heading"></a></h3>
+<p>In Line 15-18 of <code class="docutils literal notranslate"><span class="pre">data_loader.py</span></code>, the other input dataframes are loaded into the model.
+Taking <code class="docutils literal notranslate"><span class="pre">simulator_scenarios</span></code> as example, it includes the parameters to initialize a <code class="docutils literal notranslate"><span class="pre">scenario</span></code> object.
+Before being loaded, it also needs to be registered in the <code class="docutils literal notranslate"><span class="pre">data_info.py</span></code> file.</p>
+<div class="literal-block-wrapper docutils container" id="id5">
+<div class="code-block-caption"><span class="caption-text">data_info.py</span><a class="headerlink" href="#id5" title="Permalink to this code"></a></div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span> <span class="nn">sqlalchemy</span>
+<span class="linenos"> 2</span>
+<span class="linenos"> 3</span><span class="kn">from</span> <span class="nn">Melodie</span> <span class="kn">import</span> <span class="n">DataFrameInfo</span>
+<span class="linenos"> 4</span>
+<span class="linenos"> 5</span>
+<span class="linenos"> 6</span><span class="n">simulator_scenarios</span> <span class="o">=</span> <span class="n">DataFrameInfo</span><span class="p">(</span>
+<span class="linenos"> 7</span>    <span class="n">df_name</span><span class="o">=</span><span class="s2">&quot;simulator_scenarios&quot;</span><span class="p">,</span>
+<span class="hll"><span class="linenos"> 8</span>    <span class="n">file_name</span><span class="o">=</span><span class="s2">&quot;SimulatorScenarios.xlsx&quot;</span><span class="p">,</span>
+</span><span class="linenos"> 9</span>    <span class="n">columns</span><span class="o">=</span><span class="p">{</span>
+<span class="linenos">10</span>        <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="n">sqlalchemy</span><span class="o">.</span><span class="n">Integer</span><span class="p">(),</span>
+<span class="linenos">11</span>        <span class="s2">&quot;run_num&quot;</span><span class="p">:</span> <span class="n">sqlalchemy</span><span class="o">.</span><span class="n">Integer</span><span class="p">(),</span>
+<span class="linenos">12</span>        <span class="s2">&quot;period_num&quot;</span><span class="p">:</span> <span class="n">sqlalchemy</span><span class="o">.</span><span class="n">Integer</span><span class="p">(),</span>
+<span class="linenos">13</span>        <span class="s2">&quot;agent_num&quot;</span><span class="p">:</span> <span class="n">sqlalchemy</span><span class="o">.</span><span class="n">Integer</span><span class="p">(),</span>
+<span class="linenos">14</span>        <span class="s2">&quot;initial_infected_percentage&quot;</span><span class="p">:</span> <span class="n">sqlalchemy</span><span class="o">.</span><span class="n">Float</span><span class="p">(),</span>
+<span class="linenos">15</span>        <span class="s2">&quot;young_percentage&quot;</span><span class="p">:</span> <span class="n">sqlalchemy</span><span class="o">.</span><span class="n">Float</span><span class="p">(),</span>
+<span class="linenos">16</span>        <span class="s2">&quot;infection_prob&quot;</span><span class="p">:</span> <span class="n">sqlalchemy</span><span class="o">.</span><span class="n">Float</span><span class="p">(),</span>
+<span class="linenos">17</span>    <span class="p">},</span>
+<span class="linenos">18</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>The figure shows the content of <code class="docutils literal notranslate"><span class="pre">simulator_scenarios</span></code>.</p>
+<img alt="_images/simulator_scenarios.png" src="_images/simulator_scenarios.png" />
+<p>Please note that,</p>
+<ul class="simple">
+<li><p>First, since <code class="docutils literal notranslate"><span class="pre">simulator_scenarios</span></code> is “loaded” not “generated”. The attribute <code class="docutils literal notranslate"><span class="pre">file_name</span></code> needs to be assigned with the excel file name in the input folder (Line 8), so <code class="docutils literal notranslate"><span class="pre">Melodie</span></code> can find the file. But, the <code class="docutils literal notranslate"><span class="pre">df_name</span></code> attribute must be “simulator_scenarios” so it can be recognized by <code class="docutils literal notranslate"><span class="pre">Melodie</span></code>.</p></li>
+<li><p>Second, since <code class="docutils literal notranslate"><span class="pre">Melodie</span></code> supports batching the scenario runs, <code class="docutils literal notranslate"><span class="pre">simulator_scenarios</span></code> can contain multiple rows for different scenarios. Besides, for each scenario, there is also a default attribute <code class="docutils literal notranslate"><span class="pre">run_num</span></code>, which means <code class="docutils literal notranslate"><span class="pre">Melodie</span></code> will run the model with this scenario for <code class="docutils literal notranslate"><span class="pre">run_num</span></code> times to evaluate the model uncertainty afterwards.</p></li>
+<li><p>Third, the column names in the excel file must be exactly the same with the scenario attributes defined in the <code class="docutils literal notranslate"><span class="pre">CovidScenario.setup</span></code> function below, or an error will be thrown out.</p></li>
+<li><p>Fourth, the attributes <code class="docutils literal notranslate"><span class="pre">id</span></code> and <code class="docutils literal notranslate"><span class="pre">run_num</span></code> can be ignored when defining the <code class="docutils literal notranslate"><span class="pre">CovidScenario.setup</span></code> function, because they are already included in the <code class="docutils literal notranslate"><span class="pre">Melodie.Scenario</span></code> class.</p></li>
+<li><p>Finally, if the initialization of agents’ attributes is not scenario-dependent, you can also “load” a dataframe instead of generating one.</p></li>
+</ul>
+<div class="literal-block-wrapper docutils container" id="id6">
+<div class="code-block-caption"><span class="caption-text">scenario.py</span><a class="headerlink" href="#id6" title="Permalink to this code"></a></div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">from</span> <span class="nn">Melodie</span> <span class="kn">import</span> <span class="n">Scenario</span>
+<span class="linenos"> 2</span><span class="kn">from</span> <span class="nn">source</span> <span class="kn">import</span> <span class="n">data_info</span>
+<span class="linenos"> 3</span>
+<span class="linenos"> 4</span>
+<span class="linenos"> 5</span><span class="k">class</span> <span class="nc">CovidScenario</span><span class="p">(</span><span class="n">Scenario</span><span class="p">):</span>
+<span class="linenos"> 6</span>
+<span class="linenos"> 7</span>    <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="linenos"> 8</span>        <span class="bp">self</span><span class="o">.</span><span class="n">period_num</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="linenos"> 9</span>        <span class="bp">self</span><span class="o">.</span><span class="n">agent_num</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="linenos">10</span>        <span class="bp">self</span><span class="o">.</span><span class="n">initial_infected_percentage</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
+<span class="linenos">11</span>        <span class="bp">self</span><span class="o">.</span><span class="n">young_percentage</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
+<span class="linenos">12</span>        <span class="bp">self</span><span class="o">.</span><span class="n">infection_prob</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
+</pre></div>
+</div>
+</div>
+<p>Finally, as introduced in the <a class="reference internal" href="introduction.html#modelling-manager"><span class="std std-ref">Modelling Manager</span></a> section and shown below,
+the <code class="docutils literal notranslate"><span class="pre">CovidScenario</span></code> and <code class="docutils literal notranslate"><span class="pre">CovidDataLoader</span></code> class variables are used to construct the <code class="docutils literal notranslate"><span class="pre">simulator</span></code>.
+So, <strong>Melodie</strong> will initialize all the scenarios defined in <code class="docutils literal notranslate"><span class="pre">simulator_scenarios</span></code> dataframe automatically.
+Then, the model will be run with these scenarios one by one.</p>
+<div class="literal-block-wrapper docutils container" id="id7">
+<div class="code-block-caption"><span class="caption-text">run_simulator.py</span><a class="headerlink" href="#id7" title="Permalink to this code"></a></div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">from</span> <span class="nn">Melodie</span> <span class="kn">import</span> <span class="n">Simulator</span>
+<span class="linenos"> 2</span><span class="kn">from</span> <span class="nn">config</span> <span class="kn">import</span> <span class="n">config</span>
+<span class="linenos"> 3</span><span class="kn">from</span> <span class="nn">source.model</span> <span class="kn">import</span> <span class="n">CovidModel</span>
+<span class="linenos"> 4</span><span class="kn">from</span> <span class="nn">source.scenario</span> <span class="kn">import</span> <span class="n">CovidScenario</span>
+<span class="linenos"> 5</span><span class="kn">from</span> <span class="nn">source.data_loader</span> <span class="kn">import</span> <span class="n">CovidDataLoader</span>
+<span class="linenos"> 6</span>
+<span class="linenos"> 7</span><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+<span class="linenos"> 8</span>    <span class="n">simulator</span> <span class="o">=</span> <span class="n">Simulator</span><span class="p">(</span>
+<span class="linenos"> 9</span>        <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span>
+<span class="linenos">10</span>        <span class="n">model_cls</span><span class="o">=</span><span class="n">CovidModel</span><span class="p">,</span>
+<span class="hll"><span class="linenos">11</span>        <span class="n">scenario_cls</span><span class="o">=</span><span class="n">CovidScenario</span><span class="p">,</span>
+</span><span class="hll"><span class="linenos">12</span>        <span class="n">data_loader_cls</span><span class="o">=</span><span class="n">CovidDataLoader</span>
+</span><span class="linenos">13</span>    <span class="p">)</span>
+<span class="linenos">14</span>    <span class="n">simulator</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</section>
+</section>
+<section id="model">
+<h2>Model<a class="headerlink" href="#model" title="Permalink to this heading"></a></h2>
+<p>After defining the <code class="docutils literal notranslate"><span class="pre">CovidAgent</span></code> and <code class="docutils literal notranslate"><span class="pre">CovidScenario</span></code> classes, registering and loading/generating their dataframes,
+and initializing the <code class="docutils literal notranslate"><span class="pre">scenario</span></code> object by <code class="docutils literal notranslate"><span class="pre">Melodie</span></code>,
+we are now finally ready to initialize all the agents, i.e. their <code class="docutils literal notranslate"><span class="pre">health_state</span></code> and <code class="docutils literal notranslate"><span class="pre">age_group</span></code>.
+This is done in the <code class="docutils literal notranslate"><span class="pre">CovidModel</span></code> class.</p>
+<p>As shown below, the two functions <code class="docutils literal notranslate"><span class="pre">CovidModel.create</span></code> and <code class="docutils literal notranslate"><span class="pre">CovidModel.setup</span></code> are inherited from <code class="docutils literal notranslate"><span class="pre">Melodie.Model</span></code>.
+In Line 18, <code class="docutils literal notranslate"><span class="pre">agents:</span> <span class="pre">&quot;AgentList[CovidAgent]&quot;</span></code> is created by <code class="docutils literal notranslate"><span class="pre">create_agent_list</span></code>,
+then the agents’ parameters are initialized in Line 23-26, with the <code class="docutils literal notranslate"><span class="pre">AgentList.setup_agents</span></code> function in <code class="docutils literal notranslate"><span class="pre">Melodie</span></code>.
+As shown, the initialized <code class="docutils literal notranslate"><span class="pre">scenario</span></code> is already used by the model as one of its attributes.</p>
+<div class="literal-block-wrapper docutils container" id="id8">
+<div class="code-block-caption"><span class="caption-text">model.py</span><a class="headerlink" href="#id8" title="Permalink to this code"></a></div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">TYPE_CHECKING</span>
+<span class="linenos"> 2</span>
+<span class="linenos"> 3</span><span class="kn">from</span> <span class="nn">Melodie</span> <span class="kn">import</span> <span class="n">Model</span>
+<span class="linenos"> 4</span><span class="kn">from</span> <span class="nn">source</span> <span class="kn">import</span> <span class="n">data_info</span>
+<span class="linenos"> 5</span><span class="kn">from</span> <span class="nn">source.agent</span> <span class="kn">import</span> <span class="n">CovidAgent</span>
+<span class="linenos"> 6</span><span class="kn">from</span> <span class="nn">source.data_collector</span> <span class="kn">import</span> <span class="n">CovidDataCollector</span>
+<span class="linenos"> 7</span><span class="kn">from</span> <span class="nn">source.environment</span> <span class="kn">import</span> <span class="n">CovidEnvironment</span>
+<span class="linenos"> 8</span><span class="kn">from</span> <span class="nn">source.scenario</span> <span class="kn">import</span> <span class="n">CovidScenario</span>
+<span class="linenos"> 9</span>
+<span class="linenos">10</span><span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
+<span class="linenos">11</span>    <span class="kn">from</span> <span class="nn">Melodie</span> <span class="kn">import</span> <span class="n">AgentList</span>
+<span class="linenos">12</span>
+<span class="linenos">13</span>
+<span class="linenos">14</span><span class="k">class</span> <span class="nc">CovidModel</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+<span class="linenos">15</span>    <span class="n">scenario</span><span class="p">:</span> <span class="s2">&quot;CovidScenario&quot;</span>
+<span class="linenos">16</span>
+<span class="linenos">17</span>    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="hll"><span class="linenos">18</span>        <span class="bp">self</span><span class="o">.</span><span class="n">agents</span><span class="p">:</span> <span class="s2">&quot;AgentList[CovidAgent]&quot;</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_agent_list</span><span class="p">(</span><span class="n">CovidAgent</span><span class="p">)</span>
+</span><span class="linenos">19</span>        <span class="bp">self</span><span class="o">.</span><span class="n">environment</span><span class="p">:</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_environment</span><span class="p">(</span><span class="n">CovidEnvironment</span><span class="p">)</span>
+<span class="linenos">20</span>        <span class="bp">self</span><span class="o">.</span><span class="n">data_collector</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_data_collector</span><span class="p">(</span><span class="n">CovidDataCollector</span><span class="p">)</span>
+<span class="linenos">21</span>
+<span class="linenos">22</span>    <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="hll"><span class="linenos">23</span>        <span class="bp">self</span><span class="o">.</span><span class="n">agents</span><span class="o">.</span><span class="n">setup_agents</span><span class="p">(</span>
+</span><span class="hll"><span class="linenos">24</span>            <span class="n">agents_num</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">agent_num</span><span class="p">,</span>
+</span><span class="hll"><span class="linenos">25</span>            <span class="n">params_df</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">get_dataframe</span><span class="p">(</span><span class="n">data_info</span><span class="o">.</span><span class="n">agent_params</span><span class="p">),</span>
+</span><span class="hll"><span class="linenos">26</span>        <span class="p">)</span>
+</span><span class="linenos">27</span>
+<span class="hll"><span class="linenos">28</span>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span class="linenos">29</span>        <span class="k">for</span> <span class="n">period</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">iterator</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">period_num</span><span class="p">):</span>
+<span class="linenos">30</span>            <span class="bp">self</span><span class="o">.</span><span class="n">environment</span><span class="o">.</span><span class="n">agents_infection</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">agents</span><span class="p">)</span>
+<span class="linenos">31</span>            <span class="bp">self</span><span class="o">.</span><span class="n">environment</span><span class="o">.</span><span class="n">agents_health_state_transition</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">agents</span><span class="p">)</span>
+<span class="linenos">32</span>            <span class="bp">self</span><span class="o">.</span><span class="n">environment</span><span class="o">.</span><span class="n">calc_population_infection_state</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">agents</span><span class="p">)</span>
+<span class="linenos">33</span>            <span class="bp">self</span><span class="o">.</span><span class="n">data_collector</span><span class="o">.</span><span class="n">collect</span><span class="p">(</span><span class="n">period</span><span class="p">)</span>
+<span class="linenos">34</span>        <span class="bp">self</span><span class="o">.</span><span class="n">data_collector</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<p>Besides, in Line 19-20, <code class="docutils literal notranslate"><span class="pre">environment</span></code> and <code class="docutils literal notranslate"><span class="pre">data_collector</span></code> are also created.
+But, without their own parameters, they don’t have to be initialized in the <code class="docutils literal notranslate"><span class="pre">setup</span></code> function. Why?
+In brief, because in an ABM, only the agents have micro-level attributes that cannot be easily carried by <code class="docutils literal notranslate"><span class="pre">scenario</span></code>.</p>
+<p>Finally, the <code class="docutils literal notranslate"><span class="pre">CovidModel.run</span></code> function (Line 28) describes the timeline of the simulation,
+and it is called automatically when running the <code class="docutils literal notranslate"><span class="pre">simulator.run</span></code> above.
+In each period,</p>
+<ul class="simple">
+<li><p>first, the <code class="docutils literal notranslate"><span class="pre">environment</span></code>, the coordinator of the agents’ decision-making and interaction process, “asks” the <code class="docutils literal notranslate"><span class="pre">agents</span></code> to infect each other;</p></li>
+<li><p>second, the <code class="docutils literal notranslate"><span class="pre">environment</span></code> “asks” the <code class="docutils literal notranslate"><span class="pre">agents</span></code> to update their health states;</p></li>
+<li><p>third, the <code class="docutils literal notranslate"><span class="pre">environment</span></code> calculates the infection state of the whole population;</p></li>
+<li><p>fourth, the <code class="docutils literal notranslate"><span class="pre">data_collector</span></code> records the attributes’ values of the <code class="docutils literal notranslate"><span class="pre">environment</span></code> and the <code class="docutils literal notranslate"><span class="pre">agents</span></code>.</p></li>
+</ul>
+<p>Finally, after simulating all the periods, the <code class="docutils literal notranslate"><span class="pre">data_collector</span></code> will save everything into the database.</p>
+</section>
+<section id="environment">
+<h2>Environment<a class="headerlink" href="#environment" title="Permalink to this heading"></a></h2>
+<p>The CovidEnvironment class is defined as below.</p>
+<p>In the <code class="docutils literal notranslate"><span class="pre">setup</span></code> function (Line 10), four attributes are defined to save the number of agents in each health state.
+As shown, they are updated in the <code class="docutils literal notranslate"><span class="pre">calc_population_infection_state</span></code> function in each period (Line 27).</p>
+<p>Similar to the cases in the <code class="docutils literal notranslate"><span class="pre">CovidAgent</span></code> and <code class="docutils literal notranslate"><span class="pre">CovidScenario</span></code> classes,
+the <code class="docutils literal notranslate"><span class="pre">CovidEnvironment.setup</span></code> function will also be automatically called by running <code class="docutils literal notranslate"><span class="pre">CovidModel.create_environment</span></code>.
+But, the four attributes are (macro-level) variables, not parameters.
+So, they are not initialized with exogenous input.</p>
+<div class="literal-block-wrapper docutils container" id="id9">
+<div class="code-block-caption"><span class="caption-text">environment.py</span><a class="headerlink" href="#id9" title="Permalink to this code"></a></div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">from</span> <span class="nn">Melodie</span> <span class="kn">import</span> <span class="n">Environment</span>
+<span class="linenos"> 2</span><span class="kn">from</span> <span class="nn">Melodie</span> <span class="kn">import</span> <span class="n">AgentList</span>
+<span class="linenos"> 3</span><span class="kn">from</span> <span class="nn">source.agent</span> <span class="kn">import</span> <span class="n">CovidAgent</span>
+<span class="linenos"> 4</span><span class="kn">from</span> <span class="nn">source.scenario</span> <span class="kn">import</span> <span class="n">CovidScenario</span>
+<span class="linenos"> 5</span>
+<span class="linenos"> 6</span>
+<span class="linenos"> 7</span><span class="k">class</span> <span class="nc">CovidEnvironment</span><span class="p">(</span><span class="n">Environment</span><span class="p">):</span>
+<span class="linenos"> 8</span>    <span class="n">scenario</span><span class="p">:</span> <span class="s2">&quot;CovidScenario&quot;</span>
+<span class="linenos"> 9</span>
+<span class="hll"><span class="linenos">10</span>    <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span class="linenos">11</span>        <span class="bp">self</span><span class="o">.</span><span class="n">s0</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="linenos">12</span>        <span class="bp">self</span><span class="o">.</span><span class="n">s1</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="linenos">13</span>        <span class="bp">self</span><span class="o">.</span><span class="n">s2</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="linenos">14</span>        <span class="bp">self</span><span class="o">.</span><span class="n">s3</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="linenos">15</span>
+<span class="hll"><span class="linenos">16</span>    <span class="k">def</span> <span class="nf">agents_infection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agents</span><span class="p">:</span> <span class="s2">&quot;AgentList[CovidAgent]&quot;</span><span class="p">):</span>
+</span><span class="linenos">17</span>        <span class="n">infection_prob</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">s1</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">agent_num</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">infection_prob</span>
+<span class="linenos">18</span>        <span class="k">for</span> <span class="n">agent</span> <span class="ow">in</span> <span class="n">agents</span><span class="p">:</span>
+<span class="linenos">19</span>            <span class="k">if</span> <span class="n">agent</span><span class="o">.</span><span class="n">health_state</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+<span class="linenos">20</span>                <span class="n">agent</span><span class="o">.</span><span class="n">infection</span><span class="p">(</span><span class="n">infection_prob</span><span class="p">)</span>
+<span class="linenos">21</span>
+<span class="linenos">22</span>    <span class="nd">@staticmethod</span>
+<span class="hll"><span class="linenos">23</span>    <span class="k">def</span> <span class="nf">agents_health_state_transition</span><span class="p">(</span><span class="n">agents</span><span class="p">:</span> <span class="s2">&quot;AgentList[CovidAgent]&quot;</span><span class="p">):</span>
+</span><span class="linenos">24</span>        <span class="k">for</span> <span class="n">agent</span> <span class="ow">in</span> <span class="n">agents</span><span class="p">:</span>
+<span class="linenos">25</span>            <span class="n">agent</span><span class="o">.</span><span class="n">health_state_transition</span><span class="p">()</span>
+<span class="linenos">26</span>
+<span class="hll"><span class="linenos">27</span>    <span class="k">def</span> <span class="nf">calc_population_infection_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agents</span><span class="p">:</span> <span class="s2">&quot;AgentList[CovidAgent]&quot;</span><span class="p">):</span>
+</span><span class="linenos">28</span>        <span class="bp">self</span><span class="o">.</span><span class="n">setup</span><span class="p">()</span>
+<span class="linenos">29</span>        <span class="k">for</span> <span class="n">agent</span> <span class="ow">in</span> <span class="n">agents</span><span class="p">:</span>
+<span class="linenos">30</span>            <span class="k">if</span> <span class="n">agent</span><span class="o">.</span><span class="n">health_state</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+<span class="linenos">31</span>                <span class="bp">self</span><span class="o">.</span><span class="n">s0</span> <span class="o">+=</span> <span class="mi">1</span>
+<span class="linenos">32</span>            <span class="k">elif</span> <span class="n">agent</span><span class="o">.</span><span class="n">health_state</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+<span class="linenos">33</span>                <span class="bp">self</span><span class="o">.</span><span class="n">s1</span> <span class="o">+=</span> <span class="mi">1</span>
+<span class="linenos">34</span>            <span class="k">elif</span> <span class="n">agent</span><span class="o">.</span><span class="n">health_state</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+<span class="linenos">35</span>                <span class="bp">self</span><span class="o">.</span><span class="n">s2</span> <span class="o">+=</span> <span class="mi">1</span>
+<span class="linenos">36</span>            <span class="k">else</span><span class="p">:</span>
+<span class="linenos">37</span>                <span class="bp">self</span><span class="o">.</span><span class="n">s3</span> <span class="o">+=</span> <span class="mi">1</span>
+</pre></div>
+</div>
+</div>
+<p>As shown in the <code class="docutils literal notranslate"><span class="pre">agents_infection</span></code> function, the <code class="docutils literal notranslate"><span class="pre">environment</span></code> has access to <code class="docutils literal notranslate"><span class="pre">scenario</span></code> and can get necessary data.</p>
+<p>Besides, as introduced in the <a class="reference internal" href="introduction.html#melodie-framework"><span class="std std-ref">Melodie Framework</span></a> section,
+the <code class="docutils literal notranslate"><span class="pre">environment</span></code> coordinates the agents’ decision-making and interaction processes.
+This is why, in the <code class="docutils literal notranslate"><span class="pre">model.run</span></code> function, the functions of <code class="docutils literal notranslate"><span class="pre">environment</span></code> are called instead of the <code class="docutils literal notranslate"><span class="pre">agents</span></code> being called directly.</p>
+<p>So, corresponding to the functions <code class="docutils literal notranslate"><span class="pre">agents_infection</span></code> and <code class="docutils literal notranslate"><span class="pre">agents_health_state_transition</span></code> in the <code class="docutils literal notranslate"><span class="pre">CovidEnvironment</span></code>,
+we need to define the <code class="docutils literal notranslate"><span class="pre">infection</span></code> and <code class="docutils literal notranslate"><span class="pre">health_state_transition</span></code> functions in the <code class="docutils literal notranslate"><span class="pre">CovidAgent</span></code> class as below.</p>
+<div class="literal-block-wrapper docutils container" id="id10">
+<div class="code-block-caption"><span class="caption-text">agent.py</span><a class="headerlink" href="#id10" title="Permalink to this code"></a></div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">from</span> <span class="nn">Melodie</span> <span class="kn">import</span> <span class="n">Agent</span>
+<span class="linenos"> 2</span>
+<span class="linenos"> 3</span>
+<span class="linenos"> 4</span><span class="k">class</span> <span class="nc">CovidAgent</span><span class="p">(</span><span class="n">Agent</span><span class="p">):</span>
+<span class="linenos"> 5</span>
+<span class="linenos"> 6</span>        <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="linenos"> 7</span>            <span class="bp">self</span><span class="o">.</span><span class="n">health_state</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="linenos"> 8</span>            <span class="bp">self</span><span class="o">.</span><span class="n">age_group</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="linenos"> 9</span>
+<span class="hll"><span class="linenos">10</span>        <span class="k">def</span> <span class="nf">infection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">infection_prob</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+</span><span class="linenos">11</span>            <span class="k">if</span> <span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">infection_prob</span><span class="p">:</span>
+<span class="linenos">12</span>                <span class="bp">self</span><span class="o">.</span><span class="n">health_state</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="linenos">13</span>
+<span class="hll"><span class="linenos">14</span>        <span class="k">def</span> <span class="nf">health_state_transition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span class="linenos">15</span>            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">health_state</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+<span class="linenos">16</span>                <span class="n">transition_probs</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">get_transition_probs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">age_group</span><span class="p">)</span>
+<span class="linenos">17</span>                <span class="n">rand</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="linenos">18</span>                <span class="k">if</span> <span class="n">rand</span> <span class="o">&lt;=</span> <span class="n">transition_probs</span><span class="p">[</span><span class="s2">&quot;s1_s1&quot;</span><span class="p">]:</span>
+<span class="linenos">19</span>                    <span class="k">pass</span>
+<span class="linenos">20</span>                <span class="k">elif</span> <span class="n">transition_probs</span><span class="p">[</span><span class="s2">&quot;s1_s1&quot;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">rand</span> <span class="o">&lt;=</span> <span class="n">transition_probs</span><span class="p">[</span><span class="s2">&quot;s1_s1&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">transition_probs</span><span class="p">[</span><span class="s2">&quot;s1_s2&quot;</span><span class="p">]:</span>
+<span class="linenos">21</span>                    <span class="bp">self</span><span class="o">.</span><span class="n">health_state</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="linenos">22</span>                <span class="k">else</span><span class="p">:</span>
+<span class="linenos">23</span>                    <span class="bp">self</span><span class="o">.</span><span class="n">health_state</span> <span class="o">=</span> <span class="mi">3</span>
+</pre></div>
+</div>
+</div>
+<p>As shown in the <code class="docutils literal notranslate"><span class="pre">health_state_transition</span></code> function, the <code class="docutils literal notranslate"><span class="pre">agent</span></code> also has access to <code class="docutils literal notranslate"><span class="pre">scenario</span></code> and can get necessary data.</p>
+<p>On the other side, the <code class="docutils literal notranslate"><span class="pre">CovidScenario</span></code> class needs to prepare the data in a structure that is easy to use,
+as shown in the function <code class="docutils literal notranslate"><span class="pre">setup_transition_probs</span></code> below (Line 14).
+Besides, <code class="docutils literal notranslate"><span class="pre">Melodie.Scenario</span></code> has a function <code class="docutils literal notranslate"><span class="pre">get_dataframe</span></code> to read registered and loaded dataframes from the database (Line 15).
+The <code class="docutils literal notranslate"><span class="pre">data_info.transition_prob</span></code> refers to an input table as below.</p>
+<img alt="_images/transition_probs.png" src="_images/transition_probs.png" />
+<p>The corresponding code in the <code class="docutils literal notranslate"><span class="pre">CovidScenario</span></code> class is as follows.</p>
+<div class="literal-block-wrapper docutils container" id="id11">
+<div class="code-block-caption"><span class="caption-text">scenario.py</span><a class="headerlink" href="#id11" title="Permalink to this code"></a></div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">from</span> <span class="nn">Melodie</span> <span class="kn">import</span> <span class="n">Scenario</span>
+<span class="linenos"> 2</span><span class="kn">from</span> <span class="nn">source</span> <span class="kn">import</span> <span class="n">data_info</span>
+<span class="linenos"> 3</span>
+<span class="linenos"> 4</span>
+<span class="linenos"> 5</span><span class="k">class</span> <span class="nc">CovidScenario</span><span class="p">(</span><span class="n">Scenario</span><span class="p">):</span>
+<span class="linenos"> 6</span>
+<span class="linenos"> 7</span>    <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="linenos"> 8</span>        <span class="bp">self</span><span class="o">.</span><span class="n">period_num</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="linenos"> 9</span>        <span class="bp">self</span><span class="o">.</span><span class="n">agent_num</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="linenos">10</span>        <span class="bp">self</span><span class="o">.</span><span class="n">initial_infected_percentage</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
+<span class="linenos">11</span>        <span class="bp">self</span><span class="o">.</span><span class="n">young_percentage</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
+<span class="linenos">12</span>        <span class="bp">self</span><span class="o">.</span><span class="n">infection_prob</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
+<span class="linenos">13</span>
+<span class="hll"><span class="linenos">14</span>    <span class="k">def</span> <span class="nf">setup_transition_probs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span class="hll"><span class="linenos">15</span>        <span class="n">df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_dataframe</span><span class="p">(</span><span class="n">data_info</span><span class="o">.</span><span class="n">transition_prob</span><span class="p">)</span>
+</span><span class="linenos">16</span>        <span class="bp">self</span><span class="o">.</span><span class="n">transition_probs</span> <span class="o">=</span> <span class="p">{</span>
+<span class="linenos">17</span>            <span class="mi">0</span><span class="p">:</span> <span class="p">{</span>
+<span class="linenos">18</span>                <span class="s2">&quot;s1_s1&quot;</span><span class="p">:</span> <span class="n">df</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;prob_s1_s1&quot;</span><span class="p">],</span>
+<span class="linenos">19</span>                <span class="s2">&quot;s1_s2&quot;</span><span class="p">:</span> <span class="n">df</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;prob_s1_s2&quot;</span><span class="p">],</span>
+<span class="linenos">20</span>                <span class="s2">&quot;s1_s3&quot;</span><span class="p">:</span> <span class="n">df</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;prob_s1_s3&quot;</span><span class="p">],</span>
+<span class="linenos">21</span>            <span class="p">},</span>
+<span class="linenos">22</span>            <span class="mi">1</span><span class="p">:</span> <span class="p">{</span>
+<span class="linenos">23</span>                <span class="s2">&quot;s1_s1&quot;</span><span class="p">:</span> <span class="n">df</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;prob_s1_s1&quot;</span><span class="p">],</span>
+<span class="linenos">24</span>                <span class="s2">&quot;s1_s2&quot;</span><span class="p">:</span> <span class="n">df</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;prob_s1_s2&quot;</span><span class="p">],</span>
+<span class="linenos">25</span>                <span class="s2">&quot;s1_s3&quot;</span><span class="p">:</span> <span class="n">df</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;prob_s1_s3&quot;</span><span class="p">],</span>
+<span class="linenos">26</span>            <span class="p">}</span>
+<span class="linenos">27</span>        <span class="p">}</span>
+<span class="linenos">28</span>
+<span class="linenos">29</span>    <span class="k">def</span> <span class="nf">get_transition_probs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">id_age_group</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<span class="linenos">30</span>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">transition_probs</span><span class="p">[</span><span class="n">id_age_group</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<p>In summary, the idea of the <code class="docutils literal notranslate"><span class="pre">Scenario</span></code> class in the <code class="docutils literal notranslate"><span class="pre">Melodie</span></code> framework is</p>
+<ul class="simple">
+<li><p>to use it as the channel for other objects accessing input data;</p></li>
+<li><p>to easily iterate through a batch of scenarios.</p></li>
+</ul>
+<p>If you recall the <strong>Scenario Cluster</strong> introduced in the <a class="reference internal" href="introduction.html#melodie-framework"><span class="std std-ref">Melodie Framework</span></a> section,
+the <code class="docutils literal notranslate"><span class="pre">Scenario</span></code> and <code class="docutils literal notranslate"><span class="pre">DataLoader</span></code> classes focus on formatting, importing, and delivering the input data to the model.
+The <code class="docutils literal notranslate"><span class="pre">DataFrameInfo</span></code> and <code class="docutils literal notranslate"><span class="pre">MatrixInfo</span></code> are just pre-defined data structure to store the information of the input data,
+so that the functions of <code class="docutils literal notranslate"><span class="pre">Scenario</span></code> and <code class="docutils literal notranslate"><span class="pre">DataLoader</span></code> can work with the data easily.</p>
+</section>
+<section id="datacollector">
+<h2>DataCollector<a class="headerlink" href="#datacollector" title="Permalink to this heading"></a></h2>
+<p>Finally, to collect all the micro- and macro-level results stored by the <code class="docutils literal notranslate"><span class="pre">agents</span></code> and the <code class="docutils literal notranslate"><span class="pre">environment</span></code> and save them into the database,
+the <code class="docutils literal notranslate"><span class="pre">CovidDataCollector</span></code> class is defined as below.</p>
+<div class="literal-block-wrapper docutils container" id="id12">
+<div class="code-block-caption"><span class="caption-text">data_collector.py</span><a class="headerlink" href="#id12" title="Permalink to this code"></a></div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">from</span> <span class="nn">Melodie</span> <span class="kn">import</span> <span class="n">DataCollector</span>
+<span class="linenos"> 2</span>
+<span class="linenos"> 3</span>
+<span class="linenos"> 4</span><span class="k">class</span> <span class="nc">CovidDataCollector</span><span class="p">(</span><span class="n">DataCollector</span><span class="p">):</span>
+<span class="linenos"> 5</span>    <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="hll"><span class="linenos"> 6</span>        <span class="bp">self</span><span class="o">.</span><span class="n">add_agent_property</span><span class="p">(</span><span class="s2">&quot;agents&quot;</span><span class="p">,</span> <span class="s2">&quot;health_state&quot;</span><span class="p">)</span>
+</span><span class="hll"><span class="linenos"> 7</span>        <span class="bp">self</span><span class="o">.</span><span class="n">add_environment_property</span><span class="p">(</span><span class="s2">&quot;s0&quot;</span><span class="p">)</span>
+</span><span class="linenos"> 8</span>        <span class="bp">self</span><span class="o">.</span><span class="n">add_environment_property</span><span class="p">(</span><span class="s2">&quot;s1&quot;</span><span class="p">)</span>
+<span class="linenos"> 9</span>        <span class="bp">self</span><span class="o">.</span><span class="n">add_environment_property</span><span class="p">(</span><span class="s2">&quot;s2&quot;</span><span class="p">)</span>
+<span class="linenos">10</span>        <span class="bp">self</span><span class="o">.</span><span class="n">add_environment_property</span><span class="p">(</span><span class="s2">&quot;s3&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>The two functions <code class="docutils literal notranslate"><span class="pre">add_agent_property</span></code> and <code class="docutils literal notranslate"><span class="pre">add_environment_property</span></code> are provided by <code class="docutils literal notranslate"><span class="pre">Melodie</span></code>.
+For <code class="docutils literal notranslate"><span class="pre">add_agent_property</span></code>, we should also pass in the name of the agent list,
+so the <code class="docutils literal notranslate"><span class="pre">data_collector</span></code> knows which agent list to look at.
+In some ABMs, there can be multiple agent lists (e.g., wolves, sheep, etc.).</p>
+<p>With the <code class="docutils literal notranslate"><span class="pre">data_collector</span></code>, the results will saved in the <code class="docutils literal notranslate"><span class="pre">CovidContagion.sqlite</span></code> file in a pre-defined format.
+The macro-level results are indexed with <code class="docutils literal notranslate"><span class="pre">id_scenario</span></code>, <code class="docutils literal notranslate"><span class="pre">id_run</span></code>, and <code class="docutils literal notranslate"><span class="pre">period</span></code>.
+The micro-level results are further indexed with the <code class="docutils literal notranslate"><span class="pre">id</span></code> of agents. After running the model,
+you can find two tables in <code class="docutils literal notranslate"><span class="pre">CovidContagion.sqlite</span></code> named as <code class="docutils literal notranslate"><span class="pre">environment_result</span></code> and <code class="docutils literal notranslate"><span class="pre">agents_result</span></code>.</p>
+<p>Example of <code class="docutils literal notranslate"><span class="pre">environment_result</span></code>:</p>
+<img alt="_images/environment_result.png" src="_images/environment_result.png" />
+<p>Example of <code class="docutils literal notranslate"><span class="pre">agents_result</span></code>:</p>
+<img alt="_images/agents_result.png" src="_images/agents_result.png" />
+<p>In the example project, we also prepared a simple <code class="docutils literal notranslate"><span class="pre">analyzer.py</span></code> file that produces two figures based on the results.
+Since it is mainly based on other packages instead of <code class="docutils literal notranslate"><span class="pre">Melodie</span></code>, we won’t introduce the details here.</p>
+</section>
+<section id="last-words">
+<h2>Last Words<a class="headerlink" href="#last-words" title="Permalink to this heading"></a></h2>
+<p>If the <a class="reference internal" href="introduction.html#melodie-framework"><span class="std std-ref">Melodie Framework</span></a> section was too brief to follow,
+I hope this tutorial can give you a clearer picture about
+(1) why the modules are organized into those clusters, and
+(2) how they fit together.</p>
+<p>As said before, for simplicity, not all the modules are used in this example,
+but it does show a clear structure of an ABM developed with <code class="docutils literal notranslate"><span class="pre">Melodie</span></code>.
+You can find more examples using other modules in the <a class="reference internal" href="gallery/_index.html#model-gallery"><span class="std std-ref">Model Gallery</span></a> section.</p>
+<p>So, that’s it :)</p>
+<p>We really hope this tutorial is clear and useful, and most importantly, brings you the interest to join the ABM community!
+If you have any questions, please don’t hesitate to contact us!</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="introduction.html" class="btn btn-neutral float-left" title="Introduction" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="gallery/_index.html" class="btn btn-neutral float-right" title="Model Gallery" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021-2022, ABM4ALL.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

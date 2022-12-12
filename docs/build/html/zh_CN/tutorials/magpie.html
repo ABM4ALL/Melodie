@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Magpie &mdash; Melodie 0.1 文档</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/translations.js"></script>
+        <script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+        <script>mermaid.initialize({startOnLoad:true});</script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="搜索" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> Melodie
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="在文档中搜索" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Introduction</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/intro_2_abm.html">Introduction to ABM</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../advancedtutorial/boost.html">Boost Python with vectorization</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Melodie</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Magpie</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/tutorials/magpie.rst.txt" rel="nofollow"> 查看页面源码</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="magpie">
+<span id="tutorial-magpie"></span><h1>Magpie<a class="headerlink" href="#magpie" title="永久链接至标题"></a></h1>
+<p>The prospect of applying MuliAgent Reinforcement Learning algorithms on HPC
+systems is very attractive. As a first step, we demonstrate that
+abmarl can be used with <a class="reference external" href="https://github.com/LLNL/magpie">magpie</a> to create batch
+jobs for running on multiple compute nodes.</p>
+<section id="installing-abmarl-on-hpc-systems">
+<h2>Installing Abmarl on HPC systems<a class="headerlink" href="#installing-abmarl-on-hpc-systems" title="永久链接至标题"></a></h2>
+<p>Here we’ll use conda to install on an HPC system:</p>
+<ul class="simple">
+<li><p>Create the conda virtual environment: <cite>conda create –name abmarl</cite></p></li>
+<li><p>Activate it: <cite>conda activate abmarl</cite></p></li>
+<li><p>Install pip installer: <cite>conda install –name abmarl pip</cite></p></li>
+<li><p>Follow <a class="reference internal" href="../install.html#installation"><span class="std std-ref">installation instructions</span></a></p></li>
+</ul>
+</section>
+<section id="usage">
+<h2>Usage<a class="headerlink" href="#usage" title="永久链接至标题"></a></h2>
+<p>We demonstrate running the <a class="reference internal" href="predator_prey.html#tutorial-predator-prey"><span class="std std-ref">PredatorPrey tutorial</span></a>
+using Mapgie.</p>
+<section id="make-runnable">
+<h3>make-runnable<a class="headerlink" href="#make-runnable" title="永久链接至标题"></a></h3>
+<p>Abmarl’s command line interface provides the <cite>make-runnable</cite>
+subcommand that converts the configuration script into a runnable script and saves it
+to the same directory.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">abmarl</span> <span class="n">make</span><span class="o">-</span><span class="n">runnable</span> <span class="n">predator_prey_training</span><span class="o">.</span><span class="n">py</span>
+</pre></div>
+</div>
+<p>This will create a file called <cite>runnable_predator_prey_training.py</cite>.</p>
+</section>
+<section id="magpie-flag">
+<h3>Magpie flag<a class="headerlink" href="#magpie-flag" title="永久链接至标题"></a></h3>
+<p>The full use of <cite>make-runnable</cite> is seen when it is run with the <code class="docutils literal notranslate"><span class="pre">--magpie</span></code> flag.
+This will create a custom magpie script using
+<a class="reference external" href="https://github.com/LLNL/magpie/blob/master/submission-scripts/script-sbatch-srun/magpie.sbatch-srun-ray">magpie’s ray default script</a>
+as a starting point. This also adds the correct initialization parameters to
+<cite>ray.init()</cite> in the <cite>runnable_</cite> script. For example,</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">abmarl</span> <span class="n">make</span><span class="o">-</span><span class="n">runnable</span> <span class="n">predator_prey_training</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">magpie</span>
+</pre></div>
+</div>
+<p>will create the <cite>runnable_</cite> script with <code class="docutils literal notranslate"><span class="pre">ray.init(address=os.environ['MAGPIE_RAY_ADDRESS'])</span></code>
+and will create a
+<a class="reference external" href="https://github.com/LLNL/Abmarl/blob/main/examples/predator_prey/PredatorPrey_magpie.sbatch-srun-ray">magpie batch script</a>
+that is setup to run this example. To launch the batch job, we simply run it from
+the command line:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sbatch</span> <span class="o">-</span><span class="n">k</span> <span class="o">--</span><span class="n">ip</span><span class="o">-</span><span class="n">isolate</span><span class="o">=</span><span class="n">yes</span> <span class="n">PredatorPrey_magpie</span><span class="o">.</span><span class="n">sbatch</span><span class="o">-</span><span class="n">srun</span><span class="o">-</span><span class="n">ray</span>
+</pre></div>
+</div>
+<p>The script can be modified to adjust the job parameters, such as the number of
+compute nodes, the time limit for the job, etc. This can also be done through
+abmarl via the <code class="docutils literal notranslate"><span class="pre">-n</span></code> and <code class="docutils literal notranslate"><span class="pre">-t</span></code> options.</p>
+<div class="admonition attention">
+<p class="admonition-title">注意</p>
+<p>the <cite>num_workers</cite> parameter in the tune configuration is the number of processors
+to utilize per compute node, which is the different from the number of compute
+nodes you are requesting.</p>
+</div>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; 版权所有 2021, open excel_source.</p>
+  </div>
+
+  利用 <a href="https://www.sphinx-doc.org/">Sphinx</a> 构建，使用了 
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">主题</a>
+    由 <a href="https://readthedocs.org">Read the Docs</a>开发.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

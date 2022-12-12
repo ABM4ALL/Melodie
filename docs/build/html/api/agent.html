@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Agent &mdash; Melodie 1.0.0 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> Melodie
+            <img src="../_static/logo.jpg" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#user-installation">User Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#developer-installation">Developer Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#dependency-note">Dependency Note</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction.html">Introduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../introduction.html#agent-based-model-abm">Agent-based Model (ABM)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../introduction.html#melodie-framework">Melodie Framework</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../introduction.html#model">Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../introduction.html#scenario">Scenario</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../introduction.html#modelling-manager">Modelling Manager</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../introduction.html#infrastructure">Infrastructure</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">Tutorial</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial.html#project-structure">Project Structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial.html#agent">Agent</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial.html#scenario">Scenario</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../tutorial.html#generate-agent-params">Generate <code class="docutils literal notranslate"><span class="pre">agent_params</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../tutorial.html#load-simulator-scenarios">Load <code class="docutils literal notranslate"><span class="pre">simulator_scenarios</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial.html#model">Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial.html#environment">Environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial.html#datacollector">DataCollector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial.html#last-words">Last Words</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../gallery/_index.html">Model Gallery</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../gallery/covid_grid_contagion.html">Covid Grid Contagion</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gallery/covid_network_contagion.html">Covid Network Contagion</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/_index.html">Advanced Topics</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="_index.html">API Reference</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Change Log</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../changelog.html#roadmap">Roadmap</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../changelog.html#major-version-0-x">Major Version 0.x</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../changelog.html#v0-4-0-nov-15-2022">v0.4.0 (Nov. 15, 2022)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../changelog.html#v0-3-0-oct-28-2022">v0.3.0 (Oct. 28, 2022)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../changelog.html#v0-2-0-oct-24-2022">v0.2.0 (Oct. 24, 2022)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../changelog.html#v0-1-1-aug-23-2022">v0.1.1 (Aug. 23, 2022)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../changelog.html#v0-1-0-jul-22-2022">v0.1.0 (Jul. 22, 2022)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../changelog.html#start-may-10-2021">Start (May. 10, 2021)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../contribution.html">Contribution</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../contribution.html#report-bugs">Report Bugs</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../contribution.html#report-melodie-bugs">Report Melodie Bugs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../contribution.html#report-documentation-bugs">Report Documentation Bugs</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../contribution.html#ask-for-functionalities">Ask for Functionalities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../contribution.html#how-to-contribute">How to Contribute</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../about.html">About</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Melodie</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Agent</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/agent.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="agent">
+<h1>Agent<a class="headerlink" href="#agent" title="Permalink to this heading"></a></h1>
+<p>Agent and Environment are all defined in Melodie.boost for better performance, and you may find
+it will only jump to a <em>.pyi</em> file if you are trying to jump into the code. If you would like to view the source code,
+please visit our git repository. The path to related files are listed below:</p>
+<ul class="simple">
+<li><p>Stub File: Melodie/boost/basics.pyi</p></li>
+<li><p>Source Code: Melodie/boost/basics.pyx</p></li>
+<li><p>Cython Interface: Melodie/boost/basics.pxd</p></li>
+</ul>
+<p>Just include class <em>Agent</em> inside doc and undoc the Agent.id and Agent.model</p>
+<span class="target" id="module-Melodie.boost.basics"></span><dl class="py class">
+<dt class="sig sig-object py" id="Melodie.boost.basics.Agent">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Melodie.boost.basics.</span></span><span class="sig-name descname"><span class="pre">Agent</span></span><a class="headerlink" href="#Melodie.boost.basics.Agent" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#Melodie.boost.basics.Element" title="Melodie.boost.basics.Element"><code class="xref py py-class docutils literal notranslate"><span class="pre">Element</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="Melodie.boost.basics.Agent.get_style">
+<span class="sig-name descname"><span class="pre">get_style</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.boost.basics.Agent.get_style" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Melodie.boost.basics.Agent.id">
+<span class="sig-name descname"><span class="pre">id</span></span><a class="headerlink" href="#Melodie.boost.basics.Agent.id" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Melodie.boost.basics.Agent.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#Melodie.boost.basics.Agent.model" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Melodie.boost.basics.Agent.scenario">
+<span class="sig-name descname"><span class="pre">scenario</span></span><a class="headerlink" href="#Melodie.boost.basics.Agent.scenario" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Melodie.boost.basics.Agent.setup">
+<span class="sig-name descname"><span class="pre">setup</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.boost.basics.Agent.setup" title="Permalink to this definition"></a></dt>
+<dd><p>This is the initialization method, declare properties here.</p>
+<p>Here, “Declare” is to define properties with an initial value, such as:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="k">class</span> <span class="nc">NewAgent</span><span class="p">(</span><span class="n">Agent</span><span class="p">)</span>
+<span class="linenos">2</span>    <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="linenos">3</span>        <span class="bp">self</span><span class="o">.</span><span class="n">int_property</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># int property</span>
+<span class="linenos">4</span>        <span class="bp">self</span><span class="o">.</span><span class="n">float_property</span> <span class="o">=</span> <span class="mf">0.0</span>  <span class="c1"># float property</span>
+<span class="linenos">5</span>        <span class="bp">self</span><span class="o">.</span><span class="n">str_property</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>  <span class="c1"># string property</span>
+</pre></div>
+</div>
+<p>It is also fine to define properties with complex data structure such as dict/list/set, but the values in the
+complex data structure is hard to be recorded by the <cite>DataCollector</cite></p>
+<p>This method is executed at the end of the <cite>__init__</cite> method of the corresponding agent container.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Melodie.boost.basics.Agent.to_dict">
+<span class="sig-name descname"><span class="pre">to_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">properties</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.boost.basics.Agent.to_dict" title="Permalink to this definition"></a></dt>
+<dd><p>Dump Agent to a plain dict.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>properties</strong> – List[str]</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="Melodie.boost.basics.Element">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Melodie.boost.basics.</span></span><span class="sig-name descname"><span class="pre">Element</span></span><a class="headerlink" href="#Melodie.boost.basics.Element" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="Melodie.boost.basics.Element.set_params">
+<span class="sig-name descname"><span class="pre">set_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.boost.basics.Element.set_params" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>params</strong> – Dict[str, Any]</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021-2022, ABM4ALL.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

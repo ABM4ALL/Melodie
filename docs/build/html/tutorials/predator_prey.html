@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PredatorPrey &mdash; Melodie 0.1 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+        <script>mermaid.initialize({startOnLoad:true});</script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> Melodie
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Introduction</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/intro_2_abm.html">Introduction to ABM</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../advancedtutorial/boost.html">Boost Python with vectorization</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Melodie</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>PredatorPrey</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/tutorials/predator_prey.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="predatorprey">
+<span id="tutorial-predator-prey"></span><h1>PredatorPrey<a class="headerlink" href="#predatorprey" title="Permalink to this headline"></a></h1>
+<p>PredatorPrey is a multiagent simulation useful for exploring competitve behaviors
+between groups of agents. Resources “grow” in a two-dimensional grid. Prey agents
+move around the grid harvesting resources, and predator agents move around the
+grid hunting the prey agents.</p>
+<figure class="align-default" id="id1">
+<a class="reference internal image-reference" href="../_images/predatorprey.gif"><img alt="Animation of predator and prey agents in a two-dimensional grid." src="../_images/predatorprey.gif" style="width: 80%;" /></a>
+<figcaption>
+<p><span class="caption-text">Animation of predator and prey agents in a two-dimensional grid.</span><a class="headerlink" href="#id1" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<p>This tutorial uses the <a class="reference external" href="https://github.com/LLNL/Abmarl/blob/main/abmarl/sim/predator_prey/predator_prey.py">PredatorPrey simulation</a>,
+and the <a class="reference external" href="https://github.com/LLNL/Abmarl/blob/main/examples/predator_prey/predator_prey_training.py">PredatorPrey configuration</a>.</p>
+<div class="admonition attention">
+<p class="admonition-title">Attention</p>
+<p>This tutorial requires seaborn for visualizing the resources. This can be easily
+added to your virtual environment with <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">seaborn</span></code>.</p>
+</div>
+<section id="creating-the-predatorprey-simulation">
+<h2>Creating the PredatorPrey Simulation<a class="headerlink" href="#creating-the-predatorprey-simulation" title="Permalink to this headline"></a></h2>
+<section id="the-agents-in-the-simulation">
+<h3>The Agents in the Simulation<a class="headerlink" href="#the-agents-in-the-simulation" title="Permalink to this headline"></a></h3>
+<p>In this tutorial, we will train predators to hunt prey by moving around the grid
+and attacking them when they are nearby. In order to learn this, they must be able
+to see a subset of the grid around their position, and they must be able to distinguish
+between other predators and prey. We will reward the predators as follows:</p>
+<ul class="simple">
+<li><p>The predator should be rewarded for successfully killing a prey.</p></li>
+<li><p>The predator should be penalized for trying to move off the edge of the grid.</p></li>
+<li><p>The predator should be penalized for taking too long.</p></li>
+</ul>
+<p>Concurrently, we will train prey agents to harvest resources while attempting to
+avoid predators. To learn this, prey must be able to see a subset off the
+grid around them, both the resources available and any other agents. We will reward
+the prey as follows:</p>
+<ul class="simple">
+<li><p>The prey should be rewarded for harvesting resources.</p></li>
+<li><p>The prey should be penalized for trying to move off the edge of the grid.</p></li>
+<li><p>The prey should be penalized for getting eaten by a predator.</p></li>
+<li><p>The prey should be penalized for taking too long.</p></li>
+</ul>
+<p>In order to accomodate this, we will create two types of Agents, one for Predators
+and one for Prey. Notice that all agents can move around and view a subset of the
+grid, so we’ll capture this in a parent class and encode the distinction in the
+agents’ respective child classes.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
+
+<span class="kn">from</span> <span class="nn">gym.spaces</span> <span class="kn">import</span> <span class="n">Box</span><span class="p">,</span> <span class="n">Discrete</span><span class="p">,</span> <span class="n">Dict</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">abmarl.sim</span> <span class="kn">import</span> <span class="n">PrincipleAgent</span><span class="p">,</span> <span class="n">AgentBasedSimulation</span>
+
+<span class="k">class</span> <span class="nc">PredatorPreyAgent</span><span class="p">(</span><span class="n">PrincipleAgent</span><span class="p">,</span> <span class="n">ABC</span><span class="p">):</span>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">move</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">view</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">move</span> <span class="o">=</span> <span class="n">move</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">view</span> <span class="o">=</span> <span class="n">view</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">configured</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">configured</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">move</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">view</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+
+<span class="k">class</span> <span class="nc">Prey</span><span class="p">(</span><span class="n">PredatorPreyAgent</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">harvest_amount</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">harvest_amount</span> <span class="o">=</span> <span class="n">harvest_amount</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">configured</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">configured</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">harvest_amount</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">value</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="mi">1</span>
+
+<span class="k">class</span> <span class="nc">Predator</span><span class="p">(</span><span class="n">PredatorPreyAgent</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attack</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">attack</span> <span class="o">=</span> <span class="n">attack</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">configured</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">configured</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">attack</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">value</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="mi">2</span>
+</pre></div>
+</div>
+</section>
+<section id="the-predatorprey-simulation">
+<h3>The PredatorPrey Simulation<a class="headerlink" href="#the-predatorprey-simulation" title="Permalink to this headline"></a></h3>
+<p>The PredatorPrey Simulation needs much detailed explanation, which we believe will
+distract from this tutorial. Suffice it to say that we have created a simulation
+that works with the above agents and captures our desired features. This simulation
+can be found in full <a class="reference external" href="https://github.com/LLNL/Abmarl/blob/main/abmarl/sim/predator_prey/predator_prey.py">in our repo</a>.</p>
+</section>
+</section>
+<section id="training-the-predator-prey-simulation">
+<h2>Training the Predator Prey Simulation<a class="headerlink" href="#training-the-predator-prey-simulation" title="Permalink to this headline"></a></h2>
+<p>With the PredatorPrey simulation and agents at hand, we can create a configuration
+file for training.</p>
+<section id="simulation-setup">
+<h3>Simulation Setup<a class="headerlink" href="#simulation-setup" title="Permalink to this headline"></a></h3>
+<p>Setting up the PredatorPrey simulation requires us to explicity make agents and
+pass those to the simulation builder. Once we’ve done that, we can choose which
+<cite>SimulationManager</cite> to use. In this tutorial, we’ll use the <cite>AllStepManager</cite>. Then,
+we’ll wrap the simulation with our <cite>MultiAgentWrapper</cite>, which enables us to connect
+with RLlib. Finally, we’ll register the simulation with RLlib.</p>
+</section>
+<section id="policy-setup">
+<h3>Policy Setup<a class="headerlink" href="#policy-setup" title="Permalink to this headline"></a></h3>
+<p>Next, we will create the policies and the policy mapping function. Because predators
+and prey are competitve, they must train separate polices from one another. Furthermore,
+since each prey is homogeneous with other prey and each predator with other predators,
+we can have them train the same policy. Thus, we will have two policies: one for
+predators and one for prey.</p>
+</section>
+<section id="experiment-parameters">
+<h3>Experiment Parameters<a class="headerlink" href="#experiment-parameters" title="Permalink to this headline"></a></h3>
+<p>The last thing is to wrap all the parameters together into a
+single <cite>params</cite> dictionary. Below is the full configuration file:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Setup the simulation</span>
+<span class="kn">from</span> <span class="nn">abmarl.sim.predator_prey</span> <span class="kn">import</span> <span class="n">PredatorPreySimulation</span><span class="p">,</span> <span class="n">Predator</span><span class="p">,</span> <span class="n">Prey</span>
+<span class="kn">from</span> <span class="nn">abmarl.managers</span> <span class="kn">import</span> <span class="n">AllStepManager</span>
+
+<span class="n">region</span> <span class="o">=</span> <span class="mi">6</span>
+<span class="n">predators</span> <span class="o">=</span> <span class="p">[</span><span class="n">Predator</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;predator</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">attack</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">)]</span>
+<span class="n">prey</span> <span class="o">=</span> <span class="p">[</span><span class="n">Prey</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;prey</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">7</span><span class="p">)]</span>
+<span class="n">agents</span> <span class="o">=</span> <span class="n">predators</span> <span class="o">+</span> <span class="n">prey</span>
+
+<span class="n">sim_config</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;region&#39;</span><span class="p">:</span> <span class="n">region</span><span class="p">,</span>
+    <span class="s1">&#39;max_steps&#39;</span><span class="p">:</span> <span class="mi">200</span><span class="p">,</span>
+    <span class="s1">&#39;agents&#39;</span><span class="p">:</span> <span class="n">agents</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="n">sim_name</span> <span class="o">=</span> <span class="s1">&#39;PredatorPrey&#39;</span>
+
+<span class="kn">from</span> <span class="nn">abmarl.external.rllib_multiagentenv_wrapper</span> <span class="kn">import</span> <span class="n">MultiAgentWrapper</span>
+<span class="kn">from</span> <span class="nn">ray.tune.registry</span> <span class="kn">import</span> <span class="n">register_env</span>
+<span class="n">sim</span> <span class="o">=</span> <span class="n">MultiAgentWrapper</span><span class="p">(</span><span class="n">AllStepManager</span><span class="p">(</span><span class="n">PredatorPreySimulation</span><span class="o">.</span><span class="n">build</span><span class="p">(</span><span class="n">sim_config</span><span class="p">)))</span>
+<span class="n">agents</span> <span class="o">=</span> <span class="n">sim</span><span class="o">.</span><span class="n">unwrapped</span><span class="o">.</span><span class="n">agents</span>
+<span class="n">register_env</span><span class="p">(</span><span class="n">sim_name</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">sim_config</span><span class="p">:</span> <span class="n">sim</span><span class="p">)</span>
+
+<span class="c1"># Set up policies</span>
+<span class="n">policies</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;predator&#39;</span><span class="p">:</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">agents</span><span class="p">[</span><span class="s1">&#39;predator0&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">observation_space</span><span class="p">,</span> <span class="n">agents</span><span class="p">[</span><span class="s1">&#39;predator0&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">action_space</span><span class="p">,</span> <span class="p">{}),</span>
+    <span class="s1">&#39;prey&#39;</span><span class="p">:</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">agents</span><span class="p">[</span><span class="s1">&#39;prey0&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">observation_space</span><span class="p">,</span> <span class="n">agents</span><span class="p">[</span><span class="s1">&#39;prey0&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">action_space</span><span class="p">,</span> <span class="p">{})</span>
+<span class="p">}</span>
+<span class="k">def</span> <span class="nf">policy_mapping_fn</span><span class="p">(</span><span class="n">agent_id</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">agent_id</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;prey&#39;</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s1">&#39;prey&#39;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s1">&#39;predator&#39;</span>
+
+<span class="c1"># Experiment parameters</span>
+<span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;experiment&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s1">&#39;title&#39;</span><span class="p">:</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;PredatorPrey&#39;</span><span class="p">),</span>
+        <span class="s1">&#39;sim_creator&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">config</span><span class="o">=</span><span class="kc">None</span><span class="p">:</span> <span class="n">sim</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="s1">&#39;ray_tune&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s1">&#39;run_or_experiment&#39;</span><span class="p">:</span> <span class="s2">&quot;PG&quot;</span><span class="p">,</span>
+        <span class="s1">&#39;checkpoint_freq&#39;</span><span class="p">:</span> <span class="mi">50</span><span class="p">,</span>
+        <span class="s1">&#39;checkpoint_at_end&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="s1">&#39;stop&#39;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s1">&#39;episodes_total&#39;</span><span class="p">:</span> <span class="mi">20_000</span><span class="p">,</span>
+        <span class="p">},</span>
+        <span class="s1">&#39;verbose&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+        <span class="s1">&#39;config&#39;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="c1"># --- Simulation ---</span>
+            <span class="s1">&#39;env&#39;</span><span class="p">:</span> <span class="n">sim_name</span><span class="p">,</span>
+            <span class="s1">&#39;env_config&#39;</span><span class="p">:</span> <span class="n">sim_config</span><span class="p">,</span>
+            <span class="s1">&#39;horizon&#39;</span><span class="p">:</span> <span class="mi">200</span><span class="p">,</span>
+            <span class="c1"># --- Multiagent ---</span>
+            <span class="s1">&#39;multiagent&#39;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s1">&#39;policies&#39;</span><span class="p">:</span> <span class="n">policies</span><span class="p">,</span>
+                <span class="s1">&#39;policy_mapping_fn&#39;</span><span class="p">:</span> <span class="n">policy_mapping_fn</span><span class="p">,</span>
+            <span class="p">},</span>
+            <span class="c1"># &quot;lr&quot;: 0.0001,</span>
+            <span class="c1"># --- Parallelism ---</span>
+            <span class="c1"># Number of workers per experiment: int</span>
+            <span class="s2">&quot;num_workers&quot;</span><span class="p">:</span> <span class="mi">7</span><span class="p">,</span>
+            <span class="c1"># Number of simulations that each worker starts: int</span>
+            <span class="s2">&quot;num_envs_per_worker&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="c1"># This must be 1 because we are not &quot;threadsafe&quot;</span>
+            <span class="c1"># &#39;simple_optimizer&#39;: True,</span>
+            <span class="c1"># &quot;postprocess_inputs&quot;: True</span>
+        <span class="p">},</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="using-the-command-line">
+<h3>Using the Command Line<a class="headerlink" href="#using-the-command-line" title="Permalink to this headline"></a></h3>
+<section id="training">
+<h4>Training<a class="headerlink" href="#training" title="Permalink to this headline"></a></h4>
+<p>With the configuration script complete, we can utilize the command line interface
+to train our predator. We simply type <code class="docutils literal notranslate"><span class="pre">abmarl</span> <span class="pre">train</span> <span class="pre">predator_prey_training.py</span></code>,
+where <cite>predator_prey_training.py</cite> is our configuration file. This will launch Abmarl,
+which will process the script and launch RLlib according to the
+specified parameters. This particular example should take about 10 minutes to
+train, depending on your compute capabilities. You can view the performance in
+real time in tensorboard with <code class="docutils literal notranslate"><span class="pre">tensorboard</span> <span class="pre">--logdir</span> <span class="pre">~/abmarl_results</span></code>.
+We can find the rewards associated with the policies on the second page of tensorboard.</p>
+</section>
+<section id="visualizing">
+<h4>Visualizing<a class="headerlink" href="#visualizing" title="Permalink to this headline"></a></h4>
+<p>Having successfully trained predators to attack prey, we can vizualize the agents’
+learned behavior with the <cite>visualize</cite> command,
+which takes as argument the output directory from the training session stored
+in <cite>~/abmarl_results</cite>. For example, the command</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">abmarl</span> <span class="n">visualize</span> <span class="o">~/</span><span class="n">abmarl_results</span><span class="o">/</span><span class="n">PredatorPrey</span><span class="o">-</span><span class="mi">2020</span><span class="o">-</span><span class="mi">08</span><span class="o">-</span><span class="mi">25_09</span><span class="o">-</span><span class="mi">30</span><span class="o">/</span> <span class="o">-</span><span class="n">n</span> <span class="mi">5</span> <span class="o">--</span><span class="n">record</span>
+</pre></div>
+</div>
+<p>will load the training session (notice that the
+directory name is the experiment title from the configuration script appended with a
+timestamp) and display an animation of 5 episodes. The <cite>–record</cite> flag will
+save the animations as <cite>.mp4</cite> videos in the training directory.</p>
+</section>
+<section id="analyzing">
+<h4>Analyzing<a class="headerlink" href="#analyzing" title="Permalink to this headline"></a></h4>
+<p>We can further investigate the learned behaviors using the <cite>analyze</cite> command along
+with an analysis script. Analysis scripts implement a <cite>run</cite> command which takes
+the Simulation and the Trainer as input arguments. We can define any
+script to further investigate the agents’ behavior. In this
+example, we will craft a script that records how
+often a predator attacks from each grid square.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="n">sim</span><span class="p">,</span> <span class="n">trainer</span><span class="p">):</span>
+    <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+    <span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+    <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+    <span class="c1"># Create a grid</span>
+    <span class="n">grid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">sim</span><span class="o">.</span><span class="n">sim</span><span class="o">.</span><span class="n">region</span><span class="p">,</span> <span class="n">sim</span><span class="o">.</span><span class="n">sim</span><span class="o">.</span><span class="n">region</span><span class="p">))</span>
+    <span class="n">attack</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">sim</span><span class="o">.</span><span class="n">sim</span><span class="o">.</span><span class="n">region</span><span class="p">,</span> <span class="n">sim</span><span class="o">.</span><span class="n">sim</span><span class="o">.</span><span class="n">region</span><span class="p">))</span>
+
+    <span class="c1"># Run the trained policy</span>
+    <span class="n">policy_agent_mapping</span> <span class="o">=</span> <span class="n">trainer</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;multiagent&#39;</span><span class="p">][</span><span class="s1">&#39;policy_mapping_fn&#39;</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">episode</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">100</span><span class="p">):</span> <span class="c1"># Run 100 trajectories</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Episode: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">episode</span><span class="p">))</span>
+        <span class="n">obs</span> <span class="o">=</span> <span class="n">sim</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+        <span class="n">done</span> <span class="o">=</span> <span class="p">{</span><span class="n">agent</span><span class="p">:</span> <span class="kc">False</span> <span class="k">for</span> <span class="n">agent</span> <span class="ow">in</span> <span class="n">obs</span><span class="p">}</span>
+        <span class="n">pox</span><span class="p">,</span> <span class="n">poy</span> <span class="o">=</span> <span class="n">sim</span><span class="o">.</span><span class="n">agents</span><span class="p">[</span><span class="s1">&#39;predator0&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">position</span>
+        <span class="n">grid</span><span class="p">[</span><span class="n">pox</span><span class="p">,</span> <span class="n">poy</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">joint_action</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">for</span> <span class="n">agent_id</span><span class="p">,</span> <span class="n">agent_obs</span> <span class="ow">in</span> <span class="n">obs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="k">if</span> <span class="n">done</span><span class="p">[</span><span class="n">agent_id</span><span class="p">]:</span> <span class="k">continue</span> <span class="c1"># Don&#39;t get actions for dead agents</span>
+                <span class="n">policy_id</span> <span class="o">=</span> <span class="n">policy_agent_mapping</span><span class="p">(</span><span class="n">agent_id</span><span class="p">)</span>
+                <span class="n">action</span> <span class="o">=</span> <span class="n">trainer</span><span class="o">.</span><span class="n">compute_action</span><span class="p">(</span><span class="n">agent_obs</span><span class="p">,</span> <span class="n">policy_id</span><span class="o">=</span><span class="n">policy_id</span><span class="p">)</span>
+                <span class="n">joint_action</span><span class="p">[</span><span class="n">agent_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">action</span>
+            <span class="n">obs</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">done</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">sim</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">joint_action</span><span class="p">)</span>
+            <span class="n">pox</span><span class="p">,</span> <span class="n">poy</span> <span class="o">=</span> <span class="n">sim</span><span class="o">.</span><span class="n">agents</span><span class="p">[</span><span class="s1">&#39;predator0&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">position</span>
+            <span class="n">grid</span><span class="p">[</span><span class="n">pox</span><span class="p">,</span> <span class="n">poy</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">if</span> <span class="n">joint_action</span><span class="p">[</span><span class="s1">&#39;predator0&#39;</span><span class="p">][</span><span class="s1">&#39;attack&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span> <span class="c1"># This is the attack action</span>
+                <span class="n">attack</span><span class="p">[</span><span class="n">pox</span><span class="p">,</span> <span class="n">poy</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">if</span> <span class="n">done</span><span class="p">[</span><span class="s1">&#39;__all__&#39;</span><span class="p">]:</span>
+                <span class="k">break</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Attack action frequency&quot;</span><span class="p">)</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">heatmap</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">flipud</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">attack</span><span class="p">)),</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>We can run this analysis with</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">abmarl</span> <span class="n">analyze</span> <span class="o">~/</span><span class="n">abmarl_results</span><span class="o">/</span><span class="n">PredatorPrey</span><span class="o">-</span><span class="mi">2020</span><span class="o">-</span><span class="mi">08</span><span class="o">-</span><span class="mi">25_09</span><span class="o">-</span><span class="mi">30</span><span class="o">/</span> <span class="n">movement_map</span><span class="o">.</span><span class="n">py</span>
+</pre></div>
+</div>
+<p>which renders the following image for us</p>
+<a class="reference internal image-reference" href="../_images/attack_freq.png"><img alt="Animation of agents moving back and forth in a corridor until they reach the end." src="../_images/attack_freq.png" style="width: 80%;" /></a>
+<p>The heatmap figures indicate that the predators spend most of their time attacking
+prey from the center of the map and rarely ventures to the corners.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Creating the analysis script required some in-depth knowledge about
+the inner workings of the PredatorPrey Simulation. This will likely be needed
+when analyzing most simulation you work with.</p>
+</div>
+</section>
+</section>
+</section>
+<section id="extra-challenges">
+<h2>Extra Challenges<a class="headerlink" href="#extra-challenges" title="Permalink to this headline"></a></h2>
+<p>Having successfully trained the predators to attack prey experiment, we can further
+explore the agents’ behaviors and the training process. For example, you may have
+noticed that the prey agents didn’t seem to learn anything. We may need to improve
+our reward schema for the prey or modify the way agents interact in the simulation.
+This is left open to exploration.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, open excel_source.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

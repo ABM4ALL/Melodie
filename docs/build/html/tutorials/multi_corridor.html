@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MultiCorridor &mdash; Melodie 0.1 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+        <script>mermaid.initialize({startOnLoad:true});</script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> Melodie
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Introduction</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/intro_2_abm.html">Introduction to ABM</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../advancedtutorial/boost.html">Boost Python with vectorization</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Melodie</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>MultiCorridor</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/tutorials/multi_corridor.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="multicorridor">
+<span id="tutorial-multi-corridor"></span><h1>MultiCorridor<a class="headerlink" href="#multicorridor" title="Permalink to this headline"></a></h1>
+<p>MultiCorridor extends RLlib’s <a class="reference external" href="https://github.com/ray-project/ray/blob/master/rllib/examples/custom_env.py#L65">simple corridor</a>,
+wherein agents must learn to move to the right in a one-dimensonal corridor to reach the end.
+Our implementation provides the ability to instantiate multiple agents in the simulation
+and restricts agents from occupying the same square. Every agent is homogeneous:
+they all have the same action space, observation space, and objective function.</p>
+<figure class="align-default" id="id1">
+<a class="reference internal image-reference" href="../_images/multicorridor.gif"><img alt="Animation of agents moving left and right in a corridor until they reach the end." src="../_images/multicorridor.gif" style="width: 80%;" /></a>
+<figcaption>
+<p><span class="caption-text">Animation of agents moving left and right in a corridor until they reach the end.</span><a class="headerlink" href="#id1" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<p>This tutorial uses the <a class="reference external" href="https://github.com/LLNL/Abmarl/blob/main/abmarl/sim/corridor/multi_corridor.py">MultiCorridor simulation</a>
+and the <a class="reference external" href="https://github.com/LLNL/Abmarl/blob/main/examples/multi_corridor_example.py">MultiCorridor configuration</a>.</p>
+<section id="creating-the-multicorridor-simulation">
+<h2>Creating the MultiCorridor Simulation<a class="headerlink" href="#creating-the-multicorridor-simulation" title="Permalink to this headline"></a></h2>
+<section id="the-agents-in-the-simulation">
+<h3>The Agents in the Simulation<a class="headerlink" href="#the-agents-in-the-simulation" title="Permalink to this headline"></a></h3>
+<p>It’s helpful to start by thinking about what we want the agents to learn and what
+information they will need in order to learn it. In this tutorial, we want to
+train agents that can reach the end of a one-dimensional corridor without bumping
+into each other. Therefore, agents should be able to move left, move right, and
+stay still. In order to move to the end of the corridor without bumping into each
+other, they will need to see their own position and if the squares near them are
+occupied. Finally, we need to decide how to reward the agents. There are many ways
+we can do this, and we should at least capture the following:</p>
+<ul class="simple">
+<li><p>The agent should be rewarded for reaching the end of the corridor.</p></li>
+<li><p>The agent should be penalized for bumping into other agents.</p></li>
+<li><p>The agent should be penalized for taking too long.</p></li>
+</ul>
+<p>Since all our agents are homogeneous, we can create them in the Agent Based
+Simulation itself, like so:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">IntEnum</span>
+
+<span class="kn">from</span> <span class="nn">gym.spaces</span> <span class="kn">import</span> <span class="n">Box</span><span class="p">,</span> <span class="n">Discrete</span><span class="p">,</span> <span class="n">MultiBinary</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">abmarl.sim</span> <span class="kn">import</span> <span class="n">Agent</span><span class="p">,</span> <span class="n">AgentBasedSimulation</span>
+
+<span class="k">class</span> <span class="nc">MultiCorridor</span><span class="p">(</span><span class="n">AgentBasedSimulation</span><span class="p">):</span>
+
+    <span class="k">class</span> <span class="nc">Actions</span><span class="p">(</span><span class="n">IntEnum</span><span class="p">):</span> <span class="c1"># The three actions each agent can take</span>
+        <span class="n">LEFT</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">STAY</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">RIGHT</span> <span class="o">=</span> <span class="mi">2</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">num_agents</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">end</span> <span class="o">=</span> <span class="n">end</span>
+        <span class="n">agents</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_agents</span><span class="p">):</span>
+            <span class="n">agents</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;agent</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Agent</span><span class="p">(</span>
+                <span class="nb">id</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;agent</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+                <span class="n">action_space</span><span class="o">=</span><span class="n">Discrete</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span> <span class="c1"># Move left, stay still, or move right</span>
+                <span class="n">observation_space</span><span class="o">=</span><span class="p">{</span>
+                    <span class="s1">&#39;position&#39;</span><span class="p">:</span> <span class="n">Box</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">end</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,),</span> <span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">),</span> <span class="c1"># Observe your own position</span>
+                    <span class="s1">&#39;left&#39;</span><span class="p">:</span> <span class="n">MultiBinary</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="c1"># Observe if the left square is occupied</span>
+                    <span class="s1">&#39;right&#39;</span><span class="p">:</span> <span class="n">MultiBinary</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="c1"># Observe if the right square is occupied</span>
+                <span class="p">}</span>
+            <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">agents</span> <span class="o">=</span> <span class="n">agents</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">finalize</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Here, notice how the agents’ <cite>observation_space</cite> is a <cite>dict</cite> rather than a
+<cite>gym.space.Dict</cite>. That’s okay because our <cite>Agent</cite> class can convert a <cite>dict of gym spaces</cite>
+into a <cite>Dict</cite> when <code class="docutils literal notranslate"><span class="pre">finalize</span></code> is called at the end of <code class="docutils literal notranslate"><span class="pre">__init__</span></code>.</p>
+</section>
+<section id="resetting-the-simulation">
+<h3>Resetting the Simulation<a class="headerlink" href="#resetting-the-simulation" title="Permalink to this headline"></a></h3>
+<p>At the beginning of each episode, we want the agents to be randomly positioned
+throughout the corridor without occupying the same squares. We must give each agent
+a position attribute at reset. We will also create a data structure that captures
+which agent is in which cell so that we don’t have to do a search for nearby agents
+but can directly index the space. Finally, we must track the agents’ rewards.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="n">location_sample</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">end</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">agents</span><span class="p">),</span> <span class="kc">False</span><span class="p">)</span>
+    <span class="c1"># Track the squares themselves</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">corridor</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">end</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">object</span><span class="p">)</span>
+    <span class="c1"># Track the position of the agents</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">agent</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">agents</span><span class="o">.</span><span class="n">values</span><span class="p">()):</span>
+        <span class="n">agent</span><span class="o">.</span><span class="n">position</span> <span class="o">=</span> <span class="n">location_sample</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">corridor</span><span class="p">[</span><span class="n">location_sample</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">=</span> <span class="n">agent</span>
+
+    <span class="c1"># Track the agents&#39; rewards over multiple steps.</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">reward</span> <span class="o">=</span> <span class="p">{</span><span class="n">agent_id</span><span class="p">:</span> <span class="mi">0</span> <span class="k">for</span> <span class="n">agent_id</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">agents</span><span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="stepping-the-simulation">
+<h3>Stepping the Simulation<a class="headerlink" href="#stepping-the-simulation" title="Permalink to this headline"></a></h3>
+<p>The simulation is driven by the agents’ actions because there are no other
+dynamics. Thus, the MultiCorridor Simulation only concerns itself with processing
+the agents’ actions at each step. For each agent, we’ll capture the following cases:</p>
+<ul class="simple">
+<li><p>An agent attempts to move to a space that is unoccupied.</p></li>
+<li><p>An agent attempts to move to a space that is already occupied.</p></li>
+<li><p>An agent attempts to move to the right-most space (the end) of the corridor.</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action_dict</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">agent_id</span><span class="p">,</span> <span class="n">action</span> <span class="ow">in</span> <span class="n">action_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">agent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">agents</span><span class="p">[</span><span class="n">agent_id</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">action</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">Actions</span><span class="o">.</span><span class="n">LEFT</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">agent</span><span class="o">.</span><span class="n">position</span> <span class="o">!=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">corridor</span><span class="p">[</span><span class="n">agent</span><span class="o">.</span><span class="n">position</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="c1"># Good move, no extra penalty</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">corridor</span><span class="p">[</span><span class="n">agent</span><span class="o">.</span><span class="n">position</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+                <span class="n">agent</span><span class="o">.</span><span class="n">position</span> <span class="o">-=</span> <span class="mi">1</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">corridor</span><span class="p">[</span><span class="n">agent</span><span class="o">.</span><span class="n">position</span><span class="p">]</span> <span class="o">=</span> <span class="n">agent</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">reward</span><span class="p">[</span><span class="n">agent_id</span><span class="p">]</span> <span class="o">-=</span> <span class="mi">1</span> <span class="c1"># Entropy penalty</span>
+            <span class="k">elif</span> <span class="n">agent</span><span class="o">.</span><span class="n">position</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span> <span class="c1"># Tried to move left from left-most square</span>
+                <span class="c1"># Bad move, only acting agent is involved and should be penalized.</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">reward</span><span class="p">[</span><span class="n">agent_id</span><span class="p">]</span> <span class="o">-=</span> <span class="mi">5</span> <span class="c1"># Bad move</span>
+            <span class="k">else</span><span class="p">:</span> <span class="c1"># There was another agent to the left of me that I bumped into</span>
+                <span class="c1"># Bad move involving two agents. Both are penalized</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">reward</span><span class="p">[</span><span class="n">agent_id</span><span class="p">]</span> <span class="o">-=</span> <span class="mi">5</span> <span class="c1"># Penalty for offending agent</span>
+                <span class="c1"># Penalty for offended agent</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">reward</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">corridor</span><span class="p">[</span><span class="n">agent</span><span class="o">.</span><span class="n">position</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">id</span><span class="p">]</span> <span class="o">-=</span> <span class="mi">2</span>
+        <span class="k">elif</span> <span class="n">action</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">Actions</span><span class="o">.</span><span class="n">RIGHT</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">corridor</span><span class="p">[</span><span class="n">agent</span><span class="o">.</span><span class="n">position</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="c1"># Good move, but is the agent done?</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">corridor</span><span class="p">[</span><span class="n">agent</span><span class="o">.</span><span class="n">position</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+                <span class="n">agent</span><span class="o">.</span><span class="n">position</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="k">if</span> <span class="n">agent</span><span class="o">.</span><span class="n">position</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">end</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+                    <span class="c1"># Agent has reached the end of the corridor!</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">reward</span><span class="p">[</span><span class="n">agent_id</span><span class="p">]</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">end</span> <span class="o">**</span> <span class="mi">2</span>
+                <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># Good move, no extra penalty</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">corridor</span><span class="p">[</span><span class="n">agent</span><span class="o">.</span><span class="n">position</span><span class="p">]</span> <span class="o">=</span> <span class="n">agent</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">reward</span><span class="p">[</span><span class="n">agent_id</span><span class="p">]</span> <span class="o">-=</span> <span class="mi">1</span> <span class="c1"># Entropy penalty</span>
+            <span class="k">else</span><span class="p">:</span> <span class="c1"># There was another agent to the right of me that I bumped into</span>
+                <span class="c1"># Bad move involving two agents. Both are penalized</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">reward</span><span class="p">[</span><span class="n">agent_id</span><span class="p">]</span> <span class="o">-=</span> <span class="mi">5</span> <span class="c1"># Penalty for offending agent</span>
+                <span class="c1"># Penalty for offended agent</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">reward</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">corridor</span><span class="p">[</span><span class="n">agent</span><span class="o">.</span><span class="n">position</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">id</span><span class="p">]</span> <span class="o">-=</span> <span class="mi">2</span>
+        <span class="k">elif</span> <span class="n">action</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">Actions</span><span class="o">.</span><span class="n">STAY</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">reward</span><span class="p">[</span><span class="n">agent_id</span><span class="p">]</span> <span class="o">-=</span> <span class="mi">1</span> <span class="c1"># Entropy penalty</span>
+</pre></div>
+</div>
+<div class="admonition attention">
+<p class="admonition-title">Attention</p>
+<p>Our reward schema reveals a training
+dynamic that is not present in single-agent simulations: an agent’s reward
+does not entirely depend on its own interaction with the simulation but can
+be affected by other agents’ actions. In this case, agents
+are slightly penalized for being “bumped into” when other agents attempt to move
+onto their square, even though the “offended” agent did not directly cause the
+collision. This is discussed in MARL literature and captured in the way
+we have designed our Simulation Managers. In Abmarl, we favor capturing the rewards
+as part of the simulation’s state and only “flushing” them once they rewards are
+asked for in <code class="docutils literal notranslate"><span class="pre">get_reward</span></code>.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>We have not needed to consider the order in which the simulation processes actions.
+Our simulation simply provides the capabilities to process <em>any</em> agent’s action,
+and we can use <cite>Simulation Managers</cite> to impose an order. This shows the flexibility
+of our design. In this tutorial, we will use the <cite>TurnBasedManager</cite>, but we can use
+any <cite>SimulationManager</cite>.</p>
+</div>
+</section>
+<section id="querying-simulation-state">
+<h3>Querying Simulation State<a class="headerlink" href="#querying-simulation-state" title="Permalink to this headline"></a></h3>
+<p>The trainer needs to see how agents’ actions impact the simulation’s state. They do
+so via getters, which we define below.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">get_obs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent_id</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="n">agent_position</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">agents</span><span class="p">[</span><span class="n">agent_id</span><span class="p">]</span><span class="o">.</span><span class="n">position</span>
+    <span class="k">if</span> <span class="n">agent_position</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">corridor</span><span class="p">[</span><span class="n">agent_position</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">left</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">left</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">if</span> <span class="n">agent_position</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">end</span><span class="o">-</span><span class="mi">1</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">corridor</span><span class="p">[</span><span class="n">agent_position</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">right</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">right</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s1">&#39;position&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">agent_position</span><span class="p">],</span>
+        <span class="s1">&#39;left&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">left</span><span class="p">],</span>
+        <span class="s1">&#39;right&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">right</span><span class="p">],</span>
+    <span class="p">}</span>
+
+<span class="k">def</span> <span class="nf">get_done</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent_id</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">agents</span><span class="p">[</span><span class="n">agent_id</span><span class="p">]</span><span class="o">.</span><span class="n">position</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">end</span> <span class="o">-</span> <span class="mi">1</span>
+
+<span class="k">def</span> <span class="nf">get_all_done</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">agent</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">agents</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">agent</span><span class="o">.</span><span class="n">position</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">end</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+    <span class="k">return</span> <span class="kc">True</span>
+
+<span class="k">def</span> <span class="nf">get_reward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent_id</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="n">agent_reward</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">reward</span><span class="p">[</span><span class="n">agent_id</span><span class="p">]</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">reward</span><span class="p">[</span><span class="n">agent_id</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">return</span> <span class="n">agent_reward</span>
+
+<span class="k">def</span> <span class="nf">get_info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent_id</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">{}</span>
+</pre></div>
+</div>
+</section>
+<section id="rendering-for-visualization">
+<h3>Rendering for Visualization<a class="headerlink" href="#rendering-for-visualization" title="Permalink to this headline"></a></h3>
+<p>Finally, it’s often useful to be able to visualize a simulation as it steps through
+an episode. We can do this via the render funciton.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">fig</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="n">draw_now</span> <span class="o">=</span> <span class="n">fig</span> <span class="ow">is</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="n">draw_now</span><span class="p">:</span>
+        <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+        <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gcf</span><span class="p">()</span>
+
+    <span class="n">fig</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">xlim</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">end</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">),</span> <span class="n">ylim</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">))</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">end</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.</span><span class="p">))</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+        <span class="p">[</span><span class="n">agent</span><span class="o">.</span><span class="n">position</span> <span class="k">for</span> <span class="n">agent</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">agents</span><span class="o">.</span><span class="n">values</span><span class="p">()]),</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">agents</span><span class="p">)),</span>
+        <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;s&#39;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;g&#39;</span>
+    <span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">draw_now</span><span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">pause</span><span class="p">(</span><span class="mf">1e-17</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="training-the-multicorridor-simulation">
+<h2>Training the MultiCorridor Simulation<a class="headerlink" href="#training-the-multicorridor-simulation" title="Permalink to this headline"></a></h2>
+<p>Now that we have created the simulation and agents, we can create a configuration
+file for training.</p>
+<section id="simulation-setup">
+<h3>Simulation Setup<a class="headerlink" href="#simulation-setup" title="Permalink to this headline"></a></h3>
+<p>We’ll start by setting up the simulation we have just built.
+Then we’ll choose a Simulation Manager. Abmarl comes with two built-In
+managers: <cite>TurnBasedManager</cite>, where only a single agent takes a turn per step, and
+<cite>AllStepManager</cite>, where all non-done agents take a turn per step. For this experiment,
+we’ll use the <cite>TurnBasedManager</cite>. Then, we’ll wrap the simulation with our <cite>MultiAgentWrapper</cite>,
+which enables us to connect with RLlib. Finally, we’ll register the simulation
+with RLlib.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># MultiCorridor is the simulation we created above</span>
+<span class="kn">from</span> <span class="nn">abmarl.sim.corridor</span> <span class="kn">import</span> <span class="n">MultiCorridor</span>
+<span class="kn">from</span> <span class="nn">abmarl.managers</span> <span class="kn">import</span> <span class="n">TurnBasedManager</span>
+<span class="c1"># MultiAgentWrapper needed to connect with RLlib</span>
+<span class="kn">from</span> <span class="nn">abmarl.external</span> <span class="kn">import</span> <span class="n">MultiAgentWrapper</span>
+
+<span class="c1"># Create an instance of the simulation and register it</span>
+<span class="n">sim</span> <span class="o">=</span> <span class="n">MultiAgentWrapper</span><span class="p">(</span><span class="n">TurnBasedManager</span><span class="p">(</span><span class="n">MultiCorridor</span><span class="p">()))</span>
+<span class="n">sim_name</span> <span class="o">=</span> <span class="s2">&quot;MultiCorridor&quot;</span>
+<span class="kn">from</span> <span class="nn">ray.tune.registry</span> <span class="kn">import</span> <span class="n">register_env</span>
+<span class="n">register_env</span><span class="p">(</span><span class="n">sim_name</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">sim_config</span><span class="p">:</span> <span class="n">sim</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="policy-setup">
+<h3>Policy Setup<a class="headerlink" href="#policy-setup" title="Permalink to this headline"></a></h3>
+<p>Now we want to create the policies and the policy mapping function in our multiagent
+experiment. Each agent in our simulation is homogeneous: they all have the same
+observation space, action space, and objective function. Thus, we can create a
+single policy and map all agents to that policy.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ref_agent</span> <span class="o">=</span> <span class="n">sim</span><span class="o">.</span><span class="n">unwrapped</span><span class="o">.</span><span class="n">agents</span><span class="p">[</span><span class="s1">&#39;agent0&#39;</span><span class="p">]</span>
+<span class="n">policies</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;corridor&#39;</span><span class="p">:</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">ref_agent</span><span class="o">.</span><span class="n">observation_space</span><span class="p">,</span> <span class="n">ref_agent</span><span class="o">.</span><span class="n">action_space</span><span class="p">,</span> <span class="p">{})</span>
+<span class="p">}</span>
+<span class="k">def</span> <span class="nf">policy_mapping_fn</span><span class="p">(</span><span class="n">agent_id</span><span class="p">):</span>
+    <span class="k">return</span> <span class="s1">&#39;corridor&#39;</span>
+</pre></div>
+</div>
+</section>
+<section id="experiment-parameters">
+<h3>Experiment Parameters<a class="headerlink" href="#experiment-parameters" title="Permalink to this headline"></a></h3>
+<p>Having setup the simulation and policies, we can now bundle all that information
+into a parameters dictionary that will be read by Abmarl and used to launch RLlib.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;experiment&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s1">&#39;title&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">sim_name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;sim_creator&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">config</span><span class="o">=</span><span class="kc">None</span><span class="p">:</span> <span class="n">sim</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="s1">&#39;ray_tune&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s1">&#39;run_or_experiment&#39;</span><span class="p">:</span> <span class="s1">&#39;PG&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;checkpoint_freq&#39;</span><span class="p">:</span> <span class="mi">50</span><span class="p">,</span>
+        <span class="s1">&#39;checkpoint_at_end&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="s1">&#39;stop&#39;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s1">&#39;episodes_total&#39;</span><span class="p">:</span> <span class="mi">2000</span><span class="p">,</span>
+        <span class="p">},</span>
+        <span class="s1">&#39;verbose&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+        <span class="s1">&#39;config&#39;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="c1"># --- Simulation ---</span>
+            <span class="s1">&#39;env&#39;</span><span class="p">:</span> <span class="n">sim_name</span><span class="p">,</span>
+            <span class="s1">&#39;horizon&#39;</span><span class="p">:</span> <span class="mi">200</span><span class="p">,</span>
+            <span class="s1">&#39;env_config&#39;</span><span class="p">:</span> <span class="p">{},</span>
+            <span class="c1"># --- Multiagent ---</span>
+            <span class="s1">&#39;multiagent&#39;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s1">&#39;policies&#39;</span><span class="p">:</span> <span class="n">policies</span><span class="p">,</span>
+                <span class="s1">&#39;policy_mapping_fn&#39;</span><span class="p">:</span> <span class="n">policy_mapping_fn</span><span class="p">,</span>
+            <span class="p">},</span>
+            <span class="c1"># --- Parallelism ---</span>
+            <span class="c1"># Number of workers per experiment: int</span>
+            <span class="s2">&quot;num_workers&quot;</span><span class="p">:</span> <span class="mi">7</span><span class="p">,</span>
+            <span class="c1"># Number of simulations that each worker starts: int</span>
+            <span class="s2">&quot;num_envs_per_worker&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="c1"># This must be 1 because we are not &quot;threadsafe&quot;</span>
+        <span class="p">},</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="command-line-interface">
+<h3>Command Line interface<a class="headerlink" href="#command-line-interface" title="Permalink to this headline"></a></h3>
+<p>With the configuration file complete, we can utilize the command line interface
+to train our agents. We simply type <code class="docutils literal notranslate"><span class="pre">abmarl</span> <span class="pre">train</span> <span class="pre">multi_corridor_example.py</span></code>,
+where <cite>multi_corridor_example.py</cite> is the name of our configuration file. This will launch
+Abmarl, which will process the file and launch RLlib according to the
+specified parameters. This particular example should take 1-10 minutes to
+train, depending on your compute capabilities. You can view the performance
+in real time in tensorboard with <code class="docutils literal notranslate"><span class="pre">tensorboard</span> <span class="pre">--logdir</span> <span class="pre">~/abmarl_results</span></code>.</p>
+</section>
+<section id="visualizing-the-trained-behaviors">
+<h3>Visualizing the Trained Behaviors<a class="headerlink" href="#visualizing-the-trained-behaviors" title="Permalink to this headline"></a></h3>
+<p>We can visualize the agents’ learned behavior with the <code class="docutils literal notranslate"><span class="pre">visualize</span></code> command, which
+takes as argument the output directory from the training session stored in
+<code class="docutils literal notranslate"><span class="pre">~/abmarl_results</span></code>. For example, the command</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">abmarl</span> <span class="n">visualize</span> <span class="o">~/</span><span class="n">abmarl_results</span><span class="o">/</span><span class="n">MultiCorridor</span><span class="o">-</span><span class="mi">2020</span><span class="o">-</span><span class="mi">08</span><span class="o">-</span><span class="mi">25_09</span><span class="o">-</span><span class="mi">30</span><span class="o">/</span> <span class="o">-</span><span class="n">n</span> <span class="mi">5</span> <span class="o">--</span><span class="n">record</span>
+</pre></div>
+</div>
+<p>will load the experiment (notice that the directory name is the experiment
+title from the configuration file appended with a timestamp) and display an animation
+of 5 episodes. The <code class="docutils literal notranslate"><span class="pre">--record</span></code> flag will save the animations as <cite>.mp4</cite> videos in
+the training directory.</p>
+</section>
+</section>
+<section id="extra-challenges">
+<h2>Extra Challenges<a class="headerlink" href="#extra-challenges" title="Permalink to this headline"></a></h2>
+<p>Having successfully trained a MARL experiment, we can further explore the agents’
+behaviors and the training process. Some ideas are:</p>
+<ul class="simple">
+<li><p>We could enhance the MultiCorridor Simulation so that the “target” cell is a
+different location in each episode.</p></li>
+<li><p>We could introduce heterogeneous agents with the ability to “jump over” other
+agents. With heterogeneous agents, we can nontrivially train multiple policies.</p></li>
+<li><p>We could study how the agents’ behaviors differ if they are trained using the <cite>AllStepManager</cite>.</p></li>
+<li><p>We could create our own Simulation Manager so that if an agent causes a collision,
+it skips its next turn.</p></li>
+<li><p>We could do a parameter search over both simulation and algorithm parameters
+to study how the parameters affect the learned behaviors.</p></li>
+<li><p>We could analyze how often agents collide with one another and where those collisions
+most commonly occur.</p></li>
+<li><p>And much, much more!</p></li>
+</ul>
+<p>As we attempt these extra challenges, we will experience one of Abmarl’s strongest
+features: the ease with which we can modify our experiment
+file and launch another training job, going through the pipeline from
+experiment setup to behavior visualization and analysis!</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, open excel_source.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

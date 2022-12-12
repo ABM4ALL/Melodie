@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gym Environment &mdash; Melodie 0.1 文档</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/translations.js"></script>
+        <script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+        <script>mermaid.initialize({startOnLoad:true});</script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="搜索" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> Melodie
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="在文档中搜索" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Introduction</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/intro_2_abm.html">Introduction to ABM</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../advancedtutorial/boost.html">Boost Python with vectorization</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Melodie</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Gym Environment</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/tutorials/gym.rst.txt" rel="nofollow"> 查看页面源码</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="gym-environment">
+<span id="tutorial-gym"></span><h1>Gym Environment<a class="headerlink" href="#gym-environment" title="永久链接至标题"></a></h1>
+<p>Abmarl can be used with OpenAI Gym environments. In this tutorial, we’ll create
+a training configuration file that trains a gym environment. This tutorial uses
+the <a class="reference external" href="https://github.com/LLNL/Abmarl/blob/main/examples/gym_example.py">gym configuration</a>.</p>
+<section id="training-a-gym-environment">
+<h2>Training a Gym Environment<a class="headerlink" href="#training-a-gym-environment" title="永久链接至标题"></a></h2>
+<section id="simulation-setup">
+<h3>Simulation Setup<a class="headerlink" href="#simulation-setup" title="永久链接至标题"></a></h3>
+<p>We’ll start by creating gym’s built-in guessing game.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">gym</span>
+<span class="kn">from</span> <span class="nn">ray.tune.registry</span> <span class="kn">import</span> <span class="n">register_env</span>
+
+<span class="n">sim</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s1">&#39;GuessingGame-v0&#39;</span><span class="p">)</span>
+<span class="n">sim_name</span> <span class="o">=</span> <span class="s2">&quot;GuessingGame&quot;</span>
+<span class="n">register_env</span><span class="p">(</span><span class="n">sim_name</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">sim_config</span><span class="p">:</span> <span class="n">sim</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">注解</p>
+<p>Even gym’s built-in environments need to be registered with RLlib.</p>
+</div>
+</section>
+<section id="experiment-parameters">
+<h3>Experiment Parameters<a class="headerlink" href="#experiment-parameters" title="永久链接至标题"></a></h3>
+<p>All training configuration parameters are stored in a dictionary called <cite>params</cite>.
+Having setup the simualtion, we can now create the <cite>params</cite> dictionary that will
+be read by Abmarl and used to launch RLlib.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;experiment&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s1">&#39;title&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">sim_name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;sim_creator&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">config</span><span class="o">=</span><span class="kc">None</span><span class="p">:</span> <span class="n">sim</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="s1">&#39;ray_tune&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s1">&#39;run_or_experiment&#39;</span><span class="p">:</span> <span class="s1">&#39;A2C&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;checkpoint_freq&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="s1">&#39;checkpoint_at_end&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="s1">&#39;stop&#39;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s1">&#39;episodes_total&#39;</span><span class="p">:</span> <span class="mi">2000</span><span class="p">,</span>
+        <span class="p">},</span>
+        <span class="s1">&#39;verbose&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+        <span class="s1">&#39;config&#39;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="c1"># --- Simulation ---</span>
+            <span class="s1">&#39;env&#39;</span><span class="p">:</span> <span class="n">sim_name</span><span class="p">,</span>
+            <span class="s1">&#39;horizon&#39;</span><span class="p">:</span> <span class="mi">200</span><span class="p">,</span>
+            <span class="s1">&#39;env_config&#39;</span><span class="p">:</span> <span class="p">{},</span>
+            <span class="c1"># --- Parallelism ---</span>
+            <span class="c1"># Number of workers per experiment: int</span>
+            <span class="s2">&quot;num_workers&quot;</span><span class="p">:</span> <span class="mi">6</span><span class="p">,</span>
+            <span class="c1"># Number of simulations that each worker starts: int</span>
+            <span class="s2">&quot;num_envs_per_worker&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="p">},</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="command-line-interface">
+<h3>Command Line interface<a class="headerlink" href="#command-line-interface" title="永久链接至标题"></a></h3>
+<p>With the configuration file complete, we can utilize the command line interface
+to train our agents. We simply type <code class="docutils literal notranslate"><span class="pre">abmarl</span> <span class="pre">train</span> <span class="pre">gym_example.py</span></code>,
+where <cite>gym_example.py</cite> is the name of our configuration file. This will launch
+Abmarl, which will process the file and launch RLlib according to the
+specified parameters. This particular example should take 1-10 minutes to
+train, depending on your compute capabilities. You can view the performance
+in real time in tensorboard with <code class="docutils literal notranslate"><span class="pre">tensorboard</span> <span class="pre">--logdir</span> <span class="pre">~/abmarl_results</span></code>.</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; 版权所有 2021, open excel_source.</p>
+  </div>
+
+  利用 <a href="https://www.sphinx-doc.org/">Sphinx</a> 构建，使用了 
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">主题</a>
+    由 <a href="https://readthedocs.org">Read the Docs</a>开发.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
