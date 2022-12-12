@@ -5,11 +5,13 @@ import sys
 def melodie_dir():
     root = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
     directory = root
-    print(directory)
+    print(sys.executable, directory)
     return directory
 
 
-sys.path.append(melodie_dir())
+sys.path.insert(0, melodie_dir())
+import Melodie
+import MelodieInfra
 from sphinx.builders.html import StandaloneHTMLBuilder
 
 # -- Project information -----------------------------------------------------

@@ -9,7 +9,6 @@ You can install Melodie via `pip`:
 .. code-block:: shell
 
    pip install Melodie
-   pip install MelodieStudio
 
 
 Developer Installation
@@ -28,6 +27,7 @@ via pip's development mode.
 
    # Build the Cython packages
    python setup.py build_ext -i
+
    # Run pytest to check if the installation finished successfully.
    pytest
 

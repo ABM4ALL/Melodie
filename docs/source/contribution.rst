@@ -17,7 +17,7 @@ The bug report should contain these information below:
     * Version of Melodie
     * Operating system
     * Python version and the architecture of python executable. The architecture of python executable **MAY NOT** be the same as the architecture of your computer, especially
-      if you are using a Apple Computer with M1 chip on board.
+      if you are using a Apple Computer with M1 chip.
     * Version of Cython, Numpy and any other third-party packages that you think is vital to reproduce this bug.
 * Steps to reproduce the bug.
 * Any other things that you think might be helpful in troubleshooting.
