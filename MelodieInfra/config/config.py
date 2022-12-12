@@ -6,7 +6,7 @@ class Config:
     """
     The configuration class of Melodie
     Config is needed by Simulator/Calibrator/Trainer and MelodieStudio for determining the project root,
-    IO directories and other crucial configurations.
+    IO directories or other crucial configurations.
     """
 
     def __init__(

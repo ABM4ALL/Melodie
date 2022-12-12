@@ -34,7 +34,13 @@ class MelodieVisualizerProtocol(WebSocketServerProtocol):
     async def process_request(
             self, path: str, request_headers: Headers
     ) -> Optional[HTTPResponse]:
-        print('request fs', path)
+        """
+        Handle requests in visualizer.
+
+        :param path:
+        :param request_headers:
+        :return:
+        """
         if path.startswith("/fs/"):
             filepath = path[4:]
             return create_file_response(filepath)

@@ -1,7 +1,7 @@
-from Melodie import GridVisualizer
+from Melodie import Visualizer
 
 
-class CovidVisualizer(GridVisualizer):
+class CovidVisualizer(Visualizer):
     def setup(self):
         self.add_plot_chart("chart1", ["s0", "s1", "s2", "s3", "s4"])
         self.add_plot_chart("chart2", [], 'pie')

@@ -9,6 +9,9 @@ ChangeLog
 - Change the name of the base class of Simulator to `ModelRunningManager`
 - Change name: DataCollector.status -> `DataCollector.running_manager_mode`
 
+### v0.4.0
+- Separated the MelodieInfra package containing infrastructure.
+- Added HTTP Get support in the websocket protocol.
 
 ### v0.3.0
 - Batch load API for `DataframeInfo`.
