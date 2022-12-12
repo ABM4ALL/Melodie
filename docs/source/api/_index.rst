@@ -8,21 +8,39 @@ In the list below, we can release only from model to simulator.
 The calibrator and trainer come later when we add example models in the gallery. Write "under development" on their pages.
 I am not sure if it is necessary to release the APIs for infrastructure modules.
 
+
+pages below should be aligned with the Introduction page:
+
+- agent
+- agent_list
+- environment
+- data_collector
+- grid
+- network
+- dataframe_info
+- matrix_info
+- data_loader
+- scenario
+- simulator
+- config
+- db
+- exceptions
+
 .. toctree::
     :caption: Content
     :maxdepth: 1
 
-    .. comment:: model
-    .. comment:: scenario
-    .. comment:: data_loader
-    .. comment:: agent_list
-    .. comment:: environment
-    .. comment:: data_collector
-    .. comment:: grid
-    .. comment:: network
-    .. comment:: simulator
+    model
+    scenario
+    data_loader
+    agent_list
+    environment
+    data_collector
+    grid
+    network
+    simulator
     .. comment:: calibrator
     .. comment:: trainer
-    .. comment:: db
-    .. comment:: melodie_error_list
+    db
+    exceptions
 

@@ -214,9 +214,12 @@ Before being loaded, it also needs to be registered in the ``data_info.py`` file
 Please note that,
 
 * First, since ``simulator_scenarios`` is "loaded" not "generated", the attribute ``file_name`` needs to be assigned with the excel file name in the input folder (Line 8).
-* Second, since ``Melodie`` supports batching the scenario runs, the excel file can contain multiple rows for different scenarios. Besides, for each scenario, there is also a default attribute ``run_num``, which means ``Melodie`` will run the model with this scenario for ``run_num`` times to evaluate the model uncertainty afterwards.
+* Second, since ``Melodie`` supports batching the scenario runs, ``simulator_scenarios`` can contain multiple rows for different scenarios. Besides, for each scenario, there is also a default attribute ``run_num``, which means ``Melodie`` will run the model with this scenario for ``run_num`` times to evaluate the model uncertainty afterwards.
 * Third, the column names in the excel file must be exactly the same with the scenario attributes defined in the ``CovidScenario.setup`` function below, or an error will be thrown out.
 * Fourth, the attributes ``id`` and ``run_num`` can be ignored when defining the ``CovidScenario.setup`` function, because they are already included in the ``Melodie.Scenario`` class.
+
+.. comment:: add a screenshot of scenario excel file
+.. comment:: the name of "simulator_scenarios" cannot be changed (df_name)
 
 .. code-block:: Python
    :caption: scenario.py
@@ -386,7 +389,9 @@ So, they are not initialized with exogenous input.
                    self.s3 += 1
 
 As shown in the ``agents_infection`` function, the ``environment`` has access to ``scenario`` and can get necessary data.
-Besides, corresponding ``agents_infection`` and ``calc_population_infection_state`` in the ``CovidEnvironment``,
+
+Besides, if you recall the :ref:`Melodie Framework` section, ``environment`` coordinates the agents' decision-making and interaction processes.
+So, corresponding to ``agents_infection`` and ``agents_health_state_transition`` in the ``CovidEnvironment``,
 we need to define the ``infection`` and ``health_state_transition`` functions in the ``CovidAgent`` class as below.
 
 .. code-block:: Python
@@ -499,6 +504,8 @@ With the ``data_collector``, the results will saved in the ``CovidContagion.sqli
 The macro-level results are indexed with ``id_scenario``, ``id_run``, and ``period``.
 The micro-level results are further indexed with the ``id`` of agents. After running the model,
 you can find two tables in ``CovidContagion.sqlite`` named as ``environment_result`` and ``agents_result``.
+
+.. comment:: add two screenshots here: agents_result, environment_result
 
 In the example project, we also prepared a simple ``analyzer.py`` file that produces two figures based on the results.
 Since it is mainly based on other packages instead of ``Melodie``, we won't introduce the details here.
