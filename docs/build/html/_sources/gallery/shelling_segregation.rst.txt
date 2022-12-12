@@ -1,7 +1,0 @@
-
-Schelling Segregation
-=====
-
-
-
-

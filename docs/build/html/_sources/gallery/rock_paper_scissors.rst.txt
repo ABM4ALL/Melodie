@@ -1,6 +1,0 @@
-
-Rock-Paper-Scissors
-=====
-
-
-
