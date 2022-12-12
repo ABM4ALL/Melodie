@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Basic Tutorial &mdash; Melodie 0.1 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+        <script>mermaid.initialize({startOnLoad:true});</script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Scenario And Batch Experiment" href="tutorial_with_scenario.html" />
+    <link rel="prev" title="Introduction to Melodie" href="../introduction/about_melodie.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> Melodie
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Introduction</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/intro_2_abm.html">Introduction to ABM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/about_melodie.html">Introduction to Melodie</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Basic Tutorial</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#a-basic-tutorial-of-gini-index">A Basic Tutorial of Gini Index</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#introduction">Introduction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#build-agent">Build <code class="docutils literal notranslate"><span class="pre">Agent</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#build-the-environment">Build the <code class="docutils literal notranslate"><span class="pre">Environment</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#setup-datacollector">Setup <code class="docutils literal notranslate"><span class="pre">DataCollector</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#setup-model">Setup <code class="docutils literal notranslate"><span class="pre">Model</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#define-simulator-and-run-this-model">Define <code class="docutils literal notranslate"><span class="pre">Simulator</span></code> and run this model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#complete-code">Complete Code</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_with_scenario.html">Scenario And Batch Experiment</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../advancedtutorial/boost.html">Boost Python with vectorization</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Melodie</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Basic Tutorial</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/tutorials/basic_tutorial.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="basic-tutorial">
+<h1>Basic Tutorial<a class="headerlink" href="#basic-tutorial" title="Permalink to this headline"></a></h1>
+<section id="a-basic-tutorial-of-gini-index">
+<h2>A Basic Tutorial of Gini Index<a class="headerlink" href="#a-basic-tutorial-of-gini-index" title="Permalink to this headline"></a></h2>
+<section id="introduction">
+<h3>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline"></a></h3>
+<p><em>This is a simple demonstration within one page for beginner to quickly get familiar of Melodie. We suggest developers
+modelling in separate files.</em></p>
+<p>In this model, we will build a virtual economy and simulate how the gini index changes when the economy develops.</p>
+<p>At the beginning, all agents has no money. Then, for each step, this model will act following these rules:</p>
+<ol class="simple">
+<li><p>Each agent produces 1 dollar.</p></li>
+<li><p>Randomly select two Agents. For the probability <code class="docutils literal notranslate"><span class="pre">rich_win_prob</span></code>, the poorer agent will give 1 dollar to the richer.
+This rule is performed in each step for <code class="docutils literal notranslate"><span class="pre">trade_num</span></code> times.</p></li>
+</ol>
+<p>The rules are often be described by a method of Environment or Agent.</p>
+</section>
+<section id="build-agent">
+<h3>Build <code class="docutils literal notranslate"><span class="pre">Agent</span></code><a class="headerlink" href="#build-agent" title="Permalink to this headline"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">__author__</span> <span class="o">=</span> <span class="s1">&#39;Songmin&#39;</span>
+
+<span class="kn">from</span> <span class="nn">Melodie</span> <span class="kn">import</span> <span class="n">Agent</span>
+
+
+<span class="k">class</span> <span class="nc">GiniAgent</span><span class="p">(</span><span class="n">Agent</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">account</span> <span class="o">=</span> <span class="mf">.0</span>  <span class="c1"># initialize `account` with type float</span>
+
+    <span class="k">def</span> <span class="nf">go_produce</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">account</span> <span class="o">+=</span> <span class="mi">1</span>
+</pre></div>
+</div>
+<p>Here is how we model the agent. Modelling the agent takes these simple steps:</p>
+<ol class="simple">
+<li><p>Write a custom class inheriting <code class="docutils literal notranslate"><span class="pre">Melodie.Agent</span></code>. It is suggested to name this class with the suffix of <code class="docutils literal notranslate"><span class="pre">Agent</span></code>.</p></li>
+<li><p>Rewrite the <code class="docutils literal notranslate"><span class="pre">setup()</span></code> method, and define the properties inside this method.</p>
+<ul class="simple">
+<li><p>In the above piece of code, we defined the property <code class="docutils literal notranslate"><span class="pre">GiniAgent.account</span></code>, and initiated it with value 0,
+type <code class="docutils literal notranslate"><span class="pre">float</span></code>.</p></li>
+<li><p>If the initial value cannot be determined in <code class="docutils literal notranslate"><span class="pre">setup()</span></code>, we still need a initial value. Use <code class="docutils literal notranslate"><span class="pre">0</span></code> for <code class="docutils literal notranslate"><span class="pre">int</span></code>, <code class="docutils literal notranslate"><span class="pre">.0</span></code>
+for <code class="docutils literal notranslate"><span class="pre">float</span></code>, <code class="docutils literal notranslate"><span class="pre">''</span></code> for <code class="docutils literal notranslate"><span class="pre">str</span></code> and <code class="docutils literal notranslate"><span class="pre">False</span></code> for <code class="docutils literal notranslate"><span class="pre">boolean</span></code>.</p></li>
+</ul>
+</li>
+<li><p>Add custom methods such as <code class="docutils literal notranslate"><span class="pre">go_produce</span></code>.</p>
+<ul class="simple">
+<li><p>WARNING: DO NOT define new properties in methods except <code class="docutils literal notranslate"><span class="pre">setup</span></code>!</p></li>
+</ul>
+</li>
+</ol>
+</section>
+<section id="build-the-environment">
+<h3>Build the <code class="docutils literal notranslate"><span class="pre">Environment</span></code><a class="headerlink" href="#build-the-environment" title="Permalink to this headline"></a></h3>
+<p>For Melodie framework, the Environment always plays the key role when modelling. If a rule involves interactions of more
+than 1 agent, this rule is suggested to be written as the Environment method.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">from</span> <span class="nn">Melodie</span> <span class="kn">import</span> <span class="n">Environment</span>
+
+
+<span class="k">class</span> <span class="nc">GiniEnvironment</span><span class="p">(</span><span class="n">Environment</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">trade_num</span> <span class="o">=</span> <span class="mi">200</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rich_win_prob</span> <span class="o">=</span> <span class="mf">0.8</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">total_wealth</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gini</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">def</span> <span class="nf">go_money_produce</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent_list</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">agent</span> <span class="ow">in</span> <span class="n">agent_list</span><span class="p">:</span>
+            <span class="n">agent</span><span class="o">.</span><span class="n">go_produce</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">go_give_money</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent_from</span><span class="p">:</span> <span class="s1">&#39;GiniAgent&#39;</span><span class="p">,</span> <span class="n">agent_to</span><span class="p">:</span> <span class="s1">&#39;GiniAgent&#39;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">agent_from</span><span class="o">.</span><span class="n">account</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">pass</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">agent_from</span><span class="o">.</span><span class="n">account</span> <span class="o">-=</span> <span class="mi">1</span>
+            <span class="n">agent_to</span><span class="o">.</span><span class="n">account</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="k">def</span> <span class="nf">go_money_transfer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent_list</span><span class="p">:</span> <span class="s1">&#39;AgentList&#39;</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">sub_period</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">trade_num</span><span class="p">):</span>
+            <span class="n">agent_1</span><span class="p">,</span> <span class="n">agent_2</span> <span class="o">=</span> <span class="n">agent_list</span><span class="o">.</span><span class="n">random_sample</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+            <span class="n">who_win</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+            <span class="n">rand</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">rand</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rich_win_prob</span><span class="p">:</span>
+                <span class="n">who_win</span> <span class="o">=</span> <span class="s2">&quot;Rich&quot;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">who_win</span> <span class="o">=</span> <span class="s2">&quot;Poor&quot;</span>
+            <span class="k">if</span> <span class="n">who_win</span> <span class="o">==</span> <span class="s2">&quot;Rich&quot;</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">agent_1</span><span class="o">.</span><span class="n">account</span> <span class="o">&gt;=</span> <span class="n">agent_2</span><span class="o">.</span><span class="n">account</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">go_give_money</span><span class="p">(</span><span class="n">agent_2</span><span class="p">,</span> <span class="n">agent_1</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">go_give_money</span><span class="p">(</span><span class="n">agent_1</span><span class="p">,</span> <span class="n">agent_2</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">agent_1</span><span class="o">.</span><span class="n">account</span> <span class="o">&lt;=</span> <span class="n">agent_2</span><span class="o">.</span><span class="n">account</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">go_give_money</span><span class="p">(</span><span class="n">agent_2</span><span class="p">,</span> <span class="n">agent_1</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">go_give_money</span><span class="p">(</span><span class="n">agent_1</span><span class="p">,</span> <span class="n">agent_2</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">calc_gini</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">account_list</span><span class="p">):</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">account_list</span><span class="p">)</span>
+        <span class="n">N</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">account_list</span><span class="p">)</span>
+        <span class="n">account_sum</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">account_sum</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mi">0</span>
+        <span class="n">B</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">xi</span> <span class="o">*</span> <span class="p">(</span><span class="n">N</span> <span class="o">-</span> <span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">xi</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">x</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="n">N</span> <span class="o">*</span> <span class="n">account_sum</span><span class="p">)</span>
+        <span class="k">return</span> <span class="mi">1</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="n">N</span><span class="p">)</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">B</span>
+
+    <span class="k">def</span> <span class="nf">calc_wealth_and_gini</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">AgentList</span><span class="p">):</span>
+        <span class="n">account_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">agent</span> <span class="ow">in</span> <span class="n">AgentList</span><span class="p">:</span>
+            <span class="n">account_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">agent</span><span class="o">.</span><span class="n">account</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">total_wealth</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">account_list</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gini</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calc_gini</span><span class="p">(</span><span class="n">account_list</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent_list</span><span class="p">:</span> <span class="s1">&#39;AgentList[GiniAgent]&#39;</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">go_money_produce</span><span class="p">(</span><span class="n">agent_list</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">go_money_transfer</span><span class="p">(</span><span class="n">agent_list</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">calc_wealth_and_gini</span><span class="p">(</span><span class="n">agent_list</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>In each step, the method of <code class="docutils literal notranslate"><span class="pre">GiniEnvironment.step</span></code> will be executed.</p>
+<p>Inside <code class="docutils literal notranslate"><span class="pre">step()</span></code>, the environment executes these methods:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">GiniEnvironment.go_money_produce</span></code>: activate each agent to produce money</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">GiniEnvironment.go_money_transfer</span></code>: let the agents to transfer money to each other.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">GiniEnvironment.calc_wealth_and_gini</span></code>:  calculate gini index and total wealth at the end of step.</p></li>
+</ul>
+<p>You may find it different (and sometimes confusing) when noticing each method parameter has special marks such
+as <code class="docutils literal notranslate"><span class="pre">agent_list:</span> <span class="pre">AgentList[GiniAgent]</span></code>. The mark <code class="docutils literal notranslate"><span class="pre">AgentList[GiniAgent]</span></code> is the annotation to declare the type of
+parameter <code class="docutils literal notranslate"><span class="pre">agent_list</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">AgentList</span></code> is like a list of Agent, though in fact it is not an instance of builtin <code class="docutils literal notranslate"><span class="pre">list</span></code>, but it can be iterated by
+for-loop, or index like a list.</p>
+<p>The type annotations can be briefly (and not completely) summarized below:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">int</span></code>, <code class="docutils literal notranslate"><span class="pre">float</span></code>, <code class="docutils literal notranslate"><span class="pre">bool</span></code> and <code class="docutils literal notranslate"><span class="pre">str</span></code> reveals that the parameter is type <code class="docutils literal notranslate"><span class="pre">int</span></code>/<code class="docutils literal notranslate"><span class="pre">float</span></code>/<code class="docutils literal notranslate"><span class="pre">bool</span></code>/<code class="docutils literal notranslate"><span class="pre">str</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">GiniAgent</span></code> means this parameter stands for a <code class="docutils literal notranslate"><span class="pre">GiniAgent</span></code> object</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">AgentList[GiniAgent]</span></code> means this parameter a <code class="docutils literal notranslate"><span class="pre">AgentList</span></code> container object, and its each element is GiniAgent object.</p></li>
+</ul>
+<p>Within these steps of building up Agent and Environment, the major algorithms is completed. But please wait a minute.
+Before pasting the code into your editor, there are a few–and only a few–steps to do.</p>
+</section>
+<section id="setup-datacollector">
+<h3>Setup <code class="docutils literal notranslate"><span class="pre">DataCollector</span></code><a class="headerlink" href="#setup-datacollector" title="Permalink to this headline"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">Melodie</span> <span class="kn">import</span> <span class="n">DataCollector</span>
+
+
+<span class="k">class</span> <span class="nc">GiniDataCollector</span><span class="p">(</span><span class="n">DataCollector</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_agent_property</span><span class="p">(</span><span class="s2">&quot;agent_list&quot;</span><span class="p">,</span> <span class="s1">&#39;account&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_environment_property</span><span class="p">(</span><span class="s1">&#39;trade_num&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_environment_property</span><span class="p">(</span><span class="s1">&#39;rich_win_prob&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_environment_property</span><span class="p">(</span><span class="s1">&#39;total_wealth&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_environment_property</span><span class="p">(</span><span class="s1">&#39;gini&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">Melodie.DataCollector</span></code> is used for collecting data when the model is running. Like <code class="docutils literal notranslate"><span class="pre">Agent</span></code> or <code class="docutils literal notranslate"><span class="pre">Environment</span></code>, defining
+the property inside <code class="docutils literal notranslate"><span class="pre">setup</span></code> is required.</p>
+<ul class="simple">
+<li><p>call <code class="docutils literal notranslate"><span class="pre">add_agent_property(agent_container_name,</span> <span class="pre">agent_property)</span></code> to collect agent data. The first argument <code class="docutils literal notranslate"><span class="pre">agent_list</span></code>
+should be defined in <code class="docutils literal notranslate"><span class="pre">Model</span></code>.</p></li>
+<li><p>call <code class="docutils literal notranslate"><span class="pre">add_environment_property(environment_property)</span></code> to collect environment data.</p></li>
+</ul>
+</section>
+<section id="setup-model">
+<h3>Setup <code class="docutils literal notranslate"><span class="pre">Model</span></code><a class="headerlink" href="#setup-model" title="Permalink to this headline"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">Melodie</span> <span class="kn">import</span> <span class="n">Model</span>
+
+
+<span class="k">class</span> <span class="nc">GiniModel</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">agent_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_agent_container</span><span class="p">(</span><span class="n">GiniAgent</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">define_basic_components</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">environment</span> <span class="o">=</span> <span class="n">GiniEnvironment</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data_collector</span> <span class="o">=</span> <span class="n">GiniDataCollector</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">periods</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">environment</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">agent_list</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data_collector</span><span class="o">.</span><span class="n">collect</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_collector</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+</pre></div>
+</div>
+<ol class="simple">
+<li><p>create the <code class="docutils literal notranslate"><span class="pre">agent_list</span></code> by <code class="docutils literal notranslate"><span class="pre">Model.create_agent_container</span></code>.</p></li>
+<li><p>Use a <code class="docutils literal notranslate"><span class="pre">with</span></code> block to define environment and data_collector. When the with block finishes, it will ensure
+that <code class="docutils literal notranslate"><span class="pre">self.environment</span></code> is not None.</p></li>
+</ol>
+<p>Notice that the property <code class="docutils literal notranslate"><span class="pre">agent_list</span></code> is not compulsory to be named as it, but the <code class="docutils literal notranslate"><span class="pre">environment</span></code> and <code class="docutils literal notranslate"><span class="pre">data_collector</span></code> is
+compulsory. There can be more than 1 agent container in a Model, but the <code class="docutils literal notranslate"><span class="pre">Environment</span></code> and <code class="docutils literal notranslate"><span class="pre">DataCollector</span></code> can be only
+one.</p>
+<p>the <code class="docutils literal notranslate"><span class="pre">run</span></code> method defines the Model routine.</p>
+</section>
+<section id="define-simulator-and-run-this-model">
+<h3>Define <code class="docutils literal notranslate"><span class="pre">Simulator</span></code> and run this model<a class="headerlink" href="#define-simulator-and-run-this-model" title="Permalink to this headline"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
+<span class="kn">from</span> <span class="nn">Melodie</span> <span class="kn">import</span> <span class="n">Simulator</span><span class="p">,</span> <span class="n">Scenario</span><span class="p">,</span> <span class="n">Config</span>
+
+
+<span class="k">class</span> <span class="nc">GiniSimulator</span><span class="p">(</span><span class="n">Simulator</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">register_scenario_dataframe</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">scenarios_dict</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">def</span> <span class="nf">generate_scenarios</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="s1">&#39;Scenario&#39;</span><span class="p">]:</span>
+        <span class="n">scenario</span> <span class="o">=</span> <span class="n">Scenario</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">scenario</span><span class="o">.</span><span class="n">manager</span> <span class="o">=</span> <span class="bp">self</span>
+        <span class="n">scenario</span><span class="o">.</span><span class="n">periods</span> <span class="o">=</span> <span class="mi">200</span>  <span class="c1"># The model will be executed by 100 steps.</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">scenario</span><span class="p">]</span>
+
+
+<span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">(</span>
+    <span class="n">project_name</span><span class="o">=</span><span class="s1">&#39;WealthDistribution&#39;</span><span class="p">,</span>
+    <span class="n">project_root</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">),</span>
+    <span class="n">sqlite_folder</span><span class="o">=</span><span class="s1">&#39;.&#39;</span><span class="p">,</span>
+    <span class="n">excel_source_folder</span><span class="o">=</span><span class="s1">&#39;.&#39;</span><span class="p">,</span>
+    <span class="n">output_folder</span><span class="o">=</span><span class="s1">&#39;.&#39;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">simulator</span> <span class="o">=</span> <span class="n">GiniSimulator</span><span class="p">()</span>
+
+<span class="n">simulator</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
+    <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span>
+    <span class="n">model_class</span><span class="o">=</span><span class="n">GiniModel</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>Now the model is built, we could run this example for simple use.</p>
+</section>
+<section id="complete-code">
+<h3>Complete Code<a class="headerlink" href="#complete-code" title="Permalink to this headline"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">__author__</span> <span class="o">=</span> <span class="s1">&#39;Songmin&#39;</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
+
+<span class="kn">from</span> <span class="nn">Melodie</span> <span class="kn">import</span> <span class="n">Config</span><span class="p">,</span> <span class="n">Agent</span><span class="p">,</span> <span class="n">Model</span><span class="p">,</span> <span class="n">DataCollector</span><span class="p">,</span> <span class="n">Simulator</span><span class="p">,</span> <span class="n">Scenario</span><span class="p">,</span> <span class="n">AgentList</span><span class="p">,</span> <span class="n">Environment</span>
+
+
+<span class="k">class</span> <span class="nc">GiniAgent</span><span class="p">(</span><span class="n">Agent</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">account</span> <span class="o">=</span> <span class="mf">.0</span>  <span class="c1"># initialize `account` with type float</span>
+
+    <span class="k">def</span> <span class="nf">go_produce</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">account</span> <span class="o">+=</span> <span class="mi">1</span>
+
+
+<span class="k">class</span> <span class="nc">GiniEnvironment</span><span class="p">(</span><span class="n">Environment</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">trade_num</span> <span class="o">=</span> <span class="mi">200</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rich_win_prob</span> <span class="o">=</span> <span class="mf">0.8</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">total_wealth</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gini</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">def</span> <span class="nf">go_money_produce</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent_list</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">agent</span> <span class="ow">in</span> <span class="n">agent_list</span><span class="p">:</span>
+            <span class="n">agent</span><span class="o">.</span><span class="n">go_produce</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">go_give_money</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent_from</span><span class="p">:</span> <span class="s1">&#39;GiniAgent&#39;</span><span class="p">,</span> <span class="n">agent_to</span><span class="p">:</span> <span class="s1">&#39;GiniAgent&#39;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">agent_from</span><span class="o">.</span><span class="n">account</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">pass</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">agent_from</span><span class="o">.</span><span class="n">account</span> <span class="o">-=</span> <span class="mi">1</span>
+            <span class="n">agent_to</span><span class="o">.</span><span class="n">account</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="k">def</span> <span class="nf">go_money_transfer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent_list</span><span class="p">:</span> <span class="s1">&#39;AgentList&#39;</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">sub_period</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">trade_num</span><span class="p">):</span>
+            <span class="p">[</span><span class="n">agent_1</span><span class="p">,</span> <span class="n">agent_2</span><span class="p">]</span> <span class="o">=</span> <span class="n">agent_list</span><span class="o">.</span><span class="n">random_sample</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+            <span class="n">who_win</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+            <span class="n">rand</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">rand</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rich_win_prob</span><span class="p">:</span>
+                <span class="n">who_win</span> <span class="o">=</span> <span class="s2">&quot;Rich&quot;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">who_win</span> <span class="o">=</span> <span class="s2">&quot;Poor&quot;</span>
+            <span class="k">if</span> <span class="n">who_win</span> <span class="o">==</span> <span class="s2">&quot;Rich&quot;</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">agent_1</span><span class="o">.</span><span class="n">account</span> <span class="o">&gt;=</span> <span class="n">agent_2</span><span class="o">.</span><span class="n">account</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">go_give_money</span><span class="p">(</span><span class="n">agent_2</span><span class="p">,</span> <span class="n">agent_1</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">go_give_money</span><span class="p">(</span><span class="n">agent_1</span><span class="p">,</span> <span class="n">agent_2</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">agent_1</span><span class="o">.</span><span class="n">account</span> <span class="o">&lt;=</span> <span class="n">agent_2</span><span class="o">.</span><span class="n">account</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">go_give_money</span><span class="p">(</span><span class="n">agent_2</span><span class="p">,</span> <span class="n">agent_1</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">go_give_money</span><span class="p">(</span><span class="n">agent_1</span><span class="p">,</span> <span class="n">agent_2</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">calc_gini</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">Account_list</span><span class="p">):</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">Account_list</span><span class="p">)</span>
+        <span class="n">N</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">Account_list</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">sum</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mi">0</span>
+        <span class="n">B</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">xi</span> <span class="o">*</span> <span class="p">(</span><span class="n">N</span> <span class="o">-</span> <span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">xi</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">x</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="n">N</span> <span class="o">*</span> <span class="nb">sum</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+        <span class="k">return</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="n">N</span><span class="p">)</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">B</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">calc_wealth_and_gini</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">AgentList</span><span class="p">):</span>
+
+        <span class="n">account_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">agent</span> <span class="ow">in</span> <span class="n">AgentList</span><span class="p">:</span>
+            <span class="n">account_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">agent</span><span class="o">.</span><span class="n">account</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">total_wealth</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">account_list</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gini</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calc_gini</span><span class="p">(</span><span class="n">account_list</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="kc">None</span>
+
+
+<span class="k">class</span> <span class="nc">GiniModel</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">agent_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_agent_container</span><span class="p">(</span><span class="n">GiniAgent</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">define_basic_components</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">environment</span> <span class="o">=</span> <span class="n">GiniEnvironment</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data_collector</span> <span class="o">=</span> <span class="n">GiniDataCollector</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">periods</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">environment</span><span class="o">.</span><span class="n">go_money_produce</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">agent_list</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">environment</span><span class="o">.</span><span class="n">go_money_transfer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">agent_list</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">environment</span><span class="o">.</span><span class="n">calc_wealth_and_gini</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">agent_list</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data_collector</span><span class="o">.</span><span class="n">collect</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_collector</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+
+
+<span class="k">class</span> <span class="nc">GiniDataCollector</span><span class="p">(</span><span class="n">DataCollector</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_agent_property</span><span class="p">(</span><span class="s2">&quot;agent_list&quot;</span><span class="p">,</span> <span class="s1">&#39;account&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_environment_property</span><span class="p">(</span><span class="s1">&#39;trade_num&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_environment_property</span><span class="p">(</span><span class="s1">&#39;rich_win_prob&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_environment_property</span><span class="p">(</span><span class="s1">&#39;total_wealth&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_environment_property</span><span class="p">(</span><span class="s1">&#39;gini&#39;</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">GiniSimulator</span><span class="p">(</span><span class="n">Simulator</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">register_scenario_dataframe</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">scenarios_dict</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">def</span> <span class="nf">generate_scenarios</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="s1">&#39;Scenario&#39;</span><span class="p">]:</span>
+        <span class="n">scenario</span> <span class="o">=</span> <span class="n">Scenario</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">scenario</span><span class="o">.</span><span class="n">manager</span> <span class="o">=</span> <span class="bp">self</span>
+        <span class="n">scenario</span><span class="o">.</span><span class="n">periods</span> <span class="o">=</span> <span class="mi">200</span>  <span class="c1"># The model will be executed by 100 steps.</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">scenario</span><span class="p">]</span>
+
+
+<span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">(</span>
+    <span class="n">project_name</span><span class="o">=</span><span class="s1">&#39;WealthDistribution&#39;</span><span class="p">,</span>
+    <span class="n">project_root</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">),</span>
+    <span class="n">sqlite_folder</span><span class="o">=</span><span class="s1">&#39;.&#39;</span><span class="p">,</span>
+    <span class="n">excel_source_folder</span><span class="o">=</span><span class="s1">&#39;.&#39;</span><span class="p">,</span>
+    <span class="n">output_folder</span><span class="o">=</span><span class="s1">&#39;.&#39;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">simulator</span> <span class="o">=</span> <span class="n">GiniSimulator</span><span class="p">()</span>
+
+<span class="n">simulator</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
+    <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span>
+    <span class="n">model_class</span><span class="o">=</span><span class="n">GiniModel</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../introduction/about_melodie.html" class="btn btn-neutral float-left" title="Introduction to Melodie" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="tutorial_with_scenario.html" class="btn btn-neutral float-right" title="Scenario And Batch Experiment" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, open excel_source.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

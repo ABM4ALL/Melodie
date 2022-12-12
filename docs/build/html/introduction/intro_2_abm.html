@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Introduction to ABM &mdash; Melodie 0.1 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+        <script>mermaid.initialize({startOnLoad:true});</script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Boost Python with vectorization" href="../advancedtutorial/boost.html" />
+    <link rel="prev" title="Welcome to Melodie’s documentation!" href="../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> Melodie
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Introduction</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Introduction to ABM</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#complex-system">Complex System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#the-unique-points-of-view-by-abm">The Unique points of view by ABM</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#agent-interaction">Agent interaction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#heterogeneity">Heterogeneity</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#bounded-rationality-including-incomplete-information">Bounded rationality(including incomplete information)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#learning-and-evolution">Learning and evolution</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../advancedtutorial/boost.html">Boost Python with vectorization</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Melodie</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Introduction to ABM</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/introduction/intro_2_abm.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="introduction-to-abm">
+<h1>Introduction to ABM<a class="headerlink" href="#introduction-to-abm" title="Permalink to this headline"></a></h1>
+<section id="complex-system">
+<h2>Complex System<a class="headerlink" href="#complex-system" title="Permalink to this headline"></a></h2>
+<p>Let’s take a few examples of complex systems:</p>
+<ol class="simple">
+<li><p>A pool of water, pull out the plug, the water formed whirlpool</p></li>
+<li><p>Flocks of birds, creating complex formations in the sky</p></li>
+<li><p>Financial markets, where traders push stock prices up and down.</p></li>
+</ol>
+<p>The characteristics of the above system is that they are made of a number of agents, but at the macro-level phenomenon (vortex, formation and fluctuation) almost has nothing to do with a single subject, birds, traders (water molecules). In fact, they are actually depends on the number of agents inside the system, and the connection and interaction between the agents.</p>
+<p>We call this kind of phenomenon from “micro subject decision-making and interaction” to “macro system dynamics” “emergence”, and call the system with emergence phenomenon “complex system”.</p>
+<p>In order to capture the microscopic agent of the decision-making in complex system and interactive, depicting “emergent” mechanism, based on the agent of the model (the Agent-based model) is different from another set of modeling methods, such as differential equation. In short, ABM provides us four unique Angle of view for everyone: subject interaction, heterogeneity, bounded rationality, learning and evolution.</p>
+</section>
+<section id="the-unique-points-of-view-by-abm">
+<h2>The Unique points of view by ABM<a class="headerlink" href="#the-unique-points-of-view-by-abm" title="Permalink to this headline"></a></h2>
+<section id="agent-interaction">
+<h3>Agent interaction<a class="headerlink" href="#agent-interaction" title="Permalink to this headline"></a></h3>
+<p>System modeling by the ABM framework is more flexible and can depict more abundant interaction rules between actors, which may be local, or global, or a combination of the two.</p>
+</section>
+<section id="heterogeneity">
+<h3>Heterogeneity<a class="headerlink" href="#heterogeneity" title="Permalink to this headline"></a></h3>
+<p>In the FRAMEWORK of ABM, the heterogeneity between subjects can be considered, including different endowments of subjects and different objective functions of subjects – the unsolvable dynamic multi-agent game process can be simulated. In addition, the influence of “the existence and degree of heterogeneity” on mechanism operation and the heterogeneous effect of mechanism on heterogeneous subjects can also be discussed.</p>
+</section>
+<section id="bounded-rationality-including-incomplete-information">
+<h3>Bounded rationality(including incomplete information)<a class="headerlink" href="#bounded-rationality-including-incomplete-information" title="Permalink to this headline"></a></h3>
+<p>Based on the flexibility of describing the behavior of the subject, ABM model provides a more convenient interface for us to introduce conclusions from psychology and behavioral science into the modeling of social economic system.</p>
+</section>
+<section id="learning-and-evolution">
+<h3>Learning and evolution<a class="headerlink" href="#learning-and-evolution" title="Permalink to this headline"></a></h3>
+<p>For the complex social and economic system with “human” as the main body, the learning ability of the main body may also be considered, because it drives the system to show macro dynamics on a larger time scale, so that the “complex system” becomes a “complex adaptive system”. The introduction of subject learning behavior is the difficulty of ABM modeling. Whether to consider it or not, how to model and access it, needs to weigh the design according to system characteristics and research objectives. Meanwhile, the combination of ABM with machine learning and artificial intelligence is also full of imagination.</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../index.html" class="btn btn-neutral float-left" title="Welcome to Melodie’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../advancedtutorial/boost.html" class="btn btn-neutral float-right" title="Boost Python with vectorization" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, open excel_source.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

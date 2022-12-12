@@ -12,7 +12,7 @@ prof/
 .DS_Store
 # Distribution / packaging
 .Python
-build/
+/build/
 develop-eggs/
 dist/
 downloads/

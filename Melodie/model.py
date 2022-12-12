@@ -81,7 +81,7 @@ class Model:
 
     def setup(self):
         """
-        general method for setting up the model.
+        General method for setting up the model.
 
         :return: None
         """
@@ -110,7 +110,7 @@ class Model:
         """
         Create one agent list of model.
 
-        :param agent_class:
+        :param agent_class: The class of desired agent type.
         :return: Agentlist object created
         """
         return AgentList(agent_class, model=self)

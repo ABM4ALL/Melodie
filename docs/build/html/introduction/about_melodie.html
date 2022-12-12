@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Introduction to Melodie &mdash; Melodie 0.1 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+        <script>mermaid.initialize({startOnLoad:true});</script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Basic Tutorial" href="../tutorials/basic_tutorial.html" />
+    <link rel="prev" title="Introduction to ABM" href="intro_2_abm.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> Melodie
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Introduction</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="intro_2_abm.html">Introduction to ABM</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Introduction to Melodie</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#the-design-philosophy-of-verification">The Design Philosophy of Verification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#concepts-in-melodie">Concepts in Melodie</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#running-routine">Running Routine</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/basic_tutorial.html">Basic Tutorial</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../advancedtutorial/boost.html">Boost Python with vectorization</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Melodie</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Introduction to Melodie</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/introduction/about_melodie.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="introduction-to-melodie">
+<h1>Introduction to Melodie<a class="headerlink" href="#introduction-to-melodie" title="Permalink to this headline"></a></h1>
+<p>Melodie is an Agent-Based Modelling Framework aimed at building, analyzing and tuning models.</p>
+<p>Compared with other ABM frameworks, Melodie implements a Calibrator and a Trainer for model calibration. Besides, Melodie also provides a few ways to speed up both model development and model running.</p>
+<section id="the-design-philosophy-of-verification">
+<h2>The Design Philosophy of Verification<a class="headerlink" href="#the-design-philosophy-of-verification" title="Permalink to this headline"></a></h2>
+<p>Melodie is designed following the philosophy of <strong>Verification</strong>. There are a lot of assertions and checkings to verify the parameters inside .</p>
+<p>It may be annoying when an error occurs, so we tried our best to raise user-friendly exceptions. Once an error occurs, it will carry a unique id that could be found on <a class="reference external" href="#">this page</a>. If you are still confused, you could make an issue on this <a class="reference external" href="#">Github</a> page.</p>
+</section>
+<section id="concepts-in-melodie">
+<h2>Concepts in Melodie<a class="headerlink" href="#concepts-in-melodie" title="Permalink to this headline"></a></h2>
+<p>There are some important concepts involved in this framework.</p>
+<ul class="simple">
+<li><p>Basic Modelling:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">Agent</span></code>, what the system is made up of.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Environment</span></code>, where the agents interact with each other</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Model</span></code>, managing the <code class="docutils literal notranslate"><span class="pre">Agent</span></code>, <code class="docutils literal notranslate"><span class="pre">Environment</span></code>, and other Components including:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">AgentContainer</span></code> to store agent objects</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">DataCollector</span></code> to collect data</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">TableGenerator</span></code> to generate test data</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Grid</span></code> and <code class="docutils literal notranslate"><span class="pre">Network</span></code> as space where the agents live</p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Scenario and Parameters</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">Scenario</span></code> contains global parameters.</p></li>
+</ul>
+</li>
+<li><p>Manager for Scenarios</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">Simulator</span></code> could run the model within each scenario</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Calibrator</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Trainer</span></code></p></li>
+</ul>
+</li>
+<li><p>Management and Visualization</p>
+<ul>
+<li><p>Studio. run this command <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-m</span> <span class="pre">Melodie</span> <span class="pre">studio</span></code>, and you will see a webpage with visualization page and some useful tools.</p></li>
+</ul>
+</li>
+</ul>
+<section id="running-routine">
+<h3>Running Routine<a class="headerlink" href="#running-routine" title="Permalink to this headline"></a></h3>
+<p>Melodie modeling needs a Manager to run. The manager can be a <code class="docutils literal notranslate"><span class="pre">Simulator</span></code>, <code class="docutils literal notranslate"><span class="pre">Calibrator</span></code> or <code class="docutils literal notranslate"><span class="pre">Trainer</span></code>. Each <code class="docutils literal notranslate"><span class="pre">Manager</span></code> has a number of <code class="docutils literal notranslate"><span class="pre">Scenario</span></code> to run the <code class="docutils literal notranslate"><span class="pre">Model</span></code> with different parameters.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">Manager</span></code> will iterate through all scenarios, and for each scenario the model will be re-instantiated with current <code class="docutils literal notranslate"><span class="pre">Scenario</span></code>. The <code class="docutils literal notranslate"><span class="pre">Model</span></code> setup its components with parameters from current scenario, and then run.</p>
+<p>The running of model consists of discrete steps, and in each step the environment or agent do their actions. After the action, <code class="docutils literal notranslate"><span class="pre">DataCollector</span></code> and <code class="docutils literal notranslate"><span class="pre">Visualizer</span></code> could be used for visualization.</p>
+<p>The property of <code class="docutils literal notranslate"><span class="pre">Environment</span></code> and <code class="docutils literal notranslate"><span class="pre">Agent</span></code> are defined in the <code class="docutils literal notranslate"><span class="pre">setup()</span></code> method. It is a good practice to make sure the properties are of  <code class="docutils literal notranslate"><span class="pre">int</span></code>/<code class="docutils literal notranslate"><span class="pre">float</span></code>/<code class="docutils literal notranslate"><span class="pre">str</span></code>/<code class="docutils literal notranslate"><span class="pre">bool</span></code> types, because these types are database friendly. If the Agent or Environment should use complex data structure, please pass them as method arguments.</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="intro_2_abm.html" class="btn btn-neutral float-left" title="Introduction to ABM" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../tutorials/basic_tutorial.html" class="btn btn-neutral float-right" title="Basic Tutorial" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, open excel_source.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

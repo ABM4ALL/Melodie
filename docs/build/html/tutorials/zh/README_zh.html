@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>项目结构 &mdash; Melodie 0.1 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+        <script>mermaid.initialize({startOnLoad:true});</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> Melodie
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Introduction</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../introduction/intro_2_abm.html">Introduction to ABM</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../advancedtutorial/boost.html">Boost Python with vectorization</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Melodie</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>项目结构</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/tutorials/zh/README_zh.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="id1">
+<h1>项目结构<a class="headerlink" href="#id1" title="Permalink to this headline"></a></h1>
+<p>目前仅支持使用sqlite数据库进行数据的存储。</p>
+<p>在目前，sqlite文件的名称与项目名称相同。
+启动时，需要通过Config对象来设置这些参数,如下述代码所示：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">run</span><span class="p">(</span>
+        <span class="n">GINIAgent</span><span class="p">,</span>
+        <span class="n">GiniEnvironment</span><span class="p">,</span>
+        <span class="n">Config</span><span class="p">(</span><span class="s1">&#39;WealthDistribution&#39;</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)),</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+<p>Config的参数含义：</p>
+<ol class="simple">
+<li><p>第一个参数，是项目的名称，只允许有效的变量名。
+除了字母、数字、下划线之外，还可以使用汉字、日韩文字、阿拉伯文字等非Ascii字符。</p></li>
+<li><p>第二个参数是项目的根目录。默认情况下，数据库文件以及分析结果文件将输出到项目<code class="docutils literal notranslate"><span class="pre">根目录/_database</span></code>和<code class="docutils literal notranslate"><span class="pre">根目录/_output</span></code>下。</p></li>
+<li><p>还有其他参数，可以指定数据库和结果文件的输出路径。</p></li>
+</ol>
+<section id="id2">
+<h2>数据库与存储<a class="headerlink" href="#id2" title="Permalink to this headline"></a></h2>
+<p>数据存储方面，
+一共有4个数据表：</p>
+<ul class="simple">
+<li><p>scenarios，存储生成的scenario</p>
+<ul>
+<li><p>仿真最开始的阶段，被ScenarioManager生成后即写入数据库。</p></li>
+</ul>
+</li>
+<li><p>agent_param，存储agent的参数</p>
+<ul>
+<li><p>当刚刚进入一个Scenario时，被TableGenerator生成后即写入数据库</p></li>
+</ul>
+</li>
+<li><p>env_result，存储环境的结果信息</p>
+<ul>
+<li><p>每一个Scenario结束时，被写入数据库。</p></li>
+</ul>
+</li>
+<li><p>agent_result，存储agent的结果</p>
+<ul>
+<li><p>写入数据库的时间与env_result相同。</p></li>
+</ul>
+</li>
+</ul>
+<p>可以使用dbbrowser打开数据库，或者用Melodie.db.create_conn()生成一个
+数据库管理的实例，调用其中的相应方法来查看数据。</p>
+<p>例如要获取环境的数据：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">Melodie.db</span> <span class="kn">import</span> <span class="n">create_db_conn</span>
+<span class="n">create_db_conn</span><span class="p">()</span><span class="o">.</span><span class="n">query_env_results</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>返回结果：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>     trade_num  win_prob  total_wealth      gini  scenario_id  step
+0          100       0.6        5398.0  0.304265            0     0
+1          100       0.6        5445.0  0.303590            0     1
+2          100       0.6        5487.0  0.303246            0     2
+3          100       0.6        5530.0  0.300807            0     3
+4          100       0.6        5583.0  0.299995            0     4
+..         ...       ...           ...       ...          ...   ...
+195        100       0.6       15026.0  0.289315            0   195
+196        100       0.6       15076.0  0.289395            0   196
+197        100       0.6       15128.0  0.289357            0   197
+198        100       0.6       15182.0  0.289106            0   198
+199        100       0.6       15222.0  0.289137            0   199
+
+[200 rows x 6 columns]
+</pre></div>
+</div>
+<p>其他可详见<code class="docutils literal notranslate"><span class="pre">tests/test_db.py</span></code></p>
+<p><strong>另外，与Melodie配套的、基于Web的管理工具，将带有数据库的初步查看功能。</strong></p>
+<p>由于可能涉及到仿真过程中对数据库的异步读写，所以目前阶段，create_conn()每次都返回一个
+新的数据库连接。这可能会导致较大的读写开销。在未来将考虑进行优化。</p>
+</section>
+<section id="scenarioscenariomanager">
+<h2>Scenario的生成——ScenarioManager<a class="headerlink" href="#scenarioscenariomanager" title="Permalink to this headline"></a></h2>
+<p>Melodie仿真的项目，首先可以分为一系列的场景（Scenario）。</p>
+<p>一系列场景由ScenarioManager的<code class="docutils literal notranslate"><span class="pre">gen_scenario()</span></code>方法生成。仿真过程中，
+<strong>对于每一个场景，都会单独创建一个模型并运行仿真</strong>。</p>
+<ul class="simple">
+<li><p>场景的概念略微有一些复杂。因此对于入门级的项目应该省掉这个概念，用最简单的方式来入门。</p></li>
+<li><p>另外，不同场景之间的数据是独立的，因此用户必然会提出并行仿真不同Scenario的要求。
+为了解决这个问题，需要在向sqlite写入数据时进行一定的判断，如果写入失败，则进行等待。</p></li>
+</ul>
+</section>
+<section id="agenttablegenerator">
+<h2>Agent的参数生成——TableGenerator的使用<a class="headerlink" href="#agenttablegenerator" title="Permalink to this headline"></a></h2>
+<p>场景生成后，第一步任务就是要生成Agent的参数，也就是用TableGenerator.</p>
+<p>TableGenerator的使用方法较为简单，只要重写其<code class="docutils literal notranslate"><span class="pre">setup()</span></code>函数即可。
+在以下代码中，假设Agent需要赋初始值的属性——也就是参数(parameter)——有<code class="docutils literal notranslate"><span class="pre">productivity</span></code>和
+<code class="docutils literal notranslate"><span class="pre">account</span></code>两个，那么就调用<code class="docutils literal notranslate"><span class="pre">add_agent_param</span></code>方法即可。</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">Melodie.table_generator</span> <span class="kn">import</span> <span class="n">TableGenerator</span>
+
+
+<span class="k">class</span> <span class="nc">GiniTableGenerator</span><span class="p">(</span><span class="n">TableGenerator</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_agent_param</span><span class="p">(</span><span class="s1">&#39;productivity&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">agent_productivity</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_agent_param</span><span class="p">(</span><span class="s1">&#39;account&#39;</span><span class="p">,</span> <span class="k">lambda</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">agent_account_min</span><span class="p">,</span>
+                                                                        <span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">agent_account_max</span><span class="p">)))</span>
+</pre></div>
+</div>
+<p>add_agent_param方法有两个参数。第一个是属性名称，第二个是生成器。</p>
+<p>生成器是int/float/str型，或者是一个函数，没有参数，返回一个相应数据类型的数值。</p>
+<p>当传入int/float/str型数时，所有Agent被设置的属性，都和传入的值一样。如第一行初始化
+productivity，所有的Agent的productivity都被设置为<code class="docutils literal notranslate"><span class="pre">scenario.agent_productivity</span></code></p>
+<p>当传入函数时，属性将被设置为这个函数调用后的返回值。</p>
+<p>TableGenerator在生成参数之后，就会将参数存入数据库内。存入数据库之后，
+它的任务就完成了。</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, open excel_source.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

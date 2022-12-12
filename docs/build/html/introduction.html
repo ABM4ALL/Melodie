@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Introduction &mdash; Melodie 1.0.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="author" title="About these documents" href="about.html" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Tutorial" href="tutorial.html" />
+    <link rel="prev" title="Installation" href="installation.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> Melodie
+            <img src="_static/logo.jpg" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#user-installation">User Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#developer-installation">Developer Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#dependency-note">Dependency Note</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Introduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#agent-based-model-abm">Agent-based Model (ABM)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#melodie-framework">Melodie Framework</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#model">Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#scenario">Scenario</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#modelling-manager">Modelling Manager</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#infrastructure">Infrastructure</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tutorial.html#project-structure">Project Structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial.html#agent">Agent</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial.html#scenario">Scenario</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="tutorial.html#generate-agent-params">Generate <code class="docutils literal notranslate"><span class="pre">agent_params</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorial.html#load-simulator-scenarios">Load <code class="docutils literal notranslate"><span class="pre">simulator_scenarios</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial.html#model">Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial.html#environment">Environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial.html#datacollector">DataCollector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial.html#last-words">Last Words</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="gallery/_index.html">Model Gallery</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="gallery/covid_grid_contagion.html">Covid Grid Contagion</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gallery/covid_network_contagion.html">Covid Network Contagion</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="advanced/_index.html">Advanced Topics</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api/_index.html">API Reference</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Change Log</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#roadmap">Roadmap</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#major-version-0-x">Major Version 0.x</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#v0-4-0-nov-15-2022">v0.4.0 (Nov. 15, 2022)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#v0-3-0-oct-28-2022">v0.3.0 (Oct. 28, 2022)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#v0-2-0-oct-24-2022">v0.2.0 (Oct. 24, 2022)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#v0-1-1-aug-23-2022">v0.1.1 (Aug. 23, 2022)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#v0-1-0-jul-22-2022">v0.1.0 (Jul. 22, 2022)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#start-may-10-2021">Start (May. 10, 2021)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="contribution.html">Contribution</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="contribution.html#report-bugs">Report Bugs</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="contribution.html#report-melodie-bugs">Report Melodie Bugs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="contribution.html#report-documentation-bugs">Report Documentation Bugs</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="contribution.html#ask-for-functionalities">Ask for Functionalities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contribution.html#how-to-contribute">How to Contribute</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="about.html">About</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Melodie</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Introduction</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/introduction.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="introduction">
+<h1>Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading"></a></h1>
+<section id="agent-based-model-abm">
+<h2>Agent-based Model (ABM)<a class="headerlink" href="#agent-based-model-abm" title="Permalink to this heading"></a></h2>
+<p>ABMs characterize physical, biological, and social economic systems as dynamic <cite>interactions</cite> among <cite>agents</cite> from a bottom-up perspective.
+The <cite>agents</cite> can be molecules, animals, or human beings.
+The <cite>interactions</cite> can be water molecules forming a vortex, ants searching for food, or people trading stocks in the market.</p>
+<p>Agents’ interactions can bring <cite>emergent properties</cite> to a system and turn it into a <cite>complex system</cite>.
+To model such mechanism is usually the core reason for using ABMs.
+Besides, taking social economic systems as example, ABMs are also flexible to consider agents’
+(1) <cite>heterogeneity</cite> (e.g., wealth, risk attitude, preference, decision-making rule, etc.) based on micro-data;
+(2) <cite>bounded rationality and adaptation behavior</cite> based on psychological and behavioral studies.</p>
+</section>
+<section id="melodie-framework">
+<h2>Melodie Framework<a class="headerlink" href="#melodie-framework" title="Permalink to this heading"></a></h2>
+<p>As a general framework for developing agent-based models (ABMs),
+<strong>Melodie</strong> is designed in a modular structure and the modules are organized into four clusters:
+<strong>Model</strong>, <strong>Scenario</strong>, <strong>Modeling Manager</strong>, and <strong>Infrastructure</strong>.</p>
+<section id="model">
+<h3>Model<a class="headerlink" href="#model" title="Permalink to this heading"></a></h3>
+<p>The modules in the <strong>Model Cluster</strong> focus on describing the logics of the target system.
+Developed with <code class="docutils literal notranslate"><span class="pre">Melodie</span></code>, a <code class="docutils literal notranslate"><span class="pre">model:</span> <span class="pre">Model</span></code> object can contain following components:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">agent:</span> <span class="pre">Agent</span></code> - makes decisions, interacts with others, and stores the micro-level variables.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">agents:</span> <span class="pre">AgentList</span></code> - contains a list of agents and provides relevant functions.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">environment:</span> <span class="pre">Environment</span></code> - coordinates the agents’ decision-making and interaction processes and stores the macro-level variables.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">data_collector:</span> <span class="pre">DataCollector</span></code> - collects the micro- and macro-level variables from the agents and environment, then saves them to the database.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">grid:</span> <span class="pre">Grid</span></code> - constructed with <code class="docutils literal notranslate"><span class="pre">spot:</span> <span class="pre">Spot</span></code> objects, describes the grid (<em>if exists</em>) that the agents walk on, stores grid variables, and provides the relevant functions.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">network:</span> <span class="pre">Network</span></code> - constructed with <code class="docutils literal notranslate"><span class="pre">edge:</span> <span class="pre">Edge</span></code> objects, describes the network (<em>if exists</em>) that links the agents, and provides the relevant functions.</p></li>
+</ul>
+</section>
+<section id="scenario">
+<h3>Scenario<a class="headerlink" href="#scenario" title="Permalink to this heading"></a></h3>
+<p>The modules in the <strong>Scenario Cluster</strong> focus on formatting, importing,
+and delivering the input data to the <code class="docutils literal notranslate"><span class="pre">model</span></code>. The modules include</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">DataFrameInfo</span></code> and <code class="docutils literal notranslate"><span class="pre">MatrixInfo</span></code> - provide standard format for input tables as parameters.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">DataLoader</span></code> - whose object loads all the input data into the <code class="docutils literal notranslate"><span class="pre">model</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Scenario</span></code> - whose object contains all the input data that is needed to run the model, and can be accessed by the <code class="docutils literal notranslate"><span class="pre">model</span></code>, the <code class="docutils literal notranslate"><span class="pre">environment</span></code>, the <code class="docutils literal notranslate"><span class="pre">data_collector</span></code>, and each <code class="docutils literal notranslate"><span class="pre">agent</span></code>.</p></li>
+</ul>
+</section>
+<section id="modelling-manager">
+<h3>Modelling Manager<a class="headerlink" href="#modelling-manager" title="Permalink to this heading"></a></h3>
+<p>To combine everything and finally start running, the <strong>Modelling Manager Cluster</strong> includes three modules in parallel,
+which can be constructed and run for different objectives:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Simulator</span></code> - simulates the logics written in the <code class="docutils literal notranslate"><span class="pre">model</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Calibrator</span></code> - calibrates the parameters of the <code class="docutils literal notranslate"><span class="pre">scenario</span></code> by minimizing the distance between model output and empirical evidence.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Trainer</span></code> - trains the <code class="docutils literal notranslate"><span class="pre">agents</span></code> to update their behavioral parameters for higher payoff.</p></li>
+</ul>
+<p>Taking the CovidContagion model in the tutorial as example, as shown below,
+the <code class="docutils literal notranslate"><span class="pre">simulator</span></code> is initialized with a <code class="docutils literal notranslate"><span class="pre">config</span></code> object (incl. project name and folder paths) and
+the class variables of the <code class="docutils literal notranslate"><span class="pre">model</span></code>, the <code class="docutils literal notranslate"><span class="pre">scenario</span></code>, and the <code class="docutils literal notranslate"><span class="pre">data_loader</span></code>.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">Melodie</span> <span class="kn">import</span> <span class="n">Simulator</span>
+<span class="kn">from</span> <span class="nn">config</span> <span class="kn">import</span> <span class="n">config</span>
+<span class="kn">from</span> <span class="nn">source.model</span> <span class="kn">import</span> <span class="n">CovidModel</span>
+<span class="kn">from</span> <span class="nn">source.scenario</span> <span class="kn">import</span> <span class="n">CovidScenario</span>
+<span class="kn">from</span> <span class="nn">source.data_loader</span> <span class="kn">import</span> <span class="n">CovidDataLoader</span>
+
+<span class="n">simulator</span> <span class="o">=</span> <span class="n">Simulator</span><span class="p">(</span>
+     <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span>
+     <span class="n">model_cls</span><span class="o">=</span><span class="n">CovidModel</span><span class="p">,</span>
+     <span class="n">scenario_cls</span><span class="o">=</span><span class="n">CovidScenario</span><span class="p">,</span>
+     <span class="n">data_loader_cls</span><span class="o">=</span><span class="n">CovidDataLoader</span>
+<span class="p">)</span>
+<span class="n">simulator</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>At last, by calling the <code class="docutils literal notranslate"><span class="pre">simulator.run</span></code> function, the simulation starts.</p>
+</section>
+<section id="infrastructure">
+<h3>Infrastructure<a class="headerlink" href="#infrastructure" title="Permalink to this heading"></a></h3>
+<p>The last <strong>Infrastructure Cluster</strong> includes the modules that provide support for the modules above.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Config</span></code> - provides the channel to define project information, e.g., project name, folder paths.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">DBConn</span></code> - provides the functions to write to or read from the database.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">MelodieException</span></code> - provides the pre-defined exceptions in Melodie to support debugging.</p></li>
+</ul>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="installation.html" class="btn btn-neutral float-left" title="Installation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="tutorial.html" class="btn btn-neutral float-right" title="Tutorial" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021-2022, ABM4ALL.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
