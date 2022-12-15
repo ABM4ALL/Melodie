@@ -91,10 +91,10 @@ class CalibratorAlgorithmMeta:
 
     def __init__(self):
         self._freeze = False
-        self.calibrator_id_scenario = 0
-        self.calibrator_params_id = 1
-        self.path_id = 0
-        self.generation = 0
+        self.id_calibrator_scenario = 0
+        self.id_calibrator_params_scenario = 1
+        self.id_path = 0
+        self.id_generation = 0
 
     def to_dict(self, public_only=False):
 
@@ -118,7 +118,7 @@ class CalibratorAlgorithmMeta:
 class GACalibratorAlgorithmMeta(CalibratorAlgorithmMeta):
     def __init__(self):
         super(GACalibratorAlgorithmMeta, self).__init__()
-        self.chromosome_id = 0
+        self.id_chromosome = 0
         self._freeze = True
 
 
@@ -195,14 +195,14 @@ class GACalibratorAlgorithm:
     def stop(self):
         self.parallel_manager.close()
 
-    def get_params(self, chromosome_id: int) -> Dict[str, Any]:
+    def get_params(self, id_chromosome: int) -> Dict[str, Any]:
         """
         Pass parameters from the chromosome to the Environment.
 
-        :param chromosome_id:
+        :param id_chromosome:
         :return:
         """
-        chromosome_value = self.algorithm.chrom2x(self.algorithm.Chrom)[chromosome_id]
+        chromosome_value = self.algorithm.chrom2x(self.algorithm.Chrom)[id_chromosome]
         env_parameters_dict = {}
         for i, param_name in enumerate(self.env_param_names):
             env_parameters_dict[param_name] = chromosome_value[i]
@@ -212,14 +212,14 @@ class GACalibratorAlgorithm:
             self,
             env_data,
             generation: int,
-            chromosome_id: int,
+            id_chromosome: int,
     ):
         """
         Extract the value of target functions from Model, and write them into cache.
 
         :return:
         """
-        self.cache[(generation, chromosome_id)] = env_data["target_function_value"]
+        self.cache[(generation, id_chromosome)] = env_data["target_function_value"]
 
     def generate_target_function(self) -> Callable[[], float]:
         """
@@ -296,7 +296,7 @@ class GACalibratorAlgorithm:
         pd.set_option("display.max_columns", None)
         pd.set_option("display.max_rows", None)
         meta_dict = meta.to_dict(public_only=True)
-        meta_dict.pop("chromosome_id")
+        meta_dict.pop("id_chromosome")
         for container_name in self.recorded_agent_properties.keys():
             df = agent_container_df_dict[container_name]
             container_agent_record_list = []
@@ -350,20 +350,20 @@ class GACalibratorAlgorithm:
         for i in range(self.params.generation_num):
             t0 = time.time()
             self._current_generation = i
-            meta.generation = i
+            meta.id_generation = i
             logger.info(
                 f"======================="
-                f"Path {meta.path_id} Generation {i + 1}/{self.params.generation_num}"
+                f"Path {meta.id_path} Generation {i + 1}/{self.params.generation_num}"
                 f"======================="
             )
 
-            for chromosome_id in range(self.params.strategy_population):
-                params = self.get_params(chromosome_id)
+            for id_chromosome in range(self.params.strategy_population):
+                params = self.get_params(id_chromosome)
                 # params_queue.put(
-                #     json.dumps((chromosome_id, scenario.to_json(), params))
+                #     json.dumps((id_chromosome, scenario.to_json(), params))
                 # )
                 self.parallel_manager.put_task(
-                    (chromosome_id, scenario.to_json(), params)
+                    (id_chromosome, scenario.to_json(), params)
                 )
 
             agent_records_collector: Dict[str, List[Dict[str, Any]]] = {
@@ -372,9 +372,9 @@ class GACalibratorAlgorithm:
             }
             env_records_list: List[Dict[str, Any]] = []
 
-            for _chromosome_id in range(self.params.strategy_population):
+            for _id_chromosome in range(self.params.strategy_population):
                 chrom, agents_data, env_data = self.parallel_manager.get_result()
-                meta.chromosome_id = chrom
+                meta.id_chromosome = chrom
                 agent_records, env_record = self.record_agent_properties(
                     agents_data, env_data, meta
                 )
@@ -473,17 +473,17 @@ class Calibrator(BaseModellingManager):
 
         scenario_cls = GACalibratorParams
         for scenario in self.scenarios:
-            self.current_algorithm_meta.calibrator_id_scenario = scenario.id
+            self.current_algorithm_meta.id_calibrator_scenario = scenario.id
             calibration_scenarios = self.get_params_scenarios()
             for calibrator_scenario in calibration_scenarios:
                 calibrator_scenario = scenario_cls.from_dataframe_record(
                     calibrator_scenario
                 )
-                self.current_algorithm_meta.calibrator_params_id = (
+                self.current_algorithm_meta.id_calibrator_params_scenario = (
                     calibrator_scenario.id
                 )
-                for trainer_path_id in range(calibrator_scenario.path_num):
-                    self.current_algorithm_meta.path_id = trainer_path_id
+                for id_trainer_path in range(calibrator_scenario.path_num):
+                    self.current_algorithm_meta.id_path = id_trainer_path
 
                     self.run_once_new(scenario, calibrator_scenario)
 

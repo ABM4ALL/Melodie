@@ -91,10 +91,10 @@ class TrainerAlgorithmMeta:
 
     def __init__(self):
         self._freeze = False
-        self.trainer_id_scenario = 0
-        self.trainer_params_id = 1
-        self.path_id = 0
-        self.generation = 0
+        self.id_trainer_scenario = 0
+        self.id_trainer_params_scenario = 1
+        self.id_path = 0
+        self.id_generation = 0
 
     def to_dict(self, public_only=False):
 
@@ -118,7 +118,7 @@ class TrainerAlgorithmMeta:
 class GATrainerAlgorithmMeta(TrainerAlgorithmMeta):
     def __init__(self):
         super().__init__()
-        self.chromosome_id = 0
+        self.id_chromosome = 0
         self._freeze = True
 
 
@@ -127,7 +127,7 @@ class TargetFcnCache:
     The cache for the pre-computed values.
 
     Dict:  {(generation_id,
-             chromosome_id):
+             id_chromosome):
                            {(agent_id,
                              container_name):
                                             function_value
@@ -138,12 +138,12 @@ class TargetFcnCache:
     def __init__(self):
         self.target_fcn_record: Dict[Tuple[int, int], Dict] = {}
         self.current_generation = -1
-        self.current_chromosome_id = -1
+        self.current_id_chromosome = -1
 
     def lookup_agent_target_value(
-            self, agent_id: int, container_name: str, generation: int, chromosome_id: int
+            self, agent_id: int, container_name: str, generation: int, id_chromosome: int
     ):
-        return self.target_fcn_record[(generation, chromosome_id)][
+        return self.target_fcn_record[(generation, id_chromosome)][
             (agent_id, container_name)
         ]
 
@@ -153,12 +153,12 @@ class TargetFcnCache:
             container_name: str,
             value: float,
             generation: int,
-            chromosome_id: int,
+            id_chromosome: int,
     ):
         # self.current_target_fcn_value[(agent_id, container_name)] = value
-        if (generation, chromosome_id) not in self.target_fcn_record:
-            self.target_fcn_record[(generation, chromosome_id)] = {}
-        self.target_fcn_record[(generation, chromosome_id)][
+        if (generation, id_chromosome) not in self.target_fcn_record:
+            self.target_fcn_record[(generation, id_chromosome)] = {}
+        self.target_fcn_record[(generation, id_chromosome)][
             (agent_id, container_name)
         ] = value
 
@@ -166,10 +166,10 @@ class TargetFcnCache:
             self, chromosome_num: int, generation: int, agent_id: int, agent_category: int
     ):
         values = [
-            self.target_fcn_record[(generation, chromosome_id)][
+            self.target_fcn_record[(generation, id_chromosome)][
                 (agent_id, agent_category)
             ]
-            for chromosome_id in range(chromosome_num)
+            for id_chromosome in range(chromosome_num)
         ]
         return min(values)
 
@@ -261,11 +261,11 @@ class GATrainerAlgorithm:
         self.recorded_agent_properties[container_name] = recorded_properties
         self.agent_ids[container_name] = agent_id_list
 
-    def get_agent_params(self, chromosome_id: int):
+    def get_agent_params(self, id_chromosome: int):
         """
         Pass parameters from the chromosome to the agent container.
 
-        :param chromosome_id:
+        :param id_chromosome:
         :return:
         """
         params: Dict[str, List[Dict[str, Any]]] = {
@@ -273,7 +273,7 @@ class GATrainerAlgorithm:
         }
         # {category : [{id: 0, param1: 1, param2: 2, ...}]}
         for key, algorithm in self.algorithms_dict.items():
-            chromosome_value = algorithm.chrom2x(algorithm.Chrom)[chromosome_id]
+            chromosome_value = algorithm.chrom2x(algorithm.Chrom)[id_chromosome]
             agent_id, agent_category = key
             d = {"id": agent_id}
             for i, param_name in enumerate(self.agent_params_defined[agent_category]):
@@ -285,7 +285,7 @@ class GATrainerAlgorithm:
             self,
             agent_target_function_values: Dict[str, List[Dict[str, Any]]],
             generation: int,
-            chromosome_id: int,
+            id_chromosome: int,
     ):
         """
         Extract the value of target functions from Model, and write them into cache.
@@ -303,7 +303,7 @@ class GATrainerAlgorithm:
                     container_category,
                     agent_props["target_function_value"],
                     generation,
-                    chromosome_id,
+                    id_chromosome,
                 )
 
     def generate_target_function(
@@ -384,7 +384,7 @@ class GATrainerAlgorithm:
         pd.set_option("display.max_columns", None)
         pd.set_option("display.max_rows", None)
         meta_dict = meta.to_dict(public_only=True)
-        meta_dict.pop("chromosome_id")
+        meta_dict.pop("id_chromosome")
         for container_name in self.agent_ids.keys():
             df = agent_container_df_dict[container_name]
             container_agent_record_list = []
@@ -437,17 +437,17 @@ class GATrainerAlgorithm:
 
         for i in range(self.params.generation_num):
             self._current_generation = i
-            meta.generation = i
+            meta.id_generation = i
             logger.info(
                 f"======================="
-                f"Path {meta.path_id} Generation {i + 1}/{self.params.generation_num}"
+                f"Path {meta.id_path} Generation {i + 1}/{self.params.generation_num}"
                 f"======================="
             )
 
-            for chromosome_id in range(self.params.strategy_population):
-                params = self.get_agent_params(chromosome_id)
+            for id_chromosome in range(self.params.strategy_population):
+                params = self.get_agent_params(id_chromosome)
                 self.parallel_manager.put_task(
-                    (chromosome_id, scenario.to_json(), params)
+                    (id_chromosome, scenario.to_json(), params)
                 )
                 # params_queue.put(
                 #     json.dumps()
@@ -458,7 +458,7 @@ class GATrainerAlgorithm:
             }
             env_records_list: List[Dict[str, Any]] = []
 
-            for _chromosome_id in range(self.params.strategy_population):
+            for _id_chromosome in range(self.params.strategy_population):
                 # v = result_queue.get()
 
                 (
@@ -468,7 +468,7 @@ class GATrainerAlgorithm:
                 ) = (
                     self.parallel_manager.get_result()
                 )  # cloudpickle.loads(base64.b64decode(v))
-                meta.chromosome_id = chrom
+                meta.id_chromosome = chrom
                 agent_records, env_record = self.record_agent_properties(
                     agents_data, env_data, meta
                 )
@@ -631,15 +631,15 @@ class Trainer(BaseModellingManager):
         trainer_scenario_cls = self.get_trainer_scenario_cls()
         self.current_algorithm_meta = GATrainerAlgorithmMeta()
         for scenario in self.scenarios:
-            self.current_algorithm_meta.trainer_id_scenario = scenario.id
+            self.current_algorithm_meta.id_trainer_scenario = scenario.id
             for trainer_params in self.generate_trainer_params_list(
                     trainer_scenario_cls
             ):
-                self.current_algorithm_meta.trainer_params_id = trainer_params.id
-                for path_id in range(trainer_params.path_num):
-                    self.current_algorithm_meta.path_id = path_id
+                self.current_algorithm_meta.id_trainer_params_scenario = trainer_params.id
+                for id_path in range(trainer_params.path_num):
+                    self.current_algorithm_meta.id_path = id_path
                     logger.info(
-                        f"trainer_id_scenario = {scenario.id}, path_id = {path_id}"
+                        f"id_trainer_scenario = {scenario.id}, id_path = {id_path}"
                     )
                     self.run_once_new(scenario, trainer_params)
 
