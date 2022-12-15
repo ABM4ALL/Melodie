@@ -1,6 +1,8 @@
 import logging
 from typing import Dict, Set, Union, List, Tuple, Type
 
+import networkx as nx
+
 from .boost.basics import Agent
 from .boost.agent_list import AgentList
 
@@ -28,12 +30,12 @@ class NetworkAgent(Agent):
 
 class Edge:
     def __init__(
-        self,
-        category_1: int,
-        agent_1_id: int,
-        category_2: int,
-        agent_2_id: int,
-        edge_properties: Dict[str, Union[int, str, float, bool]],
+            self,
+            category_1: int,
+            agent_1_id: int,
+            category_2: int,
+            agent_2_id: int,
+            edge_properties: Dict[str, Union[int, str, float, bool]],
     ):
         self.category_1 = category_1
         self.agent_1_id = agent_1_id
@@ -74,6 +76,8 @@ class Network:
         self.nodes: Set[NodeType] = set()
         self.edges: Dict[NodeType, Dict[NodeType, Edge]] = {}
         self.edge_cls: Type[Edge] = edge_cls if edge_cls is not None else Edge
+        self.agent_categories: Dict[int, AgentList] = {}
+        self.layout = {}
         self.setup()
 
     def _setup(self):
@@ -127,7 +131,7 @@ class Network:
             self.edges[target_id].pop(source_id)
 
     def _get_neighbor_positions(
-        self, agent_id: int, category: int
+            self, agent_id: int, category: int
     ) -> List[Tuple[int, int]]:
         neighbor_ids = self.edges[(category, agent_id)]
         if neighbor_ids is None:
@@ -193,12 +197,12 @@ class Network:
         self._add_agent(agent.category, agent.id)
 
     def create_edge(
-        self,
-        agent_1_id: int,
-        category_1: int,
-        agent_2_id: int,
-        category_2: int,
-        **edge_properties,
+            self,
+            agent_1_id: int,
+            category_1: int,
+            agent_2_id: int,
+            category_2: int,
+            **edge_properties,
     ):
         """
         Create a new edge from one agent to another agent.
@@ -241,11 +245,24 @@ class Network:
             edges.append(edge)
         return edges
 
+    def update_layout(self):
+        g = nx.DiGraph()
+        for start_node in self.edges.keys():
+            for end_node in self.edges[start_node].keys():
+                g.add_edge(start_node, end_node)
+        layout = nx.spring_layout(g)
+        self.layout = layout
+
+    def get_position(self, agent_category: int, agent_id: int):
+        if (agent_category, agent_id) not in self.layout:
+            self.update_layout()
+        return self.layout[(agent_category, agent_id)] * 1000
+
     def setup_agent_connections(
-        self,
-        agent_lists: List[AgentList],
-        network_type: str,
-        network_params: dict = None,
+            self,
+            agent_lists: List[AgentList],
+            network_type: str,
+            network_params: dict = None,
     ):
         """
         Set up the connection between agents.
@@ -264,6 +281,9 @@ class Network:
         node_id = 0
         node_id_to_node_type_map: Dict[int, NodeType] = {}
         for agent_list in agent_lists:
+            if len(agent_list) > 0:
+                agent_list[0].set_category()
+                self.agent_categories[agent_list[0].category] = agent_list
             # category = agent_list[0].category
             # assert isinstance(category, int)
             for agent in agent_list:

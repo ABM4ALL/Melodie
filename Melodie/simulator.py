@@ -184,7 +184,7 @@ class Simulator(BaseModellingManager):
             #         'params-values': self.visualizer.params_manager.to_value_json()
             #     }, f, indent=4)
             # self.visualizer.params_manager.modify_scenario(scenario)
-            print('aaa', self.visualizer.params_manager.to_value_json()[0])
+            # print('aaa', self.visualizer.params_manager.to_value_json()[0])
             visualizer.start()
         else:
             model._setup()

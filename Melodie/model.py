@@ -258,7 +258,7 @@ class Model:
 
         :return:
         """
-        raise NotImplementedError
+        # raise NotImplementedError
 
     def _setup(self):
         """

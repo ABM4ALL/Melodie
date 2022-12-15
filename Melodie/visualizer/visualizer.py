@@ -165,7 +165,7 @@ class BaseVisualizer:
         self.params_manager: ParamsManager = ParamsManager()
         self.scenario_param: Dict[str, Union[int, str, float]] = {}
         self.visualizer_components: List[
-            Tuple["ComponentType", str, Dict, Dict, Callable[["Agent"], int]]
+            Tuple["Callable[[],ComponentType]", str, str, Dict, Dict, Callable[["Agent"], int]]
         ] = []
 
         self.plot_charts: ChartManager = ChartManager()
@@ -266,7 +266,6 @@ class BaseVisualizer:
         self.agent_series_managers = {}
         self.plot_charts = self.plot_charts
         self.scenario_param = {}
-        self.visualizer_components = []
 
     def set_model(self, model: "Model"):
         """
@@ -332,16 +331,18 @@ class BaseVisualizer:
     def get_visualizers_initial_options(self):
         initial_options = []
         for (
+                component,
                 component_name,
                 component_type,
                 options,
                 _1,
-                _2,
+                roles_getter,
         ) in self.visualizer_components:
             if component_type == "grid":
+
                 initial_options.append(options)
             else:
-                raise NotImplementedError
+                initial_options.append(self.parse_network_series(component(), roles_getter))
         return initial_options
 
     def send_chart_options(self):
@@ -569,6 +570,77 @@ class Visualizer(BaseVisualizer):
             "spots": spots,
         }
 
+    def parse_network_series(self, network: 'Network', roles_getter: 'Callable[[Agent], int]'):
+        data = []
+        # network.agent_categories
+        for category, agent_id in network.nodes:
+            agent = network.agent_categories[category].get_agent(agent_id)
+            layout = network.get_position(agent.category, agent.id)
+            data.append(
+                {"name": f"{agent.category}-{agent.id}", "agentCategory": category,
+                 "category": roles_getter(agent),
+                 "x": layout[0],
+                 "y": layout[1]
+                 })
+        links = []
+        for start_node in network.edges.keys():
+            for end_node in network.edges[start_node]:
+                links.append(
+                    {
+                        "source": f'{start_node[0]}-{start_node[1]}',
+                        "target": f'{end_node[0]}-{end_node[1]}',
+                    },
+                )
+        d = {
+            "title": {
+                "text": "Basic Graph",
+            },
+            "series": [
+                {
+                    "type": "graphGL",
+                    "layout": "none",
+                    "symbolSize": 5,
+                    "symbol": "circle",
+
+                    "roam": True,
+                    "itemStyle": {
+                        "opacity": 1
+                    },
+                    "scaleLimit": [0.1, 100],
+                    "edgeSymbol": ["circle", "arrow"],
+                    "edgeSymbolSize": [4, 5],
+
+                    "categories": [
+                        {
+                            "name": 0,
+                            "itemStyle": {
+                                "color": "#ff0000",
+                            },
+                        },
+                        {
+                            "name": 1,
+                            "itemStyle": {
+                                "color": "#ffff00",
+                            },
+                        },
+                        {
+                            "name": 2,
+                            "itemStyle": {
+                                "color": "#ff00ff",
+                            },
+                        },
+                    ],
+                    "data": data,
+                    "links": links
+                },
+            ],
+        }
+        return {
+            "name": "network",
+            "type": "network",
+            "graph": d
+        }
+
     def add_agent_series(
             self,
             component_name: str,
@@ -594,63 +666,72 @@ class Visualizer(BaseVisualizer):
     def add_visualize_component(
             self,
             name: str,
-            component: "ComponentType",
-            color_categories: Dict[int, str],
-            agent_roles: Dict[int, Dict[str, Any]],
-            roles_getter: Callable[["Agent"], int],
+            type: str,
+            component: "Callable[[], ComponentType]",
+            color_categories: Dict[int, str] = None,
+            agent_roles: Dict[int, Dict[str, Any]] = None,
+            roles_getter: Callable[["Agent"], int] = None,
     ):
         from ..boost.grid import Grid
         from ..network import Network
 
-        MelodieExceptions.Assertions.Type(
-            f'argument "component"', component, (Grid, Network)
-        )
-
-        chart_options = {
-            "animation": False,
-            "progressiveThreshold": 100000,
-            "tooltip": {"position": "top"},
-            "grid": {"height": "80%", "top": "10%"},
-            "xAxis": {"type": "category", "splitArea": {"show": True}},
-            "yAxis": {"type": "category", "splitArea": {"show": True}},
-            "visualMap": {
-                "type": "piecewise",
-                "categories": [i for i, color in color_categories.items()],
-                "calculable": True,
-                "orient": "horizontal",
-                "left": "center",
-                "inRange": {"color": deepcopy(color_categories)},
-                "seriesIndex": [0],
-            },
-            "series": [
-                {
-                    "universalTransition": {"enabled": False},
-                    "name": "Spot",
-                    "type": "heatmap",
-                }
-            ],
-            "name": name,
-            "columns": component.width(),
-            "rows": component.height(),
-        }
-        self.visualizer_components.append(
-            (component, name, chart_options, agent_roles, roles_getter)
-        )
+        # MelodieExceptions.Assertions.Type(
+        #     f'argument "component"', component, (Grid, Network)
+        # )
+        if type == 'grid':
+            chart_options = {
+                "animation": False,
+                "progressiveThreshold": 100000,
+                "tooltip": {"position": "top"},
+                "grid": {"height": "80%", "top": "10%"},
+                "xAxis": {"type": "category", "splitArea": {"show": True}},
+                "yAxis": {"type": "category", "splitArea": {"show": True}},
+                "visualMap": {
+                    "type": "piecewise",
+                    "categories": [i for i, color in color_categories.items()],
+                    "calculable": True,
+                    "orient": "horizontal",
+                    "left": "center",
+                    "inRange": {"color": deepcopy(color_categories)},
+                    "seriesIndex": [0],
+                },
+                "series": [
+                    {
+                        "universalTransition": {"enabled": False},
+                        "name": "Spot",
+                        "type": "heatmap",
+                    }
+                ],
+                "name": name,
+                "columns": component.width(),
+                "rows": component.height(),
+            }
+            self.visualizer_components.append(
+                (component, name, type, chart_options, agent_roles, roles_getter)
+            )
+        else:
+            self.visualizer_components.append(
+                (component, name, type, {}, None, roles_getter)
+            )
 
     def _format(self):
         from ..boost.grid import Grid
-
+        print('-format!!!!!', self.visualizer_components)
         visualizers = []
         for (
                 vis_component,
                 vis_component_name,
+                vis_component_type,
                 _1,
                 agent_roles,
                 roles_getter,
         ) in self.visualizer_components:
-            if isinstance(vis_component, Grid):
+            if vis_component_type == 'grid':
                 r = self.parse_grid_series(vis_component)
                 visualizers.append(r)
+            elif vis_component_type == 'network':
+
+                visualizers.append(self.parse_network_series(vis_component(), roles_getter))
             else:
                 raise NotImplementedError
         data = {
