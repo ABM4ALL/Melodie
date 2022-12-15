@@ -7,7 +7,7 @@ _________________
 
 v0.4.2 (Dec. 15, 2022)
 ~~~~~~
-- Fixed logging error and environment property error in calibrator
+- Fixed some errors in the ``Calibrator`` class, including logging, environment property, multiple paths, column names.
 
 
 v0.4.1 (Dec. 12, 2022)
