@@ -40,7 +40,7 @@ class ParallelWorker:
     def get_task(self):
         while 1:
             task_raw = self.conn.root.get_task()
-            task = json.loads(task_raw)
+            task = cloudpickle.loads(base64.b64decode(task_raw))
             if task is None:
                 time.sleep(0.1)
             else:
@@ -180,6 +180,7 @@ def sub_routine_calibrator(
     logger.info("subroutine started!")
     try:
         config = Config.from_dict(config_raw)
+        calibrator: Calibrator
         calibrator, scenario_cls, model_cls = get_scenario_manager(config, modules)
     except BaseException:
         import traceback
@@ -192,7 +193,7 @@ def sub_routine_calibrator(
             t0 = time.time()
             chrom, d, env_params = ret
             logger.debug(f"processor {proc_id} got chrom {chrom}")
-            scenario = scenario_cls()
+            scenario: Scenario = scenario_cls()
             scenario.manager = calibrator
             scenario.setup()
             scenario.set_params(d)
@@ -210,10 +211,13 @@ def sub_routine_calibrator(
                     row["agent_id"] = row.pop("id")
             env: Environment = model.environment
             env_data = env.to_dict(
-                calibrator.properties + calibrator.watched_env_properties
+                # calibrator.properties + calibrator.watched_env_properties
+                calibrator.watched_env_properties
             )
-            env_data["target_function_value"] = calibrator.target_function(env)
-            env_data["distance"] = calibrator.distance(env)
+            env_data.update({prop: scenario.to_dict()[prop] for prop in calibrator.properties})
+            env_data["target_function_value"] = env_data["distance"] = calibrator.distance(env)
+            # env_data["target_function_value"] = calibrator.distance(env)  # calibrator.target_function(env)
+            # env_data["distance"] = calibrator.distance(env)
             # env_data["utility"] = trainer.utility(env)
             dumped = cloudpickle.dumps((chrom, agent_data, env_data))
             t1 = time.time()

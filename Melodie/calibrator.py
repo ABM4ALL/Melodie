@@ -392,7 +392,7 @@ class GACalibratorAlgorithm:
             self._chromosome_counter = -1
             self.algorithm.run(1)
             t1 = time.time()
-            logger.info("=" * 20, "Time Elapsed", t1 - t0, "=" * 20)
+            logger.info("=" * 20 + f"Time Elapsed: {t1 - t0}s" + "=" * 20)
 
 
 class Calibrator(BaseModellingManager):

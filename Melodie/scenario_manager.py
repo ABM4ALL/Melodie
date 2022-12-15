@@ -1,4 +1,6 @@
+import copy
 import logging
+import pickle
 from typing import List, Optional, Union, TYPE_CHECKING
 
 import numpy as np
@@ -30,12 +32,12 @@ class Scenario(Element):
 
     class NumberParameter(BaseParameter):
         def __init__(
-            self,
-            name,
-            init_value: Union[int, float],
-            min_val: Optional[Union[int, float]] = None,
-            max_val: Optional[Union[int, float]] = None,
-            step: Optional[Union[int, float]] = None,
+                self,
+                name,
+                init_value: Union[int, float],
+                min_val: Optional[Union[int, float]] = None,
+                max_val: Optional[Union[int, float]] = None,
+                step: Optional[Union[int, float]] = None,
         ):
             super().__init__(name, "number", init_value)
             if min_val is None or max_val is None or step is None:
@@ -52,10 +54,10 @@ class Scenario(Element):
 
     class SelectionParameter(BaseParameter):
         def __init__(
-            self,
-            name,
-            init_value: Union[int, str, bool],
-            selections: List[Union[int, str, bool]],
+                self,
+                name,
+                init_value: Union[int, str, bool],
+                selections: List[Union[int, str, bool]],
         ):
             super().__init__(name, "selection", init_value)
             self.selections = selections
@@ -151,8 +153,8 @@ class Scenario(Element):
         return self.manager.get_matrix(matrix_info.mat_name)
 
     def add_interactive_parameters(
-        self,
-        parameters: List[Union[BaseParameter, NumberParameter, SelectionParameter]],
+            self,
+            parameters: List[Union[BaseParameter, NumberParameter, SelectionParameter]],
     ):
         """
         For visualizers, interactive parameters makes it possible to tune parameters on frontend.

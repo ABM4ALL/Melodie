@@ -124,7 +124,7 @@ class TimeService(Service):
         return time.ctime()  # time模块中的一个内置方法
 
     def exposed_get_task(self):
-        return json.dumps(tasks.get_task())
+        return base64.b64encode(cloudpickle.dumps(tasks.get_task()))
 
     def exposed_put_result(self, result):
         loaded = cloudpickle.loads(base64.b64decode(result))
