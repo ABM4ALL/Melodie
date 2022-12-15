@@ -57,7 +57,7 @@ class CovidModel(Model):
 
     def setup(self):
         self.agent_list: AgentList[CovidAgent] = self.create_agent_list(
-            CovidAgent, 1000
+            CovidAgent
         )
         self.environment = self.create_environment(CovidEnvironment)
         self.data_collector = self.create_data_collector(DataCollector)
