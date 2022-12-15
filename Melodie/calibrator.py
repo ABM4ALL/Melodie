@@ -192,7 +192,7 @@ class GACalibratorAlgorithm:
         )
         self.parallel_manager.run("calibrator")
 
-    def __del__(self):
+    def stop(self):
         self.parallel_manager.close()
 
     def get_params(self, chromosome_id: int) -> Dict[str, Any]:
@@ -505,6 +505,7 @@ class Calibrator(BaseModellingManager):
             processors=self.processes,
         )
         self.algorithm.run(scenario, self.current_algorithm_meta)
+        self.algorithm.stop()
 
     def target_function(self, env: "Environment") -> Union[float, int]:
         """

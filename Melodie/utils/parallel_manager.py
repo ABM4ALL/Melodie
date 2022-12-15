@@ -108,15 +108,12 @@ class ParallelManager:
         """
         for p in self.processes:
             p.terminate()
+            logger.info(f"terminated subworker {p}")
         if self.server is not None:
             self.server.close()
             logger.info("Server closed!")
         global tasks
-        time.sleep(3)
-        # last_tasks = tasks
         tasks = None
-        # tasks = Tasks()
-        # tasks.config = last_tasks.config
 
 
 class TimeService(Service):

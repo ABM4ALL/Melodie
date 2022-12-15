@@ -56,3 +56,4 @@ def test_chrom_params_algorithm():
     meta = GATrainerAlgorithmMeta()
     mgr.pre_run()
     ta.run(scenario, meta)
+    ta.stop()

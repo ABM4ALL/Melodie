@@ -229,7 +229,7 @@ class GATrainerAlgorithm:
         )
         self.parallel_manager.run("trainer")
 
-    def __del__(self):
+    def stop(self):
         self.parallel_manager.close()
 
     def setup_agent_locations(
@@ -663,6 +663,7 @@ class Trainer(BaseModellingManager):
             )
 
         self.algorithm.run(scenario, self.current_algorithm_meta)
+        self.algorithm.stop()
 
     def utility(self, agent: Agent) -> float:
         """
