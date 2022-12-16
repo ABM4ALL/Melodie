@@ -336,13 +336,13 @@ class BaseVisualizer:
                 component_type,
                 options,
                 roles,
-                roles_getter,
+                var_getter,
         ) in self.visualizer_components:
             if component_type == "grid":
 
                 initial_options.append(options)
             else:
-                initial_options.append(self.parse_network_series(component(), roles, roles_getter))
+                initial_options.append(self.parse_network_series(component(), roles, var_getter))
         return initial_options
 
     def send_chart_options(self):
@@ -570,7 +570,7 @@ class Visualizer(BaseVisualizer):
             "spots": spots,
         }
 
-    def parse_network_series(self, network: 'Network', roles, roles_getter: 'Callable[[Agent], int]'):
+    def parse_network_series(self, network: 'Network', roles, var_getter: 'Callable[[Agent], int]'):
         data = []
         # network.agent_categories
         for category, agent_id in network.nodes:
@@ -578,7 +578,7 @@ class Visualizer(BaseVisualizer):
             layout = network.get_position(agent.category, agent.id)
             data.append(
                 {"name": f"{agent.category}-{agent.id}", "agentCategory": category,
-                 "category": roles_getter(agent),
+                 "category": var_getter(agent),
                  "x": layout[0],
                  "y": layout[1]
                  })
@@ -649,21 +649,35 @@ class Visualizer(BaseVisualizer):
         )
         self.agent_lists[series_id] = agent_container
 
+    def add_network(self, name: str, component: "Callable[[], ComponentType]",
+                    var_style: Dict[int, Dict] = None,
+                    var_getter: Callable[["Agent"], int] = None):
+        """
+        Add a network onto the visualizer.
+
+        :param name:
+        :param component:
+        :param var_style:
+        :param var_getter:
+        :return:
+        """
+
+        self.visualizer_components.append(
+            (component, name, 'network', {}, var_style, var_getter)
+        )
+
     def add_visualize_component(
             self,
             name: str,
             type: str,
             component: "Callable[[], ComponentType]",
-            color_categories: Dict[int, str] = None,
+            var_style: Dict[int, Dict] = None,
             agent_roles: Dict[int, Dict[str, Any]] = None,
-            roles_getter: Callable[["Agent"], int] = None,
+            var_getter: Callable[["Agent"], int] = None,
     ):
         from ..boost.grid import Grid
         from ..network import Network
 
-        # MelodieExceptions.Assertions.Type(
-        #     f'argument "component"', component, (Grid, Network)
-        # )
         if type == 'grid':
             chart_options = {
                 "animation": False,
@@ -674,11 +688,11 @@ class Visualizer(BaseVisualizer):
                 "yAxis": {"type": "category", "splitArea": {"show": True}},
                 "visualMap": {
                     "type": "piecewise",
-                    "categories": [i for i, color in color_categories.items()],
+                    "categories": [i for i, color in var_style.items()],
                     "calculable": True,
                     "orient": "horizontal",
                     "left": "center",
-                    "inRange": {"color": deepcopy(color_categories)},
+                    "inRange": {"color": deepcopy(var_style)},
                     "seriesIndex": [0],
                 },
                 "series": [
@@ -693,11 +707,11 @@ class Visualizer(BaseVisualizer):
                 "rows": component.height(),
             }
             self.visualizer_components.append(
-                (component, name, type, chart_options, agent_roles, roles_getter)
+                (component, name, type, chart_options, agent_roles, var_getter)
             )
         else:
             self.visualizer_components.append(
-                (component, name, type, {}, color_categories, roles_getter)
+                (component, name, type, {}, var_style, var_getter)
             )
 
     def _format(self):
@@ -710,14 +724,14 @@ class Visualizer(BaseVisualizer):
                 vis_component_type,
                 _1,
                 roles,
-                roles_getter,
+                var_getter,
         ) in self.visualizer_components:
             if vis_component_type == 'grid':
                 r = self.parse_grid_series(vis_component)
                 visualizers.append(r)
             elif vis_component_type == 'network':
 
-                visualizers.append(self.parse_network_series(vis_component(), roles, roles_getter))
+                visualizers.append(self.parse_network_series(vis_component(), roles, var_getter))
             else:
                 raise NotImplementedError
         data = {
