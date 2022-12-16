@@ -19,7 +19,9 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="author" title="About these documents" href="../about.html" />
     <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" /> 
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="DB" href="db.html" />
+    <link rel="prev" title="Calibrator" href="calibrator.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -38,7 +40,7 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <ul>
+              <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../installation.html#user-installation">User Installation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../installation.html#developer-installation">Developer Installation</a></li>
@@ -70,13 +72,35 @@
 <li class="toctree-l2"><a class="reference internal" href="../tutorial.html#last-words">Last Words</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../gallery/_index.html">Model Gallery</a><ul class="simple">
+<li class="toctree-l1"><a class="reference internal" href="../gallery/_index.html">Model Gallery</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../gallery/covid_grid_contagion.html">CovidGridContagion</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../gallery/covid_grid_contagion.html#grid-and-spot">Grid and Spot</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../gallery/covid_grid_contagion.html#matrix-data">Matrix Data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../gallery/covid_grid_contagion.html#model">Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../gallery/covid_grid_contagion.html#gridagent">GridAgent</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../advanced/_index.html">Advanced Topics</a><ul class="simple">
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="_index.html">API Reference</a><ul class="simple">
+<li class="toctree-l1 current"><a class="reference internal" href="_index.html">API Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="model.html">Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="agent.html">Agent</a></li>
+<li class="toctree-l2"><a class="reference internal" href="agent_list.html">AgentList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="environment.html">Environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="data_collector.html">DataCollector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="grid.html">Grid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="network.html">Network</a></li>
+<li class="toctree-l2"><a class="reference internal" href="data_info.html">DataInfo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="data_loader.html">DataLoader</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scenario.html">Scenario</a></li>
+<li class="toctree-l2"><a class="reference internal" href="simulator.html">Simulator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="calibrator.html">Calibrator</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Trainer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="db.html">DB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="exceptions.html">Melodie Exceptions</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../changelog.html">Change Log</a><ul>
@@ -120,6 +144,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="_index.html">API Reference</a> &raquo;</li>
       <li>Trainer</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/api/trainer.rst.txt" rel="nofollow"> View page source</a>
@@ -130,167 +155,18 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="module-Melodie.trainer">
-<span id="trainer"></span><h1>Trainer<a class="headerlink" href="#module-Melodie.trainer" title="Permalink to this heading"></a></h1>
-<dl class="py class">
-<dt class="sig sig-object py" id="Melodie.trainer.Trainer">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Melodie.trainer.</span></span><span class="sig-name descname"><span class="pre">Trainer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scenario_cls</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Type</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="scenario.html#Melodie.scenario_manager.Scenario" title="Melodie.scenario_manager.Scenario"><span class="pre">Scenario</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_cls</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Type</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="model.html#Melodie.model.Model" title="Melodie.model.Model"><span class="pre">Model</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_loader_cls</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Type</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="data_loader.html#Melodie.data_loader.DataLoader" title="Melodie.data_loader.DataLoader"><span class="pre">DataLoader</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">processors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.trainer.Trainer" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="simulator.html#Melodie.simulator.BaseModellingManager" title="Melodie.simulator.BaseModellingManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModellingManager</span></code></a></p>
-<p>Individually run agents’ parameters</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="Melodie.trainer.Trainer.add_agent_training_property">
-<span class="sig-name descname"><span class="pre">add_agent_training_property</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">container_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">used_properties</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agent_ids</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="scenario.html#Melodie.scenario_manager.Scenario" title="Melodie.scenario_manager.Scenario"><span class="pre">Scenario</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.trainer.Trainer.add_agent_training_property" title="Permalink to this definition"></a></dt>
-<dd><p>Add a container into the trainer.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>container_name</strong> – The name of agent container.</p></li>
-<li><p><strong>used_properties</strong> – The properties used in training.</p></li>
-<li><p><strong>agent_ids</strong> – The agent with id contained in <cite>agent_ids</cite> will be trained.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>None</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="Melodie.trainer.Trainer.setup">
-<span class="sig-name descname"><span class="pre">setup</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.trainer.Trainer.setup" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="Melodie.trainer.Trainer.get_trainer_scenario_cls">
-<span class="sig-name descname"><span class="pre">get_trainer_scenario_cls</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.trainer.Trainer.get_trainer_scenario_cls" title="Permalink to this definition"></a></dt>
-<dd><p>Get the class of trainer scenario.
-:return:</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="Melodie.trainer.Trainer.collect_data">
-<span class="sig-name descname"><span class="pre">collect_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.trainer.Trainer.collect_data" title="Permalink to this definition"></a></dt>
-<dd><p>Set the agent and environment properties to be collected.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="Melodie.trainer.Trainer.run">
-<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.trainer.Trainer.run" title="Permalink to this definition"></a></dt>
-<dd><p>The main method for Trainer.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="Melodie.trainer.Trainer.run_once_new">
-<span class="sig-name descname"><span class="pre">run_once_new</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="scenario.html#Melodie.scenario_manager.Scenario" title="Melodie.scenario_manager.Scenario"><span class="pre">Scenario</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">trainer_params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">GATrainerParams</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.trainer.Trainer.run_once_new" title="Permalink to this definition"></a></dt>
-<dd><p>Use the sko package for optimization.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>scenario</strong> – </p></li>
-<li><p><strong>trainer_params</strong> – </p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="Melodie.trainer.Trainer.utility">
-<span class="sig-name descname"><span class="pre">utility</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="agent.html#Melodie.boost.basics.Agent" title="Melodie.boost.basics.Agent"><span class="pre">Agent</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#Melodie.trainer.Trainer.utility" title="Permalink to this definition"></a></dt>
-<dd><p>The utility is to be maximized.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>agent</strong> – </p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="Melodie.trainer.Trainer.target_function">
-<span class="sig-name descname"><span class="pre">target_function</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="agent.html#Melodie.boost.basics.Agent" title="Melodie.boost.basics.Agent"><span class="pre">Agent</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#Melodie.trainer.Trainer.target_function" title="Permalink to this definition"></a></dt>
-<dd><p>The target function to be minimized.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>agent</strong> – </p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="Melodie.trainer.Trainer.add_agent_property">
-<span class="sig-name descname"><span class="pre">add_agent_property</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent_list_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prop</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.trainer.Trainer.add_agent_property" title="Permalink to this definition"></a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>agent_list_name</strong> – </p></li>
-<li><p><strong>prop</strong> – </p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="Melodie.trainer.Trainer.add_environment_property">
-<span class="sig-name descname"><span class="pre">add_environment_property</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prop</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.trainer.Trainer.add_environment_property" title="Permalink to this definition"></a></dt>
-<dd><p>Add a property of environment to be recorded in the training voyage.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="Melodie.trainer.Trainer.generate_scenarios">
-<span class="sig-name descname"><span class="pre">generate_scenarios</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.trainer.Trainer.generate_scenarios" title="Permalink to this definition"></a></dt>
-<dd><p>Generate Scenarios for trainer</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="Melodie.trainer.Trainer.generate_trainer_params_list">
-<span class="sig-name descname"><span class="pre">generate_trainer_params_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trainer_scenario_cls</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Type</span><span class="p"><span class="pre">[</span></span><span class="pre">GATrainerParams</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">GATrainerParams</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#Melodie.trainer.Trainer.generate_trainer_params_list" title="Permalink to this definition"></a></dt>
-<dd><p>Generate Trainer Parameters.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p></p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
+  <section id="trainer">
+<h1>Trainer<a class="headerlink" href="#trainer" title="Permalink to this heading"></a></h1>
+<p>Under development.</p>
 </section>
 
 
            </div>
           </div>
-          <footer>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="calibrator.html" class="btn btn-neutral float-left" title="Calibrator" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="db.html" class="btn btn-neutral float-right" title="DB" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
 
   <hr/>
 

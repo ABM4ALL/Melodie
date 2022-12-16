@@ -20,7 +20,7 @@
     <link rel="author" title="About these documents" href="../about.html" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Advanced Topics" href="../advanced/_index.html" />
+    <link rel="next" title="Covid Network Contagion" href="covid_network_contagion.html" />
     <link rel="prev" title="Model Gallery" href="_index.html" /> 
 </head>
 
@@ -73,13 +73,36 @@
 </ul>
 </li>
 <li class="toctree-l1 current"><a class="reference internal" href="_index.html">Model Gallery</a><ul class="current">
-<li class="toctree-l2 current"><a class="current reference internal" href="#">CovidGridContagion</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">CovidGridContagion</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#project-structure">Project Structure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#grid-and-spot">Grid and Spot</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#matrix-data">Matrix Data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#model">Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#gridagent">GridAgent</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="covid_network_contagion.html">Covid Network Contagion</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../advanced/_index.html">Advanced Topics</a><ul class="simple">
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../api/_index.html">API Reference</a><ul class="simple">
+<li class="toctree-l1"><a class="reference internal" href="../api/_index.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../api/model.html">Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/agent.html">Agent</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/agent_list.html">AgentList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/environment.html">Environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/data_collector.html">DataCollector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/grid.html">Grid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/network.html">Network</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/data_info.html">DataInfo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/data_loader.html">DataLoader</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/scenario.html">Scenario</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/simulator.html">Simulator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/calibrator.html">Calibrator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/trainer.html">Trainer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/db.html">DB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/exceptions.html">Melodie Exceptions</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../changelog.html">Change Log</a><ul>
@@ -136,14 +159,211 @@
              
   <section id="covidgridcontagion">
 <h1>CovidGridContagion<a class="headerlink" href="#covidgridcontagion" title="Permalink to this heading"></a></h1>
-<p>This <a class="reference external" href="https://github.com/ABM4ALL/CovidGridContagion">CovidGridContagion</a> model follows the
-same structure with the <a class="reference external" href="https://github.com/ABM4ALL/CovidContagion">CovidContagion</a> model.
-The differences are:</p>
+<p>To show how the <code class="docutils literal notranslate"><span class="pre">Melodie.Grid</span></code> module can be used,
+we provide this <a class="reference external" href="https://github.com/ABM4ALL/CovidGridContagion">CovidGridContagion</a> model,
+which is based the <a class="reference external" href="https://github.com/ABM4ALL/CovidContagion">CovidContagion</a> model in the <a class="reference internal" href="../tutorial.html#tutorial"><span class="std std-ref">Tutorial</span></a> section.</p>
+<p>The differences are:</p>
 <ul class="simple">
 <li><p>Agents walk on a 2D <code class="docutils literal notranslate"><span class="pre">grid</span></code> randomly.</p></li>
-<li><p>The <code class="docutils literal notranslate"><span class="pre">grid</span></code> is constructed with <code class="docutils literal notranslate"><span class="pre">spots</span></code>. Each <code class="docutils literal notranslate"><span class="pre">spot</span></code> has an attribute <code class="docutils literal notranslate"><span class="pre">stay_prob</span></code>, which decides if the agent standing on this spot will move probabilistically.</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">grid</span></code> is constructed with spots. Each <code class="docutils literal notranslate"><span class="pre">spot</span></code> has an attribute <code class="docutils literal notranslate"><span class="pre">stay_prob</span></code>, which decides if the agent standing on this spot will move probabilistically.</p></li>
 <li><p>The infected agents can pass the virus to the other uninfected agents in the neighborhood.</p></li>
 </ul>
+<section id="project-structure">
+<h2>Project Structure<a class="headerlink" href="#project-structure" title="Permalink to this heading"></a></h2>
+<p>The project structure is as below.
+Compared with the structure of the <a class="reference external" href="https://github.com/ABM4ALL/CovidContagion">CovidContagion</a> model,
+one <code class="docutils literal notranslate"><span class="pre">grid.py</span></code> file is added in the <code class="docutils literal notranslate"><span class="pre">source</span></code> folder,
+and one <code class="docutils literal notranslate"><span class="pre">Parameter_GridStayProb.xlsx</span></code> file is added in the <code class="docutils literal notranslate"><span class="pre">data/input</span></code> folder.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>CovidGridContagion
+├── data
+│   ├── input
+│   │   ├── SimulatorScenarios.xlsx
+│   │   ├── ID_HealthState.xlsx
+│   │   ├── ID_AgeGroup.xlsx
+│   │   ├── Parameter_GridStayProb.xlsx
+│   │   └── Parameter_AgeGroup_TransitionProb.xlsx
+│   └── output
+│       ├── CovidGridContagion.sqlite
+│       ├── PopulationInfection_S0R0.png
+│       └── PopulationInfection_S1R0.png
+├── source
+│   ├── agent.py
+│   ├── environment.py
+│   ├── grid.py
+│   ├── data_collector.py
+│   ├── data_info.py
+│   ├── data_loader.py
+│   ├── scenario.py
+│   ├── model.py
+│   └── analyzer.py
+├── config.py
+├── run_simulator.py
+├── run_analyzer.py
+└── readme.md
+</pre></div>
+</div>
+</section>
+<section id="grid-and-spot">
+<h2>Grid and Spot<a class="headerlink" href="#grid-and-spot" title="Permalink to this heading"></a></h2>
+<p>To include such differences about <code class="docutils literal notranslate"><span class="pre">grid</span></code>, <code class="docutils literal notranslate"><span class="pre">Melodie</span></code> provides two classes <code class="docutils literal notranslate"><span class="pre">Grid</span></code> and <code class="docutils literal notranslate"><span class="pre">Spot</span></code>,
+based on which the <code class="docutils literal notranslate"><span class="pre">CovidGrid</span></code> and <code class="docutils literal notranslate"><span class="pre">CovidSpot</span></code> classes are defined.</p>
+<div class="literal-block-wrapper docutils container" id="id3">
+<div class="code-block-caption"><span class="caption-text">grid.py</span><a class="headerlink" href="#id3" title="Permalink to this code"></a></div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">from</span> <span class="nn">Melodie</span> <span class="kn">import</span> <span class="n">Spot</span><span class="p">,</span> <span class="n">Grid</span>
+<span class="linenos"> 2</span><span class="kn">from</span> <span class="nn">source</span> <span class="kn">import</span> <span class="n">data_info</span>
+<span class="linenos"> 3</span>
+<span class="linenos"> 4</span>
+<span class="linenos"> 5</span><span class="k">class</span> <span class="nc">CovidSpot</span><span class="p">(</span><span class="n">Spot</span><span class="p">):</span>
+<span class="linenos"> 6</span>
+<span class="linenos"> 7</span>    <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="linenos"> 8</span>        <span class="bp">self</span><span class="o">.</span><span class="n">stay_prob</span> <span class="o">=</span> <span class="mf">0.0</span>
+<span class="linenos"> 9</span>
+<span class="linenos">10</span>
+<span class="linenos">11</span><span class="k">class</span> <span class="nc">CovidGrid</span><span class="p">(</span><span class="n">Grid</span><span class="p">):</span>
+<span class="linenos">12</span>
+<span class="linenos">13</span>    <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="linenos">14</span>        <span class="bp">self</span><span class="o">.</span><span class="n">set_spot_property</span><span class="p">(</span>
+<span class="hll"><span class="linenos">15</span>            <span class="s2">&quot;stay_prob&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">get_matrix</span><span class="p">(</span><span class="n">data_info</span><span class="o">.</span><span class="n">grid_stay_prob</span><span class="p">)</span>
+</span><span class="linenos">16</span>        <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>As shown, the two classes are defined in brief, i.e., most functions and attributes are inherited from <code class="docutils literal notranslate"><span class="pre">Melodie</span></code>.
+The only reason to define this <code class="docutils literal notranslate"><span class="pre">CovidGrid</span></code> class for the model, is to include the <code class="docutils literal notranslate"><span class="pre">stay_prob</span></code> attribute of each <code class="docutils literal notranslate"><span class="pre">CovidSpot</span></code>.
+Or, one can also use the <code class="docutils literal notranslate"><span class="pre">Grid</span></code> and <code class="docutils literal notranslate"><span class="pre">Spot</span></code> classes of <code class="docutils literal notranslate"><span class="pre">Melodie</span></code> directly.</p>
+</section>
+<section id="matrix-data">
+<h2>Matrix Data<a class="headerlink" href="#matrix-data" title="Permalink to this heading"></a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">stay_prob</span></code> values of the spots are saved in a matrix, which is the same size with the grid.
+Like other dataframes, the matrix is first registered in the <code class="docutils literal notranslate"><span class="pre">data_info.py</span></code> and loaded by the <code class="docutils literal notranslate"><span class="pre">data_loader</span></code>,
+then can be accessed by the <code class="docutils literal notranslate"><span class="pre">scenario</span></code> object by using <code class="docutils literal notranslate"><span class="pre">get_matrix</span></code> function (Line 15).
+The registry of the matrix is as follows.</p>
+<div class="literal-block-wrapper docutils container" id="id4">
+<div class="code-block-caption"><span class="caption-text">data_info.py</span><a class="headerlink" href="#id4" title="Permalink to this code"></a></div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span> <span class="nn">sqlalchemy</span>
+<span class="linenos"> 2</span>
+<span class="linenos"> 3</span><span class="kn">from</span> <span class="nn">Melodie</span> <span class="kn">import</span> <span class="n">MatrixInfo</span>
+<span class="linenos"> 4</span>
+<span class="linenos"> 5</span>
+<span class="linenos"> 6</span><span class="n">grid_stay_prob</span> <span class="o">=</span> <span class="n">MatrixInfo</span><span class="p">(</span>
+<span class="linenos"> 7</span>    <span class="n">mat_name</span><span class="o">=</span><span class="s2">&quot;grid_stay_prob&quot;</span><span class="p">,</span>
+<span class="linenos"> 8</span>    <span class="n">data_type</span><span class="o">=</span><span class="n">sqlalchemy</span><span class="o">.</span><span class="n">Float</span><span class="p">(),</span>
+<span class="linenos"> 9</span>    <span class="n">file_name</span><span class="o">=</span><span class="s2">&quot;Parameter_GridStayProb.xlsx&quot;</span><span class="p">,</span>
+<span class="linenos">10</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="model">
+<h2>Model<a class="headerlink" href="#model" title="Permalink to this heading"></a></h2>
+<p>With the classes and data, the next step is to include the <code class="docutils literal notranslate"><span class="pre">grid</span></code> object as a new component of the <code class="docutils literal notranslate"><span class="pre">model</span></code>.
+As shown in Line 24, <code class="docutils literal notranslate"><span class="pre">Melodie.Model</span></code> provides a <code class="docutils literal notranslate"><span class="pre">create_grid</span></code> function,
+taking the two class variables as input - <code class="docutils literal notranslate"><span class="pre">CovidGrid</span></code> and <code class="docutils literal notranslate"><span class="pre">CovidSpot</span></code>.</p>
+<div class="literal-block-wrapper docutils container" id="id5">
+<div class="code-block-caption"><span class="caption-text">model.py</span><a class="headerlink" href="#id5" title="Permalink to this code"></a></div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">TYPE_CHECKING</span>
+<span class="linenos"> 2</span>
+<span class="linenos"> 3</span><span class="kn">from</span> <span class="nn">Melodie</span> <span class="kn">import</span> <span class="n">Model</span>
+<span class="linenos"> 4</span>
+<span class="linenos"> 5</span><span class="kn">from</span> <span class="nn">source</span> <span class="kn">import</span> <span class="n">data_info</span>
+<span class="linenos"> 6</span><span class="kn">from</span> <span class="nn">source.agent</span> <span class="kn">import</span> <span class="n">CovidAgent</span>
+<span class="linenos"> 7</span><span class="kn">from</span> <span class="nn">source.data_collector</span> <span class="kn">import</span> <span class="n">CovidDataCollector</span>
+<span class="linenos"> 8</span><span class="kn">from</span> <span class="nn">source.environment</span> <span class="kn">import</span> <span class="n">CovidEnvironment</span>
+<span class="linenos"> 9</span><span class="kn">from</span> <span class="nn">source.grid</span> <span class="kn">import</span> <span class="n">CovidGrid</span>
+<span class="linenos">10</span><span class="kn">from</span> <span class="nn">source.grid</span> <span class="kn">import</span> <span class="n">CovidSpot</span>
+<span class="linenos">11</span><span class="kn">from</span> <span class="nn">source.scenario</span> <span class="kn">import</span> <span class="n">CovidScenario</span>
+<span class="linenos">12</span>
+<span class="linenos">13</span><span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
+<span class="linenos">14</span>    <span class="kn">from</span> <span class="nn">Melodie</span> <span class="kn">import</span> <span class="n">AgentList</span>
+<span class="linenos">15</span>
+<span class="linenos">16</span>
+<span class="linenos">17</span><span class="k">class</span> <span class="nc">CovidModel</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+<span class="linenos">18</span>    <span class="n">scenario</span><span class="p">:</span> <span class="s2">&quot;CovidScenario&quot;</span>
+<span class="linenos">19</span>
+<span class="linenos">20</span>    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="linenos">21</span>        <span class="bp">self</span><span class="o">.</span><span class="n">agents</span><span class="p">:</span> <span class="s2">&quot;AgentList[CovidAgent]&quot;</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_agent_list</span><span class="p">(</span><span class="n">CovidAgent</span><span class="p">)</span>
+<span class="linenos">22</span>        <span class="bp">self</span><span class="o">.</span><span class="n">environment</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_environment</span><span class="p">(</span><span class="n">CovidEnvironment</span><span class="p">)</span>
+<span class="linenos">23</span>        <span class="bp">self</span><span class="o">.</span><span class="n">data_collector</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_data_collector</span><span class="p">(</span><span class="n">CovidDataCollector</span><span class="p">)</span>
+<span class="hll"><span class="linenos">24</span>        <span class="bp">self</span><span class="o">.</span><span class="n">grid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_grid</span><span class="p">(</span><span class="n">CovidGrid</span><span class="p">,</span> <span class="n">CovidSpot</span><span class="p">)</span>
+</span><span class="linenos">25</span>
+<span class="linenos">26</span>    <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="linenos">27</span>        <span class="bp">self</span><span class="o">.</span><span class="n">agents</span><span class="o">.</span><span class="n">setup_agents</span><span class="p">(</span>
+<span class="linenos">28</span>            <span class="n">agents_num</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">agent_num</span><span class="p">,</span>
+<span class="linenos">29</span>            <span class="n">params_df</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">get_dataframe</span><span class="p">(</span><span class="n">data_info</span><span class="o">.</span><span class="n">agent_params</span><span class="p">),</span>
+<span class="linenos">30</span>        <span class="p">)</span>
+<span class="hll"><span class="linenos">31</span>        <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">setup_params</span><span class="p">(</span>
+</span><span class="hll"><span class="linenos">32</span>            <span class="n">width</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">grid_x_size</span><span class="p">,</span>
+</span><span class="hll"><span class="linenos">33</span>            <span class="n">height</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">grid_y_size</span>
+</span><span class="hll"><span class="linenos">34</span>        <span class="p">)</span>
+</span><span class="hll"><span class="linenos">35</span>        <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">setup_agent_locations</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">agents</span><span class="p">)</span>
+</span></pre></div>
+</div>
+</div>
+<p>In the <code class="docutils literal notranslate"><span class="pre">setup</span></code> function, the <code class="docutils literal notranslate"><span class="pre">grid</span></code> needs to be initialized with size parameters from <code class="docutils literal notranslate"><span class="pre">scenario</span></code>.
+Then, the agents need to be located on the <code class="docutils literal notranslate"><span class="pre">grid</span></code>,
+which requires that they are already initialized with the attributes <code class="docutils literal notranslate"><span class="pre">x</span></code> and <code class="docutils literal notranslate"><span class="pre">y</span></code>.</p>
+</section>
+<section id="gridagent">
+<h2>GridAgent<a class="headerlink" href="#gridagent" title="Permalink to this heading"></a></h2>
+<p>The agents that can walk on the grid are defined by inheriting the <code class="docutils literal notranslate"><span class="pre">GridAgent</span></code> class of <code class="docutils literal notranslate"><span class="pre">Melodie</span></code>.
+They have three additional attributes: <code class="docutils literal notranslate"><span class="pre">category</span></code>, <code class="docutils literal notranslate"><span class="pre">x</span></code>, and <code class="docutils literal notranslate"><span class="pre">y</span></code>.
+Additionally, they also have access to the <code class="docutils literal notranslate"><span class="pre">grid</span></code> (Line 26) and some grid-related functions,
+e.g., <code class="docutils literal notranslate"><span class="pre">rand_move_agent</span></code> in Line 32.</p>
+<div class="literal-block-wrapper docutils container" id="id6">
+<div class="code-block-caption"><span class="caption-text">agent.py</span><a class="headerlink" href="#id6" title="Permalink to this code"></a></div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span> <span class="nn">random</span>
+<span class="linenos"> 2</span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">TYPE_CHECKING</span>
+<span class="linenos"> 3</span>
+<span class="linenos"> 4</span><span class="kn">from</span> <span class="nn">Melodie</span> <span class="kn">import</span> <span class="n">GridAgent</span>
+<span class="linenos"> 5</span>
+<span class="linenos"> 6</span><span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
+<span class="linenos"> 7</span>    <span class="kn">from</span> <span class="nn">source.scenario</span> <span class="kn">import</span> <span class="n">CovidScenario</span>
+<span class="linenos"> 8</span>    <span class="kn">from</span> <span class="nn">Melodie</span> <span class="kn">import</span> <span class="n">AgentList</span>
+<span class="linenos"> 9</span>    <span class="kn">from</span> <span class="nn">source.grid</span> <span class="kn">import</span> <span class="n">CovidSpot</span>
+<span class="linenos">10</span>    <span class="kn">from</span> <span class="nn">source.grid</span> <span class="kn">import</span> <span class="n">CovidGrid</span>
+<span class="linenos">11</span>
+<span class="linenos">12</span>
+<span class="linenos">13</span><span class="k">class</span> <span class="nc">CovidAgent</span><span class="p">(</span><span class="n">GridAgent</span><span class="p">):</span>
+<span class="linenos">14</span>    <span class="n">scenario</span><span class="p">:</span> <span class="s2">&quot;CovidScenario&quot;</span>
+<span class="linenos">15</span>    <span class="n">grid</span><span class="p">:</span> <span class="s2">&quot;CovidGrid[CovidSpot]&quot;</span>
+<span class="linenos">16</span>    <span class="n">spot</span><span class="p">:</span> <span class="s2">&quot;CovidSpot&quot;</span>
+<span class="linenos">17</span>
+<span class="hll"><span class="linenos">18</span>    <span class="k">def</span> <span class="nf">set_category</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span class="linenos">19</span>        <span class="bp">self</span><span class="o">.</span><span class="n">category</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="linenos">20</span>
+<span class="linenos">21</span>    <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="hll"><span class="linenos">22</span>        <span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+</span><span class="hll"><span class="linenos">23</span>        <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+</span><span class="linenos">24</span>        <span class="bp">self</span><span class="o">.</span><span class="n">health_state</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="linenos">25</span>        <span class="bp">self</span><span class="o">.</span><span class="n">age_group</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="linenos">26</span>
+<span class="linenos">27</span>    <span class="k">def</span> <span class="nf">move</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="hll"><span class="linenos">28</span>        <span class="n">spot</span><span class="p">:</span> <span class="s2">&quot;CovidSpot&quot;</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">get_spot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
+</span><span class="linenos">29</span>        <span class="n">stay_prob</span> <span class="o">=</span> <span class="n">spot</span><span class="o">.</span><span class="n">stay_prob</span>
+<span class="linenos">30</span>        <span class="k">if</span> <span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">stay_prob</span><span class="p">:</span>
+<span class="linenos">31</span>            <span class="n">move_radius</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="hll"><span class="linenos">32</span>            <span class="bp">self</span><span class="o">.</span><span class="n">rand_move_agent</span><span class="p">(</span><span class="n">move_radius</span><span class="p">,</span> <span class="n">move_radius</span><span class="p">)</span>
+</span><span class="linenos">33</span>
+<span class="linenos">34</span>    <span class="k">def</span> <span class="nf">infection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agents</span><span class="p">:</span> <span class="s2">&quot;AgentList[CovidAgent]&quot;</span><span class="p">):</span>
+<span class="hll"><span class="linenos">35</span>        <span class="n">neighbors</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">get_neighbors</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+</span><span class="hll"><span class="linenos">36</span>        <span class="k">for</span> <span class="n">neighbor_category</span><span class="p">,</span> <span class="n">neighbor_id</span> <span class="ow">in</span> <span class="n">neighbors</span><span class="p">:</span>
+</span><span class="linenos">37</span>            <span class="n">neighbor_agent</span><span class="p">:</span> <span class="s2">&quot;CovidAgent&quot;</span> <span class="o">=</span> <span class="n">agents</span><span class="o">.</span><span class="n">get_agent</span><span class="p">(</span><span class="n">neighbor_id</span><span class="p">)</span>
+<span class="linenos">38</span>            <span class="k">if</span> <span class="n">neighbor_agent</span><span class="o">.</span><span class="n">health_state</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+<span class="linenos">39</span>                <span class="k">if</span> <span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">infection_prob</span><span class="p">:</span>
+<span class="linenos">40</span>                    <span class="bp">self</span><span class="o">.</span><span class="n">health_state</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="linenos">41</span>                    <span class="k">break</span>
+</pre></div>
+</div>
+</div>
+<p>One thing that might be confused: Why is there the <code class="docutils literal notranslate"><span class="pre">category</span></code> attribute?</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">category</span></code> attribute is to make sure that, when there are multiple groups of agents walking on the <code class="docutils literal notranslate"><span class="pre">grid</span></code>,
+the <code class="docutils literal notranslate"><span class="pre">grid</span></code> can distinguish them and work well.
+So, the function <code class="docutils literal notranslate"><span class="pre">set_category</span></code> much be implemented in a class that inherits the <code class="docutils literal notranslate"><span class="pre">GridAgent</span></code> class.
+For example, as shown in Line 35-36, when iterating through the <code class="docutils literal notranslate"><span class="pre">neighbors</span></code> returned by <code class="docutils literal notranslate"><span class="pre">grid.get_neighbors</span></code>,
+each neighbor is indexed with both <code class="docutils literal notranslate"><span class="pre">category</span></code> and the <code class="docutils literal notranslate"><span class="pre">id</span></code> of the agent.</p>
+<p>For more details of the <code class="docutils literal notranslate"><span class="pre">Grid</span></code> and <code class="docutils literal notranslate"><span class="pre">Spot</span></code> modules,
+please refer to the <a class="reference internal" href="../api/grid.html#grid"><span class="std std-ref">Grid</span></a> section.</p>
+</section>
 </section>
 
 
@@ -151,7 +371,7 @@ The differences are:</p>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="_index.html" class="btn btn-neutral float-left" title="Model Gallery" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="../advanced/_index.html" class="btn btn-neutral float-right" title="Advanced Topics" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="covid_network_contagion.html" class="btn btn-neutral float-right" title="Covid Network Contagion" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

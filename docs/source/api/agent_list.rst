@@ -2,10 +2,14 @@
 AgentList
 ==========
 
-.. include agent
+Under development.
 
-.. automodule:: Melodie.boost.agent_list
-               :members:  BaseAgentContainer, AgentList
-               :undoc-members:
-               :show-inheritance:
+.. comment::
+
+    .. include agent
+
+    .. automodule:: Melodie.boost.agent_list
+                   :members:  BaseAgentContainer, AgentList
+                   :undoc-members:
+                   :show-inheritance:
 

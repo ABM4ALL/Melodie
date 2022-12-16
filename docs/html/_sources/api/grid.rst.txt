@@ -2,10 +2,14 @@
 Grid
 =============
 
-.. include spot
+Under development.
 
-.. automodule:: Melodie.boost.grid
-               :undoc-members:
-               :members: Spot, GridAgent, Grid
-               :show-inheritance:
+.. comment::
+
+    .. include spot
+
+    .. automodule:: Melodie.boost.grid
+                   :undoc-members:
+                   :members: Spot, GridAgent, Grid
+                   :show-inheritance:
 

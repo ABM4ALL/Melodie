@@ -10,7 +10,7 @@ we provide more example models to show how the other modules can be used.
     :maxdepth: 1
 
     covid_grid_contagion
-    .. comment:: covid_network_contagion
+    covid_network_contagion
 
 .. toctree::
 

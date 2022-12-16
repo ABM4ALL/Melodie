@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Covid Network Contagion &mdash; Melodie 0.4.2 documentation</title>
+  <title>CovidNetworkContagion &mdash; Melodie 0.4.2 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -19,7 +19,9 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="author" title="About these documents" href="../about.html" />
     <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" /> 
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Advanced Topics" href="../advanced/_index.html" />
+    <link rel="prev" title="CovidGridContagion" href="covid_grid_contagion.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -38,7 +40,7 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <ul>
+              <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../installation.html#user-installation">User Installation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../installation.html#developer-installation">Developer Installation</a></li>
@@ -70,13 +72,42 @@
 <li class="toctree-l2"><a class="reference internal" href="../tutorial.html#last-words">Last Words</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="_index.html">Model Gallery</a><ul class="simple">
+<li class="toctree-l1 current"><a class="reference internal" href="_index.html">Model Gallery</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="covid_grid_contagion.html">CovidGridContagion</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="covid_grid_contagion.html#project-structure">Project Structure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="covid_grid_contagion.html#grid-and-spot">Grid and Spot</a></li>
+<li class="toctree-l3"><a class="reference internal" href="covid_grid_contagion.html#matrix-data">Matrix Data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="covid_grid_contagion.html#model">Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="covid_grid_contagion.html#gridagent">GridAgent</a></li>
+</ul>
+</li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">CovidNetworkContagion</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#project-structure">Project Structure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#model">Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#scenario">Scenario</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../advanced/_index.html">Advanced Topics</a><ul class="simple">
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../api/_index.html">API Reference</a><ul class="simple">
+<li class="toctree-l1"><a class="reference internal" href="../api/_index.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../api/model.html">Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/agent.html">Agent</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/agent_list.html">AgentList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/environment.html">Environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/data_collector.html">DataCollector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/grid.html">Grid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/network.html">Network</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/data_info.html">DataInfo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/data_loader.html">DataLoader</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/scenario.html">Scenario</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/simulator.html">Simulator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/calibrator.html">Calibrator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/trainer.html">Trainer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/db.html">DB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/exceptions.html">Melodie Exceptions</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../changelog.html">Change Log</a><ul>
@@ -120,7 +151,8 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>Covid Network Contagion</li>
+          <li><a href="_index.html">Model Gallery</a> &raquo;</li>
+      <li>CovidNetworkContagion</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/gallery/covid_network_contagion.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -130,15 +162,143 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="covid-network-contagion">
-<h1>Covid Network Contagion<a class="headerlink" href="#covid-network-contagion" title="Permalink to this heading"></a></h1>
-<p>Under development.</p>
+  <section id="covidnetworkcontagion">
+<h1>CovidNetworkContagion<a class="headerlink" href="#covidnetworkcontagion" title="Permalink to this heading"></a></h1>
+<p>To show how the <code class="docutils literal notranslate"><span class="pre">Melodie.Network</span></code> module can be used,
+we provide this <a class="reference external" href="https://github.com/ABM4ALL/CovidNetworkContagion">CovidNetworkContagion</a> model,
+which is based the <a class="reference external" href="https://github.com/ABM4ALL/CovidContagion">CovidContagion</a> model in the <a class="reference internal" href="../tutorial.html#tutorial"><span class="std std-ref">Tutorial</span></a> section.</p>
+<p>The differences are:</p>
+<ul class="simple">
+<li><p>Agents are connected within a <code class="docutils literal notranslate"><span class="pre">network</span></code> randomly.</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">network</span></code> is constructed with edges, representing the connections between the agents. An infected agent can pass the virus through the edge to another uninfected agent.</p></li>
+</ul>
+<section id="project-structure">
+<h2>Project Structure<a class="headerlink" href="#project-structure" title="Permalink to this heading"></a></h2>
+<p>The project structure is as follows.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>CovidGridContagion
+├── data
+│   ├── input
+│   │   ├── SimulatorScenarios.xlsx
+│   │   ├── ID_HealthState.xlsx
+│   │   ├── ID_AgeGroup.xlsx
+│   │   └── Parameter_AgeGroup_TransitionProb.xlsx
+│   └── output
+│       ├── CovidGridContagion.sqlite
+│       ├── PopulationInfection_S0R0.png
+│       └── PopulationInfection_S1R0.png
+├── source
+│   ├── agent.py
+│   ├── environment.py
+│   ├── data_collector.py
+│   ├── data_info.py
+│   ├── data_loader.py
+│   ├── scenario.py
+│   ├── model.py
+│   └── analyzer.py
+├── config.py
+├── run_simulator.py
+├── run_analyzer.py
+└── readme.md
+</pre></div>
+</div>
+</section>
+<section id="model">
+<h2>Model<a class="headerlink" href="#model" title="Permalink to this heading"></a></h2>
+<p>As shown in the project structure, unlike <a class="reference internal" href="covid_grid_contagion.html#covidgridcontagion"><span class="std std-ref">CovidGridContagion</span></a>,
+it is same with the structure of the <a class="reference external" href="https://github.com/ABM4ALL/CovidContagion">CovidContagion</a> model.
+Because the edges in the <code class="docutils literal notranslate"><span class="pre">network</span></code> do not store model-specific parameters like spots in the <code class="docutils literal notranslate"><span class="pre">grid</span></code>.
+The <code class="docutils literal notranslate"><span class="pre">network</span></code> only provide common functions.</p>
+<p>So, by calling the <code class="docutils literal notranslate"><span class="pre">create_network</span></code> function (Line 22) without passing any parameters,
+the <code class="docutils literal notranslate"><span class="pre">network</span></code> component is created for the model with the default classes in <code class="docutils literal notranslate"><span class="pre">Melodie</span></code>.</p>
+<div class="literal-block-wrapper docutils container" id="id3">
+<div class="code-block-caption"><span class="caption-text">model.py</span><a class="headerlink" href="#id3" title="Permalink to this code"></a></div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">TYPE_CHECKING</span>
+<span class="linenos"> 2</span>
+<span class="linenos"> 3</span><span class="kn">from</span> <span class="nn">Melodie</span> <span class="kn">import</span> <span class="n">Model</span>
+<span class="linenos"> 4</span>
+<span class="linenos"> 5</span><span class="kn">from</span> <span class="nn">source</span> <span class="kn">import</span> <span class="n">data_info</span>
+<span class="linenos"> 6</span><span class="kn">from</span> <span class="nn">source.agent</span> <span class="kn">import</span> <span class="n">CovidAgent</span>
+<span class="linenos"> 7</span><span class="kn">from</span> <span class="nn">source.data_collector</span> <span class="kn">import</span> <span class="n">CovidDataCollector</span>
+<span class="linenos"> 8</span><span class="kn">from</span> <span class="nn">source.environment</span> <span class="kn">import</span> <span class="n">CovidEnvironment</span>
+<span class="linenos"> 9</span><span class="kn">from</span> <span class="nn">source.scenario</span> <span class="kn">import</span> <span class="n">CovidScenario</span>
+<span class="linenos">10</span>
+<span class="linenos">11</span><span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
+<span class="linenos">12</span>    <span class="kn">from</span> <span class="nn">Melodie</span> <span class="kn">import</span> <span class="n">AgentList</span>
+<span class="linenos">13</span>
+<span class="linenos">14</span>
+<span class="linenos">15</span><span class="k">class</span> <span class="nc">CovidModel</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+<span class="linenos">16</span>    <span class="n">scenario</span><span class="p">:</span> <span class="s2">&quot;CovidScenario&quot;</span>
+<span class="linenos">17</span>
+<span class="linenos">18</span>    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="linenos">19</span>        <span class="bp">self</span><span class="o">.</span><span class="n">agents</span><span class="p">:</span> <span class="s2">&quot;AgentList[CovidAgent]&quot;</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_agent_list</span><span class="p">(</span><span class="n">CovidAgent</span><span class="p">)</span>
+<span class="linenos">20</span>        <span class="bp">self</span><span class="o">.</span><span class="n">environment</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_environment</span><span class="p">(</span><span class="n">CovidEnvironment</span><span class="p">)</span>
+<span class="linenos">21</span>        <span class="bp">self</span><span class="o">.</span><span class="n">data_collector</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_data_collector</span><span class="p">(</span><span class="n">CovidDataCollector</span><span class="p">)</span>
+<span class="hll"><span class="linenos">22</span>        <span class="bp">self</span><span class="o">.</span><span class="n">network</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_network</span><span class="p">()</span>
+</span><span class="linenos">23</span>
+<span class="linenos">24</span>    <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="linenos">25</span>        <span class="bp">self</span><span class="o">.</span><span class="n">agents</span><span class="o">.</span><span class="n">setup_agents</span><span class="p">(</span>
+<span class="linenos">26</span>            <span class="n">agents_num</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">agent_num</span><span class="p">,</span>
+<span class="linenos">27</span>            <span class="n">params_df</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">get_dataframe</span><span class="p">(</span><span class="n">data_info</span><span class="o">.</span><span class="n">agent_params</span><span class="p">),</span>
+<span class="linenos">28</span>        <span class="p">)</span>
+<span class="hll"><span class="linenos">29</span>        <span class="bp">self</span><span class="o">.</span><span class="n">network</span><span class="o">.</span><span class="n">setup_agent_connections</span><span class="p">(</span>
+</span><span class="hll"><span class="linenos">30</span>            <span class="n">agent_lists</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">agents</span><span class="p">],</span>
+</span><span class="hll"><span class="linenos">31</span>            <span class="n">network_type</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">network_type</span><span class="p">,</span>
+</span><span class="hll"><span class="linenos">32</span>            <span class="n">network_params</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">get_network_params</span><span class="p">(),</span>
+</span><span class="hll"><span class="linenos">33</span>        <span class="p">)</span>
+</span></pre></div>
+</div>
+</div>
+<p>Then, the <code class="docutils literal notranslate"><span class="pre">network</span></code> needs to be setup based on</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">agent_lists</span></code> - a list of <code class="docutils literal notranslate"><span class="pre">agents</span></code>, i.e., multiple groups of <code class="docutils literal notranslate"><span class="pre">agents</span></code> can be connected in the same network. They are distinguished by the <code class="docutils literal notranslate"><span class="pre">category</span></code> attribute as in the <a class="reference internal" href="covid_grid_contagion.html#covidgridcontagion"><span class="std std-ref">CovidGridContagion</span></a> model.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">network_type</span></code> and <code class="docutils literal notranslate"><span class="pre">network_params</span></code> - follows the tradition of <code class="docutils literal notranslate"><span class="pre">NetworkX</span></code> package, because the <code class="docutils literal notranslate"><span class="pre">Melodie.Network</span></code> module is developed highly based on it.</p></li>
+</ul>
+</section>
+<section id="scenario">
+<h2>Scenario<a class="headerlink" href="#scenario" title="Permalink to this heading"></a></h2>
+<p>The parameters to setup the <code class="docutils literal notranslate"><span class="pre">network</span></code> could be inserted into the model through <code class="docutils literal notranslate"><span class="pre">scenario</span></code>.</p>
+<div class="literal-block-wrapper docutils container" id="id4">
+<div class="code-block-caption"><span class="caption-text">scenario.py</span><a class="headerlink" href="#id4" title="Permalink to this code"></a></div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">from</span> <span class="nn">Melodie</span> <span class="kn">import</span> <span class="n">Scenario</span>
+<span class="linenos"> 2</span><span class="kn">from</span> <span class="nn">source</span> <span class="kn">import</span> <span class="n">data_info</span>
+<span class="linenos"> 3</span>
+<span class="linenos"> 4</span>
+<span class="linenos"> 5</span><span class="k">class</span> <span class="nc">CovidScenario</span><span class="p">(</span><span class="n">Scenario</span><span class="p">):</span>
+<span class="linenos"> 6</span>
+<span class="linenos"> 7</span>    <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="linenos"> 8</span>        <span class="bp">self</span><span class="o">.</span><span class="n">period_num</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="linenos"> 9</span>        <span class="bp">self</span><span class="o">.</span><span class="n">agent_num</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="hll"><span class="linenos">10</span>        <span class="bp">self</span><span class="o">.</span><span class="n">network_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+</span><span class="hll"><span class="linenos">11</span>        <span class="bp">self</span><span class="o">.</span><span class="n">network_param_k</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+</span><span class="hll"><span class="linenos">12</span>        <span class="bp">self</span><span class="o">.</span><span class="n">network_param_p</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
+</span><span class="hll"><span class="linenos">13</span>        <span class="bp">self</span><span class="o">.</span><span class="n">network_param_m</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+</span><span class="linenos">14</span>        <span class="bp">self</span><span class="o">.</span><span class="n">initial_infected_percentage</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
+<span class="linenos">15</span>        <span class="bp">self</span><span class="o">.</span><span class="n">young_percentage</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
+<span class="linenos">16</span>        <span class="bp">self</span><span class="o">.</span><span class="n">infection_prob</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
+<span class="linenos">17</span>        <span class="bp">self</span><span class="o">.</span><span class="n">setup_transition_probs</span><span class="p">()</span>
+<span class="linenos">18</span>
+<span class="hll"><span class="linenos">19</span>    <span class="k">def</span> <span class="nf">get_network_params</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span class="linenos">20</span>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">network_type</span> <span class="o">==</span> <span class="s2">&quot;barabasi_albert_graph&quot;</span><span class="p">:</span>
+<span class="linenos">21</span>            <span class="n">network_params</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;m&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">network_param_m</span><span class="p">}</span>
+<span class="linenos">22</span>        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">network_type</span> <span class="o">==</span> <span class="s2">&quot;watts_strogatz_graph&quot;</span><span class="p">:</span>
+<span class="linenos">23</span>            <span class="n">network_params</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;k&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">network_param_k</span><span class="p">,</span> <span class="s2">&quot;p&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">network_param_p</span><span class="p">}</span>
+<span class="linenos">24</span>        <span class="k">else</span><span class="p">:</span>
+<span class="linenos">25</span>            <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+<span class="linenos">26</span>        <span class="k">return</span> <span class="n">network_params</span>
+</pre></div>
+</div>
+</div>
+<p>For more details of the <code class="docutils literal notranslate"><span class="pre">Network</span></code> module, please refer to the <a class="reference internal" href="../api/network.html#network"><span class="std std-ref">Network</span></a> section.</p>
+</section>
 </section>
 
 
            </div>
           </div>
-          <footer>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="covid_grid_contagion.html" class="btn btn-neutral float-left" title="CovidGridContagion" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../advanced/_index.html" class="btn btn-neutral float-right" title="Advanced Topics" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
 
   <hr/>
 
