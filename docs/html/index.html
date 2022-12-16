@@ -71,13 +71,42 @@
 <li class="toctree-l2"><a class="reference internal" href="tutorial.html#last-words">Last Words</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="gallery/_index.html">Model Gallery</a><ul class="simple">
+<li class="toctree-l1"><a class="reference internal" href="gallery/_index.html">Model Gallery</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="gallery/covid_grid_contagion.html">CovidGridContagion</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="gallery/covid_grid_contagion.html#project-structure">Project Structure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gallery/covid_grid_contagion.html#grid-and-spot">Grid and Spot</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gallery/covid_grid_contagion.html#matrix-data">Matrix Data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gallery/covid_grid_contagion.html#model">Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gallery/covid_grid_contagion.html#gridagent">GridAgent</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="gallery/covid_network_contagion.html">CovidNetworkContagion</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="gallery/covid_network_contagion.html#project-structure">Project Structure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gallery/covid_network_contagion.html#model">Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gallery/covid_network_contagion.html#scenario">Scenario</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="advanced/_index.html">Advanced Topics</a><ul class="simple">
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="api/_index.html">API Reference</a><ul class="simple">
+<li class="toctree-l1"><a class="reference internal" href="api/_index.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/model.html">Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/agent.html">Agent</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/agent_list.html">AgentList</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/environment.html">Environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/data_collector.html">DataCollector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/grid.html">Grid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/network.html">Network</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/data_info.html">DataInfo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/data_loader.html">DataLoader</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/scenario.html">Scenario</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/simulator.html">Simulator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/calibrator.html">Calibrator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/trainer.html">Trainer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/db.html">DB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/exceptions.html">Melodie Exceptions</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="changelog.html">Change Log</a><ul>
@@ -156,14 +185,9 @@ I take the German translation - &quot;Melodie&quot; - as the name of this packag
 <p><strong>Suggested reading path</strong></p>
 <ul class="simple">
 <li><p>First, you might want to start with the <a class="reference internal" href="introduction.html#introduction"><span class="std std-ref">Introduction</span></a> section in which you can, first, get a brief idea what agent-based modeling is about; second, get an overview of the modules in Melodie and how they fit together.</p></li>
-<li><p>Second, you can continue with the <a class="reference internal" href="tutorial.html#tutorial"><span class="std std-ref">Tutorial</span></a> section, in which you can find a minimum agent-based model developed with Melodie. We hope it is simple enough to follow, and on the other hand, we believe it shows a clear structure and the most important components to develop an ABM with Melodie.</p></li>
-<li><p>Third, for your information, we are also working on the following sections:</p>
-<ul>
-<li><p><a class="reference internal" href="gallery/_index.html#model-gallery"><span class="std std-ref">Model Gallery</span></a>, which provides examples with more modules are used than in the tutorial. You can start developing your own model with the one that is similar to your case.</p></li>
-<li><p><a class="reference internal" href="advanced/_index.html#advanced-topics"><span class="std std-ref">Advanced Topics</span></a>, which provides some advanced techniques in using <strong>Melodie</strong>, e.g., empty project creation, speed improvement, etc.</p></li>
-<li><p><a class="reference internal" href="api/_index.html#api-reference"><span class="std std-ref">API Reference</span></a>, which provides the help documentation of <strong>Melodie</strong>.</p></li>
-</ul>
-</li>
+<li><p>Second, you can continue with the <a class="reference internal" href="tutorial.html#tutorial"><span class="std std-ref">Tutorial</span></a> section, in which you can find a minimum model (<a class="reference external" href="https://github.com/ABM4ALL/CovidContagion">CovidContagion</a>) developed with Melodie. It is easier to follow but also shows a clear structure and the most important components to develop an ABM with Melodie.</p></li>
+<li><p>Third, since the tutorial only provides a minimum model developed with Melodie, in the <a class="reference internal" href="gallery/_index.html#model-gallery"><span class="std std-ref">Model Gallery</span></a>, we provide more example models to show how other modules can be used.</p></li>
+<li><p>Fourth, for more details, you may try reading the <a class="reference internal" href="advanced/_index.html#advanced-topics"><span class="std std-ref">Advanced Topics</span></a> and <a class="reference internal" href="api/_index.html#api-reference"><span class="std std-ref">API Reference</span></a> sections.</p></li>
 </ul>
 <p>Now, let’s start the journey :)</p>
 <div class="toctree-wrapper compound">

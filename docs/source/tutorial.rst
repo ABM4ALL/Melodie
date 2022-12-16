@@ -137,7 +137,7 @@ In the file ``data_info.py``, ``agent_params`` is registered as an instance of t
 
 As shown, ``agent_params`` includes an ``id_scenario`` column.
 This applies to the cases when agents' attributes are scenario-dependently initialized.
-Melodie supports batching scenario runs and can automatically select the right part of ``agent_params`` for each scenario and initialize the agents.
+``Melodie`` supports batching scenario runs and can automatically select the right part of ``agent_params`` for each scenario and initialize the agents.
 
 This **CovidContagion** model is exactly an example of the case when "agents' attributes are scenario-dependently initialized".
 The values of agents' ``health_state`` and ``age_group`` rely on two parameters of the scenario:
@@ -275,7 +275,7 @@ Please note that,
 
 Finally, as introduced in the :ref:`Modelling Manager` section and shown below,
 the ``CovidScenario`` and ``CovidDataLoader`` class variables are used to construct the ``simulator``.
-So, **Melodie** will initialize all the scenarios defined in ``simulator_scenarios`` dataframe automatically.
+So, ``Melodie`` will initialize all the scenarios defined in ``simulator_scenarios`` dataframe automatically.
 Then, the model will be run with these scenarios one by one.
 
 .. code-block:: Python
@@ -560,6 +560,9 @@ Example of ``agents_result``:
 
 In the example project, we also prepared a simple ``analyzer.py`` file that produces two figures based on the results.
 Since it is mainly based on other packages instead of ``Melodie``, we won't introduce the details here.
+Here is an example of the results from the model.
+
+.. image:: image/population_infection.png
 
 Last Words
 __________

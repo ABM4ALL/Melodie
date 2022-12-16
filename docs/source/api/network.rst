@@ -2,9 +2,13 @@
 Network
 ===========
 
-.. include edge
+Under development.
 
-.. automodule:: Melodie.network
-               :members:
-               :undoc-members:
-               :show-inheritance:
+.. comment::
+
+    .. include edge
+
+    .. automodule:: Melodie.network
+                   :members:
+                   :undoc-members:
+                   :show-inheritance:

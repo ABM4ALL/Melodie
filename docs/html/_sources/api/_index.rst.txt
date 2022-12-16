@@ -8,21 +8,21 @@ Under development.
     :caption: Content
     :maxdepth: 1
 
-    .. comment:: model
-    .. comment:: agent
-    .. comment:: agent_list
-    .. comment:: environment
-    .. comment:: data_collector
-    .. comment:: grid
-    .. comment:: network
-    .. comment:: data_info
-    .. comment:: data_loader
-    .. comment:: scenario
-    .. comment:: simulator
-    .. comment:: calibrator
-    .. comment:: trainer
-    .. comment:: db
-    .. comment:: exceptions
+    model
+    agent
+    agent_list
+    environment
+    data_collector
+    grid
+    network
+    data_info
+    data_loader
+    scenario
+    simulator
+    calibrator
+    trainer
+    db
+    exceptions
 
 
 

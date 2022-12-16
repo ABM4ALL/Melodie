@@ -73,7 +73,14 @@
 <li class="toctree-l2"><a class="reference internal" href="#last-words">Last Words</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="gallery/_index.html">Model Gallery</a><ul class="simple">
+<li class="toctree-l1"><a class="reference internal" href="gallery/_index.html">Model Gallery</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="gallery/covid_grid_contagion.html">CovidGridContagion</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="gallery/covid_grid_contagion.html#grid-and-spot">Grid and Spot</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gallery/covid_grid_contagion.html#matrix-data">Matrix Data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gallery/covid_grid_contagion.html#model">Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gallery/covid_grid_contagion.html#gridagent">GridAgent</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="advanced/_index.html">Advanced Topics</a><ul class="simple">
@@ -253,7 +260,7 @@ Each row of this dataframe contains the values of <code class="docutils literal 
 </div>
 <p>As shown, <code class="docutils literal notranslate"><span class="pre">agent_params</span></code> includes an <code class="docutils literal notranslate"><span class="pre">id_scenario</span></code> column.
 This applies to the cases when agents’ attributes are scenario-dependently initialized.
-Melodie supports batching scenario runs and can automatically select the right part of <code class="docutils literal notranslate"><span class="pre">agent_params</span></code> for each scenario and initialize the agents.</p>
+<code class="docutils literal notranslate"><span class="pre">Melodie</span></code> supports batching scenario runs and can automatically select the right part of <code class="docutils literal notranslate"><span class="pre">agent_params</span></code> for each scenario and initialize the agents.</p>
 <p>This <strong>CovidContagion</strong> model is exactly an example of the case when “agents’ attributes are scenario-dependently initialized”.
 The values of agents’ <code class="docutils literal notranslate"><span class="pre">health_state</span></code> and <code class="docutils literal notranslate"><span class="pre">age_group</span></code> rely on two parameters of the scenario:
 <code class="docutils literal notranslate"><span class="pre">initial_infected_percentage</span></code> and <code class="docutils literal notranslate"><span class="pre">young_percentage</span></code>.</p>
@@ -378,7 +385,7 @@ Before being loaded, it also needs to be registered in the <code class="docutils
 </div>
 <p>Finally, as introduced in the <a class="reference internal" href="introduction.html#modelling-manager"><span class="std std-ref">Modelling Manager</span></a> section and shown below,
 the <code class="docutils literal notranslate"><span class="pre">CovidScenario</span></code> and <code class="docutils literal notranslate"><span class="pre">CovidDataLoader</span></code> class variables are used to construct the <code class="docutils literal notranslate"><span class="pre">simulator</span></code>.
-So, <strong>Melodie</strong> will initialize all the scenarios defined in <code class="docutils literal notranslate"><span class="pre">simulator_scenarios</span></code> dataframe automatically.
+So, <code class="docutils literal notranslate"><span class="pre">Melodie</span></code> will initialize all the scenarios defined in <code class="docutils literal notranslate"><span class="pre">simulator_scenarios</span></code> dataframe automatically.
 Then, the model will be run with these scenarios one by one.</p>
 <div class="literal-block-wrapper docutils container" id="id7">
 <div class="code-block-caption"><span class="caption-text">run_simulator.py</span><a class="headerlink" href="#id7" title="Permalink to this code"></a></div>
@@ -633,7 +640,9 @@ you can find two tables in <code class="docutils literal notranslate"><span clas
 <p>Example of <code class="docutils literal notranslate"><span class="pre">agents_result</span></code>:</p>
 <img alt="_images/agents_result.png" src="_images/agents_result.png" />
 <p>In the example project, we also prepared a simple <code class="docutils literal notranslate"><span class="pre">analyzer.py</span></code> file that produces two figures based on the results.
-Since it is mainly based on other packages instead of <code class="docutils literal notranslate"><span class="pre">Melodie</span></code>, we won’t introduce the details here.</p>
+Since it is mainly based on other packages instead of <code class="docutils literal notranslate"><span class="pre">Melodie</span></code>, we won’t introduce the details here.
+Here is an example of the results from the model.</p>
+<img alt="_images/population_infection.png" src="_images/population_infection.png" />
 </section>
 <section id="last-words">
 <h2>Last Words<a class="headerlink" href="#last-words" title="Permalink to this heading"></a></h2>
