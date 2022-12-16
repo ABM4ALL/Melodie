@@ -101,7 +101,6 @@ async def handler(ws: MelodieVisualizerProtocol, path):
                     visualize_condition_queue_main.put((cmd, data, ws), timeout=1)
                 except:
                     import traceback
-
                     traceback.print_exc()
             else:
                 raise NotImplementedError(cmd)
@@ -340,7 +339,7 @@ class BaseVisualizer:
         ) in self.visualizer_components:
             if component_type == "grid":
 
-                initial_options.append(options)
+                initial_options.append(self.parse_grid_series(component(), roles, var_getter, True))
             else:
                 initial_options.append(self.parse_network_series(component(), roles, var_getter))
         return initial_options
@@ -362,7 +361,6 @@ class BaseVisualizer:
             with open(os.path.join(self.params_dir, params_set_name + '.json'), encoding='utf8', errors='replace') as f:
                 params_json = json.load(f)
                 self.params_manager.from_json(params_json)
-                print('params updated by paramset', params_set_name)
                 self.send_notification(f"Parameters updated to param set {params_set_name}")
 
         params = {"initialParams": self.params_manager.to_value_json(),
@@ -408,7 +406,6 @@ class BaseVisualizer:
         :return:
         """
         self.current_websocket = ws
-        print('received cmd', cmd_type)
         if cmd_type == GET_PARAMS:
             self.send_scenario_params(data.get('name'))
             return True
@@ -440,7 +437,6 @@ class BaseVisualizer:
             return True
         elif cmd_type == DOWNLOAD_DATA:
             sqlite_file = get_sqlite_filename(self.config)
-            print("start to export", sqlite_file)
             if os.path.exists(sqlite_file):
                 with open(sqlite_file, 'rb') as f:
                     self.send_msg(WSMsgType.FILE, self.current_step, {"name": data['name'] + '.sqlite',
@@ -523,7 +519,7 @@ class Visualizer(BaseVisualizer):
         super().__init__(config, simulator)
         self.height = 0
         self.width = 0
-
+        self.spots_status_change = True
         self.grid_roles = []
 
         self.grid_params = {}
@@ -536,23 +532,25 @@ class Visualizer(BaseVisualizer):
     def convert_to_1d(self, x, y):
         return x * self.height + y
 
-    def parse_grid_series(self, grid: "Grid"):
+    def parse_grid_series(self, grid: "Grid", styles, var_getter, initialize=False):
 
         agents_vis_dicts = []
         spots = []
 
         spot_attributes = ["id", "x", "y"] + list(grid.get_spot(0, 0).__dict__.keys())
-        if type(grid.get_spot(0, 0)) == Spot:
-            for x in range(grid.width()):
-                for y in range(grid.height()):
-                    spot = grid.get_spot(x, y)
-                    spots.append(
-                        {
-                            "data": spot.to_dict(spot_attributes),
-                            "style": spot.get_style(),
-                        }
-                    )
-        for agent_list_name, agent_list in self.agent_lists.items():
+        if self.spots_status_change or initialize:
+            if isinstance(grid.get_spot(0, 0), Spot):
+                for x in range(grid.width()):
+                    for y in range(grid.height()):
+                        spot = grid.get_spot(x, y)
+                        spots.append(
+                            {
+                                "data": spot.to_dict(spot_attributes),
+                                "style": spot.get_style(),
+                            }
+                        )
+        for agent_category in grid.get_agent_categories:
+            agent_list = grid.get_agent_container(agent_category)
             if len(agent_list) == 0:
                 continue
             first_agent = agent_list[0]
@@ -561,7 +559,7 @@ class Visualizer(BaseVisualizer):
             )
             for agent in agent_list:
                 agents_vis_dicts.append(
-                    {"data": agent.to_dict(attributes), "style": agent.get_style()}
+                    {"data": agent.to_dict(attributes), "style": styles[var_getter(agent)]}
                 )
         return {
             "name": "grid",
@@ -649,74 +647,50 @@ class Visualizer(BaseVisualizer):
         )
         self.agent_lists[series_id] = agent_container
 
-    def add_network(self, name: str, component: "Callable[[], ComponentType]",
+    def add_network(self, name: str, network_getter: "Callable[[], ComponentType]",
                     var_style: Dict[int, Dict] = None,
                     var_getter: Callable[["Agent"], int] = None):
         """
         Add a network onto the visualizer.
 
         :param name:
-        :param component:
+        :param network_getter:
         :param var_style:
         :param var_getter:
         :return:
         """
 
         self.visualizer_components.append(
-            (component, name, 'network', {}, var_style, var_getter)
+            (network_getter, name, 'network', {}, var_style, var_getter)
         )
 
-    def add_visualize_component(
+    def add_grid(
             self,
             name: str,
-            type: str,
-            component: "Callable[[], ComponentType]",
+            grid_getter: "Callable[[], ComponentType]",
             var_style: Dict[int, Dict] = None,
-            agent_roles: Dict[int, Dict[str, Any]] = None,
             var_getter: Callable[["Agent"], int] = None,
+            update_spots=True
     ):
-        from ..boost.grid import Grid
-        from ..network import Network
+        """
+        Add a Grid onto the visualizer.
 
-        if type == 'grid':
-            chart_options = {
-                "animation": False,
-                "progressiveThreshold": 100000,
-                "tooltip": {"position": "top"},
-                "grid": {"height": "80%", "top": "10%"},
-                "xAxis": {"type": "category", "splitArea": {"show": True}},
-                "yAxis": {"type": "category", "splitArea": {"show": True}},
-                "visualMap": {
-                    "type": "piecewise",
-                    "categories": [i for i, color in var_style.items()],
-                    "calculable": True,
-                    "orient": "horizontal",
-                    "left": "center",
-                    "inRange": {"color": deepcopy(var_style)},
-                    "seriesIndex": [0],
-                },
-                "series": [
-                    {
-                        "universalTransition": {"enabled": False},
-                        "name": "Spot",
-                        "type": "heatmap",
-                    }
-                ],
-                "name": name,
-                "columns": component.width(),
-                "rows": component.height(),
-            }
-            self.visualizer_components.append(
-                (component, name, type, chart_options, agent_roles, var_getter)
-            )
-        else:
-            self.visualizer_components.append(
-                (component, name, type, {}, var_style, var_getter)
-            )
+        :param name: The name of grid component.
+        :param grid_getter: The getter function returning a Grid object.
+        :param var_style:  The style of different agent categories.
+        :param var_getter: The getter of agent variable.
+        :param update_spots:  This argument is True by default, indicating rendering all spots in each step.
+            If False, spots will not be rendered during simulation. 
+        :return:
+        """
+        self.spots_status_change = update_spots
+
+        self.visualizer_components.append(
+            (grid_getter, name, "grid", {}, var_style, var_getter)
+        )
 
     def _format(self):
         from ..boost.grid import Grid
-        print('-format!!!!!', self.visualizer_components)
         visualizers = []
         for (
                 vis_component,
@@ -727,7 +701,7 @@ class Visualizer(BaseVisualizer):
                 var_getter,
         ) in self.visualizer_components:
             if vis_component_type == 'grid':
-                r = self.parse_grid_series(vis_component)
+                r = self.parse_grid_series(vis_component(), roles, var_getter)
                 visualizers.append(r)
             elif vis_component_type == 'network':
 
