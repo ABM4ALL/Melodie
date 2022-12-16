@@ -272,7 +272,7 @@ class Simulator(BaseModellingManager):
             fn = get_sqlite_filename(self.config)
             if os.path.exists(fn):
                 os.remove(fn)
-            self.data_loader = None
+            self.data_loader: "Optional[DataLoader]" = None
             self.scenarios = None
             DBConn.table_dtypes = {}
             self.pre_run()

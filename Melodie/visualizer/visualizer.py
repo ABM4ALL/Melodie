@@ -335,14 +335,14 @@ class BaseVisualizer:
                 component_name,
                 component_type,
                 options,
-                _1,
+                roles,
                 roles_getter,
         ) in self.visualizer_components:
             if component_type == "grid":
 
                 initial_options.append(options)
             else:
-                initial_options.append(self.parse_network_series(component(), roles_getter))
+                initial_options.append(self.parse_network_series(component(), roles, roles_getter))
         return initial_options
 
     def send_chart_options(self):
@@ -570,7 +570,7 @@ class Visualizer(BaseVisualizer):
             "spots": spots,
         }
 
-    def parse_network_series(self, network: 'Network', roles_getter: 'Callable[[Agent], int]'):
+    def parse_network_series(self, network: 'Network', roles, roles_getter: 'Callable[[Agent], int]'):
         data = []
         # network.agent_categories
         for category, agent_id in network.nodes:
@@ -591,13 +591,19 @@ class Visualizer(BaseVisualizer):
                         "target": f'{end_node[0]}-{end_node[1]}',
                     },
                 )
+        categories = [{
+                          "name": roles[i]['label'],
+                          "itemStyle": {
+                              "color": roles[i]['color'],
+                          },
+                      } if i in roles else {} for i in range(min(roles.keys()), max(roles.keys()) + 1)]
+        legends = [{"data": [roles[i]['label'] if i in roles else "" for i in
+                             range(min(roles.keys()), max(roles.keys()) + 1)]}]
         d = {
-            "title": {
-                "text": "Basic Graph",
-            },
+            "legend": legends,
             "series": [
                 {
-                    "type": "graphGL",
+                    "type": "graph",
                     "layout": "none",
                     "symbolSize": 5,
                     "symbol": "circle",
@@ -609,27 +615,7 @@ class Visualizer(BaseVisualizer):
                     "scaleLimit": [0.1, 100],
                     "edgeSymbol": ["circle", "arrow"],
                     "edgeSymbolSize": [4, 5],
-
-                    "categories": [
-                        {
-                            "name": 0,
-                            "itemStyle": {
-                                "color": "#ff0000",
-                            },
-                        },
-                        {
-                            "name": 1,
-                            "itemStyle": {
-                                "color": "#ffff00",
-                            },
-                        },
-                        {
-                            "name": 2,
-                            "itemStyle": {
-                                "color": "#ff00ff",
-                            },
-                        },
-                    ],
+                    "categories": categories,
                     "data": data,
                     "links": links
                 },
@@ -711,7 +697,7 @@ class Visualizer(BaseVisualizer):
             )
         else:
             self.visualizer_components.append(
-                (component, name, type, {}, None, roles_getter)
+                (component, name, type, {}, color_categories, roles_getter)
             )
 
     def _format(self):
@@ -723,7 +709,7 @@ class Visualizer(BaseVisualizer):
                 vis_component_name,
                 vis_component_type,
                 _1,
-                agent_roles,
+                roles,
                 roles_getter,
         ) in self.visualizer_components:
             if vis_component_type == 'grid':
@@ -731,7 +717,7 @@ class Visualizer(BaseVisualizer):
                 visualizers.append(r)
             elif vis_component_type == 'network':
 
-                visualizers.append(self.parse_network_series(vis_component(), roles_getter))
+                visualizers.append(self.parse_network_series(vis_component(), roles, roles_getter))
             else:
                 raise NotImplementedError
         data = {
