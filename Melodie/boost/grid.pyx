@@ -228,6 +228,7 @@ cdef class Grid:
         self._roles_list = [[0 for j in range(4)] for i in range(self._width*self._height)]
         self._agent_id_mgr = AgentIDManager(self._width, self._height, allow_multi=self._multi)
         self._agent_containers = [None for i in range(100)]
+        self._agent_categories = set()
         
 
     def setup_params(self, width: int, height: int, wrap=True, caching=True, multi=True):
@@ -261,6 +262,10 @@ cdef class Grid:
     def _setup(self):
         self.setup()
 
+    @property
+    def get_agent_categories(self):
+        return self._agent_categories
+
     def setup_agent_locations(self, category ,initial_placement = "direct")->None:
         """
         Add an agent category.
@@ -286,6 +291,7 @@ cdef class Grid:
         assert 0<=category_id<100, f"Category ID {category_id} should be a int between [0, 100)"
         assert self._agent_containers[category_id] is None, f"Category ID {category_id} already existed!"
         self._agent_containers[category_id] = category
+        self._agent_categories.add(category_id)
         assert initial_placement in {"random_single", "direct"}, f"Invalid initial placement '{initial_placement}' "
         if initial_placement == "random_single":
             for agent in category:
@@ -323,7 +329,7 @@ cdef class Grid:
         return self._agent_id_mgr.agents_on_spot(spot.x, spot.y)
 
 
-    cdef AgentList get_agent_container(self, category_id) except *:
+    cpdef AgentList get_agent_container(self, category_id) except *:
         cdef AgentList ret = self._agent_containers[category_id]
         assert ret is not None, f"Agent List for category id {category_id} is not registered!"
         return ret

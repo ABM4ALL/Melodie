@@ -57,12 +57,13 @@ cdef class Grid:
     cdef dict _neighbors_cache
     cdef list _roles_list
     cdef list _agent_containers
+    cdef set _agent_categories
     cdef public object scenario
     cdef public object _spot_cls
     
     cdef AgentIDManager _agent_id_mgr
     cpdef _add_agent_container(self, object category , str initial_placement) except *
-    cdef AgentList get_agent_container(self, category_id) except *
+    cpdef AgentList get_agent_container(self, category_id) except *
     cpdef Spot get_spot(self, long x, long y)
     cdef long _convert_to_1d(self, long x, long y)
     cdef bint _in_bounds(self, long x, long y)

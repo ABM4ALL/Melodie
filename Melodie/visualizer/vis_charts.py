@@ -101,7 +101,10 @@ class Chart(JSONBase, ChartBase):
         :param data_source:
         :return:
         """
-
+        self.set_series([k for k in data_source.keys()])
+        for series_name in data_source.keys():
+            # series = self.get_series(series_name)
+            self.set_series_data_source(series_name, data_source[series_name])
         return self
 
     def get_series(self, series_name: str) -> ChartSeries:
@@ -214,9 +217,8 @@ class BarChart(PieChart):
         self.type = 'bar'
         self._mode = 'single'
 
-    def set_data_source(self, data_source: Callable[[], Dict[str, Union[int, float]]]):
-        self._source = data_source
-        self._mode = 'multi'
+    def set_data_source(self, data_source: Dict[str, Callable[[], Union[int, float]]]):
+        self._sources = data_source
         return self
 
 

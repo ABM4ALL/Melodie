@@ -52,6 +52,7 @@ class Spot(GridItem):
 
 SpotGeneric = TypeVar("SpotGeneric")
 
+
 class Grid(typing.Sequence[AgentGeneric]):
     scenario: "Scenario"
     wrap: bool
@@ -119,3 +120,10 @@ class Grid(typing.Sequence[AgentGeneric]):
     def get_spot_neighborhood(
             self, spot: SpotGeneric, radius=1, moore=True, except_self=True
     ): ...
+
+    @property
+    def get_agent_categories(self) -> Set[int]:
+        ...
+
+    def get_agent_container(self, category_id) -> AgentList:
+        ...
