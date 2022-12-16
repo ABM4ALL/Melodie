@@ -340,6 +340,57 @@
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="Melodie.network.Network.setup_layout_creator">
+<span class="sig-name descname"><span class="pre">setup_layout_creator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">layout_creator</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">nx.Graph</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">NodeType</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">np.ndarray</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.network.Network.setup_layout_creator" title="Permalink to this definition"></a></dt>
+<dd><p>Set the creator function to create network layout.</p>
+<p>The input argument of layout_creator is a networkx graph, and the output was a dict type mapping from node id to
+position.</p>
+<p>For example:
+.. code-block:: python</p>
+<blockquote>
+<div><p>import networkx as nx
+n = Network()
+n.setup_layout_creator(lambda G: nx.spring_layout(G))</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>layout_creator</strong> – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Melodie.network.Network.update_layout">
+<span class="sig-name descname"><span class="pre">update_layout</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.network.Network.update_layout" title="Permalink to this definition"></a></dt>
+<dd><p>Update the layout of network.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Melodie.network.Network.get_position">
+<span class="sig-name descname"><span class="pre">get_position</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent_category</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agent_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.network.Network.get_position" title="Permalink to this definition"></a></dt>
+<dd><p>Get the position of agent.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>agent_category</strong> – </p></li>
+<li><p><strong>agent_id</strong> – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="Melodie.network.Network.setup_agent_connections">
 <span class="sig-name descname"><span class="pre">setup_agent_connections</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent_lists</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="agent_list.html#Melodie.boost.agent_list.AgentList" title="Melodie.boost.agent_list.AgentList"><span class="pre">AgentList</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">network_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">network_params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.network.Network.setup_agent_connections" title="Permalink to this definition"></a></dt>
 <dd><p>Set up the connection between agents.

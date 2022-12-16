@@ -2,6 +2,7 @@ import logging
 from typing import Dict, Set, Union, List, Tuple, Type
 
 import networkx as nx
+import numpy as np
 
 from .boost.basics import Agent
 from .boost.agent_list import AgentList
@@ -77,7 +78,10 @@ class Network:
         self.edges: Dict[NodeType, Dict[NodeType, Edge]] = {}
         self.edge_cls: Type[Edge] = edge_cls if edge_cls is not None else Edge
         self.agent_categories: Dict[int, AgentList] = {}
+
         self.layout = {}
+        self._layout_creator = lambda G: nx.spring_layout(G)
+
         self.setup()
 
     def _setup(self):
@@ -245,15 +249,45 @@ class Network:
             edges.append(edge)
         return edges
 
+    def setup_layout_creator(self, layout_creator: "Callable[[nx.Graph], Dict[NodeType, np.ndarray]]"):
+        """
+        Set the creator function to create network layout.
+
+        The input argument of layout_creator is a networkx graph, and the output was a dict type mapping from node id to
+        position.
+
+        For example:
+        .. code-block:: python
+            import networkx as nx
+            n = Network()
+            n.setup_layout_creator(lambda G: nx.spring_layout(G))
+
+        :param layout_creator:
+        :return:
+        """
+        self._layout_creator = layout_creator
+
     def update_layout(self):
+        """
+        Update the layout of network.
+
+        :return:
+        """
         g = nx.DiGraph()
         for start_node in self.edges.keys():
             for end_node in self.edges[start_node].keys():
                 g.add_edge(start_node, end_node)
-        layout = nx.spring_layout(g)
+        layout = self._layout_creator(g)
         self.layout = layout
 
     def get_position(self, agent_category: int, agent_id: int):
+        """
+        Get the position of agent.
+
+        :param agent_category:
+        :param agent_id:
+        :return:
+        """
         if (agent_category, agent_id) not in self.layout:
             self.update_layout()
         return self.layout[(agent_category, agent_id)] * 1000
