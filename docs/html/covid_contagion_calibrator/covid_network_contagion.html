@@ -19,9 +19,7 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="author" title="About these documents" href="../about.html" />
     <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="CovidContagionCalibrator" href="covid_contagion_calibrator.html" />
-    <link rel="prev" title="CovidGridContagion" href="covid_grid_contagion.html" /> 
+    <link rel="search" title="Search" href="../search.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -40,7 +38,7 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <ul class="current">
+              <ul>
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../installation.html#user-installation">User Installation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../installation.html#developer-installation">Developer Installation</a></li>
@@ -70,30 +68,6 @@
 <li class="toctree-l2"><a class="reference internal" href="../tutorial.html#environment">Environment</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../tutorial.html#datacollector">DataCollector</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../tutorial.html#last-words">Last Words</a></li>
-</ul>
-</li>
-<li class="toctree-l1 current"><a class="reference internal" href="_index.html">Model Gallery</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="covid_grid_contagion.html">CovidGridContagion</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="covid_grid_contagion.html#project-structure">Project Structure</a></li>
-<li class="toctree-l3"><a class="reference internal" href="covid_grid_contagion.html#grid-and-spot">Grid and Spot</a></li>
-<li class="toctree-l3"><a class="reference internal" href="covid_grid_contagion.html#matrix-data">Matrix Data</a></li>
-<li class="toctree-l3"><a class="reference internal" href="covid_grid_contagion.html#model">Model</a></li>
-<li class="toctree-l3"><a class="reference internal" href="covid_grid_contagion.html#gridagent">GridAgent</a></li>
-</ul>
-</li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">CovidNetworkContagion</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#project-structure">Project Structure</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#model">Model</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#scenario">Scenario</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="covid_contagion_calibrator.html">CovidContagionCalibrator</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="covid_contagion_calibrator.html#project-structure">Project Structure</a></li>
-<li class="toctree-l3"><a class="reference internal" href="covid_contagion_calibrator.html#calibrator">Calibrator</a></li>
-<li class="toctree-l3"><a class="reference internal" href="covid_contagion_calibrator.html#algorithm">Algorithm</a></li>
-<li class="toctree-l3"><a class="reference internal" href="covid_contagion_calibrator.html#results">Results</a></li>
-</ul>
-</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../advanced/_index.html">Advanced Topics</a><ul class="simple">
@@ -158,10 +132,9 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="_index.html">Model Gallery</a> &raquo;</li>
       <li>CovidNetworkContagion</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="../_sources/gallery/covid_network_contagion.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/covid_contagion_calibrator/covid_network_contagion.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -173,8 +146,7 @@
 <h1>CovidNetworkContagion<a class="headerlink" href="#covidnetworkcontagion" title="Permalink to this heading"></a></h1>
 <p>To show how the <code class="docutils literal notranslate"><span class="pre">Melodie.Network</span></code> module can be used,
 we provide this <a class="reference external" href="https://github.com/ABM4ALL/CovidNetworkContagion">CovidNetworkContagion</a> model,
-which is based the <a class="reference external" href="https://github.com/ABM4ALL/CovidContagion">CovidContagion</a> model.
-So, before diving in, we strongly suggest you to read the <a class="reference internal" href="../tutorial.html#tutorial"><span class="std std-ref">Tutorial</span></a> section first.</p>
+which is based the <a class="reference external" href="https://github.com/ABM4ALL/CovidContagion">CovidContagion</a> model in the <a class="reference internal" href="../tutorial.html#tutorial"><span class="std std-ref">Tutorial</span></a> section.</p>
 <p>The differences are:</p>
 <ul class="simple">
 <li><p>Agents are connected within a <code class="docutils literal notranslate"><span class="pre">network</span></code> randomly.</p></li>
@@ -183,7 +155,7 @@ So, before diving in, we strongly suggest you to read the <a class="reference in
 <section id="project-structure">
 <h2>Project Structure<a class="headerlink" href="#project-structure" title="Permalink to this heading"></a></h2>
 <p>The project structure is as follows.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>CovidNetworkContagion
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>CovidGridContagion
 ├── data
 │   ├── input
 │   │   ├── SimulatorScenarios.xlsx
@@ -296,17 +268,14 @@ the <code class="docutils literal notranslate"><span class="pre">network</span><
 </pre></div>
 </div>
 </div>
-<p>For more details of the <code class="docutils literal notranslate"><span class="pre">Network</span></code> module, please refer to the <a class="reference internal" href="../api/_index.html#api-reference"><span class="std std-ref">API Reference</span></a> section.</p>
+<p>For more details of the <code class="docutils literal notranslate"><span class="pre">Network</span></code> module, please refer to the <a class="reference internal" href="../api/network.html#network"><span class="std std-ref">Network</span></a> section.</p>
 </section>
 </section>
 
 
            </div>
           </div>
-          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="covid_grid_contagion.html" class="btn btn-neutral float-left" title="CovidGridContagion" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="covid_contagion_calibrator.html" class="btn btn-neutral float-right" title="CovidContagionCalibrator" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-    </div>
+          <footer>
 
   <hr/>
 

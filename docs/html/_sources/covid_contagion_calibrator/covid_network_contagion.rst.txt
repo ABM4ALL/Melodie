@@ -4,8 +4,7 @@ CovidNetworkContagion
 
 To show how the ``Melodie.Network`` module can be used,
 we provide this `CovidNetworkContagion <https://github.com/ABM4ALL/CovidNetworkContagion>`_ model,
-which is based the `CovidContagion <https://github.com/ABM4ALL/CovidContagion>`_ model.
-So, before diving in, we strongly suggest you to read the :ref:`Tutorial` section first.
+which is based the `CovidContagion <https://github.com/ABM4ALL/CovidContagion>`_ model in the :ref:`Tutorial` section.
 
 The differences are:
 
@@ -19,7 +18,7 @@ The project structure is as follows.
 
 ::
 
-    CovidNetworkContagion
+    CovidGridContagion
     ├── data
     │   ├── input
     │   │   ├── SimulatorScenarios.xlsx
@@ -136,7 +135,7 @@ The parameters to setup the ``network`` could be inserted into the model through
                raise NotImplementedError
            return network_params
 
-For more details of the ``Network`` module, please refer to the :ref:`API Reference` section.
+For more details of the ``Network`` module, please refer to the :ref:`Network` section.
 
 
 

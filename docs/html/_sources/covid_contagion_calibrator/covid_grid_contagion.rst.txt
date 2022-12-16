@@ -4,8 +4,7 @@ CovidGridContagion
 
 To show how the ``Melodie.Grid`` module can be used,
 we provide this `CovidGridContagion <https://github.com/ABM4ALL/CovidGridContagion>`_ model,
-which is based the `CovidContagion <https://github.com/ABM4ALL/CovidContagion>`_ model.
-So, before diving in, we strongly suggest you to read the :ref:`Tutorial` section first.
+which is based the `CovidContagion <https://github.com/ABM4ALL/CovidContagion>`_ model in the :ref:`Tutorial` section.
 
 The differences are:
 
@@ -221,7 +220,7 @@ For example, as shown in Line 35-36, when iterating through the ``neighbors`` re
 each neighbor is indexed with both ``category`` and the ``id`` of the agent.
 
 For more details of the ``Grid`` and ``Spot`` modules,
-please refer to the :ref:`API Reference` section.
+please refer to the :ref:`Grid` section.
 
 
 
