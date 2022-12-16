@@ -29,12 +29,9 @@ I take the German translation - \"Melodie\" - as the name of this package.
 **Suggested reading path**
 
 * First, you might want to start with the :ref:`Introduction` section in which you can, first, get a brief idea what agent-based modeling is about; second, get an overview of the modules in Melodie and how they fit together.
-* Second, you can continue with the :ref:`Tutorial` section, in which you can find a minimum agent-based model developed with Melodie. We hope it is simple enough to follow, and on the other hand, we believe it shows a clear structure and the most important components to develop an ABM with Melodie.
-* Third, for your information, we are also working on the following sections:
-
-  * :ref:`Model Gallery`, which provides examples with more modules are used than in the tutorial. You can start developing your own model with the one that is similar to your case.
-  * :ref:`Advanced Topics`, which provides some advanced techniques in using **Melodie**, e.g., empty project creation, speed improvement, etc.
-  * :ref:`API Reference`, which provides the help documentation of **Melodie**.
+* Second, you can continue with the :ref:`Tutorial` section, in which you can find a minimum model (`CovidContagion <https://github.com/ABM4ALL/CovidContagion>`_) developed with Melodie. It is easier to follow but also shows a clear structure and the most important components to develop an ABM with Melodie.
+* Third, since the tutorial only provides a minimum model developed with Melodie, in the :ref:`Model Gallery`, we provide more example models to show how other modules can be used.
+* Fourth, for more details, you may try reading the :ref:`Advanced Topics` and :ref:`API Reference` sections.
 
 Now, let's start the journey :)
 

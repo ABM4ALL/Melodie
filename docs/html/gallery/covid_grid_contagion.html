@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Covid Grid Contagion &mdash; Melodie 0.4.2 documentation</title>
+  <title>CovidGridContagion &mdash; Melodie 0.4.2 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -19,7 +19,9 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="author" title="About these documents" href="../about.html" />
     <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" /> 
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Advanced Topics" href="../advanced/_index.html" />
+    <link rel="prev" title="Model Gallery" href="_index.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -38,7 +40,7 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <ul>
+              <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../installation.html#user-installation">User Installation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../installation.html#developer-installation">Developer Installation</a></li>
@@ -70,7 +72,8 @@
 <li class="toctree-l2"><a class="reference internal" href="../tutorial.html#last-words">Last Words</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="_index.html">Model Gallery</a><ul class="simple">
+<li class="toctree-l1 current"><a class="reference internal" href="_index.html">Model Gallery</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">CovidGridContagion</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../advanced/_index.html">Advanced Topics</a><ul class="simple">
@@ -120,7 +123,8 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>Covid Grid Contagion</li>
+          <li><a href="_index.html">Model Gallery</a> &raquo;</li>
+      <li>CovidGridContagion</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/gallery/covid_grid_contagion.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -130,15 +134,25 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="covid-grid-contagion">
-<h1>Covid Grid Contagion<a class="headerlink" href="#covid-grid-contagion" title="Permalink to this heading"></a></h1>
-<p>Under development.</p>
+  <section id="covidgridcontagion">
+<h1>CovidGridContagion<a class="headerlink" href="#covidgridcontagion" title="Permalink to this heading"></a></h1>
+<p>This <a class="reference external" href="https://github.com/ABM4ALL/CovidGridContagion">CovidGridContagion</a> model follows the
+same structure with the <a class="reference external" href="https://github.com/ABM4ALL/CovidContagion">CovidContagion</a> model.
+The differences are:</p>
+<ul class="simple">
+<li><p>Agents walk on a 2D <code class="docutils literal notranslate"><span class="pre">grid</span></code> randomly.</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">grid</span></code> is constructed with <code class="docutils literal notranslate"><span class="pre">spots</span></code>. Each <code class="docutils literal notranslate"><span class="pre">spot</span></code> has an attribute <code class="docutils literal notranslate"><span class="pre">stay_prob</span></code>, which decides if the agent standing on this spot will move probabilistically.</p></li>
+<li><p>The infected agents can pass the virus to the other uninfected agents in the neighborhood.</p></li>
+</ul>
 </section>
 
 
            </div>
           </div>
-          <footer>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="_index.html" class="btn btn-neutral float-left" title="Model Gallery" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../advanced/_index.html" class="btn btn-neutral float-right" title="Advanced Topics" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
 
   <hr/>
 
