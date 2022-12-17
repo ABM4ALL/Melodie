@@ -4,6 +4,7 @@ import asyncio
 import os
 import queue
 import shutil
+import sys
 from copy import deepcopy
 import threading
 import time
@@ -19,7 +20,7 @@ from websockets.exceptions import ConnectionClosedOK
 from .actions import Action
 from .ws_protocol import MelodieVisualizerProtocol
 
-from MelodieInfra import get_sqlite_filename, MelodieExceptions, Config
+from MelodieInfra import OSTroubleShooter, get_sqlite_filename, MelodieExceptions, Config
 from .params import ParamsManager
 from .vis_agent_series import AgentSeriesManager
 from .vis_charts import ChartManager, Chart, PieChart, BarChart
@@ -174,7 +175,11 @@ class BaseVisualizer:
         self.current_websocket: Optional[MelodieVisualizerProtocol] = None
         self.th: Optional[threading.Thread] = None
 
-        self.start_websocket()
+        try:
+            self.start_websocket()
+        except OSError as err:
+            OSTroubleShooter().handle_exc(err)
+            raise err
 
     @execute_only_enabled
     def start_websocket(self):

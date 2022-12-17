@@ -6,3 +6,4 @@
 
 from .exceptions import *
 from .pretty_warnings import show_prettified_warning, show_link
+from .troubleshooting import OSTroubleShooter
