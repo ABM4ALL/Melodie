@@ -48,3 +48,4 @@ Now, let's start the journey :)
     contribution
     about
     melodie_error_list
+    troubleshooting

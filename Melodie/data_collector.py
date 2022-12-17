@@ -63,6 +63,7 @@ class DataCollector:
 
     def _setup(self):
         self.setup()
+        self._time_elapsed = 0
 
     def time_elapsed(self):
         """

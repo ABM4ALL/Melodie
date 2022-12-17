@@ -5,6 +5,12 @@ Change Log
 Major Version 0.x
 _________________
 
+v0.5.0 (Dec. 17, 2022)
+~~~~~~
+- Added visualizer API on ``Grid`` and ``Network``
+- Fixed port resource holding bugs in ``Trainer``
+- Fixed datacollector time counting bug
+
 v0.4.2 (Dec. 15, 2022)
 ~~~~~~
 - Fixed some errors in the ``Calibrator`` class, including logging, environment property, multiple paths, column names.
