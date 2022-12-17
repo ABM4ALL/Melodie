@@ -5,7 +5,7 @@
 
 **Melodie** is a framework for developing agent-based models (ABMs) in Python.
 The package and its examples are maintained on [ABM4ALL](https://github.com/ABM4ALL).
-For introduction and tutorial of the package, please visit our documentation page.
+For introduction and tutorial of the package, please visit our [documentation](https://abm4all.github.io/Melodie/html/index.html) page.
 
 The package name **Melodie** comes from an example which poetically explains the core concept of complexity theory: **Emergence**.
 In his bold book *Emergent Evolution*, [C. Lloyd Morgan](https://en.wikipedia.org/wiki/C._Lloyd_Morgan) wrote:
