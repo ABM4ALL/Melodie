@@ -47,5 +47,3 @@ Now, let's start the journey :)
     changelog
     contribution
     about
-    melodie_error_list
-    troubleshooting

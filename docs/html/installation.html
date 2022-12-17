@@ -87,9 +87,31 @@
 <li class="toctree-l3"><a class="reference internal" href="gallery/covid_network_contagion.html#scenario">Scenario</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="gallery/covid_contagion_calibrator.html">CovidContagionCalibrator</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="gallery/covid_contagion_calibrator.html#project-structure">Project Structure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gallery/covid_contagion_calibrator.html#calibrator">Calibrator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gallery/covid_contagion_calibrator.html#algorithm">Algorithm</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gallery/covid_contagion_calibrator.html#results">Results</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="advanced/_index.html">Advanced Topics</a><ul class="simple">
+<li class="toctree-l2"><a class="reference internal" href="gallery/covid_contagion_visual.html">CovidContagionVisual</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="gallery/covid_contagion_visual.html#visualizer">Visualizer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gallery/covid_contagion_visual.html#melodiestudio">MelodieStudio</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gallery/covid_contagion_visual.html#how-to-start">How to start?</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="advanced/_index.html">Advanced Topics</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="advanced/troubleshooting.html">TroubleShooting</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="advanced/troubleshooting.html#port-already-in-use">Port Already in use</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="advanced/troubleshooting.html#windows">Windows</a></li>
+<li class="toctree-l4"><a class="reference internal" href="advanced/troubleshooting.html#macos-linux-or-other-nix-systems">MacOS, Linux or other *nix systems</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="advanced/melodie_error_list.html">Melodie Errors</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="api/_index.html">API Reference</a><ul>
@@ -136,14 +158,6 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="about.html">About</a></li>
-<li class="toctree-l1"><a class="reference internal" href="troubleshooting.html">TroubleShooting</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="troubleshooting.html#port-already-in-use">Port Already in use</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="troubleshooting.html#windows">Windows</a></li>
-<li class="toctree-l3"><a class="reference internal" href="troubleshooting.html#macos-linux-or-other-nix-systems">MacOS, Linux or other *nix systems</a></li>
-</ul>
-</li>
-</ul>
-</li>
 </ul>
 
         </div>
@@ -183,7 +197,7 @@
 <h2>Developer Installation<a class="headerlink" href="#developer-installation" title="Permalink to this heading"></a></h2>
 <p>To install for development, first clone the repository and then install
 via pip’s development mode.</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>git clone git@github.com:SongminYu/Melodie.git
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>git clone git@github.com:ABM4ALL/Melodie.git
 <span class="nb">cd</span> Melodie
 
 <span class="c1"># Install the requirements</span>
@@ -195,6 +209,10 @@ python setup.py build_ext -i
 
 <span class="c1"># Run pytest to check if the installation finished successfully.</span>
 pytest
+
+<span class="c1"># Build docs</span>
+<span class="nb">cd</span> docs
+sphinx-autobuild <span class="nb">source</span> html -E -a
 </pre></div>
 </div>
 <p>To keep your local repository up to date, please follow these steps below:</p>
@@ -220,9 +238,9 @@ pytest
 <li><p>networkx</p></li>
 </ul>
 <p>For detailed dependencies, please visit
-<a class="reference external" href="https://github.com/SongminYu/Melodie/blob/master/requirements.txt">requirements.txt</a>
+<a class="reference external" href="https://github.com/ABM4ALL/Melodie/blob/master/requirements.txt">requirements.txt</a>
 and
-<a class="reference external" href="https://github.com/SongminYu/Melodie/blob/master/build_requirements.txt">build_requirements.txt</a></p>
+<a class="reference external" href="https://github.com/ABM4ALL/Melodie/blob/master/build_requirements.txt">build_requirements.txt</a></p>
 </section>
 </section>
 

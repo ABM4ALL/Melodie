@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CovidGridContagion &mdash; Melodie 0.4.2 documentation</title>
+  <title>CovidGridContagion &mdash; Melodie 0.5.0 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -20,7 +20,7 @@
     <link rel="author" title="About these documents" href="../about.html" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Covid Network Contagion" href="covid_network_contagion.html" />
+    <link rel="next" title="CovidNetworkContagion" href="covid_network_contagion.html" />
     <link rel="prev" title="Model Gallery" href="_index.html" /> 
 </head>
 
@@ -81,10 +81,37 @@
 <li class="toctree-l3"><a class="reference internal" href="#gridagent">GridAgent</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="covid_network_contagion.html">Covid Network Contagion</a></li>
+<li class="toctree-l2"><a class="reference internal" href="covid_network_contagion.html">CovidNetworkContagion</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="covid_network_contagion.html#project-structure">Project Structure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="covid_network_contagion.html#model">Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="covid_network_contagion.html#scenario">Scenario</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../advanced/_index.html">Advanced Topics</a><ul class="simple">
+<li class="toctree-l2"><a class="reference internal" href="covid_contagion_calibrator.html">CovidContagionCalibrator</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="covid_contagion_calibrator.html#project-structure">Project Structure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="covid_contagion_calibrator.html#calibrator">Calibrator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="covid_contagion_calibrator.html#algorithm">Algorithm</a></li>
+<li class="toctree-l3"><a class="reference internal" href="covid_contagion_calibrator.html#results">Results</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="covid_contagion_visual.html">CovidContagionVisual</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="covid_contagion_visual.html#visualizer">Visualizer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="covid_contagion_visual.html#melodiestudio">MelodieStudio</a></li>
+<li class="toctree-l3"><a class="reference internal" href="covid_contagion_visual.html#how-to-start">How to start?</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced/_index.html">Advanced Topics</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../advanced/troubleshooting.html">TroubleShooting</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../advanced/troubleshooting.html#port-already-in-use">Port Already in use</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../advanced/troubleshooting.html#windows">Windows</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../advanced/troubleshooting.html#macos-linux-or-other-nix-systems">MacOS, Linux or other *nix systems</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../advanced/melodie_error_list.html">Melodie Errors</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../api/_index.html">API Reference</a><ul>
@@ -107,6 +134,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../changelog.html">Change Log</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../changelog.html#major-version-0-x">Major Version 0.x</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../changelog.html#v0-5-0-dec-17-2022">v0.5.0 (Dec. 17, 2022)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../changelog.html#v0-4-2-dec-15-2022">v0.4.2 (Dec. 15, 2022)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../changelog.html#v0-4-1-dec-12-2022">v0.4.1 (Dec. 12, 2022)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../changelog.html#v0-4-0-nov-15-2022">v0.4.0 (Nov. 15, 2022)</a></li>
@@ -161,7 +189,8 @@
 <h1>CovidGridContagion<a class="headerlink" href="#covidgridcontagion" title="Permalink to this heading"></a></h1>
 <p>To show how the <code class="docutils literal notranslate"><span class="pre">Melodie.Grid</span></code> module can be used,
 we provide this <a class="reference external" href="https://github.com/ABM4ALL/CovidGridContagion">CovidGridContagion</a> model,
-which is based the <a class="reference external" href="https://github.com/ABM4ALL/CovidContagion">CovidContagion</a> model in the <a class="reference internal" href="../tutorial.html#tutorial"><span class="std std-ref">Tutorial</span></a> section.</p>
+which is based the <a class="reference external" href="https://github.com/ABM4ALL/CovidContagion">CovidContagion</a> model.
+So, if you haven’t, we will strongly suggest to read the <a class="reference internal" href="../tutorial.html#tutorial"><span class="std std-ref">Tutorial</span></a> section first.</p>
 <p>The differences are:</p>
 <ul class="simple">
 <li><p>Agents walk on a 2D <code class="docutils literal notranslate"><span class="pre">grid</span></code> randomly.</p></li>
@@ -362,7 +391,7 @@ So, the function <code class="docutils literal notranslate"><span class="pre">se
 For example, as shown in Line 35-36, when iterating through the <code class="docutils literal notranslate"><span class="pre">neighbors</span></code> returned by <code class="docutils literal notranslate"><span class="pre">grid.get_neighbors</span></code>,
 each neighbor is indexed with both <code class="docutils literal notranslate"><span class="pre">category</span></code> and the <code class="docutils literal notranslate"><span class="pre">id</span></code> of the agent.</p>
 <p>For more details of the <code class="docutils literal notranslate"><span class="pre">Grid</span></code> and <code class="docutils literal notranslate"><span class="pre">Spot</span></code> modules,
-please refer to the <a class="reference internal" href="../api/grid.html#grid"><span class="std std-ref">Grid</span></a> section.</p>
+please refer to the <a class="reference internal" href="../api/_index.html#api-reference"><span class="std std-ref">API Reference</span></a> section.</p>
 </section>
 </section>
 
@@ -371,7 +400,7 @@ please refer to the <a class="reference internal" href="../api/grid.html#grid"><
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="_index.html" class="btn btn-neutral float-left" title="Model Gallery" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="covid_network_contagion.html" class="btn btn-neutral float-right" title="Covid Network Contagion" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="covid_network_contagion.html" class="btn btn-neutral float-right" title="CovidNetworkContagion" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

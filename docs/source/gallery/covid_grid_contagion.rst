@@ -5,7 +5,7 @@ CovidGridContagion
 To show how the ``Melodie.Grid`` module can be used,
 we provide this `CovidGridContagion <https://github.com/ABM4ALL/CovidGridContagion>`_ model,
 which is based the `CovidContagion <https://github.com/ABM4ALL/CovidContagion>`_ model.
-So, before diving in, we strongly suggest you to read the :ref:`Tutorial` section first.
+So, if you haven't, we will strongly suggest to read the :ref:`Tutorial` section first.
 
 The differences are:
 

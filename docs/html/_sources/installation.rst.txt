@@ -18,7 +18,7 @@ via pip's development mode.
 
 .. code-block:: shell
 
-   git clone git@github.com:SongminYu/Melodie.git
+   git clone git@github.com:ABM4ALL/Melodie.git
    cd Melodie
 
    # Install the requirements
@@ -30,6 +30,11 @@ via pip's development mode.
 
    # Run pytest to check if the installation finished successfully.
    pytest
+
+   # Build docs
+   cd docs
+   sphinx-autobuild source html -E -a
+
 
 To keep your local repository up to date, please follow these steps below:
 
@@ -55,7 +60,7 @@ The dependencies that related to functionalities of Melodie are listed below.
 * networkx
 
 For detailed dependencies, please visit
-`requirements.txt <https://github.com/SongminYu/Melodie/blob/master/requirements.txt>`_
+`requirements.txt <https://github.com/ABM4ALL/Melodie/blob/master/requirements.txt>`_
 and
-`build_requirements.txt <https://github.com/SongminYu/Melodie/blob/master/build_requirements.txt>`_
+`build_requirements.txt <https://github.com/ABM4ALL/Melodie/blob/master/build_requirements.txt>`_
 

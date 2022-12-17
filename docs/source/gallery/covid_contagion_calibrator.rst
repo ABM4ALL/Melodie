@@ -6,7 +6,7 @@ To show how the ``Calibrator`` module can be used,
 we provide this `CovidContagionCalibrator <https://github.com/ABM4ALL/CovidContagionCalibrator>`_ model,
 which is almost same with the `CovidContagion <https://github.com/ABM4ALL/CovidContagion>`_ model.
 The only difference is that, we can run it with another :ref:`Modelling Manager` - ``Calibrator``.
-So, before diving in, we strongly suggest you to read the :ref:`Tutorial` section first.
+So, if you haven't, we will strongly suggest to read the :ref:`Tutorial` section first.
 
 Project Structure
 _________________
