@@ -361,7 +361,7 @@ class GATrainerAlgorithm:
         env_record.update(env_data)
 
         create_db_conn(self.manager.config).write_dataframe(
-            "env_trainer_result", pd.DataFrame([env_record]), if_exists="append"
+            "environment_trainer_result", pd.DataFrame([env_record]), if_exists="append"
         )
 
         return agent_records, env_record
@@ -415,7 +415,7 @@ class GATrainerAlgorithm:
             cov = env_df[prop_name].std() / env_df[prop_name].mean()
             env_record.update({prop_name + "_mean": mean, prop_name + "_cov": cov})
         create_db_conn(self.manager.config).write_dataframe(
-            "env_trainer_result_cov", pd.DataFrame([env_record]), if_exists="append"
+            "environment_trainer_result_cov", pd.DataFrame([env_record]), if_exists="append"
         )
 
     def pre_check(self, meta):
