@@ -77,29 +77,13 @@ the class variables of the ``model``, the ``scenario``, and the ``data_loader``.
 
 At last, by calling the ``simulator.run`` function, the simulation starts.
 
-.. comment::
-
-    Studio
-    ~~~~~~
-
-    Optional modules for visualization, incl. interactive figures and database.
-    Or, shall we make it open-source at all? The three clusters above are already well enough for research.
-
-    We can plan a few separate modules surrounding **Melodie** for developing products like AMETS for business.
-
-    * MelodieStudio
-    * MelodieData - RenderDict, DataFrameInfo, etc.
-
-    The **Studio Cluster** includes the modules
-
-    * ``Visualizer`` -
-    * ``MelodieStudio`` -
-
 Infrastructure
 ~~~~~~~~~~~~~~
 
 The last **Infrastructure Cluster** includes the modules that provide support for the modules above.
 
+* ``Visualizer`` - provides the APIs to interact with ``MelodieStudio`` for visualization.
+* ``MelodieStudio`` - another separate package which goes in parallel with ``Melodie``, which supports the visualization of simulation results in your browser.
 * ``Config`` - provides the channel to define project information, e.g., project name, folder paths.
 * ``DBConn`` - provides the functions to write to or read from the database.
 * ``MelodieException`` - provides the pre-defined exceptions in Melodie to support debugging.

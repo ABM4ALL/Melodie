@@ -87,9 +87,31 @@
 <li class="toctree-l3"><a class="reference internal" href="gallery/covid_network_contagion.html#scenario">Scenario</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="gallery/covid_contagion_calibrator.html">CovidContagionCalibrator</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="gallery/covid_contagion_calibrator.html#project-structure">Project Structure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gallery/covid_contagion_calibrator.html#calibrator">Calibrator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gallery/covid_contagion_calibrator.html#algorithm">Algorithm</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gallery/covid_contagion_calibrator.html#results">Results</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="advanced/_index.html">Advanced Topics</a><ul class="simple">
+<li class="toctree-l2"><a class="reference internal" href="gallery/covid_contagion_visual.html">CovidContagionVisual</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="gallery/covid_contagion_visual.html#visualizer">Visualizer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gallery/covid_contagion_visual.html#melodiestudio">MelodieStudio</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gallery/covid_contagion_visual.html#how-to-start">How to start?</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="advanced/_index.html">Advanced Topics</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="advanced/troubleshooting.html">TroubleShooting</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="advanced/troubleshooting.html#port-already-in-use">Port Already in use</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="advanced/troubleshooting.html#windows">Windows</a></li>
+<li class="toctree-l4"><a class="reference internal" href="advanced/troubleshooting.html#macos-linux-or-other-nix-systems">MacOS, Linux or other *nix systems</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="advanced/melodie_error_list.html">Melodie Errors</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="api/_index.html">API Reference</a><ul>
@@ -136,14 +158,6 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="about.html">About</a></li>
-<li class="toctree-l1"><a class="reference internal" href="troubleshooting.html">TroubleShooting</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="troubleshooting.html#port-already-in-use">Port Already in use</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="troubleshooting.html#windows">Windows</a></li>
-<li class="toctree-l3"><a class="reference internal" href="troubleshooting.html#macos-linux-or-other-nix-systems">MacOS, Linux or other *nix systems</a></li>
-</ul>
-</li>
-</ul>
-</li>
 </ul>
 
         </div>
@@ -244,6 +258,8 @@ the class variables of the <code class="docutils literal notranslate"><span clas
 <h3>Infrastructure<a class="headerlink" href="#infrastructure" title="Permalink to this heading"></a></h3>
 <p>The last <strong>Infrastructure Cluster</strong> includes the modules that provide support for the modules above.</p>
 <ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Visualizer</span></code> - provides the APIs to interact with <code class="docutils literal notranslate"><span class="pre">MelodieStudio</span></code> for visualization.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">MelodieStudio</span></code> - another separate package which goes in parallel with <code class="docutils literal notranslate"><span class="pre">Melodie</span></code>, which supports the visualization of simulation results in your browser.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">Config</span></code> - provides the channel to define project information, e.g., project name, folder paths.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">DBConn</span></code> - provides the functions to write to or read from the database.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">MelodieException</span></code> - provides the pre-defined exceptions in Melodie to support debugging.</p></li>
