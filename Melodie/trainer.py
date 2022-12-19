@@ -494,13 +494,13 @@ class RelatedAgentContainerModel:
             container_name: str,
             used_properties: List[str],
             recorded_properties: List[str],
-            agent_ids: Callable[[Scenario], List[int]],
+            agent_ids: Optional[Callable[[Scenario], List[int]]] = None,
     ):
         self.container_name = container_name
         self.used_properties = used_properties
         self.recorded_properties = recorded_properties
 
-        self.agent_ids = agent_ids
+        self.agent_ids: Optional[Callable[[Scenario], List[int]]] = agent_ids
 
 
 class AgentContainerManager:
@@ -516,7 +516,7 @@ class AgentContainerManager:
             self,
             container_name: str,
             used_properties: List[str],
-            agent_ids: Callable[[Scenario], List[int]],
+            agent_ids: Optional[Callable[[Scenario], List[int]]],
     ):
         """
         Add a container used in trainer.
@@ -580,19 +580,19 @@ class Trainer(BaseModellingManager):
 
     def add_agent_training_property(
             self,
-            container_name: str,
-            used_properties: List[str],
-            agent_ids: Callable[[Scenario], List[int]],
+            agent_list_name: str,
+            training_attributes: List[str],
+            agent_ids: Callable[[Scenario], List[int]]
     ):
         """
         Add a container into the trainer.
 
-        :param container_name: The name of agent container.
-        :param used_properties: The properties used in training.
+        :param agent_list_name: The name of agent container.
+        :param training_attributes: The properties used in training.
         :param agent_ids: The agent with id contained in `agent_ids` will be trained.
         :return: None
         """
-        self.container_manager.add_container(container_name, used_properties, agent_ids)
+        self.container_manager.add_container(agent_list_name, training_attributes, agent_ids)
 
     def setup(self):
         pass
