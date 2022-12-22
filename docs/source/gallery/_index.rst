@@ -12,6 +12,7 @@ we provide more example models to show how the other modules can be used.
     covid_grid_contagion
     covid_network_contagion
     covid_contagion_calibrator
+    rock_paper_scissors
     covid_contagion_visual
 
 .. toctree::
