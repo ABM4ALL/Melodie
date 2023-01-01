@@ -3,7 +3,7 @@ Introduction
 ============
 
 Agent-based Model (ABM)
------------------------
+_______________________
 
 ABMs characterize physical, biological, and social economic systems as dynamic `interactions` among `agents` from a bottom-up perspective.
 The `agents` can be molecules, animals, or human beings.
@@ -16,7 +16,7 @@ Besides, taking social economic systems as example, ABMs are also flexible to co
 (2) `bounded rationality and adaptation behavior` based on psychological and behavioral studies.
 
 Melodie Framework
------------------
+_________________
 
 As a general framework for developing agent-based models (ABMs),
 **Melodie** is designed in a modular structure and the modules are organized into four clusters:
@@ -26,7 +26,7 @@ Model
 ~~~~~
 
 The modules in the **Model Cluster** focus on describing the logics of the target system.
-Developed with ``Melodie``, a ``model: Model`` object can contain following components:
+Developed with **Melodie**, a ``model: Model`` object can contain following components:
 
 * ``agent: Agent`` - makes decisions, interacts with others, and stores the micro-level variables.
 * ``agents: AgentList`` - contains a list of agents and provides relevant functions.
@@ -83,10 +83,20 @@ Infrastructure
 The last **Infrastructure Cluster** includes the modules that provide support for the modules above.
 
 * ``Visualizer`` - provides the APIs to interact with ``MelodieStudio`` for visualization.
-* ``MelodieStudio`` - another separate package which goes in parallel with ``Melodie``, which supports the visualization of simulation results in your browser.
+* ``MelodieStudio`` - another separate package which goes in parallel with **Melodie**, which supports the visualization of simulation results in your browser.
 * ``Config`` - provides the channel to define project information, e.g., project name, folder paths.
 * ``DBConn`` - provides the functions to write to or read from the database.
-* ``MelodieException`` - provides the pre-defined exceptions in Melodie to support debugging.
+* ``MelodieException`` - provides the pre-defined exceptions in **Melodie** to support debugging.
+
+
+
+
+
+
+
+
+
+
 
 
 
