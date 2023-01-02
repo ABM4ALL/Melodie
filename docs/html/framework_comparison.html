@@ -569,12 +569,12 @@ Then, the <code class="docutils literal notranslate"><span class="pre">dictionar
 <span class="linenos"> 9</span><span class="k">def</span> <span class="nf">run_mesa</span><span class="p">():</span>
 <span class="linenos">10</span>    <span class="n">scenarios_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;data/input&#39;</span><span class="p">,</span> <span class="s1">&#39;SimulatorScenarios.xlsx&#39;</span><span class="p">))</span>
 <span class="linenos">11</span>    <span class="k">for</span> <span class="n">scenario_params</span> <span class="ow">in</span> <span class="n">scenarios_df</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="n">orient</span><span class="o">=</span><span class="s1">&#39;records&#39;</span><span class="p">):</span>
-<span class="linenos">12</span>        <span class="n">scenario_id</span> <span class="o">=</span> <span class="n">scenario_params</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">)</span>
-<span class="linenos">13</span>        <span class="n">period_num</span> <span class="o">=</span> <span class="n">scenario_params</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;period_num&#39;</span><span class="p">)</span>
+<span class="linenos">12</span>        <span class="n">scenario_id</span> <span class="o">=</span> <span class="n">scenario_params</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span>
+<span class="linenos">13</span>        <span class="n">period_num</span> <span class="o">=</span> <span class="n">scenario_params</span><span class="p">[</span><span class="s1">&#39;period_num&#39;</span><span class="p">]</span>
 <span class="hll"><span class="linenos">14</span>        <span class="n">model</span> <span class="o">=</span> <span class="n">CovidModel</span><span class="p">(</span><span class="o">**</span><span class="n">scenario_params</span><span class="p">)</span>
 </span><span class="linenos">15</span>        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">period_num</span><span class="p">):</span>
 <span class="linenos">16</span>            <span class="n">model</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
-<span class="linenos">17</span>        <span class="n">plot_result</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">scenario_id</span><span class="p">)</span>
+<span class="linenos">17</span>        <span class="n">plot_result</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">datacollector</span><span class="o">.</span><span class="n">get_model_vars_dataframe</span><span class="p">(),</span> <span class="n">scenario_id</span><span class="p">)</span>
 <span class="linenos">18</span>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">20</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Scenario </span><span class="si">{</span><span class="n">scenario_id</span><span class="si">}</span><span class="s2"> finished&quot;</span><span class="p">,</span> <span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">20</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -594,9 +594,29 @@ Then, the <code class="docutils literal notranslate"><span class="pre">dictionar
 </span></pre></div>
 </div>
 </div>
-<p>Besides, <strong>Mesa</strong> also has a <code class="docutils literal notranslate"><span class="pre">batch_run</span></code> function that can
-(1) iterate through the pre-defined scenarios (similar to the <code class="docutils literal notranslate"><span class="pre">simulator</span></code> in <strong>Melodie</strong>), or
-(2) sweep the parameter space of a given model.</p>
+<p>Besides, <strong>Mesa</strong> also has a <code class="docutils literal notranslate"><span class="pre">FixedBatchRunner</span></code> class that can
+iterate through the pre-defined scenarios (similar to the <code class="docutils literal notranslate"><span class="pre">simulator</span></code> in <strong>Melodie</strong>).</p>
+<div class="literal-block-wrapper docutils container" id="id19">
+<div class="code-block-caption"><span class="caption-text">run_mesa.py</span><a class="headerlink" href="#id19" title="Permalink to this code"></a></div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span> <span class="nn">os</span>
+<span class="linenos"> 2</span>
+<span class="linenos"> 3</span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="linenos"> 4</span>
+<span class="linenos"> 5</span><span class="kn">from</span> <span class="nn">source_mesa.analyzer</span> <span class="kn">import</span> <span class="n">plot_result</span>
+<span class="linenos"> 6</span><span class="kn">from</span> <span class="nn">source_mesa.model</span> <span class="kn">import</span> <span class="n">CovidModel</span>
+<span class="linenos"> 7</span>
+<span class="linenos"> 8</span>
+<span class="linenos"> 9</span><span class="k">def</span> <span class="nf">run_mesa_with_batch_runner</span><span class="p">():</span>
+<span class="linenos">10</span>    <span class="n">scenarios_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;data/input&#39;</span><span class="p">,</span> <span class="s1">&#39;SimulatorScenarios.xlsx&#39;</span><span class="p">))</span>
+<span class="linenos">11</span>    <span class="n">params</span> <span class="o">=</span> <span class="n">scenarios_df</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="n">orient</span><span class="o">=</span><span class="s2">&quot;records&quot;</span><span class="p">)</span>
+<span class="hll"><span class="linenos">12</span>    <span class="n">runner</span> <span class="o">=</span> <span class="n">FixedBatchRunner</span><span class="p">(</span><span class="n">CovidModel</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">max_steps</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;period_num&#39;</span><span class="p">])</span>
+</span><span class="linenos">13</span>    <span class="n">runner</span><span class="o">.</span><span class="n">run_all</span><span class="p">()</span>
+<span class="linenos">14</span>    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">report_value</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">runner</span><span class="o">.</span><span class="n">datacollector_model_reporters</span><span class="o">.</span><span class="n">values</span><span class="p">()):</span>
+<span class="linenos">15</span>        <span class="n">scenario_id</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;id&#39;</span><span class="p">]</span>
+<span class="linenos">16</span>        <span class="n">plot_result</span><span class="p">(</span><span class="n">report_value</span><span class="p">,</span> <span class="n">scenario_id</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
 </section>
 <section id="id6">
 <h3>AgentPy<a class="headerlink" href="#id6" title="Permalink to this heading"></a></h3>
@@ -606,8 +626,8 @@ However, there are two main differences compared with <strong>Mesa</strong>:</p>
 <li><p>First, in Line 12, the <code class="docutils literal notranslate"><span class="pre">parameters</span></code> passed into <code class="docutils literal notranslate"><span class="pre">ap.Experiment</span></code> (not <code class="docutils literal notranslate"><span class="pre">model</span></code>) is actually “a list of dictionaries”. Because <strong>AgentPy</strong> supports batching scenario runs with the <code class="docutils literal notranslate"><span class="pre">Experiment</span></code> module, which is similar to the <code class="docutils literal notranslate"><span class="pre">Simulator</span></code> in <strong>Melodie</strong>. They are both at a higher level than <code class="docutils literal notranslate"><span class="pre">model</span></code>.</p></li>
 <li><p>Second, in the <code class="docutils literal notranslate"><span class="pre">model</span></code>, the <code class="docutils literal notranslate"><span class="pre">dictionary</span></code> can be accessed as <code class="docutils literal notranslate"><span class="pre">model.p</span></code> whenever needed, not only when initializing the <code class="docutils literal notranslate"><span class="pre">model</span></code>. In <strong>Melodie</strong>, the <code class="docutils literal notranslate"><span class="pre">scenario</span></code> can also be accessed whenever needed. Furthermore, it can be accessed by the <code class="docutils literal notranslate"><span class="pre">model</span></code> and all of its components.</p></li>
 </ul>
-<div class="literal-block-wrapper docutils container" id="id19">
-<div class="code-block-caption"><span class="caption-text">run_agentpy.py</span><a class="headerlink" href="#id19" title="Permalink to this code"></a></div>
+<div class="literal-block-wrapper docutils container" id="id20">
+<div class="code-block-caption"><span class="caption-text">run_agentpy.py</span><a class="headerlink" href="#id20" title="Permalink to this code"></a></div>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span> <span class="nn">os.path</span>
 <span class="linenos"> 2</span>
 <span class="linenos"> 3</span><span class="kn">import</span> <span class="nn">agentpy</span> <span class="k">as</span> <span class="nn">ap</span>
@@ -654,8 +674,8 @@ For example, in the <code class="docutils literal notranslate"><span class="pre"
 <li><p>Second, optionally, some <code class="docutils literal notranslate"><span class="pre">environment</span></code> properties that are interesting to look at their evolution in the calibration process (Line 10);</p></li>
 <li><p>Third, the <code class="docutils literal notranslate"><span class="pre">distance</span></code> between the model output and a pre-defined “target” (Line 12-13), which is the percentage of “uninfected people” in the population by the end of the simulation.</p></li>
 </ul>
-<div class="literal-block-wrapper docutils container" id="id20">
-<div class="code-block-caption"><span class="caption-text">calibrator.py</span><a class="headerlink" href="#id20" title="Permalink to this code"></a></div>
+<div class="literal-block-wrapper docutils container" id="id21">
+<div class="code-block-caption"><span class="caption-text">calibrator.py</span><a class="headerlink" href="#id21" title="Permalink to this code"></a></div>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">from</span> <span class="nn">Melodie</span> <span class="kn">import</span> <span class="n">Calibrator</span>
 <span class="linenos"> 2</span>
 <span class="linenos"> 3</span><span class="kn">from</span> <span class="nn">source.environment</span> <span class="kn">import</span> <span class="n">CovidEnvironment</span>

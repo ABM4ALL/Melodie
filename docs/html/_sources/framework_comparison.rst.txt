@@ -389,12 +389,12 @@ Then, the ``dictionary`` is used to initialize the model (Line 7-10 in ``source_
    def run_mesa():
        scenarios_df = pd.read_excel(os.path.join('data/input', 'SimulatorScenarios.xlsx'))
        for scenario_params in scenarios_df.to_dict(orient='records'):
-           scenario_id = scenario_params.pop('id')
-           period_num = scenario_params.pop('period_num')
+           scenario_id = scenario_params['id']
+           period_num = scenario_params['period_num']
            model = CovidModel(**scenario_params)
            for i in range(period_num):
                model.step()
-           plot_result(model, scenario_id)
+           plot_result(model.datacollector.get_model_vars_dataframe(), scenario_id)
            print("=" * 20, f"Scenario {scenario_id} finished", "=" * 20)
 
 .. code-block:: Python
@@ -413,9 +413,30 @@ Then, the ``dictionary`` is used to initialize the model (Line 7-10 in ``source_
            self.young_percentage = kwargs["young_percentage"]
            self.infection_prob = kwargs["infection_prob"]
 
-Besides, **Mesa** also has a ``batch_run`` function that can
-(1) iterate through the pre-defined scenarios (similar to the ``simulator`` in **Melodie**), or
-(2) sweep the parameter space of a given model.
+Besides, **Mesa** also has a ``FixedBatchRunner`` class that can
+iterate through the pre-defined scenarios (similar to the ``simulator`` in **Melodie**).
+
+.. code-block:: Python
+   :caption: run_mesa.py
+   :linenos:
+   :emphasize-lines: 12
+
+   import os
+
+   import pandas as pd
+
+   from source_mesa.analyzer import plot_result
+   from source_mesa.model import CovidModel
+
+
+   def run_mesa_with_batch_runner():
+       scenarios_df = pd.read_excel(os.path.join('data/input', 'SimulatorScenarios.xlsx'))
+       params = scenarios_df.to_dict(orient="records")
+       runner = FixedBatchRunner(CovidModel, params, max_steps=params[0]['period_num'])
+       runner.run_all()
+       for i, report_value in enumerate(runner.datacollector_model_reporters.values()):
+           scenario_id = params[i]['id']
+           plot_result(report_value, scenario_id)
 
 AgentPy
 ~~~~~~~
