@@ -307,7 +307,7 @@ Finally, the ``DataCollector`` class is also separated and enhanced in **Melodie
 
 * First, like in **Mesa** and **AgentPy**, the users can define which variables to be collected (1) at the micro-level from the ``agents``, or (2) at the macro-level from the ``environment``. Then, they will be automatically collected in each period and saved in the database.
 * Second, the users can also define functions for parsing specific data structure from the ``agents`` and the ``environment`` and saving them in the database.
-* Third, with a ``db`` attribute, the ``data_collector`` can interact with the database easily.
+* Third, with a ``db`` attribute, the ``data_collector`` can interact with the database easily. **Melodie** uses a ``.sqlite`` database by default. The ``data_collector`` writes the results into the ``.sqlite`` file after each simulation run instead of holding them in the memory.
 
 Scenario Management
 ___________________
