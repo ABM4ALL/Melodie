@@ -286,8 +286,9 @@ so that  by the end of the simulation, the share of uninfected population is 50%
 <span class="linenos"> 9</span>        <span class="bp">self</span><span class="o">.</span><span class="n">add_scenario_calibrating_property</span><span class="p">(</span><span class="s2">&quot;infection_prob&quot;</span><span class="p">)</span>
 <span class="hll"><span class="linenos">10</span>        <span class="bp">self</span><span class="o">.</span><span class="n">add_environment_property</span><span class="p">(</span><span class="s2">&quot;s0&quot;</span><span class="p">)</span>
 </span><span class="linenos">11</span>
-<span class="linenos">12</span>    <span class="k">def</span> <span class="nf">distance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">environment</span><span class="p">:</span> <span class="s2">&quot;CovidEnvironment&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<span class="hll"><span class="linenos">13</span>        <span class="k">return</span> <span class="p">(</span><span class="n">environment</span><span class="o">.</span><span class="n">s0</span> <span class="o">/</span> <span class="n">environment</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">agent_num</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span>
+<span class="linenos">12</span>    <span class="k">def</span> <span class="nf">distance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="s2">&quot;CovidModel&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="linenos">13</span>        <span class="n">environment</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">environment</span>
+<span class="hll"><span class="linenos">14</span>        <span class="k">return</span> <span class="p">(</span><span class="n">environment</span><span class="o">.</span><span class="n">s0</span> <span class="o">/</span> <span class="n">environment</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">agent_num</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span>
 </span></pre></div>
 </div>
 </div>
@@ -300,9 +301,11 @@ the longer time it could take and the lower quality of the results might be.
 Additionally, as shown in Line 10, you can also <code class="docutils literal notranslate"><span class="pre">add_environment_property</span></code> so that they can be included in the result tables (see below).</p>
 <p>Second, in the <code class="docutils literal notranslate"><span class="pre">distance</span></code> function,
 you can define how the distance between the <strong>model output</strong> and the <strong>empirical data</strong> is measured.
-In Line 14, <code class="docutils literal notranslate"><span class="pre">environment.s0</span></code> is the count of uninfected agents in each period.
-However, please note that, the calibrator will automatically takes the value in the last period of simulation.
-This is also the case in Line 10, when recording the <code class="docutils literal notranslate"><span class="pre">environment.s0</span></code> value.</p>
+The parameter of the <code class="docutils literal notranslate"><span class="pre">distance</span></code> function must be <code class="docutils literal notranslate"><span class="pre">model</span></code>,
+so that all the input data can be accessed through <code class="docutils literal notranslate"><span class="pre">model.scenario</span></code>,
+and all the macro- and micro-variables can be accessed through <code class="docutils literal notranslate"><span class="pre">model.environment</span></code> and <code class="docutils literal notranslate"><span class="pre">model.agents</span></code>.
+But, please note that, the values are all the values by the end of the simulation.
+In this example, the calibration target is “50% of the agents are not infected by the end of simulation”,</p>
 </section>
 <section id="algorithm">
 <h2>Algorithm<a class="headerlink" href="#algorithm" title="Permalink to this heading"></a></h2>
