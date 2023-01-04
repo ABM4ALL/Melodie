@@ -95,7 +95,7 @@ But the values do not matter, as they will be initialized (changed) later.
 Scenario
 ________
 
-As introduced in the :ref:`Scenario` section, ``scenario`` contains all the input data that is needed to run the model,
+As introduced in the :ref:`Introduction` section, ``scenario`` contains all the input data that is needed to run the model,
 and can be accessed by the ``model``, the ``environment``, the ``data_collector``, and each ``agent``.
 All the data are stored in dataframes, which are
 
@@ -149,7 +149,7 @@ This is done in the ``data_loader.py`` file, as shown below, in Line 35-47.
 .. code-block:: Python
    :caption: data_loader.py
    :linenos:
-   :emphasize-lines: 15-19, 35-37, 42, 47
+   :emphasize-lines: 15-19, 36-38, 42, 47
 
    from typing import TYPE_CHECKING, Dict, Any
 
@@ -199,7 +199,7 @@ This is done in the ``data_loader.py`` file, as shown below, in Line 35-47.
 
                g.set_row_generator(generator_func)
 
-To generate ``agent_params``, ``Melodie`` provides the ``dataframe_generator``, which takes three inputs:
+To generate ``agent_params``, ``Melodie`` provides the ``dataframe_generator`` (Line 36-38), which takes three inputs:
 
 * ``data_info.agent_params`` (Line 37), which contains the information of ``agent_params``.
 * ``lambda scenario: scenario.agent_num`` (Line 37), based on which, in Line 42, the ``g.increment`` function is provided by the ``dataframe_generator`` to generate the ``id`` for all the agents.
