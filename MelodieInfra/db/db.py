@@ -56,7 +56,7 @@ class DBConn:
         """
         Get the connection
 
-        :return:
+        :return: Database engine
         """
         return self.connection
 
@@ -64,7 +64,7 @@ class DBConn:
         """
         Create a connection to the sqlite database.
 
-        :param database_name:
+        :param database_name: Name of sqlite database file.
         :return:
         """
         return sqlalchemy.create_engine(
@@ -76,9 +76,9 @@ class DBConn:
         """
         Create from existing database
 
-        :param type: 'sqlite'
-        :param meta: {'path': 'path-to-sqlite'}
-        :return:
+        :param type: Only support 'sqlite' now.
+        :param meta: A dict like ``{'path': 'path-to-sqlite'}``
+        :return: Database engine.
         """
         assert type in {"sqlite"}
         return sqlalchemy.create_engine(f"sqlite:///{os.path.join(meta['path'])}")
@@ -87,8 +87,6 @@ class DBConn:
     def register_dtypes(cls, table_name: str, dtypes: TABLE_DTYPES):
         """
         Register data types of a table for sqlalchemy.
-
-        :return:
         """
         MelodieExceptions.Assertions.Type("dtypes", dtypes, dict)
         if table_name in cls.table_dtypes:
@@ -103,7 +101,7 @@ class DBConn:
         Get the data type of a table.
         If table data type is not specified, return an empty dict.
 
-        :param table_name:
+        :param table_name: Name of table in database.
         :return:
         """
         if table_name in cls.table_dtypes:
@@ -114,16 +112,12 @@ class DBConn:
     def close(self):
         """
         Close DB connection.
-
-        :return:
         """
         self.connection.dispose()
 
     def clear_database(self):
         """
         Clear the database, deleting all tables.
-
-        :return:
         """
         logger.info(f"Database contains tables: {self.connection.table_names()}.")
         table_names = list(self.connection.table_names())
@@ -141,10 +135,10 @@ class DBConn:
         """
         Write a dataframe to database.
 
-        :param table_name: table_name
-        :param data_frame:
+        :param table_name: Name of table.
+        :param data_frame: The dataframe to be written into the database.
         :param data_types: The data type for columns.
-        :param if_exists: {'replace', 'fail', 'append'}
+        :param if_exists: A string in {'replace', 'fail', 'append'}.
         :return:
         """
         if data_types is None:
@@ -177,11 +171,10 @@ class DBConn:
                                                        conditions=[('id', "<=100"), ("health_state", '=1')])
             print(df)
 
-        :param table_name:
-        :param id_scenario:
-        :param id_run:
-        :param conditions:
-        :return:
+        :param table_name: Name of table inside database.
+        :param id_scenario: Filter of scenario
+        :param id_run: Filter of run_id
+        :param conditions: Custom conditions
         """
         where_condition_phrase = ""
         condition_phrases = []
@@ -208,7 +201,7 @@ class DBConn:
         """
         Drop table if it exists.
 
-        :param table_name:
+        :param table_name: The name of table to drop.
         :return:
         """
         self.connection.execute(f"drop table if exists  {table_name} ;")
@@ -217,7 +210,7 @@ class DBConn:
         """
         Execute sql command and return the result by pd.DataFrame.
 
-        :param sql:
+        :param sql: SQL phrase to execute.
         :return:
         """
         return pd.read_sql(sql, self.connection)
@@ -227,11 +220,14 @@ def create_db_conn(config: "Config") -> DBConn:
     """
     create a Database by current config
 
-    :return:
+    :return: DBConn object.
     """
 
     return DBConn(config.project_name, conn_params={"db_path": config.output_folder})
 
 
 def get_sqlite_filename(config: "Config") -> str:
+    """
+    Get SQLite database filename from Melodie project config.
+    """
     return os.path.join(config.output_folder, config.project_name + SQLITE_FILE_SUFFIX)

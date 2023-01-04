@@ -20,7 +20,12 @@ logger = logging.getLogger(__name__)
 
 class ModelRunRoutine:
     """
-    This is an simple iterator for model run
+    A simple iterator for model run.
+
+
+    When calling ``Model.iterator()`` method, a ModelRunRoutine object will be created, yielding an ``int``  value
+    reprensenting the current number of step, ranging ``[0, max_step - 1]``.
+
 
     """
 
@@ -79,17 +84,17 @@ class Model:
         """
         self.visualizer = None
 
-    def setup(self):
+    def create(self):
         """
-        General method for setting up the model.
+        An initialization method, which is called immediately right after the ``Model`` object is created.
 
         :return: None
         """
         pass
 
-    def create(self):
+    def setup(self):
         """
-        This method will be called automatically before setup()
+        General method for model setup, which is called after ``Model.create()``
 
         :return: None
         """
@@ -97,7 +102,7 @@ class Model:
 
     def create_db_conn(self) -> "DBConn":
         """
-        Create database connection for model
+        Create a database connection with the project configuration.
 
         :return: DBConn object
         """
@@ -108,7 +113,7 @@ class Model:
             agent_class: Type["Agent"],
     ):
         """
-        Create one agent list of model.
+        Create an agent list object. A model could contain multiple ``AgentList``s.
 
         :param agent_class: The class of desired agent type.
         :return: Agentlist object created
@@ -117,7 +122,7 @@ class Model:
 
     def create_environment(self, env_class: Type["Environment"]):
         """
-        Create the environment of model.
+        Create the environment of model. Notice that a model has only one environment.
 
         :param env_class:
         :return: Environment object created
@@ -130,11 +135,11 @@ class Model:
 
     def create_grid(self, grid_cls: Type["Grid"] = None, spot_cls: Type["Spot"] = None):
         """
-        Create the grid of model
+        Create a grid.
 
-        :param grid_cls:
-        :param spot_cls:
-        :return: Grid object created
+        :param grid_cls: The class of grid, ``Melodie.Grid`` by default.
+        :param spot_cls: The class of spot, ``Melodie.Spot`` by default.
+        :return: Grid object.
         """
         grid_cls = grid_cls if grid_cls is not None else Grid
         spot_cls = spot_cls if spot_cls is not None else Spot
@@ -146,10 +151,10 @@ class Model:
             self, network_cls: Type["Network"] = None, edge_cls: Type["Edge"] = None
     ):
         """
-        Create the network of model
+        Create the network of model.
 
-        :param network_cls:
-        :param edge_cls:
+        :param network_cls: The type of network object, ``Melodie.Network`` by default.
+        :param edge_cls: The type of edge object, ``Melodie.Edge`` by default.
         :return: Network object created
         """
         if network_cls is None:
@@ -162,7 +167,7 @@ class Model:
         """
         Create the data collector of model.
 
-        :param data_collector_cls: The custom datacollector class.
+        :param data_collector_cls: The datacollector class, must be a custom class inheriting ``Melodie.DataCollector``.
         :return: Datacollector object created.
         """
         data_collector = data_collector_cls()
@@ -177,14 +182,14 @@ class Model:
             initial_num: int,
             params_df: pd.DataFrame = None,
             container_type: str = "list",
-    ) -> Union[AgentList]:
+    ) -> Union[AgentList, AgentDict]:
         """
-        Create a container for agents
+        Create a container for agents.
 
         :param agent_class:
         :param initial_num: Initial number of agents
-        :param params_df:   pandas DataFrame
-        :param container_type: "list" or "dict"
+        :param params_df:   Pandas DataFrame
+        :param container_type: a str, "list" or "dict"
         :return: Agent container created
         """
         from Melodie import AgentList

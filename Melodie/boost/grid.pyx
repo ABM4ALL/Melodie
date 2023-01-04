@@ -91,7 +91,7 @@ cdef class Spot(GridItem):
 
     def get_spot_agents(self):
         """
-        Get agents on the spot
+        Get all agents on the spot.
 
         :return: a list of grid agent.
         """
@@ -191,8 +191,8 @@ cdef class AgentIDManager:
 
 cdef class Grid:
     """
-    Grid is a widely-used discrete space for ABM.
-    Grid contains many `Spot`s, each `Spot` could contain several agents_series_data.
+    Grid is a widely-used discrete space for ABM. It contains many ``Spot``s,
+    and agents move and interact inside spots.
     """
 
     def __init__(self, spot_cls: Type[Spot], scenario=None):
@@ -629,17 +629,17 @@ cdef class Grid:
     
     cpdef long height(self):
         """
-        Get height
+        Get the height of grid 
 
-        :return: int
+        :return: height, an ``int``
         """
         return self._height
     
     cpdef long width(self):
         """
-        Get width
+        Get the width of grid
 
-        :return: int
+        :return: width, an ``int``
         """
         return self._width
 
@@ -653,9 +653,9 @@ cdef class Grid:
 
     cpdef list get_empty_spots(self) except *:
         """
-        Get the empty spots from grid.
+        Get all empty spots from grid.
 
-        :return: a list of empty spot coordinate.
+        :return: a list of empty spot coordinates.
         """
         cdef list positions = []
         for spot_pos_1d in self._agent_id_mgr.get_empty_spots():

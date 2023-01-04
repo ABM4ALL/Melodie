@@ -128,7 +128,11 @@
 <li class="toctree-l2"><a class="reference internal" href="data_collector.html">DataCollector</a></li>
 <li class="toctree-l2"><a class="reference internal" href="grid.html">Grid</a></li>
 <li class="toctree-l2"><a class="reference internal" href="network.html">Network</a></li>
-<li class="toctree-l2"><a class="reference internal" href="data_info.html">DataInfo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="data_info.html">DataInfo</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="data_info.html#dataframeinfo">DataFrameInfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="data_info.html#matrixinfo">MatrixInfo</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="data_loader.html">DataLoader</a></li>
 <li class="toctree-l2"><a class="reference internal" href="scenario.html">Scenario</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Simulator</a></li>
@@ -191,9 +195,173 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="simulator">
-<h1>Simulator<a class="headerlink" href="#simulator" title="Permalink to this heading"></a></h1>
-<p>Under development.</p>
+  <section id="module-Melodie.simulator">
+<span id="simulator"></span><h1>Simulator<a class="headerlink" href="#module-Melodie.simulator" title="Permalink to this heading"></a></h1>
+<p>This data stores the run function for model running, storing global variables and other services.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="Melodie.simulator.BaseModellingManager">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Melodie.simulator.</span></span><span class="sig-name descname"><span class="pre">BaseModellingManager</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scenario_cls</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Type</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="scenario.html#Melodie.scenario_manager.Scenario" title="Melodie.scenario_manager.Scenario"><span class="pre">Scenario</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_cls</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Type</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="model.html#Melodie.model.Model" title="Melodie.model.Model"><span class="pre">Model</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_loader_cls</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Type</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="data_loader.html#Melodie.data_loader.DataLoader" title="Melodie.data_loader.DataLoader"><span class="pre">DataLoader</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.simulator.BaseModellingManager" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></p>
+<p>Base class of <code class="docutils literal notranslate"><span class="pre">Simulator</span></code>/<code class="docutils literal notranslate"><span class="pre">Trainer</span></code>/<code class="docutils literal notranslate"><span class="pre">Calibrator</span></code>.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="Melodie.simulator.BaseModellingManager.get_dataframe">
+<span class="sig-name descname"><span class="pre">get_dataframe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">table_name</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="headerlink" href="#Melodie.simulator.BaseModellingManager.get_dataframe" title="Permalink to this definition"></a></dt>
+<dd><p>Get a static <code class="docutils literal notranslate"><span class="pre">DataFrame</span></code> from the data loader.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>table_name</strong> – Name of dataframe.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Melodie.simulator.BaseModellingManager.get_matrix">
+<span class="sig-name descname"><span class="pre">get_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">matrix_name</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="headerlink" href="#Melodie.simulator.BaseModellingManager.get_matrix" title="Permalink to this definition"></a></dt>
+<dd><p>Get a matrix from data loader.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>matrix_name</strong> – Name of matrix.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Melodie.simulator.BaseModellingManager.subworker_prerun">
+<span class="sig-name descname"><span class="pre">subworker_prerun</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.simulator.BaseModellingManager.subworker_prerun" title="Permalink to this definition"></a></dt>
+<dd><p>If run as sub-worker, run this function to avoid deleting the existing tables in database.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Melodie.simulator.BaseModellingManager.pre_run">
+<span class="sig-name descname"><span class="pre">pre_run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">clear_db</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.simulator.BaseModellingManager.pre_run" title="Permalink to this definition"></a></dt>
+<dd><p><cite>pre_run</cite> means this function should be executed before <code class="docutils literal notranslate"><span class="pre">run</span></code>, to initialize the scenario
+parameters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>clear_db</strong> – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, this method will clear database.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Melodie.simulator.BaseModellingManager.generate_scenarios">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">generate_scenarios</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.simulator.BaseModellingManager.generate_scenarios" title="Permalink to this definition"></a></dt>
+<dd><p>Abstract method for generation of scenarios.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="Melodie.simulator.Simulator">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Melodie.simulator.</span></span><span class="sig-name descname"><span class="pre">Simulator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scenario_cls</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Type</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="scenario.html#Melodie.scenario_manager.Scenario" title="Melodie.scenario_manager.Scenario"><span class="pre">Scenario</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_cls</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Type</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="model.html#Melodie.model.Model" title="Melodie.model.Model"><span class="pre">Model</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_loader_cls</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Type</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="data_loader.html#Melodie.data_loader.DataLoader" title="Melodie.data_loader.DataLoader"><span class="pre">DataLoader</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">visualizer_cls</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">type</span><span class="p"><span class="pre">[</span></span><span class="pre">Melodie.visualizer.visualizer.BaseVisualizer</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.simulator.Simulator" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#Melodie.simulator.BaseModellingManager" title="Melodie.simulator.BaseModellingManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModellingManager</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="Melodie.simulator.Simulator.generate_scenarios">
+<span class="sig-name descname"><span class="pre">generate_scenarios</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="scenario.html#Melodie.scenario_manager.Scenario" title="Melodie.scenario_manager.Scenario"><span class="pre">Scenario</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#Melodie.simulator.Simulator.generate_scenarios" title="Permalink to this definition"></a></dt>
+<dd><p>Generate scenarios from the dataframe_loader</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>A list of generated scenarios.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Melodie.simulator.Simulator.run_model">
+<span class="sig-name descname"><span class="pre">run_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scenario</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">id_run</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_class</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Type</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="model.html#Melodie.model.Model" title="Melodie.model.Model"><span class="pre">Model</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">visualizer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.simulator.Simulator.run_model" title="Permalink to this definition"></a></dt>
+<dd><p>Run a model once.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Melodie.simulator.Simulator.setup">
+<span class="sig-name descname"><span class="pre">setup</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.simulator.Simulator.setup" title="Permalink to this definition"></a></dt>
+<dd><p>Setup method of simulator, usually need not to inherit.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Melodie.simulator.Simulator.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.simulator.Simulator.run" title="Permalink to this definition"></a></dt>
+<dd><p>Main function for running model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Melodie.simulator.Simulator.run_visual">
+<span class="sig-name descname"><span class="pre">run_visual</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.simulator.Simulator.run_visual" title="Permalink to this definition"></a></dt>
+<dd><p>Main function for running model with visualization.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Melodie.simulator.Simulator.run_parallel">
+<span class="sig-name descname"><span class="pre">run_parallel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cores</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.simulator.Simulator.run_parallel" title="Permalink to this definition"></a></dt>
+<dd><p>Parallelized running through a series of scenarios.</p>
+<p>Melodie does not start subprocesses directly. For the first shot, which means running one of the runs out of
+one scenario, it will be run by the main-thread to verify the model and initialize the database.
+After the first shot, subprocesses will be created as many as the value of parameter <cite>cores</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>cores</strong> – <p>How many subprocesses will be created in the parallel simulation.</p>
+<ul class="simple">
+<li><p>It is suggested that this parameter should be NO MORE THAN the <strong>physical cores</strong> of your computer.</p></li>
+<li><p>Beside ‘cores’, You may found that your cpu has one more metric: threads, which means your CPU supports
+hyper-threading. If so, use ‘physical cores’, not ‘threads’ as the upper limit.</p></li>
+<li><p>For example, an Intel® I5-8250U has 4 physical cores and 8 threads. If you use a computer equipped with
+this CPU, this parameter cannot be larger than 4.</p></li>
+<li><p>In short, hyper-threading only improves performance in io intensive programs. As Melodie was computation
+intensive, if there are more subprocess than physical cores, subprocesses will fight for CPU, costing
+a lot of extra time.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+<p>Sqlite itself was thread-safe for writing. However, pandas tries to create the table if table was not exist, which
+might trigger conflict condition.</p>
+<dl class="simple">
+<dt>For example:</dt><dd><p>p1, p2 stands for process 1 and 2 request writing to a table <cite>test</cite>;
+db stands for database;
+1. p1 –&gt; db &lt;found no table named ‘test’&gt;
+2. p2 –&gt; db &lt;found no table named ‘test’&gt;
+3. p1 –&gt; db &lt;request the db to create a table ‘test’&gt;
+4. p2 –&gt; db &lt;request the db to create a table ‘test’&gt;
+5. db –&gt; p1 &lt;created table named ‘test’&gt;
+6. db –&gt; p2 &lt;table ‘test’ already exists!&gt; ERROR!</p>
+</dd>
+</dl>
+<p>For multiple-cores, if running modelthis might happen very frequently. To avoid this, Melodie makes the first
+shot, which means running one of the runs out of one scenario, by main-process. Only when first shot completes
+will the subprocesses be launched.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 
 

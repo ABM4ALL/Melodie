@@ -396,10 +396,6 @@ class GACalibratorAlgorithm:
 
 
 class Calibrator(BaseModellingManager):
-    """
-    Calibrator
-    """
-
     def __init__(
             self,
             config: "Config",
@@ -430,31 +426,33 @@ class Calibrator(BaseModellingManager):
         self.df_loader_cls = data_loader_cls
 
     def setup(self):
+        """
+        Setup method, be sure to inherit this method in custom calibrator class.
+        """
         pass
 
     def collect_data(self):
         """
         Set the agent and environment properties to be collected.
 
-        :return:
         """
         pass
 
     def generate_scenarios(self) -> List["Scenario"]:
         """
         Generate scenario objects by the parameter from static tables or scenarios_dataframe.
-
-        :return:
+        
+        :return: A list of generated scenarios.
         """
         return self.data_loader.generate_scenarios_from_dataframe(
             "calibrator_scenarios"
         )
 
-    def get_params_scenarios(self) -> Dict:
+    def get_params_scenarios(self) -> List:
         """
         Get the parameters of calibrator parameters from the registered dataframe.
 
-        :return:
+        :return: A list of dict, and each dict contains parameters.
         """
         calibrator_scenarios_table = self.get_dataframe("calibrator_params_scenarios")
         assert isinstance(
@@ -466,7 +464,6 @@ class Calibrator(BaseModellingManager):
         """
         The main method for calibrator.
 
-        :return:
         """
         self.setup()
         self.pre_run()
@@ -491,8 +488,8 @@ class Calibrator(BaseModellingManager):
         """
         Run for one calibration path
 
-        :param scenario: Scenario
-        :param calibration_params: GACalibratorParams
+        :param scenario: The scenario to run.
+        :param calibration_params: calibration parameters.
         :return: None
         """
         self.algorithm = GACalibratorAlgorithm(
@@ -509,9 +506,9 @@ class Calibrator(BaseModellingManager):
 
     def target_function(self, env: "Environment") -> Union[float, int]:
         """
-        The target function to minimize
+        The target function to be minimized
 
-        :param env:
+        :param env: Environment of the current model.
         :return:
         """
         return self.distance(env)
@@ -526,12 +523,12 @@ class Calibrator(BaseModellingManager):
         :return: None
         """
         raise NotImplementedError(
-            "Trainer.distance(environment) must be overridden in sub-class!"
+            "Calibrator.distance(environment) must be overridden in sub-class!"
         )
 
     def add_scenario_calibrating_property(self, prop: str):
         """
-        Add a property to be calibrated, and the property should be a property of environment.
+        Add a property to be tuned in the calibration, and ``prop`` should be a name of property in the environment.
 
         :param prop: Property name
         :return: None

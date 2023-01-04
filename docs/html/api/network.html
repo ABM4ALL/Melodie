@@ -128,7 +128,11 @@
 <li class="toctree-l2"><a class="reference internal" href="data_collector.html">DataCollector</a></li>
 <li class="toctree-l2"><a class="reference internal" href="grid.html">Grid</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Network</a></li>
-<li class="toctree-l2"><a class="reference internal" href="data_info.html">DataInfo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="data_info.html">DataInfo</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="data_info.html#dataframeinfo">DataFrameInfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="data_info.html#matrixinfo">MatrixInfo</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="data_loader.html">DataLoader</a></li>
 <li class="toctree-l2"><a class="reference internal" href="scenario.html">Scenario</a></li>
 <li class="toctree-l2"><a class="reference internal" href="simulator.html">Simulator</a></li>
@@ -193,7 +197,299 @@
              
   <section id="network">
 <h1>Network<a class="headerlink" href="#network" title="Permalink to this heading"></a></h1>
-<p>Under development.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="Melodie.network.NetworkAgent">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Melodie.network.</span></span><span class="sig-name descname"><span class="pre">NetworkAgent</span></span><a class="headerlink" href="#Melodie.network.NetworkAgent" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="agent.html#Melodie.boost.basics.Agent" title="Melodie.boost.basics.Agent"><code class="xref py py-class docutils literal notranslate"><span class="pre">Agent</span></code></a></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Melodie.network.NetworkAgent.category">
+<span class="sig-name descname"><span class="pre">category</span></span><a class="headerlink" href="#Melodie.network.NetworkAgent.category" title="Permalink to this definition"></a></dt>
+<dd><p>Category indicating agent class, an <code class="docutils literal notranslate"><span class="pre">int</span></code>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Melodie.network.NetworkAgent.set_category">
+<span class="sig-name descname"><span class="pre">set_category</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.network.NetworkAgent.set_category" title="Permalink to this definition"></a></dt>
+<dd><p>Set the category of network agent.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="Melodie.network.Edge">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Melodie.network.</span></span><span class="sig-name descname"><span class="pre">Edge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">category_1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agent_1_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">category_2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agent_2_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_properties</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bool</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.network.Edge" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>category_1</strong> – Source agent category</p></li>
+<li><p><strong>agent_1_id</strong> – Source agent id</p></li>
+<li><p><strong>category_2</strong> – Target agent category</p></li>
+<li><p><strong>agent_2_id</strong> – Target agent id</p></li>
+<li><p><strong>edge_properties</strong> – a <code class="docutils literal notranslate"><span class="pre">dict</span></code> storing properties.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="Melodie.network.Edge.setup">
+<span class="sig-name descname"><span class="pre">setup</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.network.Edge.setup" title="Permalink to this definition"></a></dt>
+<dd><p>Setup method. Be sure to inherit it for custom <code class="docutils literal notranslate"><span class="pre">Edge</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Melodie.network.Edge.post_setup">
+<span class="sig-name descname"><span class="pre">post_setup</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.network.Edge.post_setup" title="Permalink to this definition"></a></dt>
+<dd><p>This method is executed after <cite>setup()</cite></p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="Melodie.network.Network">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Melodie.network.</span></span><span class="sig-name descname"><span class="pre">Network</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">edge_cls</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Type</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#Melodie.network.Edge" title="Melodie.network.Edge"><span class="pre">Edge</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.network.Network" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="Melodie.network.Network.setup">
+<span class="sig-name descname"><span class="pre">setup</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.network.Network.setup" title="Permalink to this definition"></a></dt>
+<dd><p>Setup function of network. Be sure to inherit this method for custom implementation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Melodie.network.Network.add_edge">
+<span class="sig-name descname"><span class="pre">add_edge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#Melodie.network.Edge" title="Melodie.network.Edge"><span class="pre">Edge</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.network.Network.add_edge" title="Permalink to this definition"></a></dt>
+<dd><p>Add an edge onto the network.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>source_id</strong> – A tuple <code class="docutils literal notranslate"><span class="pre">&lt;agent_category,</span> <span class="pre">agent_id&gt;</span></code> stands for source agent.</p></li>
+<li><p><strong>target_id</strong> – A tuple <code class="docutils literal notranslate"><span class="pre">&lt;agent_category,</span> <span class="pre">agent_id&gt;</span></code> stands for target agent.</p></li>
+<li><p><strong>edge</strong> – An <code class="docutils literal notranslate"><span class="pre">Edge</span></code> object</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Melodie.network.Network.get_edge">
+<span class="sig-name descname"><span class="pre">get_edge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.network.Network.get_edge" title="Permalink to this definition"></a></dt>
+<dd><p>Get an edge from the network</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>source_id</strong> – A tuple <code class="docutils literal notranslate"><span class="pre">&lt;agent_category,</span> <span class="pre">agent_id&gt;</span></code> stands for source agent.</p></li>
+<li><p><strong>target_id</strong> – A tuple <code class="docutils literal notranslate"><span class="pre">&lt;agent_category,</span> <span class="pre">agent_id&gt;</span></code> stands for target agent.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>An <code class="docutils literal notranslate"><span class="pre">Edge</span></code> object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Melodie.network.Network.remove_edge">
+<span class="sig-name descname"><span class="pre">remove_edge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.network.Network.remove_edge" title="Permalink to this definition"></a></dt>
+<dd><p>Remove an edge from the network</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>source_id</strong> – A tuple <code class="docutils literal notranslate"><span class="pre">&lt;agent_category,</span> <span class="pre">agent_id&gt;</span></code> stands for source agent.</p></li>
+<li><p><strong>target_id</strong> – A tuple <code class="docutils literal notranslate"><span class="pre">&lt;agent_category,</span> <span class="pre">agent_id&gt;</span></code> stands for target agent.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Melodie.network.Network.get_neighbors">
+<span class="sig-name descname"><span class="pre">get_neighbors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="agent.html#Melodie.boost.basics.Agent" title="Melodie.boost.basics.Agent"><span class="pre">Agent</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.network.Network.get_neighbors" title="Permalink to this definition"></a></dt>
+<dd><p>Get surrounding neighbors of agent.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>agent</strong> – <code class="docutils literal notranslate"><span class="pre">NetworkAgent</span></code> object.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Melodie.network.Network.remove_agent">
+<span class="sig-name descname"><span class="pre">remove_agent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="agent.html#Melodie.boost.basics.Agent" title="Melodie.boost.basics.Agent"><span class="pre">Agent</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.network.Network.remove_agent" title="Permalink to this definition"></a></dt>
+<dd><p>Remove agent from network.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>agent</strong> – <code class="docutils literal notranslate"><span class="pre">NetworkAgent</span></code></p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Melodie.network.Network.add_agent">
+<span class="sig-name descname"><span class="pre">add_agent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="agent.html#Melodie.boost.basics.Agent" title="Melodie.boost.basics.Agent"><span class="pre">Agent</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.network.Network.add_agent" title="Permalink to this definition"></a></dt>
+<dd><p>Add an agent onto the network.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>agent</strong> – <code class="docutils literal notranslate"><span class="pre">NetworkAgent</span></code> object</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Melodie.network.Network.create_edge">
+<span class="sig-name descname"><span class="pre">create_edge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent_1_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">category_1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agent_2_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">category_2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">edge_properties</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.network.Network.create_edge" title="Permalink to this definition"></a></dt>
+<dd><p>Create a new edge from one agent to another agent.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>agent_1_id</strong> – <code class="docutils literal notranslate"><span class="pre">id</span></code> of source agent</p></li>
+<li><p><strong>category_1</strong> – <code class="docutils literal notranslate"><span class="pre">category</span></code> of source agent</p></li>
+<li><p><strong>agent_2_id</strong> – <code class="docutils literal notranslate"><span class="pre">id</span></code> of target agent</p></li>
+<li><p><strong>category_2</strong> – <code class="docutils literal notranslate"><span class="pre">category</span></code> of target agent</p></li>
+<li><p><strong>edge_properties</strong> – keyword arguments for edge properties.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Melodie.network.Network.all_agents">
+<span class="sig-name descname"><span class="pre">all_agents</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Set</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#Melodie.network.Network.all_agents" title="Permalink to this definition"></a></dt>
+<dd><p>Get all agents on the network.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>A list of (<cite>Agent category</cite>, <cite>Agent id</cite>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Melodie.network.Network.get_node_edges">
+<span class="sig-name descname"><span class="pre">get_node_edges</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="agent.html#Melodie.boost.basics.Agent" title="Melodie.boost.basics.Agent"><span class="pre">Agent</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.network.Network.get_node_edges" title="Permalink to this definition"></a></dt>
+<dd><p>Get the edges from one node.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>agent</strong> – <code class="docutils literal notranslate"><span class="pre">NetworkAgent</span></code> object</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of <code class="docutils literal notranslate"><span class="pre">Edge</span></code> object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Melodie.network.Network.setup_layout_creator">
+<span class="sig-name descname"><span class="pre">setup_layout_creator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">layout_creator</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">nx.Graph</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">NodeType</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">np.ndarray</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.network.Network.setup_layout_creator" title="Permalink to this definition"></a></dt>
+<dd><p>Set the creator function to create network layout.</p>
+<p>The input argument of layout_creator is a networkx graph, and the output was a dict type mapping from node id to
+position.</p>
+<p>For example:
+.. code-block:: python</p>
+<blockquote>
+<div><p>import networkx as nx
+n = Network()
+n.setup_layout_creator(lambda G: nx.spring_layout(G))</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>layout_creator</strong> – a callable creating network layout as the code example.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Melodie.network.Network.update_layout">
+<span class="sig-name descname"><span class="pre">update_layout</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.network.Network.update_layout" title="Permalink to this definition"></a></dt>
+<dd><p>Update the layout of network.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Melodie.network.Network.get_position">
+<span class="sig-name descname"><span class="pre">get_position</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent_category</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agent_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.network.Network.get_position" title="Permalink to this definition"></a></dt>
+<dd><p>Get the position of agent.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>agent_category</strong> – The category of agent</p></li>
+<li><p><strong>agent_id</strong> – The id of agent</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Melodie.network.Network.setup_agent_connections">
+<span class="sig-name descname"><span class="pre">setup_agent_connections</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent_lists</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="agent_list.html#Melodie.boost.agent_list.AgentList" title="Melodie.boost.agent_list.AgentList"><span class="pre">AgentList</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">network_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">network_params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.network.Network.setup_agent_connections" title="Permalink to this definition"></a></dt>
+<dd><p>Set up the connection between agents.
+The name and parameters come from NetworkX package. For example, The documentation for BA scale-free network
+is here: <a class="reference external" href="https://networkx.org/documentation/stable/reference/generated/networkx.generators.random_graphs.barabasi_albert_graph.html">https://networkx.org/documentation/stable/reference/generated/networkx.generators.random_graphs.barabasi_albert_graph.html</a>.
+To create it, network_type is <cite>barabasi_albert_graph</cite>, and parameters should be a dict {“n”: 100, “m”: 3}.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>agent_lists</strong> – Initial agent lists containing agents to be placed onto the network.</p></li>
+<li><p><strong>network_type</strong> – str, describing the type of network, which should be the corresponding to networkx.</p></li>
+<li><p><strong>network_params</strong> – A dictionary for parameter values.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 
 

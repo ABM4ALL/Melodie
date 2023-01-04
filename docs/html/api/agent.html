@@ -128,7 +128,11 @@
 <li class="toctree-l2"><a class="reference internal" href="data_collector.html">DataCollector</a></li>
 <li class="toctree-l2"><a class="reference internal" href="grid.html">Grid</a></li>
 <li class="toctree-l2"><a class="reference internal" href="network.html">Network</a></li>
-<li class="toctree-l2"><a class="reference internal" href="data_info.html">DataInfo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="data_info.html">DataInfo</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="data_info.html#dataframeinfo">DataFrameInfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="data_info.html#matrixinfo">MatrixInfo</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="data_loader.html">DataLoader</a></li>
 <li class="toctree-l2"><a class="reference internal" href="scenario.html">Scenario</a></li>
 <li class="toctree-l2"><a class="reference internal" href="simulator.html">Simulator</a></li>
@@ -193,7 +197,75 @@
              
   <section id="agent">
 <h1>Agent<a class="headerlink" href="#agent" title="Permalink to this heading"></a></h1>
-<p>Under development.</p>
+<p>Agent and Environment are all defined in Melodie.boost for better performance, and you may find
+it will only jump to a <em>.pyi</em> file if you are trying to jump into the code. If you would like to view the source code,
+please visit our git repository. The path to related files are listed below:</p>
+<ul class="simple">
+<li><p>Stub File: Melodie/boost/basics.pyi</p></li>
+<li><p>Source Code: Melodie/boost/basics.pyx</p></li>
+<li><p>Cython Interface: Melodie/boost/basics.pxd</p></li>
+</ul>
+<p>Just include class <em>Agent</em> inside doc and undoc the Agent.id and Agent.model</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="Melodie.boost.basics.Agent">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Melodie.boost.basics.</span></span><span class="sig-name descname"><span class="pre">Agent</span></span><a class="headerlink" href="#Melodie.boost.basics.Agent" title="Permalink to this definition"></a></dt>
+<dd><p>Base class for Agent.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Melodie.boost.basics.Agent.id">
+<span class="sig-name descname"><span class="pre">id</span></span><a class="headerlink" href="#Melodie.boost.basics.Agent.id" title="Permalink to this definition"></a></dt>
+<dd><p>The id of <code class="docutils literal notranslate"><span class="pre">Agent</span></code>, a integer value <code class="docutils literal notranslate"><span class="pre">&gt;=0</span></code></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Melodie.boost.basics.Agent.scenario">
+<span class="sig-name descname"><span class="pre">scenario</span></span><a class="headerlink" href="#Melodie.boost.basics.Agent.scenario" title="Permalink to this definition"></a></dt>
+<dd><p>Current scenario object, of type <code class="docutils literal notranslate"><span class="pre">Melodie.Scenario</span></code>.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Melodie.boost.basics.Agent.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#Melodie.boost.basics.Agent.model" title="Permalink to this definition"></a></dt>
+<dd><p>The model that this agent belongs to.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Melodie.boost.basics.Agent.setup">
+<span class="sig-name descname"><span class="pre">setup</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.boost.basics.Agent.setup" title="Permalink to this definition"></a></dt>
+<dd><p>This is the initialization method, declare properties here.</p>
+<p>Here, “Declare” is to define properties with an initial value, such as:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="k">class</span> <span class="nc">NewAgent</span><span class="p">(</span><span class="n">Agent</span><span class="p">)</span>
+<span class="linenos">2</span>    <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="linenos">3</span>        <span class="bp">self</span><span class="o">.</span><span class="n">int_property</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># int property</span>
+<span class="linenos">4</span>        <span class="bp">self</span><span class="o">.</span><span class="n">float_property</span> <span class="o">=</span> <span class="mf">0.0</span>  <span class="c1"># float property</span>
+<span class="linenos">5</span>        <span class="bp">self</span><span class="o">.</span><span class="n">str_property</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>  <span class="c1"># string property</span>
+</pre></div>
+</div>
+<p>It is also fine to define properties with complex data structure such as dict/list/set, but the values in the
+complex data structure is hard to be recorded by the <cite>DataCollector</cite></p>
+<p>This method is executed at the end of the <cite>__init__</cite> method of the corresponding agent container.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Melodie.boost.basics.Agent.to_dict">
+<span class="sig-name descname"><span class="pre">to_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">properties</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.boost.basics.Agent.to_dict" title="Permalink to this definition"></a></dt>
+<dd><p>Dump Agent to a plain dict.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>properties</strong> – List[str]</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 
 

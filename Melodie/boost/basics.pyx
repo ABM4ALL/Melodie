@@ -26,6 +26,10 @@ cdef class Element:
 
 
 cdef class Agent(Element):
+    """
+    Base class for Agent.
+
+    """
     def __init__(self, agent_id: int):
         self.id = agent_id
         self.scenario = None
@@ -105,10 +109,10 @@ cdef class Environment(Element):
 
     cpdef dict to_dict(self, list properties):
         """
-        Dump Environment to a plain dict.
+        Dump environment properties declared in ``properties`` to a plain dict.
 
-        :param properties: List[str]
-        :return:
+        :param properties: List[str], property names to dump
+        :return: A dict, keys are environment property names, while value are property values.
         """
         cdef dict d
         cdef str property 

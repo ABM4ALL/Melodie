@@ -25,7 +25,7 @@ logger = logging.getLogger(__name__)
 
 class BaseModellingManager(abc.ABC):
     """
-    Base class of Simulator/Trainer/Calibrator.
+    Base class of ``Simulator``/``Trainer``/``Calibrator``.
     """
 
     def __init__(
@@ -47,9 +47,9 @@ class BaseModellingManager(abc.ABC):
 
     def get_dataframe(self, table_name) -> pd.DataFrame:
         """
-        Get a static data frame from data loader.
+        Get a static ``DataFrame`` from the data loader.
 
-        :param table_name:
+        :param table_name: Name of dataframe.
         :return:
         """
         if self.data_loader is None:
@@ -65,7 +65,7 @@ class BaseModellingManager(abc.ABC):
         """
         Get a matrix from data loader.
 
-        :param matrix_name:
+        :param matrix_name: Name of matrix.
         :return:
         """
         if self.data_loader is None:
@@ -80,8 +80,6 @@ class BaseModellingManager(abc.ABC):
     def subworker_prerun(self):
         """
         If run as sub-worker, run this function to avoid deleting the existing tables in database.
-
-        :return:
         """
         self.data_loader: DataLoader = self.df_loader_cls(
             self, self.config, self.scenario_cls, as_sub_worker=True
@@ -91,10 +89,10 @@ class BaseModellingManager(abc.ABC):
 
     def pre_run(self, clear_db=True):
         """
-        `pre_run` means this function should be executed before `run`, to initialize the scenario
+        `pre_run` means this function should be executed before ``run``, to initialize the scenario
         parameters.
 
-        This method also clears database.
+        :param clear_db: If ``True``, this method will clear database.
         :return:
         """
         if clear_db:
@@ -110,6 +108,9 @@ class BaseModellingManager(abc.ABC):
 
     @abc.abstractmethod
     def generate_scenarios(self):
+        """
+        Abstract method for generation of scenarios.
+        """
         pass
 
 
@@ -141,7 +142,7 @@ class Simulator(BaseModellingManager):
         """
         Generate scenarios from the dataframe_loader
 
-        :return:
+        :return: A list of generated scenarios.
         """
         if self.data_loader is None:
             raise MelodieExceptions.Data.NoDataframeLoaderDefined()
@@ -152,8 +153,6 @@ class Simulator(BaseModellingManager):
     ):
         """
         Run a model once.
-
-        :return:
         """
         logger.info(
             f"Simulation started - id_scenario = {scenario.id}, id_run = {id_run}"
@@ -249,7 +248,7 @@ class Simulator(BaseModellingManager):
 
     def run_visual(self):
         """
-        Main function for running model with studio.
+        Main function for running model with visualization.
 
         :return: None
         """
@@ -292,18 +291,17 @@ class Simulator(BaseModellingManager):
                 self.visualizer.reset()
                 logger.info("Model reset.")
 
-    def run_parallel(self, cores: int = 2):
+    def run_parallel(self, cores: int = 1):
         """
-        Parallel model running
+        Parallelized running through a series of scenarios.
 
         Melodie does not start subprocesses directly. For the first shot, which means running one of the runs out of
         one scenario, it will be run by the main-thread to verify the model and initialize the database.
         After the first shot, subprocesses will be created as many as the value of parameter `cores`.
 
-        :param cores:
-          determines how many subprocesses will be created after the first shot.
+        :param cores: How many subprocesses will be created in the parallel simulation.
 
-          - It is suggested that this parameter should be NO MORE THAN the 'physical cores' of your computer.
+          - It is suggested that this parameter should be NO MORE THAN the **physical cores** of your computer.
           - Beside 'cores', You may found that your cpu has one more metric: threads, which means your CPU supports
             hyper-threading. If so, use 'physical cores', not 'threads' as the upper limit.
           - For example, an Intel® I5-8250U has 4 physical cores and 8 threads. If you use a computer equipped with

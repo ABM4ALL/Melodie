@@ -542,7 +542,7 @@ class AgentContainerManager:
 
 class Trainer(BaseModellingManager):
     """
-    Individually run agents' parameters
+    Individually train agents' parameters
     """
 
     def __init__(
@@ -595,12 +595,16 @@ class Trainer(BaseModellingManager):
         self.container_manager.add_container(agent_list_name, training_attributes, agent_ids)
 
     def setup(self):
+        """
+        Setup method, be sure to inherit this method in custom trainer class.
+        """
         pass
 
     def get_trainer_scenario_cls(self):
         """
         Get the class of trainer scenario.
-        :return:
+
+        :return: Trainer parameters
         """
         assert self.algorithm_type in {"ga"}
 
@@ -645,11 +649,11 @@ class Trainer(BaseModellingManager):
 
     def run_once_new(self, scenario: Scenario, trainer_params: Union[GATrainerParams]):
         """
-        Use the sko package for optimization.
+        Run for one training path
 
-        :param scenario:
-        :param trainer_params:
-        :return:
+        :param scenario: The scenario to run
+        :param trainer_params: calibration parameters.
+        :return: None
         """
 
         self.algorithm = GATrainerAlgorithm(trainer_params, self, self.processors)
@@ -668,8 +672,9 @@ class Trainer(BaseModellingManager):
     def utility(self, agent: Agent) -> float:
         """
         The utility is to be maximized.
+        be sure to inherit inside the custom trainer class.
 
-        :param agent:
+        :param agent: Agent object.
         :return:
         """
         raise NotImplementedError(
@@ -687,10 +692,10 @@ class Trainer(BaseModellingManager):
 
     def add_agent_property(self, agent_list_name: str, prop: str):
         """
+        Add a property of agent to be recorded.
 
-        :param agent_list_name:
-        :param prop:
-        :return:
+        :param agent_list_name: Name of agent list
+        :param prop: Property name of agent
         """
         self.container_manager.get_agent_container(
             agent_list_name
@@ -698,9 +703,9 @@ class Trainer(BaseModellingManager):
 
     def add_environment_property(self, prop: str):
         """
-        Add a property of environment to be recorded in the training voyage.
-
-        :return:
+        Add a property of environment to be recorded.
+        
+        :param prop: Property name of environment.
         """
         assert prop not in self.environment_properties
         self.environment_properties.append(prop)
@@ -709,7 +714,7 @@ class Trainer(BaseModellingManager):
         """
         Generate Scenarios for trainer
 
-        :return:
+        :return: A list of scenario objects.
         """
         assert self.data_loader is not None
         return self.data_loader.generate_scenarios("trainer")
@@ -720,7 +725,7 @@ class Trainer(BaseModellingManager):
         """
         Generate Trainer Parameters.
 
-        :return:
+        :return: A list of trainer parameters.
         """
         trainer_params_table = self.get_dataframe("trainer_params_scenarios")
         assert isinstance(

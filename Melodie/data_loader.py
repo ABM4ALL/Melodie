@@ -10,7 +10,6 @@ from MelodieInfra import DBConn, create_db_conn, MelodieExceptions, Config
 from .scenario_manager import Scenario
 from .table_generator import DataFrameGenerator
 
-
 class DataFrameInfo:
     df_name: str
     columns: Dict[str, "sqlalchemy.types"]
@@ -61,8 +60,9 @@ class MatrixInfo:
 
 class DataLoader:
     """
-    DataLoader loads dataframes or matrices
-    Simulator/Trainer/Calibrator will have reference to DataLoader to avoid defining tables multiple times.
+    DataLoader loads dataframes or matrices.
+    
+    ``Simulator``/``Trainer``/``Calibrator`` will have reference to DataLoader to avoid defining tables multiple times.
     """
 
     def __init__(
@@ -91,7 +91,7 @@ class DataLoader:
             self, table_name: str, data_frame: pd.DataFrame, data_types: dict = None
     ) -> None:
         """
-        Add a pandas dataframe.
+        Register a pandas dataframe.
 
         :param table_name: Name of dataframe
         :param data_frame: A pandas dataframe
@@ -110,14 +110,11 @@ class DataLoader:
         ).read_dataframe(table_name)
 
     def load_dataframe(self, df_info: "DataFrameInfo") -> None:
-
         """
-        Register static table, saving it to `self.registered_dataframes`.
-        The static table will be copied into database.
+        Register static table. The static table will be copied into database.
 
         The scenarios/agents parameter tables can also be registered by this method.
 
-        :param df_info:
         :return: None
         """
         table_name = df_info.df_name
@@ -148,9 +145,8 @@ class DataLoader:
 
     def load_matrix(self, matrix_info: "MatrixInfo") -> None:
         """
-        Register static matrix, saving it to `self.registered_matrices`.
+        Register static matrix.
 
-        :param matrix_info:
         :return: None
         """
         _, ext = os.path.splitext(matrix_info.file_name)
@@ -170,9 +166,9 @@ class DataLoader:
             rows_in_scenario: Union[int, Callable[[Scenario], int]],
     ) -> DataFrameGenerator:
         """
-        Create a new generator
+        Create a new generator for dataframes.
 
-        :param df_info:
+        :param df_info: Dataframe info indicating the dataframe to be generated.
         :param rows_in_scenario: How many rows will be generated for a specific scenario. \
             This argument should be an integer as number of rows for each scenario, or a function with a parameter \
             with type `Scenario` and return an integer for how many rows to generate for this scenario .
@@ -182,8 +178,9 @@ class DataLoader:
 
     def generate_scenarios_from_dataframe(self, df_name: str) -> List["Scenario"]:
         """
-        Generate scenario objects by the parameter from static tables
+        Generate scenario objects by the parameter from static table named ``df_name``.
 
+        :param df_name: Name of static table.
         :return: A list of scenario object.
         """
         scenarios_dataframe = self.registered_dataframes.get(df_name)
@@ -212,7 +209,8 @@ class DataLoader:
         """
         Generate scenario objects by the parameter from static tables or scenarios_dataframe.
 
-        :return: A list of scenario object.
+        :param manager_type: The type of scenario manager, a ``str`` in "simulator", "trainer" or "calibrator".
+        :return: A list of scenarios.
         """
         if manager_type not in {"simulator", "trainer", "calibrator"}:
             MelodieExceptions.Program.Variable.VariableNotInSet(

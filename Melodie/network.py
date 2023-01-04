@@ -38,6 +38,15 @@ class Edge:
             agent_2_id: int,
             edge_properties: Dict[str, Union[int, str, float, bool]],
     ):
+        """
+        
+        :param category_1: Source agent category
+        :param agent_1_id: Source agent id
+        :param category_2: Target agent category
+        :param agent_2_id: Target agent id
+        :param edge_properties: a ``dict`` storing properties.
+        :return: None
+        """
         self.category_1 = category_1
         self.agent_1_id = agent_1_id
         self.category_2 = category_2
@@ -48,7 +57,7 @@ class Edge:
 
     def setup(self):
         """
-        Setup method. Be sure to inherit it for custom Edge.
+        Setup method. Be sure to inherit it for custom ``Edge``.
 
         :return: None
         """
@@ -99,9 +108,9 @@ class Network:
         """
         Add an edge onto the network.
 
-        :param source_id:
-        :param target_id:
-        :param edge
+        :param source_id: A tuple ``<agent_category, agent_id>`` stands for source agent.
+        :param target_id: A tuple ``<agent_category, agent_id>`` stands for target agent.
+        :param edge: An ``Edge`` object
         :return: None
         """
         if source_id not in self.edges:
@@ -116,9 +125,9 @@ class Network:
         """
         Get an edge from the network
 
-        :param source_id:
-        :param target_id:
-        :return: An `Edge` object
+        :param source_id: A tuple ``<agent_category, agent_id>`` stands for source agent.
+        :param target_id: A tuple ``<agent_category, agent_id>`` stands for target agent.
+        :return: An ``Edge`` object
         """
         return self.edges[source_id][target_id]
 
@@ -126,8 +135,8 @@ class Network:
         """
         Remove an edge from the network
 
-        :param source_id:
-        :param target_id:
+        :param source_id: A tuple ``<agent_category, agent_id>`` stands for source agent.
+        :param target_id: A tuple ``<agent_category, agent_id>`` stands for target agent.
         :return: None
         """
         self.edges[source_id].pop(target_id)
@@ -147,30 +156,17 @@ class Network:
         """
         Get surrounding neighbors of agent.
 
-        :param agent:
+        :param agent: ``NetworkAgent`` object.
         :return:
         """
         assert hasattr(agent, "category")
         return self._get_neighbor_positions(agent.id, agent.category)
 
     def _add_agent(self, category: int, agent_id: int):
-        """
-
-        :param agent_id:
-        :param category:
-        :param agent_id:
-        :return:
-        """
         agent_tuple: NodeType = (category, agent_id)
         self.nodes.add(agent_tuple)
 
     def _remove_agent(self, category: int, agent_id: int):
-        """
-
-        :param agent_id:
-        :param category:
-        :return:
-        """
         agent_tuple = (category, agent_id)
         self.nodes.remove(agent_tuple)
         target_edges = self.edges.pop(agent_tuple)
@@ -180,9 +176,9 @@ class Network:
 
     def remove_agent(self, agent: Agent):
         """
-        Remove agent from network
+        Remove agent from network.
 
-        :param agent: Agent
+        :param agent: ``NetworkAgent``
         :return: None
         """
         assert hasattr(agent, "category")
@@ -192,7 +188,7 @@ class Network:
         """
         Add an agent onto the network.
 
-        :param agent:
+        :param agent: ``NetworkAgent`` object
         :return:
         """
         assert isinstance(agent, NetworkAgent)
@@ -211,11 +207,11 @@ class Network:
         """
         Create a new edge from one agent to another agent.
 
-        :param agent_1_id:
-        :param category_1:
-        :param agent_2_id:
-        :param category_2:
-        :param edge_properties:
+        :param agent_1_id: ``id`` of source agent
+        :param category_1: ``category`` of source agent
+        :param agent_2_id: ``id`` of target agent
+        :param category_2: ``category`` of target agent
+        :param edge_properties: keyword arguments for edge properties.
         :return:
         """
         edge = self.edge_cls(
@@ -239,8 +235,8 @@ class Network:
         """
         Get the edges from one node.
 
-        :param agent:
-        :return:
+        :param agent: ``NetworkAgent`` object
+        :return: A list of ``Edge`` object
         """
         assert isinstance(agent, NetworkAgent)
         targets = self.edges[(agent.category, agent.id)]
@@ -262,8 +258,8 @@ class Network:
             n = Network()
             n.setup_layout_creator(lambda G: nx.spring_layout(G))
 
-        :param layout_creator:
-        :return:
+        :param layout_creator: a callable creating network layout as the code example.
+        :return: None
         """
         self._layout_creator = layout_creator
 
@@ -271,7 +267,7 @@ class Network:
         """
         Update the layout of network.
 
-        :return:
+        :return: None
         """
         g = nx.DiGraph()
         for start_node in self.edges.keys():
@@ -284,8 +280,8 @@ class Network:
         """
         Get the position of agent.
 
-        :param agent_category:
-        :param agent_id:
+        :param agent_category: The category of agent
+        :param agent_id: The id of agent
         :return:
         """
         if (agent_category, agent_id) not in self.layout:
@@ -304,7 +300,7 @@ class Network:
         is here: https://networkx.org/documentation/stable/reference/generated/networkx.generators.random_graphs.barabasi_albert_graph.html.
         To create it, network_type is `barabasi_albert_graph`, and parameters should be a dict {"n": 100, "m": 3}.
 
-        :param agent_lists:
+        :param agent_lists: Initial agent lists containing agents to be placed onto the network.
         :param network_type: str, describing the type of network, which should be the corresponding to networkx.
         :param network_params: A dictionary for parameter values.
         :return: None

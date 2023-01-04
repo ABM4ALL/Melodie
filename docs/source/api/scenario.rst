@@ -2,11 +2,7 @@
 Scenario
 ===============
 
-Under development.
-
-.. comment::
-
-    .. automodule:: Melodie.scenario_manager
-                   :members:
-                   :undoc-members:
-                   :show-inheritance:
+.. automodule:: Melodie.scenario_manager
+               :members:
+               :undoc-members:
+               :show-inheritance:

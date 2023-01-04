@@ -54,20 +54,32 @@ try:
     ]
     ext = ".pyx"
     jsonobj_ext_modules = [
-        Extension('MelodieInfra.jsonobject.api', ["MelodieInfra/jsonobject/api" + ext], ),
-        Extension('MelodieInfra.jsonobject.base', ["MelodieInfra/jsonobject/base" + ext], ),
-        Extension('MelodieInfra.jsonobject.base_properties', ["MelodieInfra/jsonobject/base_properties" + ext], ),
-        Extension('MelodieInfra.jsonobject.containers', ["MelodieInfra/jsonobject/containers" + ext], ),
-        Extension('MelodieInfra.jsonobject.properties', ["MelodieInfra/jsonobject/properties" + ext], ),
-        Extension('MelodieInfra.jsonobject.utils', ["MelodieInfra/jsonobject/utils" + ext], ),
+        Extension('MelodieInfra.jsonobject.api', [
+                  "MelodieInfra/jsonobject/api" + ext], ),
+        Extension('MelodieInfra.jsonobject.base', [
+                  "MelodieInfra/jsonobject/base" + ext], ),
+        Extension('MelodieInfra.jsonobject.base_properties', [
+                  "MelodieInfra/jsonobject/base_properties" + ext], ),
+        Extension('MelodieInfra.jsonobject.containers', [
+                  "MelodieInfra/jsonobject/containers" + ext], ),
+        Extension('MelodieInfra.jsonobject.properties', [
+                  "MelodieInfra/jsonobject/properties" + ext], ),
+        Extension('MelodieInfra.jsonobject.utils', [
+                  "MelodieInfra/jsonobject/utils" + ext], ),
     ]
     ext_modules = ext_modules + jsonobj_ext_modules
+    ext_modules = ext_modules+[
+        Extension('MelodieInfra.container.intmap',
+                  [
+                      'MelodieInfra/container/intmap.pyx',
+                    #   'MelodieInfra/container/mld_int_map.c',
+                  ])
+    ]
 except:
     import traceback
 
     traceback.print_exc()
     ext_modules = None
-
 
     def build_ext(_):
         return print(
@@ -108,7 +120,8 @@ setuptools.setup(
     project_urls={
         "Documentation": "http://docs.abm4all.com",
     },
-    packages=setuptools.find_namespace_packages(include=["Melodie", "Melodie.*", "MelodieInfra", "MelodieInfra.*"]),
+    packages=setuptools.find_namespace_packages(
+        include=["Melodie", "Melodie.*", "MelodieInfra", "MelodieInfra.*"]),
     install_requires=[
         "chardet",
         "numpy",

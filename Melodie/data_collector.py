@@ -16,11 +16,6 @@ if TYPE_CHECKING:
 
 
 class PropertyToCollect:
-    """
-    It is property to collect.
-    stores class and
-    """
-
     def __init__(self, property_name: str, as_type: Type):
         self.property_name = property_name
         self.as_type = as_type
@@ -28,11 +23,14 @@ class PropertyToCollect:
 
 class DataCollector:
     """
-    Data Collector collects data for each scenario.
-    At the beginning of simulation scenario, the DataCollector creates;
-    User could customize which data should be dumped to dataframe.
-    By simulation scenario exits, the DataCollector dumps the data to dataframe, and save to
-    data or datafile.
+    Data Collector collects data in the model.
+    
+    At the beginning of simulation, the ``DataCollector`` creates as the model creates;
+    
+    User could customize which property of agents or environment should be collected.
+    
+    Before the model running finished, the DataCollector dumps data to dataframe, and save to
+    database.
     """
 
     def __init__(self, target="sqlite"):
@@ -67,9 +65,9 @@ class DataCollector:
 
     def time_elapsed(self):
         """
-        Get the time spent of collecting data.
+        Get the time spent in data collection.
 
-        :return:
+        :return: Elapsed time, a ``float`` value.
         """
         return self._time_elapsed
 
@@ -77,12 +75,13 @@ class DataCollector:
         self, container_name: str, property_name: str, as_type: Type = None
     ):
         """
-        This method tells the data collector which property and in which agent container it should collect.
-        It can also be determined what type the data could be represented as in the database.
+        This method adds a property of agents in an agent_container to the data collector.
+        
+        The type which the data will be represented in the database can also be determined by ``as_type``.
 
-        :param container_name:
-        :param property_name:
-        :param as_type:
+        :param container_name: Container name, also a property name on model.
+        :param property_name: Property name on the agent.
+        :param as_type: Data type.
         :return:
         """
         if not hasattr(self.model, container_name):
@@ -97,8 +96,8 @@ class DataCollector:
         """
         This method tells the data collector which property of environment should be collected.
 
-        :param property_name:
-        :param as_type:
+        :param property_name: Environment properties
+        :param as_type: Data type.
         :return:
         """
         self._environment_properties_to_collect.append(
@@ -117,7 +116,7 @@ class DataCollector:
         """
         Get the agent property names to collect
 
-        :return: Dictionary agent_container_name --> properties_to_gather[]
+        :return: A ``dict``,  ``<agent_container_name --> agent list properties to gather>[]``
         """
         return {
             container_name: [prop.property_name for prop in props]
@@ -126,9 +125,9 @@ class DataCollector:
 
     def agent_containers(self) -> List[Tuple[str, "BaseAgentContainer"]]:
         """
-        Get all agent containers from model.
+        Get all agent containers with attributes to collect in the model.
 
-        :return:
+        :return: A list of tuples, ``<agent_container_name, agent_container_object>[]``
         """
         containers = []
         for container_name in self._agent_properties_to_collect.keys():
@@ -139,9 +138,9 @@ class DataCollector:
         """
         Collect agent properties.
 
-        :param period:
-        :param id_run:
-        :param id_scenario:
+        :param period: Current simulation step
+        :param id_run: Current simulation ``run_id``
+        :param id_scenario: Current scenario id
         :return: None
         """
         agent_containers = self.agent_containers()
@@ -169,8 +168,9 @@ class DataCollector:
     def status(self) -> bool:
         """
         If data collector is enabled.
-        Data collector is only enabled in the Simulator, because Trainer and Calibrator are only concerned over
-        the properties at the end of the model-running.
+
+        ``DataCollector`` is only enabled in the ``Simulator``, because ``Trainer`` and ``Calibrator`` are only concerned over
+        the properties at the end of the model-running, so recording middle status in ``Trainer`` or ``Calibrator`` is a waste of time and space.
 
         :return: bool.
         """
@@ -183,7 +183,7 @@ class DataCollector:
         """
         The main function to collect data.
 
-        :param period:
+        :param period: Current simulation step.
         :return: None
         """
         if not self.status:
@@ -210,7 +210,7 @@ class DataCollector:
         """
         Create a database connection
 
-        :return:
+        :return: ``melodie.DB`` object.
         """
         return self.model.create_db_conn()
 
@@ -218,9 +218,8 @@ class DataCollector:
     def calc_time(method):
         """
         Works as a decorator.
-        If you would like to define a custom data-collect method, please use `DataCollector.calc_time` as a decorator.
 
-        :return:
+        If you would like to define a custom data-collect method, please use ``DataCollector.calc_time`` as a decorator.
         """
 
         def wrapper(obj: DataCollector, *args, **kwargs):
@@ -236,7 +235,7 @@ class DataCollector:
         """
         Save the collected data into database.
 
-        :return:
+        :return: None
         """
         if not self.status:
             return
