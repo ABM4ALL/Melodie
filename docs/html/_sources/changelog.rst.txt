@@ -5,6 +5,12 @@ Change Log
 Major Version 0.x
 _________________
 
+v0.6.0 (Jan. 04, 2023)
+~~~~~~~~~~~~~~~~~~~~~~
+- Modified ``Calibrator.distance`` method, used ``model`` instead of ``environment`` as parameter.
+- Modified parameter names in ``Trainer.add_agent_training_property``.
+- Added API Reference page in docs.
+
 v0.5.0 (Dec. 17, 2022)
 ~~~~~~~~~~~~~~~~~~~~~~
 - Added visualizer API on ``Grid`` and ``Network``

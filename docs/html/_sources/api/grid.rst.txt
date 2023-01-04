@@ -6,9 +6,9 @@ Grid
     :show-inheritance:
 
     .. autoattribute:: grid
-        :annotation: Grid
+        :annotation:
         
-        ``Grid`` that this ``GridItem`` belongs to 
+        A ``Grid`` that this ``GridItem`` belongs to 
 
     .. autoattribute:: x
         :annotation:

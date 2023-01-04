@@ -135,7 +135,7 @@ class GACalibratorAlgorithm:
             recorded_env_properties: List[str],
             recorded_agent_properties: Dict[str, List[str]],
             params: GACalibratorParams,
-            target_func: "Callable[[Environment], Union[float, int]]",
+            target_func: "Callable[[Model], Union[float, int]]",
             manager: "Calibrator" = None,
             processors=1,
     ):
@@ -504,26 +504,26 @@ class Calibrator(BaseModellingManager):
         self.algorithm.run(scenario, self.current_algorithm_meta)
         self.algorithm.stop()
 
-    def target_function(self, env: "Environment") -> Union[float, int]:
+    def target_function(self, model: "Model") -> Union[float, int]:
         """
         The target function to be minimized
 
         :param env: Environment of the current model.
         :return:
         """
-        return self.distance(env)
+        return self.distance(model)
 
-    def distance(self, env: "Environment") -> float:
+    def distance(self, model: "Model") -> float:
         """
         The optimization of calibrator is to minimize the distance.
 
         Be sure to inherit this function in custom calibrator, and return a float value.
 
-        :param env: Environment of the model.
+        :param model: The current model after running the current parameter set.
         :return: None
         """
         raise NotImplementedError(
-            "Calibrator.distance(environment) must be overridden in sub-class!"
+            "Calibrator.distance(model) must be overridden in sub-class!"
         )
 
     def add_scenario_calibrating_property(self, prop: str):

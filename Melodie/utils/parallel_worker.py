@@ -211,14 +211,10 @@ def sub_routine_calibrator(
                     row["agent_id"] = row.pop("id")
             env: Environment = model.environment
             env_data = env.to_dict(
-                # calibrator.properties + calibrator.watched_env_properties
                 calibrator.watched_env_properties
             )
             env_data.update({prop: scenario.to_dict()[prop] for prop in calibrator.properties})
-            env_data["target_function_value"] = env_data["distance"] = calibrator.distance(env)
-            # env_data["target_function_value"] = calibrator.distance(env)  # calibrator.target_function(env)
-            # env_data["distance"] = calibrator.distance(env)
-            # env_data["utility"] = trainer.utility(env)
+            env_data["target_function_value"] = env_data["distance"] = calibrator.distance(model)
             dumped = cloudpickle.dumps((chrom, agent_data, env_data))
             t1 = time.time()
             logger.info(
