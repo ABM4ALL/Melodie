@@ -68,13 +68,12 @@ try:
                   "MelodieInfra/jsonobject/utils" + ext], ),
     ]
     ext_modules = ext_modules + jsonobj_ext_modules
-    ext_modules = ext_modules+[
-        Extension('MelodieInfra.container.intmap',
-                  [
-                      'MelodieInfra/container/intmap.pyx',
-                    #   'MelodieInfra/container/mld_int_map.c',
-                  ])
-    ]
+    # ext_modules = ext_modules+[
+    #     Extension('MelodieInfra.container.intmap',
+    #               [
+    #                   'MelodieInfra/container/intmap.pyx',
+    #               ])
+    # ]
 except:
     import traceback
 
