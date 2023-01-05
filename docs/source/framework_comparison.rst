@@ -496,12 +496,12 @@ For example, in the ``CovidCalibrator`` class, the users need to define
 
 * First, the parameter to calibrate, which must be an attribute of the ``scenario`` object (Line 9), which is the ``infection_prob``;
 * Second, optionally, some ``environment`` properties that are interesting to look at their evolution in the calibration process (Line 10);
-* Third, the ``distance`` between the model output and a pre-defined "target" (Line 12-13), which is the percentage of "uninfected people" in the population by the end of the simulation.
+* Third, the ``distance`` between the model output and a pre-defined "target" (Line 12-14), which is the percentage of "uninfected people" in the population by the end of the simulation.
 
 .. code-block:: Python
    :caption: calibrator.py
    :linenos:
-   :emphasize-lines: 9-10, 12-13
+   :emphasize-lines: 9-10, 12-14
 
    from Melodie import Calibrator
 
@@ -514,7 +514,8 @@ For example, in the ``CovidCalibrator`` class, the users need to define
            self.add_scenario_calibrating_property("infection_prob")
            self.add_environment_property("s0")
 
-       def distance(self, environment: "CovidEnvironment") -> float:
+       def distance(self, model: "CovidModel") -> float:
+           environment = model.environment
            return (environment.s0 / environment.scenario.agent_num - 0.5) ** 2
 
 The code above is taken from the :ref:`CovidContagionCalibrator` example.
