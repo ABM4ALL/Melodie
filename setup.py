@@ -1,7 +1,7 @@
 import os
 
 import setuptools
-
+import platform
 from distutils.extension import Extension
 
 
@@ -91,6 +91,29 @@ with open("Melodie/version.txt", "r", encoding="utf8") as fv:
 with open("README.md", "r", encoding="utf8") as fh:
     long_description = fh.read()
 
+
+def scientific_toolchain_versions():
+    python_distribution_bits = 32 if "32" in platform.architecture()[0] else 64
+    version = (sys.version_info.major, sys.version_info.minor)
+    if python_distribution_bits == 32:
+        assert version <= (
+            3, 9), "Melodie does not support 32 bit cpython interpreter > 3.9"
+    numpy_requirement = "numpy"
+    matplotlib_requirement = "matplotlib"
+    scipy_requirement = "scipy"
+    if version == (3, 7):
+        matplotlib_requirement = "matplotlib <= 3.5.3"
+        scipy_requirement = "scipy <= 1.7.3"
+    elif version == (3, 8):
+        if python_distribution_bits == 32:
+            scipy_requirement = "scipy <= 1.9.1"
+    elif version == (3, 9):
+        if python_distribution_bits == 32:
+            scipy_requirement = "scipy <= 1.9.1"
+
+    return [numpy_requirement, matplotlib_requirement, scipy_requirement]
+
+
 setuptools.setup(
     name="Melodie",
     version=version,
@@ -121,11 +144,9 @@ setuptools.setup(
     },
     packages=setuptools.find_namespace_packages(
         include=["Melodie", "Melodie.*", "MelodieInfra", "MelodieInfra.*"]),
-    install_requires=[
+    install_requires=scientific_toolchain_versions() + [
         "chardet",
-        "numpy",
         "pandas",
-        "matplotlib",
         "seaborn",
         "networkx",
         "openpyxl",
@@ -134,7 +155,7 @@ setuptools.setup(
         "astunparse",
         "pprintast",
         "cloudpickle",
-        "cython==3.0.0a10",
+        "cython==3.0.0a11",
         "scikit-opt~=0.6",
         "rpyc",
     ],
