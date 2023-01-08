@@ -1,12 +1,15 @@
+import ast
 import logging
-from typing import Dict, Set, Union, List, Tuple, Type
+import os
+from typing import Dict, Set, Union, List, Tuple, Type, TYPE_CHECKING
 
 import networkx as nx
 import numpy as np
 
 from .boost.basics import Agent
 from .boost.agent_list import AgentList
-
+if TYPE_CHECKING:
+    from .model import Model
 logger = logging.getLogger(__name__)
 
 
@@ -39,7 +42,7 @@ class Edge:
             edge_properties: Dict[str, Union[int, str, float, bool]],
     ):
         """
-        
+
         :param category_1: Source agent category
         :param agent_1_id: Source agent id
         :param category_2: Target agent category
@@ -51,7 +54,8 @@ class Edge:
         self.agent_1_id = agent_1_id
         self.category_2 = category_2
         self.agent_2_id = agent_2_id
-        self.properties: Dict[str, Union[int, str, float, bool]] = edge_properties
+        self.properties: Dict[str, Union[int,
+                                         str, float, bool]] = edge_properties
         self.setup()
         self.post_setup()
 
@@ -80,7 +84,8 @@ NodeType = Tuple[int, int]
 
 
 class Network:
-    def __init__(self, edge_cls: Type[Edge] = None, directed=False):
+    def __init__(self, model=None, edge_cls: Type[Edge] = None, directed=False, name='network'):
+        self.model: "Model" = model
         self.simple = True
         self.directed = directed
         self.nodes: Set[NodeType] = set()
@@ -88,6 +93,8 @@ class Network:
         self.edge_cls: Type[Edge] = edge_cls if edge_cls is not None else Edge
         self.agent_categories: Dict[int, AgentList] = {}
 
+        self.layout_file = os.path.join(
+            model.config.visualizer_tmpdir, name+'_layout.gexf')
         self.layout = {}
         self._layout_creator = lambda G: nx.spring_layout(G)
 
@@ -269,11 +276,33 @@ class Network:
 
         :return: None
         """
+        if os.path.exists(self.layout_file):
+            try:
+                G = nx.read_gexf(self.layout_file, node_type=ast.literal_eval)
+                positions = {}
+                for node in G.nodes:
+                    pos = G.nodes[node]['viz']['position']
+                    positions[node] = np.array([pos['x'], pos['y']])
+                self.layout = positions
+                return
+            except Exception:
+                import traceback
+                traceback.print_exc()
+        
         g = nx.DiGraph()
         for start_node in self.edges.keys():
             for end_node in self.edges[start_node].keys():
                 g.add_edge(start_node, end_node)
         layout = self._layout_creator(g)
+        for node, pos in layout.items():
+            g.nodes[node]['viz'] = {
+                "position": {
+                    "x": pos[0],
+                    "y": pos[1],
+                    "z": 0
+                }
+            }
+        nx.write_gexf(g, self.layout_file)
         self.layout = layout
 
     def get_position(self, agent_category: int, agent_id: int):

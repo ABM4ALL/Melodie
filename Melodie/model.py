@@ -63,7 +63,7 @@ class Model:
     ):
 
         self.scenario = scenario
-        self.config = config
+        self.config: "Config" = config
 
         self.environment: Optional[Environment] = None
         self.data_collector: Optional[DataCollector] = None
@@ -159,7 +159,7 @@ class Model:
         """
         if network_cls is None:
             network_cls = Network
-        network = network_cls(edge_cls)
+        network = network_cls(model=self, edge_cls=edge_cls)
         self.initialization_queue.append(network)
         return network
 
