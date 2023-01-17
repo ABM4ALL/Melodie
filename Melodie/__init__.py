@@ -6,6 +6,7 @@ from .utils import *
 from .boost.agent_list import BaseAgentContainer, AgentList, AgentDict
 from .boost.basics import Environment, Element, Agent
 from .boost.grid import Grid, Spot, GridAgent, AgentIDManager
+from .boost.fastrand import set_seed
 from .calibrator import Calibrator
 from .data_collector import DataCollector
 from .data_loader import DataLoader, DataFrameInfo, MatrixInfo

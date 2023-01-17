@@ -1,8 +1,9 @@
 import random
+import numpy as np
 
 import pandas as pd
 
-from Melodie import Agent, AgentList, GridAgent, AgentDict, NetworkAgent
+from Melodie import Agent, AgentList, GridAgent, AgentDict, NetworkAgent, set_seed
 
 from .config import model
 
@@ -161,3 +162,11 @@ def test_grid_agents():
     al = AgentList(GridAgent1, model)
     al.setup_agents(10)
     al.to_list(["x"])
+
+def test_random_sample_seed():
+    set_seed(5)
+
+    al = AgentList(Agent, model)
+    al.setup_agents(10)
+    a1, a2 = al.random_sample(2)
+    print(a1.id, a2.id)
