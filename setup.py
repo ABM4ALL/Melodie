@@ -120,9 +120,9 @@ setuptools.setup(
     description="A general framework that can be used to establish agent-based models for specific uses.",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/SongminYu/Melodie",
+    url="https://github.com/ABM4ALL/Melodie",
     author="Songmin Yu",
-    author_email="songmin.yu@isi.fraunhofer.de",
+    author_email="abm4all@outlook.com",
     license="BSD 3",
     classifiers=[
         "Development Status :: 4 - Beta",
