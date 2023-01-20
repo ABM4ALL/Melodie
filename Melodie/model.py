@@ -54,6 +54,14 @@ class ModelRunRoutine:
 
 
 class Model:
+    """
+    The base class for Model. 
+    
+    There are three major methods, ``create()``, ``setup()`` and ``run()``. ``create()`` and then ``setup()`` are called when the model creates,
+    and ``run()`` is called for model running. 
+
+    To build up your own model, inherit this class and override ``create()``, ``setup()`` and ``run()``
+    """
     def __init__(
             self,
             config: "Config",
@@ -61,6 +69,12 @@ class Model:
             run_id_in_scenario: int = 0,
             visualizer: Visualizer = None,
     ):
+        """
+        :param config: Type ``Melodie.Config``
+        :param scenario: Type ``Melodie.Scenario`` containing model parameters.
+        :param run_id_in_scenario: Current ``run_id`` in the current scenario, an ``int`` from [0, ``number_of_run`` ), and 0 by default. 
+        :param visualizer: ``Visualizer`` instance if needs visualization, ``None`` by default, indicating no need for visualization.
+        """
 
         self.scenario = scenario
         self.config: "Config" = config

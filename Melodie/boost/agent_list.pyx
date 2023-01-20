@@ -79,10 +79,14 @@ cdef class DictIter:
 
 cdef class BaseAgentContainer():
     """
-    The base class that contains agents
+    The base class that containing homogeneous agents.
+
     """
 
     def __init__(self):
+        """
+        No parameter involved in this class
+        """
         self._id_offset = -1
         self.scenario: Union['Scenario', None] = None
 
@@ -246,7 +250,15 @@ cdef class AgentDict(BaseAgentContainer):
         self._set_properties(props_df)
 
 cdef class AgentList(BaseAgentContainer):
+    """
+    The class to manage a list of homogeneous agents.
+
+    """
     def __init__(self, agent_class: Type[AgentGeneric], model: 'Model') -> None:
+        """
+        :param agent_class: Class of agent to be managed in this agent container.
+        :param model: The instance of current model.
+        """
         super(AgentList, self).__init__()
         self._iter_index = 0
         self.scenario = model.scenario

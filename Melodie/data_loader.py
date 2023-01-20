@@ -11,6 +11,9 @@ from .scenario_manager import Scenario
 from .table_generator import DataFrameGenerator
 
 class DataFrameInfo:
+    """
+    DataFrameInfo provides standard format for input tables as parameters.
+    """
     df_name: str
     columns: Dict[str, "sqlalchemy.types"]
     file_name: Optional[str] = None
@@ -21,6 +24,12 @@ class DataFrameInfo:
             columns: Dict[str, "sqlalchemy.types"],
             file_name: Optional[str] = None,
     ):
+        """
+        :param df_name: Name of dataframe.
+        :param columns: A dict, ``column name --> column data type``.
+        :param file_name: File name to load this dataframe, None by default. If None, be sure to
+            generate the dataframe in the DataLoader.
+        """
         self.df_name: str = df_name
         self.columns: Dict[str, "sqlalchemy.types"] = columns
         self.file_name: Optional[str] = file_name
@@ -35,12 +44,21 @@ class DataFrameInfo:
 
 
 class MatrixInfo:
+    """
+    MatrixInfo provides standard format for input matrices as parameters.
+    """
     def __init__(
             self,
             mat_name: str,
             data_type: sqlalchemy.types,
             file_name: Optional[str] = None,
     ):
+        """
+        :param mat_name: Name of the current matrix.
+        :param columns: A type indicating the data type in the matrix.
+        :param file_name: File name to load this dataframe, None by default. If None, be sure to
+            generate the dataframe in the DataLoader.
+        """
         self.mat_name: str = mat_name
         self.data_type: sqlalchemy.types = data_type
         self.file_name: Optional[str] = file_name
@@ -72,6 +90,12 @@ class DataLoader:
             scenario_cls: Type[Scenario],
             as_sub_worker=False,
     ):
+        """
+        :param manager: The ``Simulator``/``Trainer``/``Calibrator`` this dataloader belongs to.
+        :param config: A ``Melodie.Config`` instance, the configuration in current project.
+        :param scenario_cls: The class of scenario used in this project.
+        :param as_sub_worker: If True, DataLoader will be disabled to avoid unneed database operations.
+        """
         MelodieExceptions.Assertions.NotNone(
             scenario_cls, "Scenario class should not be None!"
         )

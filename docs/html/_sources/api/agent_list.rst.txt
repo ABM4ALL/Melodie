@@ -15,4 +15,4 @@ AgentList
     .. autoattribute:: agents
         :annotation:
         
-        A ``list`` of ``Agent``s, the actual data structure storing agents.
+        A ``list`` of ``Agent``, the actual data structure storing agents.

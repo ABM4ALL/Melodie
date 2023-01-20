@@ -396,6 +396,10 @@ class GACalibratorAlgorithm:
 
 
 class Calibrator(BaseModellingManager):
+    """
+    Calibrator calibrates the parameters of the scenario 
+    by minimizing the distance between model output and empirical evidence.
+    """
     def __init__(
             self,
             config: "Config",
@@ -404,6 +408,14 @@ class Calibrator(BaseModellingManager):
             data_loader_cls: Type["DataLoader"],
             processors=1,
     ):
+        """
+        :param config: Config instance for current project.
+        :param scenario_cls: Scenario class for current project.
+        :param model_cls: Model class in current project.
+        :param data_loader_cls: DataLoader class in current project.
+        :param processors: Each path in current iteration will be computed parallelly, this parameter
+         stands for processor cores used in parallel computation.
+        """
         super().__init__(
             config=config,
             scenario_cls=scenario_cls,

@@ -8,7 +8,7 @@ Grid
     .. autoattribute:: grid
         :annotation:
         
-        A ``Grid`` that this ``GridItem`` belongs to 
+        A ``Grid`` that this ``GridItem`` belongs to. 
 
     .. autoattribute:: x
         :annotation:
@@ -16,9 +16,9 @@ Grid
         Coordinate x on the grid, an ``int``.
 
     .. autoattribute:: y
-        :annotation: int
+        :annotation:
         
-        Coordinate y on the grid, an ``int``
+        Coordinate y on the grid, an ``int``.
 
 .. autoclass:: Melodie.boost.grid.GridAgent
     :members:

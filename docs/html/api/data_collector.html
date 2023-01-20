@@ -14,7 +14,6 @@
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="author" title="About these documents" href="../about.html" />
@@ -220,7 +219,7 @@
            <div itemprop="articleBody">
              
   <section id="module-Melodie.data_collector">
-<span id="datacollector"></span><h1>DataCollector<a class="headerlink" href="#module-Melodie.data_collector" title="Permalink to this heading"></a></h1>
+<span id="datacollector"></span><h1>DataCollector<a class="headerlink" href="#module-Melodie.data_collector" title="Permalink to this headline"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="Melodie.data_collector.DataCollector">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Melodie.data_collector.</span></span><span class="sig-name descname"><span class="pre">DataCollector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'sqlite'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.data_collector.DataCollector" title="Permalink to this definition"></a></dt>
@@ -230,6 +229,11 @@
 <p>User could customize which property of agents or environment should be collected.</p>
 <p>Before the model running finished, the DataCollector dumps data to dataframe, and save to
 database.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>target</strong> – A string indicating database type, currently just support “sqlite”.</p>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="Melodie.data_collector.DataCollector.setup">
 <span class="sig-name descname"><span class="pre">setup</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.data_collector.DataCollector.setup" title="Permalink to this definition"></a></dt>

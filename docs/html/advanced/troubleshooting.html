@@ -14,7 +14,6 @@
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="author" title="About these documents" href="../about.html" />
@@ -220,14 +219,14 @@
            <div itemprop="articleBody">
              
   <section id="troubleshooting">
-<h1>TroubleShooting<a class="headerlink" href="#troubleshooting" title="Permalink to this heading"></a></h1>
+<h1>TroubleShooting<a class="headerlink" href="#troubleshooting" title="Permalink to this headline"></a></h1>
 <section id="port-already-in-use">
-<h2>Port Already in use<a class="headerlink" href="#port-already-in-use" title="Permalink to this heading"></a></h2>
+<h2>Port Already in use<a class="headerlink" href="#port-already-in-use" title="Permalink to this headline"></a></h2>
 <p>Don’t panic when this error occurs.
 This error is because two Melodie Visualizers cannot run on the same port.
 Please verify that there aren’t any other visualizer process running on your computer.</p>
 <section id="windows">
-<h3>Windows<a class="headerlink" href="#windows" title="Permalink to this heading"></a></h3>
+<h3>Windows<a class="headerlink" href="#windows" title="Permalink to this headline"></a></h3>
 <p>On Windows, use this command:</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>netstat -aon<span class="p">|</span>findstr <span class="s2">&quot;8765&quot;</span>
 </pre></div>
@@ -246,7 +245,7 @@ TCP    <span class="o">[</span>::1<span class="o">]</span>:8765             <spa
 </div>
 </section>
 <section id="macos-linux-or-other-nix-systems">
-<h3>MacOS, Linux or other <a href="#id1"><span class="problematic" id="id2">*</span></a>nix systems<a class="headerlink" href="#macos-linux-or-other-nix-systems" title="Permalink to this heading"></a></h3>
+<h3>MacOS, Linux or other <a href="#id1"><span class="problematic" id="id2">*</span></a>nix systems<a class="headerlink" href="#macos-linux-or-other-nix-systems" title="Permalink to this headline"></a></h3>
 <p>On MacOS or Linux, use this command:</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="c1"># lsof -i:8765</span>
 COMMAND   PID USER   FD   TYPE   DEVICE SIZE/OFF NODE NAME
