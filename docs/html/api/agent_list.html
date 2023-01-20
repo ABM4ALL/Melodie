@@ -489,7 +489,7 @@
 <h1>AgentList<a class="headerlink" href="#agentlist" title="Permalink to this heading"></a></h1>
 <span class="target" id="module-Melodie.boost.agent_list"></span><dl class="py class">
 <dt class="sig sig-object py" id="Melodie.boost.agent_list.BaseAgentContainer">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">BaseAgentContainer</span></span><a class="headerlink" href="#Melodie.boost.agent_list.BaseAgentContainer" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Melodie.boost.agent_list.</span></span><span class="sig-name descname"><span class="pre">BaseAgentContainer</span></span><a class="headerlink" href="#Melodie.boost.agent_list.BaseAgentContainer" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>The base class that containing homogeneous agents.</p>
 <p>No parameter involved in this class</p>
@@ -518,30 +518,27 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="Melodie.boost.agent_list.BaseAgentContainer.to_list">
-<span class="sig-name descname"><span class="pre">to_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">column_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.boost.agent_list.BaseAgentContainer.to_list" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">to_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">column_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#Melodie.boost.agent_list.BaseAgentContainer.to_list" title="Permalink to this definition"></a></dt>
 <dd><p>Convert all agent properties to a list of dict.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>column_names</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]]) – property names</p>
+<dd class="field-odd"><p><strong>column_names</strong> – property names</p>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>]</p>
-</dd>
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>None</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="Melodie.boost.agent_list.BaseAgentContainer.type_check">
-<span class="sig-name descname"><span class="pre">type_check</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">param_names</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agent_params_df</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.boost.agent_list.BaseAgentContainer.type_check" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">type_check</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">param_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agent_params_df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.boost.agent_list.BaseAgentContainer.type_check" title="Permalink to this definition"></a></dt>
 <dd><p>Check if the parameters in the data frame has corresponding type with param_name</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>param_names</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – Parameter names to be checked</p></li>
-<li><p><strong>agent_params_df</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>) – Dataframe for agent initial parameters.</p></li>
+<li><p><strong>param_names</strong> – Parameter names to be checked</p></li>
+<li><p><strong>agent_params_df</strong> – Dataframe for agent initial parameters.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -554,7 +551,7 @@
 
 <dl class="py class">
 <dt class="sig sig-object py" id="Melodie.boost.agent_list.AgentList">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">AgentList</span></span><a class="headerlink" href="#Melodie.boost.agent_list.AgentList" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Melodie.boost.agent_list.</span></span><span class="sig-name descname"><span class="pre">AgentList</span></span><a class="headerlink" href="#Melodie.boost.agent_list.AgentList" title="Permalink to this definition"></a></dt>
 <dd><p>The class to manage a list of homogeneous agents.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -572,7 +569,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="Melodie.boost.agent_list.AgentList.add">
-<span class="sig-name descname"><span class="pre">add</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.boost.agent_list.AgentList.add" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">add</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#Melodie.boost.agent_list.AgentList.add" title="Permalink to this definition"></a></dt>
 <dd><p>Add an agent onto this agent list.</p>
 <p>Notice:</p>
 <ol class="arabic simple">
@@ -583,25 +580,19 @@
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>agent</strong> – If None, an agent of corresponding type will be automatically created.</p>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
-</dd>
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>None</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="Melodie.boost.agent_list.AgentList.all_agent_ids">
-<span class="sig-name descname"><span class="pre">all_agent_ids</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.boost.agent_list.AgentList.all_agent_ids" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">all_agent_ids</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#Melodie.boost.agent_list.AgentList.all_agent_ids" title="Permalink to this definition"></a></dt>
 <dd><p>Get <code class="docutils literal notranslate"><span class="pre">id</span></code> of all agents.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>A <code class="docutils literal notranslate"><span class="pre">list</span></code> of <code class="docutils literal notranslate"><span class="pre">int</span></code>.</p>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A <code class="docutils literal notranslate"><span class="pre">list</span></code> of <code class="docutils literal notranslate"><span class="pre">int</span></code>.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -650,17 +641,14 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="Melodie.boost.agent_list.AgentList.random_sample">
-<span class="sig-name descname"><span class="pre">random_sample</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sample_num</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.boost.agent_list.AgentList.random_sample" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">random_sample</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sample_num</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">AgentGeneric</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#Melodie.boost.agent_list.AgentList.random_sample" title="Permalink to this definition"></a></dt>
 <dd><p>Randomly sample <code class="docutils literal notranslate"><span class="pre">sample_num</span></code> agents from the container</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>sample_num</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – </p>
+<dd class="field-odd"><p><strong>sample_num</strong> – </p>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[AgentGeneric]</p>
-</dd>
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p></p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p></p>
 </dd>
 </dl>
 </dd></dl>
@@ -681,7 +669,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="Melodie.boost.agent_list.AgentList.set_properties">
-<span class="sig-name descname"><span class="pre">set_properties</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">props_df</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.boost.agent_list.AgentList.set_properties" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">set_properties</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">props_df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.boost.agent_list.AgentList.set_properties" title="Permalink to this definition"></a></dt>
 <dd><p>Extract properties from a dataframe, and Each row in the dataframe represents the property of an agent.</p>
 <p>For example, if there are 100 agents with <code class="docutils literal notranslate"><span class="pre">id</span></code> from 0 to 99, and each agent contains properties <code class="docutils literal notranslate"><span class="pre">a:</span> <span class="pre">int</span></code> and <code class="docutils literal notranslate"><span class="pre">b:</span> <span class="pre">float</span></code>,
 the <code class="docutils literal notranslate"><span class="pre">props_df</span></code> could be like this:</p>
@@ -717,7 +705,7 @@ while in <code class="docutils literal notranslate"><span class="pre">scenario</
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>props_df</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>) – <code class="docutils literal notranslate"><span class="pre">pd.DataFrame</span></code> containing agent initial properties.</p>
+<dd class="field-odd"><p><strong>props_df</strong> – <code class="docutils literal notranslate"><span class="pre">pd.DataFrame</span></code> containing agent initial properties.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p></p>
@@ -734,11 +722,11 @@ while in <code class="docutils literal notranslate"><span class="pre">scenario</
 
 <dl class="py method">
 <dt class="sig sig-object py" id="Melodie.boost.agent_list.AgentList.setup_agents">
-<span class="sig-name descname"><span class="pre">setup_agents</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agents_num</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params_df</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.boost.agent_list.AgentList.setup_agents" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">setup_agents</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agents_num</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params_df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.boost.agent_list.AgentList.setup_agents" title="Permalink to this definition"></a></dt>
 <dd><p>Setup agents with specific number, and initialize their property by a dataframe if a dataframe is passed.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>agents_num</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – A integer.</p>
+<dd class="field-odd"><p><strong>agents_num</strong> – A integer.</p>
 </dd>
 </dl>
 <p>:param params_df : A pandas dataframe whose specification is the same as the argument of <code class="docutils literal notranslate"><span class="pre">set_properties</span></code>
@@ -747,35 +735,29 @@ while in <code class="docutils literal notranslate"><span class="pre">scenario</
 
 <dl class="py method">
 <dt class="sig sig-object py" id="Melodie.boost.agent_list.AgentList.to_dataframe">
-<span class="sig-name descname"><span class="pre">to_dataframe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">column_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.boost.agent_list.AgentList.to_dataframe" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">to_dataframe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">column_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="headerlink" href="#Melodie.boost.agent_list.AgentList.to_dataframe" title="Permalink to this definition"></a></dt>
 <dd><p>Store all agent values to dataframe.
 This method is always called by the data collector.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>column_names</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]]) – property names to store</p>
+<dd class="field-odd"><p><strong>column_names</strong> – property names to store</p>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></p>
-</dd>
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p></p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="Melodie.boost.agent_list.AgentList.to_list">
-<span class="sig-name descname"><span class="pre">to_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">column_names</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.boost.agent_list.AgentList.to_list" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">to_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">column_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#Melodie.boost.agent_list.AgentList.to_list" title="Permalink to this definition"></a></dt>
 <dd><p>Dump all agent and their properties into a list of dict.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>column_names</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – The property names to be dumped.</p>
+<dd class="field-odd"><p><strong>column_names</strong> – The property names to be dumped.</p>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>]</p>
-</dd>
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p></p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p></p>
 </dd>
 </dl>
 </dd></dl>

@@ -489,25 +489,22 @@
 <span id="scenario"></span><h1>Scenario<a class="headerlink" href="#module-Melodie.scenario_manager" title="Permalink to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="Melodie.scenario_manager.Scenario">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Scenario</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id_scenario</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.scenario_manager.Scenario" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Melodie.scenario_manager.</span></span><span class="sig-name descname"><span class="pre">Scenario</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id_scenario</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.scenario_manager.Scenario" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Element</span></code></p>
 <p>Scenario contains a set of parameters used in simulation model.
 It is created before the initialization of <code class="docutils literal notranslate"><span class="pre">Model</span></code>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>id_scenario</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code>]) – the id of scenario. if None, this will be self-increment from 0 to scenarios_number-1</p>
+<dd class="field-odd"><p><strong>id_scenario</strong> – the id of scenario. if None, this will be self-increment from 0 to scenarios_number-1</p>
 </dd>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="Melodie.scenario_manager.Scenario.copy">
-<span class="sig-name descname"><span class="pre">copy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.scenario_manager.Scenario.copy" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">copy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#Melodie.scenario_manager.Scenario" title="Melodie.scenario_manager.Scenario"><span class="pre">Scenario</span></a></span></span><a class="headerlink" href="#Melodie.scenario_manager.Scenario.copy" title="Permalink to this definition"></a></dt>
 <dd><p>Copy current scenario to a new scenario.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="#Melodie.scenario_manager.Scenario" title="Melodie.scenario_manager.Scenario"><code class="xref py py-class docutils literal notranslate"><span class="pre">Scenario</span></code></a></p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>New scenario object.</p>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>New scenario object.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -542,34 +539,28 @@ It is created before the initialization of <code class="docutils literal notrans
 
 <dl class="py method">
 <dt class="sig sig-object py" id="Melodie.scenario_manager.Scenario.get_dataframe">
-<span class="sig-name descname"><span class="pre">get_dataframe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df_info</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.scenario_manager.Scenario.get_dataframe" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">get_dataframe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df_info</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="data_info.html#Melodie.data_loader.DataFrameInfo" title="Melodie.data_loader.DataFrameInfo"><span class="pre">DataFrameInfo</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="headerlink" href="#Melodie.scenario_manager.Scenario.get_dataframe" title="Permalink to this definition"></a></dt>
 <dd><p>Get dataframe from scenario</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>df_info</strong> (<a class="reference internal" href="data_info.html#Melodie.data_loader.DataFrameInfo" title="Melodie.data_loader.DataFrameInfo"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrameInfo</span></code></a>) – </p>
+<dd class="field-odd"><p><strong>df_info</strong> – </p>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></p>
-</dd>
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>pandas dataframe.</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>pandas dataframe.</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="Melodie.scenario_manager.Scenario.get_matrix">
-<span class="sig-name descname"><span class="pre">get_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">matrix_info</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.scenario_manager.Scenario.get_matrix" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">get_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">matrix_info</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="data_info.html#Melodie.data_loader.MatrixInfo" title="Melodie.data_loader.MatrixInfo"><span class="pre">MatrixInfo</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="headerlink" href="#Melodie.scenario_manager.Scenario.get_matrix" title="Permalink to this definition"></a></dt>
 <dd><p>Get matrix from scenario.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>matrix_info</strong> (<a class="reference internal" href="data_info.html#Melodie.data_loader.MatrixInfo" title="Melodie.data_loader.MatrixInfo"><code class="xref py py-class docutils literal notranslate"><span class="pre">MatrixInfo</span></code></a>) – </p>
+<dd class="field-odd"><p><strong>matrix_info</strong> – </p>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>
-</dd>
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>2D numpy array</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>2D numpy array</p>
 </dd>
 </dl>
 </dd></dl>
