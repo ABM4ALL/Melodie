@@ -1,3 +1,4 @@
+from inspect import isclass
 import os
 import sys
 
@@ -38,7 +39,8 @@ extensions = [
     "sphinx_rtd_theme",
     "recommonmark",
     "sphinx_markdown_tables",
-    "sphinx.ext.autosectionlabel"
+    "sphinx.ext.autosectionlabel",
+    "sphinx_autodoc_typehints"
 ]
 # autosectionlabel_prefix_document = True
 
@@ -81,3 +83,16 @@ html_sidebars = {
 
 autodoc_member_order = "bysource"
 autoclass_content = "both"
+add_module_names = False
+
+# typehints_use_signature = True
+# typehints_use_signature_return = True
+
+
+# def typehints_formatter(s, cfg):
+#     print(s, isclass(s) , ("Melodie" in str(s)))
+#     if isclass(s) and ("Melodie" in str(s)):
+#         print(s.__name__)
+#         return str(s.__name__)
+#     # print(s, type(s))
+#     return str(s)
