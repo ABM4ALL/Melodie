@@ -22,7 +22,7 @@ affiliations:
    index: 1
  - name: School of Reliability and Systems Engineering, Beihang University, China
    index: 2
-date: 2 January 2023
+date: 21 January 2023
 bibliography: paper.bib
 ---
 
@@ -158,7 +158,8 @@ based on the same covid contagion model developed with all the three packages.
 
 This work is not supported by any funding. 
 Dr. Songmin Yu would like to thank the free and creative working atmosphere at Fraunhofer ISI, 
-especially the inspiring talks with the colleagues.
-Zhanyi Hou...
+especially the inspiring talks and nice beer time with the colleagues.
+Zhanyi Hou would like to thank his supervisor and his research partners from Beihang University 
+for their support and guidance for programming.
 
 # References
