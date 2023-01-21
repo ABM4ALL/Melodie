@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Grid &mdash; Melodie 0.5.0 documentation</title>
+  <title>Grid &mdash; Melodie 0.6.0 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -14,7 +14,6 @@
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="author" title="About these documents" href="../about.html" />
@@ -151,7 +150,11 @@
 <li class="toctree-l2"><a class="reference internal" href="data_collector.html">DataCollector</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Grid</a></li>
 <li class="toctree-l2"><a class="reference internal" href="network.html">Network</a></li>
-<li class="toctree-l2"><a class="reference internal" href="data_info.html">DataInfo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="data_info.html">DataInfo</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="data_info.html#dataframeinfo">DataFrameInfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="data_info.html#matrixinfo">MatrixInfo</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="data_loader.html">DataLoader</a></li>
 <li class="toctree-l2"><a class="reference internal" href="scenario.html">Scenario</a></li>
 <li class="toctree-l2"><a class="reference internal" href="simulator.html">Simulator</a></li>
@@ -163,6 +166,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../changelog.html">Change Log</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../changelog.html#major-version-0-x">Major Version 0.x</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../changelog.html#v0-6-0-jan-04-2023">v0.6.0 (Jan. 04, 2023)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../changelog.html#v0-5-0-dec-17-2022">v0.5.0 (Dec. 17, 2022)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../changelog.html#v0-4-2-dec-15-2022">v0.4.2 (Dec. 15, 2022)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../changelog.html#v0-4-1-dec-12-2022">v0.4.1 (Dec. 12, 2022)</a></li>
@@ -215,8 +219,427 @@
            <div itemprop="articleBody">
              
   <section id="grid">
-<h1>Grid<a class="headerlink" href="#grid" title="Permalink to this heading"></a></h1>
-<p>Under development.</p>
+<h1>Grid<a class="headerlink" href="#grid" title="Permalink to this headline"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="Melodie.boost.grid.GridItem">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Melodie.boost.grid.</span></span><span class="sig-name descname"><span class="pre">GridItem</span></span><a class="headerlink" href="#Melodie.boost.grid.GridItem" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="agent.html#Melodie.boost.basics.Agent" title="Melodie.boost.basics.Agent"><code class="xref py py-class docutils literal notranslate"><span class="pre">Melodie.boost.basics.Agent</span></code></a></p>
+<p>Base class for GridAgent and Spot, an agent with x and y coordinate.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>agent_id</strong> – ID of <code class="docutils literal notranslate"><span class="pre">GridItem</span></code>, should be unique for same class.</p></li>
+<li><p><strong>grid</strong> – The instance of <code class="docutils literal notranslate"><span class="pre">Grid</span></code> that this <code class="docutils literal notranslate"><span class="pre">GridItem</span></code> on.</p></li>
+<li><p><strong>x</strong> – X coordinate on grid, an <code class="docutils literal notranslate"><span class="pre">int</span></code>.</p></li>
+<li><p><strong>y</strong> – Y coordinate on grid, an <code class="docutils literal notranslate"><span class="pre">int</span></code>.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Melodie.boost.grid.GridItem.grid">
+<span class="sig-name descname"><span class="pre">grid</span></span><a class="headerlink" href="#Melodie.boost.grid.GridItem.grid" title="Permalink to this definition"></a></dt>
+<dd><p>A <code class="docutils literal notranslate"><span class="pre">Grid</span></code> that this <code class="docutils literal notranslate"><span class="pre">GridItem</span></code> belongs to.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Melodie.boost.grid.GridItem.x">
+<span class="sig-name descname"><span class="pre">x</span></span><a class="headerlink" href="#Melodie.boost.grid.GridItem.x" title="Permalink to this definition"></a></dt>
+<dd><p>Coordinate x on the grid, an <code class="docutils literal notranslate"><span class="pre">int</span></code>.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Melodie.boost.grid.GridItem.y">
+<span class="sig-name descname"><span class="pre">y</span></span><a class="headerlink" href="#Melodie.boost.grid.GridItem.y" title="Permalink to this definition"></a></dt>
+<dd><p>Coordinate y on the grid, an <code class="docutils literal notranslate"><span class="pre">int</span></code>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Melodie.boost.grid.GridItem.set_params">
+<span class="sig-name descname"><span class="pre">set_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.boost.grid.GridItem.set_params" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>params</strong> – Extract parameters from a dict, and assign values to properties.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="Melodie.boost.grid.GridAgent">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Melodie.boost.grid.</span></span><span class="sig-name descname"><span class="pre">GridAgent</span></span><a class="headerlink" href="#Melodie.boost.grid.GridAgent" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#Melodie.boost.grid.GridItem" title="Melodie.boost.grid.GridItem"><code class="xref py py-class docutils literal notranslate"><span class="pre">Melodie.boost.grid.GridItem</span></code></a></p>
+<p>Base class for custom agents on grid. Different classes of custom <code class="docutils literal notranslate"><span class="pre">GridAgent</span></code> should
+have different value of <code class="docutils literal notranslate"><span class="pre">category</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>agent_id</strong> – ID of <code class="docutils literal notranslate"><span class="pre">GridAgent</span></code>, should be unique for same class.</p></li>
+<li><p><strong>grid</strong> – The instance of <code class="docutils literal notranslate"><span class="pre">Grid</span></code> that this <code class="docutils literal notranslate"><span class="pre">GridItem</span></code> on.</p></li>
+<li><p><strong>x</strong> – X coordinate on grid, an <code class="docutils literal notranslate"><span class="pre">int</span></code>.</p></li>
+<li><p><strong>y</strong> – Y coordinate on grid, an <code class="docutils literal notranslate"><span class="pre">int</span></code>.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Melodie.boost.grid.GridAgent.category">
+<span class="sig-name descname"><span class="pre">category</span></span><a class="headerlink" href="#Melodie.boost.grid.GridAgent.category" title="Permalink to this definition"></a></dt>
+<dd><p>Category indicating agent class, an <code class="docutils literal notranslate"><span class="pre">int</span></code>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Melodie.boost.grid.GridAgent.rand_move_agent">
+<span class="sig-name descname"><span class="pre">rand_move_agent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x_range</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_range</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.boost.grid.GridAgent.rand_move_agent" title="Permalink to this definition"></a></dt>
+<dd><p>Randomly move to a new position within x and y range.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Melodie.boost.grid.GridAgent.set_category">
+<span class="sig-name descname"><span class="pre">set_category</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="headerlink" href="#Melodie.boost.grid.GridAgent.set_category" title="Permalink to this definition"></a></dt>
+<dd><p>Set the category of GridAgent.</p>
+<p>As there may be more than one types of agent wandering around the grid, <cite>category</cite> is used to tell the type of
+<cite>GridAgent</cite>. So be sure to inherit this method in custom GridAgent implementation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="Melodie.boost.grid.Spot">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Melodie.boost.grid.</span></span><span class="sig-name descname"><span class="pre">Spot</span></span><a class="headerlink" href="#Melodie.boost.grid.Spot" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#Melodie.boost.grid.GridItem" title="Melodie.boost.grid.GridItem"><code class="xref py py-class docutils literal notranslate"><span class="pre">Melodie.boost.grid.GridItem</span></code></a></p>
+<p>Base class for spots.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>spot_id</strong> – ID of <code class="docutils literal notranslate"><span class="pre">Spot</span></code>, should be unique for same class.</p></li>
+<li><p><strong>grid</strong> – The instance of <code class="docutils literal notranslate"><span class="pre">Grid</span></code> that this <code class="docutils literal notranslate"><span class="pre">GridItem</span></code> on.</p></li>
+<li><p><strong>x</strong> – X coordinate on grid, an <code class="docutils literal notranslate"><span class="pre">int</span></code>.</p></li>
+<li><p><strong>y</strong> – Y coordinate on grid, an <code class="docutils literal notranslate"><span class="pre">int</span></code>.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="Melodie.boost.grid.Spot.get_spot_agents">
+<span class="sig-name descname"><span class="pre">get_spot_agents</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.boost.grid.Spot.get_spot_agents" title="Permalink to this definition"></a></dt>
+<dd><p>Get all agents on the spot.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>a list of grid agent.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="Melodie.boost.grid.Grid">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Melodie.boost.grid.</span></span><span class="sig-name descname"><span class="pre">Grid</span></span><a class="headerlink" href="#Melodie.boost.grid.Grid" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Grid is a widely-used discrete space for ABM. It contains many <a href="#id1"><span class="problematic" id="id2">``</span></a>Spot``s,
+and agents move and interact inside spots.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>spot_cls</strong> – The class of Spot.</p>
+</dd>
+<dt class="field-even">Scenario</dt>
+<dd class="field-even"><p>Current scenario of grid.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="Melodie.boost.grid.Grid.add_agent">
+<span class="sig-name descname"><span class="pre">add_agent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.boost.grid.Grid.add_agent" title="Permalink to this definition"></a></dt>
+<dd><p>Add an agent to the grid</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>agent</strong> – An GridAgent object.</p></li>
+<li><p><strong>category</strong> – A string, the name of category. The category should be registered.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Melodie.boost.grid.Grid.find_empty_spot">
+<span class="sig-name descname"><span class="pre">find_empty_spot</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.boost.grid.Grid.find_empty_spot" title="Permalink to this definition"></a></dt>
+<dd><p>Get a coordinate (x, y) of a spot without any agent on it.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>A tuple, (x, y)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Melodie.boost.grid.Grid.get_colormap">
+<span class="sig-name descname"><span class="pre">get_colormap</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.boost.grid.Grid.get_colormap" title="Permalink to this definition"></a></dt>
+<dd><p>Get the role of each spot.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>A tuple. The first item is a nested list for spot roles, and the second item is a dict for agent roles.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Melodie.boost.grid.Grid.get_empty_spots">
+<span class="sig-name descname"><span class="pre">get_empty_spots</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.boost.grid.Grid.get_empty_spots" title="Permalink to this definition"></a></dt>
+<dd><p>Get all empty spots from grid.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>a list of empty spot coordinates.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Melodie.boost.grid.Grid.get_neighbors">
+<span class="sig-name descname"><span class="pre">get_neighbors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">moore</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">except_self</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.boost.grid.Grid.get_neighbors" title="Permalink to this definition"></a></dt>
+<dd><p>Get the neighbors of one spot at (x, y).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> – </p></li>
+<li><p><strong>y</strong> – </p></li>
+<li><p><strong>radius</strong> – </p></li>
+<li><p><strong>moore</strong> – </p></li>
+<li><p><strong>except_self</strong> – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of the tuple: (<cite>Agent category</cite>, <cite>Agent id</cite>).</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Melodie.boost.grid.Grid.get_spot">
+<span class="sig-name descname"><span class="pre">get_spot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.boost.grid.Grid.get_spot" title="Permalink to this definition"></a></dt>
+<dd><p>Get a <code class="docutils literal notranslate"><span class="pre">Spot</span></code> at position <code class="docutils literal notranslate"><span class="pre">(x,</span> <span class="pre">y)</span></code></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> – </p></li>
+<li><p><strong>y</strong> – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The <code class="docutils literal notranslate"><span class="pre">Spot</span></code> at position (x, y)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Melodie.boost.grid.Grid.get_spot_agents">
+<span class="sig-name descname"><span class="pre">get_spot_agents</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spot</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.boost.grid.Grid.get_spot_agents" title="Permalink to this definition"></a></dt>
+<dd><p>Get all agent of a specific category from the spot at <code class="docutils literal notranslate"><span class="pre">(x,</span> <span class="pre">y)</span></code></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>category</strong> – category name of agent.</p></li>
+<li><p><strong>x</strong> – </p></li>
+<li><p><strong>y</strong> – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A set of int, the agent ids.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Melodie.boost.grid.Grid.height">
+<span class="sig-name descname"><span class="pre">height</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.boost.grid.Grid.height" title="Permalink to this definition"></a></dt>
+<dd><p>Get the height of grid</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>height, an <code class="docutils literal notranslate"><span class="pre">int</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Melodie.boost.grid.Grid.init_grid">
+<span class="sig-name descname"><span class="pre">init_grid</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.boost.grid.Grid.init_grid" title="Permalink to this definition"></a></dt>
+<dd><p>Initialize the grid.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Melodie.boost.grid.Grid.move_agent">
+<span class="sig-name descname"><span class="pre">move_agent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_y</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.boost.grid.Grid.move_agent" title="Permalink to this definition"></a></dt>
+<dd><p>Move agent to target position.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>agent</strong> – An GridAgent object.</p></li>
+<li><p><strong>category</strong> – A string, the name of category. The category should be registered.</p></li>
+<li><p><strong>target_x</strong> – The target x coordinate</p></li>
+<li><p><strong>target_y</strong> – The target y coordinate</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Melodie.boost.grid.Grid.rand_move_agent">
+<span class="sig-name descname"><span class="pre">rand_move_agent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">category</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">range_x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">range_y</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.boost.grid.Grid.rand_move_agent" title="Permalink to this definition"></a></dt>
+<dd><p>Randomly move an agent with maximum movement <cite>range_x</cite> in x axis and <cite>range_y</cite> in y axis.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>agent</strong> – Must be <cite>Melodie.GridAgent</cite>, not <cite>Agent</cite>. That is because <cite>GridAgent</cite> has predefined properties required in <cite>Grid</cite>.</p></li>
+<li><p><strong>range_x</strong> – The activity range of agent on the x axis.</p></li>
+<li><p><strong>range_y</strong> – The activity range of agent on the y axis.</p></li>
+</ul>
+</dd>
+</dl>
+<p>For example, if the agent is at <cite>(0, 0)</cite>, <cite>range_x=1</cite> and <cite>range_y=0</cite>, the result can be
+<cite>(-1, 0), (0, 0) or (1, 0)</cite>. The probability of these three outcomes are equal.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>(int, int), the new position</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Melodie.boost.grid.Grid.remove_agent">
+<span class="sig-name descname"><span class="pre">remove_agent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.boost.grid.Grid.remove_agent" title="Permalink to this definition"></a></dt>
+<dd><p>Remove an agent from the grid</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>agent</strong> – An GridAgent object.</p></li>
+<li><p><strong>category</strong> – A string, the name of category. The category should be registered.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Melodie.boost.grid.Grid.set_spot_property">
+<span class="sig-name descname"><span class="pre">set_spot_property</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">attr_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">array_2d</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.boost.grid.Grid.set_spot_property" title="Permalink to this definition"></a></dt>
+<dd><p>Set property from an 2d-numpy-array to each spot.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Melodie.boost.grid.Grid.setup">
+<span class="sig-name descname"><span class="pre">setup</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.boost.grid.Grid.setup" title="Permalink to this definition"></a></dt>
+<dd><p>Be sure to inherit this function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Melodie.boost.grid.Grid.setup_agent_locations">
+<span class="sig-name descname"><span class="pre">setup_agent_locations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">category</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_placement</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'direct'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#Melodie.boost.grid.Grid.setup_agent_locations" title="Permalink to this definition"></a></dt>
+<dd><p>Add an agent category.</p>
+<p>For example, if there are two classes of agents: <cite>Wolf(GridAgent)</cite> and <cite>Sheep(GridAgent)</cite>,
+and there are 100 agents with id 0~99 for each class. It is obvious in such a circumstance that
+we cannot identify an agent only with agent <em>id</em>.So it is essential to use <em>category_name</em> to distinguish two types of agents.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>category_id</strong> – The id of new category.</p></li>
+<li><p><strong>category</strong> – An AgentList object</p></li>
+<li><p><strong>initial_placement</strong> – A str object stand for initial placement.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Melodie.boost.grid.Grid.setup_params">
+<span class="sig-name descname"><span class="pre">setup_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">width</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wrap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">caching</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">multi</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.boost.grid.Grid.setup_params" title="Permalink to this definition"></a></dt>
+<dd><p>Setup the parameters of grid.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>width</strong> – int</p></li>
+<li><p><strong>height</strong> – int</p></li>
+<li><p><strong>wrap</strong> – bool, True by default.</p></li>
+</ul>
+</dd>
+</dl>
+<p>If True, GridAgent will re-enter the grid on the other side if it moves out of the grid on one side.
+:param caching: bool, True by default. If true, the grid caches the neighbor of each spot.
+:param multi: bool, True by default. If true, more than one agent could stand on one spot. If false, error will
+be raised when attempting to place multiple agents on one spot.
+:return: None</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Melodie.boost.grid.Grid.to_2d_array">
+<span class="sig-name descname"><span class="pre">to_2d_array</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">attr_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">numpy.ndarray</span></span></span><a class="headerlink" href="#Melodie.boost.grid.Grid.to_2d_array" title="Permalink to this definition"></a></dt>
+<dd><p>Collect property of each spot and write the property value into an 2d np.array.</p>
+<p>Notice:</p>
+<ul class="simple">
+<li><p>The property to collect should be float/int/bool, not other types such as str.</p></li>
+<li><p>If you would like to get an element from the returned array, please write like this:</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">arr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_2d_array</span><span class="p">(</span><span class="s1">&#39;some_attr&#39;</span><span class="p">)</span>
+<span class="linenos">2</span><span class="n">y</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="linenos">3</span><span class="n">x</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="linenos">4</span><span class="n">spot_at_x_5_y_10</span> <span class="o">=</span> <span class="n">arr</span><span class="p">[</span><span class="n">y</span><span class="p">][</span><span class="n">x</span><span class="p">]</span> <span class="c1"># CORRECT. Get the some_attr value of spot at `x = 5, y = 10`</span>
+<span class="linenos">5</span><span class="n">spot_at_x_5_y_10</span> <span class="o">=</span> <span class="n">arr</span><span class="p">[</span><span class="n">x</span><span class="p">][</span><span class="n">y</span><span class="p">]</span> <span class="c1"># INCORRECT. You will get the value of spot at `x = 10, y = 5`</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>attr_name</strong> – the property name to collect for this model.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Melodie.boost.grid.Grid.width">
+<span class="sig-name descname"><span class="pre">width</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.boost.grid.Grid.width" title="Permalink to this definition"></a></dt>
+<dd><p>Get the width of grid</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>width, an <code class="docutils literal notranslate"><span class="pre">int</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 
 

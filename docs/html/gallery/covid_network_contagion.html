@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CovidNetworkContagion &mdash; Melodie 0.5.0 documentation</title>
+  <title>CovidNetworkContagion &mdash; Melodie 0.6.0 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -14,7 +14,6 @@
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="author" title="About these documents" href="../about.html" />
@@ -151,7 +150,11 @@
 <li class="toctree-l2"><a class="reference internal" href="../api/data_collector.html">DataCollector</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/grid.html">Grid</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/network.html">Network</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/data_info.html">DataInfo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/data_info.html">DataInfo</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api/data_info.html#dataframeinfo">DataFrameInfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/data_info.html#matrixinfo">MatrixInfo</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="../api/data_loader.html">DataLoader</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/scenario.html">Scenario</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/simulator.html">Simulator</a></li>
@@ -163,6 +166,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../changelog.html">Change Log</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../changelog.html#major-version-0-x">Major Version 0.x</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../changelog.html#v0-6-0-jan-04-2023">v0.6.0 (Jan. 04, 2023)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../changelog.html#v0-5-0-dec-17-2022">v0.5.0 (Dec. 17, 2022)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../changelog.html#v0-4-2-dec-15-2022">v0.4.2 (Dec. 15, 2022)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../changelog.html#v0-4-1-dec-12-2022">v0.4.1 (Dec. 12, 2022)</a></li>
@@ -215,7 +219,7 @@
            <div itemprop="articleBody">
              
   <section id="covidnetworkcontagion">
-<h1>CovidNetworkContagion<a class="headerlink" href="#covidnetworkcontagion" title="Permalink to this heading"></a></h1>
+<h1>CovidNetworkContagion<a class="headerlink" href="#covidnetworkcontagion" title="Permalink to this headline"></a></h1>
 <p>To show how the <code class="docutils literal notranslate"><span class="pre">Melodie.Network</span></code> module can be used,
 we provide this <a class="reference external" href="https://github.com/ABM4ALL/CovidNetworkContagion">CovidNetworkContagion</a> model,
 which is based the <a class="reference external" href="https://github.com/ABM4ALL/CovidContagion">CovidContagion</a> model.
@@ -226,7 +230,7 @@ So, if you haven’t, we will strongly suggest to read the <a class="reference i
 <li><p>The <code class="docutils literal notranslate"><span class="pre">network</span></code> is constructed with edges, representing the connections between the agents. An infected agent can pass the virus through the edge to another uninfected agent.</p></li>
 </ul>
 <section id="project-structure">
-<h2>Project Structure<a class="headerlink" href="#project-structure" title="Permalink to this heading"></a></h2>
+<h2>Project Structure<a class="headerlink" href="#project-structure" title="Permalink to this headline"></a></h2>
 <p>The project structure is as follows.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>CovidNetworkContagion
 ├── data
@@ -256,7 +260,7 @@ So, if you haven’t, we will strongly suggest to read the <a class="reference i
 </div>
 </section>
 <section id="model">
-<h2>Model<a class="headerlink" href="#model" title="Permalink to this heading"></a></h2>
+<h2>Model<a class="headerlink" href="#model" title="Permalink to this headline"></a></h2>
 <p>As shown in the project structure, unlike <a class="reference internal" href="covid_grid_contagion.html#covidgridcontagion"><span class="std std-ref">CovidGridContagion</span></a>,
 it is same with the structure of the <a class="reference external" href="https://github.com/ABM4ALL/CovidContagion">CovidContagion</a> model.
 Because the edges in the <code class="docutils literal notranslate"><span class="pre">network</span></code> do not store model-specific parameters like spots in the <code class="docutils literal notranslate"><span class="pre">grid</span></code>.
@@ -308,7 +312,7 @@ the <code class="docutils literal notranslate"><span class="pre">network</span><
 </ul>
 </section>
 <section id="scenario">
-<h2>Scenario<a class="headerlink" href="#scenario" title="Permalink to this heading"></a></h2>
+<h2>Scenario<a class="headerlink" href="#scenario" title="Permalink to this headline"></a></h2>
 <p>The parameters to setup the <code class="docutils literal notranslate"><span class="pre">network</span></code> could be inserted into the model through <code class="docutils literal notranslate"><span class="pre">scenario</span></code>.</p>
 <div class="literal-block-wrapper docutils container" id="id4">
 <div class="code-block-caption"><span class="caption-text">scenario.py</span><a class="headerlink" href="#id4" title="Permalink to this code"></a></div>

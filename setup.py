@@ -1,7 +1,7 @@
 import os
 
 import setuptools
-
+import platform
 from distutils.extension import Extension
 
 
@@ -54,20 +54,31 @@ try:
     ]
     ext = ".pyx"
     jsonobj_ext_modules = [
-        Extension('MelodieInfra.jsonobject.api', ["MelodieInfra/jsonobject/api" + ext], ),
-        Extension('MelodieInfra.jsonobject.base', ["MelodieInfra/jsonobject/base" + ext], ),
-        Extension('MelodieInfra.jsonobject.base_properties', ["MelodieInfra/jsonobject/base_properties" + ext], ),
-        Extension('MelodieInfra.jsonobject.containers', ["MelodieInfra/jsonobject/containers" + ext], ),
-        Extension('MelodieInfra.jsonobject.properties', ["MelodieInfra/jsonobject/properties" + ext], ),
-        Extension('MelodieInfra.jsonobject.utils', ["MelodieInfra/jsonobject/utils" + ext], ),
+        Extension('MelodieInfra.jsonobject.api', [
+                  "MelodieInfra/jsonobject/api" + ext], ),
+        Extension('MelodieInfra.jsonobject.base', [
+                  "MelodieInfra/jsonobject/base" + ext], ),
+        Extension('MelodieInfra.jsonobject.base_properties', [
+                  "MelodieInfra/jsonobject/base_properties" + ext], ),
+        Extension('MelodieInfra.jsonobject.containers', [
+                  "MelodieInfra/jsonobject/containers" + ext], ),
+        Extension('MelodieInfra.jsonobject.properties', [
+                  "MelodieInfra/jsonobject/properties" + ext], ),
+        Extension('MelodieInfra.jsonobject.utils', [
+                  "MelodieInfra/jsonobject/utils" + ext], ),
     ]
     ext_modules = ext_modules + jsonobj_ext_modules
+    # ext_modules = ext_modules+[
+    #     Extension('MelodieInfra.container.intmap',
+    #               [
+    #                   'MelodieInfra/container/intmap.pyx',
+    #               ])
+    # ]
 except:
     import traceback
 
     traceback.print_exc()
     ext_modules = None
-
 
     def build_ext(_):
         return print(
@@ -80,15 +91,38 @@ with open("Melodie/version.txt", "r", encoding="utf8") as fv:
 with open("README.md", "r", encoding="utf8") as fh:
     long_description = fh.read()
 
+
+def scientific_toolchain_versions():
+    python_distribution_bits = 32 if "32" in platform.architecture()[0] else 64
+    version = (sys.version_info.major, sys.version_info.minor)
+    if python_distribution_bits == 32:
+        assert version <= (
+            3, 9), "Melodie does not support 32 bit cpython interpreter > 3.9"
+    numpy_requirement = "numpy"
+    matplotlib_requirement = "matplotlib"
+    scipy_requirement = "scipy"
+    if version == (3, 7):
+        matplotlib_requirement = "matplotlib <= 3.5.3"
+        scipy_requirement = "scipy <= 1.7.3"
+    elif version == (3, 8):
+        if python_distribution_bits == 32:
+            scipy_requirement = "scipy <= 1.9.1"
+    elif version == (3, 9):
+        if python_distribution_bits == 32:
+            scipy_requirement = "scipy <= 1.9.1"
+
+    return [numpy_requirement, matplotlib_requirement, scipy_requirement]
+
+
 setuptools.setup(
     name="Melodie",
     version=version,
     description="A general framework that can be used to establish agent-based models for specific uses.",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/SongminYu/Melodie",
+    url="https://github.com/ABM4ALL/Melodie",
     author="Songmin Yu",
-    author_email="songmin.yu@isi.fraunhofer.de",
+    author_email="abm4all@outlook.com",
     license="BSD 3",
     classifiers=[
         "Development Status :: 4 - Beta",
@@ -108,12 +142,11 @@ setuptools.setup(
     project_urls={
         "Documentation": "http://docs.abm4all.com",
     },
-    packages=setuptools.find_namespace_packages(include=["Melodie", "Melodie.*", "MelodieInfra", "MelodieInfra.*"]),
-    install_requires=[
+    packages=setuptools.find_namespace_packages(
+        include=["Melodie", "Melodie.*", "MelodieInfra", "MelodieInfra.*"]),
+    install_requires=scientific_toolchain_versions() + [
         "chardet",
-        "numpy",
         "pandas",
-        "matplotlib",
         "seaborn",
         "networkx",
         "openpyxl",
@@ -122,7 +155,7 @@ setuptools.setup(
         "astunparse",
         "pprintast",
         "cloudpickle",
-        "cython==3.0.0a10",
+        "cython==3.0.0a11",
         "scikit-opt~=0.6",
         "rpyc",
     ],

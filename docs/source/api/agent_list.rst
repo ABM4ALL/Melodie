@@ -2,14 +2,17 @@
 AgentList
 ==========
 
-Under development.
+.. include agent
 
-.. comment::
+.. automodule:: Melodie.boost.agent_list
+    :members:  BaseAgentContainer
+    :undoc-members:
+    :show-inheritance:
 
-    .. include agent
+.. autoclass:: Melodie.boost.agent_list.AgentList
+    :members:
 
-    .. automodule:: Melodie.boost.agent_list
-                   :members:  BaseAgentContainer, AgentList
-                   :undoc-members:
-                   :show-inheritance:
-
+    .. autoattribute:: agents
+        :annotation:
+        
+        A ``list`` of ``Agent``, the actual data structure storing agents.

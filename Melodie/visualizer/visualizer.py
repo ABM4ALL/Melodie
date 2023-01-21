@@ -144,7 +144,6 @@ def execute_only_enabled(func):
 
 class BaseVisualizer:
     enabled = True  # If in the Simulator.run() or Simulator.run_parallel(), this flag will be set to False
-    ws_port = 8765  # The websocket port that is desired to transfer data.
 
     def __init__(self, config: Config, simulator: "Simulator"):
         self.config = config
@@ -156,10 +155,13 @@ class BaseVisualizer:
 
         self.params_dir = os.path.join(config.visualizer_tmpdir, 'params')
         self.sim_data_dir = os.path.join(config.visualizer_tmpdir, 'sim_data')
+        self.layout_data_dir = os.path.join(config.visualizer_tmpdir, "layout")
         if not os.path.exists(self.params_dir):
             os.makedirs(self.params_dir)
         if not os.path.exists(self.sim_data_dir):
             os.makedirs(self.sim_data_dir)
+        if not os.path.exists(self.layout_data_dir):
+            os.makedirs(self.layout_data_dir)
 
         self._model: "Model" = None
         self.params_manager: ParamsManager = ParamsManager()
@@ -186,7 +188,7 @@ class BaseVisualizer:
         server_logger = logging.getLogger('websocket-server')
         server_logger.setLevel(logging.ERROR)
         host = "localhost"
-        start_server = websockets.serve(handler, host, self.ws_port, create_protocol=MelodieVisualizerProtocol,
+        start_server = websockets.serve(handler, host, self.config.visualizer_port, create_protocol=MelodieVisualizerProtocol,
                                         logger=server_logger
                                         )
         asyncio.get_event_loop().run_until_complete(start_server)
@@ -197,7 +199,7 @@ class BaseVisualizer:
         self.th.setDaemon(True)
         self.th.start()
 
-        logger.info("\n" + "=" * 100 + f"\nVisualizer started at {host}:{self.ws_port}\n" + "=" * 100)
+        logger.info("\n" + "=" * 100 + f"\nVisualizer started at {host}:{self.config.visualizer_port}\n" + "=" * 100)
 
     def add_action(self, action: Action):
         self.actions.append(action)

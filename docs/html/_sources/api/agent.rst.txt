@@ -2,22 +2,31 @@
 Agent
 =========
 
-Under development.
+Agent and Environment are all defined in Melodie.boost for better performance, and you may find
+it will only jump to a *.pyi* file if you are trying to jump into the code. If you would like to view the source code,
+please visit our git repository. The path to related files are listed below:
 
-.. comment::
+- Stub File: Melodie/boost/basics.pyi
+- Source Code: Melodie/boost/basics.pyx
+- Cython Interface: Melodie/boost/basics.pxd
 
-    Agent and Environment are all defined in Melodie.boost for better performance, and you may find
-    it will only jump to a *.pyi* file if you are trying to jump into the code. If you would like to view the source code,
-    please visit our git repository. The path to related files are listed below:
+Just include class *Agent* inside doc and undoc the Agent.id and Agent.model
 
-    - Stub File: Melodie/boost/basics.pyi
-    - Source Code: Melodie/boost/basics.pyx
-    - Cython Interface: Melodie/boost/basics.pxd
+.. autoclass:: Melodie.boost.basics.Agent
+    :members:
 
-    Just include class *Agent* inside doc and undoc the Agent.id and Agent.model
+    .. autoattribute:: id
+        :annotation:
 
-    .. automodule:: Melodie.boost.basics
-                   :members: Agent, Element
-                   :undoc-members:
-                   :show-inheritance:
+        The id of ``Agent``, a integer value ``>=0``
+
+    .. autoattribute:: scenario
+        :annotation:
+
+        Current scenario object, of type ``Melodie.Scenario``.
+
+    .. autoattribute:: model
+        :annotation:
+
+        The model that this agent belongs to.
 

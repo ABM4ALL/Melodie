@@ -79,10 +79,14 @@ cdef class DictIter:
 
 cdef class BaseAgentContainer():
     """
-    The base class that contains agents
+    The base class that containing homogeneous agents.
+
     """
 
     def __init__(self):
+        """
+        No parameter involved in this class
+        """
         self._id_offset = -1
         self.scenario: Union['Scenario', None] = None
 
@@ -106,7 +110,9 @@ cdef class BaseAgentContainer():
 
     cpdef list init_agents(self) except *:
         """
-        Initialize all agents in the container, and call the `setup()` method
+        Initialize all agents in the container.
+        
+        During the initialization of agent, the ``setup()`` method of each agent will be called.
         
         :return: None
         """
@@ -122,7 +128,7 @@ cdef class BaseAgentContainer():
 
     def _set_properties(self, props_df: pd.DataFrame):
         """
-        Set parameters of all agents in current scenario.
+        Set parameters of all agents in current scenario from a pandas dataframe.
 
         :return: None
         """
@@ -158,9 +164,8 @@ cdef class BaseAgentContainer():
         """
         Check if the parameters in the data frame has corresponding type with param_name 
         
-        :param agent_sample:
-        :param param_names:
-        :param agent_params_df:
+        :param param_names: Parameter names to be checked
+        :param agent_params_df: Dataframe for agent initial parameters.
         :return: None
         """
         dtypes = agent_params_df.dtypes
@@ -245,7 +250,15 @@ cdef class AgentDict(BaseAgentContainer):
         self._set_properties(props_df)
 
 cdef class AgentList(BaseAgentContainer):
+    """
+    The class to manage a list of homogeneous agents.
+
+    """
     def __init__(self, agent_class: Type[AgentGeneric], model: 'Model') -> None:
+        """
+        :param agent_class: Class of agent to be managed in this agent container.
+        :param model: The instance of current model.
+        """
         super(AgentList, self).__init__()
         self._iter_index = 0
         self.scenario = model.scenario
@@ -261,7 +274,7 @@ cdef class AgentList(BaseAgentContainer):
         Setup agents with specific number, and initialize their property by a dataframe if a dataframe is passed.
 
         :param agents_num: A integer.
-        :param params_df:
+        :param params_df : A pandas dataframe whose specification is the same as the argument of ``set_properties``
         :return:
         """
         self.initial_agent_num = agents_num
@@ -298,7 +311,7 @@ cdef class AgentList(BaseAgentContainer):
 
     def random_sample(self, sample_num: int) -> List['AgentGeneric']:
         """
-        Randomly sample `sample_num` agents from the container
+        Randomly sample ``sample_num`` agents from the container
         
         :param sample_num:
         :return:
@@ -308,7 +321,7 @@ cdef class AgentList(BaseAgentContainer):
 
     cpdef remove(self, Agent agent) except *:
         """
-        Remove the agent
+        Remove an agent from the AgentList
 
         :param agent:
         :return:
@@ -348,8 +361,14 @@ cdef class AgentList(BaseAgentContainer):
 
     def add(self, agent=None, params=None) -> None:
         """
-        Add an agent with same type onto this agent list.
-
+        Add an agent onto this agent list.
+        
+        Notice: 
+        
+        1. The ``agent`` object should have the same type as this agent list's ``agent_class``.
+        2. The ``id`` of new agent will be overriden by an auto-increment number.
+        
+        
         :param agent: If None, an agent of corresponding type will be automatically created.
         :return: None
         """
@@ -388,7 +407,7 @@ cdef class AgentList(BaseAgentContainer):
         """
         Dump all agent and their properties into a list of dict.
         
-        :param column_names:  The property name to be dumped.
+        :param column_names:  The property names to be dumped.
         :return:
         """
         
@@ -423,7 +442,48 @@ cdef class AgentList(BaseAgentContainer):
         """
         Extract properties from a dataframe, and Each row in the dataframe represents the property of an agent.
         
-        :param props_df:
+        For example, if there are 100 agents with ``id`` from 0 to 99, and each agent contains properties ``a: int`` and ``b: float``, 
+        the ``props_df`` could be like this:
+
+        
+        .. code-block:: python
+
+            import random
+            import pandas as pd
+            
+            df = pd.DataFrame([{"id": i, "a": 2, "b": random.random()} for i in range(100)]) 
+            print(df.head())
+            
+        The output is(df has 100 rows):
+
+        .. code-block:: sh
+
+                id  a         b
+            0    0  2  0.207738
+            1    1  2  0.236711
+            2    2  2  0.869793
+            3    3  2  0.797763
+            4    4  2  0.900024
+
+        For each scenario, same parameter values inside props_df will be assigned to each agents.
+        As an instance, properties ``b`` value at ``agent 0`` in both ``scenario 0`` and ``1`` are both ``0.207738``.
+
+        To set different initial parameters for different scenarios, please add a new column ``id_scenario``.
+        An example of dataframe structure is shown below, and in this case, ``b`` of ``agent 0`` in ``scenario 0`` is ``0.207738``,
+        while in ``scenario 1`` it was ``0.778997``
+
+        .. code-block:: sh
+
+                id_scenario  id  a         b
+            0             0   0  2  0.207738
+            1             0   1  2  0.236711
+            2             0   2  2  0.869793
+            ......
+            100           1   0  2  0.778997
+            101           1   1  2  0.450674
+
+
+        :param props_df: ``pd.DataFrame`` containing agent initial properties.
         :return:
         """
         self._set_properties(props_df)
@@ -432,9 +492,9 @@ cdef class AgentList(BaseAgentContainer):
 
     def all_agent_ids(self) -> List[int]:
         """
-        Get id of all agents.
+        Get ``id`` of all agents.
 
-        :return:
+        :return: A ``list`` of ``int``.
         """
         return [agent.id for agent in self.agents]
 
@@ -454,9 +514,10 @@ cdef class AgentList(BaseAgentContainer):
 
     cpdef Agent get_agent(self, long agent_id):
         """
-        Get an agent from the agent list
+        Get an agent from the agent list. If agent unexist, return None.
 
-        :param agent_id:
+        :param agent_id: The id of the agent object.
+        :return: An agent object, or None.
         """
         index = self._get_index(agent_id)
         if index == -1:
@@ -468,10 +529,10 @@ cdef class AgentList(BaseAgentContainer):
     # @cython.boundscheck(False)
     cpdef method_foreach(self, str method_name, tuple args) except *:
         """
-        For each agent, execute theirs method `method_name` with arguments `args`
+        For each agent, execute theirs method ``method_name`` with arguments ``args``
 
-        :param method_name:
-        :param args:
+        :param method_name: Name of method, a ``str``;
+        :param args: Arguments of a method, a ``tuple``
         :return: None
         """
         method = getattr(self.agent_class, method_name)
@@ -488,9 +549,11 @@ cdef class AgentList(BaseAgentContainer):
 
     cpdef vectorize(self, str prop_name) except *:
         """
-        Generate an numpy array from this list, where the values come from the property defined by `prop_name`.
+        NotImplemented yet.
 
-        :param prop_name:
+        Generate an numpy array from this list, where the values come from the property defined by ``prop_name`` on each agent.
+
+        :param prop_name: Property name
         :return: An 1-D Numpy array
         """
         if len(self.agents)==0:

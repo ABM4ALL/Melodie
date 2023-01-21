@@ -415,4 +415,6 @@ _output
 .melodieconfig
 .history
 .vscode
-
+/archive
+/node_modules
+*.map

@@ -16,52 +16,11 @@ logger = logging.getLogger(__name__)
 
 
 class Scenario(Element):
-    class BaseParameter:
-        def __init__(self, name, type, init):
-            self.name = name
-            self.type = type
-            self.init = init
+    """
+    Scenario contains a set of parameters used in simulation model.
+    It is created before the initialization of ``Model``.
 
-        def to_dict(self):
-            return self.__dict__
-
-        def __repr__(self):
-            return (
-                f"<class {self.__class__.__name__}, name {self.name}, type {self.type}>"
-            )
-
-    class NumberParameter(BaseParameter):
-        def __init__(
-                self,
-                name,
-                init_value: Union[int, float],
-                min_val: Optional[Union[int, float]] = None,
-                max_val: Optional[Union[int, float]] = None,
-                step: Optional[Union[int, float]] = None,
-        ):
-            super().__init__(name, "number", init_value)
-            if min_val is None or max_val is None or step is None:
-                raise NotImplementedError(
-                    "This version of melodie does not support free bound or period yet"
-                )
-            assert isinstance(init_value, (int, float))
-            assert isinstance(max_val, (int, float))
-            assert isinstance(min_val, (int, float))
-            assert isinstance(step, (int, float))
-            self.min = min_val
-            self.max = max_val
-            self.step = step
-
-    class SelectionParameter(BaseParameter):
-        def __init__(
-                self,
-                name,
-                init_value: Union[int, str, bool],
-                selections: List[Union[int, str, bool]],
-        ):
-            super().__init__(name, "selection", init_value)
-            self.selections = selections
-
+    """
     def __init__(self, id_scenario: Optional[Union[int, str]] = None):
         """
         :param id_scenario: the id of scenario. if None, this will be self-increment from 0 to scenarios_number-1
@@ -77,9 +36,9 @@ class Scenario(Element):
 
     def copy(self) -> "Scenario":
         """
-        Copy self to a new scenario.
+        Copy current scenario to a new scenario.
 
-        :return:
+        :return: New scenario object.
         """
         new_scenario = self.__class__()
         for property_name, property in self.__dict__.items():
@@ -91,17 +50,15 @@ class Scenario(Element):
 
     def setup(self):
         """
-        Setup method, be sure to inherit it on custom class.
-
-        :return:
+        Setup method, be sure to inherit it on the custom scenario class.
         """
         pass
 
     def to_dict(self):
         """
-        Convert to dict
+        Convert this scenario object to a dict.
 
-        :return: Dictionary `property_name->property_value`
+        :return: A ``dict``, ``property_name->property_value``
         """
         d = {}
         for k in self.__dict__.keys():
@@ -111,23 +68,15 @@ class Scenario(Element):
 
     def to_json(self):
         """
-        Convert to dict without concerning non-serializable properties.
+        Convert this scenario to a dict without concerning non-serializable properties.
 
-        :return: Dictionary `property_name->property_value`, without non-serializable properties
+        :return: a ``dict``, ``property_name->property_value``, without non-serializable properties
         """
         d = {}
         for k in self.__dict__.keys():
             if k not in {"manager"}:
                 d[k] = self.__dict__[k]
         return d
-
-    def get_parameters(self) -> List[BaseParameter]:
-        """
-        Return parameters.
-
-        :return:
-        """
-        return self._parameters
 
     def __repr__(self):
         return f"<{self.__class__.__name__} {self.__dict__}>"
@@ -144,29 +93,10 @@ class Scenario(Element):
 
     def get_matrix(self, matrix_info: "MatrixInfo") -> np.ndarray:
         """
-        Get matrix from scenario
+        Get matrix from scenario.
 
         :param matrix_info:
         :return: 2D numpy array
         """
         assert self.manager is not None
         return self.manager.get_matrix(matrix_info.mat_name)
-
-    def add_interactive_parameters(
-            self,
-            parameters: List[Union[BaseParameter, NumberParameter, SelectionParameter]],
-    ):
-        """
-        For visualizers, interactive parameters makes it possible to tune parameters on frontend.
-
-        :param parameters:
-        :return:
-        """
-        self._parameters.extend(parameters)
-        temp_set = set()
-        for parameter in self._parameters:
-            if parameter.name in temp_set:
-                raise MelodieExceptions.Scenario.ParameterRedefinedError(
-                    parameter.name, self._parameters
-                )
-            temp_set.add(parameter.name)

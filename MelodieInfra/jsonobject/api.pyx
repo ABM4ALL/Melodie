@@ -6,6 +6,7 @@ import re
 
 import six
 
+
 from .base import JsonObjectBase, _LimitedDictInterfaceMixin
 from . import properties
 from .containers import JsonArray, JsonDict, JsonSet

@@ -34,7 +34,7 @@ The output above indicates that process 19064 is LISTENING port 8765, let's kill
     taskkill /T /F /PID 19064
 
 MacOS, Linux or other *nix systems
-^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 On MacOS or Linux, use this command:
 
 .. code-block:: shell

@@ -2,13 +2,20 @@
 Network
 ===========
 
-Under development.
+.. autoclass:: Melodie.network.NetworkAgent
+    :members:
+    :show-inheritance:
 
-.. comment::
+    .. autoattribute:: category
+        :annotation:
+        
+        Category indicating agent class, an ``int``.
 
-    .. include edge
 
-    .. automodule:: Melodie.network
-                   :members:
-                   :undoc-members:
-                   :show-inheritance:
+.. autoclass:: Melodie.network.Edge
+    :members:
+    :show-inheritance:
+
+.. autoclass:: Melodie.network.Network
+    :members:
+    :show-inheritance:

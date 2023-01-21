@@ -47,7 +47,7 @@ def test_relationship_network():
     model.setup()
     agent_list = AgentList(DemoAgent, model)
     agent_list.setup_agents(10)
-    n = DemoNetwork()
+    n = DemoNetwork(model=model)
     # n.add_category("agents")
     for agent in agent_list:
         n._add_agent("agents", agent.id)
@@ -77,7 +77,7 @@ def test_relationship_directed():
     model.setup()
     agent_list = AgentList(DemoAgent, model)
     agent_list.setup_agents(10)
-    n = DemoNetwork(directed=True)
+    n = DemoNetwork(directed=True, model=model)
     for agent in agent_list:
         n._add_agent(
             "agents",
@@ -122,7 +122,7 @@ def test_create_ba():
 
     agent_list2 = AgentList(Wolf, model)
     agent_list2.setup_agents(10)
-    n = DemoNetwork()
+    n = DemoNetwork(model=model)
     n.setup_agent_connections(
         [agent_list, agent_list2],
         "watts_strogatz_graph",

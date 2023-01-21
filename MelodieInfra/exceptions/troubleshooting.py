@@ -1,13 +1,8 @@
-# -*- coding:utf-8 -*-
-# @Time: 2022/12/17 9:59
-# @Author: Zhanyi Hou
-# @Email: 1295752786@qq.com
-# @File: troubleshooting.py
 import sys
 from typing import Optional
 
 DOCS_OFFICIAL_SITE = "https://abm4all.github.io/Melodie/html"
-DOCS_MIRROR_SITE = "https://abm4all.github.io/Melodie/html"
+DOCS_MIRROR_SITE = "http://abm4all.gitee.io/melodie/html/"
 
 HELP_URL_TEMPLATE = f"""
 =====================Melodie Troubleshooting Tips==============================
@@ -23,6 +18,10 @@ or mirror site:
 
 
 class OSTroubleShooter:
+    """
+    This class is a handler to print a link towards the help page.
+
+    """
     _instance: Optional['OSTroubleShooter'] = None
 
     def __new__(cls, *args, **kwargs):

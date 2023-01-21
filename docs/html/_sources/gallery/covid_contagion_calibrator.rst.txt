@@ -62,7 +62,7 @@ For this, one file ``calibrator.py`` is added in the ``source`` folder.
 .. code-block:: Python
    :caption: calibrator.py
    :linenos:
-   :emphasize-lines: 10, 13
+   :emphasize-lines: 10, 14
 
    from Melodie import Calibrator
 
@@ -75,7 +75,8 @@ For this, one file ``calibrator.py`` is added in the ``source`` folder.
            self.add_scenario_calibrating_property("infection_prob")
            self.add_environment_property("s0")
 
-       def distance(self, environment: "CovidEnvironment") -> float:
+       def distance(self, model: "CovidModel") -> float:
+           environment = model.environment
            return (environment.s0 / environment.scenario.agent_num - 0.5) ** 2
 
 Two functions are defined in this ``CovidCalibrator`` class.
@@ -89,9 +90,11 @@ Additionally, as shown in Line 10, you can also ``add_environment_property`` so 
 
 Second, in the ``distance`` function,
 you can define how the distance between the **model output** and the **empirical data** is measured.
-In Line 14, ``environment.s0`` is the count of uninfected agents in each period.
-However, please note that, the calibrator will automatically takes the value in the last period of simulation.
-This is also the case in Line 10, when recording the ``environment.s0`` value.
+The parameter of the ``distance`` function must be ``model``,
+so that all the input data can be accessed through ``model.scenario``,
+and all the macro- and micro-variables can be accessed through ``model.environment`` and ``model.agents``.
+But, please note that, the values are all the values by the end of the simulation.
+In this example, the calibration target is "50% of the agents are not infected by the end of simulation",
 
 Algorithm
 _________

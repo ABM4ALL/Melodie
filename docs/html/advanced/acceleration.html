@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Speed Improvement &mdash; Melodie 0.5.0 documentation</title>
+  <title>Speed Improvement &mdash; Melodie 0.6.0 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -14,7 +14,6 @@
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="author" title="About these documents" href="../about.html" />
@@ -149,7 +148,11 @@
 <li class="toctree-l2"><a class="reference internal" href="../api/data_collector.html">DataCollector</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/grid.html">Grid</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/network.html">Network</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/data_info.html">DataInfo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/data_info.html">DataInfo</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api/data_info.html#dataframeinfo">DataFrameInfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/data_info.html#matrixinfo">MatrixInfo</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="../api/data_loader.html">DataLoader</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/scenario.html">Scenario</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/simulator.html">Simulator</a></li>
@@ -161,6 +164,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../changelog.html">Change Log</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../changelog.html#major-version-0-x">Major Version 0.x</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../changelog.html#v0-6-0-jan-04-2023">v0.6.0 (Jan. 04, 2023)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../changelog.html#v0-5-0-dec-17-2022">v0.5.0 (Dec. 17, 2022)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../changelog.html#v0-4-2-dec-15-2022">v0.4.2 (Dec. 15, 2022)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../changelog.html#v0-4-1-dec-12-2022">v0.4.1 (Dec. 12, 2022)</a></li>
@@ -212,7 +216,7 @@
            <div itemprop="articleBody">
              
   <section id="speed-improvement">
-<h1>Speed Improvement<a class="headerlink" href="#speed-improvement" title="Permalink to this heading"></a></h1>
+<h1>Speed Improvement<a class="headerlink" href="#speed-improvement" title="Permalink to this headline"></a></h1>
 <p>from Melodie import run_profile</p>
 <ul class="simple">
 <li><p>put agent.py and environment.py into one file?</p></li>

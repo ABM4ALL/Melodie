@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>RockPaperScissorsTrainer &mdash; Melodie 0.5.0 documentation</title>
+  <title>RockPaperScissorsTrainer &mdash; Melodie 0.6.0 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -14,7 +14,6 @@
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
         <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../_static/js/theme.js"></script>
@@ -152,7 +151,11 @@
 <li class="toctree-l2"><a class="reference internal" href="../api/data_collector.html">DataCollector</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/grid.html">Grid</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/network.html">Network</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/data_info.html">DataInfo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/data_info.html">DataInfo</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api/data_info.html#dataframeinfo">DataFrameInfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/data_info.html#matrixinfo">MatrixInfo</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="../api/data_loader.html">DataLoader</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/scenario.html">Scenario</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/simulator.html">Simulator</a></li>
@@ -164,6 +167,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../changelog.html">Change Log</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../changelog.html#major-version-0-x">Major Version 0.x</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../changelog.html#v0-6-0-jan-04-2023">v0.6.0 (Jan. 04, 2023)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../changelog.html#v0-5-0-dec-17-2022">v0.5.0 (Dec. 17, 2022)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../changelog.html#v0-4-2-dec-15-2022">v0.4.2 (Dec. 15, 2022)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../changelog.html#v0-4-1-dec-12-2022">v0.4.1 (Dec. 12, 2022)</a></li>
@@ -216,7 +220,7 @@
            <div itemprop="articleBody">
              
   <section id="rockpaperscissorstrainer">
-<h1>RockPaperScissorsTrainer<a class="headerlink" href="#rockpaperscissorstrainer" title="Permalink to this heading"></a></h1>
+<h1>RockPaperScissorsTrainer<a class="headerlink" href="#rockpaperscissorstrainer" title="Permalink to this headline"></a></h1>
 <p>To show how the <code class="docutils literal notranslate"><span class="pre">Trainer</span></code> module can be used,
 we provide this <a class="reference external" href="https://github.com/ABM4ALL/RockPaperScissorsTrainer">RockPaperScissorsTrainer</a> model,
 which implements the “evolutionary training” framework proposed in this
@@ -241,7 +245,7 @@ As explained in the <a class="reference external" href="https://ieeexplore.ieee.
 by combining the optimization (evolutionary training) and simulation methods in such a framework,
 the validity and flexibility of agent-based modeling are balanced.</p>
 <section id="model-setup">
-<h2>Model Setup<a class="headerlink" href="#model-setup" title="Permalink to this heading"></a></h2>
+<h2>Model Setup<a class="headerlink" href="#model-setup" title="Permalink to this headline"></a></h2>
 <p>In this model, the agents play the rock-paper-scissors game with each other.</p>
 <p>We make following assumptions:</p>
 <ul class="simple">
@@ -263,7 +267,7 @@ Then, the probability for the agent to play the three options are:</p>
 <code class="docutils literal notranslate"><span class="pre">Melodie</span></code> provides the <code class="docutils literal notranslate"><span class="pre">Trainer</span></code> module.</p>
 </section>
 <section id="trainer">
-<h2>Trainer<a class="headerlink" href="#trainer" title="Permalink to this heading"></a></h2>
+<h2>Trainer<a class="headerlink" href="#trainer" title="Permalink to this headline"></a></h2>
 <p>Following the methodology introduced in the <a class="reference external" href="https://ieeexplore.ieee.org/document/9857838/">paper</a> above,
 the <code class="docutils literal notranslate"><span class="pre">Trainer</span></code> module applies individual GA-based evolutionary training to “calibrate” the behavioral parameters of agents.
 All the relevant mechanisms are written in the <code class="docutils literal notranslate"><span class="pre">trainer.py</span></code> file as follows.</p>
@@ -310,7 +314,7 @@ All the relevant mechanisms are written in the <code class="docutils literal not
 please read the <a class="reference external" href="https://ieeexplore.ieee.org/document/9857838/">paper</a> mentioned above.</p>
 </section>
 <section id="results">
-<h2>Results<a class="headerlink" href="#results" title="Permalink to this heading"></a></h2>
+<h2>Results<a class="headerlink" href="#results" title="Permalink to this headline"></a></h2>
 <p>After running the <code class="docutils literal notranslate"><span class="pre">run_trainer</span></code> file, four tables will be generated:</p>
 <ul class="simple">
 <li><p>agents_trainer_result</p></li>

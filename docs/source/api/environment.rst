@@ -2,21 +2,23 @@
 Environment
 ===============
 
-Under development.
+Agent and Environment are all defined in Melodie.boost for better performance, and you may find
+it will only jump to a *.pyi* file if you are trying to jump into the code. If you would like to view the source code,
+please visit our git repository. The path to related files are listed below:
 
-.. comment::
+- Stub File: Melodie/boost/basics.pyi
+- Source Code: Melodie/boost/basics.pyx
+- Cython Interface: Melodie/boost/basics.pxd
 
-    Agent and Environment are all defined in Melodie.boost for better performance, and you may find
-    it will only jump to a *.pyi* file if you are trying to jump into the code. If you would like to view the source code,
-    please visit our git repository. The path to related files are listed below:
+.. autoclass:: Melodie.boost.basics.Environment
+    :members:
 
-    - Stub File: Melodie/boost/basics.pyi
-    - Source Code: Melodie/boost/basics.pyx
-    - Cython Interface: Melodie/boost/basics.pxd
+    .. autoattribute:: scenario
+        :annotation:
 
+        Current scenario object, of type ``Melodie.Scenario``.
 
-    .. automodule:: Melodie.boost.basics
-                   :members: Environment
-                   :undoc-members:
-                   :show-inheritance:
+    .. autoattribute:: model
+        :annotation:
 
+        The model that this environment belongs to.

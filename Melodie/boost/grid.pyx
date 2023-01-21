@@ -36,7 +36,16 @@ ctypedef fused DTYPE_FUSED:
     np.float64_t
 
 cdef class GridItem(Agent):
+    """
+    Base class for GridAgent and Spot, an agent with x and y coordinate.
+    """
     def __init__(self, agent_id:int, grid, x:int=0, y:int=0 ):
+        """
+        :param agent_id: ID of ``GridItem``, should be unique for same class.
+        :param grid: The instance of ``Grid`` that this ``GridItem`` on.
+        :param x: X coordinate on grid, an ``int``.
+        :param y: Y coordinate on grid, an ``int``.
+        """
         super().__init__(agent_id)
         self.grid = grid
         self.x = x
@@ -45,7 +54,7 @@ cdef class GridItem(Agent):
     cpdef void set_params(self, dict params) except *:
         """
 
-        :param params:
+        :param params: Extract parameters from a dict, and assign values to properties.
         :return:
         """
         for paramName, paramValue in params.items():
@@ -56,7 +65,17 @@ cdef class GridItem(Agent):
         return f"<{self.__class__.__name__} 'x': {self.x}, 'y': {self.y}>"
 
 cdef class GridAgent(GridItem):
+    """
+    Base class for custom agents on grid. Different classes of custom ``GridAgent`` should
+    have different value of ``category``.
+    """
     def __init__(self, agent_id: int, x: int = 0, y: int = 0, grid = None):
+        """
+        :param agent_id: ID of ``GridAgent``, should be unique for same class.
+        :param grid: The instance of ``Grid`` that this ``GridItem`` on.
+        :param x: X coordinate on grid, an ``int``.
+        :param y: Y coordinate on grid, an ``int``.
+        """
         super().__init__(agent_id, grid, x, y)
         self.category = -1
         self.set_category()
@@ -84,14 +103,23 @@ cdef class GridAgent(GridItem):
         self.x, self.y = self.grid.rand_move_agent(self, self.category, x_range, y_range)
 
 cdef class Spot(GridItem):
+    """
+    Base class for spots.
+    """
     def __init__(self, spot_id: int, grid: Grid, x: int = 0, y: int = 0):
+        """
+        :param spot_id: ID of ``Spot``, should be unique for same class.
+        :param grid: The instance of ``Grid`` that this ``GridItem`` on.
+        :param x: X coordinate on grid, an ``int``.
+        :param y: Y coordinate on grid, an ``int``.
+        """
         super().__init__(spot_id, grid, x, y)
         self.grid = grid
         self.colormap = 0
 
     def get_spot_agents(self):
         """
-        Get agents on the spot
+        Get all agents on the spot.
 
         :return: a list of grid agent.
         """
@@ -191,18 +219,15 @@ cdef class AgentIDManager:
 
 cdef class Grid:
     """
-    Grid is a widely-used discrete space for ABM.
-    Grid contains many `Spot`s, each `Spot` could contain several agents_series_data.
+    Grid is a widely-used discrete space for ABM. It contains many ``Spot``s,
+    and agents move and interact inside spots.
     """
 
     def __init__(self, spot_cls: Type[Spot], scenario=None):
         """
 
-        :param spot_cls: The class of Spot
-        :param width: The width of Grid
-        :param height: The height of Grid
-        :param wrap: If true, the coordinate overflow will be mapped to another end.
-        :param caching: If true, the neighbors and bound check results will be cached to avoid re-computing.
+        :param spot_cls: The class of Spot.
+        :scenario: Current scenario of grid.
 
         """
         self.scenario = scenario
@@ -629,17 +654,17 @@ cdef class Grid:
     
     cpdef long height(self):
         """
-        Get height
+        Get the height of grid 
 
-        :return: int
+        :return: height, an ``int``
         """
         return self._height
     
     cpdef long width(self):
         """
-        Get width
+        Get the width of grid
 
-        :return: int
+        :return: width, an ``int``
         """
         return self._width
 
@@ -653,9 +678,9 @@ cdef class Grid:
 
     cpdef list get_empty_spots(self) except *:
         """
-        Get the empty spots from grid.
+        Get all empty spots from grid.
 
-        :return: a list of empty spot coordinate.
+        :return: a list of empty spot coordinates.
         """
         cdef list positions = []
         for spot_pos_1d in self._agent_id_mgr.get_empty_spots():

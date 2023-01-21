@@ -361,7 +361,7 @@ class GATrainerAlgorithm:
         env_record.update(env_data)
 
         create_db_conn(self.manager.config).write_dataframe(
-            "env_trainer_result", pd.DataFrame([env_record]), if_exists="append"
+            "environment_trainer_result", pd.DataFrame([env_record]), if_exists="append"
         )
 
         return agent_records, env_record
@@ -415,7 +415,7 @@ class GATrainerAlgorithm:
             cov = env_df[prop_name].std() / env_df[prop_name].mean()
             env_record.update({prop_name + "_mean": mean, prop_name + "_cov": cov})
         create_db_conn(self.manager.config).write_dataframe(
-            "env_trainer_result_cov", pd.DataFrame([env_record]), if_exists="append"
+            "environment_trainer_result_cov", pd.DataFrame([env_record]), if_exists="append"
         )
 
     def pre_check(self, meta):
@@ -542,7 +542,7 @@ class AgentContainerManager:
 
 class Trainer(BaseModellingManager):
     """
-    Individually run agents' parameters
+    Trainer trains the agents to update their behavioral parameters for higher payoff.
     """
 
     def __init__(
@@ -553,6 +553,14 @@ class Trainer(BaseModellingManager):
             data_loader_cls: "Optional[Type[DataLoader]]",
             processors: int = 1,
     ):
+        """
+        :param config: Config instance for current project.
+        :param scenario_cls: Scenario class for current project.
+        :param model_cls: Model class in current project.
+        :param data_loader_cls: DataLoader class in current project.
+        :param processors: Each path in current iteration will be computed parallelly, this parameter
+         stands for processor cores used in parallel computation.
+        """
         super().__init__(
             config=config,
             scenario_cls=scenario_cls,
@@ -595,12 +603,16 @@ class Trainer(BaseModellingManager):
         self.container_manager.add_container(agent_list_name, training_attributes, agent_ids)
 
     def setup(self):
+        """
+        Setup method, be sure to inherit this method in custom trainer class.
+        """
         pass
 
     def get_trainer_scenario_cls(self):
         """
         Get the class of trainer scenario.
-        :return:
+
+        :return: Trainer parameters
         """
         assert self.algorithm_type in {"ga"}
 
@@ -645,11 +657,11 @@ class Trainer(BaseModellingManager):
 
     def run_once_new(self, scenario: Scenario, trainer_params: Union[GATrainerParams]):
         """
-        Use the sko package for optimization.
+        Run for one training path
 
-        :param scenario:
-        :param trainer_params:
-        :return:
+        :param scenario: The scenario to run
+        :param trainer_params: calibration parameters.
+        :return: None
         """
 
         self.algorithm = GATrainerAlgorithm(trainer_params, self, self.processors)
@@ -668,8 +680,9 @@ class Trainer(BaseModellingManager):
     def utility(self, agent: Agent) -> float:
         """
         The utility is to be maximized.
+        be sure to inherit inside the custom trainer class.
 
-        :param agent:
+        :param agent: Agent object.
         :return:
         """
         raise NotImplementedError(
@@ -687,10 +700,10 @@ class Trainer(BaseModellingManager):
 
     def add_agent_property(self, agent_list_name: str, prop: str):
         """
+        Add a property of agent to be recorded.
 
-        :param agent_list_name:
-        :param prop:
-        :return:
+        :param agent_list_name: Name of agent list
+        :param prop: Property name of agent
         """
         self.container_manager.get_agent_container(
             agent_list_name
@@ -698,9 +711,9 @@ class Trainer(BaseModellingManager):
 
     def add_environment_property(self, prop: str):
         """
-        Add a property of environment to be recorded in the training voyage.
-
-        :return:
+        Add a property of environment to be recorded.
+        
+        :param prop: Property name of environment.
         """
         assert prop not in self.environment_properties
         self.environment_properties.append(prop)
@@ -709,7 +722,7 @@ class Trainer(BaseModellingManager):
         """
         Generate Scenarios for trainer
 
-        :return:
+        :return: A list of scenario objects.
         """
         assert self.data_loader is not None
         return self.data_loader.generate_scenarios("trainer")
@@ -720,7 +733,7 @@ class Trainer(BaseModellingManager):
         """
         Generate Trainer Parameters.
 
-        :return:
+        :return: A list of trainer parameters.
         """
         trainer_params_table = self.get_dataframe("trainer_params_scenarios")
         assert isinstance(

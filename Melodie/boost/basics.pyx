@@ -26,7 +26,16 @@ cdef class Element:
 
 
 cdef class Agent(Element):
+    """
+    Base class for Agent.
+
+    """
     def __init__(self, agent_id: int):
+        """
+
+        :param agent_id: The ``id`` of agent. For the agents of same class,
+            it should be unique.
+        """
         self.id = agent_id
         self.scenario = None
         self.model = None
@@ -87,7 +96,15 @@ cdef class Agent(Element):
         raise NotImplementedError("Method `get_style` should be inherited if visualizer is implemented!")
 
 cdef class Environment(Element):
+    """
+    Environment coordinates the agents' decision-making and interaction processes and stores the macro-level variables.
+    
+    """
     def __init__(self):
+        """
+        No parameter involved in this class
+
+        """
         self.model: Optional['Model'] = None
         self.scenario: Optional['Scenario'] = None
 
@@ -105,10 +122,10 @@ cdef class Environment(Element):
 
     cpdef dict to_dict(self, list properties):
         """
-        Dump Environment to a plain dict.
+        Dump environment properties declared in ``properties`` to a plain dict.
 
-        :param properties: List[str]
-        :return:
+        :param properties: List[str], property names to dump
+        :return: A dict, keys are environment property names, while value are property values.
         """
         cdef dict d
         cdef str property 

@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Tutorial &mdash; Melodie 0.5.0 documentation</title>
+  <title>Tutorial &mdash; Melodie 0.6.0 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -14,7 +14,6 @@
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
         <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="_static/js/theme.js"></script>
@@ -152,7 +151,11 @@
 <li class="toctree-l2"><a class="reference internal" href="api/data_collector.html">DataCollector</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/grid.html">Grid</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/network.html">Network</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/data_info.html">DataInfo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/data_info.html">DataInfo</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api/data_info.html#dataframeinfo">DataFrameInfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/data_info.html#matrixinfo">MatrixInfo</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="api/data_loader.html">DataLoader</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/scenario.html">Scenario</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/simulator.html">Simulator</a></li>
@@ -164,6 +167,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="changelog.html">Change Log</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="changelog.html#major-version-0-x">Major Version 0.x</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#v0-6-0-jan-04-2023">v0.6.0 (Jan. 04, 2023)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="changelog.html#v0-5-0-dec-17-2022">v0.5.0 (Dec. 17, 2022)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="changelog.html#v0-4-2-dec-15-2022">v0.4.2 (Dec. 15, 2022)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="changelog.html#v0-4-1-dec-12-2022">v0.4.1 (Dec. 12, 2022)</a></li>
@@ -215,7 +219,7 @@
            <div itemprop="articleBody">
              
   <section id="tutorial">
-<h1>Tutorial<a class="headerlink" href="#tutorial" title="Permalink to this heading"></a></h1>
+<h1>Tutorial<a class="headerlink" href="#tutorial" title="Permalink to this headline"></a></h1>
 <p>This tutorial provides a detailed explanation for an example model developed with <strong>Melodie</strong>:
 CovidContagion, which models the contagion process of Covid-19 in a population of agents.
 You can find the code of the model in this <a class="reference external" href="https://github.com/ABM4ALL/CovidContagion">repo</a>.</p>
@@ -229,7 +233,7 @@ You can find the code of the model in this <a class="reference external" href="h
 <p>With these assumptions, this CovidContagion model is a minimum example of Melodie
 but shows a clear project structure and the use of most important modules.</p>
 <section id="project-structure">
-<h2>Project Structure<a class="headerlink" href="#project-structure" title="Permalink to this heading"></a></h2>
+<h2>Project Structure<a class="headerlink" href="#project-structure" title="Permalink to this headline"></a></h2>
 <p>The full structure of the project is as below, including the produced database and figures.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>CovidContagion
 ├── data
@@ -276,7 +280,7 @@ but shows a clear project structure and the use of most important modules.</p>
 then the name of <code class="docutils literal notranslate"><span class="pre">CovidContagion.sqlite</span></code> will also be changed accordingly.</p>
 </section>
 <section id="agent">
-<h2>Agent<a class="headerlink" href="#agent" title="Permalink to this heading"></a></h2>
+<h2>Agent<a class="headerlink" href="#agent" title="Permalink to this headline"></a></h2>
 <p>To create the <code class="docutils literal notranslate"><span class="pre">CovidAgent</span></code> class, <code class="docutils literal notranslate"><span class="pre">Melodie</span></code> provides the <code class="docutils literal notranslate"><span class="pre">Agent</span></code> class that can be inherited.
 In Line 6, <code class="docutils literal notranslate"><span class="pre">CovidAgent.setup</span></code> overrides the <code class="docutils literal notranslate"><span class="pre">Agent.setup</span></code> function from <code class="docutils literal notranslate"><span class="pre">Melodie</span></code>
 and will be automatically called when setting up the agent objects.</p>
@@ -297,7 +301,7 @@ and will be automatically called when setting up the agent objects.</p>
 But the values do not matter, as they will be initialized (changed) later.</p>
 </section>
 <section id="scenario">
-<h2>Scenario<a class="headerlink" href="#scenario" title="Permalink to this heading"></a></h2>
+<h2>Scenario<a class="headerlink" href="#scenario" title="Permalink to this headline"></a></h2>
 <p>As introduced in the <a class="reference internal" href="introduction.html#introduction"><span class="std std-ref">Introduction</span></a> section, <code class="docutils literal notranslate"><span class="pre">scenario</span></code> contains all the input data that is needed to run the model,
 and can be accessed by the <code class="docutils literal notranslate"><span class="pre">model</span></code>, the <code class="docutils literal notranslate"><span class="pre">environment</span></code>, the <code class="docutils literal notranslate"><span class="pre">data_collector</span></code>, and each <code class="docutils literal notranslate"><span class="pre">agent</span></code>.
 All the data are stored in dataframes, which are</p>
@@ -306,7 +310,7 @@ All the data are stored in dataframes, which are</p>
 <li><p>Second, <strong>generated</strong> or <strong>loaded</strong> in the <code class="docutils literal notranslate"><span class="pre">data_loader.py</span></code>.</p></li>
 </ul>
 <section id="generate-agent-params">
-<h3>Generate <code class="docutils literal notranslate"><span class="pre">agent_params</span></code><a class="headerlink" href="#generate-agent-params" title="Permalink to this heading"></a></h3>
+<h3>Generate <code class="docutils literal notranslate"><span class="pre">agent_params</span></code><a class="headerlink" href="#generate-agent-params" title="Permalink to this headline"></a></h3>
 <p>To initialize the two attributes of all the agents, a dataframe <code class="docutils literal notranslate"><span class="pre">agent_params</span></code> is first registered in the <code class="docutils literal notranslate"><span class="pre">data_info.py</span></code> and then generated in the <code class="docutils literal notranslate"><span class="pre">data_loader.py</span></code>.
 Each row of this dataframe contains the values of <code class="docutils literal notranslate"><span class="pre">health_state</span></code> and <code class="docutils literal notranslate"><span class="pre">age_group</span></code> to initialize one agent.</p>
 <p>The figure below shows the first 19 rows of <code class="docutils literal notranslate"><span class="pre">agent_params</span></code>.</p>
@@ -403,7 +407,7 @@ So, it is also called automatically by <code class="docutils literal notranslate
 Please note that, this whole <code class="docutils literal notranslate"><span class="pre">agent_params</span></code> dataframe is generated by the <code class="docutils literal notranslate"><span class="pre">data_loader</span></code> for all the scenarios before running any of them.</p>
 </section>
 <section id="load-simulator-scenarios">
-<h3>Load <code class="docutils literal notranslate"><span class="pre">simulator_scenarios</span></code><a class="headerlink" href="#load-simulator-scenarios" title="Permalink to this heading"></a></h3>
+<h3>Load <code class="docutils literal notranslate"><span class="pre">simulator_scenarios</span></code><a class="headerlink" href="#load-simulator-scenarios" title="Permalink to this headline"></a></h3>
 <p>In Line 15-18 of <code class="docutils literal notranslate"><span class="pre">data_loader.py</span></code>, the other input dataframes are loaded into the model.
 Taking <code class="docutils literal notranslate"><span class="pre">simulator_scenarios</span></code> as example, it includes the parameters to initialize a <code class="docutils literal notranslate"><span class="pre">scenario</span></code> object.
 Before being loaded, it also needs to be registered in the <code class="docutils literal notranslate"><span class="pre">data_info.py</span></code> file.</p>
@@ -483,7 +487,7 @@ Then, the model will be run with these scenarios one by one.</p>
 </section>
 </section>
 <section id="model">
-<h2>Model<a class="headerlink" href="#model" title="Permalink to this heading"></a></h2>
+<h2>Model<a class="headerlink" href="#model" title="Permalink to this headline"></a></h2>
 <p>After defining the <code class="docutils literal notranslate"><span class="pre">CovidAgent</span></code> and <code class="docutils literal notranslate"><span class="pre">CovidScenario</span></code> classes, registering and loading/generating their dataframes,
 and initializing the <code class="docutils literal notranslate"><span class="pre">scenario</span></code> object by <code class="docutils literal notranslate"><span class="pre">Melodie</span></code>,
 we are now finally ready to initialize all the agents, i.e. their <code class="docutils literal notranslate"><span class="pre">health_state</span></code> and <code class="docutils literal notranslate"><span class="pre">age_group</span></code>.
@@ -546,7 +550,7 @@ In each period,</p>
 <p>Finally, after simulating all the periods, the <code class="docutils literal notranslate"><span class="pre">data_collector</span></code> will save everything into the database.</p>
 </section>
 <section id="environment">
-<h2>Environment<a class="headerlink" href="#environment" title="Permalink to this heading"></a></h2>
+<h2>Environment<a class="headerlink" href="#environment" title="Permalink to this headline"></a></h2>
 <p>The CovidEnvironment class is defined as below.</p>
 <p>In the <code class="docutils literal notranslate"><span class="pre">setup</span></code> function (Line 10), four attributes are defined to save the number of agents in each health state.
 As shown, they are updated in the <code class="docutils literal notranslate"><span class="pre">calc_population_infection_state</span></code> function in each period (Line 27).</p>
@@ -683,7 +687,7 @@ The <code class="docutils literal notranslate"><span class="pre">DataFrameInfo</
 so that the functions of <code class="docutils literal notranslate"><span class="pre">Scenario</span></code> and <code class="docutils literal notranslate"><span class="pre">DataLoader</span></code> can work with the data easily.</p>
 </section>
 <section id="datacollector">
-<h2>DataCollector<a class="headerlink" href="#datacollector" title="Permalink to this heading"></a></h2>
+<h2>DataCollector<a class="headerlink" href="#datacollector" title="Permalink to this headline"></a></h2>
 <p>Finally, to collect all the micro- and macro-level results stored by the <code class="docutils literal notranslate"><span class="pre">agents</span></code> and the <code class="docutils literal notranslate"><span class="pre">environment</span></code> and save them into the database,
 the <code class="docutils literal notranslate"><span class="pre">CovidDataCollector</span></code> class is defined as below.</p>
 <div class="literal-block-wrapper docutils container" id="id12">
@@ -719,7 +723,7 @@ Here is an example of the results from the model.</p>
 <img alt="_images/population_infection.png" src="_images/population_infection.png" />
 </section>
 <section id="last-words">
-<h2>Last Words<a class="headerlink" href="#last-words" title="Permalink to this heading"></a></h2>
+<h2>Last Words<a class="headerlink" href="#last-words" title="Permalink to this headline"></a></h2>
 <p>If the <a class="reference internal" href="introduction.html#melodie-framework"><span class="std std-ref">Melodie Framework</span></a> section was too brief to follow,
 I hope this tutorial can give you a clearer picture about
 (1) why the modules are organized into those clusters, and

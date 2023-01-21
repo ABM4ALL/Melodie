@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AgentList &mdash; Melodie 0.5.0 documentation</title>
+  <title>AgentList &mdash; Melodie 0.6.0 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -14,7 +14,6 @@
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="author" title="About these documents" href="../about.html" />
@@ -151,7 +150,11 @@
 <li class="toctree-l2"><a class="reference internal" href="data_collector.html">DataCollector</a></li>
 <li class="toctree-l2"><a class="reference internal" href="grid.html">Grid</a></li>
 <li class="toctree-l2"><a class="reference internal" href="network.html">Network</a></li>
-<li class="toctree-l2"><a class="reference internal" href="data_info.html">DataInfo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="data_info.html">DataInfo</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="data_info.html#dataframeinfo">DataFrameInfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="data_info.html#matrixinfo">MatrixInfo</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="data_loader.html">DataLoader</a></li>
 <li class="toctree-l2"><a class="reference internal" href="scenario.html">Scenario</a></li>
 <li class="toctree-l2"><a class="reference internal" href="simulator.html">Simulator</a></li>
@@ -163,6 +166,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../changelog.html">Change Log</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../changelog.html#major-version-0-x">Major Version 0.x</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../changelog.html#v0-6-0-jan-04-2023">v0.6.0 (Jan. 04, 2023)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../changelog.html#v0-5-0-dec-17-2022">v0.5.0 (Dec. 17, 2022)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../changelog.html#v0-4-2-dec-15-2022">v0.4.2 (Dec. 15, 2022)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../changelog.html#v0-4-1-dec-12-2022">v0.4.1 (Dec. 12, 2022)</a></li>
@@ -215,8 +219,299 @@
            <div itemprop="articleBody">
              
   <section id="agentlist">
-<h1>AgentList<a class="headerlink" href="#agentlist" title="Permalink to this heading"></a></h1>
-<p>Under development.</p>
+<h1>AgentList<a class="headerlink" href="#agentlist" title="Permalink to this headline"></a></h1>
+<span class="target" id="module-Melodie.boost.agent_list"></span><dl class="py class">
+<dt class="sig sig-object py" id="Melodie.boost.agent_list.BaseAgentContainer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Melodie.boost.agent_list.</span></span><span class="sig-name descname"><span class="pre">BaseAgentContainer</span></span><a class="headerlink" href="#Melodie.boost.agent_list.BaseAgentContainer" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>The base class that containing homogeneous agents.</p>
+<p>No parameter involved in this class</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="Melodie.boost.agent_list.BaseAgentContainer.init_agents">
+<span class="sig-name descname"><span class="pre">init_agents</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.boost.agent_list.BaseAgentContainer.init_agents" title="Permalink to this definition"></a></dt>
+<dd><p>Initialize all agents in the container.</p>
+<p>During the initialization of agent, the <code class="docutils literal notranslate"><span class="pre">setup()</span></code> method of each agent will be called.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Melodie.boost.agent_list.BaseAgentContainer.new_id">
+<span class="sig-name descname"><span class="pre">new_id</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.boost.agent_list.BaseAgentContainer.new_id" title="Permalink to this definition"></a></dt>
+<dd><p>Create a new auto-increment ID</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Melodie.boost.agent_list.BaseAgentContainer.to_list">
+<span class="sig-name descname"><span class="pre">to_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">column_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#Melodie.boost.agent_list.BaseAgentContainer.to_list" title="Permalink to this definition"></a></dt>
+<dd><p>Convert all agent properties to a list of dict.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>column_names</strong> – property names</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Melodie.boost.agent_list.BaseAgentContainer.type_check">
+<span class="sig-name descname"><span class="pre">type_check</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">param_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agent_params_df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.boost.agent_list.BaseAgentContainer.type_check" title="Permalink to this definition"></a></dt>
+<dd><p>Check if the parameters in the data frame has corresponding type with param_name</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>param_names</strong> – Parameter names to be checked</p></li>
+<li><p><strong>agent_params_df</strong> – Dataframe for agent initial parameters.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="Melodie.boost.agent_list.AgentList">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Melodie.boost.agent_list.</span></span><span class="sig-name descname"><span class="pre">AgentList</span></span><a class="headerlink" href="#Melodie.boost.agent_list.AgentList" title="Permalink to this definition"></a></dt>
+<dd><p>The class to manage a list of homogeneous agents.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>agent_class</strong> – Class of agent to be managed in this agent container.</p></li>
+<li><p><strong>model</strong> – The instance of current model.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Melodie.boost.agent_list.AgentList.agents">
+<span class="sig-name descname"><span class="pre">agents</span></span><a class="headerlink" href="#Melodie.boost.agent_list.AgentList.agents" title="Permalink to this definition"></a></dt>
+<dd><p>A <code class="docutils literal notranslate"><span class="pre">list</span></code> of <code class="docutils literal notranslate"><span class="pre">Agent</span></code>, the actual data structure storing agents.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Melodie.boost.agent_list.AgentList.add">
+<span class="sig-name descname"><span class="pre">add</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#Melodie.boost.agent_list.AgentList.add" title="Permalink to this definition"></a></dt>
+<dd><p>Add an agent onto this agent list.</p>
+<p>Notice:</p>
+<ol class="arabic simple">
+<li><p>The <code class="docutils literal notranslate"><span class="pre">agent</span></code> object should have the same type as this agent list’s <code class="docutils literal notranslate"><span class="pre">agent_class</span></code>.</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">id</span></code> of new agent will be overriden by an auto-increment number.</p></li>
+</ol>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>agent</strong> – If None, an agent of corresponding type will be automatically created.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Melodie.boost.agent_list.AgentList.all_agent_ids">
+<span class="sig-name descname"><span class="pre">all_agent_ids</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#Melodie.boost.agent_list.AgentList.all_agent_ids" title="Permalink to this definition"></a></dt>
+<dd><p>Get <code class="docutils literal notranslate"><span class="pre">id</span></code> of all agents.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>A <code class="docutils literal notranslate"><span class="pre">list</span></code> of <code class="docutils literal notranslate"><span class="pre">int</span></code>.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Melodie.boost.agent_list.AgentList.filter">
+<span class="sig-name descname"><span class="pre">filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">condition</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.boost.agent_list.AgentList.filter" title="Permalink to this definition"></a></dt>
+<dd><p>Filter agents satisfying the condition Callable[[Agent], bool]</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>a list of filtered agents</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Melodie.boost.agent_list.AgentList.get_agent">
+<span class="sig-name descname"><span class="pre">get_agent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent_id</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.boost.agent_list.AgentList.get_agent" title="Permalink to this definition"></a></dt>
+<dd><p>Get an agent from the agent list. If agent unexist, return None.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>agent_id</strong> – The id of the agent object.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>An agent object, or None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Melodie.boost.agent_list.AgentList.method_foreach">
+<span class="sig-name descname"><span class="pre">method_foreach</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">method_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.boost.agent_list.AgentList.method_foreach" title="Permalink to this definition"></a></dt>
+<dd><p>For each agent, execute theirs method <code class="docutils literal notranslate"><span class="pre">method_name</span></code> with arguments <code class="docutils literal notranslate"><span class="pre">args</span></code></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>method_name</strong> – Name of method, a <code class="docutils literal notranslate"><span class="pre">str</span></code>;</p></li>
+<li><p><strong>args</strong> – Arguments of a method, a <code class="docutils literal notranslate"><span class="pre">tuple</span></code></p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Melodie.boost.agent_list.AgentList.random_sample">
+<span class="sig-name descname"><span class="pre">random_sample</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sample_num</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">AgentGeneric</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#Melodie.boost.agent_list.AgentList.random_sample" title="Permalink to this definition"></a></dt>
+<dd><p>Randomly sample <code class="docutils literal notranslate"><span class="pre">sample_num</span></code> agents from the container</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>sample_num</strong> – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Melodie.boost.agent_list.AgentList.remove">
+<span class="sig-name descname"><span class="pre">remove</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.boost.agent_list.AgentList.remove" title="Permalink to this definition"></a></dt>
+<dd><p>Remove an agent from the AgentList</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>agent</strong> – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Melodie.boost.agent_list.AgentList.set_properties">
+<span class="sig-name descname"><span class="pre">set_properties</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">props_df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.boost.agent_list.AgentList.set_properties" title="Permalink to this definition"></a></dt>
+<dd><p>Extract properties from a dataframe, and Each row in the dataframe represents the property of an agent.</p>
+<p>For example, if there are 100 agents with <code class="docutils literal notranslate"><span class="pre">id</span></code> from 0 to 99, and each agent contains properties <code class="docutils literal notranslate"><span class="pre">a:</span> <span class="pre">int</span></code> and <code class="docutils literal notranslate"><span class="pre">b:</span> <span class="pre">float</span></code>,
+the <code class="docutils literal notranslate"><span class="pre">props_df</span></code> could be like this:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="n">i</span><span class="p">,</span> <span class="s2">&quot;a&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">:</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()}</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">100</span><span class="p">)])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
+</pre></div>
+</div>
+<p>The output is(df has 100 rows):</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>    id  a         b
+<span class="m">0</span>    <span class="m">0</span>  <span class="m">2</span>  <span class="m">0</span>.207738
+<span class="m">1</span>    <span class="m">1</span>  <span class="m">2</span>  <span class="m">0</span>.236711
+<span class="m">2</span>    <span class="m">2</span>  <span class="m">2</span>  <span class="m">0</span>.869793
+<span class="m">3</span>    <span class="m">3</span>  <span class="m">2</span>  <span class="m">0</span>.797763
+<span class="m">4</span>    <span class="m">4</span>  <span class="m">2</span>  <span class="m">0</span>.900024
+</pre></div>
+</div>
+<p>For each scenario, same parameter values inside props_df will be assigned to each agents.
+As an instance, properties <code class="docutils literal notranslate"><span class="pre">b</span></code> value at <code class="docutils literal notranslate"><span class="pre">agent</span> <span class="pre">0</span></code> in both <code class="docutils literal notranslate"><span class="pre">scenario</span> <span class="pre">0</span></code> and <code class="docutils literal notranslate"><span class="pre">1</span></code> are both <code class="docutils literal notranslate"><span class="pre">0.207738</span></code>.</p>
+<p>To set different initial parameters for different scenarios, please add a new column <code class="docutils literal notranslate"><span class="pre">id_scenario</span></code>.
+An example of dataframe structure is shown below, and in this case, <code class="docutils literal notranslate"><span class="pre">b</span></code> of <code class="docutils literal notranslate"><span class="pre">agent</span> <span class="pre">0</span></code> in <code class="docutils literal notranslate"><span class="pre">scenario</span> <span class="pre">0</span></code> is <code class="docutils literal notranslate"><span class="pre">0.207738</span></code>,
+while in <code class="docutils literal notranslate"><span class="pre">scenario</span> <span class="pre">1</span></code> it was <code class="docutils literal notranslate"><span class="pre">0.778997</span></code></p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>    id_scenario  id  a         b
+<span class="m">0</span>             <span class="m">0</span>   <span class="m">0</span>  <span class="m">2</span>  <span class="m">0</span>.207738
+<span class="m">1</span>             <span class="m">0</span>   <span class="m">1</span>  <span class="m">2</span>  <span class="m">0</span>.236711
+<span class="m">2</span>             <span class="m">0</span>   <span class="m">2</span>  <span class="m">2</span>  <span class="m">0</span>.869793
+......
+<span class="m">100</span>           <span class="m">1</span>   <span class="m">0</span>  <span class="m">2</span>  <span class="m">0</span>.778997
+<span class="m">101</span>           <span class="m">1</span>   <span class="m">1</span>  <span class="m">2</span>  <span class="m">0</span>.450674
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>props_df</strong> – <code class="docutils literal notranslate"><span class="pre">pd.DataFrame</span></code> containing agent initial properties.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Melodie.boost.agent_list.AgentList.setup">
+<span class="sig-name descname"><span class="pre">setup</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.boost.agent_list.AgentList.setup" title="Permalink to this definition"></a></dt>
+<dd><p>The setup method.</p>
+<p>If you would like to define custom AgentList, please be sure to inherit this method.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Melodie.boost.agent_list.AgentList.setup_agents">
+<span class="sig-name descname"><span class="pre">setup_agents</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agents_num</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params_df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">pandas.core.frame.DataFrame</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.boost.agent_list.AgentList.setup_agents" title="Permalink to this definition"></a></dt>
+<dd><p>Setup agents with specific number, and initialize their property by a dataframe if a dataframe is passed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>agents_num</strong> – A integer.</p>
+</dd>
+</dl>
+<p>:param params_df : A pandas dataframe whose specification is the same as the argument of <code class="docutils literal notranslate"><span class="pre">set_properties</span></code>
+:return:</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Melodie.boost.agent_list.AgentList.to_dataframe">
+<span class="sig-name descname"><span class="pre">to_dataframe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">column_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">pandas.core.frame.DataFrame</span></span></span><a class="headerlink" href="#Melodie.boost.agent_list.AgentList.to_dataframe" title="Permalink to this definition"></a></dt>
+<dd><p>Store all agent values to dataframe.
+This method is always called by the data collector.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>column_names</strong> – property names to store</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Melodie.boost.agent_list.AgentList.to_list">
+<span class="sig-name descname"><span class="pre">to_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">column_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#Melodie.boost.agent_list.AgentList.to_list" title="Permalink to this definition"></a></dt>
+<dd><p>Dump all agent and their properties into a list of dict.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>column_names</strong> – The property names to be dumped.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Melodie.boost.agent_list.AgentList.vectorize">
+<span class="sig-name descname"><span class="pre">vectorize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prop_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.boost.agent_list.AgentList.vectorize" title="Permalink to this definition"></a></dt>
+<dd><p>NotImplemented yet.</p>
+<p>Generate an numpy array from this list, where the values come from the property defined by <code class="docutils literal notranslate"><span class="pre">prop_name</span></code> on each agent.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>prop_name</strong> – Property name</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>An 1-D Numpy array</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 
 

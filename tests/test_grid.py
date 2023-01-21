@@ -262,7 +262,7 @@ def test_roles_2():
                 100,
                 100,
             ),
-            dtype=np.int,
+            dtype=np.int64,
         )
         * 100,
     )
@@ -276,7 +276,7 @@ def test_roles_2():
                     100,
                     10,
                 ),
-                dtype=np.int,
+                dtype=np.int64,
             )
             * 100,
         )
@@ -292,7 +292,7 @@ def test_roles_2():
                     10,
                     100,
                 ),
-                dtype=np.int,
+                dtype=np.int64,
             )
             * 100,
         )
@@ -305,7 +305,7 @@ def test_roles_2():
             "a",
             np.ones(
                 (10, 100, 1),
-                dtype=np.int,
+                dtype=np.int64,
             )
             * 100,
         )

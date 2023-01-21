@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>DataInfo &mdash; Melodie 0.5.0 documentation</title>
+  <title>DataInfo &mdash; Melodie 0.6.0 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -14,7 +14,6 @@
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="author" title="About these documents" href="../about.html" />
@@ -151,7 +150,11 @@
 <li class="toctree-l2"><a class="reference internal" href="data_collector.html">DataCollector</a></li>
 <li class="toctree-l2"><a class="reference internal" href="grid.html">Grid</a></li>
 <li class="toctree-l2"><a class="reference internal" href="network.html">Network</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">DataInfo</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">DataInfo</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#dataframeinfo">DataFrameInfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#matrixinfo">MatrixInfo</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="data_loader.html">DataLoader</a></li>
 <li class="toctree-l2"><a class="reference internal" href="scenario.html">Scenario</a></li>
 <li class="toctree-l2"><a class="reference internal" href="simulator.html">Simulator</a></li>
@@ -163,6 +166,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../changelog.html">Change Log</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../changelog.html#major-version-0-x">Major Version 0.x</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../changelog.html#v0-6-0-jan-04-2023">v0.6.0 (Jan. 04, 2023)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../changelog.html#v0-5-0-dec-17-2022">v0.5.0 (Dec. 17, 2022)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../changelog.html#v0-4-2-dec-15-2022">v0.4.2 (Dec. 15, 2022)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../changelog.html#v0-4-1-dec-12-2022">v0.4.1 (Dec. 12, 2022)</a></li>
@@ -215,8 +219,86 @@
            <div itemprop="articleBody">
              
   <section id="datainfo">
-<h1>DataInfo<a class="headerlink" href="#datainfo" title="Permalink to this heading"></a></h1>
-<p>Under development.</p>
+<h1>DataInfo<a class="headerlink" href="#datainfo" title="Permalink to this headline"></a></h1>
+<section id="dataframeinfo">
+<h2>DataFrameInfo<a class="headerlink" href="#dataframeinfo" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="Melodie.data_loader.DataFrameInfo">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Melodie.data_loader.</span></span><span class="sig-name descname"><span class="pre">DataFrameInfo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">columns</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">sqlalchemy.types</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.data_loader.DataFrameInfo" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>DataFrameInfo provides standard format for input tables as parameters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df_name</strong> – Name of dataframe.</p></li>
+<li><p><strong>columns</strong> – A dict, <code class="docutils literal notranslate"><span class="pre">column</span> <span class="pre">name</span> <span class="pre">--&gt;</span> <span class="pre">column</span> <span class="pre">data</span> <span class="pre">type</span></code>.</p></li>
+<li><p><strong>file_name</strong> – File name to load this dataframe, None by default. If None, be sure to
+generate the dataframe in the DataLoader.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Melodie.data_loader.DataFrameInfo.df_name">
+<span class="sig-name descname"><span class="pre">df_name</span></span><a class="headerlink" href="#Melodie.data_loader.DataFrameInfo.df_name" title="Permalink to this definition"></a></dt>
+<dd><p>Dataframe name.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Melodie.data_loader.DataFrameInfo.columns">
+<span class="sig-name descname"><span class="pre">columns</span></span><a class="headerlink" href="#Melodie.data_loader.DataFrameInfo.columns" title="Permalink to this definition"></a></dt>
+<dd><p>Data types for dataframe columns when stored into database.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Melodie.data_loader.DataFrameInfo.file_name">
+<span class="sig-name descname"><span class="pre">file_name</span></span><a class="headerlink" href="#Melodie.data_loader.DataFrameInfo.file_name" title="Permalink to this definition"></a></dt>
+<dd><p>Name of dataframe file, now it can be an excel file. Other file types
+will be implemented later.</p>
+<p>If None, it indicates this dataframe will be generated by programming.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="matrixinfo">
+<h2>MatrixInfo<a class="headerlink" href="#matrixinfo" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="Melodie.data_loader.MatrixInfo">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Melodie.data_loader.</span></span><span class="sig-name descname"><span class="pre">MatrixInfo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mat_name:</span> <span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_type:</span> <span class="pre">&lt;module</span> <span class="pre">'sqlalchemy.types'</span> <span class="pre">from</span> <span class="pre">'/Users/hzy/.conda/envs/Melodie/lib/python3.8/site-packages/sqlalchemy/types.py'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_name:</span> <span class="pre">typing.Optional[str]</span> <span class="pre">=</span> <span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.data_loader.MatrixInfo" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>MatrixInfo provides standard format for input matrices as parameters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mat_name</strong> – Name of the current matrix.</p></li>
+<li><p><strong>columns</strong> – A type indicating the data type in the matrix.</p></li>
+<li><p><strong>file_name</strong> – File name to load this dataframe, None by default. If None, be sure to
+generate the dataframe in the DataLoader.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Melodie.data_loader.MatrixInfo.mat_name">
+<span class="sig-name descname"><span class="pre">mat_name</span></span><a class="headerlink" href="#Melodie.data_loader.MatrixInfo.mat_name" title="Permalink to this definition"></a></dt>
+<dd><p>Name of matrix info</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Melodie.data_loader.MatrixInfo.data_type">
+<span class="sig-name descname"><span class="pre">data_type</span></span><a class="headerlink" href="#Melodie.data_loader.MatrixInfo.data_type" title="Permalink to this definition"></a></dt>
+<dd><p>Data type of matrix elements.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Melodie.data_loader.MatrixInfo.file_name">
+<span class="sig-name descname"><span class="pre">file_name</span></span><a class="headerlink" href="#Melodie.data_loader.MatrixInfo.file_name" title="Permalink to this definition"></a></dt>
+<dd><p>File that storing this matrix.</p>
+<p>If None, it indicates this matrix will be generated by programming.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
 </section>
 
 
