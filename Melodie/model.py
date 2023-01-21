@@ -67,7 +67,7 @@ class Model:
             config: "Config",
             scenario: "Scenario",
             run_id_in_scenario: int = 0,
-            visualizer: Visualizer = None,
+            visualizer: "Visualizer" = None,
     ):
         """
         :param config: Type ``Melodie.Config``

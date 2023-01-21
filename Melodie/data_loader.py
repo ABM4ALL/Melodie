@@ -50,7 +50,7 @@ class MatrixInfo:
     def __init__(
             self,
             mat_name: str,
-            data_type: sqlalchemy.types,
+            data_type: "sqlalchemy.types",
             file_name: Optional[str] = None,
     ):
         """
