@@ -51,9 +51,10 @@ can be developed with `Melodie` step by step.
 
 # Statement of need
 
-In the Python community, there are currently two open-source frameworks for agent-based modeling, 
+In the Python community, 
 [`Mesa`](https://github.com/projectmesa/mesa) [@Mesa][^4] and
-[`AgentPy`](https://github.com/JoelForamitti/agentpy) [@AgentPy][^5]. 
+[`AgentPy`](https://github.com/JoelForamitti/agentpy) [@AgentPy][^5]
+are the two open-source frameworks for agent-based modeling. 
 Following the tradition of [`NetLogo`](https://ccl.northwestern.edu/netlogo/) [@Netlogo][^6],
 they both support interactive simulation but with different focus and style. 
 
@@ -100,7 +101,7 @@ which can be constructed and run for different objectives:
 * `Trainer` - trains the `agents` to update their behavioral parameters for higher payoff. 
 
 Both of `Calibrator` and `Trainer` modules are based on the genetic algorithm (GA), 
-and the `Trainer` framework is introduced in detail in @Yu.
+and the `Trainer` framework is introduced in detail in [@Yu].
 
 Taking the covid contagion model in the tutorial as example, as shown below,
 the `simulator` is initialized with a `config` object (incl. project name and folder paths) and
@@ -159,7 +160,7 @@ based on the same covid contagion model developed with all the three packages.
 This work is not supported by any funding. 
 Dr. Songmin Yu would like to thank the free and creative working atmosphere at Fraunhofer ISI, 
 especially the inspiring talks and nice beer time with the colleagues.
-Zhanyi Hou would like to thank his supervisor and his research partners from Beihang University 
+Zhanyi Hou would like to thank his supervisor, Prof. Shunkun Yang, and his research partners from Beihang University 
 for their support and guidance for programming.
 
 # References
