@@ -222,15 +222,18 @@ class FloatParam(Param):
     def __init__(self, name: str, value_range: Tuple[float, float], step: float = -1,
                  getter: GetterArgType = "",
                  setter: SetterArgType = "",
-                 readonly=False, label="",
+                 readonly=False,
+                 label="",
                  description="",
-                 component='auto', ):
+                 component='auto',
+                 percentage=False):
         super().__init__(name, getter, setter, readonly, label, description, component)
 
         self.min = value_range[0]
         self.max = value_range[1]
         self.step = step
         self.type = 'float'
+        self.percentage = percentage
 
     def _validator(self, new_val: int):
         if not self.min - 10 ** -9 <= new_val <= self.max + 10 ** -9:
