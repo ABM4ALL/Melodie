@@ -5,6 +5,7 @@
 # @File: actions.py
 from typing import Callable, Dict, List, Optional
 from MelodieInfra.jsonobject import JsonObject, StringProperty, ObjectProperty
+from .params import ParamsManager
 from .vis_charts import JSONBase
 
 
@@ -15,6 +16,11 @@ class BasicOprandType(JSONBase):
     def __eq__(self, other):
         assert isinstance(other, BasicOprandType)
         return other.type == self.type
+
+
+class JSONOprandType(BasicOprandType):
+    def __init__(self):
+        self.type = 'json'
 
 
 class FileOprandType(BasicOprandType):
@@ -70,6 +76,14 @@ class ResponseToFile(ResponseConversionOperation):
         self.rettype = FileOprandType()
 
 
+class ResponseToJSON(ResponseConversionOperation):
+
+    def __init__(self, oprands: Optional[List['Operation']] = None):
+        super().__init__(oprands)
+        self.name = 'op-response-to-json'
+        self.rettype = JSONOprandType()
+
+
 class DownloadOperation(Operation):
 
     def __init__(self, oprands: Optional[List['Operation']] = None):
@@ -80,16 +94,27 @@ class DownloadOperation(Operation):
         print(self.oprands)
 
 
+class ShowChartWindowOperation(Operation):
+    def __init__(self, oprands: Optional[List['Operation']] = None):
+        super().__init__(oprands)
+        self.name = "op-show-chart-window"
+        self.optypes = [JSONOprandType()]
+        self.rettype = None
+        print(self.oprands)
+
+
 class Action(JSONBase):
     handlers_map = {}
 
-    def __init__(self, key: str, text: str, operation: Operation, handler: Callable):
+    def __init__(self, key: str, text: str, operation: Operation, handler: Callable,
+                 custom_args: Optional[ParamsManager] = None):
         self.key = key
         self.text = text
         self.operation = operation
         self.operation.check_type()
         self._handler = handler
         self.children = []
+        self.custom_args = custom_args.to_json() if isinstance(custom_args, ParamsManager) else []
         Action.handlers_map[key] = handler
 
     def add_sub_action(self, action: "Action"):

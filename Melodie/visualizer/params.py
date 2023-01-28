@@ -365,6 +365,7 @@ class ParamsManager:
         :return:
         """
         self.params.append(param)
+        return self
 
     def to_json(self):
         """

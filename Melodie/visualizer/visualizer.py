@@ -188,6 +188,7 @@ class BaseVisualizer:
         server_logger = logging.getLogger('websocket-server')
         server_logger.setLevel(logging.ERROR)
         host = "localhost"
+        MelodieVisualizerProtocol.visualizer = self
         start_server = websockets.serve(handler, host, self.config.visualizer_port, create_protocol=MelodieVisualizerProtocol,
                                         logger=server_logger
                                         )
