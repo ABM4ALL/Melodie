@@ -20,31 +20,6 @@ cdef class GridAgent(GridItem):
 cdef class Spot(GridItem):
     cdef public long colormap
 
-cdef class AgentIDManager:
-    cdef long _width
-    cdef long _height
-    cdef vector[cpp_set[long]] _agents
-    cdef long _max_id
-    cdef cpp_set[long] _empty_spots
-    cdef bint allow_multi
-    cdef public cpp_set[long] all_categories 
-    cdef void _add_agent(self, long agent_id, long category, long x, long y) except *
-    cpdef add_agent(self, long agent_id, long category, long x, long y) except *
-    cdef void _remove_agent(self, long agent_id, long category, long x, long y) except *
-    cpdef remove_agent(self, long agent_id, long category, long x, long y) except *
-
-    cdef long _convert_to_1d(self, long x, long y)
-    
-    cdef cpp_set[long]* _get_empty_spots(self)
-
-    cpdef set get_empty_spots(self)
-    cpdef long agent_id_and_category_to_number(self, long agent_id, long category) except *
-    cdef (long, long) num_to_2d_coor(self, long num) except *
-    cpdef (long, long) number_to_category_and_agent_id(self, long num) except *
-
-    cpdef list agents_on_spot(self, long x, long y) except *
-    cdef (long, long) find_empty_spot(self) except *
-
 cdef class Grid:
     cdef long _width
     cdef long _height
@@ -53,6 +28,7 @@ cdef class Grid:
     cdef bint _wrap
     cdef public dict _existed_agents
     cdef list _spots
+    cdef set _empty_spots
     cdef dict _agent_ids
     cdef dict _neighbors_cache
     cdef list _roles_list
@@ -61,7 +37,7 @@ cdef class Grid:
     cdef public object scenario
     cdef public object _spot_cls
     
-    cdef AgentIDManager _agent_id_mgr
+    # cdef AgentIDManager _agent_id_mgr
     cpdef _add_agent_container(self, object category , str initial_placement) except *
     cpdef AgentList get_agent_container(self, category_id) except *
     cpdef Spot get_spot(self, long x, long y)
@@ -85,6 +61,7 @@ cdef class Grid:
     cpdef void remove_agent(self, GridAgent agent) except *
     cpdef void move_agent(self, GridAgent agent, long target_x, long target_y) except *
     cpdef list get_spot_agents(self, Spot spot) except *
+    cdef list _get_spot_agents(self, long spot_id) except *
     cdef void _add_agent(self, long agent_id, long category, long x, long y) except *
     cdef void _remove_agent(self, long agent_id, long category,long x, long y) except *
     cpdef list get_neighbors(self, GridAgent agent, long radius=*, bint moore=*, bint except_self=*) except *

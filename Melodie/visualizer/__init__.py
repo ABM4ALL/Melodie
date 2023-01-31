@@ -1,5 +1,5 @@
 from .actions import Action
-from .params import FloatParam, ArrayParam, IntParam, Param, BoolParam, StringParam
+from .params import FloatParam, ArrayParam, IntParam, Param, BoolParam, StringParam, SelectionParam
 from .vis_charts import JSONBase
 from .vis_agent_series import AgentSeriesManager, AgentSeries
 from .visualizer import BaseVisualizer, NetworkVisualizer, Visualizer, MelodieModelReset

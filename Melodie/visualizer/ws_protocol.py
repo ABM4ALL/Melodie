@@ -84,9 +84,14 @@ class MelodieVisualizerProtocol(WebSocketServerProtocol):
                     return Action.dispatch(action, args_dict)
                 else:
                     return Action.dispatch(action)
+            elif path.startswith("/action-params/"):
+                action = path[len('/action-params/'):]
+                action = action.split("?")[0]
+                return create_json_response(Action.get_custom_args(action))
+            else:
+                ret = await super().process_request(path, request_headers)
+                return ret
         except BaseException as e:
             import traceback
             traceback.print_exc()
             return create_failed_response('Request failed: ' + str(e))
-        ret = await super().process_request(path, request_headers)
-        return ret

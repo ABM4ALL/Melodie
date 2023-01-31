@@ -244,14 +244,35 @@ class FloatParam(Param):
         return float(new_val)
 
 
+class SelectionParam(Param):
+    class Selection:
+        def __init__(self, label: str, value: Union[str, int, float]):
+            self.label = label
+            self.value = value
+
+        def to_dict(self):
+            return {'label': self.label, 'value': self.value}
+
+    def __init__(self, name: str, selections: List[Selection], getter: GetterArgType = "",
+                 setter: SetterArgType = "",
+                 readonly=False,
+                 label="",
+                 description="",
+                 component='auto', ):
+        super().__init__(name, getter, setter, readonly, label, description, component)
+        self.selections = [selection.to_dict() for selection in selections]
+        self.type = 'selection'
+
+
 class ArrayParam(Param):
     """
     Parameters could be set inside an array
 
     """
-    _value: "List[Union[IntParam, FloatParam, ArrayParam]]"
+    _value: "List[Union[IntParam, FloatParam, SelectionParam, ArrayParam]]"
 
-    def __init__(self, name: str, value: "List[Union[IntParam, FloatParam, ArrayParam]]", getter: GetterArgType = '',
+    def __init__(self, name: str, value: "List[Union[IntParam, SelectionParam, FloatParam, ArrayParam]]",
+                 getter: GetterArgType = '',
                  setter: SetterArgType = '', readonly=False, label="", description="", component='auto'):
         super().__init__(name, getter, setter, readonly, label, description,
                          component)

@@ -5,7 +5,7 @@ from MelodieInfra import *
 from .utils import *
 from .boost.agent_list import BaseAgentContainer, AgentList, AgentDict
 from .boost.basics import Environment, Element, Agent
-from .boost.grid import Grid, Spot, GridAgent, AgentIDManager
+from .boost.grid import Grid, Spot, GridAgent
 from .calibrator import Calibrator
 from .data_collector import DataCollector
 from .data_loader import DataLoader, DataFrameInfo, MatrixInfo

@@ -3,7 +3,7 @@
 # @Author: Zhanyi Hou
 # @Email: 1295752786@qq.com
 # @File: actions.py
-from typing import Callable, Dict, List, Optional
+from typing import Callable, Dict, List, Optional, Union
 from MelodieInfra.jsonobject import JsonObject, StringProperty, ObjectProperty
 from .params import ParamsManager
 from .vis_charts import JSONBase
@@ -104,17 +104,21 @@ class ShowChartWindowOperation(Operation):
 
 
 class Action(JSONBase):
+    params_handler_map: Dict[str, Callable[[], ParamsManager]] = {}
     handlers_map = {}
 
     def __init__(self, key: str, text: str, operation: Operation, handler: Callable,
-                 custom_args: Optional[ParamsManager] = None):
+                 custom_args: Union[None, Callable[[], ParamsManager]] = None):
         self.key = key
         self.text = text
         self.operation = operation
         self.operation.check_type()
         self._handler = handler
         self.children = []
-        self.custom_args = custom_args.to_json() if isinstance(custom_args, ParamsManager) else []
+        self.fetch_custom_args = True if custom_args else False
+        if self.fetch_custom_args:
+            Action.params_handler_map[key] = custom_args
+        self._custom_args = custom_args  # .to_json() if isinstance(custom_args, ParamsManager) else []
         Action.handlers_map[key] = handler
 
     def add_sub_action(self, action: "Action"):
@@ -122,6 +126,18 @@ class Action(JSONBase):
 
     @classmethod
     def dispatch(cls, key, args: Dict = None):
+        from .ws_protocol import create_failed_response
         if args is None:
             args = {}
-        return cls.handlers_map[key](**args)
+        try:
+            return cls.handlers_map[key](**args)
+        except BaseException as e:
+            import traceback
+            traceback.print_exc()
+            return create_failed_response(str(e))
+
+    @classmethod
+    def get_custom_args(cls, key):
+        params_manager = cls.params_handler_map[key]()
+        assert isinstance(params_manager, ParamsManager)
+        return params_manager.to_json()
