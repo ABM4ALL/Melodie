@@ -115,6 +115,10 @@ class BaseModellingManager(abc.ABC):
 
 
 class Simulator(BaseModellingManager):
+    """
+    Simulator simulates the logics written in the model.
+
+    """
     def __init__(
             self,
             config: Config,
@@ -123,6 +127,13 @@ class Simulator(BaseModellingManager):
             data_loader_cls: "Type[DataLoader]" = None,
             visualizer_cls: "type[BaseVisualizer]" = None,
     ):
+        """
+        :param config: Config instance for current project.
+        :param scenario_cls: Scenario class for current project.
+        :param model_cls: Model class in current project.
+        :param data_loader_cls: DataLoader class in current project.
+        :param visualizer_cls: Visualizer class in current project.
+        """
         super(Simulator, self).__init__(
             config=config,
             scenario_cls=scenario_cls,

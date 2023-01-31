@@ -14,6 +14,10 @@ logger = logging.getLogger(__name__)
 
 
 class NetworkAgent(Agent):
+    """
+    Base Class for ``Agent`` s connected with ``Network``.
+    
+    """
     id: int
     category: int
     network: "Network"
@@ -33,6 +37,11 @@ class NetworkAgent(Agent):
 
 
 class Edge:
+    """
+    Base Class for ``Edges`` s on the ``Network``.
+    
+    Edge objects links the agents, and could store custom parameters.
+    """
     def __init__(
             self,
             category_1: int,
@@ -69,7 +78,7 @@ class Edge:
 
     def post_setup(self):
         """
-        This method is executed after `setup()`
+        This method is executed after ``setup()``
 
         :return: None
         """
@@ -84,7 +93,19 @@ NodeType = Tuple[int, int]
 
 
 class Network:
+    """
+    Base class for the Network. Network is constructed with edge, describes the network (if exists) that links the agents,
+    and provides the relevant functions.
+
+    """
     def __init__(self, model=None, edge_cls: Type[Edge] = None, directed=False, name='network'):
+        """
+        :param model: Current model instance.
+        :param edge_cls: Class of Edges in this Network.
+        :param directed: If this network is directed, else it is undirected.
+        :param name: The name for this network, used in saving and reading the layout file.
+        
+        """
         self.model: "Model" = model
         self.simple = True
         self.directed = directed

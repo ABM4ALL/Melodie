@@ -35,6 +35,11 @@ class DBConn:
     def __init__(
             self, db_name: str, db_type: str = "sqlite", conn_params: Dict[str, str] = None
     ):
+        """
+        :param db_name: Name of database file.
+        :param db_type: Type of database, currently only support "sqlite".
+        :param conn_params: A dict for connection parameters.
+        """
         self.db_name = db_name
 
         if db_type not in {"sqlite"}:

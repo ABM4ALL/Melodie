@@ -542,7 +542,7 @@ class AgentContainerManager:
 
 class Trainer(BaseModellingManager):
     """
-    Individually train agents' parameters
+    Trainer trains the agents to update their behavioral parameters for higher payoff.
     """
 
     def __init__(
@@ -553,6 +553,14 @@ class Trainer(BaseModellingManager):
             data_loader_cls: "Optional[Type[DataLoader]]",
             processors: int = 1,
     ):
+        """
+        :param config: Config instance for current project.
+        :param scenario_cls: Scenario class for current project.
+        :param model_cls: Model class in current project.
+        :param data_loader_cls: DataLoader class in current project.
+        :param processors: Each path in current iteration will be computed parallelly, this parameter
+         stands for processor cores used in parallel computation.
+        """
         super().__init__(
             config=config,
             scenario_cls=scenario_cls,

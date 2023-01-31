@@ -33,6 +33,9 @@ class DataCollector:
     """
 
     def __init__(self, target="sqlite"):
+        """
+        :param target: A string indicating database type, currently just support "sqlite".
+        """
         if target not in {"sqlite", None}:
             MelodieExceptions.Data.InvalidDatabaseType(target, {"sqlite"})
 

@@ -13,6 +13,9 @@ astunparse
 pprintast
 websockets
 sphinx
+sphinx-autobuild
+sphinx-markdown-tables
+sphinx-rtd-theme
 pytest
 termcolor;  python_version > '3.7'
 cython

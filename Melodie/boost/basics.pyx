@@ -31,6 +31,11 @@ cdef class Agent(Element):
 
     """
     def __init__(self, agent_id: int):
+        """
+
+        :param agent_id: The ``id`` of agent. For the agents of same class,
+            it should be unique.
+        """
         self.id = agent_id
         self.scenario = None
         self.model = None
@@ -91,7 +96,15 @@ cdef class Agent(Element):
         raise NotImplementedError("Method `get_style` should be inherited if visualizer is implemented!")
 
 cdef class Environment(Element):
+    """
+    Environment coordinates the agents' decision-making and interaction processes and stores the macro-level variables.
+    
+    """
     def __init__(self):
+        """
+        No parameter involved in this class
+
+        """
         self.model: Optional['Model'] = None
         self.scenario: Optional['Scenario'] = None
 

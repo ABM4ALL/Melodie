@@ -27,7 +27,13 @@ import array
 
 ctypedef np.int64_t DTYPE_t
 
-srand(time.time())
+cpdef set_seed(long seed):
+    random.seed(seed)
+    np.random.seed(seed)
+    srand(seed)
+
+set_seed(int(time.time()*1000_000)%(2**30))
+
 
 cdef double uniform():
     return (rand()/(RAND_MAX*1.0))
