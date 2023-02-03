@@ -1,0 +1,8 @@
+{
+    "PORT": 8089,
+    "WS_SOCKET": 8765,
+    "CURRENT_VISUALIZER_HOST": "127.0.0.1:8765",
+    "ALL_VISUALIZER_HOSTS": [
+        "127.0.0.1:8765"
+    ]
+}
