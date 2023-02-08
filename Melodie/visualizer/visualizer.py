@@ -1,27 +1,21 @@
 import base64
 import logging
-import asyncio
 import os
+import json
 import queue
 import shutil
 import threading
 import time
 from enum import Enum
 
-import json
-from queue import Queue
-from typing import Dict, Tuple, List, Any, Callable, Union, Set, TYPE_CHECKING, Optional
-
-from websockets.exceptions import ConnectionClosedOK
+from typing import Dict, Tuple, List, Any, Callable, Union, TYPE_CHECKING, Optional
+from MelodieInfra import OSTroubleShooter, get_sqlite_filename, MelodieExceptions, Config
 
 from .actions import Action
 from .visualizer_server import create_visualizer_server
-from .ws_protocol import MelodieVisualizerProtocol
-
-from MelodieInfra import OSTroubleShooter, get_sqlite_filename, MelodieExceptions, Config
 from .params import ParamsManager
 from .vis_agent_series import AgentSeriesManager
-from .vis_charts import ChartManager, Chart, PieChart, BarChart
+from .vis_charts import ChartManager
 from ..boost.grid import Spot
 
 if TYPE_CHECKING:
@@ -52,14 +46,6 @@ FINISHED = 3
 OK = 0
 ERROR = 1
 
-QUEUE_ELEM = Tuple[int, MelodieVisualizerProtocol]
-
-MAX_ACTIVE_CONNECTIONS = 8
-visualize_condition_queue_main = Queue(10)
-visualize_result_queues: Dict[MelodieVisualizerProtocol, Queue] = {}
-
-socks: Set[MelodieVisualizerProtocol] = set()
-
 
 class WSMsgType(str, Enum):
     INIT_OPTION = 'initOption'
@@ -72,7 +58,7 @@ class WSMsgType(str, Enum):
 
 
 class MelodieModelReset(BaseException):
-    def __init__(self, ws: MelodieVisualizerProtocol = None):
+    def __init__(self, ws=None):
         self.ws = ws
 
 
@@ -119,7 +105,6 @@ class BaseVisualizer:
         self.agent_series_managers: Dict[str, AgentSeriesManager] = {}
         self.agent_lists: Dict[int, "AgentList"] = {}
 
-        self.current_websocket: Optional[MelodieVisualizerProtocol] = None
         self.th: Optional[threading.Thread] = None
         self.send_queue = queue.Queue()
         self.recv_queue = queue.Queue()
@@ -267,6 +252,7 @@ class BaseVisualizer:
     def get_in_queue(self) -> Tuple[int, Dict[str, Any]]:
         """
         `while 1` statement was for checking the sigterm signal.
+
         :return:
         """
         while 1:
@@ -286,6 +272,7 @@ class BaseVisualizer:
     ) -> bool:
         """
         The handler for viewing current data, getting scenario parameters.
+
         :param cmd_type:
         :param data:
         :param ws:
@@ -344,7 +331,6 @@ class BaseVisualizer:
             self.send_current_data()
         except:
             import traceback
-
             traceback.print_exc()
 
         while 1:
@@ -557,6 +543,7 @@ class Visualizer(BaseVisualizer):
     ):
         """
         Add a Grid onto the visualizer.
+
         :param name: The name of grid component.
         :param grid_getter: The getter function returning a Grid object.
         :param var_style:  The style of different agent categories.
@@ -595,112 +582,4 @@ class Visualizer(BaseVisualizer):
             "plots": self.plot_charts.get_current_data(),
         }
 
-        return data
-
-
-
-class NetworkVisualizer(BaseVisualizer):
-    def __init__(self):
-        super().__init__()
-
-        logger.info("Network visualizer server is starting...")
-
-        self.vertex_positions: Dict[str, Tuple[int, int]] = {}
-        self.vertex_roles: Dict[str, int] = {}
-        self.edge_roles: Dict[Tuple[int, int], int] = {}
-
-        self.chart_options = {
-            "title": {"text": "Graph"},
-            "tooltip": {},
-            "series": [
-                {
-                    "type": "graphGL",
-                    "layout": "none",
-                    "animation": False,
-                    "symbolSize": 10,
-                    "symbol": "circle",
-                    "roam": True,
-                    "edgeSymbol": ["circle", "arrow"],
-                    "edgeSymbolSize": [4, 5],
-                    "itemStyle": {"opacity": 1},
-                    "categories": [
-                        {"name": 0, "itemStyle": {"color": "#67c23a"}},
-                        {"name": 1, "itemStyle": {"color": "#f56c6c"}},
-                    ],
-                }
-            ],
-        }
-        self.setup()
-
-    def reset(self):
-        self.edge_roles = {}
-        self.vertex_roles = {}
-        self.vertex_positions = {}
-
-    def parse_edges(self, edges: List[Any], parser: Callable):
-
-        for edge in edges:
-            edge, pos = parser(edge)
-            self.edge_roles[edge] = pos
-
-    def parse_layout(
-            self,
-            node_info: List[Any],
-            parser: Callable[[Any], Tuple[Union[str, int], Tuple[float, float]]] = None,
-    ):
-        """
-        :param node_info: A list contains a series of node information.
-        :param parser: The layout of the network.
-        :return:
-        """
-        if parser is None:
-            parser = lambda node: (node["name"], (node["x"], node["y"]))
-        for node in node_info:
-            node_name, pos = parser(node)
-            self.vertex_positions[node_name] = pos
-
-    def parse_role(self, node_info: List[Any], parser: Callable[[Any], int] = None):
-        """
-        :param node_info: A list contains a series of node information.
-        :param parser: A Callable to parse the role of vertex.
-        :return:
-        """
-        assert parser is not None
-        for node in node_info:
-            node_name, colormap = parser(node)
-            assert isinstance(colormap, int), "The role of node should be an int."
-            self.vertex_roles[node_name] = colormap
-
-    def _format(self):
-        lst = []
-        for name, pos in self.vertex_positions.items():
-            lst.append(
-                {
-                    "name": name,
-                    "x": pos[0],
-                    "y": pos[1],
-                    "category": self.vertex_roles[name],
-                }
-            )
-        lst_edges = []
-        for edge, role in self.edge_roles.items():
-            lst_edges.append({"source": edge[0], "target": edge[1]})
-        data = {
-            "visualizer": {"series": [{"data": lst, "links": lst_edges}]},
-            "plots": [
-                {
-                    "chartName": name,
-                    "series": [
-                        {
-                            "name": self.plot_charts[name][i].seriesName,
-                            "value": self.chart_data[name][
-                                self.plot_charts[name][i].seriesName
-                            ][self.current_step],
-                        }
-                        for i in range(len(self.plot_charts[name]))
-                    ],
-                }
-                for name in self.plot_charts.keys()
-            ],
-        }
         return data

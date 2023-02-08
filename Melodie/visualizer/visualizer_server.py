@@ -73,8 +73,6 @@ def create_visualizer_server(recv_queue: queue.Queue, send_queue: queue.Queue):
                         traceback.print_exc()
                 else:
                     raise NotImplementedError(cmd)
-
-
             except json.JSONDecodeError:
                 import traceback
                 traceback.print_exc()

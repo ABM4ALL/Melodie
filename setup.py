@@ -151,7 +151,6 @@ setuptools.setup(
         "seaborn",
         "networkx",
         "openpyxl",
-        "websockets",
         "sqlalchemy",
         "astunparse",
         "pprintast",

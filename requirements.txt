@@ -12,7 +12,6 @@ chardet~=4.0.0
 sqlalchemy
 astunparse
 pprintast
-websockets
 sphinx
 sphinx-autobuild
 sphinx-markdown-tables
