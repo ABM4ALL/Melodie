@@ -222,15 +222,18 @@ class FloatParam(Param):
     def __init__(self, name: str, value_range: Tuple[float, float], step: float = -1,
                  getter: GetterArgType = "",
                  setter: SetterArgType = "",
-                 readonly=False, label="",
+                 readonly=False,
+                 label="",
                  description="",
-                 component='auto', ):
+                 component='auto',
+                 percentage=False):
         super().__init__(name, getter, setter, readonly, label, description, component)
 
         self.min = value_range[0]
         self.max = value_range[1]
         self.step = step
         self.type = 'float'
+        self.percentage = percentage
 
     def _validator(self, new_val: int):
         if not self.min - 10 ** -9 <= new_val <= self.max + 10 ** -9:
@@ -241,14 +244,35 @@ class FloatParam(Param):
         return float(new_val)
 
 
+class SelectionParam(Param):
+    class Selection:
+        def __init__(self, label: str, value: Union[str, int, float]):
+            self.label = label
+            self.value = value
+
+        def to_dict(self):
+            return {'label': self.label, 'value': self.value}
+
+    def __init__(self, name: str, selections: List[Selection], getter: GetterArgType = "",
+                 setter: SetterArgType = "",
+                 readonly=False,
+                 label="",
+                 description="",
+                 component='auto', ):
+        super().__init__(name, getter, setter, readonly, label, description, component)
+        self.selections = [selection.to_dict() for selection in selections]
+        self.type = 'selection'
+
+
 class ArrayParam(Param):
     """
     Parameters could be set inside an array
 
     """
-    _value: "List[Union[IntParam, FloatParam, ArrayParam]]"
+    _value: "List[Union[IntParam, FloatParam, SelectionParam, ArrayParam]]"
 
-    def __init__(self, name: str, value: "List[Union[IntParam, FloatParam, ArrayParam]]", getter: GetterArgType = '',
+    def __init__(self, name: str, value: "List[Union[IntParam, SelectionParam, FloatParam, ArrayParam]]",
+                 getter: GetterArgType = '',
                  setter: SetterArgType = '', readonly=False, label="", description="", component='auto'):
         super().__init__(name, getter, setter, readonly, label, description,
                          component)
@@ -362,6 +386,7 @@ class ParamsManager:
         :return:
         """
         self.params.append(param)
+        return self
 
     def to_json(self):
         """

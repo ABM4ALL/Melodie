@@ -219,6 +219,12 @@ class BarChart(PieChart):
 
     def set_data_source(self, data_source: Dict[str, Callable[[], Union[int, float]]]):
         self._sources = data_source
+        self._mode = 'single'
+        return self
+
+    def set_data_mutable_source(self, data_source: Callable[[], Dict[str, Union[int, float]]]):
+        self._source = data_source
+        self._mode = 'multi'
         return self
 
 

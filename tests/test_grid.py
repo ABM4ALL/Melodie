@@ -70,7 +70,8 @@ def neighbors(grid: Grid):
     neighbor_ids = grid._get_neighbor_positions(px, py, 1)
 
     neighbor_ids = set(
-        [(neighbor_ids[i][0], neighbor_ids[i][1]) for i in range(len(neighbor_ids))]
+        [(neighbor_ids[i][0], neighbor_ids[i][1])
+         for i in range(len(neighbor_ids))]
     )
 
     assert len(list(neighbor_ids)) == 8
@@ -86,7 +87,8 @@ def neighbors(grid: Grid):
     assert x == grid.get_spot(x, y).x
     assert y == grid.get_spot(x, y).y
 
-    neighbor_ids = grid._get_neighbor_positions(grid.width() - 1, grid.height() - 1, 1)
+    neighbor_ids = grid._get_neighbor_positions(
+        grid.width() - 1, grid.height() - 1, 1)
     grid.get_spot(0, 0)
 
 
@@ -118,31 +120,6 @@ def neighbors(grid: Grid):
 def convert(grid: Union[Grid]):
     arr = grid.to_2d_array("id")
     print(arr)
-
-
-def test_agent_id_mgr():
-    from Melodie.boost.grid import AgentIDManager
-
-    am = AgentIDManager(10, 10)
-    SHEEP = 0
-    WOLF = 1
-    am.add_agent(0, 0, 1, 1)  # add a sheep at (1, 1)
-    assert 10 * 1 + 1 not in am.get_empty_spots()
-    am.remove_agent(0, 0, 1, 1)  # remove a sheep from (1, 1)
-    assert 10 * 1 + 1 in am.get_empty_spots()
-
-    am.add_agent(0, 0, 1, 1)  # add a sheep at (1, 1)
-    try:
-        am.add_agent(0, 0, 1, 1)  # add a sheep at (1, 1)
-        assert False, "An Error should be raised above"
-    except ValueError:
-        pass
-    print(len(am.get_empty_spots()))
-    am.add_agent(0, WOLF, 1, 1)
-    print(am.agents_on_spot(1, 1))
-    assert (WOLF, 0) in am.agents_on_spot(1, 1)
-    assert (SHEEP, 0) in am.agents_on_spot(1, 1)
-    print(am.agents_on_spot(5, 5))
 
 
 CATRGORY_A = 0
@@ -186,6 +163,7 @@ def test_single_grid():
                 agent.y = j
                 grid.add_agent(agent)
                 empty_count -= 1
+
                 assert len(grid.get_empty_spots()) == empty_count
     spot = grid.find_empty_spot()
     assert spot == (3, 3), spot

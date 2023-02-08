@@ -8,7 +8,6 @@ from MelodieInfra import DBConn, MelodieExceptions
 
 from Melodie.global_configs import MelodieGlobalConfig
 
-
 logger = logging.getLogger(__name__)
 
 if TYPE_CHECKING:
@@ -75,7 +74,7 @@ class DataCollector:
         return self._time_elapsed
 
     def add_agent_property(
-        self, container_name: str, property_name: str, as_type: Type = None
+            self, container_name: str, property_name: str, as_type: Type = None
     ):
         """
         This method adds a property of agents in an agent_container to the data collector.
@@ -233,6 +232,17 @@ class DataCollector:
             return ret
 
         return wrapper
+
+    def get_single_agent_data(self, agent_container_name: str, agent_id: int):
+        """
+        Get time series data of one agent.
+
+        :param agent_container_name: Attribute name in model.
+        :param agent_id: Agent id
+        :return:
+        """
+        container_data = self.agent_properties_dict[agent_container_name]
+        return list(filter(lambda item: item['id'] == agent_id, container_data))
 
     def save(self):
         """
