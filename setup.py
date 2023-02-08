@@ -55,17 +55,17 @@ try:
     ext = ".pyx"
     jsonobj_ext_modules = [
         Extension('MelodieInfra.jsonobject.api', [
-                  "MelodieInfra/jsonobject/api" + ext], ),
+            "MelodieInfra/jsonobject/api" + ext], ),
         Extension('MelodieInfra.jsonobject.base', [
-                  "MelodieInfra/jsonobject/base" + ext], ),
+            "MelodieInfra/jsonobject/base" + ext], ),
         Extension('MelodieInfra.jsonobject.base_properties', [
-                  "MelodieInfra/jsonobject/base_properties" + ext], ),
+            "MelodieInfra/jsonobject/base_properties" + ext], ),
         Extension('MelodieInfra.jsonobject.containers', [
-                  "MelodieInfra/jsonobject/containers" + ext], ),
+            "MelodieInfra/jsonobject/containers" + ext], ),
         Extension('MelodieInfra.jsonobject.properties', [
-                  "MelodieInfra/jsonobject/properties" + ext], ),
+            "MelodieInfra/jsonobject/properties" + ext], ),
         Extension('MelodieInfra.jsonobject.utils', [
-                  "MelodieInfra/jsonobject/utils" + ext], ),
+            "MelodieInfra/jsonobject/utils" + ext], ),
     ]
     ext_modules = ext_modules + jsonobj_ext_modules
     # ext_modules = ext_modules+[
@@ -79,6 +79,7 @@ except:
 
     traceback.print_exc()
     ext_modules = None
+
 
     def build_ext(_):
         return print(
@@ -158,6 +159,9 @@ setuptools.setup(
         "cython==3.0.0a11",
         "scikit-opt~=0.6",
         "rpyc",
+        "flask",
+        "flask-cors",
+        "flask_sock"
     ],
     python_requires=">=3.7",
     entry_points={"console_scripts": ["Melodie=Melodie.scripts.scripts:cli"]},

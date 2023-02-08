@@ -4,6 +4,7 @@ numpy >= 1.20
 pandas
 flask
 flask-cors
+flask_sock
 openpyxl
 xlrd==1.2.0
 networkx
