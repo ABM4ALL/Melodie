@@ -4,13 +4,10 @@ import asyncio
 import os
 import queue
 import shutil
-import sys
-from copy import deepcopy
 import threading
 import time
 from enum import Enum
 
-import websockets
 import json
 from queue import Queue
 from typing import Dict, Tuple, List, Any, Callable, Union, Set, TYPE_CHECKING, Optional
@@ -18,6 +15,7 @@ from typing import Dict, Tuple, List, Any, Callable, Union, Set, TYPE_CHECKING, 
 from websockets.exceptions import ConnectionClosedOK
 
 from .actions import Action
+from .visualizer_server import create_visualizer_server
 from .ws_protocol import MelodieVisualizerProtocol
 
 from MelodieInfra import OSTroubleShooter, get_sqlite_filename, MelodieExceptions, Config
@@ -73,55 +71,6 @@ class WSMsgType(str, Enum):
     FILE = "file"
 
 
-async def handler(ws: MelodieVisualizerProtocol, path):
-    global socks
-    if len(socks) >= MAX_ACTIVE_CONNECTIONS:
-        await ws.send(
-            json.dumps(
-                {
-                    "type": "error",
-                    "period": 0,
-                    "data": f"The number of connections exceeds the upper limit {MAX_ACTIVE_CONNECTIONS}. "
-                            f"Please shutdown unused webpage or modify the limit.",
-                    "modelState": UNCONFIGURED,
-                    "status": ERROR,
-                }
-            )
-        )
-        return
-    socks.add(ws)
-    visualize_result_queues[ws] = Queue(10)
-    while 1:
-        try:
-            content = await asyncio.wait_for(ws.recv(), timeout=0.05)
-            rec = json.loads(content)
-            cmd = rec["cmd"]
-            data = rec["data"]
-            if 0 <= cmd <= 10:
-                try:
-                    visualize_condition_queue_main.put((cmd, data, ws), timeout=1)
-                except:
-                    import traceback
-                    traceback.print_exc()
-            else:
-                raise NotImplementedError(cmd)
-        except (asyncio.TimeoutError, ConnectionRefusedError):
-            pass
-        except ConnectionClosedOK as e:
-            logger.info(e.reason)
-        if ws.closed:
-            socks.remove(ws)
-            visualize_result_queues.pop(ws)
-            logger.info(f"websocket connection {ws} is going offline...")
-            return
-        try:
-            while 1:
-                res = visualize_result_queues[ws].get(False)
-                await ws.send(res)
-        except queue.Empty:
-            pass
-
-
 class MelodieModelReset(BaseException):
     def __init__(self, ws: MelodieVisualizerProtocol = None):
         self.ws = ws
@@ -130,7 +79,6 @@ class MelodieModelReset(BaseException):
 def execute_only_enabled(func):
     """
     Execute the decorated function only if the Visualizer.enabled() is True.
-
     :param func:
     :return:
     """
@@ -155,13 +103,10 @@ class BaseVisualizer:
 
         self.params_dir = os.path.join(config.visualizer_tmpdir, 'params')
         self.sim_data_dir = os.path.join(config.visualizer_tmpdir, 'sim_data')
-        self.layout_data_dir = os.path.join(config.visualizer_tmpdir, "layout")
         if not os.path.exists(self.params_dir):
             os.makedirs(self.params_dir)
         if not os.path.exists(self.sim_data_dir):
             os.makedirs(self.sim_data_dir)
-        if not os.path.exists(self.layout_data_dir):
-            os.makedirs(self.layout_data_dir)
 
         self._model: "Model" = None
         self.params_manager: ParamsManager = ParamsManager()
@@ -176,6 +121,8 @@ class BaseVisualizer:
 
         self.current_websocket: Optional[MelodieVisualizerProtocol] = None
         self.th: Optional[threading.Thread] = None
+        self.send_queue = queue.Queue()
+        self.recv_queue = queue.Queue()
 
         try:
             self.start_websocket()
@@ -188,14 +135,8 @@ class BaseVisualizer:
         server_logger = logging.getLogger('websocket-server')
         server_logger.setLevel(logging.ERROR)
         host = "localhost"
-        MelodieVisualizerProtocol.visualizer = self
-        start_server = websockets.serve(handler, host, self.config.visualizer_port, create_protocol=MelodieVisualizerProtocol,
-                                        logger=server_logger
-                                        )
-        asyncio.get_event_loop().run_until_complete(start_server)
-        asyncio_serve = asyncio.get_event_loop().run_forever
 
-        self.th = threading.Thread(target=asyncio_serve)
+        self.th = threading.Thread(target=create_visualizer_server, args=(self.recv_queue, self.send_queue,))
 
         self.th.setDaemon(True)
         self.th.start()
@@ -218,56 +159,9 @@ class BaseVisualizer:
     def model(self):
         return self._model
 
-    # def add_plot_chart(self, chart_name: str, series_names: List[str], chart_type: str = 'line'):
-    #     """
-    #     Add chart to visualizer
-    #
-    #     :param chart_name:
-    #     :param series_names:
-    #     :param chart_type:
-    #     :return:
-    #     """
-    #     if chart_name not in self.plot_charts.all_chart_names():
-    #         if chart_type == 'line':
-    #             self.plot_charts.add_line_chart(chart_name)  # , series_names)
-    #         elif chart_type == 'pie':
-    #             self.plot_charts.add_piechart(chart_name)
-    #         elif chart_type == 'bar':
-    #             self.plot_charts.add_barchart(chart_name)
-    #         elif chart_type == 'candlestick':
-    #             self.plot_charts.add_candlestick_chart(chart_name)
-    #         else:
-    #             raise NotImplementedError(chart_type)
-    #     else:
-    #         raise ValueError(f"chart name '{chart_name}' already existed!")
-
-    # def set_chart_data_source(
-    #         self,
-    #         chart_name: str,
-    #         series_name: str,
-    #         source: "Callable[[Model], Union[int, float]]",
-    # ):
-    #
-    #     chart = self.plot_charts.get_chart(chart_name)
-    #     if isinstance(chart, Chart):
-    #         chart.get_series(series_name).set_data_source(source)
-    #     elif isinstance(chart, PieChart):
-    #         chart.add_variable(series_name, source)
-    #     else:
-    #         raise NotImplementedError(chart)
-
-    # def set_chart_data_multisource(self, chart_name: str,
-    #                                source: "Callable[[Model],Dict[str, Union[int, float]]]", ):
-    #     chart = self.plot_charts.get_chart(chart_name)
-    #     if isinstance(chart, BarChart):
-    #         chart.add_variables_source(source)
-    #     else:
-    #         raise NotImplementedError(chart)
-
     def _re_init(self):
         """
         Re-init the status of visualizer.
-
         :return:
         """
         self.agent_series_managers = {}
@@ -277,7 +171,6 @@ class BaseVisualizer:
     def set_model(self, model: "Model"):
         """
         Set model of visualizer. This is called every time the model resets
-
         :param model:
         :return:
         """
@@ -290,40 +183,25 @@ class BaseVisualizer:
         data = [action.to_json() for action in self.actions]
         self.send_msg(WSMsgType.ACTIONS, 0, data)
 
-    @staticmethod
-    def put_message(msg: str):
+    def put_message(self, msg: str):
         """
         Put message to the message queues of all active websocket connections.
         If the target queue is full, the message will be discarded.
-
         :param msg:
         :return:
         """
-        closed_websockets: Set[MelodieVisualizerProtocol] = set()
-        for ws, q in visualize_result_queues.items():
-            if ws.closed:
-                closed_websockets.add(ws)
-                continue
-            try:
-                q.put(msg, timeout=1)
-            except queue.Full:
-                if ws.closed:
-                    closed_websockets.add(ws)
-        for closed_ws in closed_websockets:
-            socks.remove(closed_ws)
-            visualize_result_queues.pop(closed_ws)
+        self.send_queue.put(msg)
 
     def send_msg(self, msg_type: WSMsgType, period: int, data: Any, status: int = OK):
         """
         Format input arguments to json and send the json.
-
         :param msg_type:
         :param period:
         :param data:
         :param status:
         :return:
         """
-        return BaseVisualizer.put_message(
+        return self.put_message(
             json.dumps(
                 {
                     "type": msg_type,
@@ -386,14 +264,14 @@ class BaseVisualizer:
     def send_error(self, err_msg):
         self.send_msg(WSMsgType.SIMULATION_DATA, self.current_step, err_msg, ERROR)
 
-    def get_in_queue(self) -> Tuple[int, Dict[str, Any], MelodieVisualizerProtocol]:
+    def get_in_queue(self) -> Tuple[int, Dict[str, Any]]:
         """
         `while 1` statement was for checking the sigterm signal.
         :return:
         """
         while 1:
             try:
-                res = visualize_condition_queue_main.get(timeout=1)
+                res = self.recv_queue.get(timeout=1)
                 handled = self.generic_handler(*res)
                 assert isinstance(handled, bool)
                 if not handled:
@@ -404,7 +282,7 @@ class BaseVisualizer:
                 pass
 
     def generic_handler(
-            self, cmd_type: int, data: Dict[str, Any], ws: MelodieVisualizerProtocol
+            self, cmd_type: int, data: Dict[str, Any]
     ) -> bool:
         """
         The handler for viewing current data, getting scenario parameters.
@@ -413,7 +291,6 @@ class BaseVisualizer:
         :param ws:
         :return:
         """
-        self.current_websocket = ws
         if cmd_type == GET_PARAMS:
             self.send_scenario_params(data.get('name'))
             return True
@@ -472,7 +349,7 @@ class BaseVisualizer:
 
         while 1:
             logger.info("in start")
-            flag, data, ws = self.get_in_queue()
+            flag, data = self.get_in_queue()
             if flag in {STEP, CURRENT_DATA}:
                 self.send_current_data()
                 if (
@@ -480,7 +357,7 @@ class BaseVisualizer:
                 ):  # If the flag was period, then go to period No.1. So there should be one
                     # queue to put into the condition queue.
                     self.model_state = RUNNING
-                    visualize_condition_queue_main.put((flag, {}, ws))
+                    self.recv_queue.put((flag, {}))
                     break
             else:
                 self.send_error(f"Invalid command flag {flag} for function 'start'. ")
@@ -491,7 +368,7 @@ class BaseVisualizer:
         self.plot_charts.update(self.current_step)
         while 1:
             logger.info("in period")
-            flag, data, ws = self.get_in_queue()
+            flag, data = self.get_in_queue()
             if flag == STEP:
                 self.send_current_data()
                 break
@@ -505,7 +382,7 @@ class BaseVisualizer:
         self.send_current_data()
         while 1:
             logger.info("in finish")
-            flag, data, ws = self.get_in_queue()
+            flag, data = self.get_in_queue()
             if flag == CURRENT_DATA:
                 self.send_current_data()
             else:
@@ -520,7 +397,6 @@ class BaseVisualizer:
 class Visualizer(BaseVisualizer):
     """
     The visualizer
-
     """
 
     def __init__(self, config: Config, simulator):
@@ -660,7 +536,6 @@ class Visualizer(BaseVisualizer):
                     var_getter: Callable[["Agent"], int] = None):
         """
         Add a network onto the visualizer.
-
         :param name:
         :param network_getter:
         :param var_style:
@@ -682,13 +557,12 @@ class Visualizer(BaseVisualizer):
     ):
         """
         Add a Grid onto the visualizer.
-
         :param name: The name of grid component.
         :param grid_getter: The getter function returning a Grid object.
         :param var_style:  The style of different agent categories.
         :param var_getter: The getter of agent variable.
         :param update_spots:  This argument is True by default, indicating rendering all spots in each step.
-            If False, spots will not be rendered during simulation. 
+            If False, spots will not be rendered during simulation.
         :return:
         """
         self.spots_status_change = update_spots
@@ -722,6 +596,7 @@ class Visualizer(BaseVisualizer):
         }
 
         return data
+
 
 
 class NetworkVisualizer(BaseVisualizer):
@@ -774,7 +649,6 @@ class NetworkVisualizer(BaseVisualizer):
             parser: Callable[[Any], Tuple[Union[str, int], Tuple[float, float]]] = None,
     ):
         """
-
         :param node_info: A list contains a series of node information.
         :param parser: The layout of the network.
         :return:
@@ -787,7 +661,6 @@ class NetworkVisualizer(BaseVisualizer):
 
     def parse_role(self, node_info: List[Any], parser: Callable[[Any], int] = None):
         """
-
         :param node_info: A list contains a series of node information.
         :param parser: A Callable to parse the role of vertex.
         :return:
