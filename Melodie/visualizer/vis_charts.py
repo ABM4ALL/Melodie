@@ -1,11 +1,20 @@
 import logging
 
 from typing import Any, Callable, List, Dict, TYPE_CHECKING, Tuple, TypeVar, Union, Optional
-
-from MelodieInfra import NUMERICAL_TYPE
+from decimal import Decimal
 from MelodieInfra.models.typeutils import REAL_NUM_TYPE
 
 logger = logging.getLogger(__name__)
+
+
+def float_round(float_value):
+    decimal_obj = Decimal.from_float(float_value)
+    decimal_str = format(decimal_obj, '.6')
+    return float(decimal_str)
+
+
+def round_float_array(float_arr):
+    return [float_round(v) for v in float_arr]
 
 
 class JSONBase:
@@ -168,6 +177,17 @@ class CandleStickChart(Chart):
         self.get_series('series').set_data_source(datasource)
         return self
 
+    def get_series_data(self):
+        data = super().get_series_data()
+        logger.warning(f"series data of candlestickchart {data}")
+        if data[0]['value'] is None:
+            pass
+        else:
+            assert len(data[0]['value']) == 4, \
+                f"Data format error in data source of candlestick chart: {data[0]['value']}"
+            data[0]['value'] = round_float_array(data[0]['value'])
+        return data
+
 
 class Gauge(JSONBase, ChartBase):
     def __init__(self, source: Callable[[], Union[int, float, Dict]]):
@@ -258,17 +278,7 @@ class ChartManager(JSONBase):
         current_data = []
         for chart_name in self.all_chart_names():
             chart = self.get_chart(chart_name)
-            # chart_series_data = []
-            # for i in range(len(chart.series)):
-            #     s = {
-            #         "name": chart.get_series_by_index(i).seriesName,
-            #         "value": chart.get_series(
-            #             chart.get_series_by_index(i).seriesName
-            #         ).latest_data,
-            #     }
-            #     chart_series_data.append(s)
             current_data.append({"chartName": chart_name, "series": chart.get_series_data()})
-        # print("current_data", current_data)
         return current_data
 
     def reset(self):

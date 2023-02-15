@@ -18,6 +18,7 @@ from typing import (
 import pandas as pd
 
 from MelodieInfra import create_db_conn, Config, MelodieExceptions
+from MelodieInfra.parallel.parallel_manager import ParallelManager
 
 from .algorithms import AlgorithmParameters
 from .algorithms.ga import MelodieGA
@@ -25,14 +26,10 @@ from .data_loader import DataLoader
 from .model import Model
 from .scenario_manager import Scenario
 from .simulator import BaseModellingManager
-from .utils.parallel_manager import ParallelManager
 
 if TYPE_CHECKING:
-    from .boost.basics import Environment
+    pass
 logger = logging.getLogger(__name__)
-
-pool = None  # on *nix
-th_on_thread = None  # for windows
 
 
 class GACalibratorParams(AlgorithmParameters):
@@ -84,20 +81,18 @@ class GACalibratorParams(AlgorithmParameters):
 
 class CalibratorAlgorithmMeta:
     """
-    Record the current scenario, params scenario, path and generation
-    of trainer.
-
+    CalibratorAlgorithmMeta Records the status, including current scenario, params scenario, path and generation, of
+     the calibrator.
     """
 
     def __init__(self):
-        self._freeze = False
+        self._freeze = False  # If new attributes can be added by attribute assignment.
         self.id_calibrator_scenario = 0
         self.id_calibrator_params_scenario = 1
         self.id_path = 0
         self.id_generation = 0
 
     def to_dict(self, public_only=False):
-
         if public_only:
             return {k: v for k, v in self.__dict__.items() if not k.startswith("_")}
         return copy.copy(self.__dict__)
@@ -139,7 +134,6 @@ class GACalibratorAlgorithm:
             manager: "Calibrator" = None,
             processors=1,
     ):
-        global pool, th_on_thread
         self.manager = manager
         self.params = params
         self.chromosomes = 20
@@ -286,6 +280,7 @@ class GACalibratorAlgorithm:
     ):
         """
         Calculate the coefficient of variation
+
         :param agent_container_df_dict:
         :param env_df:
         :param meta:
@@ -336,7 +331,8 @@ class GACalibratorAlgorithm:
 
     def pre_check(self, meta):
         """
-        Check at the beginning of run()
+        Check at the beginning of `run()`
+
         :return:
         """
         logger.info(f"""Algorithm will run with:
@@ -400,6 +396,7 @@ class Calibrator(BaseModellingManager):
     Calibrator calibrates the parameters of the scenario 
     by minimizing the distance between model output and empirical evidence.
     """
+
     def __init__(
             self,
             config: "Config",

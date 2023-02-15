@@ -13,7 +13,7 @@ from .actions import Action
 logger = logging.getLogger(__name__)
 
 
-def create_visualizer_server(recv_queue: queue.Queue, send_queue: queue.Queue):
+def create_visualizer_server(recv_queue: queue.Queue, send_queue: queue.Queue, port: int):
     app = Flask(__name__)
     sock = Sock(app)
     websockets: List[Server] = []
@@ -77,4 +77,4 @@ def create_visualizer_server(recv_queue: queue.Queue, send_queue: queue.Queue):
                 import traceback
                 traceback.print_exc()
 
-    app.run(host='0.0.0.0', port=8765)
+    app.run(host='0.0.0.0', port=port)

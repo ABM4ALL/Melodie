@@ -121,7 +121,8 @@ class BaseVisualizer:
         server_logger.setLevel(logging.ERROR)
         host = "localhost"
 
-        self.th = threading.Thread(target=create_visualizer_server, args=(self.recv_queue, self.send_queue,))
+        self.th = threading.Thread(target=create_visualizer_server,
+                                   args=(self.recv_queue, self.send_queue, self.config.visualizer_port))
 
         self.th.setDaemon(True)
         self.th.start()

@@ -6,7 +6,7 @@ import queue
 import sys
 import threading
 import time
-from typing import List, Tuple
+from typing import List, Optional, Tuple
 
 import cloudpickle
 from rpyc import Service
@@ -14,6 +14,8 @@ from rpyc.utils.server import ThreadedServer
 import subprocess
 
 logger = logging.getLogger("ParallelManager-MainThread")
+
+tasks: Optional["Tasks"] = None
 
 
 class Tasks:
@@ -41,9 +43,6 @@ class Tasks:
         return self.config
 
 
-tasks: Tasks = None
-
-
 class ParallelManager:
     def __init__(self, cores: int, configs: Tuple):
         self.th_server = threading.Thread(target=self.run_server)
@@ -66,7 +65,7 @@ class ParallelManager:
     def run_server(self):
         try:
             self.server = ThreadedServer(
-                service=TimeService, port=12233, auto_register=False
+                service=ParallelDataService, port=12233, auto_register=False
             )
             self.server.start()
         except OSError as e:
@@ -116,9 +115,9 @@ class ParallelManager:
         tasks = None
 
 
-class TimeService(Service):
+class ParallelDataService(Service):
     def exposed_get_time(self):
-        return time.ctime()  # time模块中的一个内置方法
+        return time.ctime()
 
     def exposed_get_task(self):
         return base64.b64encode(cloudpickle.dumps(tasks.get_task()))

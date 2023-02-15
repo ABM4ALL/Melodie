@@ -4,9 +4,10 @@
 # @Email: 1295752786@qq.com
 # @File: actions.py
 from typing import Callable, Dict, List, Optional, Union
-from MelodieInfra.jsonobject import JsonObject, StringProperty, ObjectProperty
 from .params import ParamsManager
 from .vis_charts import JSONBase
+
+from MelodieInfra import create_failed_response
 
 
 class BasicOprandType(JSONBase):
@@ -126,7 +127,6 @@ class Action(JSONBase):
 
     @classmethod
     def dispatch(cls, key, args: Dict = None):
-        from .ws_protocol import create_failed_response
         if args is None:
             args = {}
         try:

@@ -12,7 +12,7 @@ from tests.config import resources_path, skip_env_dependent
 
 
 def test_read_sqlite():
-    path = os.path.join(resources_path, r"db\test.sqlite")
+    path = os.path.join(resources_path, r"db\test.sqlite_file")
     conn_string = f"sqlite:///{path}"
     resp = DatabaseService.execute_sql(conn_string, "select * from simulator_scenarios")
     print(resp)

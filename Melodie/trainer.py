@@ -26,11 +26,9 @@ from .data_loader import DataLoader
 from .model import Model
 from .scenario_manager import Scenario
 from .simulator import BaseModellingManager
-from .utils.parallel_manager import ParallelManager
+from MelodieInfra.parallel.parallel_manager import ParallelManager
 
 logger = logging.getLogger(__name__)
-pool = None  # for *nix
-th_on_thread = None  # for windows
 
 
 class GATrainerParams(AlgorithmParameters):
@@ -184,7 +182,6 @@ class GATrainerAlgorithm:
     def __init__(
             self, params: GATrainerParams, manager: "Trainer" = None, processors=1
     ):
-        global pool, th_on_thread
         self.manager = manager
         self.params = params
         self.chromosomes = 20
