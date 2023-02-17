@@ -55,8 +55,8 @@ Among numerous frameworks for agent-based modeling in different programming lang
 [`Mesa`](https://github.com/projectmesa/mesa) [@Mesa][^4] and
 [`AgentPy`](https://github.com/JoelForamitti/agentpy) [@AgentPy][^5]
 are the two open-source frameworks in Python.
-The object-oriented paradigm of Python fits the "agent perspective" of ABM seamlessly, 
-and the modelers can also benefit from the fruitful packages on statistical analysis, data visualization, etc.
+The object-oriented paradigm of Python seamlessly fits the "agent perspective" of ABM.
+Modelers can also benefit from the wealth of packages available for statistical analysis, data visualization, etc.
 Following the tradition of [`NetLogo`](https://ccl.northwestern.edu/netlogo/) [@Netlogo][^6],
 `Mesa` and `AgentPy` both support interactive simulation but with different focus and style. 
 
@@ -64,25 +64,27 @@ In summary, `Melodie` distinguishes from them in the four following aspects.
 
 First, `Melodie` separates an `environment` component from the `model` in `Mesa` and `AgentPy` for two dedicated tasks: 
 (1) storing the macro-level variables; and (2) coordinating the agents' decision-making and interaction processes. 
-With a separated `environment` component, the "storyline" of the model can be summarized under the `run` function of the `model` clearly. 
+With a separated `environment` component, the "storyline" of the model can be summarized under a `run` function in the `model` clearly. 
 Compared to the use of `scheduler` and `step` functions in different layers in `Mesa` and bundling the behavior functions of agents to the `AgentList` in `AgentPy`, 
 we think this is easier for the users to understand the logic. 
 
 Second, `Melodie` enhances the `data_collector` component with higher configurability.
 The users can define functions for parsing specific data structure from the `agents` and the `environment`.
-For example, in a financial ABM, the transactions could be saved in the `environment` as `List[Transaction]`. 
-The users can define a function `collect_transaction_data()` in the `data_collector` to first parse the list and then save the results.
+For example, in a financial ABM, the transactions could be saved in the `environment` as "`List[Transaction]`". 
+Then, in the `data_collector`, the users can define a function `collect_transaction_data()` to first parse the list 
+and then save the results into the database.
 
 Third, `Melodie` has a wider infrastructure coverage and provides dedicated modules for scenario management.
 
-* (1) All the input data are first registered and then loaded by a `data_loader` object into a `scenario` object. Then, as the input data container, `scenario` can be accessed by the `model` and its components, including `environment`, `data_collector`, and each `agent`.
-* (2) Melodie provides two standard classes - `DataFrameInfo` and `MatrixInfo` - with which the users can register the input dataframes and matrices, so they can be easily processed by the `data_loader` and the `scenario` objects.
+* All the input data are first registered and then loaded by a `data_loader` object into a `scenario` object. Then, as the input data container, `scenario` can be accessed by the `model` and its components, including `environment`, `data_collector`, and each `agent`.
+* Melodie provides two standard classes - `DataFrameInfo` and `MatrixInfo` - with which the users can register the input dataframes and matrices, so they can be easily processed by the `data_loader` and the `scenario` objects.
 
-In such a data flow, `Melodie` also checks if the registries are consistent with the Excel files automatically. 
+In such a data flow, `Melodie` also checks if the registries are consistent with the input Excel files automatically. 
 We think such design is helpful especially when the scenario includes large and complicated input datasets.
-Having the concept of "Scenario" as the channel to access input data at different parts of the model also makes it straightforward for the users.
-Finally, `Melodie` uses `.sqlite` database to save the input and output data. This is facilitated with the `DB` module in `Melodie`.
-The users can easily save all the input tables and multiple long output tables for post-processing or sending the single `.sqlite` file to others.
+Having the channel through "Scenario" for delivering input data at different parts of the model is also conceptually clear.
+Finally, `Melodie` uses `.sqlite` database to save (1) a copy of the input data, and (2) the output data, i.e., model results. 
+The interaction between model and database is facilitated by the `DB` module in `Melodie`.
+The users can easily save all the data in multiple long tables for post-processing or sending the single `.sqlite` file to others.
 
 Fourth, `Melodie` includes two modules that are not provided in `Mesa` and `AgentPy`: `Calibrator`, and `Trainer`. 
 With these two modules, `Melodie` supports 
@@ -90,7 +92,8 @@ With these two modules, `Melodie` supports
 (2) evolutionary training of agents.
 
 In the documentation, we also provide a detailed [comparison](https://abm4all.github.io/Melodie/html/framework_comparison.html#model-components) 
-between the three packages - Mesa, AgentPy, and Melodie - based on one same ABM developed with the three packages which you can find in this [repository](https://github.com/ABM4ALL/ABMFrameworkComparison).
+between the three packages - Mesa, AgentPy, and Melodie - based on one same ABM developed with the three packages. 
+You can find the code in this [repository](https://github.com/ABM4ALL/ABMFrameworkComparison).
 
 # Overview
 
