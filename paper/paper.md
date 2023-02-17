@@ -35,10 +35,10 @@ The interactions can be water molecules forming a vortex,
 ants searching for food, or people trading stocks in the market.
 
 Agents’ interactions can bring emergent properties to a system and turn it into a complex system. 
-To model such mechanism is usually the core reason for using ABMs. 
+To model such mechanisms is usually the core reason for using ABMs. 
 Besides, taking social economic systems as example, 
 ABMs are also flexible to consider agents’ 
-(1) heterogeneity (e.g., wealth, risk attitude, preference, decision-making rule, etc.) based on micro-data; 
+(1) heterogeneity (e.g., wealth, risk attitude, preference, decision-making rule, etc.) based on micro-data; and
 (2) bounded rationality and adaptation behavior based on psychological and behavioral studies.
 
 `Melodie` is a general framework for developing agent-based models (ABMs) in Python. 
@@ -51,19 +51,46 @@ can be developed with `Melodie` step by step.
 
 # Statement of need
 
-In the Python community, 
+Among numerous frameworks for agent-based modeling in different programming languages, 
 [`Mesa`](https://github.com/projectmesa/mesa) [@Mesa][^4] and
 [`AgentPy`](https://github.com/JoelForamitti/agentpy) [@AgentPy][^5]
-are the two open-source frameworks for agent-based modeling. 
+are the two open-source frameworks in Python.
+The object-oriented paradigm of Python fits the "agent perspective" of ABM seamlessly, 
+and the modelers can also benefit from the fruitful packages on statistical analysis, data visualization, etc.
 Following the tradition of [`NetLogo`](https://ccl.northwestern.edu/netlogo/) [@Netlogo][^6],
-they both support interactive simulation but with different focus and style. 
+`Mesa` and `AgentPy` both support interactive simulation but with different focus and style. 
 
 In summary, `Melodie` distinguishes from them in the four following aspects.
 
-* First, `Melodie` separates an `environment` component from the `model` in `Mesa` and `AgentPy` for two dedicated tasks: (1) storing the macro-level variables; (2) coordinating the agents' decision-making and interaction processes. 
-* Second, `Melodie` enhances the `data_collector` component with higher configurability.
-* Third, `Melodie` has a wider infrastructure coverage and provides two dedicated modules for scenario management, i.e., importing input data and deliver them to the `model` and its components. 
-* Fourth, `Melodie` includes two modules that are not provided in `Mesa` and `AgentPy`: `Calibrator`, and `Trainer`. With these two modules, `Melodie` supports (1) automatic calibration of scenario parameters, and (2) evolutionary training of agents.
+First, `Melodie` separates an `environment` component from the `model` in `Mesa` and `AgentPy` for two dedicated tasks: 
+(1) storing the macro-level variables; and (2) coordinating the agents' decision-making and interaction processes. 
+With a separated `environment` component, the "storyline" of the model can be summarized under the `run` function of the `model` clearly. 
+Compared to the use of `scheduler` and `step` functions in different layers in `Mesa` and bundling the behavior functions of agents to the `AgentList` in `AgentPy`, 
+we think this is easier for the users to understand the logic. 
+
+Second, `Melodie` enhances the `data_collector` component with higher configurability.
+The users can define functions for parsing specific data structure from the `agents` and the `environment`.
+For example, in a financial ABM, the transactions could be saved in the `environment` as `List[Transaction]`. 
+The users can define a function `collect_transaction_data()` in the `data_collector` to first parse the list and then save the results.
+
+Third, `Melodie` has a wider infrastructure coverage and provides dedicated modules for scenario management.
+
+* (1) All the input data are first registered and then loaded by a `data_loader` object into a `scenario` object. Then, as the input data container, `scenario` can be accessed by the `model` and its components, including `environment`, `data_collector`, and each `agent`.
+* (2) Melodie provides two standard classes - `DataFrameInfo` and `MatrixInfo` - with which the users can register the input dataframes and matrices, so they can be easily processed by the `data_loader` and the `scenario` objects.
+
+In such a data flow, `Melodie` also checks if the registries are consistent with the Excel files automatically. 
+We think such design is helpful especially when the scenario includes large and complicated input datasets.
+Having the concept of "Scenario" as the channel to access input data at different parts of the model also makes it straightforward for the users.
+Finally, `Melodie` uses `.sqlite` database to save the input and output data. This is facilitated with the `DB` module in `Melodie`.
+The users can easily save all the input tables and multiple long output tables for post-processing or sending the single `.sqlite` file to others.
+
+Fourth, `Melodie` includes two modules that are not provided in `Mesa` and `AgentPy`: `Calibrator`, and `Trainer`. 
+With these two modules, `Melodie` supports 
+(1) automatic calibration of scenario parameters, and 
+(2) evolutionary training of agents.
+
+In the documentation, we also provide a detailed [comparison](https://abm4all.github.io/Melodie/html/framework_comparison.html#model-components) 
+between the three packages - Mesa, AgentPy, and Melodie - based on one same ABM developed with the three packages which you can find in this [repository](https://github.com/ABM4ALL/ABMFrameworkComparison).
 
 # Overview
 
@@ -87,7 +114,7 @@ Developed with `Melodie`, a `model` object can contain following components:
 The modules in the Scenario Cluster focus on formatting, importing, and delivering the input data to the `model`, 
 including
 
-* `DataFrameInfo` and `MatrixInfo` - used to create standard data object for input tables.
+* `DataFrameInfo` and `MatrixInfo` - used to create standard data objects for input tables.
 * `data_loader` - loads all the input data into the `model`.
 * `scenario` - contains all the input data that is needed to run the model, and can be accessed by the `model` and its components.
 
