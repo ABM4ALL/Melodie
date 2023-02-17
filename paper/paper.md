@@ -60,7 +60,7 @@ Modelers can also benefit from the wealth of packages available for statistical 
 Following the tradition of [`NetLogo`](https://ccl.northwestern.edu/netlogo/) [@Netlogo][^6],
 `Mesa` and `AgentPy` both support interactive simulation but with different focus and style. 
 
-In summary, `Melodie` distinguishes from them in the four following aspects.
+In summary, `Melodie` distinguishes from `Mesa` and `AgentPy` in the following aspects.
 
 First, `Melodie` separates an `environment` component from the `model` in `Mesa` and `AgentPy` for two dedicated tasks: 
 (1) storing the macro-level variables; and (2) coordinating the agents' decision-making and interaction processes. 
@@ -90,6 +90,9 @@ Fourth, `Melodie` includes two modules that are not provided in `Mesa` and `Agen
 With these two modules, `Melodie` supports 
 (1) automatic calibration of scenario parameters, and 
 (2) evolutionary training of agents.
+
+Fifth, `Melodie` uses the `Cython` package for acceleration for its compatibility advantage compared with other packages like `numba`. 
+The modules that are written in `Cython` are `agent`, `environment`, `agent_list` and `grid`.
 
 In the documentation, we also provide a detailed [comparison](https://abm4all.github.io/Melodie/html/framework_comparison.html#model-components) 
 between the three packages - Mesa, AgentPy, and Melodie - based on one same ABM developed with the three packages. 
