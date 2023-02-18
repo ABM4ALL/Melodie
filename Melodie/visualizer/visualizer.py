@@ -11,7 +11,7 @@ from enum import Enum
 from typing import Dict, Tuple, List, Any, Callable, Union, TYPE_CHECKING, Optional
 from MelodieInfra import OSTroubleShooter, get_sqlite_filename, MelodieExceptions, Config
 
-from .actions import Action
+from .actions import ToolbarAction
 from .visualizer_server import create_visualizer_server
 from .params import ParamsManager
 from .vis_agent_series import AgentSeriesManager
@@ -85,7 +85,7 @@ class BaseVisualizer:
         self.current_step = 0
         self.model_state = UNCONFIGURED
         self.current_scenario: "Scenario" = None
-        self.actions: List[Action] = []
+        self.actions: List[ToolbarAction] = []
 
         self.params_dir = os.path.join(config.visualizer_tmpdir, 'params')
         self.sim_data_dir = os.path.join(config.visualizer_tmpdir, 'sim_data')
@@ -129,7 +129,7 @@ class BaseVisualizer:
 
         logger.info("\n" + "=" * 100 + f"\nVisualizer started at {host}:{self.config.visualizer_port}\n" + "=" * 100)
 
-    def add_action(self, action: Action):
+    def add_action(self, action: ToolbarAction):
         self.actions.append(action)
 
     def setup(self):

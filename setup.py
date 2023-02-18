@@ -151,7 +151,7 @@ setuptools.setup(
         "seaborn",
         "networkx",
         "openpyxl",
-        "sqlalchemy",
+        "sqlalchemy~=1.4",
         "astunparse",
         "pprintast",
         "cloudpickle",

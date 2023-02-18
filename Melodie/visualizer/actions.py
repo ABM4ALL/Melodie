@@ -104,7 +104,7 @@ class ShowChartWindowOperation(Operation):
         print(self.oprands)
 
 
-class Action(JSONBase):
+class ToolbarAction(JSONBase):
     params_handler_map: Dict[str, Callable[[], ParamsManager]] = {}
     handlers_map = {}
 
@@ -118,11 +118,11 @@ class Action(JSONBase):
         self.children = []
         self.fetch_custom_args = True if custom_args else False
         if self.fetch_custom_args:
-            Action.params_handler_map[key] = custom_args
+            ToolbarAction.params_handler_map[key] = custom_args
         self._custom_args = custom_args  # .to_json() if isinstance(custom_args, ParamsManager) else []
-        Action.handlers_map[key] = handler
+        ToolbarAction.handlers_map[key] = handler
 
-    def add_sub_action(self, action: "Action"):
+    def add_sub_action(self, action: "ToolbarAction"):
         self.children.append(action)
 
     @classmethod

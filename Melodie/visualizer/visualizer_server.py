@@ -8,7 +8,7 @@ from flask_cors import CORS
 from flask_sock import Sock, Server, ConnectionClosed as WSClosed
 from typing import List, Set
 
-from .actions import Action
+from .actions import ToolbarAction
 
 logger = logging.getLogger(__name__)
 
@@ -47,13 +47,13 @@ def create_visualizer_server(recv_queue: queue.Queue, send_queue: queue.Queue, p
             args = json.loads(request.args['args'])
             args_dict = {arg['name']: arg['value'] for arg in args}
             logger.warning(f"{args}")
-            return Action.dispatch(action_name, args_dict)
+            return ToolbarAction.dispatch(action_name, args_dict)
         else:
-            return Action.dispatch(action_name)
+            return ToolbarAction.dispatch(action_name)
 
     @app.route('/action-params/<string:action_name>')
     def handle_action_params(action_name: str):
-        resp = {"status": 0, "data": Action.get_custom_args(action_name)}
+        resp = {"status": 0, "data": ToolbarAction.get_custom_args(action_name)}
         return json.dumps(resp)
 
     @sock.route('/echo')
