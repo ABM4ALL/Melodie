@@ -3,6 +3,7 @@ import logging
 from typing import Any, Callable, List, Dict, TYPE_CHECKING, Tuple, TypeVar, Union, Optional
 from decimal import Decimal
 from MelodieInfra.models.typeutils import REAL_NUM_TYPE
+from MelodieInfra import JSONBase
 
 logger = logging.getLogger(__name__)
 
@@ -15,38 +16,6 @@ def float_round(float_value):
 
 def round_float_array(float_arr):
     return [float_round(v) for v in float_arr]
-
-
-class JSONBase:
-    names_map = {}
-
-    def to_json(self):
-        d = {}
-        for k, v in self.__dict__.items():
-            k = k if k not in self.__class__.names_map else self.__class__.names_map[k]
-            if k.startswith("_"):
-                continue
-            elif hasattr(v, "to_json"):
-                d[k] = v.to_json()
-            elif isinstance(v, dict):
-                new_dict = {}
-                for new_k, new_v in v.items():
-                    if hasattr(new_v, "to_json"):
-                        new_dict[new_k] = new_v.to_json()
-                    else:
-                        new_dict[new_k] = new_v
-                d[k] = new_dict
-            elif isinstance(v, (list, tuple)):
-                new_list = []
-                for new_v in v:
-                    if hasattr(new_v, "to_json"):
-                        new_list.append(new_v.to_json())
-                    else:
-                        new_list.append(new_v)
-                d[k] = new_list
-            else:
-                d[k] = v
-        return d
 
 
 class ChartBase:

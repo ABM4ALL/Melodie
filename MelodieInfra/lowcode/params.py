@@ -6,7 +6,7 @@
 import math
 from typing import Callable, Any, TYPE_CHECKING, Tuple, Union, List, Dict
 
-from .vis_charts import JSONBase
+from ..models.jsonbase import JSONBase
 
 if TYPE_CHECKING:
     from Melodie import Scenario
@@ -157,8 +157,8 @@ class IntParam(Param):
                  component='auto', ):
         super().__init__(name, getter, setter, readonly, label, description, component)
 
-        self.min = value_range[0]
-        self.max = value_range[1]
+        self.min = value_range[0] if value_range[0] is not None else -math.inf
+        self.max = value_range[1] if value_range[1] is not None else math.inf
         self.type = 'int'
 
     def _validator(self, new_val: int):
@@ -228,9 +228,8 @@ class FloatParam(Param):
                  component='auto',
                  percentage=False):
         super().__init__(name, getter, setter, readonly, label, description, component)
-
-        self.min = value_range[0]
-        self.max = value_range[1]
+        self.min = value_range[0] if value_range[0] is not None else -math.inf
+        self.max = value_range[1] if value_range[1] is not None else math.inf
         self.step = step
         self.type = 'float'
         self.percentage = percentage

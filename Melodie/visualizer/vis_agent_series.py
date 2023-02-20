@@ -1,6 +1,6 @@
 from typing import Dict, List, Callable, Any
 
-from .vis_charts import JSONBase
+from MelodieInfra import JSONBase
 from .. import Agent
 
 

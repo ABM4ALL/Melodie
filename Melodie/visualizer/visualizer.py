@@ -13,7 +13,7 @@ from MelodieInfra import OSTroubleShooter, get_sqlite_filename, MelodieException
 
 from .actions import ToolbarAction
 from .visualizer_server import create_visualizer_server
-from .params import ParamsManager
+from MelodieInfra.lowcode.params import ParamsManager
 from .vis_agent_series import AgentSeriesManager
 from .vis_charts import ChartManager
 from ..boost.grid import Spot
@@ -560,7 +560,6 @@ class Visualizer(BaseVisualizer):
         )
 
     def _format(self):
-        from ..boost.grid import Grid
         visualizers = []
         for (
                 vis_component,
