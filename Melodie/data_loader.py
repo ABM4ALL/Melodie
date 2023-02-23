@@ -67,9 +67,9 @@ class MatrixInfo:
     def dtype(self):
         py_type = self.data_type.python_type
         if issubclass(py_type, int):
-            return np.int
+            return np.int64
         elif issubclass(py_type, float):
-            return np.float
+            return np.float64
         else:
             raise NotImplementedError(
                 f"Cannot convert this type {self.data_type} to numpy data type!"

@@ -25,6 +25,11 @@ via pip's development mode.
    pip install -r build_requirements.txt
    pip install -r requirements.txt
 
+   pip3 install -e .
+
+To build with developing mode and build binary extensions in place, use the following commands:
+.. code-block:: shell
+
    # Build the Cython packages
    python setup.py build_ext -i
 
@@ -36,7 +41,7 @@ via pip's development mode.
    sphinx-autobuild source html -E -a
 
 
-To keep your local repository up to date, please follow these steps below:
+To keep local repository up to date, please follow these steps:
 
 .. code-block:: shell
 
@@ -52,7 +57,7 @@ Dependency Note
 ---------------
 The dependencies that related to functionalities of Melodie are listed below.
 
-* Python >=3.7
+* Python >=3.8
 * numpy
 * pandas
 * matplotlib
