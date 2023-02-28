@@ -28,6 +28,7 @@ via pip's development mode.
    pip3 install -e .
 
 To build with developing mode and build binary extensions in place, use the following commands:
+
 .. code-block:: shell
 
    # Build the Cython packages
@@ -35,6 +36,11 @@ To build with developing mode and build binary extensions in place, use the foll
 
    # Run pytest to check if the installation finished successfully.
    pytest
+
+
+To build documentation locally, use the following commands:
+
+.. code-block:: shell
 
    # Build docs
    cd docs
