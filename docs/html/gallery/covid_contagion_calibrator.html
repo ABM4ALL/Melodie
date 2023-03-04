@@ -331,7 +331,26 @@ As a result, <span class="math notranslate nohighlight">\(01001\)</span> is tran
 </section>
 <section id="results">
 <h2>Results<a class="headerlink" href="#results" title="Permalink to this heading"></a></h2>
-<p>After running the <code class="docutils literal notranslate"><span class="pre">run_calibrator.py</span></code> file, you will find two result table in the database.</p>
+<p>After running the <code class="docutils literal notranslate"><span class="pre">run_calibrator.py</span></code> file, if you see following messages (or similar) printed,
+it means the calibration process successfully went through.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>calibrator.py:391 <span class="nv">INFO</span> <span class="o">====================</span>Time Elapsed: <span class="m">2</span>.0582101345062256s<span class="o">====================</span>
+parallel_manager.py:110 INFO terminated subworker &lt;subprocess.Popen object at 0x7f87bc2e0f10&gt;
+parallel_manager.py:110 INFO terminated subworker &lt;subprocess.Popen object at 0x7f87bc361a60&gt;
+parallel_manager.py:110 INFO terminated subworker &lt;subprocess.Popen object at 0x7f87bc3585b0&gt;
+parallel_manager.py:110 INFO terminated subworker &lt;subprocess.Popen object at 0x7f87bc487820&gt;
+parallel_manager.py:110 INFO terminated subworker &lt;subprocess.Popen object at 0x7f87bc358190&gt;
+parallel_manager.py:110 INFO terminated subworker &lt;subprocess.Popen object at 0x7f87bc459430&gt;
+parallel_manager.py:110 INFO terminated subworker &lt;subprocess.Popen object at 0x7f87bc257880&gt;
+parallel_manager.py:110 INFO terminated subworker &lt;subprocess.Popen object at 0x7f87bc2572e0&gt;
+server.py:123 INFO listener closed
+server.py:207 INFO goodbye <span class="o">(</span><span class="s1">&#39;127.0.0.1&#39;</span>, <span class="m">51509</span><span class="o">)</span>
+server.py:207 INFO goodbye <span class="o">(</span><span class="s1">&#39;127.0.0.1&#39;</span>, <span class="m">51511</span><span class="o">)</span>
+server.py:271 INFO server has terminated
+server.py:123 INFO listener closed
+parallel_manager.py:113 INFO Server closed!
+</pre></div>
+</div>
+<p>Then, you will find two result table in the database.</p>
 <p>First is the <code class="docutils literal notranslate"><span class="pre">environment_calibrator_result</span></code> table:</p>
 <img alt="../_images/calibrator_results.png" src="../_images/calibrator_results.png" />
 <p>Second is the <code class="docutils literal notranslate"><span class="pre">environment_calibrator_result_cov</span></code> table:</p>

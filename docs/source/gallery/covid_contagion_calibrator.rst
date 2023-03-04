@@ -128,7 +128,28 @@ As a result, :math:`01001` is translated as :math:`x = 9a/31`.
 Results
 _______
 
-After running the ``run_calibrator.py`` file, you will find two result table in the database.
+After running the ``run_calibrator.py`` file, if you see following messages (or similar) printed,
+it means the calibration process successfully went through.
+
+.. code-block:: shell
+
+   calibrator.py:391 INFO ====================Time Elapsed: 2.0582101345062256s====================
+   parallel_manager.py:110 INFO terminated subworker <subprocess.Popen object at 0x7f87bc2e0f10>
+   parallel_manager.py:110 INFO terminated subworker <subprocess.Popen object at 0x7f87bc361a60>
+   parallel_manager.py:110 INFO terminated subworker <subprocess.Popen object at 0x7f87bc3585b0>
+   parallel_manager.py:110 INFO terminated subworker <subprocess.Popen object at 0x7f87bc487820>
+   parallel_manager.py:110 INFO terminated subworker <subprocess.Popen object at 0x7f87bc358190>
+   parallel_manager.py:110 INFO terminated subworker <subprocess.Popen object at 0x7f87bc459430>
+   parallel_manager.py:110 INFO terminated subworker <subprocess.Popen object at 0x7f87bc257880>
+   parallel_manager.py:110 INFO terminated subworker <subprocess.Popen object at 0x7f87bc2572e0>
+   server.py:123 INFO listener closed
+   server.py:207 INFO goodbye ('127.0.0.1', 51509)
+   server.py:207 INFO goodbye ('127.0.0.1', 51511)
+   server.py:271 INFO server has terminated
+   server.py:123 INFO listener closed
+   parallel_manager.py:113 INFO Server closed!
+
+Then, you will find two result table in the database.
 
 First is the ``environment_calibrator_result`` table:
 
