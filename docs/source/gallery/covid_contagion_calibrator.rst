@@ -142,7 +142,11 @@ As shown, ``environment_calibrator_result`` has one more index column, the ``id_
 Then, ``environment_calibrator_result_cov`` calculates the ``mean`` and ``coefficient of variance`` (:math:`\mu / \sigma`)
 of ``infection_prob``, ``s0``, and ``distance`` in each generation.
 
-With the results in ``environment_calibrator_result_cov``, two figures are plot as below.
+On top of the tutorial model,
+one more function - ``plot_calibration_process`` - is added to plot the calibration process.
+By calling it in the ``run_analyzer.py`` file,
+two figures are produced based on the results in ``environment_calibrator_result_cov`` and saved in the ``data/output`` folder.
+They are shown below.
 
 .. image:: ../image/calibrator_infection_prob.png
 

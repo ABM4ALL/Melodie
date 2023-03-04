@@ -339,7 +339,11 @@ As a result, <span class="math notranslate nohighlight">\(01001\)</span> is tran
 <p>As shown, <code class="docutils literal notranslate"><span class="pre">environment_calibrator_result</span></code> has one more index column, the <code class="docutils literal notranslate"><span class="pre">id_chromosome</span></code> column.
 Then, <code class="docutils literal notranslate"><span class="pre">environment_calibrator_result_cov</span></code> calculates the <code class="docutils literal notranslate"><span class="pre">mean</span></code> and <code class="docutils literal notranslate"><span class="pre">coefficient</span> <span class="pre">of</span> <span class="pre">variance</span></code> (<span class="math notranslate nohighlight">\(\mu / \sigma\)</span>)
 of <code class="docutils literal notranslate"><span class="pre">infection_prob</span></code>, <code class="docutils literal notranslate"><span class="pre">s0</span></code>, and <code class="docutils literal notranslate"><span class="pre">distance</span></code> in each generation.</p>
-<p>With the results in <code class="docutils literal notranslate"><span class="pre">environment_calibrator_result_cov</span></code>, two figures are plot as below.</p>
+<p>On top of the tutorial model,
+one more function - <code class="docutils literal notranslate"><span class="pre">plot_calibration_process</span></code> - is added to plot the calibration process.
+By calling it in the <code class="docutils literal notranslate"><span class="pre">run_analyzer.py</span></code> file,
+two figures are produced based on the results in <code class="docutils literal notranslate"><span class="pre">environment_calibrator_result_cov</span></code> and saved in the <code class="docutils literal notranslate"><span class="pre">data/output</span></code> folder.
+They are shown below.</p>
 <img alt="../_images/calibrator_infection_prob.png" src="../_images/calibrator_infection_prob.png" />
 <img alt="../_images/calibrator_s0.png" src="../_images/calibrator_s0.png" />
 <p>For more details of the <code class="docutils literal notranslate"><span class="pre">Calibrator</span></code> module, please refer to the <a class="reference internal" href="../api/_index.html#api-reference"><span class="std std-ref">API Reference</span></a> section.</p>
