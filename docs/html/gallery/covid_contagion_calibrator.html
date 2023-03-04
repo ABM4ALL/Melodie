@@ -14,6 +14,7 @@
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
         <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../_static/js/theme.js"></script>
@@ -220,14 +221,14 @@
            <div itemprop="articleBody">
              
   <section id="covidcontagioncalibrator">
-<h1>CovidContagionCalibrator<a class="headerlink" href="#covidcontagioncalibrator" title="Permalink to this headline"></a></h1>
+<h1>CovidContagionCalibrator<a class="headerlink" href="#covidcontagioncalibrator" title="Permalink to this heading"></a></h1>
 <p>To show how the <code class="docutils literal notranslate"><span class="pre">Calibrator</span></code> module can be used,
 we provide this <a class="reference external" href="https://github.com/ABM4ALL/CovidContagionCalibrator">CovidContagionCalibrator</a> model,
 which is almost same with the <a class="reference external" href="https://github.com/ABM4ALL/CovidContagion">CovidContagion</a> model.
 The only difference is that, we can run it with another <a class="reference internal" href="../introduction.html#modelling-manager"><span class="std std-ref">Modelling Manager</span></a> - <code class="docutils literal notranslate"><span class="pre">Calibrator</span></code>.
 So, if you haven’t, we will strongly suggest to read the <a class="reference internal" href="../tutorial.html#tutorial"><span class="std std-ref">Tutorial</span></a> section first.</p>
 <section id="project-structure">
-<h2>Project Structure<a class="headerlink" href="#project-structure" title="Permalink to this headline"></a></h2>
+<h2>Project Structure<a class="headerlink" href="#project-structure" title="Permalink to this heading"></a></h2>
 <p>The project structure is as below.
 Compared with the structure of the <a class="reference external" href="https://github.com/ABM4ALL/CovidContagion">CovidContagion</a> model,
 two python files - <code class="docutils literal notranslate"><span class="pre">calibrator.py</span></code> and <code class="docutils literal notranslate"><span class="pre">run_calibrator</span></code> - files are added in the <code class="docutils literal notranslate"><span class="pre">source</span></code> and the <code class="docutils literal notranslate"><span class="pre">root</span></code> folders,
@@ -265,7 +266,7 @@ and two excel files - <code class="docutils literal notranslate"><span class="pr
 </div>
 </section>
 <section id="calibrator">
-<h2>Calibrator<a class="headerlink" href="#calibrator" title="Permalink to this headline"></a></h2>
+<h2>Calibrator<a class="headerlink" href="#calibrator" title="Permalink to this heading"></a></h2>
 <p>The idea of <code class="docutils literal notranslate"><span class="pre">Calibrator</span></code> in <code class="docutils literal notranslate"><span class="pre">Melodie</span></code> is to find the values of pre-defined parameters
 - attributes of the <code class="docutils literal notranslate"><span class="pre">scenario</span></code> object -
 so that the distance between model output and empirical data is minimized.
@@ -307,7 +308,7 @@ But, please note that, the values are all the values by the end of the simulatio
 In this example, the calibration target is “50% of the agents are not infected by the end of simulation”,</p>
 </section>
 <section id="algorithm">
-<h2>Algorithm<a class="headerlink" href="#algorithm" title="Permalink to this headline"></a></h2>
+<h2>Algorithm<a class="headerlink" href="#algorithm" title="Permalink to this heading"></a></h2>
 <p>In the current version, <code class="docutils literal notranslate"><span class="pre">Melodie</span></code> applies the <a class="reference external" href="https://en.wikipedia.org/wiki/Genetic_algorithm">genetic algorithm (GA)</a>
 to search the parameter space.
 Relevant parameters are defined in the <code class="docutils literal notranslate"><span class="pre">CalibratorParamsScenarios.xlsx</span></code> file.</p>
@@ -329,7 +330,7 @@ Third, scale x to the range <span class="math notranslate nohighlight">\([0, a]\
 As a result, <span class="math notranslate nohighlight">\(01001\)</span> is translated as <span class="math notranslate nohighlight">\(x = 9a/31\)</span>.</p>
 </section>
 <section id="results">
-<h2>Results<a class="headerlink" href="#results" title="Permalink to this headline"></a></h2>
+<h2>Results<a class="headerlink" href="#results" title="Permalink to this heading"></a></h2>
 <p>After running the <code class="docutils literal notranslate"><span class="pre">run_calibrator.py</span></code> file, you will find two result table in the database.</p>
 <p>First is the <code class="docutils literal notranslate"><span class="pre">environment_calibrator_result</span></code> table:</p>
 <img alt="../_images/calibrator_results.png" src="../_images/calibrator_results.png" />

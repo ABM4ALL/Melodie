@@ -14,6 +14,7 @@
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="author" title="About these documents" href="about.html" />
@@ -218,7 +219,7 @@
            <div itemprop="articleBody">
              
   <section id="framework-comparison">
-<h1>Framework Comparison<a class="headerlink" href="#framework-comparison" title="Permalink to this headline"></a></h1>
+<h1>Framework Comparison<a class="headerlink" href="#framework-comparison" title="Permalink to this heading"></a></h1>
 <p>For those who work with
 <a class="reference external" href="https://github.com/projectmesa/mesa">Mesa</a> or
 <a class="reference external" href="https://github.com/JoelForamitti/agentpy">AgentPy</a>,
@@ -235,7 +236,7 @@ your comments and suggestions are most welcomed if we misunderstand or misuse th
 </ul>
 <p>For further details, please read the sections below.</p>
 <section id="project-structure">
-<h2>Project Structure<a class="headerlink" href="#project-structure" title="Permalink to this headline"></a></h2>
+<h2>Project Structure<a class="headerlink" href="#project-structure" title="Permalink to this heading"></a></h2>
 <p>The structure of the project in the framework comparison
 <a class="reference external" href="https://github.com/ABM4ALL/ABMFrameworkComparison">repository</a> is shown below.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>ABMFrameworkComparison
@@ -283,7 +284,7 @@ For clearer comparison, we try to create the files for different frameworks in a
 There are more files in the <code class="docutils literal notranslate"><span class="pre">source_melodie</span></code> folder and they are explained below.</p>
 </section>
 <section id="model-components">
-<h2>Model Components<a class="headerlink" href="#model-components" title="Permalink to this headline"></a></h2>
+<h2>Model Components<a class="headerlink" href="#model-components" title="Permalink to this heading"></a></h2>
 <p>In <strong>Melodie</strong>, the <code class="docutils literal notranslate"><span class="pre">model</span></code> is mainly a container of several components and the functions to create and set them up.
 The components include <code class="docutils literal notranslate"><span class="pre">agents</span></code> (container of <code class="docutils literal notranslate"><span class="pre">agent</span></code>), <code class="docutils literal notranslate"><span class="pre">environment</span></code>, <code class="docutils literal notranslate"><span class="pre">data_collector</span></code>.
 Optionally, the <code class="docutils literal notranslate"><span class="pre">model</span></code> can also include <code class="docutils literal notranslate"><span class="pre">grid</span></code> and <code class="docutils literal notranslate"><span class="pre">network</span></code>.
@@ -292,7 +293,7 @@ Finally, the <code class="docutils literal notranslate"><span class="pre">model<
 The biggest difference between <strong>Melodie</strong> and the two packages is that,
 <strong>Melodie</strong> separates the <code class="docutils literal notranslate"><span class="pre">environment</span></code> as a new component from the <code class="docutils literal notranslate"><span class="pre">model</span></code> in <strong>Mesa</strong> and <strong>AgentPy</strong>.</p>
 <section id="melodie">
-<h3>Melodie<a class="headerlink" href="#melodie" title="Permalink to this headline"></a></h3>
+<h3>Melodie<a class="headerlink" href="#melodie" title="Permalink to this heading"></a></h3>
 <p>As shown in the figure below (<a class="reference external" href="https://ieeexplore.ieee.org/document/9857838/">Yu, 2020</a>),
 <code class="docutils literal notranslate"><span class="pre">environment</span></code> refers to the “outside” of an individual agent.
 <strong>Melodie</strong> follows such conceptualization from the reinforcement learning tradition and
@@ -352,7 +353,7 @@ In <strong>Melodie</strong>, these steps are either “<code class="docutils lit
 <p>Finally, <strong>Melodie</strong> runs the model by calling this <code class="docutils literal notranslate"><span class="pre">model.run</span></code> function.</p>
 </section>
 <section id="id2">
-<h3>Mesa<a class="headerlink" href="#id2" title="Permalink to this headline"></a></h3>
+<h3>Mesa<a class="headerlink" href="#id2" title="Permalink to this heading"></a></h3>
 <p>In <strong>Mesa</strong>, the two tasks of the <code class="docutils literal notranslate"><span class="pre">environment</span></code> in <strong>Melodie</strong> are done by <code class="docutils literal notranslate"><span class="pre">model</span></code>:</p>
 <ul class="simple">
 <li><p>First, all the scenario parameters (Line 11-14) and the macro-level variables (Line 15-18) are the attributes of the model.</p></li>
@@ -427,7 +428,7 @@ In <strong>Melodie</strong>, these steps are either “<code class="docutils lit
 Then, as a result, the representation of the “model timeline” is a major difference between <strong>Melodie</strong> and <strong>Mesa</strong>.</p>
 </section>
 <section id="id3">
-<h3>AgentPy<a class="headerlink" href="#id3" title="Permalink to this headline"></a></h3>
+<h3>AgentPy<a class="headerlink" href="#id3" title="Permalink to this heading"></a></h3>
 <p>In <strong>AgentPy</strong>, like in <strong>Mesa</strong>, the two tasks of the <code class="docutils literal notranslate"><span class="pre">environment</span></code> in <strong>Melodie</strong> are done by <code class="docutils literal notranslate"><span class="pre">model</span></code>:</p>
 <ul class="simple">
 <li><p>First, all the scenario parameters (Line 9-13) and the macro-level variables (Line 14-17) are the attributes of the model.</p></li>
@@ -480,7 +481,7 @@ Then, as a result, the representation of the “model timeline” is a major dif
 The total <code class="docutils literal notranslate"><span class="pre">steps</span></code> of simulation is an attribute of the model and used internally.</p>
 </section>
 <section id="summary">
-<h3>Summary<a class="headerlink" href="#summary" title="Permalink to this headline"></a></h3>
+<h3>Summary<a class="headerlink" href="#summary" title="Permalink to this heading"></a></h3>
 <p>In <strong>Melodie</strong>, a new component <code class="docutils literal notranslate"><span class="pre">environment</span></code> is separated from the <code class="docutils literal notranslate"><span class="pre">model</span></code> in <strong>Mesa</strong> and <strong>AgentPy</strong>
 and is dedicated to (1) storing the macro-level variables;
 and (2) coordinating the decision-making and interaction processes of agents.</p>
@@ -503,9 +504,9 @@ You can find how it is used in this <a class="reference external" href="https://
 </section>
 </section>
 <section id="scenario-management">
-<h2>Scenario Management<a class="headerlink" href="#scenario-management" title="Permalink to this headline"></a></h2>
+<h2>Scenario Management<a class="headerlink" href="#scenario-management" title="Permalink to this heading"></a></h2>
 <section id="id4">
-<h3>Melodie<a class="headerlink" href="#id4" title="Permalink to this headline"></a></h3>
+<h3>Melodie<a class="headerlink" href="#id4" title="Permalink to this heading"></a></h3>
 <p>As introduced in the <a class="reference internal" href="introduction.html#introduction"><span class="std std-ref">Introduction</span></a> and <a class="reference internal" href="tutorial.html#tutorial"><span class="std std-ref">Tutorial</span></a> sections, in a model developed with <strong>Melodie</strong>:</p>
 <ul class="simple">
 <li><p>First, all the input data are loaded by the <code class="docutils literal notranslate"><span class="pre">data_loader</span></code> into the <code class="docutils literal notranslate"><span class="pre">scenario</span></code> object. Then, as the input data container, the <code class="docutils literal notranslate"><span class="pre">scenario</span></code> object can be accessed by the <code class="docutils literal notranslate"><span class="pre">model</span></code> and its components, including <code class="docutils literal notranslate"><span class="pre">environment</span></code>, <code class="docutils literal notranslate"><span class="pre">data_collector</span></code>, and each <code class="docutils literal notranslate"><span class="pre">agent</span></code>.</p></li>
@@ -556,7 +557,7 @@ especially (1) “generating scenario-dependent dataframe for initializing agent
 and (2) “transforming input data into specific data structure for easier use” in the <code class="docutils literal notranslate"><span class="pre">CovidScenario</span></code> class.</p>
 </section>
 <section id="id5">
-<h3>Mesa<a class="headerlink" href="#id5" title="Permalink to this headline"></a></h3>
+<h3>Mesa<a class="headerlink" href="#id5" title="Permalink to this heading"></a></h3>
 <p>In <strong>Mesa</strong>, there is no <code class="docutils literal notranslate"><span class="pre">scenario</span></code> object.
 The input data is contained in a <code class="docutils literal notranslate"><span class="pre">dictionary</span></code> as shown in Line 14 below.
 Then, the <code class="docutils literal notranslate"><span class="pre">dictionary</span></code> is used to initialize the model (Line 7-10 in <code class="docutils literal notranslate"><span class="pre">source_mesa/model</span></code>).</p>
@@ -623,7 +624,7 @@ iterate through the pre-defined scenarios (similar to the <code class="docutils 
 </div>
 </section>
 <section id="id6">
-<h3>AgentPy<a class="headerlink" href="#id6" title="Permalink to this headline"></a></h3>
+<h3>AgentPy<a class="headerlink" href="#id6" title="Permalink to this heading"></a></h3>
 <p>In <strong>AgentPy</strong>, the input data is also passed into the <code class="docutils literal notranslate"><span class="pre">model</span></code> as a <code class="docutils literal notranslate"><span class="pre">dictionary</span></code>.
 However, there are two main differences compared with <strong>Mesa</strong>:</p>
 <ul class="simple">
@@ -651,7 +652,7 @@ However, there are two main differences compared with <strong>Mesa</strong>:</p>
 </div>
 </section>
 <section id="id7">
-<h3>Summary<a class="headerlink" href="#id7" title="Permalink to this headline"></a></h3>
+<h3>Summary<a class="headerlink" href="#id7" title="Permalink to this heading"></a></h3>
 <p>Regarding the scenario management (data import and preparation),
 <strong>Melodie</strong> provides relevant tools (or infrastructure)
 - the <code class="docutils literal notranslate"><span class="pre">Scenario</span></code> and <code class="docutils literal notranslate"><span class="pre">DataLoader</span></code> modules - to smooth the workflow.
@@ -662,13 +663,13 @@ We think such design is helpful especially when the <code class="docutils litera
 </section>
 </section>
 <section id="modeling-manager">
-<h2>Modeling Manager<a class="headerlink" href="#modeling-manager" title="Permalink to this headline"></a></h2>
+<h2>Modeling Manager<a class="headerlink" href="#modeling-manager" title="Permalink to this heading"></a></h2>
 <p>“Modeling Manager” is a set of classes that <strong>Melodie</strong> provides at a higher level than the <code class="docutils literal notranslate"><span class="pre">model</span></code>.
 The <code class="docutils literal notranslate"><span class="pre">Simulator</span></code> module is the first example.
 Besides, <strong>Melodie</strong> also provides another two “modeling managers” that are not included in <strong>Mesa</strong> and <strong>AgentPy</strong>:
 <code class="docutils literal notranslate"><span class="pre">Calibrator</span></code> and <code class="docutils literal notranslate"><span class="pre">Trainer</span></code>.</p>
 <section id="calibrator">
-<h3>Calibrator<a class="headerlink" href="#calibrator" title="Permalink to this headline"></a></h3>
+<h3>Calibrator<a class="headerlink" href="#calibrator" title="Permalink to this heading"></a></h3>
 <p>The <code class="docutils literal notranslate"><span class="pre">calibrator</span></code> module in <strong>Melodie</strong> can calibrate the scenario parameters of a model by minimizing the
 distance between model output and a “target”.
 The “target” can be defined directly or calculated based on input data.
@@ -704,7 +705,7 @@ which is stable in three calibration runs.</p>
 <img alt="_images/calibrator_infection_prob.png" src="_images/calibrator_infection_prob.png" />
 </section>
 <section id="trainer">
-<h3>Trainer<a class="headerlink" href="#trainer" title="Permalink to this headline"></a></h3>
+<h3>Trainer<a class="headerlink" href="#trainer" title="Permalink to this heading"></a></h3>
 <p>The <code class="docutils literal notranslate"><span class="pre">Trainer</span></code> module in <strong>Melodie</strong> can train the <code class="docutils literal notranslate"><span class="pre">agents</span></code> to update their behavioral parameters for higher payoff, individually.
 The framework is introduced in detail in <a class="reference external" href="https://ieeexplore.ieee.org/document/9857838/">Yu (2020)</a>:
 <em>An Agent-based Framework for Policy Simulation: Modeling Heterogeneous Behaviors with Modified Sigmoid Function and Evolutionary Training</em>.</p>
