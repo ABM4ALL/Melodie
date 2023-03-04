@@ -17,7 +17,7 @@ sphinx-autobuild
 sphinx-markdown-tables
 sphinx-rtd-theme
 pytest
-termcolor;  python_version > '3.7'
+termcolor
 cython
 setuptools
 cloudpickle~=2.0
