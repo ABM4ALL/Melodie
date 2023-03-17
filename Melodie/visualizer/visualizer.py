@@ -36,6 +36,7 @@ SAVE_PARAMS = 7
 SAVE_DATABASE = 8
 DOWNLOAD_DATA = 9
 GENERAL_COMMAND = 10
+HEARTBEAT=100
 
 UNCONFIGURED = 0
 READY = 1
@@ -55,6 +56,7 @@ class WSMsgType(str, Enum):
     SIMULATION_DATA = "data"
     ACTIONS = "actions"
     FILE = "file"
+    HEARTBEAT = "heartbeat"
 
 
 class MelodieModelReset(BaseException):

@@ -108,14 +108,17 @@ class ToolbarAction(JSONBase):
     params_handler_map: Dict[str, Callable[[], ParamsManager]] = {}
     handlers_map = {}
 
-    def __init__(self, key: str, text: str, operation: Operation, handler: Callable,
-                 custom_args: Union[None, Callable[[], ParamsManager]] = None):
+    def __init__(self, key: str, menu: str, text: str, operation: Operation, handler: Callable,
+                 custom_args: Union[None, Callable[[], ParamsManager]] = None, type="default"):
         self.key = key
+        self.menu = menu
         self.text = text
         self.operation = operation
         self.operation.check_type()
         self._handler = handler
         self.children = []
+        assert type in {"default", "parameterized-window"}
+        self.type = type
         self.fetch_custom_args = True if custom_args else False
         if self.fetch_custom_args:
             ToolbarAction.params_handler_map[key] = custom_args
@@ -130,11 +133,11 @@ class ToolbarAction(JSONBase):
         if args is None:
             args = {}
         try:
-            return cls.handlers_map[key](**args)
+            return cls.handlers_map[key](**args), True
         except BaseException as e:
             import traceback
             traceback.print_exc()
-            return create_failed_response(str(e))
+            return create_failed_response(str(e)), False
 
     @classmethod
     def get_custom_args(cls, key):

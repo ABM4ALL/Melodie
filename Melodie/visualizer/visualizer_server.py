@@ -1,9 +1,10 @@
+import base64
 import json
 import logging
 import queue
 import threading
 
-from flask import Flask, request
+from flask import Flask, Response, abort, request
 from flask_cors import CORS
 from flask_sock import Sock, Server, ConnectionClosed as WSClosed
 from typing import List, Set
@@ -41,31 +42,40 @@ def create_visualizer_server(recv_queue: queue.Queue, send_queue: queue.Queue, p
     thread_send.setDaemon(True)
     thread_send.start()
 
-    @app.route("/action/<string:action_name>")
+    @app.route("/visualizer/action/<string:action_name>")
     def handle_action(action_name: str):
         if 'args' in request.args:
-            args = json.loads(request.args['args'])
+            logger.warning(f"args: {request.args}")
+            args = json.loads(base64.b64decode(request.args['args']))
             args_dict = {arg['name']: arg['value'] for arg in args}
             logger.warning(f"{args}")
-            return ToolbarAction.dispatch(action_name, args_dict)
+            ret, stat = ToolbarAction.dispatch(action_name, args_dict)
         else:
-            return ToolbarAction.dispatch(action_name)
+            ret, stat = ToolbarAction.dispatch(action_name)
+        if not stat:
+            abort(Response(ret, status=400))
+            return ""
+        return ret
 
-    @app.route('/action-params/<string:action_name>')
+    @app.route('/visualizer/action-params/<string:action_name>')
     def handle_action_params(action_name: str):
         resp = {"status": 0, "data": ToolbarAction.get_custom_args(action_name)}
         return json.dumps(resp)
 
-    @sock.route('/echo')
+    @sock.route('/visualizer/echo')
     def echo(ws: Server):
+        from .visualizer import HEARTBEAT, WSMsgType
         websockets.append(ws)
         while True:
             try:
                 content = ws.receive()
+                # if content.startswith()
                 rec = json.loads(content)
                 cmd = rec["cmd"]
                 data = rec["data"]
-                if 0 <= cmd <= 10:
+                if cmd == HEARTBEAT:
+                    continue
+                if 0 <= cmd < 100:
                     try:
                         recv_queue.put((cmd, data), timeout=1)
                     except:

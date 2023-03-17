@@ -12,7 +12,7 @@ def create_json_response(data) -> str:
 
 
 def create_failed_response(msg: str) -> str:
-    return DataServiceStatus(DataServiceState.SUCCESS, msg=msg).to_json()
+    return DataServiceStatus(DataServiceState.ERROR, msg=msg).to_json()
 
 
 def create_file_response(filename: str) -> Response:
