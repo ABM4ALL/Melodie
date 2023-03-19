@@ -558,7 +558,11 @@ Example of ``agents_result``:
 
 .. image:: image/agents_result.png
 
-In the example project, we also prepared a simple ``analyzer.py`` file that produces two figures based on the results.
+In the example project, we also prepared a simple ``analyzer.py`` file that produces two figures based on the results
+showing the population of different ``health_state``.
+The two figures will be saved in the ``data/output`` folder together with the ``.sqlite`` file.
+Similarly, users can also define other post-processing functions in the ``analyzer.py`` file.
+
 Since it is mainly based on other packages instead of ``Melodie``, we won't introduce the details here.
 Here is an example of the results from the model.
 

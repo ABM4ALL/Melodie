@@ -14,6 +14,7 @@
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="author" title="About these documents" href="../about.html" />
@@ -219,22 +220,11 @@
            <div itemprop="articleBody">
              
   <section id="grid">
-<h1>Grid<a class="headerlink" href="#grid" title="Permalink to this headline"></a></h1>
+<h1>Grid<a class="headerlink" href="#grid" title="Permalink to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="Melodie.boost.grid.GridItem">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Melodie.boost.grid.</span></span><span class="sig-name descname"><span class="pre">GridItem</span></span><a class="headerlink" href="#Melodie.boost.grid.GridItem" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="agent.html#Melodie.boost.basics.Agent" title="Melodie.boost.basics.Agent"><code class="xref py py-class docutils literal notranslate"><span class="pre">Melodie.boost.basics.Agent</span></code></a></p>
-<p>Base class for GridAgent and Spot, an agent with x and y coordinate.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>agent_id</strong> – ID of <code class="docutils literal notranslate"><span class="pre">GridItem</span></code>, should be unique for same class.</p></li>
-<li><p><strong>grid</strong> – The instance of <code class="docutils literal notranslate"><span class="pre">Grid</span></code> that this <code class="docutils literal notranslate"><span class="pre">GridItem</span></code> on.</p></li>
-<li><p><strong>x</strong> – X coordinate on grid, an <code class="docutils literal notranslate"><span class="pre">int</span></code>.</p></li>
-<li><p><strong>y</strong> – Y coordinate on grid, an <code class="docutils literal notranslate"><span class="pre">int</span></code>.</p></li>
-</ul>
-</dd>
-</dl>
+<dd><p>Bases: <a class="reference internal" href="agent.html#Melodie.boost.basics.Agent" title="Melodie.boost.basics.Agent"><code class="xref py py-class docutils literal notranslate"><span class="pre">Agent</span></code></a></p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="Melodie.boost.grid.GridItem.grid">
 <span class="sig-name descname"><span class="pre">grid</span></span><a class="headerlink" href="#Melodie.boost.grid.GridItem.grid" title="Permalink to this definition"></a></dt>
@@ -258,7 +248,7 @@
 <span class="sig-name descname"><span class="pre">set_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.boost.grid.GridItem.set_params" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>params</strong> – Extract parameters from a dict, and assign values to properties.</p>
+<dd class="field-odd"><p><strong>params</strong> – </p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p></p>
@@ -271,19 +261,7 @@
 <dl class="py class">
 <dt class="sig sig-object py" id="Melodie.boost.grid.GridAgent">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Melodie.boost.grid.</span></span><span class="sig-name descname"><span class="pre">GridAgent</span></span><a class="headerlink" href="#Melodie.boost.grid.GridAgent" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="#Melodie.boost.grid.GridItem" title="Melodie.boost.grid.GridItem"><code class="xref py py-class docutils literal notranslate"><span class="pre">Melodie.boost.grid.GridItem</span></code></a></p>
-<p>Base class for custom agents on grid. Different classes of custom <code class="docutils literal notranslate"><span class="pre">GridAgent</span></code> should
-have different value of <code class="docutils literal notranslate"><span class="pre">category</span></code>.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>agent_id</strong> – ID of <code class="docutils literal notranslate"><span class="pre">GridAgent</span></code>, should be unique for same class.</p></li>
-<li><p><strong>grid</strong> – The instance of <code class="docutils literal notranslate"><span class="pre">Grid</span></code> that this <code class="docutils literal notranslate"><span class="pre">GridItem</span></code> on.</p></li>
-<li><p><strong>x</strong> – X coordinate on grid, an <code class="docutils literal notranslate"><span class="pre">int</span></code>.</p></li>
-<li><p><strong>y</strong> – Y coordinate on grid, an <code class="docutils literal notranslate"><span class="pre">int</span></code>.</p></li>
-</ul>
-</dd>
-</dl>
+<dd><p>Bases: <a class="reference internal" href="#Melodie.boost.grid.GridItem" title="Melodie.boost.grid.GridItem"><code class="xref py py-class docutils literal notranslate"><span class="pre">GridItem</span></code></a></p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="Melodie.boost.grid.GridAgent.category">
 <span class="sig-name descname"><span class="pre">category</span></span><a class="headerlink" href="#Melodie.boost.grid.GridAgent.category" title="Permalink to this definition"></a></dt>
@@ -319,18 +297,7 @@ have different value of <code class="docutils literal notranslate"><span class="
 <dl class="py class">
 <dt class="sig sig-object py" id="Melodie.boost.grid.Spot">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Melodie.boost.grid.</span></span><span class="sig-name descname"><span class="pre">Spot</span></span><a class="headerlink" href="#Melodie.boost.grid.Spot" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="#Melodie.boost.grid.GridItem" title="Melodie.boost.grid.GridItem"><code class="xref py py-class docutils literal notranslate"><span class="pre">Melodie.boost.grid.GridItem</span></code></a></p>
-<p>Base class for spots.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>spot_id</strong> – ID of <code class="docutils literal notranslate"><span class="pre">Spot</span></code>, should be unique for same class.</p></li>
-<li><p><strong>grid</strong> – The instance of <code class="docutils literal notranslate"><span class="pre">Grid</span></code> that this <code class="docutils literal notranslate"><span class="pre">GridItem</span></code> on.</p></li>
-<li><p><strong>x</strong> – X coordinate on grid, an <code class="docutils literal notranslate"><span class="pre">int</span></code>.</p></li>
-<li><p><strong>y</strong> – Y coordinate on grid, an <code class="docutils literal notranslate"><span class="pre">int</span></code>.</p></li>
-</ul>
-</dd>
-</dl>
+<dd><p>Bases: <a class="reference internal" href="#Melodie.boost.grid.GridItem" title="Melodie.boost.grid.GridItem"><code class="xref py py-class docutils literal notranslate"><span class="pre">GridItem</span></code></a></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="Melodie.boost.grid.Spot.get_spot_agents">
 <span class="sig-name descname"><span class="pre">get_spot_agents</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.boost.grid.Spot.get_spot_agents" title="Permalink to this definition"></a></dt>
@@ -352,10 +319,13 @@ have different value of <code class="docutils literal notranslate"><span class="
 and agents move and interact inside spots.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>spot_cls</strong> – The class of Spot.</p>
-</dd>
-<dt class="field-even">Scenario</dt>
-<dd class="field-even"><p>Current scenario of grid.</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>spot_cls</strong> – The class of Spot</p></li>
+<li><p><strong>width</strong> – The width of Grid</p></li>
+<li><p><strong>height</strong> – The height of Grid</p></li>
+<li><p><strong>wrap</strong> – If true, the coordinate overflow will be mapped to another end.</p></li>
+<li><p><strong>caching</strong> – If true, the neighbors and bound check results will be cached to avoid re-computing.</p></li>
+</ul>
 </dd>
 </dl>
 <dl class="py method">
@@ -384,16 +354,6 @@ and agents move and interact inside spots.</p>
 <dd class="field-odd"><p>A tuple, (x, y)</p>
 </dd>
 </dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="Melodie.boost.grid.Grid.get_agent_ids">
-<span class="sig-name descname"><span class="pre">get_agent_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">category</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Set</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#Melodie.boost.grid.Grid.get_agent_ids" title="Permalink to this definition"></a></dt>
-<dd><p>Get all agent of a specific category from the spot at (x, y)
-:param category:
-:param x:
-:param y:
-:return: A set of int, the agent ids.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -613,7 +573,7 @@ be raised when attempting to place multiple agents on one spot.
 
 <dl class="py method">
 <dt class="sig sig-object py" id="Melodie.boost.grid.Grid.to_2d_array">
-<span class="sig-name descname"><span class="pre">to_2d_array</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">attr_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">numpy.ndarray</span></span></span><a class="headerlink" href="#Melodie.boost.grid.Grid.to_2d_array" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">to_2d_array</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">attr_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="headerlink" href="#Melodie.boost.grid.Grid.to_2d_array" title="Permalink to this definition"></a></dt>
 <dd><p>Collect property of each spot and write the property value into an 2d np.array.</p>
 <p>Notice:</p>
 <ul class="simple">
