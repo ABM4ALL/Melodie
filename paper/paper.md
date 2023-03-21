@@ -81,7 +81,7 @@ Third, `Melodie` has a wider infrastructure coverage and provides dedicated modu
 In such a data flow, `Melodie` also checks if the registries are consistent with the input Excel files automatically. 
 We think such design is helpful especially when the scenario includes large and complicated input datasets.
 Having the channel through "Scenario" for delivering input data at different parts of the model is also conceptually clear.
-Finally, `Melodie` uses a `SQLite` database to save (1) a copy of the input data, and (2) the output data, i.e., model results. 
+Finally, `Melodie` uses an `SQLite` database to save (1) a copy of the input data, and (2) the output data, i.e., model results. 
 The interaction between model and database is facilitated by the `DB` module in `Melodie`.
 The users can easily save all the data in multiple long tables for post-processing or sending the single `.sqlite` file to others.
 
