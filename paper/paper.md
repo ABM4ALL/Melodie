@@ -52,12 +52,12 @@ can be developed with `Melodie` step by step.
 # Statement of need
 
 Among numerous frameworks for agent-based modeling in different programming languages, 
-[`Mesa`](https://github.com/projectmesa/mesa) [@Mesa][^4] and
-[`AgentPy`](https://github.com/JoelForamitti/agentpy) [@AgentPy][^5]
+[`Mesa`](https://github.com/projectmesa/mesa) `[@Mesa]`[^4] and
+[`AgentPy`](https://github.com/JoelForamitti/agentpy) `[@AgentPy]`[^5]
 are the two open-source frameworks in Python.
 The object-oriented paradigm of Python seamlessly fits the "agent perspective" of ABM.
 Modelers can also benefit from the wealth of packages available for statistical analysis, data visualization, etc.
-Following the tradition of [`NetLogo`](https://ccl.northwestern.edu/netlogo/) [@Netlogo][^6],
+Following the tradition of [`NetLogo`](https://ccl.northwestern.edu/netlogo/) `[@Netlogo]`[^6],
 `Mesa` and `AgentPy` both support interactive simulation but with different focus and style. 
 
 In summary, `Melodie` distinguishes from `Mesa` and `AgentPy` in the following aspects.
@@ -70,7 +70,7 @@ we think this is easier for the users to understand the logic.
 
 Second, `Melodie` enhances the `data_collector` component with higher configurability.
 The users can define functions for parsing specific data structure from the `agents` and the `environment`.
-For example, in a financial ABM, the transactions could be saved in the `environment` as "`List[Transaction]`". 
+For example, in a financial ABM, the transactions could be saved in the `environment` as `List[Transaction]`. 
 Then, in the `data_collector`, the users can define a function `collect_transaction_data()` to first parse the list 
 and then save the results into the database.
 
@@ -82,7 +82,7 @@ Third, `Melodie` has a wider infrastructure coverage and provides dedicated modu
 In such a data flow, `Melodie` also checks if the registries are consistent with the input Excel files automatically. 
 We think such design is helpful especially when the scenario includes large and complicated input datasets.
 Having the channel through "Scenario" for delivering input data at different parts of the model is also conceptually clear.
-Finally, `Melodie` uses `.sqlite` database to save (1) a copy of the input data, and (2) the output data, i.e., model results. 
+Finally, `Melodie` uses a `SQLite` database to save (1) a copy of the input data, and (2) the output data, i.e., model results. 
 The interaction between model and database is facilitated by the `DB` module in `Melodie`.
 The users can easily save all the data in multiple long tables for post-processing or sending the single `.sqlite` file to others.
 
@@ -92,7 +92,7 @@ With these two modules, `Melodie` supports
 (2) evolutionary training of agents.
 
 Fifth, `Melodie` uses the `Cython` package for acceleration for its compatibility advantage compared with other packages like `numba`. 
-The modules that are written in `Cython` are `agent`, `environment`, `agent_list` and `grid`.
+The modules that are written in `Cython` are `agent`, `environment`, `agent_list`, and `grid`.
 
 In the documentation, we also provide a detailed [comparison](https://abm4all.github.io/Melodie/html/framework_comparison.html#model-components) 
 between the three packages - Mesa, AgentPy, and Melodie - based on one same ABM developed with the three packages. 
@@ -133,15 +133,14 @@ which can be constructed and run for different objectives:
 * `Calibrator` - calibrates the parameters of the `scenario` by minimizing the distance between model output and empirical evidence.
 * `Trainer` - trains the `agents` to update their behavioral parameters for higher payoff. 
 
-Both of `Calibrator` and `Trainer` modules are based on the genetic algorithm (GA), 
+Both of `Calibrator` and `Trainer` modules are based on a Genetic Algorithm (GA), 
 and the `Trainer` framework is introduced in detail in [@Yu].
 
-Taking the covid contagion model in the tutorial as example, as shown below,
-the `simulator` is initialized with a `config` object (incl. project name and folder paths) and
+Taking the Covid contagion model in the tutorial as example, as shown below,
+the `simulator` is initialized with a `config` object (including a project name and a set of folder paths) and
 the class variables of the `model`, the `scenario`, and the `data_loader`.
 
 ```Python
-
     from Melodie import Simulator
     from config import config
     from source.model import CovidModel
@@ -149,10 +148,10 @@ the class variables of the `model`, the `scenario`, and the `data_loader`.
     from source.data_loader import CovidDataLoader
 
     simulator = Simulator(
-         config=config,
-         model_cls=CovidModel,
-         scenario_cls=CovidScenario,
-         data_loader_cls=CovidDataLoader
+         config = config,
+         model_cls = CovidModel,
+         scenario_cls = CovidScenario,
+         data_loader_cls = CovidDataLoader
     )
     simulator.run()
 ```
@@ -166,7 +165,7 @@ The last Infrastructure Cluster includes the modules that provide support for th
 * `Visualizer` - provides the APIs to interact with `MelodieStudio` for visualization.
 * `MelodieStudio` - another library in parallel with `Melodie`, which supports results visualization and interactive simulation in the browser.
 * `Config` - provides the channel to define project information, e.g., project name, folder paths.
-* `DBConn` - provides the functions to write to or read from the database.
+* `DBConn` - provides IO functions for the database.
 * `MelodieException` - provides the pre-defined exceptions in `Melodie` to support debugging.
 
 # Resources
