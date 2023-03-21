@@ -51,7 +51,7 @@ can be developed with `Melodie` step by step.
 # Statement of need
 
 Among numerous frameworks for agent-based modeling in different programming languages, 
-[`Mesa`](https://github.com/projectmesa/mesa) @Mesa[^4] and
+[`Mesa`](https://github.com/projectmesa/mesa) [@Mesa][^4] and
 [`AgentPy`](https://github.com/JoelForamitti/agentpy) [@AgentPy][^5]
 are the two open-source frameworks in Python.
 The object-oriented paradigm of Python seamlessly fits the "agent perspective" of ABM.
