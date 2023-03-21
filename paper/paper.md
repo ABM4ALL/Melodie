@@ -9,8 +9,7 @@ tags:
 authors:
   - name: Songmin Yu
     orcid: 0000-0001-6062-4382
-    equal-contrib: true 
-    corresponding: true
+    equal-contrib: true
     affiliation: 1
   - name: Zhanyi Hou
     orcid: 0000-0001-8524-5370
