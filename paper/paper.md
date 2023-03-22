@@ -179,9 +179,6 @@ a comparison between `Melodie` and the two packages is provided in the documenta
 based on the same covid contagion model developed with all the three packages.
 
 
-
-
-
 # Acknowledgements
 
 This work is not supported by any funding. 
