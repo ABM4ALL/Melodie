@@ -41,22 +41,22 @@ ABMs are also flexible to consider agents’
 (2) bounded rationality and adaptation behavior based on psychological and behavioral studies.
 
 `Melodie` is a general framework for developing agent-based models (ABMs) in Python. 
-It is published and maintained on the GitHub organization page of [`ABM4ALL`](https://github.com/ABM4ALL)[^1],
+It is published and maintained on the GitHub organization page of [`ABM4ALL`](https://github.com/ABM4ALL),
 a developing community among agent-based modelers for sharing ideas and resources.
-Together with the code [repository](https://github.com/ABM4ALL/Melodie)[^2], 
-we also published the [documentation](https://abm4all.github.io/Melodie/html/index.html)[^3] of `Melodie`, 
+Together with the code [repository](https://github.com/ABM4ALL/Melodie), 
+we also published the [documentation](https://abm4all.github.io/Melodie/html/index.html) of `Melodie`, 
 including a tutorial explaining how a minimum example - an agent-based covid contagion model - 
 can be developed with `Melodie` step by step.
 
 # Statement of need
 
 Among numerous frameworks for agent-based modeling in different programming languages, 
-[`Mesa`](https://github.com/projectmesa/mesa) [@Mesa][^4] and
-[`AgentPy`](https://github.com/JoelForamitti/agentpy) [@AgentPy][^5]
+[`Mesa`](https://github.com/projectmesa/mesa) [@Mesa] and
+[`AgentPy`](https://github.com/JoelForamitti/agentpy) [@AgentPy]
 are the two open-source frameworks in Python.
 The object-oriented paradigm of Python seamlessly fits the "agent perspective" of ABM.
 Modelers can also benefit from the wealth of packages available for statistical analysis, data visualization, etc.
-Following the tradition of [`NetLogo`](https://ccl.northwestern.edu/netlogo/) [@Netlogo][^6],
+Following the tradition of [`NetLogo`](https://ccl.northwestern.edu/netlogo/) [@Netlogo],
 `Mesa` and `AgentPy` both support interactive simulation but with different focus and style. 
 
 In summary, `Melodie` distinguishes from `Mesa` and `AgentPy` in the following aspects.
@@ -178,13 +178,6 @@ Finally, for those who are familiar with `Mesa` or `AgentPy`,
 a comparison between `Melodie` and the two packages is provided in the documentation, 
 based on the same covid contagion model developed with all the three packages.
 
-
-[^1]: Link to `ABM4ALL`: [https://github.com/ABM4ALL](https://github.com/ABM4ALL).
-[^2]: Link to `Melodie` repository: [https://github.com/ABM4ALL/Melodie](https://github.com/ABM4ALL/Melodie).
-[^3]: Link to `Melodie` documentation: [https://abm4all.github.io/Melodie/html/index.html](https://abm4all.github.io/Melodie/html/index.html).
-[^4]: Link to `Mesa`: [https://github.com/projectmesa/mesa](https://github.com/projectmesa/mesa).
-[^5]: Link to `AgentPy`: [https://github.com/JoelForamitti/agentpy](https://github.com/JoelForamitti/agentpy).
-[^6]: Link to `NetLogo`: [https://ccl.northwestern.edu/netlogo/](https://ccl.northwestern.edu/netlogo/).
 
 # Acknowledgements
 
