@@ -122,7 +122,7 @@ setuptools.setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/ABM4ALL/Melodie",
-    author="Songmin Yu",
+    author="Songmin Yu, Zhanyi Hou",
     author_email="abm4all@outlook.com",
     license="BSD 3",
     classifiers=[
