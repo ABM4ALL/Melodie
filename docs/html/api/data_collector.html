@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>DataCollector &mdash; Melodie 0.6.0 documentation</title>
+  <title>DataCollector &mdash; Melodie 0.7.0 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -167,6 +167,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../changelog.html">Change Log</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../changelog.html#major-version-0-x">Major Version 0.x</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../changelog.html#v0-7-0-mar-25-2023">v0.7.0 (Mar. 25, 2023)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../changelog.html#v0-6-0-jan-04-2023">v0.6.0 (Jan. 04, 2023)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../changelog.html#v0-5-0-dec-17-2022">v0.5.0 (Dec. 17, 2022)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../changelog.html#v0-4-2-dec-15-2022">v0.4.2 (Dec. 15, 2022)</a></li>
@@ -343,6 +344,30 @@ database.</p>
 </dd>
 </dl>
 </dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Melodie.data_collector.DataCollector.append_agent_properties_by_records">
+<span class="sig-name descname"><span class="pre">append_agent_properties_by_records</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">container_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agent_prop_list</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">period</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.data_collector.DataCollector.append_agent_properties_by_records" title="Permalink to this definition"></a></dt>
+<dd><p>Directly append properties to the properties recorder dict.
+If used dynamic-linked-lib as speed up extensions, directly calling this method will be necessary.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>period</strong> – Current simulation step</p></li>
+<li><p><strong>container_name</strong> – Name of agent container</p></li>
+<li><p><strong>agent_prop_list</strong> – A list with properties as records.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Melodie.data_collector.DataCollector.append_environment_properties">
+<span class="sig-name descname"><span class="pre">append_environment_properties</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env_properties</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">period</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.data_collector.DataCollector.append_environment_properties" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="Melodie.data_collector.DataCollector.status">

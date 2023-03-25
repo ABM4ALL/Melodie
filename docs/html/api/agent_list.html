@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AgentList &mdash; Melodie 0.6.0 documentation</title>
+  <title>AgentList &mdash; Melodie 0.7.0 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -167,6 +167,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../changelog.html">Change Log</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../changelog.html#major-version-0-x">Major Version 0.x</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../changelog.html#v0-7-0-mar-25-2023">v0.7.0 (Mar. 25, 2023)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../changelog.html#v0-6-0-jan-04-2023">v0.6.0 (Jan. 04, 2023)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../changelog.html#v0-5-0-dec-17-2022">v0.5.0 (Dec. 17, 2022)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../changelog.html#v0-4-2-dec-15-2022">v0.4.2 (Dec. 15, 2022)</a></li>
@@ -225,7 +226,8 @@
 <dt class="sig sig-object py" id="Melodie.boost.agent_list.BaseAgentContainer">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Melodie.boost.agent_list.</span></span><span class="sig-name descname"><span class="pre">BaseAgentContainer</span></span><a class="headerlink" href="#Melodie.boost.agent_list.BaseAgentContainer" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>The base class that contains agents</p>
+<p>The base class that containing homogeneous agents.</p>
+<p>No parameter involved in this class</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="Melodie.boost.agent_list.BaseAgentContainer.init_agents">
 <span class="sig-name descname"><span class="pre">init_agents</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.boost.agent_list.BaseAgentContainer.init_agents" title="Permalink to this definition"></a></dt>
@@ -285,7 +287,16 @@
 <dl class="py class">
 <dt class="sig sig-object py" id="Melodie.boost.agent_list.AgentList">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Melodie.boost.agent_list.</span></span><span class="sig-name descname"><span class="pre">AgentList</span></span><a class="headerlink" href="#Melodie.boost.agent_list.AgentList" title="Permalink to this definition"></a></dt>
-<dd><dl class="py attribute">
+<dd><p>The class to manage a list of homogeneous agents.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>agent_class</strong> – Class of agent to be managed in this agent container.</p></li>
+<li><p><strong>model</strong> – The instance of current model.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
 <dt class="sig sig-object py" id="Melodie.boost.agent_list.AgentList.agents">
 <span class="sig-name descname"><span class="pre">agents</span></span><a class="headerlink" href="#Melodie.boost.agent_list.AgentList.agents" title="Permalink to this definition"></a></dt>
 <dd><p>A <code class="docutils literal notranslate"><span class="pre">list</span></code> of <code class="docutils literal notranslate"><span class="pre">Agent</span></code>, the actual data structure storing agents.</p>

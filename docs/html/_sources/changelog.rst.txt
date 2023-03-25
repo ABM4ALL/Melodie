@@ -5,6 +5,15 @@ Change Log
 Major Version 0.x
 _________________
 
+v0.7.0 (Mar. 25, 2023)
+~~~~~~~~~~~~~~~~~~~~~~
+- Fixed version compatibility problem for sqlalchemy.
+- Fixed numpy data type error mentioned in issue #12, #18.
+- Deleted unused dependencies in ``requirements.txt`` and ``setup.py``.
+- Modified docs according to reviewers' advice (submission to JOSS).
+- Fixed path problem on *nix platforms.
+- Added proxy router to adapt to the gateway in MelodieStudio.
+
 v0.6.0 (Jan. 04, 2023)
 ~~~~~~~~~~~~~~~~~~~~~~
 - Modified ``Calibrator.distance`` method, used ``model`` instead of ``environment`` as parameter.
