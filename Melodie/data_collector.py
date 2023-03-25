@@ -23,11 +23,11 @@ class PropertyToCollect:
 class DataCollector:
     """
     Data Collector collects data in the model.
-    
+
     At the beginning of simulation, the ``DataCollector`` creates as the model creates;
-    
+
     User could customize which property of agents or environment should be collected.
-    
+
     Before the model running finished, the DataCollector dumps data to dataframe, and save to
     database.
     """
@@ -42,7 +42,8 @@ class DataCollector:
         self.target = target
         self.model: Optional[Model] = None
         self.scenario: Optional["Scenario"] = None
-        self._agent_properties_to_collect: Dict[str, List[PropertyToCollect]] = {}
+        self._agent_properties_to_collect: Dict[str,
+                                                List[PropertyToCollect]] = {}
         self._environment_properties_to_collect: List[PropertyToCollect] = []
 
         self.agent_properties_df = pd.DataFrame()
@@ -78,7 +79,7 @@ class DataCollector:
     ):
         """
         This method adds a property of agents in an agent_container to the data collector.
-        
+
         The type which the data will be represented in the database can also be determined by ``as_type``.
 
         :param container_name: Container name, also a property name on model.
@@ -87,7 +88,8 @@ class DataCollector:
         :return:
         """
         if not hasattr(self.model, container_name):
-            raise AttributeError(f"Model has no agent container '{container_name}'")
+            raise AttributeError(
+                f"Model has no agent container '{container_name}'")
         if container_name not in self._agent_properties_to_collect.keys():
             self._agent_properties_to_collect[container_name] = []
         self._agent_properties_to_collect[container_name].append(
@@ -133,7 +135,8 @@ class DataCollector:
         """
         containers = []
         for container_name in self._agent_properties_to_collect.keys():
-            containers.append((container_name, getattr(self.model, container_name)))
+            containers.append(
+                (container_name, getattr(self.model, container_name)))
         return containers
 
     def collect_agent_properties(self, period: int, id_run: int, id_scenario: int):
@@ -148,23 +151,47 @@ class DataCollector:
         agent_containers = self.agent_containers()
         agent_property_names = self.agent_property_names()
         for container_name, container in agent_containers:
-            agent_prop_list = container.to_list(agent_property_names[container_name])
-            length = len(agent_prop_list)
-            props_list = []
-            for i in range(length):
-                agent_props_dict = agent_prop_list[i]
-                tmp_dic = {
-                    "id_scenario": id_scenario,
-                    "id_run": id_run,
-                    "period": period,
-                    "id": agent_props_dict.pop("id"),
-                }
-                tmp_dic.update(agent_props_dict)
-                props_list.append(tmp_dic)
+            agent_prop_list = container.to_list(
+                agent_property_names[container_name])
+            self.append_agent_properties_by_records(
+                container_name, agent_prop_list, period)
 
-            if container_name not in self.agent_properties_dict:
-                self.agent_properties_dict[container_name] = []
-            self.agent_properties_dict[container_name].extend(props_list)
+    def append_agent_properties_by_records(self, container_name: str, agent_prop_list: List[Dict[str, Any]], period: int):
+        """
+        Directly append properties to the properties recorder dict.
+        If used dynamic-linked-lib as speed up extensions, directly calling this method will be necessary.
+
+        :param period: Current simulation step
+        :param container_name: Name of agent container
+        :param agent_prop_list: A list with properties as records.
+        :return: None
+        """
+        id_run, id_scenario = self.model.run_id_in_scenario, self.model.scenario.id
+        length = len(agent_prop_list)
+        props_list = []
+        for i in range(length):
+            agent_props_dict = agent_prop_list[i]
+            tmp_dic = {
+                "id_scenario": id_scenario,
+                "id_run": id_run,
+                "period": period,
+                "id": agent_props_dict.pop("id"),
+            }
+            tmp_dic.update(agent_props_dict)
+            props_list.append(tmp_dic)
+        if container_name not in self.agent_properties_dict:
+            self.agent_properties_dict[container_name] = []
+        self.agent_properties_dict[container_name].extend(props_list)
+
+    def append_environment_properties(self, env_properties: Dict[str, Any], period: int):
+        env_dic = {
+            "id_scenario": self.model.scenario.id,
+            "id_run": self.model.run_id_in_scenario,
+            "period": period,
+        }
+        env_dic.update(
+            {prop_name: env_properties[prop_name] for prop_name in self.env_property_names()})
+        self.environment_properties_list.append(env_dic)
 
     @property
     def status(self) -> bool:
@@ -197,9 +224,12 @@ class DataCollector:
             "id_run": self.model.run_id_in_scenario,
             "period": period,
         }
-        env_dic.update(self.model.environment.to_dict(self.env_property_names()))
+        env_dic.update(self.model.environment.to_dict(
+            self.env_property_names()))
 
         self.environment_properties_list.append(env_dic)
+
+        
 
         self.collect_agent_properties(
             period, self.model.run_id_in_scenario, self.model.scenario.id
@@ -255,7 +285,8 @@ class DataCollector:
         t0 = time.time()
         write_db_time = 0
         connection = self.model.create_db_conn()
-        environment_properties_df = pd.DataFrame(self.environment_properties_list)
+        environment_properties_df = pd.DataFrame(
+            self.environment_properties_list)
         _t = time.time()
         connection.write_dataframe(
             DBConn.ENVIRONMENT_RESULT_TABLE, environment_properties_df, {}

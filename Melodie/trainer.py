@@ -437,7 +437,7 @@ class GATrainerAlgorithm:
             meta.id_generation = i
             logger.info(
                 f"======================="
-                f"Path {meta.id_path} Generation {i + 1}/{self.params.generation_num}"
+                f"Scenario {scenario.id} Path {meta.id_path} Generation {i + 1}/{self.params.generation_num}"
                 f"======================="
             )
 

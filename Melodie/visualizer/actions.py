@@ -143,4 +143,4 @@ class ToolbarAction(JSONBase):
     def get_custom_args(cls, key):
         params_manager = cls.params_handler_map[key]()
         assert isinstance(params_manager, ParamsManager)
-        return params_manager.to_json()
+        return params_manager.to_frontend_model()

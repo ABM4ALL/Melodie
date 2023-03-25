@@ -4,6 +4,7 @@
 # @Email: 1295752786@qq.com
 # @File: params.py.py
 import math
+import sys
 from typing import Callable, Any, TYPE_CHECKING, Tuple, Union, List, Dict
 
 from ..models.jsonbase import JSONBase
@@ -94,7 +95,11 @@ class Param(JSONBase):
 
         :return:
         """
-        return {'value': self._value, 'type': self.type, 'name': self.name}
+        if isinstance(self._value, UnInitialized):
+            value = None
+        else:
+            value = self._value
+        return {'value': value, 'type': self.type, 'name': self.name}
 
     def _validator(self, new_val):
         return
@@ -449,6 +454,7 @@ class ParamsManager:
 
         :return:
         """
+        print([param.to_value_json() for param in self.params], file=sys.stderr)
         return [param.to_value_json() for param in self.params]
 
     def from_json(self, l: List[Union[Dict, List]]):
@@ -461,3 +467,14 @@ class ParamsManager:
         assert len(l) == len(self.params)
         for i, param in enumerate(self.params):
             param.from_json(l[i])
+
+    def to_frontend_model(self):
+        """
+        Convert to model and value json
+
+        :return:
+        """
+        return {
+            "model": self.to_json(),
+            "values": self.to_value_json()
+        }
