@@ -2,6 +2,7 @@
 
 
 [![Build](https://github.com/ABM4ALL/Melodie/actions/workflows/wheels.yml/badge.svg?branch=dist)](https://github.com/ABM4ALL/Melodie/actions/workflows/wheels.yml)
+[![DOI](https://joss.theoj.org/papers/10.21105/joss.05100/status.svg)](https://doi.org/10.21105/joss.05100)
 
 **Melodie** is a framework for developing agent-based models (ABMs) in Python.
 The package and its examples are maintained on [ABM4ALL](https://github.com/ABM4ALL).
