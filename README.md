@@ -30,3 +30,7 @@ Sitting in Karlsruhe, a lovely city in southern Germany,
 I take the German translation - ***Melodie*** - as the name of this package.
 
 ![Karlsruhe](docs/source/image/karlsruhe.png)
+
+### Suggested citation:
+
+Yu, S.; Hou, Z.; (2023). Melodie: Agent-based Modeling in Python. Journal of Open Source Software, 8(83), 5100, https://doi.org/10.21105/joss.05100
