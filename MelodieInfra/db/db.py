@@ -1,3 +1,4 @@
+import abc
 import logging
 import os
 from typing import Union, Dict, TYPE_CHECKING, Type, Optional, List, Tuple
@@ -23,6 +24,44 @@ SQLITE_FILE_SUFFIX = ".sqlite"
 logger = logging.getLogger(__name__)
 
 
+class BaseMelodieDBConfig(abc.ABC):
+    def __init__(self):
+        self.type = ""
+
+    @abc.abstractmethod
+    def connection_string(self) -> str:
+        pass
+
+
+class SQLiteDBConfig(BaseMelodieDBConfig):
+    def __init__(self, db_name: str, db_path: str, db_file: str = ""):
+        super().__init__()
+        self.type = 'sqlite'
+        self.db_path = db_path
+        self.db_name = db_name
+        if db_file == "":
+            self.db_file = os.path.join(self.db_path, self.db_name + SQLITE_FILE_SUFFIX)
+
+        else:
+            self.db_file = db_file
+
+    def connection_string(self) -> str:
+        return f"sqlite:///{self.db_file}"
+
+
+class MysqlDBConfig(BaseMelodieDBConfig):
+    def __init__(self, db_name: str, host: str, user: str, password: str):
+        super().__init__()
+        self.type == "mysql"
+        self.db_name = db_name
+        self.host = host
+        self.user = user
+        self.password = password
+
+    def connection_string(self) -> str:
+        return f"mysql+pymysql://{self.user}:{self.password}@{self.host}/{self.db_name}?charset=utf8mb4"
+
+
 class DBConn:
     """
     DBConn provides API to write to/read from the database.
@@ -33,7 +72,7 @@ class DBConn:
     ENVIRONMENT_RESULT_TABLE = "environment_result"
 
     def __init__(
-            self, db_name: str, db_type: str = "sqlite", conn_params: Dict[str, str] = None
+            self, db_name: str, db_type: str = "sqlite", conn_params: Dict[str, str] = None, conn_string=""
     ):
         """
         :param db_name: Name of database file.
@@ -42,7 +81,7 @@ class DBConn:
         """
         self.db_name = db_name
 
-        if db_type not in {"sqlite"}:
+        if db_type not in {"sqlite", "mysql"}:
             MelodieExceptions.Data.InvalidDatabaseType(db_type, {"sqlite"})
         if db_type == "sqlite":
             if conn_params is None:
@@ -56,6 +95,18 @@ class DBConn:
             self.connection = self.create_connection(db_name)
         else:
             raise NotImplementedError
+
+    @staticmethod
+    def from_connection_string(conn_string: str) -> "DBConn":
+        """
+        Create from connection string.
+
+        :param conn_string:
+        :return:
+        """
+        conn = DBConn("")
+        conn.connection = sqlalchemy.create_engine(conn_string)
+        return conn
 
     def get_engine(self):
         """

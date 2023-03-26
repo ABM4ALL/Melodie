@@ -28,6 +28,13 @@ def test_init_database():
     create_db_conn(cfg).write_dataframe("simulator_scenarios", df, if_exists="replace")
 
 
+def test_connect_mysql():
+    # engine = create_engine()
+    db = DBConn.from_connection_string(conn_string="mysql+pymysql://root:123456@localhost/melodie?charset=utf8mb4")
+    pd.DataFrame([{"a": 123}, {"a": 456}]).to_sql("temp_mysql_table", db.connection)
+
+
+
 def test_sqlalchemy_data_types():
     """
     In-memory sqlite testcase.
