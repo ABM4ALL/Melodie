@@ -1,5 +1,8 @@
 import os
-from typing import Any, Dict
+from typing import Any, Dict, Optional, TYPE_CHECKING
+
+from MelodieInfra.db.base import SQLITE_FILE_SUFFIX
+from MelodieInfra.db.db_configs import DBConfigTypes, SQLiteDBConfig, BaseMelodieDBConfig
 
 
 class Config:
@@ -16,6 +19,7 @@ class Config:
             input_folder: str,
             output_folder: str,
             visualizer_entry: str = "",
+            database_config: Optional["DBConfigTypes"] = None,
             **kwargs,
     ):
         self.project_name = project_name
@@ -27,6 +31,14 @@ class Config:
         self.studio_port = kwargs.get("studio_port", 8089)
         self.visualizer_port = kwargs.get("visualizer_port", 8765)
         self.parallel_port = kwargs.get("parallel_port", 12233)
+
+        if database_config is None:
+            self.database_config = SQLiteDBConfig(
+                os.path.join(self.output_folder, self.project_name + SQLITE_FILE_SUFFIX))
+        else:
+            assert isinstance(database_config, BaseMelodieDBConfig), f"parameter database_config is {database_config}," \
+                                                                     f" not a valid data base configuration class. "
+            self.database_config = database_config
 
         if not os.path.exists(visualizer_entry) and visualizer_entry != "":
             raise FileNotFoundError(

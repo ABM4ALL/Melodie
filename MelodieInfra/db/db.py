@@ -6,60 +6,15 @@ from typing import Union, Dict, TYPE_CHECKING, Type, Optional, List, Tuple
 import pandas as pd
 import sqlalchemy
 from sqlalchemy.exc import OperationalError
-
+from sqlalchemy_utils import database_exists, create_database
 from ..exceptions import MelodieExceptions
 
 if TYPE_CHECKING:
     from MelodieInfra.config.config import Config
 
-TABLE_DTYPES = Dict[
-    str,
-    Union[
-        str, Type[str], Type[float], Type[int], Type[complex], Type[bool], Type[object]
-    ],
-]
-
-SQLITE_FILE_SUFFIX = ".sqlite"
+from .base import SQLITE_FILE_SUFFIX, TABLE_DTYPES
 
 logger = logging.getLogger(__name__)
-
-
-class BaseMelodieDBConfig(abc.ABC):
-    def __init__(self):
-        self.type = ""
-
-    @abc.abstractmethod
-    def connection_string(self) -> str:
-        pass
-
-
-class SQLiteDBConfig(BaseMelodieDBConfig):
-    def __init__(self, db_name: str, db_path: str, db_file: str = ""):
-        super().__init__()
-        self.type = 'sqlite'
-        self.db_path = db_path
-        self.db_name = db_name
-        if db_file == "":
-            self.db_file = os.path.join(self.db_path, self.db_name + SQLITE_FILE_SUFFIX)
-
-        else:
-            self.db_file = db_file
-
-    def connection_string(self) -> str:
-        return f"sqlite:///{self.db_file}"
-
-
-class MysqlDBConfig(BaseMelodieDBConfig):
-    def __init__(self, db_name: str, host: str, user: str, password: str):
-        super().__init__()
-        self.type == "mysql"
-        self.db_name = db_name
-        self.host = host
-        self.user = user
-        self.password = password
-
-    def connection_string(self) -> str:
-        return f"mysql+pymysql://{self.user}:{self.password}@{self.host}/{self.db_name}?charset=utf8mb4"
 
 
 class DBConn:
@@ -175,11 +130,14 @@ class DBConn:
         """
         Clear the database, deleting all tables.
         """
-        logger.info(f"Database contains tables: {self.connection.table_names()}.")
-        table_names = list(self.connection.table_names())
-        for table_name in table_names:
-            self.connection.execute(f"drop table {table_name}")
-        logger.info(f"Database drops tables: {table_names}.")
+        if database_exists(self.connection.url):
+            logger.info(f"Database contains tables: {self.connection.table_names()}.")
+            table_names = list(self.connection.table_names())
+            for table_name in table_names:
+                self.connection.execute(f"drop table {table_name}")
+            logger.info(f"Database drops tables: {table_names}.")
+        else:
+            create_database(self.connection.url)
 
     def write_dataframe(
             self,
@@ -278,8 +236,8 @@ def create_db_conn(config: "Config") -> DBConn:
 
     :return: DBConn object.
     """
-
-    return DBConn(config.project_name, conn_params={"db_path": config.output_folder})
+    return DBConn.from_connection_string(config.database_config.connection_string())
+    # return DBConn(config.project_name, conn_params={"db_path": config.output_folder})
 
 
 def get_sqlite_filename(config: "Config") -> str:

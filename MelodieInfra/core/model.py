@@ -1,21 +1,22 @@
-import logging
-from typing import Optional, Union, Type, List
 
-import pandas as pd
+from .types import Optional, Union, Type, List
 
-from MelodieInfra import create_db_conn, DBConn, MelodieExceptions, show_prettified_warning, show_link
-# from .boost.agent_list import AgentList, BaseAgentContainer, AgentDict
-from MelodieInfra.core import AgentList, BaseAgentContainer, Agent, Environment, Grid, Spot
+# import pandas as pd
+
+# from MelodieInfra import create_db_conn, DBConn, MelodieExceptions, show_prettified_warning, show_link
+from .agent_list import AgentList
+from .agent import Agent
+from .environment import Environment
 # from .boost.grid import Grid, Spot
-from MelodieInfra.config.config import Config
-from .data_collector import DataCollector
+# from MelodieInfra.config.config import Config
+# from .data_collector import DataCollector
 
-from .scenario_manager import Scenario
-from .table_generator import DataFrameGenerator
-from .network import Network, Edge
-from .visualizer import Visualizer
+# from .scenario_manager import Scenario
+# from .table_generator import DataFrameGenerator
+# from .network import Network, Edge
+# from .visualizer import Visualizer
 
-logger = logging.getLogger(__name__)
+# logger = logging.getLogger(__name__)
 
 
 class ModelRunRoutine:
@@ -54,30 +55,16 @@ class ModelRunRoutine:
 
 
 class Model:
-    """
-    The base class for Model. 
-    
-    There are three major methods, ``create()``, ``setup()`` and ``run()``. ``create()`` and then ``setup()`` are called when the model creates,
-    and ``run()`` is called for model running. 
-
-    To build up your own model, inherit this class and override ``create()``, ``setup()`` and ``run()``
-    """
     def __init__(
             self,
             config: "Config",
             scenario: "Scenario",
             run_id_in_scenario: int = 0,
-            visualizer: "Visualizer" = None,
+            visualizer: Visualizer = None,
     ):
-        """
-        :param config: Type ``Melodie.Config``
-        :param scenario: Type ``Melodie.Scenario`` containing model parameters.
-        :param run_id_in_scenario: Current ``run_id`` in the current scenario, an ``int`` from [0, ``number_of_run`` ), and 0 by default. 
-        :param visualizer: ``Visualizer`` instance if needs visualization, ``None`` by default, indicating no need for visualization.
-        """
 
         self.scenario = scenario
-        self.config: "Config" = config
+        self.config = config
 
         self.environment: Optional[Environment] = None
         self.data_collector: Optional[DataCollector] = None
@@ -87,7 +74,7 @@ class Model:
         self.network = None
         self.visualizer: "Visualizer" = visualizer
         self.initialization_queue: List[
-            Union['AgentList', 'Grid', 'Environment', DataCollector, Network]
+            Union[AgentList, Grid, Environment, DataCollector, Network]
         ] = []
 
     def __del__(self):
@@ -173,7 +160,7 @@ class Model:
         """
         if network_cls is None:
             network_cls = Network
-        network = network_cls(model=self, edge_cls=edge_cls)
+        network = network_cls(edge_cls)
         self.initialization_queue.append(network)
         return network
 
@@ -196,7 +183,7 @@ class Model:
             initial_num: int,
             params_df: pd.DataFrame = None,
             container_type: str = "list",
-    ) -> Union[AgentList, 'AgentDict']:
+    ) -> Union[AgentList, AgentDict]:
         """
         Create a container for agents.
 
@@ -206,9 +193,8 @@ class Model:
         :param container_type: a str, "list" or "dict"
         :return: Agent container created
         """
-        from Melodie import AgentList
 
-        agent_container_class: Union[Type[AgentList], Type['AgentDict'], None]
+        agent_container_class: Union[Type[AgentList], Type[AgentDict], None]
         if container_type == "list":
             agent_container_class = AgentList
         elif container_type == "dict":
@@ -228,20 +214,6 @@ class Model:
             )
         self.initialization_queue.append(container)
         return container
-
-    def _check_agent_containers(self):
-        """
-        Check the agent agent_lists in the model.
-        Check list is:
-        - Each agent, no matter which container it was in, should have a unique id.
-
-        :return: None
-        """
-        for prop_name, prop in self.__dict__.items():
-            if isinstance(prop, BaseAgentContainer):
-                all_ids = prop.all_agent_ids()
-                if len(set(all_ids)) < len(all_ids):
-                    raise MelodieExceptions.Agents.AgentIDConflict(prop_name, all_ids)
 
     def run(self):
         """
@@ -289,3 +261,5 @@ class Model:
         self.setup()
         for component_to_init in self.initialization_queue:
             component_to_init._setup()
+
+__all__ = ['Model']

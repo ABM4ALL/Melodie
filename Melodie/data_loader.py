@@ -1,14 +1,18 @@
 import os
-from typing import Optional, Dict, List, Union, Callable, Type
+from typing import Optional, Dict, List, Union, Callable, Type, TYPE_CHECKING
 
-import numpy as np
-import pandas as pd
 import sqlalchemy
 
 from MelodieInfra import DBConn, create_db_conn, MelodieExceptions, Config
+from MelodieTable import Table
 
 from .scenario_manager import Scenario
 from .table_generator import DataFrameGenerator
+
+if TYPE_CHECKING:
+    import pandas as pd
+    import numpy as np
+
 
 class DataFrameInfo:
     """
@@ -17,22 +21,30 @@ class DataFrameInfo:
     df_name: str
     columns: Dict[str, "sqlalchemy.types"]
     file_name: Optional[str] = None
+    engine: str
+
+    FORCE_PANDAS = False  # Force Melodie to use Pandas to load all dataframes.
 
     def __init__(
             self,
             df_name: str,
             columns: Dict[str, "sqlalchemy.types"],
             file_name: Optional[str] = None,
+            engine: str = "melodie-table"
     ):
         """
         :param df_name: Name of dataframe.
         :param columns: A dict, ``column name --> column data type``.
         :param file_name: File name to load this dataframe, None by default. If None, be sure to
             generate the dataframe in the DataLoader.
+        :param engine: The library used to load this table file. Valid values are "pandas" and "melodie-table".
+            However, if ``DataFrameInfo.FORCE_PANDAS`` was ``True``, Melodie will use ``"pandas"`` to load all dataframes.
         """
         self.df_name: str = df_name
         self.columns: Dict[str, "sqlalchemy.types"] = columns
         self.file_name: Optional[str] = file_name
+        assert engine in {"pandas", "melodie-table"}
+        self.engine = engine if not DataFrameInfo.FORCE_PANDAS else "pandas"
 
     def check_column_names(self, columns: List[str]):
         if set(columns) != set(self.columns.keys()):
@@ -47,6 +59,7 @@ class MatrixInfo:
     """
     MatrixInfo provides standard format for input matrices as parameters.
     """
+
     def __init__(
             self,
             mat_name: str,
@@ -69,6 +82,7 @@ class MatrixInfo:
         if issubclass(py_type, int):
             return np.int64
         elif issubclass(py_type, float):
+            return np.float64
             return np.float64
         else:
             raise NotImplementedError(
@@ -141,31 +155,32 @@ class DataLoader:
 
         :return: None
         """
-        table_name = df_info.df_name
-        file_name = df_info.file_name
-        data_types = df_info.columns
-        _, ext = os.path.splitext(file_name)
-        table: Optional[pd.DataFrame]
+        _, ext = os.path.splitext(df_info.file_name)
+        table: Optional["pd.DataFrame"]
 
-        MelodieExceptions.Data.TableNameInvalid(table_name)
-        if ext in {".xls", ".xlsx"}:
-            file_path_abs = os.path.join(self.config.input_folder, file_name)
-            table = pd.read_excel(file_path_abs)
-            df_info.check_column_names(list(table.columns))
+        MelodieExceptions.Data.TableNameInvalid(df_info.df_name)
+        file_path_abs = os.path.join(self.config.input_folder, df_info.file_name)
+        if df_info.engine == "pandas":
+            import pandas
+            if ext in {".xls", ".xlsx"}:
+                table = pandas.read_excel(file_path_abs)
+                df_info.check_column_names(list(table.columns))
+            else:
+                raise NotImplemented(df_info.file_name)
         else:
-            raise NotImplemented(file_name)
+            table = Table.from_file(file_path_abs, df_info.columns)
         if not self.as_sub_worker:
-            DBConn.register_dtypes(table_name, data_types)
+            DBConn.register_dtypes(df_info.df_name, df_info.columns)
             create_db_conn(self.config).write_dataframe(
-                table_name,
+                df_info.df_name,
                 table,
-                data_types=data_types,
+                data_types=df_info.columns,
                 if_exists="replace",
             )
 
-        self.registered_dataframes[table_name] = create_db_conn(
+        self.registered_dataframes[df_info.df_name] = create_db_conn(
             self.config
-        ).read_dataframe(table_name)
+        ).read_dataframe(df_info.df_name)
 
     def load_matrix(self, matrix_info: "MatrixInfo") -> None:
         """

@@ -14,14 +14,18 @@ from typing import (
 )
 
 import pandas as pd
-from sko import GA
+
+
+# from sko import GA
+class GA:
+    pass
+
 
 from MelodieInfra import Config, MelodieExceptions, create_db_conn
 
 from .algorithms import AlgorithmParameters
 from .algorithms.ga import MelodieGA
-from .boost.agent_list import AgentList
-from .boost.basics import Agent
+from MelodieInfra.core import AgentList, Agent
 from .data_loader import DataLoader
 from .model import Model
 from .scenario_manager import Scenario

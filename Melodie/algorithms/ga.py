@@ -1,8 +1,12 @@
 import logging
 
 import numpy as np
-from sko.GA import GA
 
+
+
+# from sko.GA import GA
+class GA:
+    pass
 logger = logging.getLogger(__name__)
 
 

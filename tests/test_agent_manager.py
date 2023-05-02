@@ -3,7 +3,7 @@ import numpy as np
 
 import pandas as pd
 
-from Melodie import Agent, AgentList, GridAgent, AgentDict, NetworkAgent, set_seed
+from Melodie import Agent, AgentList, GridAgent, NetworkAgent, set_seed
 
 from .config import model
 
@@ -31,7 +31,6 @@ def test_repr():
 
 
 def test_agent_manager_filter():
-
     am = AgentList(TestAgentToFilter, model)
     for i in range(10):
         ta = TestAgentToFilter(0)
@@ -89,22 +88,23 @@ def test_add_del_agents():
     al.add()
     assert al[-1].id == 20
     assert len(al) == 20
+    print(al.indices)
     for agent in al:
         assert al.get_agent(agent.id).id == agent.id
     new_agent = TestAgent(100)
     al.add(new_agent, {"id": 1000})
 
 
-def test_add_del_agents_dict():
-    n = 20
-    al = AgentDict(TestAgent, n, model)
-    al.remove(al[10])
-    al.add()
-    assert len(al) == 20
-    for agent in al:
-        assert al.get_agent(agent.id).id == agent.id
-    new_agent = TestAgent(100)
-    al.add(new_agent, {"id": 1000})
+# def test_add_del_agents_dict():
+#     n = 20
+#     al = AgentDict(TestAgent, n, model)
+#     al.remove(al[10])
+#     al.add()
+#     assert len(al) == 20
+#     for agent in al:
+#         assert al.get_agent(agent.id).id == agent.id
+#     new_agent = TestAgent(100)
+#     al.add(new_agent, {"id": 1000})
 
 
 def test_agent_list_iteration():
@@ -162,6 +162,7 @@ def test_grid_agents():
     al = AgentList(GridAgent1, model)
     al.setup_agents(10)
     al.to_list(["x"])
+
 
 def test_random_sample_seed():
     set_seed(5)

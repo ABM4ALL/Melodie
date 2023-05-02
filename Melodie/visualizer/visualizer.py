@@ -16,7 +16,7 @@ from .visualizer_server import create_visualizer_server
 from MelodieInfra.lowcode.params import ParamsManager
 from .vis_agent_series import AgentSeriesManager
 from .vis_charts import ChartManager
-from ..boost.grid import Spot
+from MelodieInfra.core import Spot
 
 if TYPE_CHECKING:
     from Melodie import Scenario, Model, Grid, Network, Agent, AgentList, Simulator

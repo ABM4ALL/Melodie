@@ -6,8 +6,8 @@ from typing import Dict, Set, Union, List, Tuple, Type, TYPE_CHECKING
 import networkx as nx
 import numpy as np
 
-from .boost.basics import Agent
-from .boost.agent_list import AgentList
+from MelodieInfra.core import Agent, AgentList
+
 if TYPE_CHECKING:
     from .model import Model
 logger = logging.getLogger(__name__)
@@ -42,6 +42,7 @@ class Edge:
     
     Edge objects links the agents, and could store custom parameters.
     """
+
     def __init__(
             self,
             category_1: int,
@@ -64,7 +65,7 @@ class Edge:
         self.category_2 = category_2
         self.agent_2_id = agent_2_id
         self.properties: Dict[str, Union[int,
-                                         str, float, bool]] = edge_properties
+        str, float, bool]] = edge_properties
         self.setup()
         self.post_setup()
 
@@ -98,6 +99,7 @@ class Network:
     and provides the relevant functions.
 
     """
+
     def __init__(self, model=None, edge_cls: Type[Edge] = None, directed=False, name='network'):
         """
         :param model: Current model instance.
@@ -115,7 +117,7 @@ class Network:
         self.agent_categories: Dict[int, AgentList] = {}
 
         self.layout_file = os.path.join(
-            model.config.visualizer_tmpdir, name+'_layout.gexf')
+            model.config.visualizer_tmpdir, name + '_layout.gexf')
         self.layout = {}
         self._layout_creator = lambda G: nx.spring_layout(G)
 
@@ -309,7 +311,7 @@ class Network:
             except Exception:
                 import traceback
                 traceback.print_exc()
-        
+
         g = nx.DiGraph()
         for start_node in self.edges.keys():
             for end_node in self.edges[start_node].keys():

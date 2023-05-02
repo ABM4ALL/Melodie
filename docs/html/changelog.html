@@ -14,7 +14,6 @@
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="author" title="About these documents" href="about.html" />
@@ -141,6 +140,10 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="advanced/melodie_error_list.html">Melodie Errors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advanced/datatypes.html">Data Types</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="advanced/datatypes.html#notice">Notice</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="api/_index.html">API Reference</a><ul>
@@ -220,11 +223,11 @@
            <div itemprop="articleBody">
              
   <section id="change-log">
-<h1>Change Log<a class="headerlink" href="#change-log" title="Permalink to this heading"></a></h1>
+<h1>Change Log<a class="headerlink" href="#change-log" title="Permalink to this headline"></a></h1>
 <section id="major-version-0-x">
-<h2>Major Version 0.x<a class="headerlink" href="#major-version-0-x" title="Permalink to this heading"></a></h2>
+<h2>Major Version 0.x<a class="headerlink" href="#major-version-0-x" title="Permalink to this headline"></a></h2>
 <section id="v0-7-0-mar-25-2023">
-<h3>v0.7.0 (Mar. 25, 2023)<a class="headerlink" href="#v0-7-0-mar-25-2023" title="Permalink to this heading"></a></h3>
+<h3>v0.7.0 (Mar. 25, 2023)<a class="headerlink" href="#v0-7-0-mar-25-2023" title="Permalink to this headline"></a></h3>
 <ul class="simple">
 <li><p>Fixed version compatibility problem for sqlalchemy.</p></li>
 <li><p>Fixed numpy data type error mentioned in issue #12, #18.</p></li>
@@ -235,7 +238,7 @@
 </ul>
 </section>
 <section id="v0-6-0-jan-04-2023">
-<h3>v0.6.0 (Jan. 04, 2023)<a class="headerlink" href="#v0-6-0-jan-04-2023" title="Permalink to this heading"></a></h3>
+<h3>v0.6.0 (Jan. 04, 2023)<a class="headerlink" href="#v0-6-0-jan-04-2023" title="Permalink to this headline"></a></h3>
 <ul class="simple">
 <li><p>Modified <code class="docutils literal notranslate"><span class="pre">Calibrator.distance</span></code> method, used <code class="docutils literal notranslate"><span class="pre">model</span></code> instead of <code class="docutils literal notranslate"><span class="pre">environment</span></code> as parameter.</p></li>
 <li><p>Modified parameter names in <code class="docutils literal notranslate"><span class="pre">Trainer.add_agent_training_property</span></code>.</p></li>
@@ -243,7 +246,7 @@
 </ul>
 </section>
 <section id="v0-5-0-dec-17-2022">
-<h3>v0.5.0 (Dec. 17, 2022)<a class="headerlink" href="#v0-5-0-dec-17-2022" title="Permalink to this heading"></a></h3>
+<h3>v0.5.0 (Dec. 17, 2022)<a class="headerlink" href="#v0-5-0-dec-17-2022" title="Permalink to this headline"></a></h3>
 <ul class="simple">
 <li><p>Added visualizer API on <code class="docutils literal notranslate"><span class="pre">Grid</span></code> and <code class="docutils literal notranslate"><span class="pre">Network</span></code></p></li>
 <li><p>Fixed port resource holding bugs in <code class="docutils literal notranslate"><span class="pre">Trainer</span></code></p></li>
@@ -251,19 +254,19 @@
 </ul>
 </section>
 <section id="v0-4-2-dec-15-2022">
-<h3>v0.4.2 (Dec. 15, 2022)<a class="headerlink" href="#v0-4-2-dec-15-2022" title="Permalink to this heading"></a></h3>
+<h3>v0.4.2 (Dec. 15, 2022)<a class="headerlink" href="#v0-4-2-dec-15-2022" title="Permalink to this headline"></a></h3>
 <ul class="simple">
 <li><p>Fixed some errors in the <code class="docutils literal notranslate"><span class="pre">Calibrator</span></code> class, including logging, environment property, multiple paths, column names.</p></li>
 </ul>
 </section>
 <section id="v0-4-1-dec-12-2022">
-<h3>v0.4.1 (Dec. 12, 2022)<a class="headerlink" href="#v0-4-1-dec-12-2022" title="Permalink to this heading"></a></h3>
+<h3>v0.4.1 (Dec. 12, 2022)<a class="headerlink" href="#v0-4-1-dec-12-2022" title="Permalink to this headline"></a></h3>
 <ul class="simple">
 <li><p>Documentation finished and the project is released!</p></li>
 </ul>
 </section>
 <section id="v0-4-0-nov-15-2022">
-<h3>v0.4.0 (Nov. 15, 2022)<a class="headerlink" href="#v0-4-0-nov-15-2022" title="Permalink to this heading"></a></h3>
+<h3>v0.4.0 (Nov. 15, 2022)<a class="headerlink" href="#v0-4-0-nov-15-2022" title="Permalink to this headline"></a></h3>
 <ul class="simple">
 <li><p>Separated the MelodieInfra package containing infrastructure.</p></li>
 <li><p>Added HTTP Get support in the websocket protocol.</p></li>
@@ -271,33 +274,33 @@
 </ul>
 </section>
 <section id="v0-3-0-oct-28-2022">
-<h3>v0.3.0 (Oct. 28, 2022)<a class="headerlink" href="#v0-3-0-oct-28-2022" title="Permalink to this heading"></a></h3>
+<h3>v0.3.0 (Oct. 28, 2022)<a class="headerlink" href="#v0-3-0-oct-28-2022" title="Permalink to this headline"></a></h3>
 <ul class="simple">
 <li><p>Batch load API for <cite>DataframeInfo</cite>.</p></li>
 <li><p>Logger API.</p></li>
 </ul>
 </section>
 <section id="v0-2-0-oct-24-2022">
-<h3>v0.2.0 (Oct. 24, 2022)<a class="headerlink" href="#v0-2-0-oct-24-2022" title="Permalink to this heading"></a></h3>
+<h3>v0.2.0 (Oct. 24, 2022)<a class="headerlink" href="#v0-2-0-oct-24-2022" title="Permalink to this headline"></a></h3>
 <ul class="simple">
 <li><p>DB module supported reading from specific directories.</p></li>
 <li><p>Added <cite>filter</cite> method to select agents of given conditions.</p></li>
 </ul>
 </section>
 <section id="v0-1-1-aug-23-2022">
-<h3>v0.1.1 (Aug. 23, 2022)<a class="headerlink" href="#v0-1-1-aug-23-2022" title="Permalink to this heading"></a></h3>
+<h3>v0.1.1 (Aug. 23, 2022)<a class="headerlink" href="#v0-1-1-aug-23-2022" title="Permalink to this headline"></a></h3>
 <ul class="simple">
 <li><p>Added specific description for assertion error in <cite>Grid.set_spot_property</cite>.</p></li>
 </ul>
 </section>
 <section id="v0-1-0-jul-22-2022">
-<h3>v0.1.0 (Jul. 22, 2022)<a class="headerlink" href="#v0-1-0-jul-22-2022" title="Permalink to this heading"></a></h3>
+<h3>v0.1.0 (Jul. 22, 2022)<a class="headerlink" href="#v0-1-0-jul-22-2022" title="Permalink to this headline"></a></h3>
 <ul class="simple">
 <li><p>first version, all main modules created.</p></li>
 </ul>
 </section>
 <section id="start-may-10-2021">
-<h3>Start (May. 10, 2021)<a class="headerlink" href="#start-may-10-2021" title="Permalink to this heading"></a></h3>
+<h3>Start (May. 10, 2021)<a class="headerlink" href="#start-may-10-2021" title="Permalink to this headline"></a></h3>
 <ul class="simple">
 <li><p>Start of the journey.</p></li>
 </ul>

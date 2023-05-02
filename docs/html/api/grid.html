@@ -14,7 +14,6 @@
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="author" title="About these documents" href="../about.html" />
@@ -141,6 +140,10 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../advanced/melodie_error_list.html">Melodie Errors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../advanced/datatypes.html">Data Types</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../advanced/datatypes.html#notice">Notice</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1 current"><a class="reference internal" href="_index.html">API Reference</a><ul class="current">
@@ -221,11 +224,11 @@
            <div itemprop="articleBody">
              
   <section id="grid">
-<h1>Grid<a class="headerlink" href="#grid" title="Permalink to this heading"></a></h1>
+<h1>Grid<a class="headerlink" href="#grid" title="Permalink to this headline"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="Melodie.boost.grid.GridItem">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Melodie.boost.grid.</span></span><span class="sig-name descname"><span class="pre">GridItem</span></span><a class="headerlink" href="#Melodie.boost.grid.GridItem" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="agent.html#Melodie.boost.basics.Agent" title="Melodie.boost.basics.Agent"><code class="xref py py-class docutils literal notranslate"><span class="pre">Agent</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="agent.html#Melodie.boost.basics.Agent" title="Melodie.boost.basics.Agent"><code class="xref py py-class docutils literal notranslate"><span class="pre">Melodie.boost.basics.Agent</span></code></a></p>
 <p>Base class for GridAgent and Spot, an agent with x and y coordinate.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -273,7 +276,7 @@
 <dl class="py class">
 <dt class="sig sig-object py" id="Melodie.boost.grid.GridAgent">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Melodie.boost.grid.</span></span><span class="sig-name descname"><span class="pre">GridAgent</span></span><a class="headerlink" href="#Melodie.boost.grid.GridAgent" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="#Melodie.boost.grid.GridItem" title="Melodie.boost.grid.GridItem"><code class="xref py py-class docutils literal notranslate"><span class="pre">GridItem</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#Melodie.boost.grid.GridItem" title="Melodie.boost.grid.GridItem"><code class="xref py py-class docutils literal notranslate"><span class="pre">Melodie.boost.grid.GridItem</span></code></a></p>
 <p>Base class for custom agents on grid. Different classes of custom <code class="docutils literal notranslate"><span class="pre">GridAgent</span></code> should
 have different value of <code class="docutils literal notranslate"><span class="pre">category</span></code>.</p>
 <dl class="field-list simple">
@@ -321,7 +324,7 @@ have different value of <code class="docutils literal notranslate"><span class="
 <dl class="py class">
 <dt class="sig sig-object py" id="Melodie.boost.grid.Spot">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Melodie.boost.grid.</span></span><span class="sig-name descname"><span class="pre">Spot</span></span><a class="headerlink" href="#Melodie.boost.grid.Spot" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="#Melodie.boost.grid.GridItem" title="Melodie.boost.grid.GridItem"><code class="xref py py-class docutils literal notranslate"><span class="pre">GridItem</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#Melodie.boost.grid.GridItem" title="Melodie.boost.grid.GridItem"><code class="xref py py-class docutils literal notranslate"><span class="pre">Melodie.boost.grid.GridItem</span></code></a></p>
 <p>Base class for spots.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -615,7 +618,7 @@ be raised when attempting to place multiple agents on one spot.
 
 <dl class="py method">
 <dt class="sig sig-object py" id="Melodie.boost.grid.Grid.to_2d_array">
-<span class="sig-name descname"><span class="pre">to_2d_array</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">attr_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="headerlink" href="#Melodie.boost.grid.Grid.to_2d_array" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">to_2d_array</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">attr_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">numpy.ndarray</span></span></span><a class="headerlink" href="#Melodie.boost.grid.Grid.to_2d_array" title="Permalink to this definition"></a></dt>
 <dd><p>Collect property of each spot and write the property value into an 2d np.array.</p>
 <p>Notice:</p>
 <ul class="simple">

@@ -14,7 +14,6 @@
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="author" title="About these documents" href="../about.html" />
@@ -141,6 +140,10 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../advanced/melodie_error_list.html">Melodie Errors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../advanced/datatypes.html">Data Types</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../advanced/datatypes.html#notice">Notice</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1 current"><a class="reference internal" href="_index.html">API Reference</a><ul class="current">
@@ -221,7 +224,7 @@
            <div itemprop="articleBody">
              
   <section id="agentlist">
-<h1>AgentList<a class="headerlink" href="#agentlist" title="Permalink to this heading"></a></h1>
+<h1>AgentList<a class="headerlink" href="#agentlist" title="Permalink to this headline"></a></h1>
 <span class="target" id="module-Melodie.boost.agent_list"></span><dl class="py class">
 <dt class="sig sig-object py" id="Melodie.boost.agent_list.BaseAgentContainer">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Melodie.boost.agent_list.</span></span><span class="sig-name descname"><span class="pre">BaseAgentContainer</span></span><a class="headerlink" href="#Melodie.boost.agent_list.BaseAgentContainer" title="Permalink to this definition"></a></dt>
@@ -267,7 +270,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="Melodie.boost.agent_list.BaseAgentContainer.type_check">
-<span class="sig-name descname"><span class="pre">type_check</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">param_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agent_params_df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.boost.agent_list.BaseAgentContainer.type_check" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">type_check</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">param_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agent_params_df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.boost.agent_list.BaseAgentContainer.type_check" title="Permalink to this definition"></a></dt>
 <dd><p>Check if the parameters in the data frame has corresponding type with param_name</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -404,7 +407,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="Melodie.boost.agent_list.AgentList.set_properties">
-<span class="sig-name descname"><span class="pre">set_properties</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">props_df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.boost.agent_list.AgentList.set_properties" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">set_properties</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">props_df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.boost.agent_list.AgentList.set_properties" title="Permalink to this definition"></a></dt>
 <dd><p>Extract properties from a dataframe, and Each row in the dataframe represents the property of an agent.</p>
 <p>For example, if there are 100 agents with <code class="docutils literal notranslate"><span class="pre">id</span></code> from 0 to 99, and each agent contains properties <code class="docutils literal notranslate"><span class="pre">a:</span> <span class="pre">int</span></code> and <code class="docutils literal notranslate"><span class="pre">b:</span> <span class="pre">float</span></code>,
 the <code class="docutils literal notranslate"><span class="pre">props_df</span></code> could be like this:</p>
@@ -416,12 +419,12 @@ the <code class="docutils literal notranslate"><span class="pre">props_df</span>
 </pre></div>
 </div>
 <p>The output is(df has 100 rows):</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>    id  a         b
-<span class="m">0</span>    <span class="m">0</span>  <span class="m">2</span>  <span class="m">0</span>.207738
-<span class="m">1</span>    <span class="m">1</span>  <span class="m">2</span>  <span class="m">0</span>.236711
-<span class="m">2</span>    <span class="m">2</span>  <span class="m">2</span>  <span class="m">0</span>.869793
-<span class="m">3</span>    <span class="m">3</span>  <span class="m">2</span>  <span class="m">0</span>.797763
-<span class="m">4</span>    <span class="m">4</span>  <span class="m">2</span>  <span class="m">0</span>.900024
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="w">    </span>id<span class="w">  </span>a<span class="w">         </span>b
+<span class="m">0</span><span class="w">    </span><span class="m">0</span><span class="w">  </span><span class="m">2</span><span class="w">  </span><span class="m">0</span>.207738
+<span class="m">1</span><span class="w">    </span><span class="m">1</span><span class="w">  </span><span class="m">2</span><span class="w">  </span><span class="m">0</span>.236711
+<span class="m">2</span><span class="w">    </span><span class="m">2</span><span class="w">  </span><span class="m">2</span><span class="w">  </span><span class="m">0</span>.869793
+<span class="m">3</span><span class="w">    </span><span class="m">3</span><span class="w">  </span><span class="m">2</span><span class="w">  </span><span class="m">0</span>.797763
+<span class="m">4</span><span class="w">    </span><span class="m">4</span><span class="w">  </span><span class="m">2</span><span class="w">  </span><span class="m">0</span>.900024
 </pre></div>
 </div>
 <p>For each scenario, same parameter values inside props_df will be assigned to each agents.
@@ -429,13 +432,13 @@ As an instance, properties <code class="docutils literal notranslate"><span clas
 <p>To set different initial parameters for different scenarios, please add a new column <code class="docutils literal notranslate"><span class="pre">id_scenario</span></code>.
 An example of dataframe structure is shown below, and in this case, <code class="docutils literal notranslate"><span class="pre">b</span></code> of <code class="docutils literal notranslate"><span class="pre">agent</span> <span class="pre">0</span></code> in <code class="docutils literal notranslate"><span class="pre">scenario</span> <span class="pre">0</span></code> is <code class="docutils literal notranslate"><span class="pre">0.207738</span></code>,
 while in <code class="docutils literal notranslate"><span class="pre">scenario</span> <span class="pre">1</span></code> it was <code class="docutils literal notranslate"><span class="pre">0.778997</span></code></p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>    id_scenario  id  a         b
-<span class="m">0</span>             <span class="m">0</span>   <span class="m">0</span>  <span class="m">2</span>  <span class="m">0</span>.207738
-<span class="m">1</span>             <span class="m">0</span>   <span class="m">1</span>  <span class="m">2</span>  <span class="m">0</span>.236711
-<span class="m">2</span>             <span class="m">0</span>   <span class="m">2</span>  <span class="m">2</span>  <span class="m">0</span>.869793
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="w">    </span>id_scenario<span class="w">  </span>id<span class="w">  </span>a<span class="w">         </span>b
+<span class="m">0</span><span class="w">             </span><span class="m">0</span><span class="w">   </span><span class="m">0</span><span class="w">  </span><span class="m">2</span><span class="w">  </span><span class="m">0</span>.207738
+<span class="m">1</span><span class="w">             </span><span class="m">0</span><span class="w">   </span><span class="m">1</span><span class="w">  </span><span class="m">2</span><span class="w">  </span><span class="m">0</span>.236711
+<span class="m">2</span><span class="w">             </span><span class="m">0</span><span class="w">   </span><span class="m">2</span><span class="w">  </span><span class="m">2</span><span class="w">  </span><span class="m">0</span>.869793
 ......
-<span class="m">100</span>           <span class="m">1</span>   <span class="m">0</span>  <span class="m">2</span>  <span class="m">0</span>.778997
-<span class="m">101</span>           <span class="m">1</span>   <span class="m">1</span>  <span class="m">2</span>  <span class="m">0</span>.450674
+<span class="m">100</span><span class="w">           </span><span class="m">1</span><span class="w">   </span><span class="m">0</span><span class="w">  </span><span class="m">2</span><span class="w">  </span><span class="m">0</span>.778997
+<span class="m">101</span><span class="w">           </span><span class="m">1</span><span class="w">   </span><span class="m">1</span><span class="w">  </span><span class="m">2</span><span class="w">  </span><span class="m">0</span>.450674
 </pre></div>
 </div>
 <dl class="field-list simple">
@@ -457,7 +460,7 @@ while in <code class="docutils literal notranslate"><span class="pre">scenario</
 
 <dl class="py method">
 <dt class="sig sig-object py" id="Melodie.boost.agent_list.AgentList.setup_agents">
-<span class="sig-name descname"><span class="pre">setup_agents</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agents_num</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params_df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">DataFrame</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.boost.agent_list.AgentList.setup_agents" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">setup_agents</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agents_num</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params_df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">pandas.core.frame.DataFrame</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.boost.agent_list.AgentList.setup_agents" title="Permalink to this definition"></a></dt>
 <dd><p>Setup agents with specific number, and initialize their property by a dataframe if a dataframe is passed.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -470,7 +473,7 @@ while in <code class="docutils literal notranslate"><span class="pre">scenario</
 
 <dl class="py method">
 <dt class="sig sig-object py" id="Melodie.boost.agent_list.AgentList.to_dataframe">
-<span class="sig-name descname"><span class="pre">to_dataframe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">column_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="headerlink" href="#Melodie.boost.agent_list.AgentList.to_dataframe" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">to_dataframe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">column_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">pandas.core.frame.DataFrame</span></span></span><a class="headerlink" href="#Melodie.boost.agent_list.AgentList.to_dataframe" title="Permalink to this definition"></a></dt>
 <dd><p>Store all agent values to dataframe.
 This method is always called by the data collector.</p>
 <dl class="field-list simple">
