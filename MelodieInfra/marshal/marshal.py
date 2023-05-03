@@ -1,7 +1,14 @@
 import datetime
 
-from MelodieInfra.jsonobject import StringProperty, BooleanProperty, DateTimeProperty, ListProperty, unicode, JsonObject, \
-    DefaultProperty
+from MelodieInfra.jsonobject import (
+    StringProperty,
+    BooleanProperty,
+    DateTimeProperty,
+    ListProperty,
+    unicode,
+    JsonObject,
+    DefaultProperty,
+)
 
 # https://github.com/dimagi/jsonobject
 class User(JsonObject):
@@ -13,12 +20,12 @@ class User(JsonObject):
 
 
 user1 = User(
-    name='John Doe',
-    user_name='jdoe',
+    name="John Doe",
+    user_name="jdoe",
     date_joined=datetime.datetime.utcnow(),
-    tags=['generic', 'anonymous']
+    tags=["generic", "anonymous"],
 )
 
 print(user1.to_json())
-user2 = User({'userName': 'aaaaa'})
+user2 = User({"userName": "aaaaa"})
 print(user2.to_json())

@@ -20,8 +20,15 @@ from sphinx.builders.html import StandaloneHTMLBuilder
 project = "Melodie"
 copyright = "2021-2022, ABM4ALL"
 author = "Songmin Yu, Zhanyi Hou"
-with open(os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'Melodie', 'version.txt'),
-          encoding='utf8', errors='replace') as f:
+with open(
+    os.path.join(
+        os.path.dirname(os.path.dirname(os.path.dirname(__file__))),
+        "Melodie",
+        "version.txt",
+    ),
+    encoding="utf8",
+    errors="replace",
+) as f:
     release = f.read()
 
 # -- General configuration ---------------------------------------------------
@@ -85,7 +92,7 @@ autodoc_member_order = "bysource"
 autoclass_content = "both"
 # add_module_names = False
 
-autodoc_type_aliases = {'MelodieInfra.config.config.Config': 'Config'}
+autodoc_type_aliases = {"MelodieInfra.config.config.Config": "Config"}
 # typehints_use_signature = True
 # # typehints_use_signature_return = True
 

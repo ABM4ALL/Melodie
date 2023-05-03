@@ -5,10 +5,12 @@ from random import randint
 import numpy as np
 
 
-def iterable(a): return a
+def iterable(a):
+    return a
 
 
-def new(a): return a
+def new(a):
+    return a
 
 
 def _random():

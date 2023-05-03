@@ -16,8 +16,9 @@ logger = logging.getLogger(__name__)
 class NetworkAgent(Agent):
     """
     Base Class for ``Agent`` s connected with ``Network``.
-    
+
     """
+
     id: int
     category: int
     network: "Network"
@@ -39,17 +40,17 @@ class NetworkAgent(Agent):
 class Edge:
     """
     Base Class for ``Edges`` s on the ``Network``.
-    
+
     Edge objects links the agents, and could store custom parameters.
     """
 
     def __init__(
-            self,
-            category_1: int,
-            agent_1_id: int,
-            category_2: int,
-            agent_2_id: int,
-            edge_properties: Dict[str, Union[int, str, float, bool]],
+        self,
+        category_1: int,
+        agent_1_id: int,
+        category_2: int,
+        agent_2_id: int,
+        edge_properties: Dict[str, Union[int, str, float, bool]],
     ):
         """
 
@@ -64,8 +65,7 @@ class Edge:
         self.agent_1_id = agent_1_id
         self.category_2 = category_2
         self.agent_2_id = agent_2_id
-        self.properties: Dict[str, Union[int,
-        str, float, bool]] = edge_properties
+        self.properties: Dict[str, Union[int, str, float, bool]] = edge_properties
         self.setup()
         self.post_setup()
 
@@ -100,13 +100,15 @@ class Network:
 
     """
 
-    def __init__(self, model=None, edge_cls: Type[Edge] = None, directed=False, name='network'):
+    def __init__(
+        self, model=None, edge_cls: Type[Edge] = None, directed=False, name="network"
+    ):
         """
         :param model: Current model instance.
         :param edge_cls: Class of Edges in this Network.
         :param directed: If this network is directed, else it is undirected.
         :param name: The name for this network, used in saving and reading the layout file.
-        
+
         """
         self.model: "Model" = model
         self.simple = True
@@ -117,7 +119,8 @@ class Network:
         self.agent_categories: Dict[int, AgentList] = {}
 
         self.layout_file = os.path.join(
-            model.config.visualizer_tmpdir, name + '_layout.gexf')
+            model.config.visualizer_tmpdir, name + "_layout.gexf"
+        )
         self.layout = {}
         self._layout_creator = lambda G: nx.spring_layout(G)
 
@@ -174,7 +177,7 @@ class Network:
             self.edges[target_id].pop(source_id)
 
     def _get_neighbor_positions(
-            self, agent_id: int, category: int
+        self, agent_id: int, category: int
     ) -> List[Tuple[int, int]]:
         neighbor_ids = self.edges[(category, agent_id)]
         if neighbor_ids is None:
@@ -227,12 +230,12 @@ class Network:
         self._add_agent(agent.category, agent.id)
 
     def create_edge(
-            self,
-            agent_1_id: int,
-            category_1: int,
-            agent_2_id: int,
-            category_2: int,
-            **edge_properties,
+        self,
+        agent_1_id: int,
+        category_1: int,
+        agent_2_id: int,
+        category_2: int,
+        **edge_properties,
     ):
         """
         Create a new edge from one agent to another agent.
@@ -275,7 +278,9 @@ class Network:
             edges.append(edge)
         return edges
 
-    def setup_layout_creator(self, layout_creator: "Callable[[nx.Graph], Dict[NodeType, np.ndarray]]"):
+    def setup_layout_creator(
+        self, layout_creator: "Callable[[nx.Graph], Dict[NodeType, np.ndarray]]"
+    ):
         """
         Set the creator function to create network layout.
 
@@ -304,12 +309,13 @@ class Network:
                 G = nx.read_gexf(self.layout_file, node_type=ast.literal_eval)
                 positions = {}
                 for node in G.nodes:
-                    pos = G.nodes[node]['viz']['position']
-                    positions[node] = np.array([pos['x'], pos['y']])
+                    pos = G.nodes[node]["viz"]["position"]
+                    positions[node] = np.array([pos["x"], pos["y"]])
                 self.layout = positions
                 return
             except Exception:
                 import traceback
+
                 traceback.print_exc()
 
         g = nx.DiGraph()
@@ -318,13 +324,7 @@ class Network:
                 g.add_edge(start_node, end_node)
         layout = self._layout_creator(g)
         for node, pos in layout.items():
-            g.nodes[node]['viz'] = {
-                "position": {
-                    "x": pos[0],
-                    "y": pos[1],
-                    "z": 0
-                }
-            }
+            g.nodes[node]["viz"] = {"position": {"x": pos[0], "y": pos[1], "z": 0}}
         nx.write_gexf(g, self.layout_file)
         self.layout = layout
 
@@ -341,10 +341,10 @@ class Network:
         return self.layout[(agent_category, agent_id)] * 1000
 
     def setup_agent_connections(
-            self,
-            agent_lists: List[AgentList],
-            network_type: str,
-            network_params: dict = None,
+        self,
+        agent_lists: List[AgentList],
+        network_type: str,
+        network_params: dict = None,
     ):
         """
         Set up the connection between agents.

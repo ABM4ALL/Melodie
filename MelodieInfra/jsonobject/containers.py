@@ -11,15 +11,11 @@ class JsonArray(list):
 
     def __init__(self, _obj, wrapper, type_config):
         super(JsonArray, self).__init__()
-        self._obj = check_type(_obj, list,
-                               'JsonArray must wrap a list or None')
+        self._obj = check_type(_obj, list, "JsonArray must wrap a list or None")
 
         assert type_config is not None
         self._type_config = type_config
-        self._wrapper = (
-            wrapper or
-            DefaultProperty(type_config=self._type_config)
-        )
+        self._wrapper = wrapper or DefaultProperty(type_config=self._type_config)
         for item in self._obj:
             super(JsonArray, self).append(self._wrapper.wrap(item))
 
@@ -61,9 +57,7 @@ class JsonArray(list):
 
     def extend(self, wrapped_list):
         if wrapped_list:
-            wrapped_list, unwrapped_list = zip(
-                *map(self._wrapper.unwrap, wrapped_list)
-            )
+            wrapped_list, unwrapped_list = zip(*map(self._wrapper.unwrap, wrapped_list))
         else:
             unwrapped_list = []
         self._obj.extend(unwrapped_list)
@@ -134,16 +128,12 @@ class JsonArray(list):
 
 
 class JsonDict(SimpleDict):
-
     def __init__(self, _obj=None, wrapper=None, type_config=None):
         super(JsonDict, self).__init__()
-        self._obj = check_type(_obj, dict, 'JsonDict must wrap a dict or None')
+        self._obj = check_type(_obj, dict, "JsonDict must wrap a dict or None")
         assert type_config is not None
         self._type_config = type_config
-        self._wrapper = (
-            wrapper or
-            DefaultProperty(type_config=self._type_config)
-        )
+        self._wrapper = wrapper or DefaultProperty(type_config=self._type_config)
         for key, value in self._obj.items():
             self[key] = self.__wrap(key, value)
 
@@ -180,13 +170,10 @@ class JsonSet(set):
         super(JsonSet, self).__init__()
         if isinstance(_obj, set):
             _obj = list(_obj)
-        self._obj = check_type(_obj, list, 'JsonSet must wrap a list or None')
+        self._obj = check_type(_obj, list, "JsonSet must wrap a list or None")
         assert type_config is not None
         self._type_config = type_config
-        self._wrapper = (
-            wrapper or
-            DefaultProperty(type_config=self._type_config)
-        )
+        self._wrapper = wrapper or DefaultProperty(type_config=self._type_config)
         for item in self._obj:
             super(JsonSet, self).add(self._wrapper.wrap(item))
 

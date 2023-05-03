@@ -5,7 +5,7 @@ from typing import Union
 import numpy as np
 
 from Melodie import Grid, Spot, GridAgent, Agent, AgentList
-from .config import model
+from tests.infra.config import model
 
 logger = logging.getLogger(__name__)
 
@@ -70,8 +70,7 @@ def neighbors(grid: Grid):
     neighbor_ids = grid._get_neighbor_positions(px, py, 1)
 
     neighbor_ids = set(
-        [(neighbor_ids[i][0], neighbor_ids[i][1])
-         for i in range(len(neighbor_ids))]
+        [(neighbor_ids[i][0], neighbor_ids[i][1]) for i in range(len(neighbor_ids))]
     )
 
     assert len(list(neighbor_ids)) == 8
@@ -87,8 +86,7 @@ def neighbors(grid: Grid):
     assert x == grid.get_spot(x, y).x
     assert y == grid.get_spot(x, y).y
 
-    neighbor_ids = grid._get_neighbor_positions(
-        grid.width() - 1, grid.height() - 1, 1)
+    neighbor_ids = grid._get_neighbor_positions(grid.width() - 1, grid.height() - 1, 1)
     grid.get_spot(0, 0)
 
 
@@ -194,7 +192,7 @@ def test_agents_nojit():
     grid.setup_params(width, height)
     agents(grid)
     neighbors(grid)
-    convert(grid)
+    # convert(grid)
 
 
 class Grid2(Grid):

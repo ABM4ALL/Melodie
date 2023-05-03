@@ -13,15 +13,7 @@ from typing import (
     cast,
 )
 
-import pandas as pd
-
-
-# from sko import GA
-class GA:
-    pass
-
-
-from MelodieInfra import Config, MelodieExceptions, create_db_conn
+from MelodieInfra import Config, MelodieExceptions, create_db_conn, pd
 
 from .algorithms import AlgorithmParameters
 from .algorithms.ga import MelodieGA
@@ -37,14 +29,14 @@ logger = logging.getLogger(__name__)
 
 class GATrainerParams(AlgorithmParameters):
     def __init__(
-            self,
-            id: int,
-            path_num: int,
-            generation_num: int,
-            strategy_population: int,
-            mutation_prob: float,
-            strategy_param_code_length: int,
-            **kw,
+        self,
+        id: int,
+        path_num: int,
+        generation_num: int,
+        strategy_population: int,
+        mutation_prob: float,
+        strategy_param_code_length: int,
+        **kw,
     ):
         super().__init__(id, path_num)
         self.generation_num = generation_num
@@ -55,7 +47,7 @@ class GATrainerParams(AlgorithmParameters):
 
     @staticmethod
     def from_dataframe_record(
-            record: Dict[str, Union[int, float]]
+        record: Dict[str, Union[int, float]]
     ) -> "GATrainerParams":
         s = GATrainerParams(
             record["id"],
@@ -143,19 +135,19 @@ class TargetFcnCache:
         self.current_id_chromosome = -1
 
     def lookup_agent_target_value(
-            self, agent_id: int, container_name: str, generation: int, id_chromosome: int
+        self, agent_id: int, container_name: str, generation: int, id_chromosome: int
     ):
         return self.target_fcn_record[(generation, id_chromosome)][
             (agent_id, container_name)
         ]
 
     def set_agent_target_value(
-            self,
-            agent_id: int,
-            container_name: str,
-            value: float,
-            generation: int,
-            id_chromosome: int,
+        self,
+        agent_id: int,
+        container_name: str,
+        value: float,
+        generation: int,
+        id_chromosome: int,
     ):
         # self.current_target_fcn_value[(agent_id, container_name)] = value
         if (generation, id_chromosome) not in self.target_fcn_record:
@@ -165,7 +157,7 @@ class TargetFcnCache:
         ] = value
 
     def best_value(
-            self, chromosome_num: int, generation: int, agent_id: int, agent_category: int
+        self, chromosome_num: int, generation: int, agent_id: int, agent_category: int
     ):
         values = [
             self.target_fcn_record[(generation, id_chromosome)][
@@ -184,12 +176,12 @@ class GATrainerAlgorithm:
     """
 
     def __init__(
-            self, params: GATrainerParams, manager: "Trainer" = None, processors=1
+        self, params: GATrainerParams, manager: "Trainer" = None, processors=1
     ):
         self.manager = manager
         self.params = params
         self.chromosomes = 20
-        self.algorithms_dict: Dict[Tuple[int, str], Union[GA]] = {}
+        self.algorithms_dict: Dict[Tuple[int, str], Union["GA"]] = {}
 
         self.target_fcn_cache = TargetFcnCache()
         self.agent_container_getters: Dict[str, Callable[[Model], AgentList]] = {}
@@ -234,11 +226,11 @@ class GATrainerAlgorithm:
         self.parallel_manager.close()
 
     def setup_agent_locations(
-            self,
-            container_name: str,
-            param_names: List[str],
-            recorded_properties: List[str],
-            agent_id_list: List[int],
+        self,
+        container_name: str,
+        param_names: List[str],
+        recorded_properties: List[str],
+        agent_id_list: List[int],
     ):
         assert container_name not in self.agent_container_getters
         self.agent_container_getters[container_name] = lambda model: getattr(
@@ -283,10 +275,10 @@ class GATrainerAlgorithm:
         return params
 
     def target_function_to_cache(
-            self,
-            agent_target_function_values: Dict[str, List[Dict[str, Any]]],
-            generation: int,
-            id_chromosome: int,
+        self,
+        agent_target_function_values: Dict[str, List[Dict[str, Any]]],
+        generation: int,
+        id_chromosome: int,
     ):
         """
         Extract the value of target functions from Model, and write them into cache.
@@ -294,8 +286,8 @@ class GATrainerAlgorithm:
         :return:
         """
         for (
-                container_category,
-                container_getter,
+            container_category,
+            container_getter,
         ) in self.agent_container_getters.items():
             agent_props_list = agent_target_function_values[container_category]
             for agent_props in agent_props_list:
@@ -308,7 +300,7 @@ class GATrainerAlgorithm:
                 )
 
     def generate_target_function(
-            self, agent_id: int, container_name: str
+        self, agent_id: int, container_name: str
     ) -> Callable[[], float]:
         def f(*args):
             self._chromosome_counter += 1
@@ -323,10 +315,10 @@ class GATrainerAlgorithm:
         return f
 
     def record_agent_properties(
-            self,
-            agent_data: Dict[str, List[Dict[str, Any]]],
-            env_data: Dict[str, Any],
-            meta: GATrainerAlgorithmMeta,
+        self,
+        agent_data: Dict[str, List[Dict[str, Any]]],
+        env_data: Dict[str, Any],
+        meta: GATrainerAlgorithmMeta,
     ):
         """
         Record the property of each agent in the current chromosome.
@@ -341,8 +333,8 @@ class GATrainerAlgorithm:
         meta_dict = meta.to_dict(public_only=True)
 
         for (
-                container_name,
-                agent_container_getter,
+            container_name,
+            agent_container_getter,
         ) in self.agent_container_getters.items():
             agent_records[container_name] = []
             data = agent_data[container_name]
@@ -368,10 +360,10 @@ class GATrainerAlgorithm:
         return agent_records, env_record
 
     def calc_cov_df(
-            self,
-            agent_container_df_dict: Dict[str, pd.DataFrame],
-            env_df: pd.DataFrame,
-            meta,
+        self,
+        agent_container_df_dict: Dict[str, pd.DataFrame],
+        env_df: pd.DataFrame,
+        meta,
     ):
         """
         Calculate the coefficient of variation
@@ -416,7 +408,9 @@ class GATrainerAlgorithm:
             cov = env_df[prop_name].std() / env_df[prop_name].mean()
             env_record.update({prop_name + "_mean": mean, prop_name + "_cov": cov})
         create_db_conn(self.manager.config).write_dataframe(
-            "environment_trainer_result_cov", pd.DataFrame([env_record]), if_exists="append"
+            "environment_trainer_result_cov",
+            pd.DataFrame([env_record]),
+            if_exists="append",
         )
 
     def pre_check(self, meta):
@@ -424,10 +418,12 @@ class GATrainerAlgorithm:
         Check at the beginning of run()
         :return:
         """
-        logger.info(f"""Algorithm will run with:
+        logger.info(
+            f"""Algorithm will run with:
         Meta value: {meta}
         Recording environment parameters: {self.recorded_env_properties}
-        Recording Agent agent_lists: {self.recorded_agent_properties}\n""")
+        Recording Agent agent_lists: {self.recorded_agent_properties}\n"""
+        )
         # print("Algorithm will run with:")
         # print("    Meta value", meta)
         # print("    Recording environment parameters: ", self.recorded_env_properties)
@@ -491,11 +487,11 @@ class GATrainerAlgorithm:
 
 class RelatedAgentContainerModel:
     def __init__(
-            self,
-            container_name: str,
-            used_properties: List[str],
-            recorded_properties: List[str],
-            agent_ids: Optional[Callable[[Scenario], List[int]]] = None,
+        self,
+        container_name: str,
+        used_properties: List[str],
+        recorded_properties: List[str],
+        agent_ids: Optional[Callable[[Scenario], List[int]]] = None,
     ):
         self.container_name = container_name
         self.used_properties = used_properties
@@ -514,10 +510,10 @@ class AgentContainerManager:
         self.agent_containers: List[RelatedAgentContainerModel] = []
 
     def add_container(
-            self,
-            container_name: str,
-            used_properties: List[str],
-            agent_ids: Optional[Callable[[Scenario], List[int]]],
+        self,
+        container_name: str,
+        used_properties: List[str],
+        agent_ids: Optional[Callable[[Scenario], List[int]]],
     ):
         """
         Add a container used in trainer.
@@ -533,7 +529,7 @@ class AgentContainerManager:
         )
 
     def get_agent_container(
-            self, agent_container_name: str
+        self, agent_container_name: str
     ) -> RelatedAgentContainerModel:
         for agent_container_model in self.agent_containers:
             if agent_container_model.container_name == agent_container_name:
@@ -547,12 +543,12 @@ class Trainer(BaseModellingManager):
     """
 
     def __init__(
-            self,
-            config: "Config",
-            scenario_cls: "Optional[Type[Scenario]]",
-            model_cls: "Optional[Type[Model]]",
-            data_loader_cls: "Optional[Type[DataLoader]]",
-            processors: int = 1,
+        self,
+        config: "Config",
+        scenario_cls: "Optional[Type[Scenario]]",
+        model_cls: "Optional[Type[Model]]",
+        data_loader_cls: "Optional[Type[DataLoader]]",
+        processors: int = 1,
     ):
         """
         :param config: Config instance for current project.
@@ -588,10 +584,10 @@ class Trainer(BaseModellingManager):
         self.processors = processors
 
     def add_agent_training_property(
-            self,
-            agent_list_name: str,
-            training_attributes: List[str],
-            agent_ids: Callable[[Scenario], List[int]]
+        self,
+        agent_list_name: str,
+        training_attributes: List[str],
+        agent_ids: Callable[[Scenario], List[int]],
     ):
         """
         Add a container into the trainer.
@@ -601,7 +597,9 @@ class Trainer(BaseModellingManager):
         :param agent_ids: The agent with id contained in `agent_ids` will be trained.
         :return: None
         """
-        self.container_manager.add_container(agent_list_name, training_attributes, agent_ids)
+        self.container_manager.add_container(
+            agent_list_name, training_attributes, agent_ids
+        )
 
     def setup(self):
         """
@@ -646,9 +644,11 @@ class Trainer(BaseModellingManager):
         for scenario in self.scenarios:
             self.current_algorithm_meta.id_trainer_scenario = scenario.id
             for trainer_params in self.generate_trainer_params_list(
-                    trainer_scenario_cls
+                trainer_scenario_cls
             ):
-                self.current_algorithm_meta.id_trainer_params_scenario = trainer_params.id
+                self.current_algorithm_meta.id_trainer_params_scenario = (
+                    trainer_params.id
+                )
                 for id_path in range(trainer_params.path_num):
                     self.current_algorithm_meta.id_path = id_path
                     logger.info(
@@ -713,7 +713,7 @@ class Trainer(BaseModellingManager):
     def add_environment_property(self, prop: str):
         """
         Add a property of environment to be recorded.
-        
+
         :param prop: Property name of environment.
         """
         assert prop not in self.environment_properties
@@ -729,7 +729,7 @@ class Trainer(BaseModellingManager):
         return self.data_loader.generate_scenarios("trainer")
 
     def generate_trainer_params_list(
-            self, trainer_scenario_cls: Type[GATrainerParams]
+        self, trainer_scenario_cls: Type[GATrainerParams]
     ) -> List[GATrainerParams]:
         """
         Generate Trainer Parameters.

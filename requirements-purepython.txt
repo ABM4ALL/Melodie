@@ -13,5 +13,3 @@ termcolor
 setuptools
 cloudpickle~=2.0
 rpyc
-numpy >= 1.20
-pandas

@@ -6,7 +6,12 @@
 import os
 from typing import List
 
-from MelodieInfra.jsonobject import StringProperty, JsonObject, DefaultProperty, ObjectProperty
+from MelodieInfra.jsonobject import (
+    StringProperty,
+    JsonObject,
+    DefaultProperty,
+    ObjectProperty,
+)
 from .base import ExcelMeta
 
 
@@ -16,15 +21,13 @@ def path_validator(path: str):
 
 
 class ExcelWriteRequest(JsonObject):
-    path = StringProperty(
-        required=True, validators=path_validator, name="path")
-    data = DefaultProperty(required=True, name='data')
+    path = StringProperty(required=True, validators=path_validator, name="path")
+    data = DefaultProperty(required=True, name="data")
     sheet = StringProperty(required=True, name="sheet")
 
 
 class ExcelReadSheetRequest(JsonObject):
-    path = StringProperty(name="path",
-                          required=True, validators=path_validator)
+    path = StringProperty(name="path", required=True, validators=path_validator)
     sheet = StringProperty(name="sheet", required=False)
 
 
@@ -36,10 +39,12 @@ class ExcelReadSheetResponse(JsonObject):
     def create(payload, sheet: str, all_sheets: List[str]):
         return ExcelReadSheetResponse(
             payload=payload,
-            meta=ExcelMeta({
-                "currentSheet": sheet,
-                "sheetNames": all_sheets,
-                "widget": "table",
-                "type": "excel"
-            })
+            meta=ExcelMeta(
+                {
+                    "currentSheet": sheet,
+                    "sheetNames": all_sheets,
+                    "widget": "table",
+                    "type": "excel",
+                }
+            ),
         )

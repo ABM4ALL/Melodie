@@ -1,13 +1,15 @@
-import abc
 import logging
 import os
-from typing import Union, Dict, TYPE_CHECKING, Type, Optional, List, Tuple
+from typing import Dict, TYPE_CHECKING, Optional, List, Tuple
 
-import pandas as pd
 import sqlalchemy
 from sqlalchemy.exc import OperationalError
 from sqlalchemy_utils import database_exists, create_database
+
+from MelodieTable import TableBase, Table, PyAMTable
+
 from ..exceptions import MelodieExceptions
+from ..compat import pd
 
 if TYPE_CHECKING:
     from MelodieInfra.config.config import Config
@@ -22,12 +24,18 @@ class DBConn:
     DBConn provides API to write to/read from the database.
 
     """
+
     table_dtypes: Dict[str, TABLE_DTYPES] = {}
+    existing_connections: Dict[str, "DBConn"] = {}
     SCENARIO_TABLE = "simulator_scenarios"
     ENVIRONMENT_RESULT_TABLE = "environment_result"
 
     def __init__(
-            self, db_name: str, db_type: str = "sqlite", conn_params: Dict[str, str] = None, conn_string=""
+            self,
+            db_name: str,
+            db_type: str = "sqlite",
+            conn_params: Dict[str, str] = None,
+            conn_string="",
     ):
         """
         :param db_name: Name of database file.
@@ -59,9 +67,13 @@ class DBConn:
         :param conn_string:
         :return:
         """
-        conn = DBConn("")
-        conn.connection = sqlalchemy.create_engine(conn_string)
-        return conn
+        if conn_string in DBConn.existing_connections:
+            return DBConn.existing_connections[conn_string]
+        else:
+            conn = DBConn("")
+            conn.connection = sqlalchemy.create_engine(conn_string)
+            DBConn.existing_connections[conn_string] = conn
+            return conn
 
     def get_engine(self):
         """
@@ -155,16 +167,20 @@ class DBConn:
         :param if_exists: A string in {'replace', 'fail', 'append'}.
         :return:
         """
-        if data_types is None:
-            data_types = DBConn.get_table_dtypes(table_name)
-        logger.debug(f"datatype of table `{table_name}` is: {data_types}")
-        data_frame.to_sql(
-            table_name,
-            self.connection,
-            index=False,
-            dtype=data_types,
-            if_exists=if_exists,
-        )
+
+        if isinstance(data_frame, Table):
+            data_frame.to_database(self.connection, table_name)
+        else:
+            if data_types is None:
+                data_types = DBConn.get_table_dtypes(table_name)
+            logger.debug(f"datatype of table `{table_name}` is: {data_types}")
+            data_frame.to_sql(
+                table_name,
+                self.connection,
+                index=False,
+                dtype=data_types,
+                if_exists=if_exists,
+            )
 
     def read_dataframe(
             self,
@@ -237,7 +253,6 @@ def create_db_conn(config: "Config") -> DBConn:
     :return: DBConn object.
     """
     return DBConn.from_connection_string(config.database_config.connection_string())
-    # return DBConn(config.project_name, conn_params={"db_path": config.output_folder})
 
 
 def get_sqlite_filename(config: "Config") -> str:

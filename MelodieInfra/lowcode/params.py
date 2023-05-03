@@ -12,13 +12,13 @@ from ..models.jsonbase import JSONBase
 if TYPE_CHECKING:
     from Melodie import Scenario
 
-GetterType = 'Callable[[object], Any]'
-SetterType = 'Callable[[object, Param], Any]'
+GetterType = "Callable[[object], Any]"
+SetterType = "Callable[[object, Param], Any]"
 GetterArgType = Union[GetterType, str]
 SetterArgType = Union[SetterType, str]
 
 BasicType = Union[str, int, float, bool]
-ParamsType = 'Union[Param, IntParam, FloatParam, BoolParam, StringParam, ArrayParam]'
+ParamsType = "Union[Param, IntParam, FloatParam, BoolParam, StringParam, ArrayParam]"
 
 
 class UnInitialized:
@@ -26,6 +26,7 @@ class UnInitialized:
     Special class standing for uninitialized variable
 
     """
+
     pass
 
 
@@ -36,18 +37,27 @@ class Param(JSONBase):
     """
 
     def validate_getter_or_setter(self, f):
-        assert isinstance(f, str) or callable(f), 'Argument `getter` and `setter` should be callable or string'
+        assert isinstance(f, str) or callable(
+            f
+        ), "Argument `getter` and `setter` should be callable or string"
 
-    def __init__(self, name: str, getter: GetterArgType, setter: SetterArgType, readonly=False, label="",
-                 description="No description about this parameter...",
-                 component='auto'):
+    def __init__(
+        self,
+        name: str,
+        getter: GetterArgType,
+        setter: SetterArgType,
+        readonly=False,
+        label="",
+        description="No description about this parameter...",
+        component="auto",
+    ):
         self.name = name
         self.label = label
-        self.type = ''
+        self.type = ""
         self.component: str = component
-        if isinstance(getter, str) and getter == '':
+        if isinstance(getter, str) and getter == "":
             getter = name
-        if isinstance(setter, str) and setter == '':
+        if isinstance(setter, str) and setter == "":
             setter = name
         self.validate_getter_or_setter(getter)
         self.validate_getter_or_setter(setter)
@@ -55,10 +65,14 @@ class Param(JSONBase):
         self.readonly = readonly
         self.description = description
 
-        self._getter_from_obj: GetterType = getter if callable(getter) else \
-            lambda obj: getattr(obj, getter)
-        self._setter_to_obj: SetterType = setter if callable(setter) else \
-            lambda obj, param: setattr(obj, setter, param)
+        self._getter_from_obj: GetterType = (
+            getter if callable(getter) else lambda obj: getattr(obj, getter)
+        )
+        self._setter_to_obj: SetterType = (
+            setter
+            if callable(setter)
+            else lambda obj, param: setattr(obj, setter, param)
+        )
 
     @property
     def value(self):
@@ -76,8 +90,15 @@ class Param(JSONBase):
     def value(self, new_val):
         new_val = self._converter(new_val)
         self._validator(new_val)
-        assert isinstance(new_val, type(self._value)) or isinstance(self._value, UnInitialized), (
-            'new value', type(new_val), 'old value', type(self._value), 'does not match')
+        assert isinstance(new_val, type(self._value)) or isinstance(
+            self._value, UnInitialized
+        ), (
+            "new value",
+            type(new_val),
+            "old value",
+            type(self._value),
+            "does not match",
+        )
         self._value = new_val
 
     def to_json(self):
@@ -99,7 +120,7 @@ class Param(JSONBase):
             value = None
         else:
             value = self._value
-        return {'value': value, 'type': self.type, 'name': self.name}
+        return {"value": value, "type": self.type, "name": self.name}
 
     def _validator(self, new_val):
         return
@@ -122,7 +143,7 @@ class Param(JSONBase):
         """
         self.value = self._getter_from_obj(obj)
 
-    def modify_object(self, obj: 'object'):
+    def modify_object(self, obj: "object"):
         """
         Modify property inside the object with setter.
 
@@ -138,7 +159,7 @@ class Param(JSONBase):
         :param d:
         :return:
         """
-        self.value = d['value']
+        self.value = d["value"]
 
 
 class IntParam(Param):
@@ -154,17 +175,25 @@ class IntParam(Param):
     Be sure to check the right boundary in case of out-of-range error when you are using this value as indices.
 
     """
+
     _value: int
 
-    def __init__(self, name: str, value_range: Tuple[int, int], getter: GetterArgType = "", setter: SetterArgType = "",
-                 readonly=False, label="",
-                 description="",
-                 component='auto', ):
+    def __init__(
+        self,
+        name: str,
+        value_range: Tuple[int, int],
+        getter: GetterArgType = "",
+        setter: SetterArgType = "",
+        readonly=False,
+        label="",
+        description="",
+        component="auto",
+    ):
         super().__init__(name, getter, setter, readonly, label, description, component)
 
         self.min = value_range[0] if value_range[0] is not None else -math.inf
         self.max = value_range[1] if value_range[1] is not None else math.inf
-        self.type = 'int'
+        self.type = "int"
 
     def _validator(self, new_val: int):
         """
@@ -174,7 +203,9 @@ class IntParam(Param):
         :return:
         """
         if not self.min <= new_val <= self.max:
-            raise ValueError(f"Integer value {new_val} out of range {self.min}<= x <={self.max}")
+            raise ValueError(
+                f"Integer value {new_val} out of range {self.min}<= x <={self.max}"
+            )
 
     def _converter(self, new_val):
         return int(new_val)
@@ -185,14 +216,21 @@ class BoolParam(Param):
     Boolean parameter
 
     """
+
     _value: bool
 
-    def __init__(self, name: str, getter: GetterArgType = "", setter: SetterArgType = "",
-                 readonly=False, label="",
-                 description="",
-                 component='auto', ):
+    def __init__(
+        self,
+        name: str,
+        getter: GetterArgType = "",
+        setter: SetterArgType = "",
+        readonly=False,
+        label="",
+        description="",
+        component="auto",
+    ):
         super().__init__(name, getter, setter, readonly, label, description, component)
-        self.type = 'bool'
+        self.type = "bool"
 
     def _converter(self, new_val):
         return bool(new_val)
@@ -201,16 +239,23 @@ class BoolParam(Param):
 class StringParam(Param):
     """
     String parameter
-    
+
     """
+
     _value: bool
 
-    def __init__(self, name: str, getter: GetterArgType = "", setter: SetterArgType = "",
-                 readonly=False, label="",
-                 description="",
-                 component='auto', ):
+    def __init__(
+        self,
+        name: str,
+        getter: GetterArgType = "",
+        setter: SetterArgType = "",
+        readonly=False,
+        label="",
+        description="",
+        component="auto",
+    ):
         super().__init__(name, getter, setter, readonly, label, description, component)
-        self.type = 'str'
+        self.type = "str"
 
     def _converter(self, new_val):
         return str(new_val)
@@ -222,27 +267,34 @@ class FloatParam(Param):
 
     precision: An integer for float digit numbers, -1 by default, indicating no rounding.
     """
+
     _value: float
 
-    def __init__(self, name: str, value_range: Tuple[float, float], step: float = -1,
-                 getter: GetterArgType = "",
-                 setter: SetterArgType = "",
-                 readonly=False,
-                 label="",
-                 description="",
-                 component='auto',
-                 percentage=False):
+    def __init__(
+        self,
+        name: str,
+        value_range: Tuple[float, float],
+        step: float = -1,
+        getter: GetterArgType = "",
+        setter: SetterArgType = "",
+        readonly=False,
+        label="",
+        description="",
+        component="auto",
+        percentage=False,
+    ):
         super().__init__(name, getter, setter, readonly, label, description, component)
         self.min = value_range[0] if value_range[0] is not None else -math.inf
         self.max = value_range[1] if value_range[1] is not None else math.inf
         self.step = step
-        self.type = 'float'
+        self.type = "float"
         self.percentage = percentage
 
     def _validator(self, new_val: int):
-        if not self.min - 10 ** -9 <= new_val <= self.max + 10 ** -9:
+        if not self.min - 10**-9 <= new_val <= self.max + 10**-9:
             raise ValueError(
-                f"Float parameter named {self.name}, value {new_val} out of range {self.min}<= x <={self.max}")
+                f"Float parameter named {self.name}, value {new_val} out of range {self.min}<= x <={self.max}"
+            )
 
     def _converter(self, new_val):
         return float(new_val)
@@ -255,17 +307,22 @@ class SelectionParam(Param):
             self.value = value
 
         def to_dict(self):
-            return {'label': self.label, 'value': self.value}
+            return {"label": self.label, "value": self.value}
 
-    def __init__(self, name: str, selections: List[Selection], getter: GetterArgType = "",
-                 setter: SetterArgType = "",
-                 readonly=False,
-                 label="",
-                 description="",
-                 component='auto', ):
+    def __init__(
+        self,
+        name: str,
+        selections: List[Selection],
+        getter: GetterArgType = "",
+        setter: SetterArgType = "",
+        readonly=False,
+        label="",
+        description="",
+        component="auto",
+    ):
         super().__init__(name, getter, setter, readonly, label, description, component)
         self.selections = [selection.to_dict() for selection in selections]
-        self.type = 'selection'
+        self.type = "selection"
 
 
 class ArrayParam(Param):
@@ -273,17 +330,27 @@ class ArrayParam(Param):
     Parameters could be set inside an array
 
     """
+
     _value: "List[Union[IntParam, FloatParam, SelectionParam, ArrayParam]]"
 
-    def __init__(self, name: str, value: "List[Union[IntParam, SelectionParam, FloatParam, ArrayParam]]",
-                 getter: GetterArgType = '',
-                 setter: SetterArgType = '', readonly=False, label="", description="", component='auto'):
-        super().__init__(name, getter, setter, readonly, label, description,
-                         component)
+    def __init__(
+        self,
+        name: str,
+        value: "List[Union[IntParam, SelectionParam, FloatParam, ArrayParam]]",
+        getter: GetterArgType = "",
+        setter: SetterArgType = "",
+        readonly=False,
+        label="",
+        description="",
+        component="auto",
+    ):
+        super().__init__(name, getter, setter, readonly, label, description, component)
         self._value = value
-        self.type = 'array'
+        self.type = "array"
         for val in self._value:
-            assert isinstance(val, (IntParam, FloatParam, ArrayParam, BoolParam, StringParam))
+            assert isinstance(
+                val, (IntParam, FloatParam, ArrayParam, BoolParam, StringParam)
+            )
 
     def children(self):
         """
@@ -324,7 +391,7 @@ class ArrayParam(Param):
         for param in self._value:
             items.append(param.to_json())
         d = super().to_json()
-        d['children'] = items
+        d["children"] = items
         return d
 
     def to_value_json(self):
@@ -333,7 +400,11 @@ class ArrayParam(Param):
 
         :return:
         """
-        return {"type": 'array', "name": self.name, "value": [param.to_value_json() for param in self._value]}
+        return {
+            "type": "array",
+            "name": self.name,
+            "value": [param.to_value_json() for param in self._value],
+        }
 
     def extract_value(self, obj: "object"):
         """
@@ -352,12 +423,12 @@ class ArrayParam(Param):
         :param d:
         :return:
         """
-        assert isinstance(d['value'], list)
-        assert len(d['value']) == len(self._value)
+        assert isinstance(d["value"], list)
+        assert len(d["value"]) == len(self._value)
         for i, param in enumerate(self._value):
-            param.from_json(d['value'][i])
+            param.from_json(d["value"][i])
 
-    def modify_object(self, obj: 'object'):
+    def modify_object(self, obj: "object"):
         """
         Modify each child with theirs setter
 
@@ -400,7 +471,7 @@ class ParamsManager:
         """
         return [param.to_json() for param in self.params]
 
-    def modify_scenario(self, scenario: 'Scenario'):
+    def modify_scenario(self, scenario: "Scenario"):
         """
         Write parameter values to scenario object
 
@@ -423,7 +494,11 @@ class ParamsManager:
             param.extract_value(obj)
 
     @staticmethod
-    def for_each_param(params: List[ParamsType], name_prefix: str, callback: Callable[[str, Param], None]):
+    def for_each_param(
+        params: List[ParamsType],
+        name_prefix: str,
+        callback: Callable[[str, Param], None],
+    ):
         """
         Walk through the parameter tree to gather each parameter value into a plain list.
 
@@ -474,7 +549,4 @@ class ParamsManager:
 
         :return:
         """
-        return {
-            "model": self.to_json(),
-            "values": self.to_value_json()
-        }
+        return {"model": self.to_json(), "values": self.to_value_json()}

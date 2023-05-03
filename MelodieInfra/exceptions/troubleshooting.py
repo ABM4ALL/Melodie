@@ -22,7 +22,8 @@ class OSTroubleShooter:
     This class is a handler to print a link towards the help page.
 
     """
-    _instance: Optional['OSTroubleShooter'] = None
+
+    _instance: Optional["OSTroubleShooter"] = None
 
     def __new__(cls, *args, **kwargs):
         if not cls._instance:
@@ -30,8 +31,12 @@ class OSTroubleShooter:
         return cls._instance
 
     def __init__(self):
-        self.cases = [(lambda s: "address already in use" in s or "Errno 10048" in s,
-                       "/troubleshooting.html#port-already-in-use")]
+        self.cases = [
+            (
+                lambda s: "address already in use" in s or "Errno 10048" in s,
+                "/troubleshooting.html#port-already-in-use",
+            )
+        ]
 
     def handle_exc(self, exc: BaseException, exit_program=True, traceback=True):
         """
@@ -47,6 +52,7 @@ class OSTroubleShooter:
             if case[0](s):
                 if traceback:
                     import traceback
+
                     traceback.print_exc()
 
                 self._print_help_url(case[1])

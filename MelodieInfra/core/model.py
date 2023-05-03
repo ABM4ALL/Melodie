@@ -1,4 +1,3 @@
-
 from .types import Optional, Union, Type, List
 
 # import pandas as pd
@@ -7,6 +6,7 @@ from .types import Optional, Union, Type, List
 from .agent_list import AgentList
 from .agent import Agent
 from .environment import Environment
+
 # from .boost.grid import Grid, Spot
 # from MelodieInfra.config.config import Config
 # from .data_collector import DataCollector
@@ -56,11 +56,11 @@ class ModelRunRoutine:
 
 class Model:
     def __init__(
-            self,
-            config: "Config",
-            scenario: "Scenario",
-            run_id_in_scenario: int = 0,
-            visualizer: Visualizer = None,
+        self,
+        config: "Config",
+        scenario: "Scenario",
+        run_id_in_scenario: int = 0,
+        visualizer: Visualizer = None,
     ):
 
         self.scenario = scenario
@@ -110,8 +110,8 @@ class Model:
         return create_db_conn(self.config)
 
     def create_agent_list(
-            self,
-            agent_class: Type["Agent"],
+        self,
+        agent_class: Type["Agent"],
     ):
         """
         Create an agent list object. A model could contain multiple ``AgentList``s.
@@ -149,7 +149,7 @@ class Model:
         return grid
 
     def create_network(
-            self, network_cls: Type["Network"] = None, edge_cls: Type["Edge"] = None
+        self, network_cls: Type["Network"] = None, edge_cls: Type["Edge"] = None
     ):
         """
         Create the network of model.
@@ -178,11 +178,11 @@ class Model:
         return data_collector
 
     def create_agent_container(
-            self,
-            agent_class: Type["Agent"],
-            initial_num: int,
-            params_df: pd.DataFrame = None,
-            container_type: str = "list",
+        self,
+        agent_class: Type["Agent"],
+        initial_num: int,
+        params_df: pd.DataFrame = None,
+        container_type: str = "list",
     ) -> Union[AgentList, AgentDict]:
         """
         Create a container for agents.
@@ -262,4 +262,5 @@ class Model:
         for component_to_init in self.initialization_queue:
             component_to_init._setup()
 
-__all__ = ['Model']
+
+__all__ = ["Model"]

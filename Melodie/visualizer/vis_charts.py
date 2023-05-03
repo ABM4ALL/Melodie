@@ -1,6 +1,16 @@
 import logging
 
-from typing import Any, Callable, List, Dict, TYPE_CHECKING, Tuple, TypeVar, Union, Optional
+from typing import (
+    Any,
+    Callable,
+    List,
+    Dict,
+    TYPE_CHECKING,
+    Tuple,
+    TypeVar,
+    Union,
+    Optional,
+)
 from decimal import Decimal
 from MelodieInfra.models.typeutils import REAL_NUM_TYPE
 from MelodieInfra import JSONBase
@@ -10,7 +20,7 @@ logger = logging.getLogger(__name__)
 
 def float_round(float_value):
     decimal_obj = Decimal.from_float(float_value)
-    decimal_str = format(decimal_obj, '.6')
+    decimal_str = format(decimal_obj, ".6")
     return float(decimal_str)
 
 
@@ -19,7 +29,6 @@ def round_float_array(float_arr):
 
 
 class ChartBase:
-
     def reset(self):
         pass
 
@@ -124,10 +133,9 @@ class Chart(JSONBase, ChartBase):
 
 
 class CandleStickChart(Chart):
-
     def __init__(self):
         self.type = "candlestick"
-        self._series_name = 'series'
+        self._series_name = "series"
         self.series: Tuple[ChartSeries] = (ChartSeries(self._series_name),)
 
     def get_series(self, series_name: str) -> ChartSeries:
@@ -136,25 +144,30 @@ class CandleStickChart(Chart):
         else:
             raise ValueError(series_name)
 
-    def set_data_source(self, datasource: Callable[
-        [], Tuple[REAL_NUM_TYPE, REAL_NUM_TYPE, REAL_NUM_TYPE, REAL_NUM_TYPE]]) -> 'CandleStickChart':
+    def set_data_source(
+        self,
+        datasource: Callable[
+            [], Tuple[REAL_NUM_TYPE, REAL_NUM_TYPE, REAL_NUM_TYPE, REAL_NUM_TYPE]
+        ],
+    ) -> "CandleStickChart":
         """
 
         :param datasource: Callable, should return a tuple with four real number -- (open, close, low, high)
         :return:
         """
-        self.get_series('series').set_data_source(datasource)
+        self.get_series("series").set_data_source(datasource)
         return self
 
     def get_series_data(self):
         data = super().get_series_data()
         logger.warning(f"series data of candlestickchart {data}")
-        if data[0]['value'] is None:
+        if data[0]["value"] is None:
             pass
         else:
-            assert len(data[0]['value']) == 4, \
-                f"Data format error in data source of candlestick chart: {data[0]['value']}"
-            data[0]['value'] = round_float_array(data[0]['value'])
+            assert (
+                len(data[0]["value"]) == 4
+            ), f"Data format error in data source of candlestick chart: {data[0]['value']}"
+            data[0]["value"] = round_float_array(data[0]["value"])
         return data
 
 
@@ -176,7 +189,7 @@ class PieChart(JSONBase, ChartBase):
         self._sources: Dict[str, Callable[[], Union[int, float]]] = {}
         self._source: Optional[Callable[[], Dict[Union[int, float]]]] = None
         self.value: Dict[str, Union[int, float]] = {}
-        self._mode = 'single'
+        self._mode = "single"
 
     def add_variable(self, variable_name: str, source: Callable[[], Union[int, float]]):
         self.value[variable_name] = 0
@@ -184,7 +197,7 @@ class PieChart(JSONBase, ChartBase):
 
     def update(self, current_step):
         assert isinstance(self.value, dict)
-        if self._mode == 'single':
+        if self._mode == "single":
             for varname in self._sources.keys():
                 self.value[varname] = self._sources[varname]()
         else:
@@ -194,26 +207,28 @@ class PieChart(JSONBase, ChartBase):
         self.value = {}
 
     def to_json(self):
-        return {'type': self.type, 'series': self.get_series_data()}
+        return {"type": self.type, "series": self.get_series_data()}
 
     def get_series_data(self):
-        return [{"name": k, 'value': v} for k, v in self.value.items()]
+        return [{"name": k, "value": v} for k, v in self.value.items()]
 
 
 class BarChart(PieChart):
     def __init__(self):
         super(BarChart, self).__init__()
-        self.type = 'bar'
-        self._mode = 'single'
+        self.type = "bar"
+        self._mode = "single"
 
     def set_data_source(self, data_source: Dict[str, Callable[[], Union[int, float]]]):
         self._sources = data_source
-        self._mode = 'single'
+        self._mode = "single"
         return self
 
-    def set_data_mutable_source(self, data_source: Callable[[], Dict[str, Union[int, float]]]):
+    def set_data_mutable_source(
+        self, data_source: Callable[[], Dict[str, Union[int, float]]]
+    ):
         self._source = data_source
-        self._mode = 'multi'
+        self._mode = "multi"
         return self
 
 
@@ -247,7 +262,9 @@ class ChartManager(JSONBase):
         current_data = []
         for chart_name in self.all_chart_names():
             chart = self.get_chart(chart_name)
-            current_data.append({"chartName": chart_name, "series": chart.get_series_data()})
+            current_data.append(
+                {"chartName": chart_name, "series": chart.get_series_data()}
+            )
         return current_data
 
     def reset(self):

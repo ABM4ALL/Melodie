@@ -5,9 +5,12 @@ from .exceptions import BadValueError
 
 function_name = None
 if six.PY3:
+
     def function_name(f):
         return f.__name__
+
 else:
+
     def function_name(f):
         return f.func_name
 
@@ -17,9 +20,17 @@ class JsonProperty(object):
     default = None
     type_config = None
 
-    def __init__(self, default=Ellipsis, name=None, choices=None,
-                 required=False, exclude_if_none=False, validators=None,
-                 verbose_name=None, type_config=None):
+    def __init__(
+        self,
+        default=Ellipsis,
+        name=None,
+        choices=None,
+        required=False,
+        exclude_if_none=False,
+        validators=None,
+        verbose_name=None,
+        type_config=None,
+    ):
         validators = validators or ()
         self.name = name
         if default is Ellipsis:
@@ -99,24 +110,21 @@ class JsonProperty(object):
         return value is None
 
     def validate(self, value, required=True, recursive=True):
-        if (self.choice_keys and value not in self.choice_keys
-                and value is not None):
+        if self.choice_keys and value not in self.choice_keys and value is not None:
             raise BadValueError(
-                '{0!r} not in choices: {1!r}'.format(value, self.choice_keys)
+                "{0!r} not in choices: {1!r}".format(value, self.choice_keys)
             )
 
         if not self.empty(value):
             self._custom_validate(value)
         elif required and self.required:
-            raise BadValueError(
-                'Property {0} is required.'.format(self.name)
-            )
-        if recursive and hasattr(value, 'validate'):
+            raise BadValueError("Property {0} is required.".format(self.name))
+        if recursive and hasattr(value, "validate"):
             value.validate(required=required)
 
     def _custom_validate(self, value):
         if self._validators:
-            if hasattr(self._validators, '__iter__'):
+            if hasattr(self._validators, "__iter__"):
                 for validator in self._validators:
                     validator(value)
             else:
@@ -141,6 +149,7 @@ class JsonContainerProperty(JsonProperty):
     def to_item_wrapper(self, item_type):
         from .base import JsonObjectMeta
         from .properties import ObjectProperty
+
         if item_type is None:
             return None
         if isinstance(item_type, JsonObjectMeta):
@@ -153,19 +162,23 @@ class JsonContainerProperty(JsonProperty):
         elif issubclass(item_type, JsonProperty):
             return item_type(type_config=self.type_config, required=True)
         elif item_type in self.type_config.properties:
-            return self.type_config.properties[item_type](type_config=self.type_config, required=True)
+            return self.type_config.properties[item_type](
+                type_config=self.type_config, required=True
+            )
         else:
             for general_type, property_cls in self.type_config.properties.items():
                 if issubclass(item_type, general_type):
                     return property_cls(type_config=self.type_config, required=True)
-            raise ValueError("item_type {0!r} not in {1!r}".format(
-                item_type,
-                self.type_config.properties,
-            ))
+            raise ValueError(
+                "item_type {0!r} not in {1!r}".format(
+                    item_type,
+                    self.type_config.properties,
+                )
+            )
 
     @property
     def item_wrapper(self):
-        if hasattr(self, '_item_type_deferred'):
+        if hasattr(self, "_item_type_deferred"):
             if inspect.isfunction(self._item_type_deferred):
                 self._item_wrapper = self.to_item_wrapper(self._item_type_deferred())
             else:
@@ -177,14 +190,14 @@ class JsonContainerProperty(JsonProperty):
         return not value
 
     def wrap(self, obj):
-        return self.container_class(obj, wrapper=self.item_wrapper,
-                                    type_config=self.type_config)
+        return self.container_class(
+            obj, wrapper=self.item_wrapper, type_config=self.type_config
+        )
 
     def unwrap(self, obj):
         if not isinstance(obj, self._type):
             raise BadValueError(
-                '{0!r} is not an instance of {1!r}'.format(
-                    obj, self._type.__name__)
+                "{0!r} is not an instance of {1!r}".format(obj, self._type.__name__)
             )
         if isinstance(obj, self.container_class):
             return obj, obj._obj
@@ -198,7 +211,6 @@ class JsonContainerProperty(JsonProperty):
 
 
 class DefaultProperty(JsonProperty):
-
     def wrap(self, obj):
         assert self.type_config.string_conversions is not None
         value = self.value_to_python(obj)
@@ -219,16 +231,16 @@ class DefaultProperty(JsonProperty):
         if value is None:
             return None
         elif type(value) in map_types_properties:
-            return map_types_properties[type(value)](
-                type_config=self.type_config)
+            return map_types_properties[type(value)](type_config=self.type_config)
         else:
             for value_type, prop_class in map_types_properties.items():
                 if isinstance(value, value_type):
                     return prop_class(type_config=self.type_config)
             else:
                 raise BadValueError(
-                    'value {0!r} not in allowed types: {1!r}'.format(
-                        value, map_types_properties.keys())
+                    "value {0!r} not in allowed types: {1!r}".format(
+                        value, map_types_properties.keys()
+                    )
                 )
 
     def value_to_python(self, value):
@@ -252,7 +264,7 @@ class DefaultProperty(JsonProperty):
 
             if convert is not None:
                 try:
-                    #sometimes regex fail so return value
+                    # sometimes regex fail so return value
                     value = convert(value)
                 except Exception:
                     pass
@@ -266,9 +278,7 @@ class AssertTypeProperty(JsonProperty):
         if obj is None:
             return
         elif not isinstance(obj, self._type):
-            raise BadValueError(
-                '{0!r} not of type {1!r}'.format(obj, self._type)
-            )
+            raise BadValueError("{0!r} not of type {1!r}".format(obj, self._type))
 
     def selective_coerce(self, obj):
         return obj
@@ -298,17 +308,21 @@ class AbstractDateProperty(JsonProperty):
                 raise ValueError()
             return self._wrap(obj)
         except ValueError:
-            raise BadValueError('{0!r} is not a {1}-formatted string'.format(
-                obj,
-                self._type.__name__,
-            ))
+            raise BadValueError(
+                "{0!r} is not a {1}-formatted string".format(
+                    obj,
+                    self._type.__name__,
+                )
+            )
 
     def unwrap(self, obj):
         if not isinstance(obj, self._type):
-            raise BadValueError('{0!r} is not a {1} object'.format(
-                obj,
-                self._type.__name__,
-            ))
+            raise BadValueError(
+                "{0!r} is not a {1} object".format(
+                    obj,
+                    self._type.__name__,
+                )
+            )
         return self._unwrap(obj)
 
     def _wrap(self, obj):

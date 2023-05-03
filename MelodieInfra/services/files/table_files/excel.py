@@ -9,10 +9,15 @@ import tempfile
 from typing import Any, List, cast
 
 import openpyxl
-import pandas as pd
+from ....compat import pd
 
-from MelodieInfra.models import ExcelWriteRequest, DataServiceStatus, ExcelReadSheetRequest, ExcelReadSheetResponse, \
-    DataServiceState
+from MelodieInfra.models import (
+    ExcelWriteRequest,
+    DataServiceStatus,
+    ExcelReadSheetRequest,
+    ExcelReadSheetResponse,
+    DataServiceState,
+)
 
 
 def df_to_json(df: pd.DataFrame):
@@ -45,7 +50,7 @@ class ExcelManipulator:
             sheet_exist = sheet_name in self.get_sheet_names()
         if sheet_exist:
             with pd.ExcelWriter(
-                    self.filename, engine="openpyxl", mode="a", if_sheet_exists="replace"
+                self.filename, engine="openpyxl", mode="a", if_sheet_exists="replace"
             ) as writer:
                 df.to_excel(writer, sheet_name=sheet_name, index=False)
         else:
@@ -76,12 +81,16 @@ class ExcelDataService:
                     em.write_to_sheet(df, req.sheet)
                 else:
                     df.to_excel(req.path, index=False)
-                return DataServiceStatus(status=DataServiceState.SUCCESS, msg='Succeeded saved table file!')
+                return DataServiceStatus(
+                    status=DataServiceState.SUCCESS, msg="Succeeded saved table file!"
+                )
             except BaseException as e:
                 return DataServiceStatus(status=DataServiceState.ERROR, msg=f"{e}")
         else:
-            return DataServiceStatus(status=DataServiceState.ERROR,
-                                     msg=f"Extension name {ext} unsupported for excel files!")
+            return DataServiceStatus(
+                status=DataServiceState.ERROR,
+                msg=f"Extension name {ext} unsupported for excel files!",
+            )
 
     @staticmethod
     def read_excel(req: ExcelReadSheetRequest) -> DataServiceStatus:
@@ -99,7 +108,13 @@ class ExcelDataService:
             currentSheet: str = sheets[0] if req.sheet is None else req.sheet
             res = em.read_sheet(currentSheet)
             resp = ExcelReadSheetResponse.create(df_to_json(res), currentSheet, sheets)
-            return DataServiceStatus(status=DataServiceState.SUCCESS, msg="Read excel file succeeded!", data=resp)
+            return DataServiceStatus(
+                status=DataServiceState.SUCCESS,
+                msg="Read excel file succeeded!",
+                data=resp,
+            )
         else:
-            return DataServiceStatus(status=DataServiceState.ERROR,
-                                     msg=f"File extension {ext} unsupported for excel files!")
+            return DataServiceStatus(
+                status=DataServiceState.ERROR,
+                msg=f"File extension {ext} unsupported for excel files!",
+            )

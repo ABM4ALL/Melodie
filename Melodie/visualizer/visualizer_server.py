@@ -14,7 +14,9 @@ from .actions import ToolbarAction
 logger = logging.getLogger(__name__)
 
 
-def create_visualizer_server(recv_queue: queue.Queue, send_queue: queue.Queue, port: int):
+def create_visualizer_server(
+    recv_queue: queue.Queue, send_queue: queue.Queue, port: int
+):
     app = Flask(__name__)
     sock = Sock(app)
     websockets: List[Server] = []
@@ -44,10 +46,10 @@ def create_visualizer_server(recv_queue: queue.Queue, send_queue: queue.Queue, p
 
     @app.route("/visualizer/action/<string:action_name>")
     def handle_action(action_name: str):
-        if 'args' in request.args:
+        if "args" in request.args:
             logger.warning(f"args: {request.args}")
-            args = json.loads(base64.b64decode(request.args['args']))
-            args_dict = {arg['name']: arg['value'] for arg in args}
+            args = json.loads(base64.b64decode(request.args["args"]))
+            args_dict = {arg["name"]: arg["value"] for arg in args}
             logger.warning(f"{args}")
             ret, stat = ToolbarAction.dispatch(action_name, args_dict)
         else:
@@ -57,14 +59,15 @@ def create_visualizer_server(recv_queue: queue.Queue, send_queue: queue.Queue, p
             return ""
         return ret
 
-    @app.route('/visualizer/action-params/<string:action_name>')
+    @app.route("/visualizer/action-params/<string:action_name>")
     def handle_action_params(action_name: str):
         resp = {"status": 0, "data": ToolbarAction.get_custom_args(action_name)}
         return json.dumps(resp)
 
-    @sock.route('/visualizer/echo')
+    @sock.route("/visualizer/echo")
     def echo(ws: Server):
         from .visualizer import HEARTBEAT, WSMsgType
+
         websockets.append(ws)
         while True:
             try:
@@ -80,11 +83,13 @@ def create_visualizer_server(recv_queue: queue.Queue, send_queue: queue.Queue, p
                         recv_queue.put((cmd, data), timeout=1)
                     except:
                         import traceback
+
                         traceback.print_exc()
                 else:
                     raise NotImplementedError(cmd)
             except json.JSONDecodeError:
                 import traceback
+
                 traceback.print_exc()
 
-    app.run(host='0.0.0.0', port=port)
+    app.run(host="0.0.0.0", port=port)

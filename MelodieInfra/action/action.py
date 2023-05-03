@@ -17,9 +17,8 @@ class IOPort:
 
 
 class Action(abc.ABC):
-
     def __init__(self):
-        self.name = 'base_action'
+        self.name = "base_action"
         self.next_actions: List[Action] = []
 
     @abc.abstractmethod
@@ -50,7 +49,7 @@ class Action(abc.ABC):
             "name": self.name,
             "title": self.title(),
             "formModel": self.parameters_manager().to_form_model(),
-            "outputs": [port.to_json_dumpable() for port in self.outputs()]
+            "outputs": [port.to_json_dumpable() for port in self.outputs()],
         }
 
 

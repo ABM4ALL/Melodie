@@ -16,8 +16,8 @@ class TestScenario(Scenario):
         self.a = 123
         self.f = 455.0
         self.e123 = [1, 2]
-        self.df = pd.DataFrame([[1]], columns=['a'])
-        print(self.df['a'][0])
+        self.df = pd.DataFrame([[1]], columns=["a"])
+        print(self.df["a"][0])
 
 
 def create_index_setter_pattern(index):
@@ -33,9 +33,13 @@ def create_index_setter_pattern(index):
 def test_array_params():
     scenario = TestScenario(0)
     scenario.setup()
-    p1 = IntParam('0', (0, 20), lambda scenario: scenario.e123[0], create_index_setter_pattern(0))
-    p2 = IntParam('1', (0, 20), lambda scenario: scenario.e123[0], create_index_setter_pattern(1))
-    ap = ArrayParam('e123', [p1, p2], 'e123', 'e123')
+    p1 = IntParam(
+        "0", (0, 20), lambda scenario: scenario.e123[0], create_index_setter_pattern(0)
+    )
+    p2 = IntParam(
+        "1", (0, 20), lambda scenario: scenario.e123[0], create_index_setter_pattern(1)
+    )
+    ap = ArrayParam("e123", [p1, p2], "e123", "e123")
 
     ap.value = [5, 10]
 
@@ -51,18 +55,20 @@ def test_array_params():
     pm = ParamsManager()
 
     pm.params.append(ap)
-    pm.params.append(FloatParam('f', (0, 10000), 9))
+    pm.params.append(FloatParam("f", (0, 10000), 9))
 
     def set_value(obj, val):
-        obj.df['a'][0] = val
+        obj.df["a"][0] = val
 
-    df_ap = ArrayParam('df', [IntParam('aaaa', (0, 100), lambda obj: obj.df['a'][0], set_value)])
+    df_ap = ArrayParam(
+        "df", [IntParam("aaaa", (0, 100), lambda obj: obj.df["a"][0], set_value)]
+    )
 
     pm.params.append(df_ap)
 
-    print('plain list', pm.to_form_model())
-    print('value json', pm.to_value_json())
-    ParamsManager.for_each_param(pm.params, '', lambda name, param: print(name, param))
+    print("plain list", pm.to_form_model())
+    print("value json", pm.to_value_json())
+    ParamsManager.for_each_param(pm.params, "", lambda name, param: print(name, param))
 
     scenario2 = TestScenario()
     scenario2.setup()
@@ -73,7 +79,7 @@ def test_array_params():
 
 
 def test_param_inheritance():
-    int_param = IntParam('a', (0, 200))
+    int_param = IntParam("a", (0, 200))
     scenario = TestScenario(0)
     scenario.setup()
     int_param.extract_value(scenario)

@@ -1,13 +1,29 @@
 import logging
 from typing import Optional, Union, Type, List
 
-import pandas as pd
+from MelodieInfra import (
+    create_db_conn,
+    DBConn,
+    MelodieExceptions,
+    show_prettified_warning,
+    show_link,
+    np,
+    pd,
+)
 
-from MelodieInfra import create_db_conn, DBConn, MelodieExceptions, show_prettified_warning, show_link
 # from .boost.agent_list import AgentList, BaseAgentContainer, AgentDict
-from MelodieInfra.core import AgentList, BaseAgentContainer, Agent, Environment, Grid, Spot
+from MelodieInfra.core import (
+    AgentList,
+    BaseAgentContainer,
+    Agent,
+    Environment,
+    Grid,
+    Spot,
+)
+
 # from .boost.grid import Grid, Spot
 from MelodieInfra.config.config import Config
+
 from .data_collector import DataCollector
 
 from .scenario_manager import Scenario
@@ -55,24 +71,25 @@ class ModelRunRoutine:
 
 class Model:
     """
-    The base class for Model. 
-    
+    The base class for Model.
+
     There are three major methods, ``create()``, ``setup()`` and ``run()``. ``create()`` and then ``setup()`` are called when the model creates,
-    and ``run()`` is called for model running. 
+    and ``run()`` is called for model running.
 
     To build up your own model, inherit this class and override ``create()``, ``setup()`` and ``run()``
     """
+
     def __init__(
-            self,
-            config: "Config",
-            scenario: "Scenario",
-            run_id_in_scenario: int = 0,
-            visualizer: "Visualizer" = None,
+        self,
+        config: "Config",
+        scenario: "Scenario",
+        run_id_in_scenario: int = 0,
+        visualizer: "Visualizer" = None,
     ):
         """
         :param config: Type ``Melodie.Config``
         :param scenario: Type ``Melodie.Scenario`` containing model parameters.
-        :param run_id_in_scenario: Current ``run_id`` in the current scenario, an ``int`` from [0, ``number_of_run`` ), and 0 by default. 
+        :param run_id_in_scenario: Current ``run_id`` in the current scenario, an ``int`` from [0, ``number_of_run`` ), and 0 by default.
         :param visualizer: ``Visualizer`` instance if needs visualization, ``None`` by default, indicating no need for visualization.
         """
 
@@ -87,7 +104,7 @@ class Model:
         self.network = None
         self.visualizer: "Visualizer" = visualizer
         self.initialization_queue: List[
-            Union['AgentList', 'Grid', 'Environment', DataCollector, Network]
+            Union["AgentList", "Grid", "Environment", DataCollector, Network]
         ] = []
 
     def __del__(self):
@@ -123,8 +140,8 @@ class Model:
         return create_db_conn(self.config)
 
     def create_agent_list(
-            self,
-            agent_class: Type["Agent"],
+        self,
+        agent_class: Type["Agent"],
     ):
         """
         Create an agent list object. A model could contain multiple ``AgentList``s.
@@ -162,7 +179,7 @@ class Model:
         return grid
 
     def create_network(
-            self, network_cls: Type["Network"] = None, edge_cls: Type["Edge"] = None
+        self, network_cls: Type["Network"] = None, edge_cls: Type["Edge"] = None
     ):
         """
         Create the network of model.
@@ -191,12 +208,12 @@ class Model:
         return data_collector
 
     def create_agent_container(
-            self,
-            agent_class: Type["Agent"],
-            initial_num: int,
-            params_df: pd.DataFrame = None,
-            container_type: str = "list",
-    ) -> Union[AgentList, 'AgentDict']:
+        self,
+        agent_class: Type["Agent"],
+        initial_num: int,
+        params_df: pd.DataFrame = None,
+        container_type: str = "list",
+    ) -> Union[AgentList, "AgentDict"]:
         """
         Create a container for agents.
 
@@ -208,7 +225,7 @@ class Model:
         """
         from Melodie import AgentList
 
-        agent_container_class: Union[Type[AgentList], Type['AgentDict'], None]
+        agent_container_class: Union[Type[AgentList], Type["AgentDict"], None]
         if container_type == "list":
             agent_container_class = AgentList
         elif container_type == "dict":

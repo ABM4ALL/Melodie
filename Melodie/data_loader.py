@@ -3,21 +3,18 @@ from typing import Optional, Dict, List, Union, Callable, Type, TYPE_CHECKING
 
 import sqlalchemy
 
-from MelodieInfra import DBConn, create_db_conn, MelodieExceptions, Config
+from MelodieInfra import DBConn, create_db_conn, MelodieExceptions, Config, np, pd
 from MelodieTable import Table
 
 from .scenario_manager import Scenario
 from .table_generator import DataFrameGenerator
-
-if TYPE_CHECKING:
-    import pandas as pd
-    import numpy as np
 
 
 class DataFrameInfo:
     """
     DataFrameInfo provides standard format for input tables as parameters.
     """
+
     df_name: str
     columns: Dict[str, "sqlalchemy.types"]
     file_name: Optional[str] = None
@@ -30,7 +27,7 @@ class DataFrameInfo:
             df_name: str,
             columns: Dict[str, "sqlalchemy.types"],
             file_name: Optional[str] = None,
-            engine: str = "melodie-table"
+            engine: str = "pandas",
     ):
         """
         :param df_name: Name of dataframe.
@@ -93,7 +90,7 @@ class MatrixInfo:
 class DataLoader:
     """
     DataLoader loads dataframes or matrices.
-    
+
     ``Simulator``/``Trainer``/``Calibrator`` will have reference to DataLoader to avoid defining tables multiple times.
     """
 
@@ -116,7 +113,7 @@ class DataLoader:
         self.as_sub_worker = as_sub_worker  # If loader is loaded from sub worker.
         self.config: Config = config
         self.scenario_cls = scenario_cls
-        self.registered_dataframes: Optional[Dict[str, pd.DataFrame]] = {}
+        self.registered_dataframes: Optional[Dict[str, "pd.DataFrame"]] = {}
         self.registered_matrices: Optional[Dict[str, np.ndarray]] = {}
         self.manager = manager
         self.manager.data_loader = self
@@ -126,7 +123,7 @@ class DataLoader:
         pass
 
     def register_dataframe(
-            self, table_name: str, data_frame: pd.DataFrame, data_types: dict = None
+            self, table_name: str, data_frame: "pd.DataFrame", data_types: dict = None
     ) -> None:
         """
         Register a pandas dataframe.
@@ -160,8 +157,10 @@ class DataLoader:
 
         MelodieExceptions.Data.TableNameInvalid(df_info.df_name)
         file_path_abs = os.path.join(self.config.input_folder, df_info.file_name)
+        print(df_info.engine, df_info.file_name)
         if df_info.engine == "pandas":
             import pandas
+
             if ext in {".xls", ".xlsx"}:
                 table = pandas.read_excel(file_path_abs)
                 df_info.check_column_names(list(table.columns))
@@ -169,6 +168,7 @@ class DataLoader:
                 raise NotImplemented(df_info.file_name)
         else:
             table = Table.from_file(file_path_abs, df_info.columns)
+        self.registered_dataframes[df_info.df_name] = table
         if not self.as_sub_worker:
             DBConn.register_dtypes(df_info.df_name, df_info.columns)
             create_db_conn(self.config).write_dataframe(
@@ -177,10 +177,6 @@ class DataLoader:
                 data_types=df_info.columns,
                 if_exists="replace",
             )
-
-        self.registered_dataframes[df_info.df_name] = create_db_conn(
-            self.config
-        ).read_dataframe(df_info.df_name)
 
     def load_matrix(self, matrix_info: "MatrixInfo") -> None:
         """
@@ -193,7 +189,7 @@ class DataLoader:
             file_path_abs = os.path.join(
                 self.config.input_folder, matrix_info.file_name
             )
-            table: pd.DataFrame = pd.read_excel(file_path_abs, header=None)
+            table: "pd.DataFrame" = pd.read_excel(file_path_abs, header=None)
             array = table.to_numpy(matrix_info.dtype, copy=True)
         else:
             raise NotImplementedError(f"Cannot load file to matrix {ext}")

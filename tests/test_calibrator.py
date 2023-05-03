@@ -2,7 +2,7 @@ import pytest
 
 from Melodie import DataLoader
 from tests.calibrator import CovidCalibrator, CovidModel, CovidScenario
-from tests.config import cfg_for_calibrator
+from tests.infra.config import cfg_for_calibrator
 
 
 class DFLoader(DataLoader):

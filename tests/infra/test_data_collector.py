@@ -15,8 +15,8 @@ from Melodie import (
     Model,
     DataLoader,
 )
-from .calibrator import CovidCalibrator, CovidScenario, CovidModel
-from .config import cfg_for_temp, cfg_for_calibrator
+from tests.calibrator import CovidCalibrator, CovidScenario, CovidModel
+from tests.infra.config import cfg_for_temp, cfg_for_calibrator
 
 AGENT_NUM_1 = 10
 AGENT_NUM_2 = 20

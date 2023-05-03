@@ -9,7 +9,7 @@ from Melodie import (
     DataLoader,
     DataFrameInfo,
 )
-from .config import cfg_for_temp
+from tests.infra.config import cfg_for_temp
 
 
 class TestModel(Model):

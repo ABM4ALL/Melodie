@@ -59,9 +59,11 @@ class ParallelWorker:
             raise NotImplementedError(f"Unrecognized role `{self.role}`")
 
 
-def get_scenario_manager(config, modules: Dict) -> Tuple[
-    Union["Trainer", "Calibrator"], Type["Model"], Type["Scenario"]]:
+def get_scenario_manager(
+    config, modules: Dict
+) -> Tuple[Union["Trainer", "Calibrator"], Type["Model"], Type["Scenario"]]:
     from Melodie import Trainer, Calibrator
+
     classes_dict = {}
     for module_type, content in modules.items():
         class_name, module_name = content
@@ -78,14 +80,14 @@ def get_scenario_manager(config, modules: Dict) -> Tuple[
     trainer.setup()
     trainer.collect_data()
     trainer.subworker_prerun()
-    return trainer, classes_dict['scenario'], classes_dict['model']
+    return trainer, classes_dict["scenario"], classes_dict["model"]
 
 
 def sub_routine_trainer(
-        proc_id: int,
-        modules: Dict[str, Tuple[str, str]],
-        config_raw: Dict[str, Any],
-        worker: ParallelWorker,
+    proc_id: int,
+    modules: Dict[str, Tuple[str, str]],
+    config_raw: Dict[str, Any],
+    worker: ParallelWorker,
 ):
     """
     The sub iterator callback for parallelized computing used in Trainer and Calibrator.
@@ -156,10 +158,10 @@ def sub_routine_trainer(
 
 
 def sub_routine_calibrator(
-        proc_id: int,
-        modules: Dict[str, Tuple[str, str]],
-        config_raw: Dict[str, Any],
-        worker: ParallelWorker,
+    proc_id: int,
+    modules: Dict[str, Tuple[str, str]],
+    config_raw: Dict[str, Any],
+    worker: ParallelWorker,
 ):
     """
     The sub iterator callback for parallelized computing used in Trainer and Calibrator.
@@ -207,11 +209,13 @@ def sub_routine_calibrator(
                 for row in df:
                     row["agent_id"] = row.pop("id")
             env: Environment = model.environment
-            env_data = env.to_dict(
-                calibrator.watched_env_properties
+            env_data = env.to_dict(calibrator.watched_env_properties)
+            env_data.update(
+                {prop: scenario.to_dict()[prop] for prop in calibrator.properties}
             )
-            env_data.update({prop: scenario.to_dict()[prop] for prop in calibrator.properties})
-            env_data["target_function_value"] = env_data["distance"] = calibrator.distance(model)
+            env_data["target_function_value"] = env_data[
+                "distance"
+            ] = calibrator.distance(model)
             dumped = cloudpickle.dumps((chrom, agent_data, env_data))
             t1 = time.time()
             logger.info(

@@ -3,10 +3,7 @@ import logging
 import pickle
 from typing import List, Optional, Union, TYPE_CHECKING
 
-import numpy as np
-import pandas as pd
-
-from MelodieInfra import MelodieExceptions
+from MelodieInfra import MelodieExceptions, np, pd
 from .element import Element
 
 if TYPE_CHECKING:
@@ -21,6 +18,7 @@ class Scenario(Element):
     It is created before the initialization of ``Model``.
 
     """
+
     def __init__(self, id_scenario: Optional[Union[int, str]] = None):
         """
         :param id_scenario: the id of scenario. if None, this will be self-increment from 0 to scenarios_number-1

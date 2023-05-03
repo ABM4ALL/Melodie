@@ -5,8 +5,8 @@ from .agent import Element
 class Environment(Element):
     def __init__(self):
         super().__init__()
-        self.model: Optional['Model'] = None
-        self.scenario: Optional['Scenario'] = None
+        self.model: Optional["Model"] = None
+        self.scenario: Optional["Scenario"] = None
 
     def setup(self):
         """
@@ -33,4 +33,4 @@ class Environment(Element):
         self.setup()
 
 
-__all__ = ['Environment']
+__all__ = ["Environment"]

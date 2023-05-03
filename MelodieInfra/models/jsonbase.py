@@ -4,6 +4,7 @@
 # @Email: 1295752786@qq.com
 # @File: jsonbase.py
 
+
 class JSONBase:
     names_map = {}
 

@@ -4,7 +4,7 @@ import sys
 
 from Melodie import Config, Model, Scenario
 
-skip_env_dependent = '--skip-env-dependent-testcases' in sys.argv
+skip_env_dependent = "--skip-env-dependent-testcases" in sys.argv
 resources_path = os.path.join(os.path.dirname(__file__), "resources")
 
 cfg = Config(

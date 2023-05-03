@@ -9,7 +9,12 @@ import time
 from enum import Enum
 
 from typing import Dict, Tuple, List, Any, Callable, Union, TYPE_CHECKING, Optional
-from MelodieInfra import OSTroubleShooter, get_sqlite_filename, MelodieExceptions, Config
+from MelodieInfra import (
+    OSTroubleShooter,
+    get_sqlite_filename,
+    MelodieExceptions,
+    Config,
+)
 
 from .actions import ToolbarAction
 from .visualizer_server import create_visualizer_server
@@ -36,7 +41,7 @@ SAVE_PARAMS = 7
 SAVE_DATABASE = 8
 DOWNLOAD_DATA = 9
 GENERAL_COMMAND = 10
-HEARTBEAT=100
+HEARTBEAT = 100
 
 UNCONFIGURED = 0
 READY = 1
@@ -49,7 +54,7 @@ ERROR = 1
 
 
 class WSMsgType(str, Enum):
-    INIT_OPTION = 'initOption'
+    INIT_OPTION = "initOption"
     INIT_PLOT_SERIES = "initPlotSeries"
     NOTIFICATION = "notification"
     PARAMS = "params"
@@ -89,8 +94,8 @@ class BaseVisualizer:
         self.current_scenario: "Scenario" = None
         self.actions: List[ToolbarAction] = []
 
-        self.params_dir = os.path.join(config.visualizer_tmpdir, 'params')
-        self.sim_data_dir = os.path.join(config.visualizer_tmpdir, 'sim_data')
+        self.params_dir = os.path.join(config.visualizer_tmpdir, "params")
+        self.sim_data_dir = os.path.join(config.visualizer_tmpdir, "sim_data")
         if not os.path.exists(self.params_dir):
             os.makedirs(self.params_dir)
         if not os.path.exists(self.sim_data_dir):
@@ -100,7 +105,14 @@ class BaseVisualizer:
         self.params_manager: ParamsManager = ParamsManager()
         self.scenario_param: Dict[str, Union[int, str, float]] = {}
         self.visualizer_components: List[
-            Tuple["Callable[[],ComponentType]", str, str, Dict, Dict, Callable[["Agent"], int]]
+            Tuple[
+                "Callable[[],ComponentType]",
+                str,
+                str,
+                Dict,
+                Dict,
+                Callable[["Agent"], int],
+            ]
         ] = []
 
         self.plot_charts: ChartManager = ChartManager()
@@ -119,17 +131,24 @@ class BaseVisualizer:
 
     @execute_only_enabled
     def start_websocket(self):
-        server_logger = logging.getLogger('websocket-server')
+        server_logger = logging.getLogger("websocket-server")
         server_logger.setLevel(logging.ERROR)
         host = "localhost"
 
-        self.th = threading.Thread(target=create_visualizer_server,
-                                   args=(self.recv_queue, self.send_queue, self.config.visualizer_port))
+        self.th = threading.Thread(
+            target=create_visualizer_server,
+            args=(self.recv_queue, self.send_queue, self.config.visualizer_port),
+        )
 
         self.th.setDaemon(True)
         self.th.start()
 
-        logger.info("\n" + "=" * 100 + f"\nVisualizer started at {host}:{self.config.visualizer_port}\n" + "=" * 100)
+        logger.info(
+            "\n"
+            + "=" * 100
+            + f"\nVisualizer started at {host}:{self.config.visualizer_port}\n"
+            + "=" * 100
+        )
 
     def add_action(self, action: ToolbarAction):
         self.actions.append(action)
@@ -204,42 +223,59 @@ class BaseVisualizer:
     def get_visualizers_initial_options(self):
         initial_options = []
         for (
-                component,
-                component_name,
-                component_type,
-                options,
-                roles,
-                var_getter,
+            component,
+            component_name,
+            component_type,
+            options,
+            roles,
+            var_getter,
         ) in self.visualizer_components:
             if component_type == "grid":
 
-                initial_options.append(self.parse_grid_series(component(), roles, var_getter, True))
+                initial_options.append(
+                    self.parse_grid_series(component(), roles, var_getter, True)
+                )
             else:
-                initial_options.append(self.parse_network_series(component(), roles, var_getter))
+                initial_options.append(
+                    self.parse_network_series(component(), roles, var_getter)
+                )
         return initial_options
 
     def send_chart_options(self):
         self.send_msg(WSMsgType.INIT_OPTION, 0, self.get_visualizers_initial_options())
 
-    def send_notification(self, message: str, type: str = 'info', title="Notice"):
-        assert type in {'success', 'info', 'warning', 'error'}
-        self.send_msg(WSMsgType.NOTIFICATION, 0, {"type": type, "title": title, "message": message})
+    def send_notification(self, message: str, type: str = "info", title="Notice"):
+        assert type in {"success", "info", "warning", "error"}
+        self.send_msg(
+            WSMsgType.NOTIFICATION,
+            0,
+            {"type": type, "title": title, "message": message},
+        )
 
     def send_plot_series(self):
         self.send_msg(WSMsgType.INIT_PLOT_SERIES, 0, self.plot_charts.to_json())
 
     def send_scenario_params(self, params_set_name: str):
-        all_param_names = [os.path.splitext(filename)[0] for filename in
-                           os.listdir(self.params_dir)]
+        all_param_names = [
+            os.path.splitext(filename)[0] for filename in os.listdir(self.params_dir)
+        ]
         if params_set_name in all_param_names:
-            with open(os.path.join(self.params_dir, params_set_name + '.json'), encoding='utf8', errors='replace') as f:
+            with open(
+                os.path.join(self.params_dir, params_set_name + ".json"),
+                encoding="utf8",
+                errors="replace",
+            ) as f:
                 params_json = json.load(f)
                 self.params_manager.from_json(params_json)
-                self.send_notification(f"Parameters updated to param set {params_set_name}")
+                self.send_notification(
+                    f"Parameters updated to param set {params_set_name}"
+                )
 
-        params = {"initialParams": self.params_manager.to_value_json(),
-                  "paramModels": self.params_manager.to_form_model(),
-                  "allParamSetNames": all_param_names}
+        params = {
+            "initialParams": self.params_manager.to_value_json(),
+            "paramModels": self.params_manager.to_form_model(),
+            "allParamSetNames": all_param_names,
+        }
         self.send_msg(WSMsgType.PARAMS, self.current_step, params)
 
     def send_current_data(self):
@@ -270,9 +306,7 @@ class BaseVisualizer:
             except queue.Empty:
                 pass
 
-    def generic_handler(
-            self, cmd_type: int, data: Dict[str, Any]
-    ) -> bool:
+    def generic_handler(self, cmd_type: int, data: Dict[str, Any]) -> bool:
         """
         The handler for viewing current data, getting scenario parameters.
 
@@ -282,14 +316,15 @@ class BaseVisualizer:
         :return:
         """
         if cmd_type == GET_PARAMS:
-            self.send_scenario_params(data.get('name'))
+            self.send_scenario_params(data.get("name"))
             return True
         elif cmd_type == RESET:
             try:
-                self.params_manager.from_json(data['params'])
+                self.params_manager.from_json(data["params"])
                 raise MelodieModelReset
             except Exception as e:
                 import traceback
+
                 traceback.print_exc()
                 self.send_notification("Parameter value error:" + str(e), "error")
                 return True
@@ -300,8 +335,8 @@ class BaseVisualizer:
             return True
         elif cmd_type == SAVE_PARAMS:
             file = os.path.join(self.params_dir, f"{data['name']}.json")
-            with open(file, 'w', encoding='utf-8', errors='replace') as f:
-                json.dump(data['params'], f, indent=4, ensure_ascii=False)
+            with open(file, "w", encoding="utf-8", errors="replace") as f:
+                json.dump(data["params"], f, indent=4, ensure_ascii=False)
             self.send_notification("Parameters saved successfully", "success")
             return True
         elif cmd_type == SAVE_DATABASE:
@@ -313,15 +348,22 @@ class BaseVisualizer:
         elif cmd_type == DOWNLOAD_DATA:
             sqlite_file = get_sqlite_filename(self.config)
             if os.path.exists(sqlite_file):
-                with open(sqlite_file, 'rb') as f:
-                    self.send_msg(WSMsgType.FILE, self.current_step, {"name": data['name'] + '.sqlite',
-                                                                      "content":
-                                                                          base64.b64encode(f.read()).decode('ascii')},
-                                  ERROR)
+                with open(sqlite_file, "rb") as f:
+                    self.send_msg(
+                        WSMsgType.FILE,
+                        self.current_step,
+                        {
+                            "name": data["name"] + ".sqlite",
+                            "content": base64.b64encode(f.read()).decode("ascii"),
+                        },
+                        ERROR,
+                    )
 
                 self.send_notification("Database exported successfully!", "success")
             else:
-                self.send_notification("Database exported error: No database file found!", "error")
+                self.send_notification(
+                    "Database exported error: No database file found!", "error"
+                )
             return True
         else:
             return False
@@ -334,6 +376,7 @@ class BaseVisualizer:
             self.send_current_data()
         except:
             import traceback
+
             traceback.print_exc()
 
         while 1:
@@ -342,7 +385,7 @@ class BaseVisualizer:
             if flag in {STEP, CURRENT_DATA}:
                 self.send_current_data()
                 if (
-                        flag == STEP
+                    flag == STEP
                 ):  # If the flag was period, then go to period No.1. So there should be one
                     # queue to put into the condition queue.
                     self.model_state = RUNNING
@@ -432,7 +475,10 @@ class Visualizer(BaseVisualizer):
             )
             for agent in agent_list:
                 agents_vis_dicts.append(
-                    {"data": agent.to_dict(attributes), "style": styles[var_getter(agent)]}
+                    {
+                        "data": agent.to_dict(attributes),
+                        "style": styles[var_getter(agent)],
+                    }
                 )
         return {
             "name": "grid",
@@ -441,35 +487,51 @@ class Visualizer(BaseVisualizer):
             "spots": spots,
         }
 
-    def parse_network_series(self, network: 'Network', roles, var_getter: 'Callable[[Agent], int]'):
+    def parse_network_series(
+        self, network: "Network", roles, var_getter: "Callable[[Agent], int]"
+    ):
         data = []
         # network.agent_categories
         for category, agent_id in network.nodes:
             agent = network.agent_categories[category].get_agent(agent_id)
             layout = network.get_position(agent.category, agent.id)
             data.append(
-                {"name": f"{agent.category}-{agent.id}", "agentCategory": category,
-                 "category": var_getter(agent),
-                 "x": layout[0],
-                 "y": layout[1]
-                 })
+                {
+                    "name": f"{agent.category}-{agent.id}",
+                    "agentCategory": category,
+                    "category": var_getter(agent),
+                    "x": layout[0],
+                    "y": layout[1],
+                }
+            )
         links = []
         for start_node in network.edges.keys():
             for end_node in network.edges[start_node]:
                 links.append(
                     {
-                        "source": f'{start_node[0]}-{start_node[1]}',
-                        "target": f'{end_node[0]}-{end_node[1]}',
+                        "source": f"{start_node[0]}-{start_node[1]}",
+                        "target": f"{end_node[0]}-{end_node[1]}",
                     },
                 )
-        categories = [{
-                          "name": roles[i]['label'],
-                          "itemStyle": {
-                              "color": roles[i]['color'],
-                          },
-                      } if i in roles else {} for i in range(min(roles.keys()), max(roles.keys()) + 1)]
-        legends = [{"data": [roles[i]['label'] if i in roles else "" for i in
-                             range(min(roles.keys()), max(roles.keys()) + 1)]}]
+        categories = [
+            {
+                "name": roles[i]["label"],
+                "itemStyle": {
+                    "color": roles[i]["color"],
+                },
+            }
+            if i in roles
+            else {}
+            for i in range(min(roles.keys()), max(roles.keys()) + 1)
+        ]
+        legends = [
+            {
+                "data": [
+                    roles[i]["label"] if i in roles else ""
+                    for i in range(min(roles.keys()), max(roles.keys()) + 1)
+                ]
+            }
+        ]
         d = {
             "legend": legends,
             "series": [
@@ -478,36 +540,29 @@ class Visualizer(BaseVisualizer):
                     "layout": "none",
                     "symbolSize": 5,
                     "symbol": "circle",
-
                     "roam": True,
-                    "itemStyle": {
-                        "opacity": 1
-                    },
+                    "itemStyle": {"opacity": 1},
                     "scaleLimit": [0.1, 100],
                     "edgeSymbol": ["circle", "arrow"],
                     "edgeSymbolSize": [4, 5],
                     "categories": categories,
                     "data": data,
-                    "links": links
+                    "links": links,
                 },
             ],
         }
-        return {
-            "name": "network",
-            "type": "network",
-            "graph": d
-        }
+        return {"name": "network", "type": "network", "graph": d}
 
     def add_agent_series(
-            self,
-            component_name: str,
-            series_id: int,
-            agent_container: Union["AgentList"],
-            role_getter: Callable[["Agent"], int] = None,
-            roles_repr: Dict = None,
-            series_type: str = "scatter",
-            color: str = "#000000",
-            symbol="rect",
+        self,
+        component_name: str,
+        series_id: int,
+        agent_container: Union["AgentList"],
+        role_getter: Callable[["Agent"], int] = None,
+        roles_repr: Dict = None,
+        series_type: str = "scatter",
+        color: str = "#000000",
+        symbol="rect",
     ):
         if series_type not in {"scatter"}:
             MelodieExceptions.Program.Variable.VariableNotInSet(
@@ -520,9 +575,13 @@ class Visualizer(BaseVisualizer):
         )
         self.agent_lists[series_id] = agent_container
 
-    def add_network(self, name: str, network_getter: "Callable[[], ComponentType]",
-                    var_style: Dict[int, Dict] = None,
-                    var_getter: Callable[["Agent"], int] = None):
+    def add_network(
+        self,
+        name: str,
+        network_getter: "Callable[[], ComponentType]",
+        var_style: Dict[int, Dict] = None,
+        var_getter: Callable[["Agent"], int] = None,
+    ):
         """
         Add a network onto the visualizer.
         :param name:
@@ -533,16 +592,16 @@ class Visualizer(BaseVisualizer):
         """
 
         self.visualizer_components.append(
-            (network_getter, name, 'network', {}, var_style, var_getter)
+            (network_getter, name, "network", {}, var_style, var_getter)
         )
 
     def add_grid(
-            self,
-            name: str,
-            grid_getter: "Callable[[], ComponentType]",
-            var_style: Dict[int, Dict] = None,
-            var_getter: Callable[["Agent"], int] = None,
-            update_spots=True
+        self,
+        name: str,
+        grid_getter: "Callable[[], ComponentType]",
+        var_style: Dict[int, Dict] = None,
+        var_getter: Callable[["Agent"], int] = None,
+        update_spots=True,
     ):
         """
         Add a Grid onto the visualizer.
@@ -564,19 +623,21 @@ class Visualizer(BaseVisualizer):
     def _format(self):
         visualizers = []
         for (
-                vis_component,
-                vis_component_name,
-                vis_component_type,
-                _1,
-                roles,
-                var_getter,
+            vis_component,
+            vis_component_name,
+            vis_component_type,
+            _1,
+            roles,
+            var_getter,
         ) in self.visualizer_components:
-            if vis_component_type == 'grid':
+            if vis_component_type == "grid":
                 r = self.parse_grid_series(vis_component(), roles, var_getter)
                 visualizers.append(r)
-            elif vis_component_type == 'network':
+            elif vis_component_type == "network":
 
-                visualizers.append(self.parse_network_series(vis_component(), roles, var_getter))
+                visualizers.append(
+                    self.parse_network_series(vis_component(), roles, var_getter)
+                )
             else:
                 raise NotImplementedError
         data = {

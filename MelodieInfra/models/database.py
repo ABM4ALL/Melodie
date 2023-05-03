@@ -6,9 +6,10 @@
 
 from MelodieInfra.jsonobject import JsonObject, StringProperty
 
+
 class DatabaseBasicRequest(JsonObject):
     connection_string = StringProperty(name="connectionString", required=True)
 
+
 class DatabaseQueryRequest(DatabaseBasicRequest):
     sql = StringProperty(name="sql", required=True)
-

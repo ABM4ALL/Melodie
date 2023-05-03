@@ -12,15 +12,14 @@ from . import properties
 from .containers import JsonArray, JsonDict, JsonSet
 
 
-re_date = re.compile(r'^(\d{4})\D?(0[1-9]|1[0-2])\D?([12]\d|0[1-9]|3[01])$')
-re_time = re.compile(
-    r'^([01]\d|2[0-3])\D?([0-5]\d)\D?([0-5]\d)?\D?(\d{3,6})?$')
+re_date = re.compile(r"^(\d{4})\D?(0[1-9]|1[0-2])\D?([12]\d|0[1-9]|3[01])$")
+re_time = re.compile(r"^([01]\d|2[0-3])\D?([0-5]\d)\D?([0-5]\d)?\D?(\d{3,6})?$")
 re_datetime = re.compile(
-    r'^(\d{4})\D?(0[1-9]|1[0-2])\D?([12]\d|0[1-9]|3[01])'
-    r'(\D?([01]\d|2[0-3])\D?([0-5]\d)\D?([0-5]\d)?\D?(\d{3,6})?'
-    r'([zZ]|([\+-])([01]\d|2[0-3])\D?([0-5]\d)?)?)?$'
+    r"^(\d{4})\D?(0[1-9]|1[0-2])\D?([12]\d|0[1-9]|3[01])"
+    r"(\D?([01]\d|2[0-3])\D?([0-5]\d)\D?([0-5]\d)?\D?(\d{3,6})?"
+    r"([zZ]|([\+-])([01]\d|2[0-3])\D?([0-5]\d)?)?)?$"
 )
-re_decimal = re.compile(r'^(\d+)\.(\d+)$')
+re_decimal = re.compile(r"^(\d+)\.(\d+)$")
 
 if six.PY3:
     unicode = str

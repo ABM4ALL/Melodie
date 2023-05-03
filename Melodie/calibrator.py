@@ -15,9 +15,7 @@ from typing import (
     cast,
 )
 
-import pandas as pd
-
-from MelodieInfra import create_db_conn, Config, MelodieExceptions
+from MelodieInfra import create_db_conn, Config, MelodieExceptions, np, pd
 from MelodieInfra.parallel.parallel_manager import ParallelManager
 
 from .algorithms import AlgorithmParameters
@@ -27,21 +25,21 @@ from .model import Model
 from .scenario_manager import Scenario
 from .simulator import BaseModellingManager
 
-if TYPE_CHECKING:
-    pass
+# if TYPE_CHECKING:
+#     import pandas as pd
 logger = logging.getLogger(__name__)
 
 
 class GACalibratorParams(AlgorithmParameters):
     def __init__(
-            self,
-            id: int,
-            path_num: int,
-            generation_num: int,
-            strategy_population: int,
-            mutation_prob: int,
-            strategy_param_code_length: int,
-            **kw,
+        self,
+        id: int,
+        path_num: int,
+        generation_num: int,
+        strategy_population: int,
+        mutation_prob: int,
+        strategy_param_code_length: int,
+        **kw,
     ):
         super().__init__(id, path_num)
 
@@ -53,7 +51,7 @@ class GACalibratorParams(AlgorithmParameters):
 
     @staticmethod
     def from_dataframe_record(
-            record: Dict[str, Union[int, float]]
+        record: Dict[str, Union[int, float]]
     ) -> "GACalibratorParams":
         s = GACalibratorParams(
             record["id"],
@@ -125,14 +123,14 @@ class GACalibratorAlgorithm:
     """
 
     def __init__(
-            self,
-            env_param_names: List[str],
-            recorded_env_properties: List[str],
-            recorded_agent_properties: Dict[str, List[str]],
-            params: GACalibratorParams,
-            target_func: "Callable[[Model], Union[float, int]]",
-            manager: "Calibrator" = None,
-            processors=1,
+        self,
+        env_param_names: List[str],
+        recorded_env_properties: List[str],
+        recorded_agent_properties: Dict[str, List[str]],
+        params: GACalibratorParams,
+        target_func: "Callable[[Model], Union[float, int]]",
+        manager: "Calibrator" = None,
+        processors=1,
     ):
         self.manager = manager
         self.params = params
@@ -203,10 +201,10 @@ class GACalibratorAlgorithm:
         return env_parameters_dict
 
     def target_function_to_cache(
-            self,
-            env_data,
-            generation: int,
-            id_chromosome: int,
+        self,
+        env_data,
+        generation: int,
+        id_chromosome: int,
     ):
         """
         Extract the value of target functions from Model, and write them into cache.
@@ -230,10 +228,10 @@ class GACalibratorAlgorithm:
         return f
 
     def record_agent_properties(
-            self,
-            agent_data: Dict[str, List[Dict[str, Any]]],
-            env_data: Dict[str, Any],
-            meta: GACalibratorAlgorithmMeta,
+        self,
+        agent_data: Dict[str, List[Dict[str, Any]]],
+        env_data: Dict[str, Any],
+        meta: GACalibratorAlgorithmMeta,
     ):
         """
         Record the property of each agent in the current chromosome.
@@ -273,10 +271,10 @@ class GACalibratorAlgorithm:
         return agent_records, environment_record
 
     def calc_cov_df(
-            self,
-            agent_container_df_dict: Dict[str, pd.DataFrame],
-            env_df: pd.DataFrame,
-            meta,
+        self,
+        agent_container_df_dict: "Dict[str, pd.DataFrame]",
+        env_df: "pd.DataFrame",
+        meta,
     ):
         """
         Calculate the coefficient of variation
@@ -286,7 +284,6 @@ class GACalibratorAlgorithm:
         :param meta:
         :return:
         """
-
         pd.set_option("max_colwidth", 500)
         pd.set_option("display.max_columns", None)
         pd.set_option("display.max_rows", None)
@@ -318,7 +315,7 @@ class GACalibratorAlgorithm:
         env_record = {}
         env_record.update(meta_dict)
         for prop_name in (
-                self.env_param_names + self.recorded_env_properties + ["distance"]
+            self.env_param_names + self.recorded_env_properties + ["distance"]
         ):
             mean = env_df[prop_name].mean()
             cov = env_df[prop_name].std() / env_df[prop_name].mean()
@@ -335,10 +332,12 @@ class GACalibratorAlgorithm:
 
         :return:
         """
-        logger.info(f"""Algorithm will run with:
+        logger.info(
+            f"""Algorithm will run with:
         Meta value: {meta}
         Recording environment parameters: {self.recorded_env_properties}
-        Recording Agent agent_lists: {self.recorded_agent_properties}\n""")
+        Recording Agent agent_lists: {self.recorded_agent_properties}\n"""
+        )
 
     def run(self, scenario: Scenario, meta: Union[GACalibratorAlgorithmMeta]):
         self.pre_check(meta)
@@ -393,17 +392,17 @@ class GACalibratorAlgorithm:
 
 class Calibrator(BaseModellingManager):
     """
-    Calibrator calibrates the parameters of the scenario 
+    Calibrator calibrates the parameters of the scenario
     by minimizing the distance between model output and empirical evidence.
     """
 
     def __init__(
-            self,
-            config: "Config",
-            scenario_cls: "Optional[Type[Scenario]]",
-            model_cls: "Optional[Type[Model]]",
-            data_loader_cls: Type["DataLoader"],
-            processors=1,
+        self,
+        config: "Config",
+        scenario_cls: "Optional[Type[Scenario]]",
+        model_cls: "Optional[Type[Model]]",
+        data_loader_cls: Type["DataLoader"],
+        processors=1,
     ):
         """
         :param config: Config instance for current project.
@@ -450,7 +449,7 @@ class Calibrator(BaseModellingManager):
     def generate_scenarios(self) -> List["Scenario"]:
         """
         Generate scenario objects by the parameter from static tables or scenarios_dataframe.
-        
+
         :return: A list of generated scenarios.
         """
         return self.data_loader.generate_scenarios_from_dataframe(
@@ -543,7 +542,7 @@ class Calibrator(BaseModellingManager):
         :return: None
         """
         assert (
-                prop not in self.properties
+            prop not in self.properties
         ), f'Property "{prop}" is already in the calibrating training_properties!'
         self.properties.append(prop)
 

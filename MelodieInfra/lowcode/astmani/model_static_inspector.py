@@ -15,20 +15,20 @@ if TYPE_CHECKING:
     from Melodie import Agent, DataCollector, Environment, Model
 
 
-def get_model_ast(model: 'Type[Model]'):
+def get_model_ast(model: "Type[Model]"):
     file = sys.modules[model.__module__].__file__
-    with open(file, encoding='utf-8', errors='replace') as f:
+    with open(file, encoding="utf-8", errors="replace") as f:
         for node in ast.walk(ast.parse(f.read())):
             if isinstance(node, ast.ClassDef) and node.name == model.__name__:
                 return node
-    raise Exception('No classdef in such file!')
+    raise Exception("No classdef in such file!")
 
 
 class ModelStructure:
     def __init__(self):
-        self.agent_types: 'List[Type[Agent]]' = []
-        self.environment_type: 'Optional[Type[Environment]]' = None
-        self.data_collector_type: 'Optional[Type[DataCollector]]' = None
+        self.agent_types: "List[Type[Agent]]" = []
+        self.environment_type: "Optional[Type[Environment]]" = None
+        self.data_collector_type: "Optional[Type[DataCollector]]" = None
 
         self.env_structure: "Optional[ClassStructure]" = None
         self.agents_structure: "Optional[Dict[str, ClassStructure]]" = {}
@@ -74,8 +74,10 @@ class ClassStructure:
         self.methods: Dict[str, Function] = {}
 
     def __repr__(self):
-        return f"<ClassStructure of class '{self.name}' extends {self.bases}, attributes: {self.attributes}," \
-               f" methods: {self.methods} >"
+        return (
+            f"<ClassStructure of class '{self.name}' extends {self.bases}, attributes: {self.attributes},"
+            f" methods: {self.methods} >"
+        )
 
     @staticmethod
     def from_cls_ast(cls_ast: ast.ClassDef) -> "ClassStructure":
@@ -97,19 +99,28 @@ class ClassStructure:
     def parse_assign(self, node: Union[ast.Assign, ast.AnnAssign]):
         targets = node.targets if isinstance(node, ast.Assign) else [node.target]
         for target in targets:
-            if isinstance(target, ast.Attribute) and isinstance(target.value,
-                                                                ast.Name) and target.value.id == 'self':
+            if (
+                isinstance(target, ast.Attribute)
+                and isinstance(target.value, ast.Name)
+                and target.value.id == "self"
+            ):
                 self.attributes[target.attr] = Attribute(target.attr)
 
     def parse_functiondef(self, node: ast.FunctionDef):
         if len(node.decorator_list) > 0:
             for decorator_ast in node.decorator_list:
-                if isinstance(decorator_ast, ast.Name) and decorator_ast.id == 'property':
+                if (
+                    isinstance(decorator_ast, ast.Name)
+                    and decorator_ast.id == "property"
+                ):
                     if node.name not in self.attributes:
                         self.attributes[node.name] = Attribute(node.name, True)
                         return
-                elif isinstance(decorator_ast, ast.Attribute) and decorator_ast.attr == 'setter' and isinstance(
-                        decorator_ast.value, ast.Name):
+                elif (
+                    isinstance(decorator_ast, ast.Attribute)
+                    and decorator_ast.attr == "setter"
+                    and isinstance(decorator_ast.value, ast.Name)
+                ):
                     attr_name = decorator_ast.value.id
                     if attr_name in self.attributes:
                         self.attributes[attr_name].readonly = False
@@ -146,9 +157,15 @@ def find_class_in_files(cls_name: str, files_dir: str):
 
 def walk_model_ast(model_ast: ast.ClassDef, file: str):
     model_structure = ModelStructure()
-    functions = {'self.create_agent_list': lambda args: model_structure.add_agent_container_type(args[0]),
-                 'self.create_environment': lambda args: model_structure.set_env_type(args[0]),
-                 'self.create_data_collector': lambda args: model_structure.set_data_collector_type(args[0])}
+    functions = {
+        "self.create_agent_list": lambda args: model_structure.add_agent_container_type(
+            args[0]
+        ),
+        "self.create_environment": lambda args: model_structure.set_env_type(args[0]),
+        "self.create_data_collector": lambda args: model_structure.set_data_collector_type(
+            args[0]
+        ),
+    }
 
     for node in ast.walk(model_ast):
         if isinstance(node, ast.Call):
@@ -164,6 +181,8 @@ def walk_model_ast(model_ast: ast.ClassDef, file: str):
         agent_cls_ast = find_class_in_files(agent_type, os.path.dirname(file))
         model_structure.agents_structure[agent_type] = scan_attributes(agent_cls_ast)
 
-    env_structure = scan_attributes(find_class_in_files(model_structure.environment_type, os.path.dirname(file)))
+    env_structure = scan_attributes(
+        find_class_in_files(model_structure.environment_type, os.path.dirname(file))
+    )
     model_structure.env_structure = env_structure
     # model_structure.agents_structure

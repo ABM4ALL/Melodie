@@ -11,7 +11,10 @@ import astunparse
 import pprintast
 from MelodieInfra.lowcode.astmani.ast_manipulator import FuncDefManipulator
 
-from MelodieInfra.lowcode.astmani.model_static_inspector import get_model_ast, walk_model_ast
+from MelodieInfra.lowcode.astmani.model_static_inspector import (
+    get_model_ast,
+    walk_model_ast,
+)
 from ..calibrator import CovidModel
 
 #

@@ -6,7 +6,6 @@
 
 from typing import TYPE_CHECKING
 
-import pandas as pd
 from Melodie import DataCollector
 
 if TYPE_CHECKING:
@@ -67,7 +66,9 @@ class AMETSDataCollector(DataCollector):
                             "period": period,
                             "tick": tick,
                             "price": environment.order_book.price_history[period][tick],
-                            "volume": environment.order_book.volume_history[period][tick],
+                            "volume": environment.order_book.volume_history[period][
+                                tick
+                            ],
                         }
                     )
             price_volume_history_df = pd.DataFrame(price_volume_history)

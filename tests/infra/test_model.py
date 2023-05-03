@@ -3,7 +3,7 @@ import pandas as pd
 
 from MelodieInfra import MelodieException
 from Melodie import Agent, Model, Scenario
-from .config import cfg
+from tests.infra.config import cfg
 
 
 class TestAgent(Agent):

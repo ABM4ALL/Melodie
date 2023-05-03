@@ -9,7 +9,7 @@ from typing import Callable, List, Optional, Tuple
 
 
 def load_func(file: str, func_name: str):
-    with open(file, 'r', encoding='utf8', errors='replace') as f:
+    with open(file, "r", encoding="utf8", errors="replace") as f:
         root = ast.parse(f.read())
     for node in ast.walk(root):
         if isinstance(node, ast.FunctionDef) and node.name == func_name:
@@ -55,7 +55,7 @@ class FuncDefManipulator(ASTManipulator):
                 value=ast.Call(
                     func=ast.parse(func_name),
                     args=[ast.Constant(value=s) for s in record],
-                    keywords=[]
+                    keywords=[],
                 )
             )
         )
@@ -65,7 +65,10 @@ class FuncDefManipulator(ASTManipulator):
         for i, item in enumerate(self.body):
             if isinstance(item, ast.Expr):
                 node = item.value
-                if self.is_valid_ast_node(func_name, node) and self.parse_valid_node(node) == record:
+                if (
+                    self.is_valid_ast_node(func_name, node)
+                    and self.parse_valid_node(node) == record
+                ):
                     break
             else:
                 continue

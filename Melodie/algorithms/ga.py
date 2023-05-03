@@ -2,11 +2,17 @@ import logging
 
 import numpy as np
 
+try:
+    from sko.GA import GA
+except:
+
+    class GA:
+        def __init__(self, *args, **kwargs):
+            raise ModuleNotFoundError(
+                "Cannot import scikit-opt, please install this package!"
+            )
 
 
-# from sko.GA import GA
-class GA:
-    pass
 logger = logging.getLogger(__name__)
 
 

@@ -70,6 +70,7 @@ class ParallelManager:
             self.server.start()
         except OSError as e:
             import traceback
+
             traceback.print_exc()
             # print()
             raise Exception("Server Error Occurred, exiting...")
@@ -127,4 +128,5 @@ class ParallelDataService(Service):
         tasks.put_result(loaded)
 
     def exposed_get_config(self):
+        print(tasks.get_config())
         return json.dumps(tasks.get_config())

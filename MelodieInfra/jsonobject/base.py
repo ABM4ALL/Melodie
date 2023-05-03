@@ -11,14 +11,15 @@ from .base_properties import JsonProperty, DefaultProperty
 from .utils import check_type
 
 
-JsonObjectClassSettings = namedtuple('JsonObjectClassSettings', ['type_config'])
+JsonObjectClassSettings = namedtuple("JsonObjectClassSettings", ["type_config"])
 
-CLASS_SETTINGS_ATTR = '_$_class_settings'
+CLASS_SETTINGS_ATTR = "_$_class_settings"
 
 
 def get_settings(cls):
-    return getattr(cls, CLASS_SETTINGS_ATTR,
-                   JsonObjectClassSettings(type_config=TypeConfig()))
+    return getattr(
+        cls, CLASS_SETTINGS_ATTR, JsonObjectClassSettings(type_config=TypeConfig())
+    )
 
 
 def set_settings(cls, settings):
@@ -60,11 +61,13 @@ class TypeConfig(object):
     instead of the default.
 
     """
+
     def __init__(self, properties=None, string_conversions=None):
         self._properties = properties if properties is not None else {}
 
         self._string_conversions = (
-            OrderedDict(string_conversions) if string_conversions is not None
+            OrderedDict(string_conversions)
+            if string_conversions is not None
             else OrderedDict()
         )
         # cache this
@@ -73,10 +76,12 @@ class TypeConfig(object):
 
     def replace(self, properties=None, string_conversions=None):
         return TypeConfig(
-            properties=(properties if properties is not None
-                        else self._properties),
-            string_conversions=(string_conversions if string_conversions is not None
-                                else self._string_conversions)
+            properties=(properties if properties is not None else self._properties),
+            string_conversions=(
+                string_conversions
+                if string_conversions is not None
+                else self._string_conversions
+            ),
         )
 
     def updated(self, properties=None, string_conversions=None):
@@ -102,26 +107,31 @@ class TypeConfig(object):
         result = []
         for pattern, conversion in self._string_conversions.items():
             conversion = (
-                conversion if conversion not in self._properties
+                conversion
+                if conversion not in self._properties
                 else self._properties[conversion](type_config=self).to_python
             )
             result.append((pattern, conversion))
         return result
 
-META_ATTRS = ('properties', 'string_conversions', 'update_properties')
+
+META_ATTRS = ("properties", "string_conversions", "update_properties")
 
 
 class JsonObjectMeta(type):
-
     class Meta(object):
         pass
 
     def __new__(mcs, name, bases, dct):
         cls = super(JsonObjectMeta, mcs).__new__(mcs, name, bases, dct)
 
-        cls.__configure(**{key: value
-                           for key, value in cls.Meta.__dict__.items()
-                           if key in META_ATTRS})
+        cls.__configure(
+            **{
+                key: value
+                for key, value in cls.Meta.__dict__.items()
+                if key in META_ATTRS
+            }
+        )
         cls_settings = get_settings(cls)
 
         properties = {}
@@ -129,24 +139,27 @@ class JsonObjectMeta(type):
         for key, value in dct.items():
             if isinstance(value, JsonProperty):
                 properties[key] = value
-            elif key.startswith('_'):
+            elif key.startswith("_"):
                 continue
             elif type(value) in cls_settings.type_config.properties:
-                property_ = cls_settings.type_config.properties[type(value)](default=value)
+                property_ = cls_settings.type_config.properties[type(value)](
+                    default=value
+                )
                 properties[key] = dct[key] = property_
                 setattr(cls, key, property_)
 
         for key, property_ in properties.items():
-            property_.init_property(default_name=key,
-                                    type_config=cls_settings.type_config)
+            property_.init_property(
+                default_name=key, type_config=cls_settings.type_config
+            )
             assert property_.name is not None, property_
-            assert property_.name not in properties_by_name, \
-                'You can only have one property named {0}'.format(
-                    property_.name)
+            assert (
+                property_.name not in properties_by_name
+            ), "You can only have one property named {0}".format(property_.name)
             properties_by_name[property_.name] = property_
 
         for base in bases:
-            if getattr(base, '_properties_by_attr', None):
+            if getattr(base, "_properties_by_attr", None):
                 for key, value in base._properties_by_attr.items():
                     if key not in properties:
                         properties[key] = value
@@ -156,25 +169,25 @@ class JsonObjectMeta(type):
         cls._properties_by_key = properties_by_name
         return cls
 
-    def __configure(cls, properties=None, string_conversions=None,
-                    update_properties=None):
+    def __configure(
+        cls, properties=None, string_conversions=None, update_properties=None
+    ):
         super_settings = get_settings(super(cls, cls))
-        assert not properties or not update_properties, \
-            "{} {}".format(properties, update_properties)
+        assert not properties or not update_properties, "{} {}".format(
+            properties, update_properties
+        )
         type_config = super_settings.type_config
         if update_properties is not None:
             type_config = type_config.updated(properties=update_properties)
         elif properties is not None:
             type_config = type_config.replace(properties=properties)
         if string_conversions is not None:
-            type_config = type_config.replace(
-                string_conversions=string_conversions)
+            type_config = type_config.replace(string_conversions=string_conversions)
         set_settings(cls, super_settings._replace(type_config=type_config))
         return cls
 
 
 class _JsonObjectPrivateInstanceVariables(object):
-
     def __init__(self, dynamic_properties=None):
         self.dynamic_properties = dynamic_properties or {}
 
@@ -191,10 +204,9 @@ class JsonObjectBase(object):
     _string_conversions = ()
 
     def __init__(self, _obj=None, **kwargs):
-        setattr(self, '_$', _JsonObjectPrivateInstanceVariables())
+        setattr(self, "_$", _JsonObjectPrivateInstanceVariables())
 
-        self._obj = check_type(_obj, dict,
-                               'JsonObject must wrap a dict or None')
+        self._obj = check_type(_obj, dict, "JsonObject must wrap a dict or None")
         self._wrapped = {}
 
         for key, value in list(self._obj.items()):
@@ -244,7 +256,7 @@ class JsonObjectBase(object):
 
     @property
     def __dynamic_properties(self):
-        return getattr(self, '_$').dynamic_properties
+        return getattr(self, "_$").dynamic_properties
 
     @classmethod
     def wrap(cls, obj):
@@ -282,7 +294,7 @@ class JsonObjectBase(object):
 
         if isinstance(wrapped, JsonObjectBase):
             # validate containers but not objects
-            recursive_kwargs = {'recursive': False}
+            recursive_kwargs = {"recursive": False}
         else:
             # omit the argument for backwards compatibility of custom properties
             # that do not contain `recursive` in their signature
@@ -309,9 +321,9 @@ class JsonObjectBase(object):
 
     def __is_dynamic_property(self, name):
         return (
-            name not in self._properties_by_attr and
-            not name.startswith('_') and
-            not inspect.isdatadescriptor(getattr(self.__class__, name, None))
+            name not in self._properties_by_attr
+            and not name.startswith("_")
+            and not inspect.isdatadescriptor(getattr(self.__class__, name, None))
         )
 
     def __setattr__(self, name, value):
@@ -348,17 +360,17 @@ class JsonObjectBase(object):
     def __repr__(self):
         name = self.__class__.__name__
         predefined_properties = self._properties_by_attr.keys()
-        predefined_property_keys = set(self._properties_by_attr[p].name
-                                       for p in predefined_properties)
-        dynamic_properties = (set(self._wrapped.keys())
-                              - predefined_property_keys)
+        predefined_property_keys = set(
+            self._properties_by_attr[p].name for p in predefined_properties
+        )
+        dynamic_properties = set(self._wrapped.keys()) - predefined_property_keys
         properties = sorted(predefined_properties) + sorted(dynamic_properties)
-        return u'{name}({keyword_args})'.format(
+        return "{name}({keyword_args})".format(
             name=name,
-            keyword_args=', '.join('{key}={value!r}'.format(
-                key=key,
-                value=getattr(self, key)
-            ) for key in properties),
+            keyword_args=", ".join(
+                "{key}={value!r}".format(key=key, value=getattr(self, key))
+                for key in properties
+            ),
         )
 
 
@@ -371,6 +383,7 @@ class _LimitedDictInterfaceMixin(object):
     that need to be more carefully understood
 
     """
+
     _wrapped = None
 
     def keys(self):
@@ -396,4 +409,4 @@ class _LimitedDictInterfaceMixin(object):
 
 
 def get_dynamic_properties(obj):
-    return getattr(obj, '_$').dynamic_properties.copy()
+    return getattr(obj, "_$").dynamic_properties.copy()

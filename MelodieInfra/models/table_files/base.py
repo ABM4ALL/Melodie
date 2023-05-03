@@ -14,4 +14,4 @@ class ExcelMeta(JsonObject):
     widget = StringProperty(name="widget")
     type = StringProperty(name="type")
     sheet_names = ListProperty(str, name="sheetNames", validators=assert_is_list)
-    current_sheet = StringProperty(name='currentSheet')
+    current_sheet = StringProperty(name="currentSheet")

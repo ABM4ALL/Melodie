@@ -9,10 +9,16 @@ import time
 from multiprocessing import Pool
 from typing import Optional, List, Tuple, Type
 
-import numpy as np
-import pandas as pd
-
-from MelodieInfra import create_db_conn, get_sqlite_filename, DBConn, Config, MelodieExceptions, show_prettified_warning
+from MelodieInfra import (
+    create_db_conn,
+    get_sqlite_filename,
+    DBConn,
+    Config,
+    MelodieExceptions,
+    show_prettified_warning,
+    np,
+    pd,
+)
 
 from .global_configs import MelodieGlobalConfig
 from .data_loader import DataLoader
@@ -29,11 +35,11 @@ class BaseModellingManager(abc.ABC):
     """
 
     def __init__(
-            self,
-            config: Config,
-            scenario_cls: Type["Scenario"],
-            model_cls: Type["Model"],
-            data_loader_cls: Type[DataLoader] = None,
+        self,
+        config: Config,
+        scenario_cls: Type["Scenario"],
+        model_cls: Type["Model"],
+        data_loader_cls: Type[DataLoader] = None,
     ):
         self.config: Optional[Config] = config
         self.scenario_cls = scenario_cls
@@ -119,13 +125,14 @@ class Simulator(BaseModellingManager):
     Simulator simulates the logics written in the model.
 
     """
+
     def __init__(
-            self,
-            config: Config,
-            scenario_cls: "Type[Scenario]",
-            model_cls: "Type[Model]",
-            data_loader_cls: "Type[DataLoader]" = None,
-            visualizer_cls: "type[BaseVisualizer]" = None,
+        self,
+        config: Config,
+        scenario_cls: "Type[Scenario]",
+        model_cls: "Type[Model]",
+        data_loader_cls: "Type[DataLoader]" = None,
+        visualizer_cls: "type[BaseVisualizer]" = None,
     ):
         """
         :param config: Config instance for current project.
@@ -146,7 +153,9 @@ class Simulator(BaseModellingManager):
 
     def _init_visualizer(self):
         self.visualizer: Optional[BaseVisualizer] = (
-            None if self.visualizer_cls is None else self.visualizer_cls(self.config, self)
+            None
+            if self.visualizer_cls is None
+            else self.visualizer_cls(self.config, self)
         )
 
     def generate_scenarios(self) -> List["Scenario"]:
@@ -160,7 +169,7 @@ class Simulator(BaseModellingManager):
         return self.data_loader.generate_scenarios("simulator")
 
     def run_model(
-            self, config, scenario, id_run, model_class: Type["Model"], visualizer=None
+        self, config, scenario, id_run, model_class: Type["Model"], visualizer=None
     ):
         """
         Run a model once.
@@ -176,8 +185,9 @@ class Simulator(BaseModellingManager):
         if visualizer is not None:
             visualizer.set_model(model)
             if not self.visualizer.params_manager._initialized:
-                self.visualizer.params_manager.write_obj_attrs_to_params_list(scenario,
-                                                                              self.visualizer.params_manager.params)
+                self.visualizer.params_manager.write_obj_attrs_to_params_list(
+                    scenario, self.visualizer.params_manager.params
+                )
                 self.visualizer.params_manager._initialized = True
             else:
                 self.visualizer.params_manager.modify_scenario(scenario)

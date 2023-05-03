@@ -56,9 +56,7 @@ class CovidModel(Model):
     scenario: "CovidScenario"
 
     def setup(self):
-        self.agent_list: AgentList[CovidAgent] = self.create_agent_list(
-            CovidAgent
-        )
+        self.agent_list: AgentList[CovidAgent] = self.create_agent_list(CovidAgent)
         self.environment = self.create_environment(CovidEnvironment)
         self.data_collector = self.create_data_collector(DataCollector)
 
@@ -80,8 +78,8 @@ class CovidCalibrator(Calibrator):
             environment.scenario.infection_probability,
         )
         return (
-                       environment.accumulated_infection / environment.scenario.agent_num - 0.75
-               ) ** 2
+            environment.accumulated_infection / environment.scenario.agent_num - 0.75
+        ) ** 2
 
     def generate_scenarios(self) -> List["Scenario"]:
         return [CovidScenario(0)]

@@ -4,6 +4,7 @@
 # @Email: 1295752786@qq.com
 # @File: unsafe.py
 
+
 class Unsafe:
     @staticmethod
     def create_getter_by_str(rvalue_expr):
@@ -13,7 +14,7 @@ def getter(scenario):
         """
         local_vars = {}
         exec(func_str, {}, local_vars)
-        return local_vars['getter']
+        return local_vars["getter"]
 
     @staticmethod
     def create_setter_by_str(lvalue_expr):
@@ -23,4 +24,4 @@ def setter(scenario, value):
         """
         local_vars = {}
         exec(func_str, {}, local_vars)
-        return local_vars['setter']
+        return local_vars["setter"]

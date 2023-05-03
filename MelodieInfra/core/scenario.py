@@ -68,4 +68,4 @@ class Scenario(Element):
         return f"<{self.__class__.__name__} {self.__dict__}>"
 
 
-__all__ = ['Scenario']
+__all__ = ["Scenario"]

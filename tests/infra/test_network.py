@@ -1,6 +1,6 @@
-from Melodie import AgentList, Agent, Model, Scenario, Edge, Network
+from Melodie import AgentList, Model, Scenario, Edge, Network
 from Melodie.network import NetworkAgent
-from tests.config import cfg
+from tests.infra.config import cfg
 
 
 class RelationshipEdge(Edge):

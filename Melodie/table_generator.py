@@ -3,9 +3,7 @@
 import logging
 from typing import Callable, Union, TYPE_CHECKING, Optional, Dict, Any
 
-import pandas as pd
-
-from MelodieInfra import MelodieExceptions
+from MelodieInfra import MelodieExceptions, pd
 from .utils import args_check
 from .scenario_manager import Scenario
 
@@ -27,10 +25,10 @@ class DataFrameGenerator:
         return
 
     def __init__(
-            self,
-            df_loader: "DataLoader",
-            df_info: "DataFrameInfo",
-            num_generator: Union[int, Callable[[Scenario], int]],
+        self,
+        df_loader: "DataLoader",
+        df_info: "DataFrameInfo",
+        num_generator: Union[int, Callable[[Scenario], int]],
     ):
         """
         :param df_loader:
@@ -67,7 +65,7 @@ class DataFrameGenerator:
         self._self_incremental_value = -1
 
     def convert_to_num_generator(
-            self, num_generator: Union[int, Callable[[Scenario], int]]
+        self, num_generator: Union[int, Callable[[Scenario], int]]
     ):
         if isinstance(num_generator, int):
             return lambda _: num_generator
@@ -78,7 +76,7 @@ class DataFrameGenerator:
             raise TypeError
 
     def set_row_generator(
-            self, row_generator: Callable[[Union[Any, Scenario]], Union[Dict[str, Any]]]
+        self, row_generator: Callable[[Union[Any, Scenario]], Union[Dict[str, Any]]]
     ):
         """
         Set the geneator for each row. Every time the row_generator is called, this function

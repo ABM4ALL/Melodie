@@ -1,5 +1,5 @@
 import abc
-from typing import Union
+from typing import Dict, Union
 
 
 class BaseMelodieDBConfig(abc.ABC):
@@ -10,11 +10,20 @@ class BaseMelodieDBConfig(abc.ABC):
     def connection_string(self) -> str:
         pass
 
+    def to_json(self):
+        return self.__dict__
+
+    @staticmethod
+    def from_json(config_json: Dict[str, str]):
+        types = {"sqlite": SQLiteDBConfig, "mysql": MysqlDBConfig}
+        config_type = config_json.pop("type")
+        return types[config_type](**config_json)
+
 
 class SQLiteDBConfig(BaseMelodieDBConfig):
     def __init__(self, db_file: str = ""):
         super().__init__()
-        self.type = 'sqlite'
+        self.type = "sqlite"
         self.db_file = db_file
 
     def connection_string(self) -> str:

@@ -17,7 +17,7 @@ from .base_properties import (
 from .containers import JsonArray, JsonDict, JsonSet
 
 
-if sys.version > '3':
+if sys.version > "3":
     unicode = str
     long = int
 
@@ -49,7 +49,6 @@ class FloatProperty(AssertTypeProperty):
 
 
 class DecimalProperty(JsonProperty):
-
     def wrap(self, obj):
         return decimal.Decimal(obj)
 
@@ -68,11 +67,11 @@ class DateProperty(AbstractDateProperty):
     _type = datetime.date
 
     def _wrap(self, value):
-        fmt = '%Y-%m-%d'
+        fmt = "%Y-%m-%d"
         try:
             return datetime.date(*time.strptime(value, fmt)[:3])
         except ValueError as e:
-            raise ValueError('Invalid ISO date {0!r} [{1}]'.format(value, e))
+            raise ValueError("Invalid ISO date {0!r} [{1}]".format(value, e))
 
     def _unwrap(self, value):
         return value, value.isoformat()
@@ -84,24 +83,23 @@ class DateTimeProperty(AbstractDateProperty):
 
     def _wrap(self, value):
         if not self.exact:
-            value = value.split('.', 1)[0]  # strip out microseconds
+            value = value.split(".", 1)[0]  # strip out microseconds
             value = value[0:19]  # remove timezone
-            fmt = '%Y-%m-%dT%H:%M:%S'
+            fmt = "%Y-%m-%dT%H:%M:%S"
         else:
-            fmt = '%Y-%m-%dT%H:%M:%S.%fZ'
+            fmt = "%Y-%m-%dT%H:%M:%S.%fZ"
         try:
             return datetime.datetime.strptime(value, fmt)
         except ValueError as e:
-            raise ValueError(
-                'Invalid ISO date/time {0!r} [{1}]'.format(value, e))
+            raise ValueError("Invalid ISO date/time {0!r} [{1}]".format(value, e))
 
     def _unwrap(self, value):
         if not self.exact:
             value = value.replace(microsecond=0)
-            padding = ''
+            padding = ""
         else:
-            padding = '' if value.microsecond else '.000000'
-        return value, value.isoformat() + padding + 'Z'
+            padding = "" if value.microsecond else ".000000"
+        return value, value.isoformat() + padding + "Z"
 
 
 class TimeProperty(AbstractDateProperty):
@@ -110,14 +108,14 @@ class TimeProperty(AbstractDateProperty):
 
     def _wrap(self, value):
         if not self.exact:
-            value = value.split('.', 1)[0]  # strip out microseconds
-            fmt = '%H:%M:%S'
+            value = value.split(".", 1)[0]  # strip out microseconds
+            fmt = "%H:%M:%S"
         else:
-            fmt = '%H:%M:%S.%f'
+            fmt = "%H:%M:%S.%f"
         try:
             return datetime.time(*time.strptime(value, fmt)[3:6])
         except ValueError as e:
-            raise ValueError('Invalid ISO time {0!r} [{1}]'.format(value, e))
+            raise ValueError("Invalid ISO time {0!r} [{1}]".format(value, e))
 
     def _unwrap(self, value):
         if not self.exact:
@@ -137,25 +135,29 @@ class ObjectProperty(JsonProperty):
     @property
     def item_type(self):
         from .base import JsonObjectBase
-        if hasattr(self, '_item_type_deferred'):
+
+        if hasattr(self, "_item_type_deferred"):
             if inspect.isfunction(self._item_type_deferred):
                 self._item_type = self._item_type_deferred()
             else:
                 self._item_type = self._item_type_deferred
             del self._item_type_deferred
         if not issubclass(self._item_type, JsonObjectBase):
-            raise ValueError("item_type {0!r} not a JsonObject subclass".format(
-                self._item_type,
-                self.type_config.properties,
-            ))
+            raise ValueError(
+                "item_type {0!r} not a JsonObject subclass".format(
+                    self._item_type,
+                    self.type_config.properties,
+                )
+            )
         return self._item_type
 
     def wrap(self, obj, string_conversions=None):
         return self.item_type.wrap(obj)
 
     def unwrap(self, obj):
-        assert isinstance(obj, self.item_type), \
-            '{0} is not an instance of {1}'.format(obj, self.item_type)
+        assert isinstance(obj, self.item_type), "{0} is not an instance of {1}".format(
+            obj, self.item_type
+        )
         return obj, obj._obj
 
 

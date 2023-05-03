@@ -54,18 +54,30 @@ try:
     ]
     ext = ".pyx"
     jsonobj_ext_modules = [
-        Extension('MelodieInfra.jsonobject.api', [
-            "MelodieInfra/jsonobject/api" + ext], ),
-        Extension('MelodieInfra.jsonobject.base', [
-            "MelodieInfra/jsonobject/base" + ext], ),
-        Extension('MelodieInfra.jsonobject.base_properties', [
-            "MelodieInfra/jsonobject/base_properties" + ext], ),
-        Extension('MelodieInfra.jsonobject.containers', [
-            "MelodieInfra/jsonobject/containers" + ext], ),
-        Extension('MelodieInfra.jsonobject.properties', [
-            "MelodieInfra/jsonobject/properties" + ext], ),
-        Extension('MelodieInfra.jsonobject.utils', [
-            "MelodieInfra/jsonobject/utils" + ext], ),
+        Extension(
+            "MelodieInfra.jsonobject.api",
+            ["MelodieInfra/jsonobject/api" + ext],
+        ),
+        Extension(
+            "MelodieInfra.jsonobject.base",
+            ["MelodieInfra/jsonobject/base" + ext],
+        ),
+        Extension(
+            "MelodieInfra.jsonobject.base_properties",
+            ["MelodieInfra/jsonobject/base_properties" + ext],
+        ),
+        Extension(
+            "MelodieInfra.jsonobject.containers",
+            ["MelodieInfra/jsonobject/containers" + ext],
+        ),
+        Extension(
+            "MelodieInfra.jsonobject.properties",
+            ["MelodieInfra/jsonobject/properties" + ext],
+        ),
+        Extension(
+            "MelodieInfra.jsonobject.utils",
+            ["MelodieInfra/jsonobject/utils" + ext],
+        ),
     ]
     ext_modules = ext_modules + jsonobj_ext_modules
     # ext_modules = ext_modules+[
@@ -80,11 +92,11 @@ except:
     traceback.print_exc()
     ext_modules = None
 
-
     def build_ext(_):
         return print(
             "Cython was not installed. With cython you may get better peformance boost!"
         )
+
 
 with open("Melodie/version.txt", "r", encoding="utf8") as fv:
     version = fv.read()
@@ -98,7 +110,9 @@ def scientific_toolchain_versions():
     version = (sys.version_info.major, sys.version_info.minor)
     if python_distribution_bits == 32:
         assert version <= (
-            3, 9), "Melodie does not support 32 bit cpython interpreter > 3.9"
+            3,
+            9,
+        ), "Melodie does not support 32 bit cpython interpreter > 3.9"
     numpy_requirement = "numpy"
     matplotlib_requirement = "matplotlib"
     scipy_requirement = "scipy"
@@ -132,18 +146,20 @@ setuptools.setup(
         "Natural Language :: English",
         "Operating System :: Unix",
         "Operating System :: Microsoft :: Windows",
-        'Programming Language :: Python :: 3.8',
-        'Programming Language :: Python :: 3.9',
-        'Programming Language :: Python :: 3.10',
-        'Programming Language :: Python :: 3.11',
+        "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
+        "Programming Language :: Python :: 3.11",
         "Topic :: Scientific/Engineering :: Artificial Intelligence",
     ],
     project_urls={
         "Documentation": "http://docs.abm4all.com",
     },
     packages=setuptools.find_namespace_packages(
-        include=["Melodie", "Melodie.*", "MelodieInfra", "MelodieInfra.*"]),
-    install_requires=scientific_toolchain_versions() + [
+        include=["Melodie", "Melodie.*", "MelodieInfra", "MelodieInfra.*"]
+    ),
+    install_requires=scientific_toolchain_versions()
+    + [
         "chardet",
         "pandas",
         "seaborn",
@@ -158,7 +174,7 @@ setuptools.setup(
         "rpyc",
         "flask",
         "flask-cors",
-        "flask_sock"
+        "flask_sock",
     ],
     python_requires=">=3.8",
     entry_points={"console_scripts": ["Melodie=Melodie.scripts.scripts:cli"]},

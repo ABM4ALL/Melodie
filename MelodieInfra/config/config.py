@@ -2,7 +2,11 @@ import os
 from typing import Any, Dict, Optional, TYPE_CHECKING
 
 from MelodieInfra.db.base import SQLITE_FILE_SUFFIX
-from MelodieInfra.db.db_configs import DBConfigTypes, SQLiteDBConfig, BaseMelodieDBConfig
+from MelodieInfra.db.db_configs import (
+    DBConfigTypes,
+    SQLiteDBConfig,
+    BaseMelodieDBConfig,
+)
 
 
 class Config:
@@ -13,14 +17,14 @@ class Config:
     """
 
     def __init__(
-            self,
-            project_name: str,
-            project_root: str,
-            input_folder: str,
-            output_folder: str,
-            visualizer_entry: str = "",
-            database_config: Optional["DBConfigTypes"] = None,
-            **kwargs,
+        self,
+        project_name: str,
+        project_root: str,
+        input_folder: str,
+        output_folder: str,
+        visualizer_entry: str = "",
+        database_config: Optional["DBConfigTypes"] = None,
+        **kwargs,
     ):
         self.project_name = project_name
         self.project_root = project_root
@@ -34,10 +38,13 @@ class Config:
 
         if database_config is None:
             self.database_config = SQLiteDBConfig(
-                os.path.join(self.output_folder, self.project_name + SQLITE_FILE_SUFFIX))
+                os.path.join(self.output_folder, self.project_name + SQLITE_FILE_SUFFIX)
+            )
         else:
-            assert isinstance(database_config, BaseMelodieDBConfig), f"parameter database_config is {database_config}," \
-                                                                     f" not a valid data base configuration class. "
+            assert isinstance(database_config, BaseMelodieDBConfig), (
+                f"parameter database_config is {database_config},"
+                f" not a valid data base configuration class. "
+            )
             self.database_config = database_config
 
         if not os.path.exists(visualizer_entry) and visualizer_entry != "":
@@ -65,15 +72,18 @@ class Config:
         pass
 
     def to_dict(self):
-        return self.__dict__
+        d = {k: v for k, v in self.__dict__.items()}
+        d["database_config"] = self.database_config.to_json()
+        return d
 
     @staticmethod
     def from_dict(d: Dict[str, Any]):
-
+        db_conf = BaseMelodieDBConfig.from_json(d["database_config"])
         c = Config(
             d["project_name"],
             d["project_root"],
             d["input_folder"],
             d["output_folder"],
+            database_config=db_conf,
         )
         return c

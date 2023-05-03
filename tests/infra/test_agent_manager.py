@@ -1,11 +1,9 @@
 import random
-import numpy as np
-
 import pandas as pd
+from Melodie import Agent, AgentList, GridAgent, set_seed
 
-from Melodie import Agent, AgentList, GridAgent, NetworkAgent, set_seed
 
-from .config import model
+from tests.infra.config import model
 
 
 class TestAgent(Agent):
