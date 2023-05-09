@@ -1,0 +1,34 @@
+name: Tests
+on: [push]
+ 
+jobs:
+  build:
+    name: Run Python Tests
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [ "3.9"]
+
+    steps:
+ 
+    - uses: actions/checkout@v2
+ 
+    - name: Setup timezone
+      uses: zcong1993/setup-timezone@master
+      with:
+        timezone: UTC
+ 
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version:  ${{ matrix.python-version }}
+ 
+    - name: Install Python dependencies
+      run: |
+        sudo apt install -y $(grep -o ^[^#][[:alnum:]-]* "packages.list")
+        python3 -m pip install --upgrade pip
+        pip3 install -r requirements-purepython.txt
+ 
+    - name: Test with pytest
+      run: |
+        pytest -s

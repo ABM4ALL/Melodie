@@ -1,1 +1,0 @@
-cdef long randint(long _min, long _max)

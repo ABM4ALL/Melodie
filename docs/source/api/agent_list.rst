@@ -4,12 +4,11 @@ AgentList
 
 .. include agent
 
-.. automodule:: Melodie.boost.agent_list
-    :members:  BaseAgentContainer
-    :undoc-members:
-    :show-inheritance:
+.. autoclass:: MelodieInfra.core.agent_list.BaseAgentContainer
+    :members:
+    
 
-.. autoclass:: Melodie.boost.agent_list.AgentList
+.. autoclass:: Melodie.AgentList
     :members:
 
     .. autoattribute:: agents

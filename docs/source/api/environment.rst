@@ -10,7 +10,7 @@ please visit our git repository. The path to related files are listed below:
 - Source Code: Melodie/boost/basics.pyx
 - Cython Interface: Melodie/boost/basics.pxd
 
-.. autoclass:: Melodie.boost.basics.Environment
+.. autoclass:: Melodie.Environment
     :members:
 
     .. autoattribute:: scenario

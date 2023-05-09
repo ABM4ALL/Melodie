@@ -14,6 +14,7 @@
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="author" title="About these documents" href="../about.html" />
@@ -224,7 +225,7 @@
            <div itemprop="articleBody">
              
   <section id="data-types">
-<h1>Data Types<a class="headerlink" href="#data-types" title="Permalink to this headline"></a></h1>
+<h1>Data Types<a class="headerlink" href="#data-types" title="Permalink to this heading"></a></h1>
 <p>When your program is trying to write dataframe into database, the type might be uncertained if we use the default data types.
 For example, there is a variable <code class="docutils literal notranslate"><span class="pre">number_of_factories</span></code> that is thought to be an <code class="docutils literal notranslate"><span class="pre">integer</span></code>. But if this value is from</p>
 <blockquote>
@@ -250,7 +251,7 @@ database by default method, the database may not regard it as integer.</p>
 <li><p><code class="docutils literal notranslate"><span class="pre">sqlalchemy.Text()</span></code>, stands for text in database.</p></li>
 </ul>
 <section id="notice">
-<h2>Notice<a class="headerlink" href="#notice" title="Permalink to this headline"></a></h2>
+<h2>Notice<a class="headerlink" href="#notice" title="Permalink to this heading"></a></h2>
 <ul class="simple">
 <li><dl class="simple">
 <dt>Please use snake cased name as the table name like <code class="docutils literal notranslate"><span class="pre">table_name</span></code>, not <code class="docutils literal notranslate"><span class="pre">TableName</span></code>.</dt><dd><ul>

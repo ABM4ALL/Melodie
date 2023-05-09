@@ -14,6 +14,7 @@
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="author" title="About these documents" href="about.html" />
@@ -223,31 +224,31 @@
            <div itemprop="articleBody">
              
   <section id="installation">
-<h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline"></a></h1>
+<h1>Installation<a class="headerlink" href="#installation" title="Permalink to this heading"></a></h1>
 <section id="user-installation">
-<h2>User Installation<a class="headerlink" href="#user-installation" title="Permalink to this headline"></a></h2>
+<h2>User Installation<a class="headerlink" href="#user-installation" title="Permalink to this heading"></a></h2>
 <p>You can install Melodie via <cite>pip</cite>:</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>Melodie
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>pip install Melodie
 </pre></div>
 </div>
 </section>
 <section id="developer-installation">
-<h2>Developer Installation<a class="headerlink" href="#developer-installation" title="Permalink to this headline"></a></h2>
+<h2>Developer Installation<a class="headerlink" href="#developer-installation" title="Permalink to this heading"></a></h2>
 <p>To install for development, first clone the repository and then install
 via pip’s development mode.</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>git@github.com:ABM4ALL/Melodie.git
-<span class="nb">cd</span><span class="w"> </span>Melodie
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>git clone git@github.com:ABM4ALL/Melodie.git
+<span class="nb">cd</span> Melodie
 
 <span class="c1"># Install the requirements</span>
-pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>build_requirements.txt
-pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
+pip install -r build_requirements.txt
+pip install -r requirements.txt
 
-pip3<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.
+pip3 install -e .
 </pre></div>
 </div>
 <p>To build with developing mode and build binary extensions in place, use the following commands:</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="c1"># Build the Cython packages</span>
-python<span class="w"> </span>setup.py<span class="w"> </span>build_ext<span class="w"> </span>-i
+python setup.py build_ext -i
 
 <span class="c1"># Run pytest to check if the installation finished successfully.</span>
 pytest
@@ -255,15 +256,15 @@ pytest
 </div>
 <p>To build documentation locally, use the following commands:</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="c1"># Build docs</span>
-<span class="nb">cd</span><span class="w"> </span>docs
-sphinx-autobuild<span class="w"> </span><span class="nb">source</span><span class="w"> </span>html<span class="w"> </span>-E<span class="w"> </span>-a
+<span class="nb">cd</span> docs
+sphinx-autobuild <span class="nb">source</span> html -E -a
 </pre></div>
 </div>
 <p>To keep local repository up to date, please follow these steps:</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>pull<span class="w"> </span>origin<span class="w"> </span>&lt;branch-name&gt;
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>git pull origin &lt;branch-name&gt;
 
 <span class="c1"># Re-build Cython packages</span>
-python<span class="w"> </span>setup.py<span class="w"> </span>build_ext<span class="w"> </span>-i
+python setup.py build_ext -i
 
 <span class="c1"># Test the installation</span>
 pytest
@@ -271,7 +272,7 @@ pytest
 </div>
 </section>
 <section id="dependency-note">
-<h2>Dependency Note<a class="headerlink" href="#dependency-note" title="Permalink to this headline"></a></h2>
+<h2>Dependency Note<a class="headerlink" href="#dependency-note" title="Permalink to this heading"></a></h2>
 <p>The dependencies that related to functionalities of Melodie are listed below.</p>
 <ul class="simple">
 <li><p>Python &gt;=3.8</p></li>

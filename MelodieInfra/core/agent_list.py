@@ -49,12 +49,12 @@ class BaseAgentContainer:
     def __init__(self):
         self._id_offset = -1
         self.scenario: Union["Scenario", None] = None
-        self.agents: Union[List["AgentGeneric"], Set["AgentGeneric"], None] = None
+        self.agents: Union[List["AgentGeneric"],
+                           Set["AgentGeneric"], None] = None
 
-    def new_id(self):
+    def new_id(self) -> int:
         """
         Create a new auto-increment ID
-        :return:
         """
         self._id_offset += 1
         return self._id_offset
@@ -62,19 +62,19 @@ class BaseAgentContainer:
     def all_agent_ids(self) -> List[int]:
         """
         Get id of all agents.
-        :return:
         """
         return [agent.id for agent in self.agents]
 
     def to_list(self, column_names: List[str] = None) -> List[Dict]:
         """
         Convert all agent properties to a list of dict.
+
         :param column_names:  property names
-        :return:
         """
 
-    def get_agent(self, agent_id: int):
-        index = binary_search(self.agents, agent_id, key=lambda agent: agent.id)
+    def get_agent(self, agent_id: int) -> "AgentGeneric":
+        index = binary_search(self.agents, agent_id,
+                              key=lambda agent: agent.id)
         if index == -1:
             return None
         else:
@@ -371,7 +371,6 @@ class AgentList(BaseAgentContainer):
     # @cython.nonecheck(False)
     # @cython.boundscheck(False)
     def method_foreach(self, method_name, args):
-
         """
         For each agent, execute theirs method ``method_name`` with arguments ``args``
 

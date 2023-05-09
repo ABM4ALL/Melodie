@@ -14,6 +14,7 @@
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="author" title="About these documents" href="../about.html" />
@@ -224,41 +225,41 @@
            <div itemprop="articleBody">
              
   <section id="troubleshooting">
-<h1>TroubleShooting<a class="headerlink" href="#troubleshooting" title="Permalink to this headline"></a></h1>
+<h1>TroubleShooting<a class="headerlink" href="#troubleshooting" title="Permalink to this heading"></a></h1>
 <section id="port-already-in-use">
-<h2>Port Already in use<a class="headerlink" href="#port-already-in-use" title="Permalink to this headline"></a></h2>
+<h2>Port Already in use<a class="headerlink" href="#port-already-in-use" title="Permalink to this heading"></a></h2>
 <p>Don’t panic when this error occurs.
 This error is because two Melodie Visualizers cannot run on the same port.
 Please verify that there aren’t any other visualizer process running on your computer.</p>
 <section id="windows">
-<h3>Windows<a class="headerlink" href="#windows" title="Permalink to this headline"></a></h3>
+<h3>Windows<a class="headerlink" href="#windows" title="Permalink to this heading"></a></h3>
 <p>On Windows, use this command:</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>netstat<span class="w"> </span>-aon<span class="p">|</span>findstr<span class="w"> </span><span class="s2">&quot;8765&quot;</span>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>netstat -aon<span class="p">|</span>findstr <span class="s2">&quot;8765&quot;</span>
 </pre></div>
 </div>
 <p>The output is:</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>C:<span class="se">\U</span>sers<span class="se">\U</span>serName&gt;netstat<span class="w"> </span>-aon<span class="p">|</span>findstr<span class="w"> </span><span class="s2">&quot;8765&quot;</span>
-TCP<span class="w">    </span><span class="m">127</span>.0.0.1:8765<span class="w">         </span><span class="m">0</span>.0.0.0:0<span class="w">              </span>LISTENING<span class="w">       </span><span class="m">19064</span>
-TCP<span class="w">    </span><span class="m">127</span>.0.0.1:8765<span class="w">         </span><span class="m">127</span>.0.0.1:64450<span class="w">        </span>ESTABLISHED<span class="w">     </span><span class="m">19064</span>
-TCP<span class="w">    </span><span class="m">127</span>.0.0.1:64450<span class="w">        </span><span class="m">127</span>.0.0.1:8765<span class="w">         </span>ESTABLISHED<span class="w">     </span><span class="m">24236</span>
-TCP<span class="w">    </span><span class="o">[</span>::1<span class="o">]</span>:8765<span class="w">             </span><span class="o">[</span>::<span class="o">]</span>:0<span class="w">                 </span>LISTENING<span class="w">       </span><span class="m">19064</span>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>C:<span class="se">\U</span>sers<span class="se">\U</span>serName&gt;netstat -aon<span class="p">|</span>findstr <span class="s2">&quot;8765&quot;</span>
+TCP    <span class="m">127</span>.0.0.1:8765         <span class="m">0</span>.0.0.0:0              LISTENING       <span class="m">19064</span>
+TCP    <span class="m">127</span>.0.0.1:8765         <span class="m">127</span>.0.0.1:64450        ESTABLISHED     <span class="m">19064</span>
+TCP    <span class="m">127</span>.0.0.1:64450        <span class="m">127</span>.0.0.1:8765         ESTABLISHED     <span class="m">24236</span>
+TCP    <span class="o">[</span>::1<span class="o">]</span>:8765             <span class="o">[</span>::<span class="o">]</span>:0                 LISTENING       <span class="m">19064</span>
 </pre></div>
 </div>
 <p>The output above indicates that process 19064 is LISTENING port 8765, let’s kill this process by:</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>taskkill<span class="w"> </span>/T<span class="w"> </span>/F<span class="w"> </span>/PID<span class="w"> </span><span class="m">19064</span>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>taskkill /T /F /PID <span class="m">19064</span>
 </pre></div>
 </div>
 </section>
 <section id="macos-linux-or-other-nix-systems">
-<h3>MacOS, Linux or other <a href="#id1"><span class="problematic" id="id2">*</span></a>nix systems<a class="headerlink" href="#macos-linux-or-other-nix-systems" title="Permalink to this headline"></a></h3>
+<h3>MacOS, Linux or other <a href="#id1"><span class="problematic" id="id2">*</span></a>nix systems<a class="headerlink" href="#macos-linux-or-other-nix-systems" title="Permalink to this heading"></a></h3>
 <p>On MacOS or Linux, use this command:</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="c1"># lsof -i:8765</span>
-COMMAND<span class="w">   </span>PID<span class="w"> </span>USER<span class="w">   </span>FD<span class="w">   </span>TYPE<span class="w">   </span>DEVICE<span class="w"> </span>SIZE/OFF<span class="w"> </span>NODE<span class="w"> </span>NAME
-python<span class="w">  </span><span class="m">26993</span><span class="w"> </span>root<span class="w">   </span>10u<span class="w">  </span>IPv4<span class="w"> </span><span class="m">37999514</span><span class="w">      </span>0t0<span class="w">  </span>TCP<span class="w"> </span>*:8765<span class="w"> </span><span class="o">(</span>LISTEN<span class="o">)</span>
+COMMAND   PID USER   FD   TYPE   DEVICE SIZE/OFF NODE NAME
+python  <span class="m">26993</span> root   10u  IPv4 <span class="m">37999514</span>      0t0  TCP *:8765 <span class="o">(</span>LISTEN<span class="o">)</span>
 </pre></div>
 </div>
 <p>The output shows that process 26993 is holding this port, so kill this process by:</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nb">kill</span><span class="w"> </span>-9<span class="w"> </span><span class="m">26993</span>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nb">kill</span> -9 <span class="m">26993</span>
 </pre></div>
 </div>
 <p>In the future, different visualizer will start in different ports automatically.</p>

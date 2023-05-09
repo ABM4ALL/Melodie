@@ -12,15 +12,15 @@ class Environment(Element):
         """
         The setup method of the environment.
         Use `self.scenario` to get the parameters from the scenario.
-        :return:
+        
         """
         pass
 
     def to_dict(self, properties: List[str]) -> Dict:
         """
         Dump Environment to a plain dict.
+        
         :param properties:
-        :return:
         """
         if properties is None:
             properties = self.__dict__.keys()

@@ -14,6 +14,7 @@
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="author" title="About these documents" href="about.html" />
@@ -223,9 +224,9 @@
            <div itemprop="articleBody">
              
   <section id="introduction">
-<h1>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline"></a></h1>
+<h1>Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading"></a></h1>
 <section id="agent-based-model-abm">
-<h2>Agent-based Model (ABM)<a class="headerlink" href="#agent-based-model-abm" title="Permalink to this headline"></a></h2>
+<h2>Agent-based Model (ABM)<a class="headerlink" href="#agent-based-model-abm" title="Permalink to this heading"></a></h2>
 <p>ABMs characterize physical, biological, and social economic systems as dynamic <cite>interactions</cite> among <cite>agents</cite> from a bottom-up perspective.
 The <cite>agents</cite> can be molecules, animals, or human beings.
 The <cite>interactions</cite> can be water molecules forming a vortex, ants searching for food, or people trading stocks in the market.</p>
@@ -236,12 +237,12 @@ Besides, taking social economic systems as example, ABMs are also flexible to co
 (2) <cite>bounded rationality and adaptation behavior</cite> based on psychological and behavioral studies.</p>
 </section>
 <section id="melodie-framework">
-<h2>Melodie Framework<a class="headerlink" href="#melodie-framework" title="Permalink to this headline"></a></h2>
+<h2>Melodie Framework<a class="headerlink" href="#melodie-framework" title="Permalink to this heading"></a></h2>
 <p>As a general framework for developing agent-based models (ABMs),
 <strong>Melodie</strong> is designed in a modular structure and the modules are organized into four clusters:
 <strong>Model</strong>, <strong>Scenario</strong>, <strong>Modeling Manager</strong>, and <strong>Infrastructure</strong>.</p>
 <section id="model">
-<h3>Model<a class="headerlink" href="#model" title="Permalink to this headline"></a></h3>
+<h3>Model<a class="headerlink" href="#model" title="Permalink to this heading"></a></h3>
 <p>The modules in the <strong>Model Cluster</strong> focus on describing the logics of the target system.
 Developed with <strong>Melodie</strong>, a <code class="docutils literal notranslate"><span class="pre">model:</span> <span class="pre">Model</span></code> object can contain following components:</p>
 <ul class="simple">
@@ -254,7 +255,7 @@ Developed with <strong>Melodie</strong>, a <code class="docutils literal notrans
 </ul>
 </section>
 <section id="scenario">
-<h3>Scenario<a class="headerlink" href="#scenario" title="Permalink to this headline"></a></h3>
+<h3>Scenario<a class="headerlink" href="#scenario" title="Permalink to this heading"></a></h3>
 <p>The modules in the <strong>Scenario Cluster</strong> focus on formatting, importing,
 and delivering the input data to the <code class="docutils literal notranslate"><span class="pre">model</span></code>. The modules include</p>
 <ul class="simple">
@@ -264,7 +265,7 @@ and delivering the input data to the <code class="docutils literal notranslate">
 </ul>
 </section>
 <section id="modelling-manager">
-<h3>Modelling Manager<a class="headerlink" href="#modelling-manager" title="Permalink to this headline"></a></h3>
+<h3>Modelling Manager<a class="headerlink" href="#modelling-manager" title="Permalink to this heading"></a></h3>
 <p>To combine everything and finally start running, the <strong>Modelling Manager Cluster</strong> includes three modules in parallel,
 which can be constructed and run for different objectives:</p>
 <ul class="simple">
@@ -293,7 +294,7 @@ the class variables of the <code class="docutils literal notranslate"><span clas
 <p>At last, by calling the <code class="docutils literal notranslate"><span class="pre">simulator.run</span></code> function, the simulation starts.</p>
 </section>
 <section id="infrastructure">
-<h3>Infrastructure<a class="headerlink" href="#infrastructure" title="Permalink to this headline"></a></h3>
+<h3>Infrastructure<a class="headerlink" href="#infrastructure" title="Permalink to this heading"></a></h3>
 <p>The last <strong>Infrastructure Cluster</strong> includes the modules that provide support for the modules above.</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">Visualizer</span></code> - provides the APIs to interact with <code class="docutils literal notranslate"><span class="pre">MelodieStudio</span></code> for visualization.</p></li>

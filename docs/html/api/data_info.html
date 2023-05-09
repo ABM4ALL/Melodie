@@ -14,6 +14,7 @@
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="author" title="About these documents" href="../about.html" />
@@ -224,12 +225,12 @@
            <div itemprop="articleBody">
              
   <section id="datainfo">
-<h1>DataInfo<a class="headerlink" href="#datainfo" title="Permalink to this headline"></a></h1>
+<h1>DataInfo<a class="headerlink" href="#datainfo" title="Permalink to this heading"></a></h1>
 <section id="dataframeinfo">
-<h2>DataFrameInfo<a class="headerlink" href="#dataframeinfo" title="Permalink to this headline"></a></h2>
+<h2>DataFrameInfo<a class="headerlink" href="#dataframeinfo" title="Permalink to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="Melodie.data_loader.DataFrameInfo">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Melodie.data_loader.</span></span><span class="sig-name descname"><span class="pre">DataFrameInfo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">columns</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">sqlalchemy.types</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.data_loader.DataFrameInfo" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Melodie.data_loader.</span></span><span class="sig-name descname"><span class="pre">DataFrameInfo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">columns</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">sqlalchemy.types</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">engine</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'pandas'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.data_loader.DataFrameInfo" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>DataFrameInfo provides standard format for input tables as parameters.</p>
 <dl class="field-list simple">
@@ -239,6 +240,8 @@
 <li><p><strong>columns</strong> – A dict, <code class="docutils literal notranslate"><span class="pre">column</span> <span class="pre">name</span> <span class="pre">--&gt;</span> <span class="pre">column</span> <span class="pre">data</span> <span class="pre">type</span></code>.</p></li>
 <li><p><strong>file_name</strong> – File name to load this dataframe, None by default. If None, be sure to
 generate the dataframe in the DataLoader.</p></li>
+<li><p><strong>engine</strong> – The library used to load this table file. Valid values are “pandas” and “melodie-table”.
+However, if <code class="docutils literal notranslate"><span class="pre">DataFrameInfo.FORCE_PANDAS</span></code> was <code class="docutils literal notranslate"><span class="pre">True</span></code>, Melodie will use <code class="docutils literal notranslate"><span class="pre">&quot;pandas&quot;</span></code> to load all dataframes.</p></li>
 </ul>
 </dd>
 </dl>
@@ -266,7 +269,7 @@ will be implemented later.</p>
 
 </section>
 <section id="matrixinfo">
-<h2>MatrixInfo<a class="headerlink" href="#matrixinfo" title="Permalink to this headline"></a></h2>
+<h2>MatrixInfo<a class="headerlink" href="#matrixinfo" title="Permalink to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="Melodie.data_loader.MatrixInfo">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Melodie.data_loader.</span></span><span class="sig-name descname"><span class="pre">MatrixInfo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mat_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">sqlalchemy.types</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.data_loader.MatrixInfo" title="Permalink to this definition"></a></dt>

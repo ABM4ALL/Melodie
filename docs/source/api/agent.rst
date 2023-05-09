@@ -12,7 +12,7 @@ please visit our git repository. The path to related files are listed below:
 
 Just include class *Agent* inside doc and undoc the Agent.id and Agent.model
 
-.. autoclass:: Melodie.boost.basics.Agent
+.. autoclass:: Melodie.Agent
     :members:
 
     .. autoattribute:: id

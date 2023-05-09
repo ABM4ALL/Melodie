@@ -13,6 +13,7 @@
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="author" title="About these documents" href="about.html" />
@@ -250,9 +251,9 @@
 <h2 id="A">A</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/agent_list.html#Melodie.boost.agent_list.AgentList.add">add() (Melodie.boost.agent_list.AgentList method)</a>
+      <li><a href="api/agent_list.html#Melodie.AgentList.add">add() (Melodie.AgentList method)</a>
 </li>
-      <li><a href="api/grid.html#Melodie.boost.grid.Grid.add_agent">add_agent() (Melodie.boost.grid.Grid method)</a>
+      <li><a href="api/grid.html#Melodie.Grid.add_agent">add_agent() (Melodie.Grid method)</a>
 
       <ul>
         <li><a href="api/network.html#Melodie.network.Network.add_agent">(Melodie.network.Network method)</a>
@@ -266,6 +267,8 @@
       </ul></li>
       <li><a href="api/trainer.html#Melodie.trainer.Trainer.add_agent_training_property">add_agent_training_property() (Melodie.trainer.Trainer method)</a>
 </li>
+      <li><a href="api/grid.html#Melodie.Grid.add_category">add_category() (Melodie.Grid method)</a>
+</li>
       <li><a href="api/network.html#Melodie.network.Network.add_edge">add_edge() (Melodie.network.Network method)</a>
 </li>
       <li><a href="api/calibrator.html#Melodie.calibrator.Calibrator.add_environment_property">add_environment_property() (Melodie.calibrator.Calibrator method)</a>
@@ -278,7 +281,7 @@
       </ul></li>
       <li><a href="api/calibrator.html#Melodie.calibrator.Calibrator.add_scenario_calibrating_property">add_scenario_calibrating_property() (Melodie.calibrator.Calibrator method)</a>
 </li>
-      <li><a href="api/agent.html#Melodie.boost.basics.Agent">Agent (class in Melodie.boost.basics)</a>
+      <li><a href="api/agent.html#Melodie.Agent">Agent (class in Melodie)</a>
 </li>
       <li><a href="api/data_collector.html#Melodie.data_collector.DataCollector.agent_containers">agent_containers() (Melodie.data_collector.DataCollector method)</a>
 </li>
@@ -288,16 +291,20 @@
 </li>
       <li><a href="api/exceptions.html#MelodieInfra.exceptions.exceptions.MelodieExceptions.Agents.AgentIDConflict">AgentIDConflict() (MelodieInfra.exceptions.exceptions.MelodieExceptions.Agents static method)</a>
 </li>
-      <li><a href="api/agent_list.html#Melodie.boost.agent_list.AgentList">AgentList (class in Melodie.boost.agent_list)</a>
+      <li><a href="api/agent_list.html#Melodie.AgentList">AgentList (class in Melodie)</a>
 </li>
       <li><a href="api/exceptions.html#MelodieInfra.exceptions.exceptions.MelodieExceptions.Agents.AgentListEmpty">AgentListEmpty() (MelodieInfra.exceptions.exceptions.MelodieExceptions.Agents static method)</a>
 </li>
       <li><a href="api/exceptions.html#MelodieInfra.exceptions.exceptions.MelodieExceptions.Agents.AgentPropertyNameNotExist">AgentPropertyNameNotExist() (MelodieInfra.exceptions.exceptions.MelodieExceptions.Agents static method)</a>
 </li>
-      <li><a href="api/agent_list.html#Melodie.boost.agent_list.AgentList.agents">agents (Melodie.boost.agent_list.AgentList attribute)</a>
+      <li><a href="api/agent_list.html#Melodie.AgentList.agents">agents (Melodie.AgentList attribute)</a>
 </li>
-      <li><a href="api/agent_list.html#Melodie.boost.agent_list.AgentList.all_agent_ids">all_agent_ids() (Melodie.boost.agent_list.AgentList method)</a>
+      <li><a href="api/agent_list.html#Melodie.AgentList.all_agent_ids">all_agent_ids() (Melodie.AgentList method)</a>
+
+      <ul>
+        <li><a href="api/agent_list.html#MelodieInfra.core.agent_list.BaseAgentContainer.all_agent_ids">(MelodieInfra.core.agent_list.BaseAgentContainer method)</a>
 </li>
+      </ul></li>
       <li><a href="api/network.html#Melodie.network.Network.all_agents">all_agents() (Melodie.network.Network method)</a>
 </li>
       <li><a href="api/data_collector.html#Melodie.data_collector.DataCollector.append_agent_properties_by_records">append_agent_properties_by_records() (Melodie.data_collector.DataCollector method)</a>
@@ -316,7 +323,7 @@
 <h2 id="B">B</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/agent_list.html#Melodie.boost.agent_list.BaseAgentContainer">BaseAgentContainer (class in Melodie.boost.agent_list)</a>
+      <li><a href="api/agent_list.html#MelodieInfra.core.agent_list.BaseAgentContainer">BaseAgentContainer (class in MelodieInfra.core.agent_list)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
@@ -334,7 +341,7 @@
 </li>
       <li><a href="api/exceptions.html#MelodieInfra.exceptions.exceptions.MelodieExceptions.State.CannotMoveToNewStateError">CannotMoveToNewStateError() (MelodieInfra.exceptions.exceptions.MelodieExceptions.State static method)</a>
 </li>
-      <li><a href="api/grid.html#Melodie.boost.grid.GridAgent.category">category (Melodie.boost.grid.GridAgent attribute)</a>
+      <li><a href="api/grid.html#Melodie.GridAgent.category">category (Melodie.GridAgent attribute)</a>
 
       <ul>
         <li><a href="api/network.html#Melodie.network.NetworkAgent.category">(Melodie.network.NetworkAgent attribute)</a>
@@ -358,9 +365,11 @@
       </ul></li>
       <li><a href="api/exceptions.html#MelodieInfra.exceptions.exceptions.MelodieExceptions.Data.ColumnNameConsistencyError">ColumnNameConsistencyError() (MelodieInfra.exceptions.exceptions.MelodieExceptions.Data static method)</a>
 </li>
+      <li><a href="api/data_info.html#Melodie.data_loader.DataFrameInfo.columns">columns (Melodie.data_loader.DataFrameInfo attribute)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/data_info.html#Melodie.data_loader.DataFrameInfo.columns">columns (Melodie.data_loader.DataFrameInfo attribute)</a>
+      <li><a href="api/grid.html#Melodie.Grid.coords_wrap">coords_wrap() (Melodie.Grid method)</a>
 </li>
       <li><a href="api/scenario.html#Melodie.scenario_manager.Scenario.copy">copy() (Melodie.scenario_manager.Scenario method)</a>
 </li>
@@ -430,9 +439,11 @@
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/environment.html#Melodie.boost.basics.Environment">Environment (class in Melodie.boost.basics)</a>
+      <li><a href="api/environment.html#Melodie.Environment">Environment (class in Melodie)</a>
 </li>
       <li><a href="api/db.html#MelodieInfra.db.db.DBConn.ENVIRONMENT_RESULT_TABLE">ENVIRONMENT_RESULT_TABLE (MelodieInfra.db.db.DBConn attribute)</a>
+</li>
+      <li><a href="api/db.html#MelodieInfra.db.db.DBConn.existing_connections">existing_connections (MelodieInfra.db.db.DBConn attribute)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -446,11 +457,9 @@
         <li><a href="api/data_info.html#Melodie.data_loader.MatrixInfo.file_name">(Melodie.data_loader.MatrixInfo attribute)</a>
 </li>
       </ul></li>
-      <li><a href="api/agent_list.html#Melodie.boost.agent_list.AgentList.filter">filter() (Melodie.boost.agent_list.AgentList method)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/grid.html#Melodie.boost.grid.Grid.find_empty_spot">find_empty_spot() (Melodie.boost.grid.Grid method)</a>
+      <li><a href="api/agent_list.html#Melodie.AgentList.filter">filter() (Melodie.AgentList method)</a>
 </li>
       <li><a href="api/db.html#MelodieInfra.db.db.DBConn.from_connection_string">from_connection_string() (MelodieInfra.db.db.DBConn static method)</a>
 </li>
@@ -478,11 +487,13 @@
 </li>
       <li><a href="api/trainer.html#Melodie.trainer.Trainer.generate_trainer_params_list">generate_trainer_params_list() (Melodie.trainer.Trainer method)</a>
 </li>
-      <li><a href="api/agent_list.html#Melodie.boost.agent_list.AgentList.get_agent">get_agent() (Melodie.boost.agent_list.AgentList method)</a>
+      <li><a href="api/agent_list.html#Melodie.AgentList.get_agent">get_agent() (Melodie.AgentList method)</a>
 </li>
-      <li><a href="api/grid.html#Melodie.boost.grid.Grid.get_agent_ids">get_agent_ids() (Melodie.boost.grid.Grid method)</a>
+      <li><a href="api/grid.html#Melodie.Grid.get_agent_ids">get_agent_ids() (Melodie.Grid method)</a>
 </li>
-      <li><a href="api/grid.html#Melodie.boost.grid.Grid.get_colormap">get_colormap() (Melodie.boost.grid.Grid method)</a>
+      <li><a href="api/grid.html#Melodie.Grid.get_agent_pos">get_agent_pos() (Melodie.Grid method)</a>
+</li>
+      <li><a href="api/grid.html#Melodie.Grid.get_colormap">get_colormap() (Melodie.Grid method)</a>
 </li>
       <li><a href="api/scenario.html#Melodie.scenario_manager.Scenario.get_dataframe">get_dataframe() (Melodie.scenario_manager.Scenario method)</a>
 
@@ -492,7 +503,7 @@
       </ul></li>
       <li><a href="api/network.html#Melodie.network.Network.get_edge">get_edge() (Melodie.network.Network method)</a>
 </li>
-      <li><a href="api/grid.html#Melodie.boost.grid.Grid.get_empty_spots">get_empty_spots() (Melodie.boost.grid.Grid method)</a>
+      <li><a href="api/grid.html#Melodie.Grid.get_empty_spots">get_empty_spots() (Melodie.Grid method)</a>
 </li>
       <li><a href="api/db.html#MelodieInfra.db.db.DBConn.get_engine">get_engine() (MelodieInfra.db.db.DBConn method)</a>
 </li>
@@ -504,7 +515,7 @@
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/grid.html#Melodie.boost.grid.Grid.get_neighbors">get_neighbors() (Melodie.boost.grid.Grid method)</a>
+      <li><a href="api/grid.html#Melodie.Grid.get_neighbors">get_neighbors() (Melodie.Grid method)</a>
 
       <ul>
         <li><a href="api/network.html#Melodie.network.Network.get_neighbors">(Melodie.network.Network method)</a>
@@ -518,12 +529,12 @@
 </li>
       <li><a href="api/data_collector.html#Melodie.data_collector.DataCollector.get_single_agent_data">get_single_agent_data() (Melodie.data_collector.DataCollector method)</a>
 </li>
-      <li><a href="api/grid.html#Melodie.boost.grid.Grid.get_spot">get_spot() (Melodie.boost.grid.Grid method)</a>
+      <li><a href="api/grid.html#Melodie.Grid.get_spot">get_spot() (Melodie.Grid method)</a>
 </li>
-      <li><a href="api/grid.html#Melodie.boost.grid.Grid.get_spot_agents">get_spot_agents() (Melodie.boost.grid.Grid method)</a>
+      <li><a href="api/grid.html#Melodie.Grid.get_spot_agents">get_spot_agents() (Melodie.Grid method)</a>
 
       <ul>
-        <li><a href="api/grid.html#Melodie.boost.grid.Spot.get_spot_agents">(Melodie.boost.grid.Spot method)</a>
+        <li><a href="api/grid.html#Melodie.Spot.get_spot_agents">(Melodie.Spot method)</a>
 </li>
       </ul></li>
       <li><a href="api/db.html#MelodieInfra.db.db.get_sqlite_filename">get_sqlite_filename() (in module MelodieInfra.db.db)</a>
@@ -532,13 +543,13 @@
 </li>
       <li><a href="api/trainer.html#Melodie.trainer.Trainer.get_trainer_scenario_cls">get_trainer_scenario_cls() (Melodie.trainer.Trainer method)</a>
 </li>
-      <li><a href="api/grid.html#Melodie.boost.grid.Grid">Grid (class in Melodie.boost.grid)</a>
+      <li><a href="api/grid.html#Melodie.Grid">Grid (class in Melodie)</a>
 </li>
-      <li><a href="api/grid.html#Melodie.boost.grid.GridItem.grid">grid (Melodie.boost.grid.GridItem attribute)</a>
+      <li><a href="api/grid.html#Melodie.GridItem.grid">grid (Melodie.GridItem attribute)</a>
 </li>
-      <li><a href="api/grid.html#Melodie.boost.grid.GridAgent">GridAgent (class in Melodie.boost.grid)</a>
+      <li><a href="api/grid.html#Melodie.GridAgent">GridAgent (class in Melodie)</a>
 </li>
-      <li><a href="api/grid.html#Melodie.boost.grid.GridItem">GridItem (class in Melodie.boost.grid)</a>
+      <li><a href="api/grid.html#Melodie.GridItem">GridItem (class in Melodie)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -546,7 +557,7 @@
 <h2 id="H">H</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/grid.html#Melodie.boost.grid.Grid.height">height() (Melodie.boost.grid.Grid method)</a>
+      <li><a href="api/grid.html#Melodie.Grid.height">height() (Melodie.Grid method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -554,7 +565,7 @@
 <h2 id="I">I</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/agent.html#Melodie.boost.basics.Agent.id">id (Melodie.boost.basics.Agent attribute)</a>
+      <li><a href="api/agent.html#Melodie.Agent.id">id (Melodie.Agent attribute)</a>
 </li>
       <li><a href="api/exceptions.html#MelodieInfra.exceptions.exceptions.MelodieExceptions.Agents.ID">ID (MelodieInfra.exceptions.exceptions.MelodieExceptions.Agents attribute)</a>
 
@@ -582,9 +593,7 @@
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/agent_list.html#Melodie.boost.agent_list.BaseAgentContainer.init_agents">init_agents() (Melodie.boost.agent_list.BaseAgentContainer method)</a>
-</li>
-      <li><a href="api/grid.html#Melodie.boost.grid.Grid.init_grid">init_grid() (Melodie.boost.grid.Grid method)</a>
+      <li><a href="api/agent_list.html#Melodie.AgentList.init_agents">init_agents() (Melodie.AgentList method)</a>
 </li>
       <li><a href="api/model.html#Melodie.model.Model.init_visualize">init_visualize() (Melodie.model.Model method)</a>
 </li>
@@ -616,13 +625,6 @@
 </li>
       <li><a href="api/data_info.html#Melodie.data_loader.MatrixInfo">MatrixInfo (class in Melodie.data_loader)</a>
 </li>
-      <li>
-    Melodie.boost.agent_list
-
-      <ul>
-        <li><a href="api/agent_list.html#module-Melodie.boost.agent_list">module</a>
-</li>
-      </ul></li>
       <li>
     Melodie.calibrator
 
@@ -713,14 +715,14 @@
       </ul></li>
       <li><a href="api/exceptions.html#MelodieInfra.exceptions.exceptions.MelodieExceptions.Tools.MelodieStudioUnAvailable">MelodieStudioUnAvailable() (MelodieInfra.exceptions.exceptions.MelodieExceptions.Tools static method)</a>
 </li>
-      <li><a href="api/agent_list.html#Melodie.boost.agent_list.AgentList.method_foreach">method_foreach() (Melodie.boost.agent_list.AgentList method)</a>
+      <li><a href="api/agent_list.html#Melodie.AgentList.method_foreach">method_foreach() (Melodie.AgentList method)</a>
 </li>
       <li><a href="api/model.html#Melodie.model.Model">Model (class in Melodie.model)</a>
 </li>
-      <li><a href="api/agent.html#Melodie.boost.basics.Agent.model">model (Melodie.boost.basics.Agent attribute)</a>
+      <li><a href="api/agent.html#Melodie.Agent.model">model (Melodie.Agent attribute)</a>
 
       <ul>
-        <li><a href="api/environment.html#Melodie.boost.basics.Environment.model">(Melodie.boost.basics.Environment attribute)</a>
+        <li><a href="api/environment.html#Melodie.Environment.model">(Melodie.Environment attribute)</a>
 </li>
       </ul></li>
       <li><a href="api/model.html#Melodie.model.ModelRunRoutine">ModelRunRoutine (class in Melodie.model)</a>
@@ -729,8 +731,6 @@
     module
 
       <ul>
-        <li><a href="api/agent_list.html#module-Melodie.boost.agent_list">Melodie.boost.agent_list</a>
-</li>
         <li><a href="api/calibrator.html#module-Melodie.calibrator">Melodie.calibrator</a>
 </li>
         <li><a href="api/data_collector.html#module-Melodie.data_collector">Melodie.data_collector</a>
@@ -748,7 +748,7 @@
         <li><a href="api/exceptions.html#module-MelodieInfra.exceptions.exceptions">MelodieInfra.exceptions.exceptions</a>
 </li>
       </ul></li>
-      <li><a href="api/grid.html#Melodie.boost.grid.Grid.move_agent">move_agent() (Melodie.boost.grid.Grid method)</a>
+      <li><a href="api/grid.html#Melodie.Grid.move_agent">move_agent() (Melodie.Grid method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -760,7 +760,7 @@
 </li>
       <li><a href="api/network.html#Melodie.network.NetworkAgent">NetworkAgent (class in Melodie.network)</a>
 </li>
-      <li><a href="api/agent_list.html#Melodie.boost.agent_list.BaseAgentContainer.new_id">new_id() (Melodie.boost.agent_list.BaseAgentContainer method)</a>
+      <li><a href="api/agent_list.html#MelodieInfra.core.agent_list.BaseAgentContainer.new_id">new_id() (MelodieInfra.core.agent_list.BaseAgentContainer method)</a>
 </li>
       <li><a href="api/exceptions.html#MelodieInfra.exceptions.exceptions.MelodieExceptions.General.NoAttributeError">NoAttributeError() (MelodieInfra.exceptions.exceptions.MelodieExceptions.General static method)</a>
 </li>
@@ -810,13 +810,13 @@
 <h2 id="R">R</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/grid.html#Melodie.boost.grid.Grid.rand_move_agent">rand_move_agent() (Melodie.boost.grid.Grid method)</a>
+      <li><a href="api/grid.html#Melodie.Grid.rand_move_agent">rand_move_agent() (Melodie.Grid method)</a>
 
       <ul>
-        <li><a href="api/grid.html#Melodie.boost.grid.GridAgent.rand_move_agent">(Melodie.boost.grid.GridAgent method)</a>
+        <li><a href="api/grid.html#Melodie.GridAgent.rand_move_agent">(Melodie.GridAgent method)</a>
 </li>
       </ul></li>
-      <li><a href="api/agent_list.html#Melodie.boost.agent_list.AgentList.random_sample">random_sample() (Melodie.boost.agent_list.AgentList method)</a>
+      <li><a href="api/agent_list.html#Melodie.AgentList.random_sample">random_sample() (Melodie.AgentList method)</a>
 </li>
       <li><a href="api/db.html#MelodieInfra.db.db.DBConn.read_dataframe">read_dataframe() (MelodieInfra.db.db.DBConn method)</a>
 </li>
@@ -824,9 +824,9 @@
 </li>
       <li><a href="api/db.html#MelodieInfra.db.db.DBConn.register_dtypes">register_dtypes() (MelodieInfra.db.db.DBConn class method)</a>
 </li>
-      <li><a href="api/agent_list.html#Melodie.boost.agent_list.AgentList.remove">remove() (Melodie.boost.agent_list.AgentList method)</a>
+      <li><a href="api/agent_list.html#Melodie.AgentList.remove">remove() (Melodie.AgentList method)</a>
 </li>
-      <li><a href="api/grid.html#Melodie.boost.grid.Grid.remove_agent">remove_agent() (Melodie.boost.grid.Grid method)</a>
+      <li><a href="api/grid.html#Melodie.Grid.remove_agent">remove_agent() (Melodie.Grid method)</a>
 
       <ul>
         <li><a href="api/network.html#Melodie.network.Network.remove_agent">(Melodie.network.Network method)</a>
@@ -868,10 +868,10 @@
 </li>
       <li><a href="api/scenario.html#Melodie.scenario_manager.Scenario">Scenario (class in Melodie.scenario_manager)</a>
 </li>
-      <li><a href="api/agent.html#Melodie.boost.basics.Agent.scenario">scenario (Melodie.boost.basics.Agent attribute)</a>
+      <li><a href="api/agent.html#Melodie.Agent.scenario">scenario (Melodie.Agent attribute)</a>
 
       <ul>
-        <li><a href="api/environment.html#Melodie.boost.basics.Environment.scenario">(Melodie.boost.basics.Environment attribute)</a>
+        <li><a href="api/environment.html#Melodie.Environment.scenario">(Melodie.Environment attribute)</a>
 </li>
       </ul></li>
       <li><a href="api/db.html#MelodieInfra.db.db.DBConn.SCENARIO_TABLE">SCENARIO_TABLE (MelodieInfra.db.db.DBConn attribute)</a>
@@ -880,30 +880,28 @@
 </li>
       <li><a href="api/exceptions.html#MelodieInfra.exceptions.exceptions.MelodieExceptions.Scenario.ScenarioIDTypeError">ScenarioIDTypeError() (MelodieInfra.exceptions.exceptions.MelodieExceptions.Scenario static method)</a>
 </li>
-      <li><a href="api/grid.html#Melodie.boost.grid.GridAgent.set_category">set_category() (Melodie.boost.grid.GridAgent method)</a>
+      <li><a href="api/grid.html#Melodie.GridAgent.set_category">set_category() (Melodie.GridAgent method)</a>
 
       <ul>
         <li><a href="api/network.html#Melodie.network.NetworkAgent.set_category">(Melodie.network.NetworkAgent method)</a>
 </li>
       </ul></li>
-      <li><a href="api/grid.html#Melodie.boost.grid.GridItem.set_params">set_params() (Melodie.boost.grid.GridItem method)</a>
+      <li><a href="api/agent_list.html#Melodie.AgentList.set_properties">set_properties() (Melodie.AgentList method)</a>
 </li>
-      <li><a href="api/agent_list.html#Melodie.boost.agent_list.AgentList.set_properties">set_properties() (Melodie.boost.agent_list.AgentList method)</a>
+      <li><a href="api/grid.html#Melodie.Grid.set_spot_property">set_spot_property() (Melodie.Grid method)</a>
 </li>
-      <li><a href="api/grid.html#Melodie.boost.grid.Grid.set_spot_property">set_spot_property() (Melodie.boost.grid.Grid method)</a>
-</li>
-      <li><a href="api/agent_list.html#Melodie.boost.agent_list.AgentList.setup">setup() (Melodie.boost.agent_list.AgentList method)</a>
+      <li><a href="api/agent.html#Melodie.Agent.setup">setup() (Melodie.Agent method)</a>
 
       <ul>
-        <li><a href="api/agent.html#Melodie.boost.basics.Agent.setup">(Melodie.boost.basics.Agent method)</a>
-</li>
-        <li><a href="api/environment.html#Melodie.boost.basics.Environment.setup">(Melodie.boost.basics.Environment method)</a>
-</li>
-        <li><a href="api/grid.html#Melodie.boost.grid.Grid.setup">(Melodie.boost.grid.Grid method)</a>
+        <li><a href="api/agent_list.html#Melodie.AgentList.setup">(Melodie.AgentList method)</a>
 </li>
         <li><a href="api/calibrator.html#Melodie.calibrator.Calibrator.setup">(Melodie.calibrator.Calibrator method)</a>
 </li>
         <li><a href="api/data_collector.html#Melodie.data_collector.DataCollector.setup">(Melodie.data_collector.DataCollector method)</a>
+</li>
+        <li><a href="api/environment.html#Melodie.Environment.setup">(Melodie.Environment method)</a>
+</li>
+        <li><a href="api/grid.html#Melodie.Grid.setup">(Melodie.Grid method)</a>
 </li>
         <li><a href="api/model.html#Melodie.model.Model.setup">(Melodie.model.Model method)</a>
 </li>
@@ -922,17 +920,19 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/network.html#Melodie.network.Network.setup_agent_connections">setup_agent_connections() (Melodie.network.Network method)</a>
 </li>
-      <li><a href="api/grid.html#Melodie.boost.grid.Grid.setup_agent_locations">setup_agent_locations() (Melodie.boost.grid.Grid method)</a>
+      <li><a href="api/grid.html#Melodie.Grid.setup_agent_locations">setup_agent_locations() (Melodie.Grid method)</a>
 </li>
-      <li><a href="api/agent_list.html#Melodie.boost.agent_list.AgentList.setup_agents">setup_agents() (Melodie.boost.agent_list.AgentList method)</a>
+      <li><a href="api/agent_list.html#Melodie.AgentList.setup_agents">setup_agents() (Melodie.AgentList method)</a>
 </li>
       <li><a href="api/network.html#Melodie.network.Network.setup_layout_creator">setup_layout_creator() (Melodie.network.Network method)</a>
 </li>
-      <li><a href="api/grid.html#Melodie.boost.grid.Grid.setup_params">setup_params() (Melodie.boost.grid.Grid method)</a>
+      <li><a href="api/grid.html#Melodie.Grid.setup_params">setup_params() (Melodie.Grid method)</a>
 </li>
       <li><a href="api/simulator.html#Melodie.simulator.Simulator">Simulator (class in Melodie.simulator)</a>
 </li>
-      <li><a href="api/grid.html#Melodie.boost.grid.Spot">Spot (class in Melodie.boost.grid)</a>
+      <li><a href="api/grid.html#Melodie.Spot">Spot (class in Melodie)</a>
+</li>
+      <li><a href="api/grid.html#Melodie.Grid.spots_to_json">spots_to_json() (Melodie.Grid method)</a>
 </li>
       <li><a href="api/exceptions.html#MelodieInfra.exceptions.exceptions.MelodieExceptions.State.StateNotFoundError">StateNotFoundError() (MelodieInfra.exceptions.exceptions.MelodieExceptions.State static method)</a>
 </li>
@@ -964,37 +964,27 @@
       </ul></li>
       <li><a href="api/data_collector.html#Melodie.data_collector.DataCollector.time_elapsed">time_elapsed() (Melodie.data_collector.DataCollector method)</a>
 </li>
-      <li><a href="api/grid.html#Melodie.boost.grid.Grid.to_2d_array">to_2d_array() (Melodie.boost.grid.Grid method)</a>
+      <li><a href="api/agent_list.html#Melodie.AgentList.to_dataframe">to_dataframe() (Melodie.AgentList method)</a>
 </li>
-      <li><a href="api/agent_list.html#Melodie.boost.agent_list.AgentList.to_dataframe">to_dataframe() (Melodie.boost.agent_list.AgentList method)</a>
-
-      <ul>
-        <li><a href="api/environment.html#Melodie.boost.basics.Environment.to_dataframe">(Melodie.boost.basics.Environment method)</a>
-</li>
-      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/agent.html#Melodie.boost.basics.Agent.to_dict">to_dict() (Melodie.boost.basics.Agent method)</a>
+      <li><a href="api/environment.html#Melodie.Environment.to_dict">to_dict() (Melodie.Environment method)</a>
 
       <ul>
-        <li><a href="api/environment.html#Melodie.boost.basics.Environment.to_dict">(Melodie.boost.basics.Environment method)</a>
-</li>
         <li><a href="api/scenario.html#Melodie.scenario_manager.Scenario.to_dict">(Melodie.scenario_manager.Scenario method)</a>
 </li>
       </ul></li>
       <li><a href="api/scenario.html#Melodie.scenario_manager.Scenario.to_json">to_json() (Melodie.scenario_manager.Scenario method)</a>
 </li>
-      <li><a href="api/agent_list.html#Melodie.boost.agent_list.AgentList.to_list">to_list() (Melodie.boost.agent_list.AgentList method)</a>
+      <li><a href="api/agent_list.html#Melodie.AgentList.to_list">to_list() (Melodie.AgentList method)</a>
 
       <ul>
-        <li><a href="api/agent_list.html#Melodie.boost.agent_list.BaseAgentContainer.to_list">(Melodie.boost.agent_list.BaseAgentContainer method)</a>
+        <li><a href="api/agent_list.html#MelodieInfra.core.agent_list.BaseAgentContainer.to_list">(MelodieInfra.core.agent_list.BaseAgentContainer method)</a>
 </li>
       </ul></li>
       <li><a href="api/trainer.html#Melodie.trainer.Trainer">Trainer (class in Melodie.trainer)</a>
 </li>
       <li><a href="api/exceptions.html#MelodieInfra.exceptions.exceptions.MelodieExceptions.Assertions.Type">Type() (MelodieInfra.exceptions.exceptions.MelodieExceptions.Assertions static method)</a>
-</li>
-      <li><a href="api/agent_list.html#Melodie.boost.agent_list.BaseAgentContainer.type_check">type_check() (Melodie.boost.agent_list.BaseAgentContainer method)</a>
 </li>
       <li><a href="api/exceptions.html#MelodieInfra.exceptions.exceptions.MelodieExceptions.General.TypeError">TypeError() (MelodieInfra.exceptions.exceptions.MelodieExceptions.General static method)</a>
 </li>
@@ -1022,7 +1012,7 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/exceptions.html#MelodieInfra.exceptions.exceptions.MelodieExceptions.Program.Variable.VariableNotInSet">VariableNotInSet() (MelodieInfra.exceptions.exceptions.MelodieExceptions.Program.Variable static method)</a>
 </li>
-      <li><a href="api/agent_list.html#Melodie.boost.agent_list.AgentList.vectorize">vectorize() (Melodie.boost.agent_list.AgentList method)</a>
+      <li><a href="api/agent_list.html#Melodie.AgentList.vectorize">vectorize() (Melodie.AgentList method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -1030,7 +1020,7 @@
 <h2 id="W">W</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/grid.html#Melodie.boost.grid.Grid.width">width() (Melodie.boost.grid.Grid method)</a>
+      <li><a href="api/grid.html#Melodie.Grid.width">width() (Melodie.Grid method)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
@@ -1042,7 +1032,7 @@
 <h2 id="X">X</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/grid.html#Melodie.boost.grid.GridItem.x">x (Melodie.boost.grid.GridItem attribute)</a>
+      <li><a href="api/grid.html#Melodie.GridItem.x">x (Melodie.GridItem attribute)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -1050,7 +1040,7 @@
 <h2 id="Y">Y</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/grid.html#Melodie.boost.grid.GridItem.y">y (Melodie.boost.grid.GridItem attribute)</a>
+      <li><a href="api/grid.html#Melodie.GridItem.y">y (Melodie.GridItem attribute)</a>
 </li>
   </ul></td>
 </tr></table>

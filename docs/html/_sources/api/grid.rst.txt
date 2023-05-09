@@ -1,7 +1,7 @@
 
 Grid
 =============
-.. autoclass:: Melodie.boost.grid.GridItem
+.. autoclass:: Melodie.GridItem
     :members:
     :show-inheritance:
 
@@ -20,7 +20,7 @@ Grid
         
         Coordinate y on the grid, an ``int``.
 
-.. autoclass:: Melodie.boost.grid.GridAgent
+.. autoclass:: Melodie.GridAgent
     :members:
     :show-inheritance:
 
@@ -29,11 +29,11 @@ Grid
         
         Category indicating agent class, an ``int``.
 
-.. autoclass:: Melodie.boost.grid.Spot
+.. autoclass:: Melodie.Spot
     :members:
     :show-inheritance:
 
-.. autoclass:: Melodie.boost.grid.Grid
+.. autoclass:: Melodie.Grid
     :members:
     :show-inheritance:
 
