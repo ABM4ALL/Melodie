@@ -6,6 +6,7 @@ xlrd==1.2.0
 networkx
 chardet~=4.0.0
 sqlalchemy~=1.4
+sqlalchemy_utils
 astunparse
 pprintast
 pytest
