@@ -10,6 +10,7 @@ xlrd==1.2.0
 networkx
 chardet~=4.0.0
 sqlalchemy~=1.4
+sqlalchemy_utils
 astunparse
 pprintast
 sphinx
@@ -23,3 +24,4 @@ setuptools
 cloudpickle~=2.0
 scikit-opt~=0.6
 rpyc
+MelodieTable
