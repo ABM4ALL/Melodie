@@ -82,9 +82,11 @@ def test_to_database():
     # table.from_dicts()
 
     table.to_database(engine, "aaaaaa")
+    table.from_database(engine, "aaaaaa", "select * from aaaaaa")
 
 
 def test_indicing():
     agents = [{"a": i, "b": i} for i in range(1000)]
     table = GeneralTable.from_dicts({"a": Integer(), "b": Integer()}, agents)
-    assert table.iat[50, "a"] == 50
+    assert table.at[50, "a"] == 50
+    assert table.iat[50, 0] == 50

@@ -169,14 +169,23 @@ class AgentList(BaseAgentContainer):
             )
         else:
             params_table = table  # deep copy this dataframe.
+        if "id" in param_names:
+            row: Dict[str, Any]
+            for i, row in enumerate(params_table.iter_dicts()):
+                params = {k: row[k] for k in param_names}
+                agent = self.get_agent(params["id"])
+                if agent is None:
+                    agent = self.add()
+                agent.set_params(params)
+        else:
+            row: Dict[str, Any]
+            params_table.df.data("out.csv")
+            assert len(self) == len(params_table), (len(self), len(params_table))
 
-        row: Dict[str, Any]
-        for i, row in enumerate(params_table.iter_dicts()):
-            params = {k: row[k] for k in param_names}
-            agent = self.get_agent(params["id"])
-            if agent is None:
-                agent = self.add()
-            agent.set_params(params)
+            for i, row in enumerate(params_table.iter_dicts()):
+                params = {k: row[k] for k in param_names}
+                agent = self.agents(i)
+                agent.set_params(params)
 
     def filter(self, condition: Callable[[AgentGeneric], bool]):
         """

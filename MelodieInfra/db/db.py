@@ -6,10 +6,8 @@ import sqlalchemy
 from sqlalchemy.exc import OperationalError
 from sqlalchemy_utils import database_exists, create_database
 
-from ..table import Table
-
+from ..table import TableBase, TABLE_TYPE, GeneralTable, DatabaseConnector
 from ..exceptions import MelodieExceptions
-from ..compat import pd
 
 if TYPE_CHECKING:
     from MelodieInfra.config.config import Config
@@ -154,7 +152,7 @@ class DBConn:
     def write_dataframe(
         self,
         table_name: str,
-        data_frame: pd.DataFrame,
+        data_frame: TABLE_TYPE,
         data_types: Optional[TABLE_DTYPES] = None,
         if_exists="append",
     ):
@@ -168,7 +166,7 @@ class DBConn:
         :return:
         """
 
-        if isinstance(data_frame, Table):
+        if isinstance(data_frame, TableBase):
             data_frame.to_database(self.connection, table_name)
         else:
             if data_types is None:
@@ -188,7 +186,8 @@ class DBConn:
         id_scenario: Optional[int] = None,
         id_run: Optional[int] = None,
         conditions: List[Tuple[str, str]] = None,
-    ) -> pd.DataFrame:
+        df_type: str = "pandas",
+    ) -> "pd.DataFrame":
         """
         Read a table and return all content as a dataframe.
 
@@ -205,13 +204,15 @@ class DBConn:
         :param id_scenario: Filter of scenario
         :param id_run: Filter of run_id
         :param conditions: Custom conditions
+        :param df_type: Type of dataframe, choose between "pandas" and "melodie-table"
         """
+        assert df_type in {"pandas", "melodie-table"}
+
         where_condition_phrase = ""
         condition_phrases = []
         if conditions is not None:
             condition_phrases.extend([item[0] + item[1] for item in conditions])
         if id_scenario is not None:
-            # assert isinstance(id_scenario, int)
             condition_phrases.append(f"id_scenario={id_scenario}")
         if id_run is not None:
             condition_phrases.append(f"id_run={id_scenario}")
@@ -220,7 +221,12 @@ class DBConn:
             if len(condition_phrases) != 0:
                 sql += " where " + " and ".join(condition_phrases)
             logger.debug("Querying database: " + sql)
-            return pd.read_sql(sql, self.connection)
+            if df_type == "pandas":
+                import pandas as pd
+
+                return pd.read_sql(sql, self.connection)
+            else:
+                return GeneralTable.from_database(self.connection, table_name, sql)
         except OperationalError:
             import traceback
 
@@ -236,13 +242,15 @@ class DBConn:
         """
         self.connection.execute(f"drop table if exists  {table_name} ;")
 
-    def query(self, sql) -> pd.DataFrame:
+    def query(self, sql) -> "pd.DataFrame":
         """
         Execute sql command and return the result by pd.DataFrame.
 
         :param sql: SQL phrase to execute.
         :return:
         """
+        import pandas as pd
+
         return pd.read_sql(sql, self.connection)
 
 

@@ -2,8 +2,8 @@
 
 import logging
 from typing import Callable, Union, TYPE_CHECKING, Optional, Dict, Any
-
-from MelodieInfra import MelodieExceptions, pd
+from sqlalchemy import Integer, Float
+from MelodieInfra import MelodieExceptions, Table, GeneralTable
 from .utils import args_check
 from .scenario_manager import Scenario
 
@@ -104,7 +104,12 @@ class DataFrameGenerator:
         for scenario in scenarios:
             data_list.extend(self.gen_agent_params(scenario))
             self.reset_increment()
-        return pd.DataFrame(data_list)
+        assert len(data_list) > 0, "Agent param table should contain more than one row"
+        cols = {
+            k: Integer() if isinstance(v, int) else Float()
+            for k, v in data_list[0].items()
+        }
+        return GeneralTable.from_dicts(cols, data_list)
 
     def gen_agent_params(self, scenario: Scenario):
         """

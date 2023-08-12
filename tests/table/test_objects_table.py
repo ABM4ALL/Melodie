@@ -19,8 +19,9 @@ class TableRowType1(TableRow):
 
 
 def test_create_table():
-    assert type(TableRowType1.get_datatypes()["a"]) == BigInteger
-    assert type(TableRowType1.get_datatypes()["b"]) == Integer
+    print(TableRowType1.get_datatypes())
+    assert type(TableRowType1.get_datatypes()["a"].type) == BigInteger
+    assert type(TableRowType1.get_datatypes()["b"].type) == Integer
 
     table = Table.from_dicts(TableRowType1, [{"a": i, "b": i} for i in range(1000)])
 
@@ -35,8 +36,8 @@ class TableRowType2(TableRow):
 
 
 def test_create_with_alias():
-    assert type(TableRowType2.get_datatypes()["a"]) == BigInteger
-    assert type(TableRowType2.get_datatypes()["b"]) == Integer
+    assert type(TableRowType2.get_datatypes()["a"].type) == BigInteger
+    assert type(TableRowType2.get_datatypes()["b"].type) == Integer
 
     table = Table.from_dicts(TableRowType2, [{"**a": i, "^&1b": i} for i in range(100)])
     print(table.data)
@@ -171,3 +172,9 @@ def test_indicing():
     agents = [{"a": i, "b": i} for i in range(1000)]
     table = Table.from_dicts(TableRowType1, agents)
     assert table.iat[50, "a"] == 50
+
+
+def test_create_autodetect():
+    agents = [{"a": i, "b": i + 0.5} for i in range(1000)]
+    row_cls = TableRow.subcls_from_dict(agents[0])
+    table = Table.from_dicts(row_cls, agents)

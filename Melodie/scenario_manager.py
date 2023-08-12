@@ -19,7 +19,7 @@ class Scenario(Element):
 
     """
 
-    def __init__(self, id_scenario: Optional[Union[int, str]] = None):
+    def __init__(self, id_scenario: Optional[Union[int, str]] = 0):
         """
         :param id_scenario: the id of scenario. if None, this will be self-increment from 0 to scenarios_number-1
         """

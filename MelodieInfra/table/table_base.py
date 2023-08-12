@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from sqlalchemy import Column
 from sqlalchemy.types import BigInteger, Text, TypeEngine, Float, Boolean
 from typing import Callable, Dict, List, Optional, Tuple, TypeVar, Type, Any
 
@@ -13,13 +14,15 @@ py_types_to_sa_types: Dict[Type, Type[TypeEngine]] = {
 @dataclass
 class ColumnMeta:
     column_name: str
-    dtype: Optional[TypeEngine]
+    dtype: Optional[Column]
 
     def __post_init__(self):
-        assert isinstance(self.dtype, TypeEngine) or self.dtype is None, self.dtype
+        assert isinstance(self.dtype, Column) or self.dtype is None, self.dtype
 
 
 def column_meta(col_name: str, dtype: Optional[TypeEngine] = None) -> Any:
+    if isinstance(dtype, TypeEngine):
+        dtype = Column(dtype)
     o = ColumnMeta(col_name, dtype)
     return o
 
@@ -41,6 +44,14 @@ class TableBase:
             return getattr(self.data[indices[0]], indices[1])
 
     class IatDictsIndicer:
+        def __init__(self, data: List, columns: List[str]) -> None:
+            self.data = data
+            self.columns = columns
+
+        def __getitem__(self, indices):
+            return self.data[indices[0]][self.columns[indices[1]]]
+
+    class AtDictsIndicer:
         def __init__(self, data: List) -> None:
             self.data = data
 
@@ -101,3 +112,7 @@ class TableBase:
     @property
     def iat(self):
         return TableBase.IatObjectsIndicer(self.data)
+
+    @property
+    def at(self):
+        raise NotImplementedError

@@ -5,8 +5,9 @@ from typing import List, TYPE_CHECKING, Dict, Tuple, Any, Optional, Type
 
 import sqlalchemy
 from MelodieInfra import DBConn, MelodieExceptions
-from MelodieInfra import DatabaseConnector, TableWriter
+from MelodieInfra import DatabaseConnector, TableWriter, Table, TableRow
 from Melodie.global_configs import MelodieGlobalConfig
+from MelodieInfra.table.pandas_compat import TABLE_TYPE
 
 logger = logging.getLogger(__name__)
 
@@ -62,8 +63,8 @@ class DataCollector:
         self._agent_properties_to_collect: Dict[str, List[PropertyToCollect]] = {}
         self._environment_properties_to_collect: List[PropertyToCollect] = []
 
-        self.agent_properties_dict: Dict[str, List[Any]] = {}
-        self.environment_properties_list = []
+        self.agent_properties_dict: Dict[str, Table] = {}
+        self.environment_properties_list: Dict[str, Table] = None
 
         self._time_elapsed = 0
 
@@ -192,24 +193,37 @@ class DataCollector:
             tmp_dic.update(agent_props_dict)
             props_list.append(tmp_dic)
         if container_name not in self.agent_properties_dict:
-            self.agent_properties_dict[container_name] = []
-        self.agent_properties_dict[container_name].extend(props_list)
+            if len(props_list)==0:
+                raise ValueError(f"No property collected for container {container_name}!")
+            print(props_list[0])
+            row_cls = TableRow.subcls_from_dict(props_list[0])
+            self.agent_properties_dict[container_name] = Table(row_cls)
+        self.agent_properties_dict[container_name].append_from_dicts(props_list)
 
     def append_environment_properties(
         self, env_properties: Dict[str, Any], period: int
     ):
+        # env_dic = {
+        #     "id_scenario": self.model.scenario.id,
+        #     "id_run": self.model.run_id_in_scenario,
+        #     "period": period,
+        # }
+        # env_dic.update(
+        #     {
+        #         prop_name: env_properties[prop_name]
+        #         for prop_name in self.env_property_names()
+        #     }
+        # )
         env_dic = {
             "id_scenario": self.model.scenario.id,
             "id_run": self.model.run_id_in_scenario,
             "period": period,
         }
-        env_dic.update(
-            {
-                prop_name: env_properties[prop_name]
-                for prop_name in self.env_property_names()
-            }
-        )
-        self.environment_properties_list.append(env_dic)
+        env_dic.update(self.model.environment.to_dict(self.env_property_names()))
+        if self.environment_properties_list is None:
+            row_cls = TableRow.subcls_from_dict(env_dic)
+            self.environment_properties_list = Table(row_cls)
+        self.environment_properties_list.append_from_dicts([env_dic])
 
     @property
     def status(self) -> bool:
@@ -237,14 +251,8 @@ class DataCollector:
             return
         t0 = time.time()
 
-        env_dic = {
-            "id_scenario": self.model.scenario.id,
-            "id_run": self.model.run_id_in_scenario,
-            "period": period,
-        }
-        env_dic.update(self.model.environment.to_dict(self.env_property_names()))
-
-        self.environment_properties_list.append(env_dic)
+        # self.environment_properties_list.append(env_dic)
+        self.append_environment_properties(self.env_property_names(), period)
 
         self.collect_agent_properties(
             period, self.model.run_id_in_scenario, self.model.scenario.id
@@ -289,45 +297,51 @@ class DataCollector:
         container_data = self.agent_properties_dict[agent_container_name]
         return list(filter(lambda item: item["id"] == agent_id, container_data))
 
-    def _write_list_to_table(self, engine, table_name: str, data: List[Dict[str, Any]]):
+    def _write_list_to_table(self, engine, table_name: str, data: Table):
         """
         Write a list of dict into database.
 
         :return:
         """
-        cols = [k for k in data[0].keys()]
-        if not os.path.exists(table_name + ".csv"):
-            cw = TableWriter(file_name=table_name + ".csv")
-            writer = cw.write()
-            writer.send(cols)
-            vectorizers[table_name] = vectorizer(cols)
-        else:
-            cw = TableWriter(file_name=table_name + ".csv", append=True)
+        # cols = [k for k in data[0].keys()]
+        # if not os.path.exists(table_name + ".csv"):
+        #     cw = TableWriter(file_name=table_name + ".csv")
+        #     writer = cw.write()
+        #     writer.send(cols)
 
-            # items= { k: type(v)        for k, v in data[0].items()}
-
-            writer = cw.write()
-        vectorizer_ = vectorizers[table_name]
-        for row_data in data:
-            # writer.send([row_data[col] for col in cols])
-            writer.send(vectorizer_(row_data))
-        return
+        # else:
+        #     cw = TableWriter(file_name=table_name + ".csv", append=True)
+        #     writer = cw.write()
+        # if table_name not in vectorizers:
+        #     vectorizers[table_name] = vectorizer(cols)
+        # vectorizer_ = vectorizers[table_name]
+        # for row_data in data:
+        #     writer.send(vectorizer_(row_data))
+        # self
         # for item in cw.write():
         #     pass
 
-        dbc = DatabaseConnector(engine)
-        types = {}
+        # TableWriter.
+        print(data.columns)
+        data.to_database(engine, table_name)
+        # dbc = DatabaseConnector(engine)
+        # dbc.write_table(
+        #     table_name,
+        #     data.row_types,
+        #     data.to_dict()
+        # )
+        # types = {}
 
-        if len(data) >= 1:
-            for k, v in data[0].items():
-                if isinstance(v, int):
-                    type_ = sqlalchemy.Integer()
-                elif isinstance(v, float):
-                    type_ = sqlalchemy.Float()
-                else:
-                    type_ = sqlalchemy.Text()
-                types[k] = sqlalchemy.Column(type_)
-        dbc.write_table(table_name, types, data)
+        # if len(data) >= 1:
+        #     for k, v in data[0].items():
+        #         if isinstance(v, int):
+        #             type_ = sqlalchemy.Integer()
+        #         elif isinstance(v, float):
+        #             type_ = sqlalchemy.Float()
+        #         else:
+        #             type_ = sqlalchemy.Text()
+        #         types[k] = sqlalchemy.Column(type_)
+        # dbc.write_table(table_name, types, data)
 
     def save(self):
         """
@@ -347,7 +361,7 @@ class DataCollector:
             self.environment_properties_list,
         )
         self._write_list_to_table(
-            None, DBConn.ENVIRONMENT_RESULT_TABLE, self.environment_properties_list
+            connection.get_engine(), DBConn.ENVIRONMENT_RESULT_TABLE, self.environment_properties_list
         )
         self.environment_properties_list = []
         write_db_time += time.time() - _t

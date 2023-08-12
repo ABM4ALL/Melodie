@@ -2,7 +2,6 @@ from math import floor
 import random as random_module
 from functools import lru_cache
 from random import randint
-import numpy as np
 
 
 def iterable(a):
@@ -19,5 +18,10 @@ def _random():
 
 def set_seed(seed: int):
     random_module.seed(seed)
-    np.random.seed(seed)
+    try:
+        import numpy as np
+
+        np.random.seed(seed)
+    except ImportError:
+        pass
     # srand(seed)

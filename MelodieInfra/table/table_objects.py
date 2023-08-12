@@ -13,7 +13,7 @@ from typing import (
 from sqlalchemy import Column
 from sqlalchemy.types import TypeEngine
 from sqlalchemy.orm import declarative_base
-from .reader_writer import TableReader, TableWriter, DatabaseConnector
+from .reader_writer import TableReader, TableWriter, DatabaseConnector, get_stat_cls
 from .table_base import TableBase, RowBase, py_types_to_sa_types, ColumnMeta
 
 Base = declarative_base()
@@ -34,6 +34,17 @@ class TableRow(RowBase):
                 setattr(self, k, v)
 
     @classmethod
+    def subcls_from_dict(cls, dic: Dict[str, Union[int, float, str, bool]]):
+        """
+        Create a subclass of TableRow by autodetect datatypes
+        """
+        return type(
+            "_TMP_ROW",
+            (TableRow,),
+            {k: ColumnMeta(k, Column(py_types_to_sa_types[type(v)]())) for k, v in dic.items()},
+        )
+
+    @classmethod
     def from_dict(cls, table: "Table", d: Dict, aliases: Dict[str, str]) -> "TableRow":
         r = TableRow(table)
         for k, v in d.items():
@@ -46,7 +57,8 @@ class TableRow(RowBase):
 
     @classmethod
     def get_aliases(cls):
-        attr_names = list(cls.__dict__.keys()) + list(cls.get_annotations().keys())
+        attr_names = list(cls.__dict__.keys()) + \
+            list(cls.get_annotations().keys())
         aliases = {}
         for attr_name in attr_names:
             if hasattr(cls, attr_name) and isinstance(
@@ -63,28 +75,34 @@ class TableRow(RowBase):
         """
         Get the datatype represented in database.
         """
-        attr_names = list(cls.__dict__.keys()) + list(cls.get_annotations().keys())
+        attr_names = list(cls.__dict__.keys()) + \
+            list(cls.get_annotations().keys())
         attr_names = [
             attr_name
             for attr_name in list(set(attr_names))
             if not attr_name.startswith("__")
         ]
-        dtypes = {}
+        col_dtypes: Dict[str, Column] = {}
         for attr_name in attr_names:
-            assert (
-                attr_name in cls.get_annotations()
-            ), f'Attribute "{attr_name}" of class {cls.__name__} must be annotated!'
+            # assert (
+            #     attr_name in cls.get_annotations()
+            # ), f'Attribute "{attr_name}" of class {cls.__name__} must be annotated!'
             if not hasattr(cls, attr_name):
-                dtype = py_types_to_sa_types[cls.get_annotations()[attr_name]]()
+                dtype_ = py_types_to_sa_types[cls.get_annotations()[
+                    attr_name]]()
+                dtype = Column(dtype_)
             else:
                 meta = getattr(cls, attr_name)
                 assert isinstance(meta, ColumnMeta)
                 if meta.dtype is not None:
                     dtype = meta.dtype
                 else:
-                    dtype = py_types_to_sa_types[cls.get_annotations()[attr_name]]()
-            dtypes[attr_name] = dtype
-        return dtypes
+                    dtype_ = py_types_to_sa_types[cls.get_annotations()[
+                        attr_name]]()
+                    dtype = Column(dtype_)
+            assert isinstance(dtype, Column)
+            col_dtypes[attr_name] = dtype
+        return col_dtypes
 
     @staticmethod
     def vectorizer(
@@ -123,6 +141,8 @@ class Table(TableBase, Generic[TableRowGeneric]):
 
         if callable(row_type) and issubclass(row_type, TableRow):
             self.row_types = row_type.get_datatypes()
+            for v in self.row_types.values():
+                assert isinstance(v, Column), v
         else:
             raise NotImplementedError(
                 f"Cannot recognize table row type {type(row_type)}"
@@ -137,6 +157,9 @@ class Table(TableBase, Generic[TableRowGeneric]):
 
     def create_empty(self):
         return Table(self.row_cls)
+
+    def append(self):
+        return self.data.append()
 
     @staticmethod
     def parse_header(header_colnames_list: List[str]):
@@ -160,7 +183,8 @@ class Table(TableBase, Generic[TableRowGeneric]):
         aliases = table.row_cls.get_aliases()
         for row_data in rows_iter:
             table_row_obj: TableRow = table.row_cls.from_dict(
-                table, {col: row_data[i] for i, col in enumerate(columns)}, aliases
+                table, {col: row_data[i]
+                        for i, col in enumerate(columns)}, aliases
             )
             table.data.append(table_row_obj)
         return table
@@ -175,7 +199,9 @@ class Table(TableBase, Generic[TableRowGeneric]):
 
     def to_database(self, engine, table_name: str):
         conn = DatabaseConnector(engine)
-        conn.write_table(table_name, self.row_types, [d.__dict__ for d in self.data])
+        # cls = get_stat_cls(table_name, self.row_types)
+        conn.write_table(table_name, self.row_types, [
+                         d.__dict__ for d in self.data])
 
     def to_file_with_codegen(self, file_name: str, encoding="utf-8"):
         writer = TableWriter(file_name, text_encoding=encoding).write()
@@ -186,11 +212,17 @@ class Table(TableBase, Generic[TableRowGeneric]):
             writer.send(vectorizer(row_data))
         writer.close()
 
+    def append_from_dicts(self, dicts: List[dict]):
+        aliases = self.row_cls.get_aliases()
+        for dic in dicts:
+            self.data.append(self.row_cls.from_dict(self, dic, aliases))
+
     @staticmethod
-    def from_dicts(row_type: RowType, dicts: List[dict]):
+    def from_dicts(row_type: Type[TableRow], dicts: List[dict]):
+        print(row_type.get_datatypes())
         table = Table(row_type)
         aliases = table.row_cls.get_aliases()
-        print(aliases)
+        
         for dic in dicts:
             table.data.append(table.row_cls.from_dict(table, dic, aliases))
         return table

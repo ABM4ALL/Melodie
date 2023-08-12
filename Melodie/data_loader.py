@@ -11,7 +11,10 @@ from MelodieInfra import (
     np,
     pd,
     Table,
+    TableInterface,
 )
+from MelodieInfra.table.table_base import TableBase
+from MelodieInfra.table.table_general import GeneralTable
 
 from .scenario_manager import Scenario
 from .table_generator import DataFrameGenerator
@@ -135,6 +138,8 @@ class DataLoader:
         """
         Register a pandas dataframe.
 
+        TODO! register data frame to database!!!
+
         :param table_name: Name of dataframe
         :param data_frame: A pandas dataframe
         :param data_types: A dictionary describing data types.
@@ -149,7 +154,11 @@ class DataLoader:
             )
         self.registered_dataframes[table_name] = create_db_conn(
             self.config
-        ).read_dataframe(table_name)
+        ).read_dataframe(
+            table_name,
+            df_type="melodie-table" if isinstance(data_frame, TableBase) else "pandas",
+        )
+        self.registered_dataframes[table_name] = data_frame
 
     def load_dataframe(self, df_info: "DataFrameInfo") -> None:
         """
@@ -174,7 +183,7 @@ class DataLoader:
             else:
                 raise NotImplemented(df_info.file_name)
         else:
-            table = Table.from_file(file_path_abs, df_info.columns)
+            table = GeneralTable.from_file(file_path_abs, df_info.columns)
         self.registered_dataframes[df_info.df_name] = table
         if not self.as_sub_worker:
             DBConn.register_dtypes(df_info.df_name, df_info.columns)
@@ -228,20 +237,18 @@ class DataLoader:
         scenarios_dataframe = self.registered_dataframes.get(df_name)
         if scenarios_dataframe is None:
             MelodieExceptions.Data.TableNotFound(df_name, self.registered_dataframes)
-
+        scenarios_dataframe = TableInterface(scenarios_dataframe)
         cols = [col for col in scenarios_dataframe.columns]
         scenarios: List[Scenario] = []
-        for i in range(scenarios_dataframe.shape[0]):
+        for i, row in enumerate(scenarios_dataframe.iter_dicts()):
             scenario = self.scenario_cls()
             scenario.manager = self.manager
             scenario.setup()
 
             for col_name in cols:
-                value = scenarios_dataframe.loc[i, col_name]
-                if isinstance(value, str):
-                    scenario.__dict__[col_name] = value
-                else:
-                    scenario.__dict__[col_name] = value.item()
+                value = row[col_name]
+                scenario.__dict__[col_name] = value
+
             scenarios.append(scenario)
         if len(scenarios) == 0:
             raise MelodieExceptions.Scenario.NoValidScenarioGenerated(scenarios)

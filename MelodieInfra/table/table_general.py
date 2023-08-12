@@ -3,7 +3,7 @@ from sqlalchemy import Column
 from sqlalchemy.types import TypeEngine
 from sqlalchemy.orm import declarative_base
 from .reader_writer import TableReader, TableWriter, DatabaseConnector
-from .table_base import TableBase, RowBase
+from .table_base import TableBase, RowBase, py_types_to_sa_types
 
 Base = declarative_base()
 
@@ -21,11 +21,15 @@ class GeneralTable(TableBase):
 
     def __init__(self, row_type: RowType) -> None:
         super().__init__()
+        self._row_type = row_type
         self._db_model_cls: Type = None
         self.row_types: Dict[str, Column] = {}
+        if row_type is not None:
+            for prop_name, prop_value in row_type.items():
+                self.row_types[prop_name] = Column(prop_value)
 
-        for prop_name, prop_value in row_type.items():
-            self.row_types[prop_name] = Column(prop_value)
+    def create_empty(self):
+        return GeneralTable(self._row_type)
 
     def clear(self):
         self.data.clear()
@@ -64,12 +68,23 @@ class GeneralTable(TableBase):
         conn = DatabaseConnector(engine)
         conn.write_table(table_name, self.row_types, self.data)
 
+    @staticmethod
+    def from_database(engine, table: str, sql: str):
+        conn = DatabaseConnector(engine)
+        data, types = conn.read_sql(table, sql)
+        return GeneralTable.from_dicts(types, data, copy=False)
+
     @property
     def columns(self):
         return [col for col in self.row_types.keys()]
 
     @staticmethod
     def from_dicts(row_type: RowType, dicts: List[dict], copy=True):
+        if row_type is None:
+            assert (
+                len(dicts) > 0
+            ), "Initial data must have at least one row for Melodie to detect data type."
+            row_type = {k: py_types_to_sa_types[type(v)] for k, v in dicts[0].items()}
         table = GeneralTable(row_type)
         if not copy:
             for dic in dicts:
@@ -93,4 +108,8 @@ class GeneralTable(TableBase):
 
     @property
     def iat(self):
-        return TableBase.IatDictsIndicer(self.data)
+        return TableBase.IatDictsIndicer(self.data, self.columns)
+
+    @property
+    def at(self):
+        return TableBase.AtDictsIndicer(self.data)

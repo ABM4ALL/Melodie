@@ -1,7 +1,8 @@
-from typing import Dict, Generator, List, Tuple, Union, Type
+from typing import Any, Dict, Generator, List, Tuple, Union, Type
 import openpyxl
 import csv
 from sqlalchemy import Column, inspect, Integer
+from sqlalchemy.types import TypeEngine
 from sqlalchemy.ext.declarative import declarative_base
 
 TableValues = Tuple[List[str], Generator[List[Union[str, int, float]], None, None]]
@@ -186,9 +187,31 @@ class DatabaseConnector:
         insp = inspect(self.engine)
         if not insp.has_table(table_name):
             stat_cls.__table__.create(bind=self.engine)
-        # self.engine.execute(
-        #     stat_cls.__table__.insert(),
-        #     data
-        # )
+        sql = stat_cls.__table__.insert()
+        print(columns)
+        print(sql, stat_cls.__dict__)
+        print(stat_cls.__table__)
         with self.engine.connect() as conn:
-            conn.execute(stat_cls.__table__.insert(), data)
+            conn.execute(sql, data)
+
+    def read_sql(
+        self, table_name: str, sql: str
+    ) -> Tuple[List[Dict[str, Any]], Dict[str, TypeEngine]]:
+        # 创建inspector对象
+        insp = inspect(self.engine)
+        columns = insp.get_columns(table_name)
+        index_mapping = []
+        types = {}
+        for column in columns:
+            column_name = column["name"]
+            column_type = column["type"]
+            types[column_name] = column_type
+            index_mapping.append(column_name)
+            print(column, type(column["type"]), type(Integer()))
+
+        with self.engine.connect() as conn:
+            result = conn.execute(sql)
+            data = []
+            for row in result.fetchall():
+                data.append({index_mapping[i]: item for i, item in enumerate(row)})
+            return data, types
