@@ -1,7 +1,8 @@
 import random
 import pandas as pd
-from Melodie import Agent, AgentList, GridAgent, set_seed
-
+from Melodie import Agent, AgentList, GridAgent, set_seed, assert_exc_type_occurs
+from MelodieInfra import GeneralTable
+from sqlalchemy import Integer
 
 from tests.infra.config import model
 
@@ -32,8 +33,6 @@ def test_agent_manager_filter():
     am = AgentList(TestAgentToFilter, model)
     for i in range(10):
         ta = TestAgentToFilter(0)
-        # ta.setup()
-
         am.add(ta)
         ta.a = i
         ta.b = float(i)
@@ -73,9 +72,17 @@ def test_properties():
     l = [j for j in range(n)]
     random.shuffle(l)
     df = pd.DataFrame([{"id": i, "a": random.randint(-100, 100)} for i in l])
-    al.set_properties(df)
-    for agent in al:
-        assert agent.a == (df[df["id"] == agent.id]["a"].item())
+    table = GeneralTable.from_dicts(
+        {"id": Integer(), "a": Integer()}, df.to_dict(orient="records")
+    )
+
+    def test_routine(t):
+        al.set_properties(t)
+        for agent in al:
+            assert agent.a == (df[df["id"] == agent.id]["a"].item())
+
+    test_routine(df)
+    test_routine(table)
 
 
 def test_add_del_agents():
@@ -86,11 +93,21 @@ def test_add_del_agents():
     al.add()
     assert al[-1].id == 20
     assert len(al) == 20
-    print(al.indices)
+    assert al.get_agent(21) is None
+    assert al.get_agent(-1) is None
     for agent in al:
         assert al.get_agent(agent.id).id == agent.id
     new_agent = TestAgent(100)
     al.add(new_agent, {"id": 1000})
+    ids = al.all_agent_ids()
+    assert len(ids) == len(al.agents)
+
+
+def test_repr_agent_manager():
+    n = 20
+    al = AgentList(TestAgent, model)
+    al.setup_agents(n)
+    repr(al)  # Not check
 
 
 # def test_add_del_agents_dict():
@@ -141,8 +158,7 @@ def test_properties_with_scenario():
                 for i in l
             ]
         )
-        al.setup_agents(n)
-        al.set_properties(df)
+        al.setup_agents(n, df)
         assert len(al) == n
         df_scenario = df.query(f"id_scenario == {model.scenario.id}")
         for agent in al:

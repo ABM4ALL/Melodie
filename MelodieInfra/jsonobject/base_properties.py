@@ -16,7 +16,6 @@ else:
 
 
 class JsonProperty(object):
-
     default = None
     type_config = None
 
@@ -132,7 +131,6 @@ class JsonProperty(object):
 
 
 class JsonContainerProperty(JsonProperty):
-
     _type = default = None
     container_class = None
 
@@ -295,7 +293,6 @@ class AssertTypeProperty(JsonProperty):
 
 
 class AbstractDateProperty(JsonProperty):
-
     _type = None
 
     def __init__(self, exact=False, *args, **kwargs):

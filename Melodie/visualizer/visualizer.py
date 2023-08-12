@@ -231,7 +231,6 @@ class BaseVisualizer:
             var_getter,
         ) in self.visualizer_components:
             if component_type == "grid":
-
                 initial_options.append(
                     self.parse_grid_series(component(), roles, var_getter, True)
                 )
@@ -340,7 +339,6 @@ class BaseVisualizer:
             self.send_notification("Parameters saved successfully", "success")
             return True
         elif cmd_type == SAVE_DATABASE:
-
             exported_file = os.path.join(self.sim_data_dir, f"{data['name']}.sqlite")
             shutil.copy(get_sqlite_filename(self.config), exported_file)
             self.send_notification("Database saved successfully!", "success")
@@ -449,7 +447,6 @@ class Visualizer(BaseVisualizer):
         return x * self.height + y
 
     def parse_grid_series(self, grid: "Grid", styles, var_getter, initialize=False):
-
         agents_vis_dicts = []
         spots = []
 
@@ -634,7 +631,6 @@ class Visualizer(BaseVisualizer):
                 r = self.parse_grid_series(vis_component(), roles, var_getter)
                 visualizers.append(r)
             elif vis_component_type == "network":
-
                 visualizers.append(
                     self.parse_network_series(vis_component(), roles, var_getter)
                 )

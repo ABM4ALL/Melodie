@@ -5,99 +5,6 @@ import platform
 from distutils.extension import Extension
 
 
-def get_include():
-    import numpy as np
-
-    return [np.get_include()]
-
-
-# try:
-#     from Cython.Distutils import build_ext
-#     from Cython.Compiler import Options
-#     import Cython
-#     import numpy
-#     import sys
-
-#     Options.annotate = True
-#     ext_modules = [
-#         Extension(
-#             "Melodie.boost._vectorize",
-#             ["Melodie/boost/_vectorize.pyx"],
-#             language="c++",
-#             # extra_compile_args=["-std=c++11"]
-#         ),
-#         Extension(
-#             "Melodie.boost._vectorize2d",
-#             ["Melodie/boost/_vectorize2d.pyx"],
-#             language="c++",
-#             # extra_compile_args=["-std=c++11"]
-#         ),
-#         Extension(
-#             "Melodie.boost.agent_list",
-#             ["Melodie/boost/agent_list.pyx"],
-#             language="c++",
-#             # extra_compile_args=["-std=c++11"]
-#         ),
-#         Extension(
-#             "Melodie.boost.grid",
-#             ["Melodie/boost/grid.pyx"],
-#             language="c++",
-#             # extra_compile_args=["-std=c++11"],
-#         ),
-#         # define_macros=[('CYTHON_TRACE', '1')]),
-#         Extension("Melodie.boost.fastrand", ["Melodie/boost/fastrand.pyx"]),
-#         Extension(
-#             "Melodie.boost.basics",
-#             ["Melodie/boost/basics.pyx"],
-#             language="c++",
-#         ),
-#     ]
-#     ext = ".pyx"
-#     jsonobj_ext_modules = [
-#         Extension(
-#             "MelodieInfra.jsonobject.api",
-#             ["MelodieInfra/jsonobject/api" + ext],
-#         ),
-#         Extension(
-#             "MelodieInfra.jsonobject.base",
-#             ["MelodieInfra/jsonobject/base" + ext],
-#         ),
-#         Extension(
-#             "MelodieInfra.jsonobject.base_properties",
-#             ["MelodieInfra/jsonobject/base_properties" + ext],
-#         ),
-#         Extension(
-#             "MelodieInfra.jsonobject.containers",
-#             ["MelodieInfra/jsonobject/containers" + ext],
-#         ),
-#         Extension(
-#             "MelodieInfra.jsonobject.properties",
-#             ["MelodieInfra/jsonobject/properties" + ext],
-#         ),
-#         Extension(
-#             "MelodieInfra.jsonobject.utils",
-#             ["MelodieInfra/jsonobject/utils" + ext],
-#         ),
-#     ]
-#     ext_modules = ext_modules + jsonobj_ext_modules
-#     # ext_modules = ext_modules+[
-#     #     Extension('MelodieInfra.container.intmap',
-#     #               [
-#     #                   'MelodieInfra/container/intmap.pyx',
-#     #               ])
-#     # ]
-# except:
-#     import traceback
-
-#     traceback.print_exc()
-#     ext_modules = None
-
-#     def build_ext(_):
-#         return print(
-#             "Cython was not installed. With cython you may get better peformance boost!"
-#         )
-
-
 with open("Melodie/version.txt", "r", encoding="utf8") as fv:
     version = fv.read()
 
@@ -170,18 +77,13 @@ setuptools.setup(
         "astunparse",
         "pprintast",
         "cloudpickle",
-        "cython==3.0.0a11",
         "scikit-opt~=0.6",
         "rpyc",
         "flask",
         "flask-cors",
         "flask_sock",
-        "MelodieTable",
     ],
     python_requires=">=3.8",
     entry_points={"console_scripts": ["Melodie=Melodie.scripts.scripts:cli"]},
     include_package_data=True,
-    # ext_modules=ext_modules,
-    # cmdclass={"build_ext": build_ext},
-    include_dirs=get_include(),
 )

@@ -4,8 +4,8 @@ import time
 from typing import List, TYPE_CHECKING, Dict, Tuple, Any, Optional, Type
 
 import sqlalchemy
-from MelodieInfra import DBConn, MelodieExceptions, pd
-from MelodieTable import DatabaseConnector, TableWriter
+from MelodieInfra import DBConn, MelodieExceptions
+from MelodieInfra import DatabaseConnector, TableWriter
 from Melodie.global_configs import MelodieGlobalConfig
 
 logger = logging.getLogger(__name__)
@@ -27,13 +27,16 @@ def vectorize_template(obj):
 
 
 def vectorizer(attrs):
-    code = VEC_TEMPLATE.format(exprs=",".join([f"obj[\"{attr}\"]" for attr in attrs]))
+    code = VEC_TEMPLATE.format(exprs=",".join([f'obj["{attr}"]' for attr in attrs]))
     print(code)
     d = {}
     exec(code, None, d)
-    return d['vectorize_template']
+    return d["vectorize_template"]
+
 
 vectorizers = {}
+
+
 class DataCollector:
     """
     Data Collector collects data in the model.
@@ -58,9 +61,6 @@ class DataCollector:
         self.scenario: Optional["Scenario"] = None
         self._agent_properties_to_collect: Dict[str, List[PropertyToCollect]] = {}
         self._environment_properties_to_collect: List[PropertyToCollect] = []
-
-        self.agent_properties_df = pd.DataFrame()
-        self.environment_properties_df = pd.DataFrame()
 
         self.agent_properties_dict: Dict[str, List[Any]] = {}
         self.environment_properties_list = []
@@ -88,7 +88,7 @@ class DataCollector:
         return self._time_elapsed
 
     def add_agent_property(
-            self, container_name: str, property_name: str, as_type: Type = None
+        self, container_name: str, property_name: str, as_type: Type = None
     ):
         """
         This method adds a property of agents in an agent_container to the data collector.
@@ -168,7 +168,7 @@ class DataCollector:
             )
 
     def append_agent_properties_by_records(
-            self, container_name: str, agent_prop_list: List[Dict[str, Any]], period: int
+        self, container_name: str, agent_prop_list: List[Dict[str, Any]], period: int
     ):
         """
         Directly append properties to the properties recorder dict.
@@ -196,7 +196,7 @@ class DataCollector:
         self.agent_properties_dict[container_name].extend(props_list)
 
     def append_environment_properties(
-            self, env_properties: Dict[str, Any], period: int
+        self, env_properties: Dict[str, Any], period: int
     ):
         env_dic = {
             "id_scenario": self.model.scenario.id,
@@ -340,29 +340,26 @@ class DataCollector:
         t0 = time.time()
         write_db_time = 0
         connection = self.model.create_db_conn()
-        # environment_properties_df = pd.DataFrame(self.environment_properties_list)
         _t = time.time()
-        self._write_list_to_table(connection.get_engine(), DBConn.ENVIRONMENT_RESULT_TABLE,
-                                  self.environment_properties_list)
-        self._write_list_to_table(None, DBConn.ENVIRONMENT_RESULT_TABLE,
-                                  self.environment_properties_list)
+        self._write_list_to_table(
+            connection.get_engine(),
+            DBConn.ENVIRONMENT_RESULT_TABLE,
+            self.environment_properties_list,
+        )
+        self._write_list_to_table(
+            None, DBConn.ENVIRONMENT_RESULT_TABLE, self.environment_properties_list
+        )
         self.environment_properties_list = []
-        # connection.write_dataframe(
-        #     DBConn.ENVIRONMENT_RESULT_TABLE, environment_properties_df, {}
-        # )
         write_db_time += time.time() - _t
 
         for container_name in self.agent_properties_dict.keys():
-            # agent_properties_df = pd.DataFrame(
-            #     self.agent_properties_dict[container_name]
-            # )
             _t = time.time()
-            self._write_list_to_table(connection.get_engine(), container_name + "_result",
-                                      self.agent_properties_dict[container_name])
+            self._write_list_to_table(
+                connection.get_engine(),
+                container_name + "_result",
+                self.agent_properties_dict[container_name],
+            )
             self.agent_properties_dict[container_name] = []
-            # connection.write_dataframe(
-            #     container_name + "_result", agent_properties_df, {}
-            # )
             write_db_time += time.time() - _t
 
         t1 = time.time()

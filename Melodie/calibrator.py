@@ -25,8 +25,6 @@ from .model import Model
 from .scenario_manager import Scenario
 from .simulator import BaseModellingManager
 
-# if TYPE_CHECKING:
-#     import pandas as pd
 logger = logging.getLogger(__name__)
 
 

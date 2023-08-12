@@ -521,7 +521,6 @@ class Grid:
         self._add_agent_container(category, initial_placement)
 
     def _add_agent_container(self, category, initial_placement):
-
         assert category is not None, f"Agent Container was None"
         agent = category[0]
         category_id = agent.category

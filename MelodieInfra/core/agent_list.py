@@ -1,24 +1,20 @@
 # import random
 import logging
 import random
-from typing import Callable
+from typing import Any, Callable, TYPE_CHECKING
 
 from .types import (
-    TYPE_CHECKING,
     ClassVar,
     List,
     Dict,
     Union,
     Set,
-    Optional,
     TypeVar,
-    Type,
-    Generic,
 )
 
 from .agent import Agent
 from ..exceptions import MelodieExceptions, show_prettified_warning
-from ..compat import pd
+from ..table import TABLE_TYPE, TableInterface
 
 AgentGeneric = TypeVar("AgentGeneric")
 logger = logging.getLogger("purepython-agent-list")
@@ -49,8 +45,7 @@ class BaseAgentContainer:
     def __init__(self):
         self._id_offset = -1
         self.scenario: Union["Scenario", None] = None
-        self.agents: Union[List["AgentGeneric"],
-                           Set["AgentGeneric"], None] = None
+        self.agents: Union[List["AgentGeneric"], Set["AgentGeneric"], None] = None
 
     def new_id(self) -> int:
         """
@@ -63,7 +58,7 @@ class BaseAgentContainer:
         """
         Get id of all agents.
         """
-        return [agent.id for agent in self.agents]
+        return [agent.id for agent in self]
 
     def to_list(self, column_names: List[str] = None) -> List[Dict]:
         """
@@ -73,12 +68,7 @@ class BaseAgentContainer:
         """
 
     def get_agent(self, agent_id: int) -> "AgentGeneric":
-        index = binary_search(self.agents, agent_id,
-                              key=lambda agent: agent.id)
-        if index == -1:
-            return None
-        else:
-            return self.agents[index]
+        raise NotImplementedError
 
 
 class AgentList(BaseAgentContainer):
@@ -104,7 +94,7 @@ class AgentList(BaseAgentContainer):
         self._iter_index = 0
         return SeqIter(self.agents)
 
-    def setup_agents(self, agents_num: int, params_df: pd.DataFrame = None):
+    def setup_agents(self, agents_num: int, params_df: TABLE_TYPE = None):
         """
         Setup agents with specific number, and initialize their property by a dataframe if a dataframe is passed.
 
@@ -127,7 +117,7 @@ class AgentList(BaseAgentContainer):
         if agent_id in self.indices:
             return self.indices[agent_id]
         else:
-            raise KeyError(agent_id)
+            return -1
 
     def _setup(self):
         self.setup()
@@ -163,40 +153,29 @@ class AgentList(BaseAgentContainer):
         """
         return random.sample(self.agents, sample_num)
 
-    def _set_properties(self, props_df: pd.DataFrame):
+    def _set_properties(self, props_table: TABLE_TYPE):
         """
         Set parameters of all agents in current scenario from a pandas dataframe.
 
         :return: None
         """
-        MelodieExceptions.Assertions.Type("props_df", props_df, pd.DataFrame)
+        table = TableInterface(props_table)
 
-        param_names = [
-            param for param in props_df.columns if param not in {"id_scenario"}
-        ]
+        param_names = [param for param in table.columns if param not in {"id_scenario"}]
 
-        # props_df_cpy: Optional[pd.DataFrame] = None
-        if "id_scenario" in props_df.columns:
-            props_df_cpy = props_df.query(f"id_scenario == {self.scenario.id}").copy(
-                True
+        if "id_scenario" in table.columns:
+            params_table = table.filter(
+                lambda row: row["id_scenario"] == self.scenario.id
             )
         else:
-            props_df_cpy = props_df.copy()  # deep copy this dataframe.
+            params_table = table  # deep copy this dataframe.
 
-        props_df_cpy.reset_index(drop=True, inplace=True)
-        # self.type_check(param_names, props_df_cpy)
-
-        # Assign parameters to properties for each agent.
-        for i, agent in enumerate(self):
-            params = {}
-            for agent_param_name in param_names:
-                # .item() method was applied to convert pandas/numpy data into python-builtin types.
-                item = props_df_cpy.loc[i, agent_param_name]
-                if isinstance(item, str):
-                    params[agent_param_name] = item
-                else:
-                    params[agent_param_name] = item.item()
-
+        row: Dict[str, Any]
+        for i, row in enumerate(params_table.iter_dicts()):
+            params = {k: row[k] for k in param_names}
+            agent = self.get_agent(params["id"])
+            if agent is None:
+                agent = self.add()
             agent.set_params(params)
 
     def filter(self, condition: Callable[[AgentGeneric], bool]):
@@ -211,14 +190,14 @@ class AgentList(BaseAgentContainer):
                 filtered_agents.append(agent)
         return filtered_agents
 
-    def add(self, agent: "AgentGeneric" = None, params: Dict = None):
+    def add(self, agent: "AgentGeneric" = None, params: Dict = None) -> "AgentGeneric":
         """
         Add an agent
         :param agent:
         :param params:
         :return:
         """
-        self._add(agent, params)
+        return self._add(agent, params)
 
     def _add(self, agent, params):
         """
@@ -248,8 +227,9 @@ class AgentList(BaseAgentContainer):
         self.agents.append(agent)
 
         self._set_index(agent.id, len(self.agents) - 1)
+        return agent
 
-    def set_properties(self, props_df: pd.DataFrame):
+    def set_properties(self, props_df: TABLE_TYPE):
         """
         Extract properties from a dataframe, and Each row in the dataframe represents the property of an agent.
         :param props_df:
@@ -282,7 +262,7 @@ class AgentList(BaseAgentContainer):
             data_list.append(d)
         return data_list
 
-    def to_dataframe(self, column_names: List[str] = None) -> pd.DataFrame:
+    def to_dataframe(self, column_names: List[str] = None) -> TABLE_TYPE:
         """
         Store all agent values to dataframe.
         This method is always called by the data collector.
@@ -290,12 +270,14 @@ class AgentList(BaseAgentContainer):
         :param column_names: property names to store
         :return:
         """
+        import pandas as pd
+
         data_list = self.to_list(column_names)
         df = pd.DataFrame(data_list)
         df["id"] = df["id"].astype(int)
         return df
 
-    def set_properties(self, props_df: pd.DataFrame):
+    def set_properties(self, props_df: TABLE_TYPE):
         """
         Extract properties from a dataframe, and Each row in the dataframe represents the property of an agent.
 
@@ -346,14 +328,6 @@ class AgentList(BaseAgentContainer):
         self._set_properties(props_df)
         self.agents.sort(key=lambda agent: agent.id)
 
-    def all_agent_ids(self) -> List[int]:
-        """
-        Get ``id`` of all agents.
-
-        :return: A ``list`` of ``int``.
-        """
-        return [agent.id for agent in self.agents]
-
     def get_agent(self, agent_id):
         """
         Get an agent from the agent list. If agent unexist, return None.
@@ -368,8 +342,6 @@ class AgentList(BaseAgentContainer):
         else:
             return self.agents[index]
 
-    # @cython.nonecheck(False)
-    # @cython.boundscheck(False)
     def method_foreach(self, method_name, args):
         """
         For each agent, execute theirs method ``method_name`` with arguments ``args``

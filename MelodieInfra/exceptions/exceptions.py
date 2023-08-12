@@ -26,7 +26,7 @@ def assert_exc_type_occurs(exc_type: BaseException, func: Callable):
     """
     try:
         func()
-        assert False
+        assert False, "Exception does not occur inside func"
     except BaseException as e:
         import traceback
 

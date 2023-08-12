@@ -10,3 +10,4 @@ from .exceptions import *
 from .services import *
 from .lowcode import *
 from .models import *
+from .table import *

@@ -35,7 +35,6 @@ def get_system_info(print_info=True) -> str:
     :return:
     """
     import numpy
-    import Cython
 
     info = f"""
     Here is the information for Melodie
@@ -44,7 +43,6 @@ def get_system_info(print_info=True) -> str:
     Python Version   :  {platform.python_version()}
     Python Arch      :  {platform.architecture()}
     Platform Detail  :  {platform.platform()}
-    Cython Version   :  {Cython.__version__}
     Numpy Version    :  {numpy.__version__}
     """
     if print_info:

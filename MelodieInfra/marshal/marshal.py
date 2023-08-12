@@ -10,6 +10,7 @@ from MelodieInfra.jsonobject import (
     DefaultProperty,
 )
 
+
 # https://github.com/dimagi/jsonobject
 class User(JsonObject):
     user_name: str = StringProperty(required=True)

@@ -308,7 +308,6 @@ class Simulator(BaseModellingManager):
                     self.config, scenario, 0, self.model_cls, visualizer=self.visualizer
                 )
             except MelodieModelReset:
-
                 self.visualizer.reset()
                 logger.info("Model reset.")
 

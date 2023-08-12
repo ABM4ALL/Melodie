@@ -16,7 +16,6 @@ class PseudoAgent:
         self.y = 2
 
     def demofunction(self):
-
         rand = np.random.uniform(0, 1)
         if rand <= self.productivity:
             self.account += 1

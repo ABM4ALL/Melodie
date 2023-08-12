@@ -6,7 +6,7 @@ import sqlalchemy
 from sqlalchemy.exc import OperationalError
 from sqlalchemy_utils import database_exists, create_database
 
-from MelodieTable import TableBase, Table, PyAMTable
+from ..table import Table
 
 from ..exceptions import MelodieExceptions
 from ..compat import pd
@@ -31,11 +31,11 @@ class DBConn:
     ENVIRONMENT_RESULT_TABLE = "environment_result"
 
     def __init__(
-            self,
-            db_name: str,
-            db_type: str = "sqlite",
-            conn_params: Dict[str, str] = None,
-            conn_string="",
+        self,
+        db_name: str,
+        db_type: str = "sqlite",
+        conn_params: Dict[str, str] = None,
+        conn_string="",
     ):
         """
         :param db_name: Name of database file.
@@ -152,11 +152,11 @@ class DBConn:
             create_database(self.connection.url)
 
     def write_dataframe(
-            self,
-            table_name: str,
-            data_frame: pd.DataFrame,
-            data_types: Optional[TABLE_DTYPES] = None,
-            if_exists="append",
+        self,
+        table_name: str,
+        data_frame: pd.DataFrame,
+        data_types: Optional[TABLE_DTYPES] = None,
+        if_exists="append",
     ):
         """
         Write a dataframe to database.
@@ -183,11 +183,11 @@ class DBConn:
             )
 
     def read_dataframe(
-            self,
-            table_name: str,
-            id_scenario: Optional[int] = None,
-            id_run: Optional[int] = None,
-            conditions: List[Tuple[str, str]] = None,
+        self,
+        table_name: str,
+        id_scenario: Optional[int] = None,
+        id_run: Optional[int] = None,
+        conditions: List[Tuple[str, str]] = None,
     ) -> pd.DataFrame:
         """
         Read a table and return all content as a dataframe.

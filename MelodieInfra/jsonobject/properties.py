@@ -63,7 +63,6 @@ class DecimalProperty(JsonProperty):
 
 
 class DateProperty(AbstractDateProperty):
-
     _type = datetime.date
 
     def _wrap(self, value):
@@ -78,7 +77,6 @@ class DateProperty(AbstractDateProperty):
 
 
 class DateTimeProperty(AbstractDateProperty):
-
     _type = datetime.datetime
 
     def _wrap(self, value):
@@ -103,7 +101,6 @@ class DateTimeProperty(AbstractDateProperty):
 
 
 class TimeProperty(AbstractDateProperty):
-
     _type = datetime.time
 
     def _wrap(self, value):
@@ -124,7 +121,6 @@ class TimeProperty(AbstractDateProperty):
 
 
 class ObjectProperty(JsonProperty):
-
     _type = None
     default = lambda self: self.item_type()
 
@@ -162,7 +158,6 @@ class ObjectProperty(JsonProperty):
 
 
 class ListProperty(JsonContainerProperty):
-
     _type = default = list
     container_class = JsonArray
 
@@ -171,7 +166,6 @@ class ListProperty(JsonContainerProperty):
 
 
 class DictProperty(JsonContainerProperty):
-
     _type = default = dict
     container_class = JsonDict
 
@@ -180,7 +174,6 @@ class DictProperty(JsonContainerProperty):
 
 
 class SetProperty(JsonContainerProperty):
-
     _type = default = set
     container_class = JsonSet
 

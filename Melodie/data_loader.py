@@ -3,8 +3,15 @@ from typing import Optional, Dict, List, Union, Callable, Type, TYPE_CHECKING
 
 import sqlalchemy
 
-from MelodieInfra import DBConn, create_db_conn, MelodieExceptions, Config, np, pd
-from MelodieTable import Table
+from MelodieInfra import (
+    DBConn,
+    create_db_conn,
+    MelodieExceptions,
+    Config,
+    np,
+    pd,
+    Table,
+)
 
 from .scenario_manager import Scenario
 from .table_generator import DataFrameGenerator
@@ -23,11 +30,11 @@ class DataFrameInfo:
     FORCE_PANDAS = False  # Force Melodie to use Pandas to load all dataframes.
 
     def __init__(
-            self,
-            df_name: str,
-            columns: Dict[str, "sqlalchemy.types"],
-            file_name: Optional[str] = None,
-            engine: str = "pandas",
+        self,
+        df_name: str,
+        columns: Dict[str, "sqlalchemy.types"],
+        file_name: Optional[str] = None,
+        engine: str = "pandas",
     ):
         """
         :param df_name: Name of dataframe.
@@ -58,10 +65,10 @@ class MatrixInfo:
     """
 
     def __init__(
-            self,
-            mat_name: str,
-            data_type: "sqlalchemy.types",
-            file_name: Optional[str] = None,
+        self,
+        mat_name: str,
+        data_type: "sqlalchemy.types",
+        file_name: Optional[str] = None,
     ):
         """
         :param mat_name: Name of the current matrix.
@@ -95,11 +102,11 @@ class DataLoader:
     """
 
     def __init__(
-            self,
-            manager,
-            config: Config,
-            scenario_cls: Type[Scenario],
-            as_sub_worker=False,
+        self,
+        manager,
+        config: Config,
+        scenario_cls: Type[Scenario],
+        as_sub_worker=False,
     ):
         """
         :param manager: The ``Simulator``/``Trainer``/``Calibrator`` this dataloader belongs to.
@@ -123,7 +130,7 @@ class DataLoader:
         pass
 
     def register_dataframe(
-            self, table_name: str, data_frame: "pd.DataFrame", data_types: dict = None
+        self, table_name: str, data_frame: "pd.DataFrame", data_types: dict = None
     ) -> None:
         """
         Register a pandas dataframe.
@@ -196,9 +203,9 @@ class DataLoader:
         self.registered_matrices[matrix_info.mat_name] = array
 
     def dataframe_generator(
-            self,
-            df_info: DataFrameInfo,
-            rows_in_scenario: Union[int, Callable[[Scenario], int]],
+        self,
+        df_info: DataFrameInfo,
+        rows_in_scenario: Union[int, Callable[[Scenario], int]],
     ) -> DataFrameGenerator:
         """
         Create a new generator for dataframes.

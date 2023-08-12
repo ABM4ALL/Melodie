@@ -91,7 +91,6 @@ class TrainerAlgorithmMeta:
         self.id_generation = 0
 
     def to_dict(self, public_only=False):
-
         if public_only:
             return {k: v for k, v in self.__dict__.items() if not k.startswith("_")}
         return copy.copy(self.__dict__)
