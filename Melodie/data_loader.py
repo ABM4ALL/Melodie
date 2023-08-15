@@ -8,8 +8,6 @@ from MelodieInfra import (
     create_db_conn,
     MelodieExceptions,
     Config,
-    np,
-    pd,
     Table,
     TableInterface,
 )
@@ -85,6 +83,8 @@ class MatrixInfo:
 
     @property
     def dtype(self):
+        import numpy as np
+
         py_type = self.data_type.python_type
         if issubclass(py_type, int):
             return np.int64
@@ -124,7 +124,7 @@ class DataLoader:
         self.config: Config = config
         self.scenario_cls = scenario_cls
         self.registered_dataframes: Optional[Dict[str, "pd.DataFrame"]] = {}
-        self.registered_matrices: Optional[Dict[str, np.ndarray]] = {}
+        self.registered_matrices: Optional[Dict[str, "np.ndarray"]] = {}
         self.manager = manager
         self.manager.data_loader = self
         self.setup()
@@ -173,7 +173,6 @@ class DataLoader:
 
         MelodieExceptions.Data.TableNameInvalid(df_info.df_name)
         file_path_abs = os.path.join(self.config.input_folder, df_info.file_name)
-        print(df_info.engine, df_info.file_name)
         if df_info.engine == "pandas":
             import pandas
 

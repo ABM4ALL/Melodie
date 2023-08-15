@@ -16,8 +16,6 @@ from MelodieInfra import (
     Config,
     MelodieExceptions,
     show_prettified_warning,
-    np,
-    pd,
 )
 
 from .global_configs import MelodieGlobalConfig
@@ -51,7 +49,7 @@ class BaseModellingManager(abc.ABC):
         if data_loader_cls is not None:
             assert issubclass(data_loader_cls, DataLoader), data_loader_cls
 
-    def get_dataframe(self, table_name) -> pd.DataFrame:
+    def get_dataframe(self, table_name) -> "pd.DataFrame":
         """
         Get a static ``DataFrame`` from the data loader.
 
@@ -67,7 +65,7 @@ class BaseModellingManager(abc.ABC):
 
         return self.data_loader.registered_dataframes[table_name]
 
-    def get_matrix(self, matrix_name) -> np.ndarray:
+    def get_matrix(self, matrix_name) -> "np.ndarray":
         """
         Get a matrix from data loader.
 

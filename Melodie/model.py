@@ -7,8 +7,6 @@ from MelodieInfra import (
     MelodieExceptions,
     show_prettified_warning,
     show_link,
-    np,
-    pd,
 )
 
 # from .boost.agent_list import AgentList, BaseAgentContainer, AgentDict
@@ -211,7 +209,7 @@ class Model:
         self,
         agent_class: Type["Agent"],
         initial_num: int,
-        params_df: pd.DataFrame = None,
+        params_df: "pd.DataFrame" = None,
         container_type: str = "list",
     ) -> Union[AgentList, "AgentDict"]:
         """

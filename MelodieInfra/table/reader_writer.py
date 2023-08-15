@@ -74,10 +74,6 @@ class TableReader:
             i = sheet.max_column
             real_max_col = 0
             while i > 0:
-                print(
-                    "col",
-                    i,
-                )
                 col_dict = {table.cell(row + 1, i).value for row in range(rows)}
                 if col_dict == {None}:
                     i = i - 1
@@ -188,9 +184,6 @@ class DatabaseConnector:
         if not insp.has_table(table_name):
             stat_cls.__table__.create(bind=self.engine)
         sql = stat_cls.__table__.insert()
-        print(columns)
-        print(sql, stat_cls.__dict__)
-        print(stat_cls.__table__)
         with self.engine.connect() as conn:
             conn.execute(sql, data)
 
@@ -207,7 +200,6 @@ class DatabaseConnector:
             column_type = column["type"]
             types[column_name] = column_type
             index_mapping.append(column_name)
-            print(column, type(column["type"]), type(Integer()))
 
         with self.engine.connect() as conn:
             result = conn.execute(sql)

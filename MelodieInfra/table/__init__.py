@@ -4,3 +4,4 @@ from .table_general import GeneralTable
 from .table_pyam import *
 from .reader_writer import *
 from .pandas_compat import TableInterface, TABLE_TYPE
+from .vectorizers import *

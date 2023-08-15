@@ -108,6 +108,9 @@ def test_model_run():
     dc.collect(1)
     assert len(dc.agent_properties_dict["agent_list1"]) == AGENT_NUM_1 * 2
     assert len(dc.agent_properties_dict["agent_list2"]) == AGENT_NUM_2 * 2
+    dc.save()
+
+    
 
 
 def test_status():

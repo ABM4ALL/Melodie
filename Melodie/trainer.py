@@ -13,7 +13,7 @@ from typing import (
     cast,
 )
 
-from MelodieInfra import Config, MelodieExceptions, create_db_conn, pd
+from MelodieInfra import Config, MelodieExceptions, create_db_conn
 
 from .algorithms import AlgorithmParameters
 from .algorithms.ga import MelodieGA
@@ -327,6 +327,8 @@ class GATrainerAlgorithm:
         :param meta:
         :return:
         """
+        import pandas as pd
+
         agent_records = {}
         env_record = {}
         meta_dict = meta.to_dict(public_only=True)
@@ -360,8 +362,8 @@ class GATrainerAlgorithm:
 
     def calc_cov_df(
         self,
-        agent_container_df_dict: Dict[str, pd.DataFrame],
-        env_df: pd.DataFrame,
+        agent_container_df_dict: Dict[str, "pd.DataFrame"],
+        env_df: "pd.DataFrame",
         meta,
     ):
         """
@@ -371,6 +373,7 @@ class GATrainerAlgorithm:
         :param meta:
         :return:
         """
+        import pandas as pd
 
         pd.set_option("max_colwidth", 500)
         pd.set_option("display.max_columns", None)
@@ -429,6 +432,8 @@ class GATrainerAlgorithm:
         # print("    Recording Agent agent_lists:", self.agent_container_getters)
 
     def run(self, scenario: Scenario, meta: Union[GATrainerAlgorithmMeta]):
+        import pandas as pd
+
         self.pre_check(meta)
 
         for i in range(self.params.generation_num):
@@ -735,6 +740,8 @@ class Trainer(BaseModellingManager):
 
         :return: A list of trainer parameters.
         """
+        import pandas as pd
+
         trainer_params_table = self.get_dataframe("trainer_params_scenarios")
         assert isinstance(
             trainer_params_table, pd.DataFrame

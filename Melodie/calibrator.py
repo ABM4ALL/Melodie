@@ -15,7 +15,7 @@ from typing import (
     cast,
 )
 
-from MelodieInfra import create_db_conn, Config, MelodieExceptions, np, pd
+from MelodieInfra import create_db_conn, Config, MelodieExceptions
 from MelodieInfra.parallel.parallel_manager import ParallelManager
 
 from .algorithms import AlgorithmParameters
@@ -239,6 +239,8 @@ class GACalibratorAlgorithm:
         :param meta:
         :return:
         """
+        import pandas as pd
+
         agent_records = {}
         environment_record = {}
         meta_dict = meta.to_dict(public_only=True)
@@ -282,6 +284,8 @@ class GACalibratorAlgorithm:
         :param meta:
         :return:
         """
+        import pandas as pd
+
         pd.set_option("max_colwidth", 500)
         pd.set_option("display.max_columns", None)
         pd.set_option("display.max_rows", None)
@@ -338,6 +342,8 @@ class GACalibratorAlgorithm:
         )
 
     def run(self, scenario: Scenario, meta: Union[GACalibratorAlgorithmMeta]):
+        import pandas as pd
+
         self.pre_check(meta)
 
         for i in range(self.params.generation_num):
@@ -460,6 +466,8 @@ class Calibrator(BaseModellingManager):
 
         :return: A list of dict, and each dict contains parameters.
         """
+        import pandas as pd
+
         calibrator_scenarios_table = self.get_dataframe("calibrator_params_scenarios")
         assert isinstance(
             calibrator_scenarios_table, pd.DataFrame

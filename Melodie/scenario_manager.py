@@ -3,7 +3,7 @@ import logging
 import pickle
 from typing import List, Optional, Union, TYPE_CHECKING
 
-from MelodieInfra import MelodieExceptions, np, pd
+from MelodieInfra import MelodieExceptions
 from .element import Element
 
 if TYPE_CHECKING:
@@ -79,7 +79,7 @@ class Scenario(Element):
     def __repr__(self):
         return f"<{self.__class__.__name__} {self.__dict__}>"
 
-    def get_dataframe(self, df_info: "DataFrameInfo") -> pd.DataFrame:
+    def get_dataframe(self, df_info: "DataFrameInfo") -> "pd.DataFrame":
         """
         Get dataframe from scenario
 
@@ -89,7 +89,7 @@ class Scenario(Element):
         assert self.manager is not None
         return self.manager.get_dataframe(df_info.df_name)
 
-    def get_matrix(self, matrix_info: "MatrixInfo") -> np.ndarray:
+    def get_matrix(self, matrix_info: "MatrixInfo") -> "np.ndarray":
         """
         Get matrix from scenario.
 
