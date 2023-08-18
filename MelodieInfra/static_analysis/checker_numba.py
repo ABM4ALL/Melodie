@@ -7,7 +7,6 @@ from .base import BaseChecker, CheckerMessage, StaticCheckerRoutine
 
 
 class JITClassSpecMissing(CheckerMessage):
-
     def __init__(self, lineno: int, jitcls_name: str, missing_attr: str) -> None:
         self.jitclass_name: str = jitcls_name
         self.missing_attr: str = missing_attr
@@ -35,7 +34,7 @@ class Vistor(ast.NodeVisitor):
         self.funcs = set()
 
     def visit_Attribute(self, node: ast.Attribute):
-        s = (node.value)
+        s = node.value
         if ast.unparse(s) == "self":
             self.properties[node.attr] = node
         return
@@ -55,8 +54,11 @@ class NumbaChecker(BaseChecker):
 
     def _get_jitclass_decorator(self, clsdef: ast.ClassDef) -> ast.Call:
         for deco in clsdef.decorator_list:
-            if isinstance(deco, ast.Call) and isinstance(deco.func, ast.Name)\
-                    and deco.func.id == "jitclass":
+            if (
+                isinstance(deco, ast.Call)
+                and isinstance(deco.func, ast.Name)
+                and deco.func.id == "jitclass"
+            ):
                 return deco
         return None
 
@@ -65,20 +67,25 @@ class NumbaChecker(BaseChecker):
         Get the ast of jitclass type spec variable.
         """
 
-        assert len(
-            jitclass_decorator.args) > 0, "jitclass decorator must have at least one argument!"
+        assert (
+            len(jitclass_decorator.args) > 0
+        ), "jitclass decorator must have at least one argument!"
         first_arg = jitclass_decorator.args[0]
         if isinstance(first_arg, ast.Name):  # Used other global variables
-            assert first_arg.id in self.global_variables, "Jitclass Spec variable should be in the global scope!"
+            assert (
+                first_arg.id in self.global_variables
+            ), "Jitclass Spec variable should be in the global scope!"
             var = self.global_variables[first_arg.id]
             assert isinstance(
-                var, ast.List), "Jitclass spec variable should be a list of (attr_name, attr_type) tuple"
+                var, ast.List
+            ), "Jitclass spec variable should be a list of (attr_name, attr_type) tuple"
             return var
         elif isinstance(first_arg, ast.List):
             return first_arg
         else:
             raise NotImplementedError(
-                "Cannot recognize the declarations of jitclass spec!")
+                "Cannot recognize the declarations of jitclass spec!"
+            )
 
     def _extract_jitclass_spec_types(self, spec_list: ast.List) -> Dict[str, ast.AST]:
         """
@@ -88,11 +95,13 @@ class NumbaChecker(BaseChecker):
         attr_spec: ast.Tuple
         for attr_spec in spec_list.elts:
             assert isinstance(
-                attr_spec, ast.Tuple), "Jitclass spec variable should be a list of (attr_name, attr_type) tuple"
+                attr_spec, ast.Tuple
+            ), "Jitclass spec variable should be a list of (attr_name, attr_type) tuple"
             attr_name: ast.Constant = attr_spec.elts[0]
             attr_value: Union[ast.Name, ast.Item] = attr_spec.elts[1]
             assert isinstance(
-                attr_name, ast.Constant), "Attribute name should be a string literal"
+                attr_name, ast.Constant
+            ), "Attribute name should be a string literal"
             types[attr_name.value] = attr_value
         return types
 
@@ -114,10 +123,13 @@ class NumbaChecker(BaseChecker):
 
     def check(self, ast_node: ast.Module) -> Iterator[CheckerMessage]:
         classdefs = [
-            clsdef for clsdef in ast_node.body if isinstance(clsdef, ast.ClassDef)]
+            clsdef for clsdef in ast_node.body if isinstance(clsdef, ast.ClassDef)
+        ]
         self._extract_global_variables(ast_node)
         # pprintast.pprintast(ast_node)
-        for clsdef in [clsdef for clsdef in classdefs if self._is_jitted_classdef(clsdef)]:
+        for clsdef in [
+            clsdef for clsdef in classdefs if self._is_jitted_classdef(clsdef)
+        ]:
             decorator = self._get_jitclass_decorator(clsdef)
             jitspec_ast = self._get_jitclass_decorator_args(decorator)
 
@@ -133,11 +145,15 @@ class NumbaChecker(BaseChecker):
                 # The ast node that using the property
                 property_used_at = used_attrs[undefined_varname]
 
-                yield JITClassSpecMissing(property_used_at.lineno, clsdef.name, undefined_varname)
+                yield JITClassSpecMissing(
+                    property_used_at.lineno, clsdef.name, undefined_varname
+                )
 
             for defined_unused_varname in defined_unused:
                 property_defined_at = attr_types[defined_unused_varname]
-                yield JITClassUnusedSpec(property_defined_at.lineno, clsdef.name, defined_unused_varname)
+                yield JITClassUnusedSpec(
+                    property_defined_at.lineno, clsdef.name, defined_unused_varname
+                )
 
 
 StaticCheckerRoutine.checkers.append(NumbaChecker)

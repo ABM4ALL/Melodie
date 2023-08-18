@@ -21,6 +21,8 @@ from .scenario_manager import Scenario
 from .table_generator import DataFrameGenerator
 
 logger = logging.getLogger(__name__)
+
+
 class DataFrameInfo:
     """
     DataFrameInfo provides standard format for input tables as parameters.
@@ -160,8 +162,7 @@ class DataLoader:
             self.config
         ).read_dataframe(
             table_name,
-            df_type="melodie-table" if isinstance(
-                data_frame, TableBase) else "pandas",
+            df_type="melodie-table" if isinstance(data_frame, TableBase) else "pandas",
         )
         self.registered_dataframes[table_name] = data_frame
 
@@ -232,8 +233,7 @@ class DataLoader:
         table: Optional["pd.DataFrame"]
 
         MelodieExceptions.Data.TableNameInvalid(df_info.df_name)
-        file_path_abs = os.path.join(
-            self.config.input_folder, df_info.file_name)
+        file_path_abs = os.path.join(self.config.input_folder, df_info.file_name)
         if df_info.engine == "pandas":
             table = self._load_dataframe_cached(file_path_abs)
             df_info.check_column_names(list(table.columns))
@@ -291,8 +291,7 @@ class DataLoader:
         """
         scenarios_dataframe = self.registered_dataframes.get(df_name)
         if scenarios_dataframe is None:
-            MelodieExceptions.Data.TableNotFound(
-                df_name, self.registered_dataframes)
+            MelodieExceptions.Data.TableNotFound(df_name, self.registered_dataframes)
         scenarios_dataframe = TableInterface(scenarios_dataframe)
         cols = [col for col in scenarios_dataframe.columns]
         scenarios: List[Scenario] = []
@@ -307,8 +306,7 @@ class DataLoader:
 
             scenarios.append(scenario)
         if len(scenarios) == 0:
-            raise MelodieExceptions.Scenario.NoValidScenarioGenerated(
-                scenarios)
+            raise MelodieExceptions.Scenario.NoValidScenarioGenerated(scenarios)
         return scenarios
 
     def generate_scenarios(self, manager_type: str) -> List["Scenario"]:
@@ -320,7 +318,6 @@ class DataLoader:
         """
         if manager_type not in {"simulator", "trainer", "calibrator"}:
             MelodieExceptions.Program.Variable.VariableNotInSet(
-                "manager_type", manager_type, {
-                    "simulator", "trainer", "calibrator"}
+                "manager_type", manager_type, {"simulator", "trainer", "calibrator"}
             )
         return self.generate_scenarios_from_dataframe(f"{manager_type}_scenarios")

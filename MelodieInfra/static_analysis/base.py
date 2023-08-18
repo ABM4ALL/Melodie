@@ -6,9 +6,9 @@ from typing import List, Literal, Tuple
 
 
 class CheckerMessage:
-    def __init__(self, status:  Literal['error', 'warning'], lineno: int) -> None:
+    def __init__(self, status: Literal["error", "warning"], lineno: int) -> None:
         self.status = status
-        self.filename: str = ''
+        self.filename: str = ""
         self.lineno = lineno
 
     @property
@@ -36,7 +36,7 @@ class StaticCheckerRoutine:
         """
         Convert file to AST, then dispatch it to all checkers.
         """
-        with open(file_path, 'r', encoding="utf-8", errors="replace") as f:
+        with open(file_path, "r", encoding="utf-8", errors="replace") as f:
             ast_root = ast.parse(f.read())
             for checker_cls in self.__class__.checkers:
                 msg: CheckerMessage

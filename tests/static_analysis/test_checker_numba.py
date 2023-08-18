@@ -1,6 +1,7 @@
 import os
 
 from MelodieInfra.static_analysis import StaticCheckerRoutine
+
 dirname = os.path.dirname(__file__)
 dir_to_analyse = os.path.join(dirname, "numba_demo")
 
