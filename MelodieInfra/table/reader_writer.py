@@ -3,7 +3,7 @@ import openpyxl
 import csv
 from sqlalchemy import Column, inspect, Integer
 from sqlalchemy.types import TypeEngine
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import declarative_base
 
 TableValues = Tuple[List[str], Generator[List[Union[str, int, float]], None, None]]
 Base = declarative_base()

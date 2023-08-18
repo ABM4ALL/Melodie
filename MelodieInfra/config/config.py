@@ -53,6 +53,7 @@ class Config:
             )
         self.visualizer_entry = visualizer_entry
         self.visualizer_tmpdir = os.path.join(self.temp_folder, "visualizer")
+        self.input_dataframe_cache = kwargs.get("input_dataframe_cache", False)
         self.init_temp_folders()
 
         self.setup()

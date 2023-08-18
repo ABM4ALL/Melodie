@@ -1,1 +1,0 @@
-cbmc mld_int_map.c --bounds-check --div-by-zero-check --trace

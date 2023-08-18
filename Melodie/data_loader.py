@@ -1,8 +1,11 @@
+import hashlib
+import logging
 import os
+import shutil
 from typing import Optional, Dict, List, Union, Callable, Type, TYPE_CHECKING
 
 import sqlalchemy
-
+import cloudpickle
 from MelodieInfra import (
     DBConn,
     create_db_conn,
@@ -17,7 +20,7 @@ from MelodieInfra.table.table_general import GeneralTable
 from .scenario_manager import Scenario
 from .table_generator import DataFrameGenerator
 
-
+logger = logging.getLogger(__name__)
 class DataFrameInfo:
     """
     DataFrameInfo provides standard format for input tables as parameters.
@@ -120,7 +123,8 @@ class DataLoader:
         MelodieExceptions.Assertions.NotNone(
             scenario_cls, "Scenario class should not be None!"
         )
-        self.as_sub_worker = as_sub_worker  # If loader is loaded from sub worker.
+        # If loader is loaded from sub worker.
+        self.as_sub_worker = as_sub_worker
         self.config: Config = config
         self.scenario_cls = scenario_cls
         self.registered_dataframes: Optional[Dict[str, "pd.DataFrame"]] = {}
@@ -156,9 +160,65 @@ class DataLoader:
             self.config
         ).read_dataframe(
             table_name,
-            df_type="melodie-table" if isinstance(data_frame, TableBase) else "pandas",
+            df_type="melodie-table" if isinstance(
+                data_frame, TableBase) else "pandas",
         )
         self.registered_dataframes[table_name] = data_frame
+
+    def _calc_hash(self, filename: str) -> str:
+        """
+        Calculate md5 hash value of file
+        """
+        with open(filename, "rb") as fp:
+            hash_func = hashlib.md5()
+            while True:
+                data = fp.read(2**20)
+                if not data:
+                    break
+                hash_func.update(data)
+            return hash_func.digest().hex()
+
+    def clear_cache(self):
+        """
+        Clear all caches under caching directory.
+        """
+        if os.path.exists(self._cache_dir):
+            shutil.rmtree(self._cache_dir)
+            os.mkdir(self._cache_dir)
+        else:
+            logger.warning("Cache directory does not exist!")
+
+    @property
+    def _cache_dir(self):
+        return os.path.join(self.config.temp_folder, "cache", "pd-df")
+
+    def _load_dataframe_cached(self, file_path_abs: str) -> None:
+        """
+        Load dataframe from file
+        """
+        import pandas
+
+        if self.config.input_dataframe_cache:
+            hash_value = self._calc_hash(file_path_abs)
+            if not os.path.exists(self._cache_dir):
+                os.makedirs(self._cache_dir)
+            cache_file = os.path.join(self._cache_dir, f"{hash_value}.pkl")
+            if os.path.exists(cache_file):
+                with open(cache_file, "rb") as f:
+                    return cloudpickle.load(f)
+
+        _, ext = os.path.splitext(file_path_abs)
+        if ext in {".xls", ".xlsx"}:
+            table = pandas.read_excel(file_path_abs)
+        elif ext in {".csv"}:
+            table = pandas.read_csv(file_path_abs)
+        else:
+            raise NotImplemented(file_path_abs)
+
+        if self.config.input_dataframe_cache:
+            with open(cache_file, "wb") as f:
+                cloudpickle.dump(table, f)
+        return table
 
     def load_dataframe(self, df_info: "DataFrameInfo") -> None:
         """
@@ -168,19 +228,15 @@ class DataLoader:
 
         :return: None
         """
-        _, ext = os.path.splitext(df_info.file_name)
+
         table: Optional["pd.DataFrame"]
 
         MelodieExceptions.Data.TableNameInvalid(df_info.df_name)
-        file_path_abs = os.path.join(self.config.input_folder, df_info.file_name)
+        file_path_abs = os.path.join(
+            self.config.input_folder, df_info.file_name)
         if df_info.engine == "pandas":
-            import pandas
-
-            if ext in {".xls", ".xlsx"}:
-                table = pandas.read_excel(file_path_abs)
-                df_info.check_column_names(list(table.columns))
-            else:
-                raise NotImplemented(df_info.file_name)
+            table = self._load_dataframe_cached(file_path_abs)
+            df_info.check_column_names(list(table.columns))
         else:
             table = GeneralTable.from_file(file_path_abs, df_info.columns)
         self.registered_dataframes[df_info.df_name] = table
@@ -235,7 +291,8 @@ class DataLoader:
         """
         scenarios_dataframe = self.registered_dataframes.get(df_name)
         if scenarios_dataframe is None:
-            MelodieExceptions.Data.TableNotFound(df_name, self.registered_dataframes)
+            MelodieExceptions.Data.TableNotFound(
+                df_name, self.registered_dataframes)
         scenarios_dataframe = TableInterface(scenarios_dataframe)
         cols = [col for col in scenarios_dataframe.columns]
         scenarios: List[Scenario] = []
@@ -250,7 +307,8 @@ class DataLoader:
 
             scenarios.append(scenario)
         if len(scenarios) == 0:
-            raise MelodieExceptions.Scenario.NoValidScenarioGenerated(scenarios)
+            raise MelodieExceptions.Scenario.NoValidScenarioGenerated(
+                scenarios)
         return scenarios
 
     def generate_scenarios(self, manager_type: str) -> List["Scenario"]:
@@ -262,6 +320,7 @@ class DataLoader:
         """
         if manager_type not in {"simulator", "trainer", "calibrator"}:
             MelodieExceptions.Program.Variable.VariableNotInSet(
-                "manager_type", manager_type, {"simulator", "trainer", "calibrator"}
+                "manager_type", manager_type, {
+                    "simulator", "trainer", "calibrator"}
             )
         return self.generate_scenarios_from_dataframe(f"{manager_type}_scenarios")

@@ -1,5 +1,6 @@
 from typing import List, Callable, Union, Type
 from .table_objects import Table
+
 DATA_TYPES = Union[bool, int, float, str]
 
 VEC_TEMPLATE = """

@@ -4,7 +4,14 @@ from typing import Callable, List, TYPE_CHECKING, Dict, Tuple, Any, Optional, Ty
 
 import sqlalchemy
 
-from MelodieInfra import DBConn, MelodieExceptions, is_pypy, Table, TableRow, objs_to_table_row_vectorizer
+from MelodieInfra import (
+    DBConn,
+    MelodieExceptions,
+    is_pypy,
+    Table,
+    TableRow,
+    objs_to_table_row_vectorizer,
+)
 from Melodie.global_configs import MelodieGlobalConfig
 
 logger = logging.getLogger(__name__)
@@ -26,8 +33,7 @@ def vectorize_template(obj):
 
 
 def vectorizer(attrs):
-    code = VEC_TEMPLATE.format(exprs=",".join(
-        [f'obj["{attr}"]' for attr in attrs]))
+    code = VEC_TEMPLATE.format(exprs=",".join([f'obj["{attr}"]' for attr in attrs]))
     d = {}
     exec(code, None, d)
     return d["vectorize_template"]
@@ -58,10 +64,8 @@ class DataCollector:
         self.target = target
         self.model: Optional[Model] = None
         self.scenario: Optional["Scenario"] = None
-        self._agent_properties_to_collect: Dict[str,
-                                                List[PropertyToCollect]] = {}
-        self._agent_properties_collectors: Dict[str, Callable[[
-            object], object]] = {}
+        self._agent_properties_to_collect: Dict[str, List[PropertyToCollect]] = {}
+        self._agent_properties_collectors: Dict[str, Callable[[object], object]] = {}
         self._environment_properties_to_collect: List[PropertyToCollect] = []
 
         self.agent_properties_dict: Dict[str, Table] = {}
@@ -103,8 +107,7 @@ class DataCollector:
         :return:
         """
         if not hasattr(self.model, container_name):
-            raise AttributeError(
-                f"Model has no agent container '{container_name}'")
+            raise AttributeError(f"Model has no agent container '{container_name}'")
         if container_name not in self._agent_properties_to_collect.keys():
             self._agent_properties_to_collect[container_name] = []
         self._agent_properties_to_collect[container_name].append(
@@ -150,8 +153,7 @@ class DataCollector:
         """
         containers = []
         for container_name in self._agent_properties_to_collect.keys():
-            containers.append(
-                (container_name, getattr(self.model, container_name)))
+            containers.append((container_name, getattr(self.model, container_name)))
         return containers
 
     def collect_agent_properties(self, period: int):
@@ -165,12 +167,15 @@ class DataCollector:
         agent_property_names = self.agent_property_names()
         for container_name, container in agent_containers:
             self.append_agent_properties_by_records(
-                container_name,
-                agent_property_names[container_name], container, period
+                container_name, agent_property_names[container_name], container, period
             )
 
     def append_agent_properties_by_records(
-        self, container_name: str, prop_names: List[str], container: "AgentList", period: int
+        self,
+        container_name: str,
+        prop_names: List[str],
+        container: "AgentList",
+        period: int,
     ):
         """
         Directly append properties to the properties recorder dict.
@@ -181,9 +186,7 @@ class DataCollector:
         id_run, id_scenario = self.model.run_id_in_scenario, self.model.scenario.id
         if container_name not in self.agent_properties_dict:
             if len(container) == 0:
-                raise ValueError(
-                    f"No property collected for container {container}!"
-                )
+                raise ValueError(f"No property collected for container {container}!")
             agent_attrs_dict = container.random_sample(1)[0].__dict__
             props = {
                 "id_scenario": 0,
@@ -191,16 +194,14 @@ class DataCollector:
                 "period": 0,
                 "id": 0,
             }
-            props.update({
-                k: agent_attrs_dict[k] for k in prop_names
-            })
+            props.update({k: agent_attrs_dict[k] for k in prop_names})
 
             row_cls = TableRow.subcls_from_dict(props)
             self.agent_properties_dict[container_name] = Table(row_cls)
-            self._agent_properties_collectors[container_name] = objs_to_table_row_vectorizer(
-                row_cls, prop_names)
+            self._agent_properties_collectors[
+                container_name
+            ] = objs_to_table_row_vectorizer(row_cls, prop_names)
 
-        
         collector = self._agent_properties_collectors[container_name]
         table = self.agent_properties_dict[container_name]
         props_list = table.data
@@ -212,17 +213,13 @@ class DataCollector:
             row.id = agent.id
             props_list.append(row)
 
-
-    def append_environment_properties(
-        self, period: int
-    ):
+    def append_environment_properties(self, period: int):
         env_dic = {
             "id_scenario": self.model.scenario.id,
             "id_run": self.model.run_id_in_scenario,
             "period": period,
         }
-        env_dic.update(self.model.environment.to_dict(
-            self.env_property_names()))
+        env_dic.update(self.model.environment.to_dict(self.env_property_names()))
         if self.environment_properties_list is None:
             row_cls = TableRow.subcls_from_dict(env_dic)
             self.environment_properties_list = Table(row_cls)

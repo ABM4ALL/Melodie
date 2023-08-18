@@ -33,6 +33,20 @@ cfg_for_trainer = Config(
     output_folder=os.path.join(os.path.dirname(__file__), "resources", "output"),
 )
 
+cfg_dataloader_with_cache = Config(
+    "loader_with_cache",
+    os.path.dirname(__file__),
+    input_folder=os.path.join(os.path.dirname(__file__), "resources", "excels"),
+    output_folder=os.path.join(os.path.dirname(__file__), "resources", "output"),
+    input_dataframe_cache=True
+)
+cfg_dataloader_without_cache = Config(
+    "loader_without_cache",
+    os.path.dirname(__file__),
+    input_folder=os.path.join(os.path.dirname(__file__), "resources", "excels"),
+    output_folder=os.path.join(os.path.dirname(__file__), "resources", "output"),
+)
+
 model = Model(
     cfg,
     Scenario(id_scenario=100),

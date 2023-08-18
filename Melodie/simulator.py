@@ -369,10 +369,11 @@ class Simulator(BaseModellingManager):
         logger.info(
             "Running the first session with only one core to verify this model..."
         )
-        self.run_model(*parameters.pop())
-        logger.info(
-            f"Verification finished, now using {cores} cores for parallel computing!"
-        )
+        # self.run_model(*parameters.pop())
+        # logger.info(
+        #     f"Verification finished, now using {cores} cores for parallel computing!"
+        # )
+        print(parameters[0])
         pool.starmap(self.run_model, parameters)
 
         pool.close()

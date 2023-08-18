@@ -110,8 +110,6 @@ def test_model_run():
     assert len(dc.agent_properties_dict["agent_list2"]) == AGENT_NUM_2 * 2
     dc.save()
 
-    
-
 
 def test_status():
     calibrator = CovidCalibrator(

@@ -3,27 +3,29 @@ import argparse
 from MelodieInfra import MelodieExceptions
 
 parser = argparse.ArgumentParser()
-parser.add_argument(
-    "action",
-    help="""[action] for starting the management server;
-""",
-)
+subparsers = parser.add_subparsers()
+subparser_static_check = subparsers.add_parser(
+    "check", help="Melodie Static checker")
+subparser_static_check.add_argument("-d", help="Directory to check")
 
+subparser_studio = subparsers.add_parser("studio", help="Start MelodieStudio")
+subparser_info = subparsers.add_parser("info", help="Show Information of Melodie")
 
-def check_args(action: str):
-    if action not in {"studio", "info"}:
-        raise MelodieExceptions.Program.Variable.VariableNotInSet(
-            "Command-Line argument 'action'", action, {"studio"}
-        )
+def handle_check(args):
+    from MelodieInfra.static_analysis import StaticCheckerRoutine
+    StaticCheckerRoutine(args.d).run()
+
+def handle_studio(args):
+    from MelodieStudio.main import studio_main
+    studio_main()
+
+def handle_info(args):
+    from Melodie import get_system_info
+    get_system_info()
+subparser_static_check.set_defaults(func=handle_check)
+subparser_studio.set_defaults(func=handle_studio)
+subparser_info.set_defaults(func=handle_info)
 
 
 args = parser.parse_args()
-check_args(args.action)
-if args.action == "studio":
-    from MelodieStudio.main import studio_main
-
-    studio_main()
-elif args.action == "info":
-    from Melodie import get_system_info
-
-    get_system_info()
+args.func(args)
