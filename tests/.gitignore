@@ -1,4 +1,5 @@
-*.csv
+/*.csv
+/out
 _database
 _output
 resources/temp/*.sqlite
