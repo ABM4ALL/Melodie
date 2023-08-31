@@ -1,8 +1,3 @@
-# -*- coding:utf-8 -*-
-# @Time: 2022/11/9 10:41
-# @Author: Zhanyi Hou
-# @Email: 1295752786@qq.com
-# @File: params.py.py
 import math
 import sys
 from typing import Callable, Any, TYPE_CHECKING, Tuple, Union, List, Dict
