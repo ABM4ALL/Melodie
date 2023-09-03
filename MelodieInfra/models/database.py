@@ -21,6 +21,7 @@ class ColumnSchema(JsonObject):
     label = StringProperty()
     readonly = BooleanProperty(default=False)
     width = IntegerProperty(default=0)
+    selectable = IntegerProperty(default=False)
 
 class ColumnSchemas(JsonObject):
     table_name: str = StringProperty()
