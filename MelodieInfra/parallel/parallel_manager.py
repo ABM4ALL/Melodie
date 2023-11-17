@@ -39,6 +39,9 @@ class Tasks:
     def get_result(self):
         return self.result_queue.get()
 
+    # def get_result_nowait(self):
+    #     return self.result_queue.get()
+
     def get_config(self):
         return self.config
 
@@ -82,7 +85,7 @@ class ParallelManager:
         :param role: run as calibrator or trainer
         :return:
         """
-        assert role in {"calibrator", "trainer"}
+        assert role in {"calibrator", "trainer", "simulator"}
         self.th_server.setDaemon(True)
         self.th_server.start()
         for core_id in range(self.cores):

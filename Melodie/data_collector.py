@@ -1,6 +1,7 @@
 import logging
 import time
 from typing import Callable, List, TYPE_CHECKING, Dict, Tuple, Any, Optional, Type
+import pandas as pd
 
 import sqlalchemy
 
@@ -323,6 +324,10 @@ class DataCollector:
         t0 = time.time()
         write_db_time = 0
         connection = self.model.create_db_conn()
+        print("config!", self.model.config.to_dict())
+        print("connection string!", self.model.config.database_config.connection_string())
+        print("opened connection!", connection, connection.db_name)
+        
         _t = time.time()
         if self.environment_properties_list is not None:
             self._write_list_to_table(
@@ -337,7 +342,7 @@ class DataCollector:
             # )
         self.environment_properties_list = None
         write_db_time += time.time() - _t
-
+        
         for container_name in self.agent_properties_dict.keys():
             _t = time.time()
             self._write_list_to_table(
@@ -345,9 +350,12 @@ class DataCollector:
                 container_name + "_result",
                 self.agent_properties_dict[container_name],
             )
+            # print("wrote agent properties!", container_name+"_result")
             write_db_time += time.time() - _t
         self.agent_properties_dict = {}
+        
         t1 = time.time()
+        print(pd.read_sql('select * from agent_list2_result', connection.connection))
         collect_time = self._time_elapsed
         self._time_elapsed += t1 - t0
         logger.debug(

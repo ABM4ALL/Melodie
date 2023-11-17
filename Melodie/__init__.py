@@ -16,7 +16,7 @@ from .data_loader import DataLoader, DataFrameInfo, MatrixInfo
 from .model import Model
 from .network import Edge, Network, NetworkAgent
 from .scenario_manager import Scenario
-from .simulator import Simulator
+from .simulator import Simulator, SimulatorMeta
 from .table_generator import DataFrameGenerator
 from .trainer import Trainer
 from .visualizer import *

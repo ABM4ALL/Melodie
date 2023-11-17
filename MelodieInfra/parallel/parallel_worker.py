@@ -1,3 +1,4 @@
+from Melodie.global_configs import MelodieGlobalConfig
 import argparse
 import base64
 import importlib
@@ -10,7 +11,7 @@ from typing import Dict, Tuple, Any, Type, Union, TYPE_CHECKING
 import cloudpickle
 
 if TYPE_CHECKING:
-    from Melodie import Calibrator, Trainer, Scenario, Model
+    from Melodie import Calibrator, Trainer, Scenario, Model, Simulator
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--core_id", help="ID of core")
@@ -21,13 +22,11 @@ args = parser.parse_args()
 workdirs = json.loads(args.workdirs)
 sys.path = workdirs + sys.path
 
-from Melodie.global_configs import MelodieGlobalConfig
-
 
 class ParallelWorker:
     def __init__(self):
         self.role = args.role
-        assert self.role in {"trainer", "calibrator"}
+        assert self.role in {"trainer", "calibrator", "simulator"}
         self.core_id = args.core_id
         self.conn = rpyc.connect("localhost", 12233)
 
@@ -55,30 +54,36 @@ class ParallelWorker:
             sub_routine_calibrator(self.core_id, config[0], config[1], self)
         elif self.role == "trainer":
             sub_routine_trainer(self.core_id, config[0], config[1], self)
+        elif self.role == "simulator":
+            sub_routine_simulator(self.core_id, config[0], config[1], self)
         else:
             raise NotImplementedError(f"Unrecognized role `{self.role}`")
 
 
 def get_scenario_manager(
     config, modules: Dict
-) -> Tuple[Union["Trainer", "Calibrator"], Type["Model"], Type["Scenario"]]:
+) -> Tuple[Union["Trainer", "Calibrator"], Type["Scenario"], Type["Model"]]:
     from Melodie import Trainer, Calibrator
 
     classes_dict = {}
     for module_type, content in modules.items():
-        class_name, module_name = content
-        module = importlib.import_module(module_name)
-        cls = getattr(module, class_name)
-        classes_dict[module_type] = cls
+        if content is not None:
+            class_name, module_name = content
+            module = importlib.import_module(module_name)
+            cls = getattr(module, class_name)
+            classes_dict[module_type] = cls
+        else:
+            classes_dict[module_type] = None
 
-    trainer: Union[Trainer, Calibrator] = classes_dict["trainer"](
+    trainer: "Union[Trainer, Calibrator, Simulator]" = classes_dict["trainer"](
         config=config,
         scenario_cls=classes_dict["scenario"],
         model_cls=classes_dict["model"],
         data_loader_cls=classes_dict["data_loader"],
     )
     trainer.setup()
-    trainer.collect_data()
+    if isinstance(trainer, (Trainer, Calibrator)):
+        trainer.collect_data()
     trainer.subworker_prerun()
     return trainer, classes_dict["scenario"], classes_dict["model"]
 
@@ -179,7 +184,7 @@ def sub_routine_calibrator(
     logger.info("subroutine started!")
     try:
         config = Config.from_dict(config_raw)
-        calibrator: Calibrator
+        calibrator: "Calibrator"
         calibrator, scenario_cls, model_cls = get_scenario_manager(config, modules)
     except BaseException:
         import traceback
@@ -226,6 +231,72 @@ def sub_routine_calibrator(
             import traceback
 
             traceback.print_exc()
+
+
+def sub_routine_simulator(
+    proc_id: int,
+    modules: Dict[str, Tuple[str, str]],
+    config_raw: Dict[str, Any],
+    worker: ParallelWorker,
+):
+    """
+    The sub iterator callback for parallelized computing used for Simulator.
+
+    :param proc_id:
+    :param modules:
+    :param config_raw:
+    :return:
+    """
+    from Melodie import Config, Environment
+    import logging
+
+    logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
+    logger = logging.getLogger(f"Simulator-processor-{proc_id}")
+    logger.info("subroutine started!")
+    try:
+        config = Config.from_dict(config_raw)
+        simulator: "Simulator"
+        simulator, scenario_cls, model_cls = get_scenario_manager(config, modules)
+    except BaseException:
+        import traceback
+
+        traceback.print_exc()
+        dumped = cloudpickle.dumps(0)
+        worker.put_result(base64.b64encode(dumped))
+        return
+    while 1:
+        try:
+            ret = worker.get_task()
+            t0 = time.time()
+            id_run, d, env_params = ret
+            logger.debug(f"processor {proc_id} got id_run {id_run}")
+            scenario: Scenario = scenario_cls()
+            scenario.manager = simulator
+            scenario.setup()
+            scenario.set_params(d)
+            # scenario.set_params(env_params)
+            model = model_cls(config, scenario,run_id_in_scenario=id_run)
+            
+            model.create()
+            model._setup()
+            model.run()
+            print("finished running this model!")
+            
+            dumped = cloudpickle.dumps((id_run, None, None))
+            t1 = time.time()
+            logger.info(
+                f"Processor {proc_id}, chromosome {id_run}, time: {MelodieGlobalConfig.Logger.round_elapsed_time(t1 - t0)}s"
+            )
+            worker.put_result(base64.b64encode(dumped))
+        except Exception:
+            import traceback
+
+            traceback.print_exc()
+            dumped = cloudpickle.dumps((None, None, None))
+            logger.info(
+                f"Processor {proc_id}, chromosome {id_run}, time: {MelodieGlobalConfig.Logger.round_elapsed_time(t1 - t0)}s"
+            )
+            worker.put_result(base64.b64encode(dumped))
 
 
 if __name__ == "__main__":

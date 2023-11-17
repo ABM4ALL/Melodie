@@ -5,7 +5,13 @@
 # @File: database.py
 
 from typing import List
-from MelodieInfra.jsonobject import JsonObject, StringProperty, BooleanProperty, ListProperty, IntegerProperty
+from MelodieInfra.jsonobject import (
+    JsonObject,
+    StringProperty,
+    BooleanProperty,
+    ListProperty,
+    IntegerProperty,
+)
 
 
 class DatabaseBasicRequest(JsonObject):
@@ -15,13 +21,15 @@ class DatabaseBasicRequest(JsonObject):
 class DatabaseQueryRequest(DatabaseBasicRequest):
     sql = StringProperty(name="sql", required=True)
 
+
 class ColumnSchema(JsonObject):
     name = StringProperty()
-    type = StringProperty(validators=[lambda t : t in {'int', "float", 'str', 'bool'}])
+    type = StringProperty(validators=[lambda t: t in {"int", "float", "str", "bool"}])
     label = StringProperty()
     readonly = BooleanProperty(default=False)
     width = IntegerProperty(default=0)
     selectable = IntegerProperty(default=False)
+
 
 class ColumnSchemas(JsonObject):
     table_name: str = StringProperty()
@@ -30,6 +38,12 @@ class ColumnSchemas(JsonObject):
 
     def label_to_name(self, label: str):
         for schema in self.columns:
-            if schema.label==label:
+            if schema.label == label:
                 return schema.name
         raise KeyError(f"Schema label not defined: {label}")
+
+    def name_to_label(self, name: str):
+        for schema in self.columns:
+            if schema.name == name:
+                return schema.label
+        raise KeyError(f"Schema name not defined: {name}")

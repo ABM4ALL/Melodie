@@ -2,6 +2,7 @@
 This data stores the run function for model running, storing global variables and other services.
 """
 import abc
+import copy
 import logging
 import os
 import threading
@@ -85,9 +86,10 @@ class BaseModellingManager(abc.ABC):
         """
         If run as sub-worker, run this function to avoid deleting the existing tables in database.
         """
-        self.data_loader: DataLoader = self.df_loader_cls(
-            self, self.config, self.scenario_cls, as_sub_worker=True
-        )
+        if self.df_loader_cls is not None:
+            self.data_loader: DataLoader = self.df_loader_cls(
+                self, self.config, self.scenario_cls, as_sub_worker=True
+            )
 
         self.scenarios = self.generate_scenarios()
 
@@ -116,6 +118,34 @@ class BaseModellingManager(abc.ABC):
         Abstract method for generation of scenarios.
         """
         pass
+
+
+class SimulatorMeta:
+    """
+    Record the current scenario, params scenario of simulator
+
+    """
+
+    def __init__(self):
+        self._freeze = False
+        self.id_simulator_scenario = 0
+
+    def to_dict(self, public_only=False):
+        if public_only:
+            return {k: v for k, v in self.__dict__.items() if not k.startswith("_")}
+        return copy.copy(self.__dict__)
+
+    def __repr__(self):
+        return f"<{self.to_dict()}>"
+
+    def __setattr__(self, key, value):
+        if (not hasattr(self, "_freeze")) or (not self._freeze):
+            super().__setattr__(key, value)
+        else:
+            if key in self.__dict__:
+                super().__setattr__(key, value)
+            else:
+                raise MelodieExceptions.General.NoAttributeError(self, key)
 
 
 class Simulator(BaseModellingManager):
@@ -301,7 +331,8 @@ class Simulator(BaseModellingManager):
             #     scenario.__setattr__(k, v)
             logger.info(f"Scenario parameters: {scenario.to_dict()}")
             try:
-                self.visualizer.current_scenario = scenario  # set studio scenario.
+                # set studio scenario.
+                self.visualizer.current_scenario = scenario
                 self.run_model(
                     self.config, scenario, 0, self.model_cls, visualizer=self.visualizer
                 )
@@ -341,7 +372,7 @@ class Simulator(BaseModellingManager):
             5. db --> p1 <created table named 'test'>
             6. db --> p2 <table 'test' already exists!> ERROR!
 
-        For multiple-cores, if running modelthis might happen very frequently. To avoid this, Melodie makes the first
+        For multiple-cores, if running model this might happen very frequently. To avoid this, Melodie makes the first
         shot, which means running one of the runs out of one scenario, by main-process. Only when first shot completes
         will the subprocesses be launched.
 
@@ -369,10 +400,10 @@ class Simulator(BaseModellingManager):
         logger.info(
             "Running the first session with only one core to verify this model..."
         )
-        # self.run_model(*parameters.pop())
-        # logger.info(
-        #     f"Verification finished, now using {cores} cores for parallel computing!"
-        # )
+        self.run_model(*parameters.pop())
+        logger.info(
+            f"Verification finished, now using {cores} cores for parallel computing!"
+        )
         print(parameters[0])
         pool.starmap(self.run_model, parameters)
 
@@ -382,3 +413,109 @@ class Simulator(BaseModellingManager):
         logger.info(
             f"Melodie completed all runs, time elapsed totally {t2 - t0}s, and {t2 - t1}s for running."
         )
+
+    def new_parallel(self, cores: int = 1):
+        """
+        Parallelized running through a series of scenarios.
+
+        Melodie does not start subprocesses directly. For the first shot, which means running one of the runs out of
+        one scenario, it will be run by the main-thread to verify the model and initialize the database.
+        After the first shot, subprocesses will be created as many as the value of parameter `cores`.
+
+        :param cores: How many subprocesses will be created in the parallel simulation.
+
+          - It is suggested that this parameter should be NO MORE THAN the **physical cores** of your computer.
+          - Beside 'cores', You may found that your cpu has one more metric: threads, which means your CPU supports
+            hyper-threading. If so, use 'physical cores', not 'threads' as the upper limit.
+          - For example, an Intel® I5-8250U has 4 physical cores and 8 threads. If you use a computer equipped with
+            this CPU, this parameter cannot be larger than 4.
+          - In short, hyper-threading only improves performance in io intensive programs. As Melodie was computation
+            intensive, if there are more subprocess than physical cores, subprocesses will fight for CPU, costing
+            a lot of extra time.
+
+        Sqlite itself was thread-safe for writing. However, pandas tries to create the table if table was not exist, which
+        might trigger conflict condition.
+
+        For example:
+            p1, p2 stands for process 1 and 2 request writing to a table `test`;
+            db stands for database;
+            1. p1 --> db <found no table named 'test'>
+            2. p2 --> db <found no table named 'test'>
+            3. p1 --> db <request the db to create a table 'test'>
+            4. p2 --> db <request the db to create a table 'test'>
+            5. db --> p1 <created table named 'test'>
+            6. db --> p2 <table 'test' already exists!> ERROR!
+
+        For multiple-cores, if running model this might happen very frequently. To avoid this, Melodie makes the first
+        shot, which means running one of the runs out of one scenario, by main-process. Only when first shot completes
+        will the subprocesses be launched.
+
+
+        :return: None
+        """
+        from MelodieInfra.parallel.parallel_manager import ParallelManager
+
+        t0 = time.time()
+        self.pre_run()
+
+        t1 = time.time()
+        parallel_manager_data = {
+            "model": (
+                self.model_cls.__name__,
+                self.model_cls.__module__,
+            ),
+            "scenario": (
+                self.scenario_cls.__name__,
+                self.scenario_cls.__module__,
+            ),
+            "trainer": (
+                self.__class__.__name__,
+                self.__class__.__module__,
+            ),
+            "data_loader": (
+                self.df_loader_cls.__name__,
+                self.df_loader_cls.__module__,
+            )
+            if self.df_loader_cls is not None
+            else None,
+        }
+        parallel_manager = ParallelManager(
+            cores, configs=(parallel_manager_data, self.config.to_dict())
+        )
+        parallel_manager.run("simulator")
+        try:
+            logger.info(f"Melodie will run for {len(self.scenarios)} times!.")
+            first_run = False
+            print(self.scenarios)
+            tasks_count = 0
+            for scenario in self.scenarios:
+                for id_run in range(scenario.run_num):
+                    if not first_run:
+                        self.run_model(
+                            self.config,
+                            scenario,
+                            id_run,
+                            self.model_cls,
+                        )
+                        first_run = True
+                    else:
+                        print("put task:", scenario.to_json())
+                        parallel_manager.put_task(
+                            (id_run, scenario.to_json(), None))
+                        tasks_count += 1
+
+            for i in range(tasks_count):
+                parallel_manager.get_result()
+                logger.info(f"finished {i+1} tasks!")
+            t2 = time.time()
+            logger.info(
+                f"Melodie completed all runs, time elapsed totally {t2 - t0}s, and {t2 - t1}s for running."
+            )
+        except KeyboardInterrupt:
+            raise KeyboardInterrupt
+        except Exception:
+            import traceback
+
+            traceback.print_exc()
+        finally:
+            parallel_manager.close()
