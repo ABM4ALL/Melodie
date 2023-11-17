@@ -28,17 +28,21 @@ class Tasks:
         self.task_queue.put(item)
 
     def get_task(self):
-        try:
-            return self.task_queue.get(block=False)
-        except queue.Empty:
-            return None
+        while 1:
+            try:
+                return self.task_queue.get(block=False)
+            except queue.Empty:
+                continue
 
     def put_result(self, item):
         self.result_queue.put(item)
 
     def get_result(self):
-        return self.result_queue.get()
-
+        while 1:
+            try:
+                return self.result_queue.get(timeout=0.1)
+            except queue.Empty:
+                continue
     # def get_result_nowait(self):
     #     return self.result_queue.get()
 

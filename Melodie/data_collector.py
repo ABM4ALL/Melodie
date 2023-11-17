@@ -355,7 +355,7 @@ class DataCollector:
         self.agent_properties_dict = {}
         
         t1 = time.time()
-        print(pd.read_sql('select * from agent_list2_result', connection.connection))
+        
         collect_time = self._time_elapsed
         self._time_elapsed += t1 - t0
         logger.debug(

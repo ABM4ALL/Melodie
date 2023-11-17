@@ -30,4 +30,5 @@ jobs:
  
     - name: Test with pytest
       run: |
-        pytest -s
+        pytest tests/infra -s
+        pytest tests/procedures -s

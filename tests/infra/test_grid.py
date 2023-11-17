@@ -116,6 +116,7 @@ def neighbors(grid: Grid):
 
 
 def convert(grid: Union[Grid]):
+    
     arr = grid.to_2d_array("id")
     print(arr)
 
@@ -125,6 +126,8 @@ CATRGORY_B = 1
 
 
 def test_roles():
+    
+    print('testing roles')
     class GridForRoles(Grid):
         def config_grid(self):
             self.set_size(5, 5)
@@ -143,6 +146,8 @@ def test_roles():
 
 
 def test_single_grid():
+    
+    print('testing single grid')
     class GridForTest(Grid):
         pass
 
@@ -182,6 +187,7 @@ def test_single_grid():
 
 
 def test_agents_nojit():
+    print('testing agents nojit')
     width = 10
     height = 20
 
@@ -200,25 +206,31 @@ class Grid2(Grid):
 
 
 def test_containers():
+    print('testing containers')
     grid = Grid2(Spot)
+    print("grid created!")
     grid.setup_params(10, 10)
+    print("params setup!")
     agent_list: AgentList[TestGridAgent] = model.create_agent_container(
         TestGridAgent, 10
     )
+    print(217)
     agent_list.setup_agents(10)
+    print('setup!')
     for i in range(10):
         agent_list[i].x = i
         agent_list[i].y = i
         agent_list[i].category = 0
     grid.setup_agent_locations(agent_list, "direct")
     agents_on_grid = grid.get_spot_agents(grid.get_spot(1, 1))
-
     assert len(agents_on_grid) == 1
     a = agent_list.get_agent(agents_on_grid[0][1])
     assert a.x == 1, a.y == 1
+    print("finished!")
 
 
 def test_roles_2():
+    print('testing roles_2')
     class MySpot(Spot):
         def setup(self):
             self.a = 123

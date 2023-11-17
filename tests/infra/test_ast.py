@@ -15,7 +15,6 @@ from MelodieInfra.lowcode.astmani.model_static_inspector import (
     get_model_ast,
     walk_model_ast,
 )
-from ..calibrator import CovidModel
 
 #
 # def test_ast_manipulator():

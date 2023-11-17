@@ -501,7 +501,7 @@ class Simulator(BaseModellingManager):
                     else:
                         print("put task:", scenario.to_json())
                         parallel_manager.put_task(
-                            (id_run, scenario.to_json(), None))
+                                (id_run, scenario.to_json(), None))
                         tasks_count += 1
 
             for i in range(tasks_count):
@@ -518,4 +518,5 @@ class Simulator(BaseModellingManager):
 
             traceback.print_exc()
         finally:
+            logger.info("quit parallel manager!")
             parallel_manager.close()

@@ -15,7 +15,6 @@ from Melodie import (
     Model,
     DataLoader,
 )
-from tests.calibrator import CovidCalibrator, CovidScenario, CovidModel
 from tests.infra.config import cfg_for_temp, cfg_for_calibrator
 
 AGENT_NUM_1 = 10
@@ -112,6 +111,8 @@ def test_model_run():
 
 
 def test_status():
+    
+    from tests.procedures.calibrator import CovidCalibrator, CovidScenario, CovidModel
     calibrator = CovidCalibrator(
         cfg_for_calibrator, CovidScenario, CovidModel, DFLoader
     )

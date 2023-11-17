@@ -35,7 +35,10 @@ class ParallelWorker:
 
     def get_task(self):
         while 1:
-            task_raw = self.conn.root.get_task()
+            try:
+                task_raw = self.conn.root.get_task()
+            except rpyc.AsyncResultTimeout:
+                continue
             task = cloudpickle.loads(base64.b64decode(task_raw))
             if task is None:
                 time.sleep(0.1)
@@ -273,7 +276,7 @@ def sub_routine_simulator(
             scenario: Scenario = scenario_cls()
             scenario.manager = simulator
             scenario.setup()
-            scenario.set_params(d)
+            scenario.set_params(d, asserts_key_exist=False)
             # scenario.set_params(env_params)
             model = model_cls(config, scenario,run_id_in_scenario=id_run)
             
@@ -294,7 +297,7 @@ def sub_routine_simulator(
             traceback.print_exc()
             dumped = cloudpickle.dumps((None, None, None))
             logger.info(
-                f"Processor {proc_id}, chromosome {id_run}, time: {MelodieGlobalConfig.Logger.round_elapsed_time(t1 - t0)}s"
+                f"Processor {proc_id} failed"
             )
             worker.put_result(base64.b64encode(dumped))
 
