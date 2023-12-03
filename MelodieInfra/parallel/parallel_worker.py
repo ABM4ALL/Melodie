@@ -9,7 +9,7 @@ from typing import Dict, Tuple, Any, Type, Union, TYPE_CHECKING
 
 import cloudpickle
 
-from Melodie.global_configs import MelodieGlobalConfig
+from MelodieInfra.config.global_configs import MelodieGlobalConfig
 
 if TYPE_CHECKING:
     from Melodie import Calibrator, Trainer, Scenario, Model, Simulator

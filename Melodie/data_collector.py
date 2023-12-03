@@ -13,7 +13,7 @@ from MelodieInfra import (
     TableRow,
     objs_to_table_row_vectorizer,
 )
-from Melodie.global_configs import MelodieGlobalConfig
+from MelodieInfra.config.global_configs import MelodieGlobalConfig
 
 logger = logging.getLogger(__name__)
 

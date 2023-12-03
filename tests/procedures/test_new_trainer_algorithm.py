@@ -1,6 +1,6 @@
 # -*- coding:utf-8 -*-
 from typing import List
-
+from tests.infra.config import cfg_for_trainer
 import pytest
 
 from Melodie import (
@@ -12,7 +12,6 @@ from Melodie import (
     Environment,
 )
 from Melodie.trainer import GATrainerAlgorithm, GATrainerAlgorithmMeta, GATrainerParams
-from tests.infra.config import cfg_for_trainer
 
 
 class DemoAgent(Agent):

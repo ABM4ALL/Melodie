@@ -106,7 +106,8 @@ class ParallelManager:
                     json.dumps([os.getcwd()]),
                     "--role",
                     role,
-                ]
+                ],
+                env={"PYTHONPATH": ":".join(sys.path)},
             )
             self.processes.append(p)
 

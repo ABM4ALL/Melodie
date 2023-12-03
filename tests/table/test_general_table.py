@@ -88,6 +88,7 @@ def test_to_database():
     table.from_database(engine, "aaaaaa", "select * from aaaaaa")
     print("table")
 
+
 def test_indicing():
     print("indicing")
     agents = [{"a": i, "b": i} for i in range(1000)]

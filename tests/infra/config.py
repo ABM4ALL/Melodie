@@ -4,6 +4,10 @@ import sys
 
 from Melodie import Config, Model, Scenario
 
+basedir = os.path.dirname(os.path.dirname(__file__))
+sys.path.insert(0, os.path.dirname(basedir))
+print(sys.path[0])
+
 skip_env_dependent = "--skip-env-dependent-testcases" in sys.argv
 resources_path = os.path.join(os.path.dirname(__file__), "resources")
 

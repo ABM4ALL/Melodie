@@ -17,9 +17,9 @@ from MelodieInfra import (
     Config,
     MelodieExceptions,
     show_prettified_warning,
+    MelodieGlobalConfig,
 )
 
-from .global_configs import MelodieGlobalConfig
 from .data_loader import DataLoader
 from .model import Model
 from .scenario_manager import Scenario
