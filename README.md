@@ -1,8 +1,5 @@
 # Melodie: Agent-based Modeling in Python
 
-
-[![Build](https://github.com/ABM4ALL/Melodie/actions/workflows/wheels.yml/badge.svg?branch=dist)](https://github.com/ABM4ALL/Melodie/actions/workflows/wheels.yml)
-
 [![Tests](https://github.com/ABM4ALL/Melodie/actions/workflows/test.yml/badge.svg)](https://github.com/ABM4ALL/Melodie/actions/workflows/test.yml)
 
 **Melodie** is a framework for developing agent-based models (ABMs) in Python.

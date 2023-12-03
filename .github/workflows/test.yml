@@ -1,34 +1,33 @@
 name: Tests
 on: [push]
- 
+
 jobs:
   build:
     name: Run Python Tests
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: [ "3.9"]
+        python-version: ["3.8", "3.12"]
 
     steps:
- 
-    - uses: actions/checkout@v2
- 
-    - name: Setup timezone
-      uses: zcong1993/setup-timezone@master
-      with:
-        timezone: UTC
- 
-    - name: Set up Python
-      uses: actions/setup-python@v2
-      with:
-        python-version:  ${{ matrix.python-version }}
- 
-    - name: Install Python dependencies
-      run: |
-        python3 -m pip install --upgrade pip
-        pip3 install -r requirements.txt
- 
-    - name: Test with pytest
-      run: |
-        pytest tests/infra -s
-        pytest tests/procedures -s
+      - uses: actions/checkout@v2
+
+      - name: Setup timezone
+        uses: zcong1993/setup-timezone@master
+        with:
+          timezone: UTC
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install Python dependencies
+        run: |
+          python3 -m pip install --upgrade pip
+          pip3 install -r requirements.txt
+
+      - name: Test with pytest
+        run: |
+          pytest tests/infra -s
+          pytest tests/procedures -s
