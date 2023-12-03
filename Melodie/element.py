@@ -2,6 +2,7 @@ import logging
 from typing import Dict, Any
 import warnings
 
+
 class Element:
     def set_params(self, params: Dict[str, Any], asserts_key_exist=True):
         """
@@ -16,6 +17,5 @@ class Element:
                     raise ValueError(msg)
                 else:
                     warnings.warn(msg)
-            
 
             setattr(self, paramName, paramValue)

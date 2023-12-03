@@ -500,8 +500,7 @@ class Simulator(BaseModellingManager):
                         first_run = True
                     else:
                         print("put task:", scenario.to_json())
-                        parallel_manager.put_task(
-                                (id_run, scenario.to_json(), None))
+                        parallel_manager.put_task((id_run, scenario.to_json(), None))
                         tasks_count += 1
 
             for i in range(tasks_count):

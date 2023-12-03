@@ -325,9 +325,11 @@ class DataCollector:
         write_db_time = 0
         connection = self.model.create_db_conn()
         print("config!", self.model.config.to_dict())
-        print("connection string!", self.model.config.database_config.connection_string())
+        print(
+            "connection string!", self.model.config.database_config.connection_string()
+        )
         print("opened connection!", connection, connection.db_name)
-        
+
         _t = time.time()
         if self.environment_properties_list is not None:
             self._write_list_to_table(
@@ -342,7 +344,7 @@ class DataCollector:
             # )
         self.environment_properties_list = None
         write_db_time += time.time() - _t
-        
+
         for container_name in self.agent_properties_dict.keys():
             _t = time.time()
             self._write_list_to_table(
@@ -353,9 +355,9 @@ class DataCollector:
             # print("wrote agent properties!", container_name+"_result")
             write_db_time += time.time() - _t
         self.agent_properties_dict = {}
-        
+
         t1 = time.time()
-        
+
         collect_time = self._time_elapsed
         self._time_elapsed += t1 - t0
         logger.debug(

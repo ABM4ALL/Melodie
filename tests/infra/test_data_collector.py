@@ -111,8 +111,8 @@ def test_model_run():
 
 
 def test_status():
-    
     from tests.procedures.calibrator import CovidCalibrator, CovidScenario, CovidModel
+
     calibrator = CovidCalibrator(
         cfg_for_calibrator, CovidScenario, CovidModel, DFLoader
     )

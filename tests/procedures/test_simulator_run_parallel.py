@@ -8,10 +8,8 @@ from tests.procedures.simulator_demo import Simulator4Test, DCTestModel, TestSce
 cfg_for_temp2 = Config(
     "temp_db_for_parallel_simulation",
     os.path.dirname(__file__),
-    input_folder=os.path.join(os.path.dirname(
-        __file__), "resources", "excels"),
-    output_folder=os.path.join(os.path.dirname(
-        __file__), "resources", "output"),
+    input_folder=os.path.join(os.path.dirname(__file__), "resources", "excels"),
+    output_folder=os.path.join(os.path.dirname(__file__), "resources", "output"),
 )
 AGENT_NUM_1 = 10
 AGENT_NUM_2 = 20

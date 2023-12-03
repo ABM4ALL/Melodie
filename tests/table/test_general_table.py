@@ -76,16 +76,20 @@ class Agent:
 
 
 def test_to_database():
+    print("to_database")
     engine = create_engine("sqlite:///" + SQLITE_FILE)
+    print("engine created")
     agents = [{"a": i, "b": i} for i in range(1000)]
     table = GeneralTable.from_dicts({"a": Integer(), "b": Integer()}, agents)
     # table.from_dicts()
-
+    print("table")
     table.to_database(engine, "aaaaaa")
+    print("table")
     table.from_database(engine, "aaaaaa", "select * from aaaaaa")
-
+    print("table")
 
 def test_indicing():
+    print("indicing")
     agents = [{"a": i, "b": i} for i in range(1000)]
     table = GeneralTable.from_dicts({"a": Integer(), "b": Integer()}, agents)
     assert table.at[50, "a"] == 50

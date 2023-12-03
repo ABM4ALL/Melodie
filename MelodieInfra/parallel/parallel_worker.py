@@ -1,4 +1,3 @@
-from Melodie.global_configs import MelodieGlobalConfig
 import argparse
 import base64
 import importlib
@@ -9,6 +8,8 @@ import rpyc
 from typing import Dict, Tuple, Any, Type, Union, TYPE_CHECKING
 
 import cloudpickle
+
+from Melodie.global_configs import MelodieGlobalConfig
 
 if TYPE_CHECKING:
     from Melodie import Calibrator, Trainer, Scenario, Model, Simulator
@@ -28,17 +29,19 @@ class ParallelWorker:
         self.role = args.role
         assert self.role in {"trainer", "calibrator", "simulator"}
         self.core_id = args.core_id
-        self.conn = rpyc.connect("localhost", 12233)
+        self.conn = rpyc.connect(
+            "localhost", 12233, keepalive=True, config={"sync_request_timeout": None}
+        )
 
     def get_config(self):
         return json.loads(self.conn.root.get_config())
 
     def get_task(self):
         while 1:
-            try:
-                task_raw = self.conn.root.get_task()
-            except rpyc.AsyncResultTimeout:
-                continue
+            # try:
+            task_raw = self.conn.root.get_task()
+            # except rpyc.AsyncResultTimeout:
+            #     continue
             task = cloudpickle.loads(base64.b64decode(task_raw))
             if task is None:
                 time.sleep(0.1)
@@ -278,17 +281,16 @@ def sub_routine_simulator(
             scenario.setup()
             scenario.set_params(d, asserts_key_exist=False)
             # scenario.set_params(env_params)
-            model = model_cls(config, scenario,run_id_in_scenario=id_run)
-            
+            model = model_cls(config, scenario, run_id_in_scenario=id_run)
+
             model.create()
             model._setup()
             model.run()
-            print("finished running this model!")
-            
+
             dumped = cloudpickle.dumps((id_run, None, None))
             t1 = time.time()
             logger.info(
-                f"Processor {proc_id}, chromosome {id_run}, time: {MelodieGlobalConfig.Logger.round_elapsed_time(t1 - t0)}s"
+                f"Processor {proc_id}, run {id_run}, time: {MelodieGlobalConfig.Logger.round_elapsed_time(t1 - t0)}s"
             )
             worker.put_result(base64.b64encode(dumped))
         except Exception:
@@ -296,9 +298,7 @@ def sub_routine_simulator(
 
             traceback.print_exc()
             dumped = cloudpickle.dumps((None, None, None))
-            logger.info(
-                f"Processor {proc_id} failed"
-            )
+            logger.info(f"Processor {proc_id} failed")
             worker.put_result(base64.b64encode(dumped))
 
 

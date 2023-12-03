@@ -60,7 +60,6 @@ class ExcelManipulator:
                 df.to_excel(writer, sheet_name=sheet_name, index=False)
         else:
             writer = pd.ExcelWriter(self.filename, engine="openpyxl")
-            print(sheet_exist)
             if book is not None:
                 writer.book = book
             df.to_excel(writer, sheet_name, index=False)

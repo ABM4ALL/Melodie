@@ -30,7 +30,10 @@ class Tasks:
     def get_task(self):
         while 1:
             try:
-                return self.task_queue.get(block=False)
+                task = self.task_queue.get(block=False)
+                logger.info(f"got task {task}")
+                if task is not None:
+                    return task
             except queue.Empty:
                 continue
 
@@ -43,6 +46,7 @@ class Tasks:
                 return self.result_queue.get(timeout=0.1)
             except queue.Empty:
                 continue
+
     # def get_result_nowait(self):
     #     return self.result_queue.get()
 
@@ -79,7 +83,6 @@ class ParallelManager:
             import traceback
 
             traceback.print_exc()
-            # print()
             raise Exception("Server Error Occurred, exiting...")
 
     def run(self, role: str):
@@ -135,5 +138,4 @@ class ParallelDataService(Service):
         tasks.put_result(loaded)
 
     def exposed_get_config(self):
-        print(tasks.get_config())
         return json.dumps(tasks.get_config())
