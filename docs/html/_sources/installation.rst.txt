@@ -61,7 +61,7 @@ To keep local repository up to date, please follow these steps:
 
 Dependency Note
 ---------------
-The dependencies that related to functionalities of Melodie are listed below.
+The major dependencies that related to functionalities of Melodie are listed below.
 
 * Python >=3.8
 * numpy
@@ -70,8 +70,8 @@ The dependencies that related to functionalities of Melodie are listed below.
 * scikit-opt
 * networkx
 
+For Python versions, 3.8 to 3.12 are tested.
+
 For detailed dependencies, please visit
 `requirements.txt <https://github.com/ABM4ALL/Melodie/blob/master/requirements.txt>`_
-and
-`build_requirements.txt <https://github.com/ABM4ALL/Melodie/blob/master/build_requirements.txt>`_
 

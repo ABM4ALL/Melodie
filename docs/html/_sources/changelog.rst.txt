@@ -5,6 +5,10 @@ Change Log
 Major Version 0.x
 _________________
 
+v0.8.0 (May. 10, 2023)
+~~~~~~~~~~~~~~~~~~~~~~
+- Removed Cythonized modules, in order to gain maintainability and make Melodie more pypy-friendly.
+
 v0.7.0 (Mar. 25, 2023)
 ~~~~~~~~~~~~~~~~~~~~~~
 - Fixed version compatibility problem for sqlalchemy.
