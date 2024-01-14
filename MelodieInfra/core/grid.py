@@ -1,3 +1,4 @@
+from MelodieInfra.core.agent_list import AgentList
 from .api import floor, randint, _random as random, iterable, lru_cache
 from .types import ClassVar, Dict, List, Tuple
 
@@ -5,6 +6,8 @@ from .agent import Agent
 
 
 class GridItem(Agent):
+    _unserializable_props_ = ("model", "scenario", "grid")
+
     def __init__(self, agent_id: int, grid, x: int = 0, y: int = 0):
         super().__init__(agent_id)
         self.grid = grid
@@ -37,7 +40,8 @@ class GridAgent(GridItem):
         :return: None
         """
         if self.grid is None:
-            raise ValueError("Grid Agent has not been registered onto the grid!")
+            raise ValueError(
+                "Grid Agent has not been registered onto the grid!")
         self.x, self.y = self.grid.rand_move_agent(
             self, self.category, x_range, y_range
         )
@@ -93,7 +97,8 @@ class Grid:
     def init_grid(self):
         SpotCls = self._spot_cls
         self._spots = [
-            [SpotCls(self._convert_to_1d(x, y), self, x, y) for x in range(self._width)]
+            [SpotCls(self._convert_to_1d(x, y), self, x, y)
+             for x in range(self._width)]
             for y in range(self._height)
         ]
         for x in range(self._width):
@@ -295,7 +300,7 @@ class Grid:
         """
         if not isinstance(agent, GridAgent):
             raise TypeError(
-                f"Parameter \`agent\` should be of type {GridAgent.__name__} "
+                f"Parameter `agent` should be of type {GridAgent.__name__} "
             )
         agent.grid = self
         self._add_agent(agent.id, agent.category, agent.x, agent.y)
@@ -322,7 +327,8 @@ class Grid:
         category_of_agents = self._get_category_of_agents(category)
 
         if agent_id in category_of_agents:
-            raise ValueError(f"Agent with id: {agent_id} already exists on grid!")
+            raise ValueError(
+                f"Agent with id: {agent_id} already exists on grid!")
         pos_1d = self._convert_to_1d(x, y)
         if agent_id in self._agent_ids[category][pos_1d]:
             raise ValueError(
@@ -340,12 +346,14 @@ class Grid:
         category_of_agents = self._get_category_of_agents(category)
 
         if agent_id not in category_of_agents.keys():
-            raise ValueError(f"Agent with id: {agent_id} does not exist on grid!")
+            raise ValueError(
+                f"Agent with id: {agent_id} does not exist on grid!")
         pos_1d = self._convert_to_1d(x, y)
         if agent_id not in self._existed_agents[category]:
             raise ValueError("Agent does not exist on the grid!")
         if agent_id not in self._agent_ids[category][pos_1d]:
-            print("Melodie-boost error occured. agent_id:", agent_id, "x:", x, "y:", y)
+            print("Melodie-boost error occured. agent_id:",
+                  agent_id, "x:", x, "y:", y)
             raise IndexError("agent_id does not exist on such coordinate.")
         else:
             self._agent_ids[category][pos_1d].remove(agent_id)
@@ -481,7 +489,7 @@ class Grid:
         spots_serialized = []
         for x in range(self.width()):
             for y in range(self.height()):
-                spot = self._spots[y][x]
+                spot: Spot = self._spots[y][x]
                 spots_serialized.append(spot.to_json())
         return spots_serialized
 
@@ -584,6 +592,15 @@ class Grid:
         target_y = source_y + dy
         self._add_agent(agent.id, category, target_x, target_y)
         return self.coords_wrap(target_x, target_y)
+
+    def get_agent_container(self, category_id) -> "AgentList":
+        ret = self._agent_containers.get(category_id)
+        assert ret is not None, f"Agent List for category id {category_id} is not registered!"
+        return ret
+
+    @property
+    def agent_categories(self):
+        return set(self._existed_agents.keys())
 
 
 __all__ = ["GridAgent", "GridItem", "Spot", "Grid"]

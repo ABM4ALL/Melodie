@@ -137,7 +137,8 @@ class BaseVisualizer:
 
         self.th = threading.Thread(
             target=create_visualizer_server,
-            args=(self.recv_queue, self.send_queue, self.config.visualizer_port),
+            args=(self.recv_queue, self.send_queue,
+                  self.config.visualizer_port),
         )
 
         self.th.setDaemon(True)
@@ -232,7 +233,8 @@ class BaseVisualizer:
         ) in self.visualizer_components:
             if component_type == "grid":
                 initial_options.append(
-                    self.parse_grid_series(component(), roles, var_getter, True)
+                    self.parse_grid_series(
+                        component(), roles, var_getter, True)
                 )
             else:
                 initial_options.append(
@@ -241,7 +243,8 @@ class BaseVisualizer:
         return initial_options
 
     def send_chart_options(self):
-        self.send_msg(WSMsgType.INIT_OPTION, 0, self.get_visualizers_initial_options())
+        self.send_msg(WSMsgType.INIT_OPTION, 0,
+                      self.get_visualizers_initial_options())
 
     def send_notification(self, message: str, type: str = "info", title="Notice"):
         assert type in {"success", "info", "warning", "error"}
@@ -252,7 +255,8 @@ class BaseVisualizer:
         )
 
     def send_plot_series(self):
-        self.send_msg(WSMsgType.INIT_PLOT_SERIES, 0, self.plot_charts.to_json())
+        self.send_msg(WSMsgType.INIT_PLOT_SERIES,
+                      0, self.plot_charts.to_json())
 
     def send_scenario_params(self, params_set_name: str):
         all_param_names = [
@@ -285,7 +289,8 @@ class BaseVisualizer:
         self.send_msg(WSMsgType.SIMULATION_DATA, self.current_step, formatted)
 
     def send_error(self, err_msg):
-        self.send_msg(WSMsgType.SIMULATION_DATA, self.current_step, err_msg, ERROR)
+        self.send_msg(WSMsgType.SIMULATION_DATA,
+                      self.current_step, err_msg, ERROR)
 
     def get_in_queue(self) -> Tuple[int, Dict[str, Any]]:
         """
@@ -325,7 +330,8 @@ class BaseVisualizer:
                 import traceback
 
                 traceback.print_exc()
-                self.send_notification("Parameter value error:" + str(e), "error")
+                self.send_notification(
+                    "Parameter value error:" + str(e), "error")
                 return True
         elif cmd_type == INIT_OPTIONS:
             self.send_chart_options()
@@ -339,7 +345,8 @@ class BaseVisualizer:
             self.send_notification("Parameters saved successfully", "success")
             return True
         elif cmd_type == SAVE_DATABASE:
-            exported_file = os.path.join(self.sim_data_dir, f"{data['name']}.sqlite")
+            exported_file = os.path.join(
+                self.sim_data_dir, f"{data['name']}.sqlite")
             shutil.copy(get_sqlite_filename(self.config), exported_file)
             self.send_notification("Database saved successfully!", "success")
             return True
@@ -357,7 +364,8 @@ class BaseVisualizer:
                         ERROR,
                     )
 
-                self.send_notification("Database exported successfully!", "success")
+                self.send_notification(
+                    "Database exported successfully!", "success")
             else:
                 self.send_notification(
                     "Database exported error: No database file found!", "error"
@@ -390,7 +398,8 @@ class BaseVisualizer:
                     self.recv_queue.put((flag, {}))
                     break
             else:
-                self.send_error(f"Invalid command flag {flag} for function 'start'. ")
+                self.send_error(
+                    f"Invalid command flag {flag} for function 'start'. ")
 
     def step(self, current_step):
         self.model_state = RUNNING
@@ -405,7 +414,8 @@ class BaseVisualizer:
             elif flag == CURRENT_DATA:
                 self.send_current_data()
             else:
-                self.send_error(f"Invalid command flag {flag} for function 'period'. ")
+                self.send_error(
+                    f"Invalid command flag {flag} for function 'period'. ")
 
     def finish(self):
         self.model_state = FINISHED
@@ -417,7 +427,8 @@ class BaseVisualizer:
                 self.send_current_data()
             else:
                 if flag == STEP:
-                    self.send_error(f"Model already finished, please reset the model.")
+                    self.send_error(
+                        f"Model already finished, please reset the model.")
                 else:
                     self.send_error(
                         f"Invalid command flag {flag} for function 'finish'. "
@@ -450,19 +461,24 @@ class Visualizer(BaseVisualizer):
         agents_vis_dicts = []
         spots = []
 
-        spot_attributes = ["id", "x", "y"] + list(grid.get_spot(0, 0).__dict__.keys())
+        spot_attributes = ["id", "x", "y"] + \
+            list(grid.get_spot(0, 0).__dict__.keys())
         if self.spots_status_change or initialize:
             if isinstance(grid.get_spot(0, 0), Spot):
                 for x in range(grid.width()):
                     for y in range(grid.height()):
                         spot = grid.get_spot(x, y)
+                        # print(spot_attributes)
                         spots.append(
                             {
-                                "data": spot.to_dict(spot_attributes),
+                                "data": spot.to_json(spot_attributes),
                                 "style": spot.get_style(),
                             }
                         )
-        for agent_category in grid.get_agent_categories:
+                        # print(spots[-1])
+                        # import pdb
+                        # pdb.set_trace()
+        for agent_category in grid.agent_categories:
             agent_list = grid.get_agent_container(agent_category)
             if len(agent_list) == 0:
                 continue
@@ -470,10 +486,11 @@ class Visualizer(BaseVisualizer):
             attributes = ["id", "x", "y", "category"] + list(
                 first_agent.__dict__.keys()
             )
+            # attributes.remove("grid")
             for agent in agent_list:
                 agents_vis_dicts.append(
                     {
-                        "data": agent.to_dict(attributes),
+                        "data": agent.to_json(attributes),
                         "style": styles[var_getter(agent)],
                     }
                 )
@@ -632,7 +649,8 @@ class Visualizer(BaseVisualizer):
                 visualizers.append(r)
             elif vis_component_type == "network":
                 visualizers.append(
-                    self.parse_network_series(vis_component(), roles, var_getter)
+                    self.parse_network_series(
+                        vis_component(), roles, var_getter)
                 )
             else:
                 raise NotImplementedError

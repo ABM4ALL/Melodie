@@ -6,6 +6,7 @@ from typing import Optional, Dict, List, Union, Callable, Type, TYPE_CHECKING
 
 import sqlalchemy
 import cloudpickle
+import pandas as pd
 from MelodieInfra import (
     DBConn,
     create_db_conn,

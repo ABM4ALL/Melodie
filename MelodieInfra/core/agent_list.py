@@ -74,7 +74,6 @@ class BaseAgentContainer:
 class AgentList(BaseAgentContainer):
     def __init__(self, agent_class: "ClassVar[AgentGeneric]", model: "Model") -> None:
         super().__init__()
-        self._iter_index = 0
         self.scenario = model.scenario
         self.agent_class: "ClassVar[AgentGeneric]" = agent_class
         self.model = model
@@ -91,7 +90,6 @@ class AgentList(BaseAgentContainer):
         return self.agents.__getitem__(item)
 
     def __iter__(self):
-        self._iter_index = 0
         return SeqIter(self.agents)
 
     def setup_agents(self, agents_num: int, params_df: TABLE_TYPE = None):

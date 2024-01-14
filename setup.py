@@ -45,11 +45,11 @@ setuptools.setup(
     url="https://github.com/ABM4ALL/Melodie",
     author="Songmin Yu, Zhanyi Hou",
     author_email="abm4all@outlook.com",
-    license="BSD 3",
+    license="MIT",
     classifiers=[
         "Development Status :: 4 - Beta",
         "Intended Audience :: Science/Research",
-        "License :: OSI Approved :: BSD License",
+        "License :: OSI Approved :: MIT License",
         "Natural Language :: English",
         "Operating System :: Unix",
         "Operating System :: Microsoft :: Windows",
