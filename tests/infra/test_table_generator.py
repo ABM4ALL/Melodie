@@ -1,4 +1,5 @@
 # -*- coding:utf-8 -*-
+import os
 import pandas as pd
 
 from Melodie import (
@@ -8,9 +9,16 @@ from Melodie import (
     Model,
     DataLoader,
     DataFrameInfo,
+    Config
 )
-from tests.infra.config import cfg_for_temp
 
+cfg_for_temp = Config(
+    "temp_db_created",
+    os.path.dirname(__file__),
+    input_folder=os.path.join(os.path.dirname(__file__), "resources", "excels"),
+    output_folder=os.path.join(os.path.dirname(__file__), "resources", "output"),
+    data_output_type="sqlite"
+)
 
 class TestModel(Model):
     pass
@@ -60,6 +68,8 @@ def test_table_generator():
             return o
 
         g.set_row_generator(f)
+    create_db_conn(cfg_for_temp).write_dataframe("aaa", simulator.data_loader.registered_dataframes['aaa'])
+    create_db_conn(cfg_for_temp).write_dataframe("bbb", simulator.data_loader.registered_dataframes['bbb'])
     df = create_db_conn(cfg_for_temp).read_dataframe("aaa")
     print(df)
     df = create_db_conn(cfg_for_temp).read_dataframe("bbb")

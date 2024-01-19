@@ -1,4 +1,5 @@
 import logging
+import os
 import time
 from typing import Callable, List, TYPE_CHECKING, Dict, Tuple, Any, Optional, Type
 import pandas as pd
@@ -34,7 +35,8 @@ def vectorize_template(obj):
 
 
 def vectorizer(attrs):
-    code = VEC_TEMPLATE.format(exprs=",".join([f'obj["{attr}"]' for attr in attrs]))
+    code = VEC_TEMPLATE.format(exprs=",".join(
+        [f'obj["{attr}"]' for attr in attrs]))
     d = {}
     exec(code, None, d)
     return d["vectorize_template"]
@@ -65,8 +67,10 @@ class DataCollector:
         self.target = target
         self.model: Optional[Model] = None
         self.scenario: Optional["Scenario"] = None
-        self._agent_properties_to_collect: Dict[str, List[PropertyToCollect]] = {}
-        self._agent_properties_collectors: Dict[str, Callable[[object], object]] = {}
+        self._agent_properties_to_collect: Dict[str,
+                                                List[PropertyToCollect]] = {}
+        self._agent_properties_collectors: Dict[str, Callable[[
+            object], object]] = {}
         self._environment_properties_to_collect: List[PropertyToCollect] = []
 
         self.agent_properties_dict: Dict[str, Table] = {}
@@ -108,7 +112,8 @@ class DataCollector:
         :return:
         """
         if not hasattr(self.model, container_name):
-            raise AttributeError(f"Model has no agent container '{container_name}'")
+            raise AttributeError(
+                f"Model has no agent container '{container_name}'")
         if container_name not in self._agent_properties_to_collect.keys():
             self._agent_properties_to_collect[container_name] = []
         self._agent_properties_to_collect[container_name].append(
@@ -154,7 +159,8 @@ class DataCollector:
         """
         containers = []
         for container_name in self._agent_properties_to_collect.keys():
-            containers.append((container_name, getattr(self.model, container_name)))
+            containers.append(
+                (container_name, getattr(self.model, container_name)))
         return containers
 
     def collect_agent_properties(self, period: int):
@@ -187,7 +193,8 @@ class DataCollector:
         id_run, id_scenario = self.model.run_id_in_scenario, self.model.scenario.id
         if container_name not in self.agent_properties_dict:
             if len(container) == 0:
-                raise ValueError(f"No property collected for container {container}!")
+                raise ValueError(
+                    f"No property collected for container {container}!")
             agent_attrs_dict = container.random_sample(1)[0].__dict__
             props = {
                 "id_scenario": 0,
@@ -220,7 +227,8 @@ class DataCollector:
             "id_run": self.model.run_id_in_scenario,
             "period": period,
         }
-        env_dic.update(self.model.environment.to_dict(self.env_property_names()))
+        env_dic.update(self.model.environment.to_dict(
+            self.env_property_names()))
         if self.environment_properties_list is None:
             row_cls = TableRow.subcls_from_dict(env_dic)
             self.environment_properties_list = Table(row_cls)
@@ -300,18 +308,15 @@ class DataCollector:
 
         :return:
         """
-        # if is_pypy():
-        data.to_database(engine, table_name)
-        # else:
-        #     import pandas as pd
-
-        #     t00 = time.time()
-        #     s = [obj.__dict__ for obj in data.data]
-        #     t0 = time.time()
-
-        #     df = pd.DataFrame(s, columns=list(data.row_types.keys()))
-        #     t1 = time.time()
-        #     print(t1 - t0, t0 - t00)
+        if self.model.config.data_output_type == "csv":
+            base_path = os.path.join(self.model.config.output_folder,
+                                     self.model.config.project_name)
+            if not os.path.exists(base_path):
+                os.makedirs(base_path)
+            path = os.path.join(base_path, table_name+".csv")
+            data.to_file(path)
+        else:
+            data.to_database(engine, table_name)
 
     def save(self):
         """
@@ -324,11 +329,6 @@ class DataCollector:
         t0 = time.time()
         write_db_time = 0
         connection = self.model.create_db_conn()
-        print("config!", self.model.config.to_dict())
-        print(
-            "connection string!", self.model.config.database_config.connection_string()
-        )
-        print("opened connection!", connection, connection.db_name)
 
         _t = time.time()
         if self.environment_properties_list is not None:

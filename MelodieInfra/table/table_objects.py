@@ -197,7 +197,6 @@ class Table(TableBase, Generic[TableRowGeneric]):
 
     def to_database(self, engine, table_name: str):
         conn = DatabaseConnector(engine)
-        # cls = get_stat_cls(table_name, self.row_types)
         conn.write_table(table_name, self.row_types, [d.__dict__ for d in self.data])
 
     def to_file_with_codegen(self, file_name: str, encoding="utf-8"):

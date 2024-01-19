@@ -42,6 +42,8 @@ class MelodieException(Exception):
 
 
 class MelodieExceptions:
+    MLD_INTL_EXC: MelodieException
+
     class Assertions:
         @staticmethod
         def Type(name, obj, expected_type):
@@ -139,6 +141,24 @@ class MelodieExceptions:
                     1021,
                     f"There should be {expected_arg_num} for function {func}, "
                     f"but the actual argument number was {actual_arg_num}",
+                )
+
+        class Internal:
+            ID = 1030
+
+            @classmethod
+            def InternalError(cls):
+                """
+                Internal error of Melodie.
+                """
+                return MelodieException(
+                    cls.ID,
+                    (
+                        f"An internal error of Melodie occurred,"
+                        " and this kind of error is likely to be by Melodie internal logics."
+                        "Feel free to report this problem with detailed failure information at "
+                        "https://github.com/ABM4ALL/Melodie"
+                    ),
                 )
 
     class State:
@@ -464,3 +484,6 @@ class MelodieExceptions:
                     1701,
                     f"Chart name '{chart_name}' is already defined. All chart names are: {all_chart_names}",
                 )
+
+
+MelodieExceptions.MLD_INTL_EXC = MelodieExceptions.Program.Internal.InternalError()

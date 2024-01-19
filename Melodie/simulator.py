@@ -38,7 +38,7 @@ class BaseModellingManager(abc.ABC):
         config: Config,
         scenario_cls: Type["Scenario"],
         model_cls: Type["Model"],
-        data_loader_cls: Type[DataLoader] = None,
+        data_loader_cls: Optional[Type[DataLoader]] = None,
     ):
         self.config: Optional[Config] = config
         self.scenario_cls = scenario_cls
@@ -47,8 +47,9 @@ class BaseModellingManager(abc.ABC):
         self.scenarios: Optional[List["Scenario"]] = None
         self.df_loader_cls: Optional[Type[DataLoader]] = data_loader_cls
         self.data_loader: Optional[DataLoader] = None
-        if data_loader_cls is not None:
-            assert issubclass(data_loader_cls, DataLoader), data_loader_cls
+        if data_loader_cls is None:
+            self.df_loader_cls = DataLoader
+        assert issubclass(self.df_loader_cls, DataLoader), self.df_loader_cls
 
     def get_dataframe(self, table_name) -> "pd.DataFrame":
         """
@@ -101,6 +102,7 @@ class BaseModellingManager(abc.ABC):
         :param clear_db: If ``True``, this method will clear database.
         :return:
         """
+        assert self.config is not None, MelodieExceptions.MLD_INTL_EXC
         if clear_db:
             create_db_conn(self.config).clear_database()
         if self.df_loader_cls is not None:
@@ -109,8 +111,13 @@ class BaseModellingManager(abc.ABC):
             )
 
         self.scenarios = self.generate_scenarios()
+
         if self.scenarios is None or len(self.scenarios) == 0:
-            MelodieExceptions.Scenario.NoValidScenarioGenerated(self.scenarios)
+            raise MelodieExceptions.Scenario.NoValidScenarioGenerated(
+                self.scenarios)
+
+        for scenario in self.scenarios:
+            scenario._setup()
 
     @abc.abstractmethod
     def generate_scenarios(self):
@@ -283,9 +290,11 @@ class Simulator(BaseModellingManager):
             )
 
         self.pre_run()
-        t1 = time.time()
+
+        assert self.scenarios is not None, MelodieExceptions.MLD_INTL_EXC
         for scenario_index, scenario in enumerate(self.scenarios):
             for id_run in range(scenario.run_num):
+                # TODO: scenario.id_run = id_run might cause wrong result when parallel executing.
                 self.run_model(
                     self.config, scenario, id_run, self.model_cls, visualizer=None
                 )
@@ -311,6 +320,10 @@ class Simulator(BaseModellingManager):
 
         t1 = time.time()
         logger.info(f"Simulator start up cost: {t1 - t0}s")
+
+        assert self.visualizer is not None, MelodieExceptions.MLD_INTL_EXC
+        assert self.config is not None, MelodieExceptions.MLD_INTL_EXC
+
         while True:
             logger.info(
                 f"Visualizer interactive paramerters for this scenario are: {self.visualizer.scenario_param}"
@@ -324,6 +337,10 @@ class Simulator(BaseModellingManager):
             self.scenarios = None
             DBConn.table_dtypes = {}
             self.pre_run()
+            assert self.scenarios is not None, MelodieExceptions.MLD_INTL_EXC
+            logger.warning(
+                "When running visualizer, only the first scenario will be run."
+            )
             scenario = self.scenarios[0].copy()
             scenario.manager = self
 
@@ -500,7 +517,8 @@ class Simulator(BaseModellingManager):
                         first_run = True
                     else:
                         print("put task:", scenario.to_json())
-                        parallel_manager.put_task((id_run, scenario.to_json(), None))
+                        parallel_manager.put_task(
+                            (id_run, scenario.to_json(), None))
                         tasks_count += 1
 
             for i in range(tasks_count):

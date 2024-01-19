@@ -15,7 +15,6 @@ from MelodieInfra import (
     Table,
     TableInterface,
 )
-from MelodieInfra.table.table_base import TableBase
 from MelodieInfra.table.table_general import GeneralTable
 
 from .scenario_manager import Scenario
@@ -40,7 +39,7 @@ class DataFrameInfo:
         self,
         df_name: str,
         columns: Dict[str, "sqlalchemy.types"],
-        file_name: Optional[str] = None,
+        file_name: str = '',
         engine: str = "pandas",
     ):
         """
@@ -53,7 +52,7 @@ class DataFrameInfo:
         """
         self.df_name: str = df_name
         self.columns: Dict[str, "sqlalchemy.types"] = columns
-        self.file_name: Optional[str] = file_name
+        self.file_name: str = file_name
         assert engine in {"pandas", "melodie-table"}
         self.engine = engine if not DataFrameInfo.FORCE_PANDAS else "pandas"
 
@@ -74,7 +73,7 @@ class MatrixInfo:
     def __init__(
         self,
         mat_name: str,
-        data_type: "sqlalchemy.types",
+        data_type: Optional["sqlalchemy.types"] = None,
         file_name: Optional[str] = None,
     ):
         """
@@ -84,13 +83,14 @@ class MatrixInfo:
             generate the dataframe in the DataLoader.
         """
         self.mat_name: str = mat_name
-        self.data_type: sqlalchemy.types = data_type
+        self.data_type: "sqlalchemy.types" = data_type
         self.file_name: Optional[str] = file_name
 
     @property
     def dtype(self):
         import numpy as np
-
+        if self.data_type is None:
+            return None
         py_type = self.data_type.python_type
         if issubclass(py_type, int):
             return np.int64
@@ -130,8 +130,8 @@ class DataLoader:
         self.as_sub_worker = as_sub_worker
         self.config: Config = config
         self.scenario_cls = scenario_cls
-        self.registered_dataframes: Optional[Dict[str, "pd.DataFrame"]] = {}
-        self.registered_matrices: Optional[Dict[str, "np.ndarray"]] = {}
+        self.registered_dataframes: Dict[str, "pd.DataFrame"] = {}
+        self.registered_matrices: Dict[str, "np.ndarray"] = {}
         self.manager = manager
         self.manager.data_loader = self
         self.setup()
@@ -145,8 +145,6 @@ class DataLoader:
         """
         Register a pandas dataframe.
 
-        TODO! register data frame to database!!!
-
         :param table_name: Name of dataframe
         :param data_frame: A pandas dataframe
         :param data_types: A dictionary describing data types.
@@ -154,17 +152,6 @@ class DataLoader:
         """
         if data_types is None:
             data_types = {}
-        if not self.as_sub_worker:
-            DBConn.register_dtypes(table_name, data_types)
-            create_db_conn(self.config).write_dataframe(
-                table_name, data_frame, data_types=data_types, if_exists="replace"
-            )
-        self.registered_dataframes[table_name] = create_db_conn(
-            self.config
-        ).read_dataframe(
-            table_name,
-            df_type="melodie-table" if isinstance(data_frame, TableBase) else "pandas",
-        )
         self.registered_dataframes[table_name] = data_frame
 
     def _calc_hash(self, filename: str) -> str:
@@ -194,7 +181,7 @@ class DataLoader:
     def _cache_dir(self):
         return os.path.join(self.config.temp_folder, "cache", "pd-df")
 
-    def _load_dataframe_cached(self, file_path_abs: str) -> None:
+    def _load_dataframe_cached(self, file_path_abs: str) -> "pd.DataFrame":
         """
         Load dataframe from file
         """
@@ -222,7 +209,7 @@ class DataLoader:
                 cloudpickle.dump(table, f)
         return table
 
-    def load_dataframe(self, df_info: "DataFrameInfo") -> None:
+    def load_dataframe(self, df_info: "DataFrameInfo") -> "pd.DataFrame":
         """
         Register static table. The static table will be copied into database.
 
@@ -234,38 +221,37 @@ class DataLoader:
         table: Optional["pd.DataFrame"]
 
         MelodieExceptions.Data.TableNameInvalid(df_info.df_name)
-        file_path_abs = os.path.join(self.config.input_folder, df_info.file_name)
-        if df_info.engine == "pandas":
-            table = self._load_dataframe_cached(file_path_abs)
-            df_info.check_column_names(list(table.columns))
-        else:
-            table = GeneralTable.from_file(file_path_abs, df_info.columns)
-        self.registered_dataframes[df_info.df_name] = table
-        if not self.as_sub_worker:
-            DBConn.register_dtypes(df_info.df_name, df_info.columns)
-            create_db_conn(self.config).write_dataframe(
-                df_info.df_name,
-                table,
-                data_types=df_info.columns,
-                if_exists="replace",
-            )
+        assert df_info.file_name is not None
+        file_path_abs = os.path.join(
+            self.config.input_folder, df_info.file_name)
+        # if df_info.engine == "pandas":
+        table = self._load_dataframe_cached(file_path_abs)
 
-    def load_matrix(self, matrix_info: "MatrixInfo") -> None:
+        self.registered_dataframes[df_info.df_name] = table
+
+        return table
+
+    def load_matrix(self, matrix_info: "MatrixInfo") -> "np.ndarray":
         """
         Register static matrix.
 
         :return: None
         """
+        assert matrix_info.file_name is not None
         _, ext = os.path.splitext(matrix_info.file_name)
+        file_path_abs = os.path.join(
+            self.config.input_folder, matrix_info.file_name
+        )
         if ext in {".xls", ".xlsx"}:
-            file_path_abs = os.path.join(
-                self.config.input_folder, matrix_info.file_name
-            )
             table: "pd.DataFrame" = pd.read_excel(file_path_abs, header=None)
-            array = table.to_numpy(matrix_info.dtype, copy=True)
+        elif ext in {".csv"}:
+            table: "pd.DataFrame" = pd.read_csv(file_path_abs, header=None)
         else:
-            raise NotImplementedError(f"Cannot load file to matrix {ext}")
+            raise NotImplementedError(
+                f"Cannot load file with extension {ext} to matrix.")
+        array = table.to_numpy(matrix_info.dtype, copy=True)
         self.registered_matrices[matrix_info.mat_name] = array
+        return array
 
     def dataframe_generator(
         self,
@@ -292,14 +278,14 @@ class DataLoader:
         """
         scenarios_dataframe = self.registered_dataframes.get(df_name)
         if scenarios_dataframe is None:
-            MelodieExceptions.Data.TableNotFound(df_name, self.registered_dataframes)
+            MelodieExceptions.Data.TableNotFound(
+                df_name, self.registered_dataframes)
         scenarios_dataframe = TableInterface(scenarios_dataframe)
         cols = [col for col in scenarios_dataframe.columns]
         scenarios: List[Scenario] = []
         for i, row in enumerate(scenarios_dataframe.iter_dicts()):
             scenario = self.scenario_cls()
             scenario.manager = self.manager
-            scenario.setup()
 
             for col_name in cols:
                 value = row[col_name]
@@ -307,7 +293,8 @@ class DataLoader:
 
             scenarios.append(scenario)
         if len(scenarios) == 0:
-            raise MelodieExceptions.Scenario.NoValidScenarioGenerated(scenarios)
+            raise MelodieExceptions.Scenario.NoValidScenarioGenerated(
+                scenarios)
         return scenarios
 
     def generate_scenarios(self, manager_type: str) -> List["Scenario"]:
@@ -319,6 +306,7 @@ class DataLoader:
         """
         if manager_type not in {"simulator", "trainer", "calibrator"}:
             MelodieExceptions.Program.Variable.VariableNotInSet(
-                "manager_type", manager_type, {"simulator", "trainer", "calibrator"}
+                "manager_type", manager_type, {
+                    "simulator", "trainer", "calibrator"}
             )
         return self.generate_scenarios_from_dataframe(f"{manager_type}_scenarios")

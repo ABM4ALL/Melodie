@@ -1,5 +1,5 @@
 import os
-from typing import Any, Dict, Optional, TYPE_CHECKING
+from typing import Any, Dict, Literal, Optional, TYPE_CHECKING
 
 from MelodieInfra.db.base import SQLITE_FILE_SUFFIX
 from MelodieInfra.db.db_configs import (
@@ -23,6 +23,7 @@ class Config:
         input_folder: str,
         output_folder: str,
         visualizer_entry: str = "",
+        data_output_type:  Literal["csv", "sqlite"] = "csv",
         database_config: Optional["DBConfigTypes"] = None,
         **kwargs,
     ):
@@ -35,10 +36,12 @@ class Config:
         self.studio_port = kwargs.get("studio_port", 8089)
         self.visualizer_port = kwargs.get("visualizer_port", 8765)
         self.parallel_port = kwargs.get("parallel_port", 12233)
-
+        self.data_output_type = data_output_type
+        
         if database_config is None:
             self.database_config = SQLiteDBConfig(
-                os.path.join(self.output_folder, self.project_name + SQLITE_FILE_SUFFIX)
+                os.path.join(self.output_folder,
+                             self.project_name + SQLITE_FILE_SUFFIX)
             )
         else:
             assert isinstance(database_config, BaseMelodieDBConfig), (

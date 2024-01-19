@@ -131,7 +131,7 @@ def sub_routine_trainer(
             chrom, d, agent_params = worker.get_task()
             logger.debug(f"processor {proc_id} got chrom {chrom}")
             scenario = scenario_cls()
-            scenario.setup()
+            scenario._setup()
             scenario.set_params(d)
             model = model_cls(config, scenario)
             scenario.manager = trainer
@@ -205,7 +205,7 @@ def sub_routine_calibrator(
             logger.debug(f"processor {proc_id} got chrom {chrom}")
             scenario: Scenario = scenario_cls()
             scenario.manager = calibrator
-            scenario.setup()
+            scenario._setup()
             scenario.set_params(d)
             scenario.set_params(env_params)
             model = model_cls(config, scenario)
@@ -278,7 +278,7 @@ def sub_routine_simulator(
             logger.debug(f"processor {proc_id} got id_run {id_run}")
             scenario: Scenario = scenario_cls()
             scenario.manager = simulator
-            scenario.setup()
+            scenario._setup()
             scenario.set_params(d, asserts_key_exist=False)
             # scenario.set_params(env_params)
             model = model_cls(config, scenario, run_id_in_scenario=id_run)

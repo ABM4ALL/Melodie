@@ -32,7 +32,7 @@ def create_index_setter_pattern(index):
 
 def test_array_params():
     scenario = TestScenario(0)
-    scenario.setup()
+    scenario._setup()
     p1 = IntParam(
         "0", (0, 20), lambda scenario: scenario.e123[0], create_index_setter_pattern(0)
     )
@@ -81,7 +81,7 @@ def test_array_params():
 def test_param_inheritance():
     int_param = IntParam("a", (0, 200))
     scenario = TestScenario(0)
-    scenario.setup()
+    scenario._setup()
     int_param.extract_value(scenario)
 
     print(int_param.value)

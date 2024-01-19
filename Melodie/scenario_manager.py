@@ -1,7 +1,10 @@
 import copy
 import logging
+import os
 import pickle
 from typing import List, Optional, Union, TYPE_CHECKING
+
+import numpy as np
 
 from MelodieInfra import MelodieExceptions
 from .element import Element
@@ -29,6 +32,7 @@ class Scenario(Element):
         self._parameters = []
         self.manager: Union["Calibrator", "Simulator", None] = None
         self.id = id_scenario
+        self.id_run = -1
         self.run_num = 1
         self.period_num = 0
 
@@ -46,11 +50,53 @@ class Scenario(Element):
             parameter.init = getattr(self, parameter.name)
         return new_scenario
 
+    def load(self):
+        """
+        This method loads should load data into the scenario as its properties.
+        """
+        pass
+
+    def _setup(self):
+        self.load()
+        self.setup()
+
     def setup(self):
         """
         Setup method, be sure to inherit it on the custom scenario class.
         """
         pass
+
+    def load_dataframe(self, df_info: Union[str, "DataFrameInfo"]):
+        """
+        Load a data frame from table file.
+
+        :df_info: The file name of that containing the data frame, or pass a `DataFrameInfo`
+        """
+        from .data_loader import DataFrameInfo
+
+        assert self.manager is not None, MelodieExceptions.MLD_INTL_EXC
+        assert self.manager.data_loader is not None, MelodieExceptions.MLD_INTL_EXC
+        if isinstance(df_info, str):
+            info = DataFrameInfo(os.path.basename(df_info), {}, df_info)
+            return self.manager.data_loader.load_dataframe(info)
+        else:
+            return self.manager.data_loader.load_dataframe(df_info)
+
+    def load_matrix(self, mat_info: Union[str, "MatrixInfo"]) -> np.ndarray:
+        """
+        Load a matrix from table file.
+
+        :mat_info: The file name of that containing the matrix, or pass a `DataFrameInfo`
+        """
+        from .data_loader import MatrixInfo
+
+        assert self.manager is not None, MelodieExceptions.MLD_INTL_EXC
+        assert self.manager.data_loader is not None, MelodieExceptions.MLD_INTL_EXC
+        if isinstance(mat_info, str):
+            info = MatrixInfo(os.path.basename(mat_info), None, mat_info)
+            return self.manager.data_loader.load_matrix(info)
+        else:
+            return self.manager.data_loader.load_matrix(mat_info)
 
     def to_dict(self):
         """
