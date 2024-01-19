@@ -3,7 +3,7 @@ import os
 import time
 from typing import Callable, List, TYPE_CHECKING, Dict, Tuple, Any, Optional, Type
 import pandas as pd
-
+import collections
 import sqlalchemy
 
 from MelodieInfra import (
@@ -205,7 +205,8 @@ class DataCollector:
             props.update({k: agent_attrs_dict[k] for k in prop_names})
 
             row_cls = TableRow.subcls_from_dict(props)
-            self.agent_properties_dict[container_name] = Table(row_cls)
+            self.agent_properties_dict[container_name] = Table(
+                row_cls, ['id_scenario', 'id_run', 'period', 'id'] + prop_names)
             self._agent_properties_collectors[
                 container_name
             ] = objs_to_table_row_vectorizer(row_cls, prop_names)
@@ -231,7 +232,8 @@ class DataCollector:
             self.env_property_names()))
         if self.environment_properties_list is None:
             row_cls = TableRow.subcls_from_dict(env_dic)
-            self.environment_properties_list = Table(row_cls)
+            self.environment_properties_list = Table(
+                row_cls, ['id_scenario', 'id_run', 'period']+self.env_property_names())
         self.environment_properties_list.append_from_dicts([env_dic])
 
     @property
@@ -309,8 +311,7 @@ class DataCollector:
         :return:
         """
         if self.model.config.data_output_type == "csv":
-            base_path = os.path.join(self.model.config.output_folder,
-                                     self.model.config.project_name)
+            base_path = self.model.config.output_tables_path()
             if not os.path.exists(base_path):
                 os.makedirs(base_path)
             path = os.path.join(base_path, table_name+".csv")

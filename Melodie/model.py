@@ -121,6 +121,11 @@ class Model:
         """
         pass
 
+    def load(self):
+        """
+        An initialization method for injecting data.
+        """
+
     def setup(self):
         """
         General method for model setup, which is called after ``Model.create()``
@@ -300,6 +305,7 @@ class Model:
 
         :return:
         """
+        self.load()
         self.create()
         self.setup()
         for component_to_init in self.initialization_queue:

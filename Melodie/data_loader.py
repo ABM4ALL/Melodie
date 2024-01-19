@@ -286,7 +286,7 @@ class DataLoader:
         for i, row in enumerate(scenarios_dataframe.iter_dicts()):
             scenario = self.scenario_cls()
             scenario.manager = self.manager
-
+            scenario._setup()
             for col_name in cols:
                 value = row[col_name]
                 scenario.__dict__[col_name] = value

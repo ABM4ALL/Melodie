@@ -1,3 +1,4 @@
+import os
 from typing import (
     Any,
     Callable,
@@ -42,8 +43,8 @@ class TableRow(RowBase):
             "_TMP_ROW",
             (TableRow,),
             {
-                k: ColumnMeta(k, Column(py_types_to_sa_types[type(v)]()))
-                for k, v in dic.items()
+                k: ColumnMeta(k, Column(py_types_to_sa_types[type(dic[k])]()))
+                for k in dic.keys()
             },
         )
 
@@ -60,7 +61,8 @@ class TableRow(RowBase):
 
     @classmethod
     def get_aliases(cls):
-        attr_names = list(cls.__dict__.keys()) + list(cls.get_annotations().keys())
+        attr_names = list(cls.__dict__.keys()) + \
+            list(cls.get_annotations().keys())
         aliases = {}
         for attr_name in attr_names:
             if hasattr(cls, attr_name) and isinstance(
@@ -77,7 +79,8 @@ class TableRow(RowBase):
         """
         Get the datatype represented in database.
         """
-        attr_names = list(cls.__dict__.keys()) + list(cls.get_annotations().keys())
+        attr_names = list(cls.__dict__.keys()) + \
+            list(cls.get_annotations().keys())
         attr_names = [
             attr_name
             for attr_name in list(set(attr_names))
@@ -89,7 +92,8 @@ class TableRow(RowBase):
             #     attr_name in cls.get_annotations()
             # ), f'Attribute "{attr_name}" of class {cls.__name__} must be annotated!'
             if not hasattr(cls, attr_name):
-                dtype_ = py_types_to_sa_types[cls.get_annotations()[attr_name]]()
+                dtype_ = py_types_to_sa_types[cls.get_annotations()[
+                    attr_name]]()
                 dtype = Column(dtype_)
             else:
                 meta = getattr(cls, attr_name)
@@ -97,7 +101,8 @@ class TableRow(RowBase):
                 if meta.dtype is not None:
                     dtype = meta.dtype
                 else:
-                    dtype_ = py_types_to_sa_types[cls.get_annotations()[attr_name]]()
+                    dtype_ = py_types_to_sa_types[cls.get_annotations()[
+                        attr_name]]()
                     dtype = Column(dtype_)
             assert isinstance(dtype, Column)
             col_dtypes[attr_name] = dtype
@@ -132,24 +137,32 @@ TableRowGeneric = TypeVar("TableRowGeneric")
 class Table(TableBase, Generic[TableRowGeneric]):
     data: List[TableRowGeneric]
 
-    def __init__(self, row_type: Type[TableRowGeneric]) -> None:
+    def __init__(self, row_type: Type[TableRowGeneric], columns_order: Optional[List[str]] = None) -> None:
         super().__init__()
         self.row_cls: Type[TableRow] = row_type
         self._db_model_cls: Type = None
         self.row_types: Dict[str, Column] = {}
 
+        column_names = []
         if callable(row_type) and issubclass(row_type, TableRow):
             self.row_types = row_type.get_datatypes()
-            for v in self.row_types.values():
+            for k, v in self.row_types.items():
                 assert isinstance(v, Column), v
+                column_names.append(k)
         else:
             raise NotImplementedError(
                 f"Cannot recognize table row type {type(row_type)}"
             )
+        if columns_order is not None:
+            self.columns_order = columns_order
+            assert set([row for row in self.row_types.keys()]) == set(
+                self.columns_order), f"columns_order {self.columns_order} should contain the same names as row_types: {self.row_types.keys()}"
+        else:
+            self.columns_order = [row for row in self.row_types.keys()]
 
     @property
     def columns(self):
-        return [row for row in self.row_types.keys()]
+        return self.columns_order
 
     def clear(self):
         self.data = []
@@ -182,22 +195,27 @@ class Table(TableBase, Generic[TableRowGeneric]):
         aliases = table.row_cls.get_aliases()
         for row_data in rows_iter:
             table_row_obj: TableRow = table.row_cls.from_dict(
-                table, {col: row_data[i] for i, col in enumerate(columns)}, aliases
+                table, {col: row_data[i]
+                        for i, col in enumerate(columns)}, aliases
             )
             table.data.append(table_row_obj)
         return table
 
     def to_file(self, file_name: str, encoding="utf-8"):
-        writer = TableWriter(file_name, text_encoding=encoding).write()
+        is_new_file = True if not os.path.exists(file_name) else False
+        writer = TableWriter(file_name, text_encoding=encoding,
+                             append=not is_new_file).write()
         headers = self.columns
-        writer.send(headers)
+        if is_new_file:
+            writer.send(headers)
         for row_data in self.data:
             writer.send([row_data.__dict__[k] for k in headers])
         writer.close()
 
     def to_database(self, engine, table_name: str):
         conn = DatabaseConnector(engine)
-        conn.write_table(table_name, self.row_types, [d.__dict__ for d in self.data])
+        conn.write_table(table_name, self.row_types, [
+                         d.__dict__ for d in self.data])
 
     def to_file_with_codegen(self, file_name: str, encoding="utf-8"):
         writer = TableWriter(file_name, text_encoding=encoding).write()

@@ -5,6 +5,7 @@ import abc
 import copy
 import logging
 import os
+import shutil
 import threading
 import time
 from multiprocessing import Pool
@@ -40,7 +41,7 @@ class BaseModellingManager(abc.ABC):
         model_cls: Type["Model"],
         data_loader_cls: Optional[Type[DataLoader]] = None,
     ):
-        self.config: Optional[Config] = config
+        self.config: Config = config
         self.scenario_cls = scenario_cls
         self.model_cls = model_cls
 
@@ -94,7 +95,15 @@ class BaseModellingManager(abc.ABC):
 
         self.scenarios = self.generate_scenarios()
 
-    def pre_run(self, clear_db=True):
+    def clear_output_tables(self):
+        """
+        Clear all output tables
+        """
+        output_path = self.config.output_tables_path()
+        shutil.rmtree(output_path)
+        os.mkdir(output_path)
+
+    def pre_run(self, clear_output_data=True):
         """
         `pre_run` means this function should be executed before ``run``, to initialize the scenario
         parameters.
@@ -103,8 +112,10 @@ class BaseModellingManager(abc.ABC):
         :return:
         """
         assert self.config is not None, MelodieExceptions.MLD_INTL_EXC
-        if clear_db:
+        if clear_output_data:
             create_db_conn(self.config).clear_database()
+            self.clear_output_tables()
+
         if self.df_loader_cls is not None:
             self.data_loader: DataLoader = self.df_loader_cls(
                 self, self.config, self.scenario_cls
@@ -116,11 +127,8 @@ class BaseModellingManager(abc.ABC):
             raise MelodieExceptions.Scenario.NoValidScenarioGenerated(
                 self.scenarios)
 
-        for scenario in self.scenarios:
-            scenario._setup()
-
     @abc.abstractmethod
-    def generate_scenarios(self):
+    def generate_scenarios(self) -> List[Scenario]:
         """
         Abstract method for generation of scenarios.
         """

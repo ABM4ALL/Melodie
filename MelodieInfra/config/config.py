@@ -37,7 +37,7 @@ class Config:
         self.visualizer_port = kwargs.get("visualizer_port", 8765)
         self.parallel_port = kwargs.get("parallel_port", 12233)
         self.data_output_type = data_output_type
-        
+
         if database_config is None:
             self.database_config = SQLiteDBConfig(
                 os.path.join(self.output_folder,
@@ -91,3 +91,12 @@ class Config:
             database_config=db_conf,
         )
         return c
+
+    def output_tables_path(self):
+        """
+        Get the path to store the tables output from the model. It is `data/output/{project_name}`
+        
+        If output to database and using sqlite, the output directory will be `data/output`
+        """
+        return os.path.join(self.output_folder,
+                            self.project_name)
