@@ -3,6 +3,7 @@ import logging
 import os
 import shutil
 from typing import Optional, Dict, List, Union, Callable, Type, TYPE_CHECKING
+import numpy as np
 
 import sqlalchemy
 import cloudpickle
@@ -21,6 +22,19 @@ from .scenario_manager import Scenario
 from .table_generator import DataFrameGenerator
 
 logger = logging.getLogger(__name__)
+
+
+def first_char_upper(s: str) -> str:
+    if len(s) >= 1:
+        return s[0].upper()+s[1:]
+    else:
+        return s
+
+# TODO: move this function to utils
+
+
+def underline_to_camel(s):
+    return ''.join(first_char_upper(word) for word in s.split('_'))
 
 
 class DataFrameInfo:
@@ -134,7 +148,50 @@ class DataLoader:
         self.registered_matrices: Dict[str, "np.ndarray"] = {}
         self.manager = manager
         self.manager.data_loader = self
+        self.load_scenarios()
         self.setup()
+
+    def load_scenarios(self):
+        for file_name in os.listdir(self.config.input_folder):
+            camel_case = underline_to_camel(os.path.splitext(file_name)[0])
+
+            if camel_case in ("SimulatorScenarios", "TrainerScenarios", "CalibratorScenarios"):
+                self.load_dataframe(file_name, camel_case)
+
+    def load_dataframe(self, df_info: Union[str, "DataFrameInfo"], df_name=""):
+        """
+        Load a data frame from table file.
+
+        :df_info: The file name of that containing the data frame, or pass a `DataFrameInfo`
+        """
+        from .data_loader import DataFrameInfo
+
+        assert self.manager is not None, MelodieExceptions.MLD_INTL_EXC
+        assert self.manager.data_loader is not None, MelodieExceptions.MLD_INTL_EXC
+        if isinstance(df_info, str):
+            df_name = df_name if df_name != "" else os.path.basename(df_info)
+            info = DataFrameInfo(df_name, {}, df_info)
+            return self._load_dataframe(info)
+        else:
+            return self._load_dataframe(df_info)
+
+    def load_matrix(self, mat_info: Union[str, "MatrixInfo"], mat_name="") -> np.ndarray:
+        """
+        Load a matrix from table file.
+
+        :mat_info: The file name of that containing the matrix, or pass a `DataFrameInfo`
+        """
+        from .data_loader import MatrixInfo
+
+        assert self.manager is not None, MelodieExceptions.MLD_INTL_EXC
+        assert self.manager.data_loader is not None, MelodieExceptions.MLD_INTL_EXC
+        if isinstance(mat_info, str):
+            mat_name = mat_name if mat_name != "" else os.path.basename(
+                mat_info)
+            info = MatrixInfo(mat_name, None, mat_info)
+            return self.manager.data_loader._load_matrix(info)
+        else:
+            return self.manager.data_loader._load_matrix(mat_info)
 
     def setup(self):
         pass
@@ -209,7 +266,7 @@ class DataLoader:
                 cloudpickle.dump(table, f)
         return table
 
-    def load_dataframe(self, df_info: "DataFrameInfo") -> "pd.DataFrame":
+    def _load_dataframe(self, df_info: "DataFrameInfo") -> "pd.DataFrame":
         """
         Register static table. The static table will be copied into database.
 
@@ -219,24 +276,27 @@ class DataLoader:
         """
 
         table: Optional["pd.DataFrame"]
-
-        MelodieExceptions.Data.TableNameInvalid(df_info.df_name)
+        if df_info.df_name in self.registered_dataframes:
+            return self.registered_dataframes[df_info.df_name]
         assert df_info.file_name is not None
         file_path_abs = os.path.join(
             self.config.input_folder, df_info.file_name)
-        # if df_info.engine == "pandas":
+
         table = self._load_dataframe_cached(file_path_abs)
 
         self.registered_dataframes[df_info.df_name] = table
 
         return table
 
-    def load_matrix(self, matrix_info: "MatrixInfo") -> "np.ndarray":
+    def _load_matrix(self, matrix_info: "MatrixInfo") -> "np.ndarray":
         """
         Register static matrix.
 
         :return: None
         """
+        if matrix_info.mat_name in self.registered_matrices:
+            return self.registered_matrices[matrix_info.mat_name]
+
         assert matrix_info.file_name is not None
         _, ext = os.path.splitext(matrix_info.file_name)
         file_path_abs = os.path.join(
@@ -255,7 +315,7 @@ class DataLoader:
 
     def dataframe_generator(
         self,
-        df_info: DataFrameInfo,
+        df_info: Union[str, DataFrameInfo],
         rows_in_scenario: Union[int, Callable[[Scenario], int]],
     ) -> DataFrameGenerator:
         """
@@ -304,9 +364,18 @@ class DataLoader:
         :param manager_type: The type of scenario manager, a ``str`` in "simulator", "trainer" or "calibrator".
         :return: A list of scenarios.
         """
-        if manager_type not in {"simulator", "trainer", "calibrator"}:
-            MelodieExceptions.Program.Variable.VariableNotInSet(
+        if manager_type not in {"Simulator", "Trainer", "Calibrator"}:
+            raise MelodieExceptions.Program.Variable.VariableNotInSet(
                 "manager_type", manager_type, {
-                    "simulator", "trainer", "calibrator"}
+                    "Simulator", "Trainer", "Calibrator"}
             )
-        return self.generate_scenarios_from_dataframe(f"{manager_type}_scenarios")
+
+        df_name = f"{manager_type}Scenarios"
+
+        if df_name in self.registered_dataframes:
+            return self.generate_scenarios_from_dataframe(df_name)
+        elif underline_to_camel(df_name) in self.registered_dataframes:
+            return self.generate_scenarios_from_dataframe(underline_to_camel(df_name))
+        else:
+            raise NotImplementedError(
+                f"{manager_type}/{underline_to_camel(df_name)} is not supported!")

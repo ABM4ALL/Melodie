@@ -98,5 +98,4 @@ class Config:
         
         If output to database and using sqlite, the output directory will be `data/output`
         """
-        return os.path.join(self.output_folder,
-                            self.project_name)
+        return os.path.join(self.output_folder)

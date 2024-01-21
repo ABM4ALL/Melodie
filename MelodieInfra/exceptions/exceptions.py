@@ -121,7 +121,7 @@ class MelodieExceptions:
                 """
                 return MelodieException(
                     1012,
-                    f"Variable {var_desc} is {var_value}, not in allowed set {allowed_set} ",
+                    f"Variable {var_desc} is {repr(var_value)}, not in allowed set {allowed_set} ",
                 )
 
         class Function:

@@ -1,7 +1,7 @@
 import logging
 import os
 import time
-from typing import Callable, List, TYPE_CHECKING, Dict, Tuple, Any, Optional, Type
+from typing import Callable, Generic, List, TYPE_CHECKING, Dict, NewType, Tuple, Any, Optional, Type, TypeVar, Union, cast
 import pandas as pd
 import collections
 import sqlalchemy
@@ -11,6 +11,7 @@ from MelodieInfra import (
     MelodieExceptions,
     is_pypy,
     Table,
+    GeneralTable,
     TableRow,
     objs_to_table_row_vectorizer,
 )
@@ -20,6 +21,7 @@ logger = logging.getLogger(__name__)
 
 if TYPE_CHECKING:
     from Melodie import Model, Scenario, BaseAgentContainer, AgentList
+    M = TypeVar('M', bound=Model)
 
 
 class PropertyToCollect:
@@ -34,6 +36,10 @@ def vectorize_template(obj):
 """
 
 
+def underline_to_camel(s: str):
+    return ''.join(word.capitalize() for word in s.split('_'))
+
+
 def vectorizer(attrs):
     code = VEC_TEMPLATE.format(exprs=",".join(
         [f'obj["{attr}"]' for attr in attrs]))
@@ -45,7 +51,7 @@ def vectorizer(attrs):
 vectorizers = {}
 
 
-class DataCollector:
+class DataCollector():
     """
     Data Collector collects data in the model.
 
@@ -56,6 +62,7 @@ class DataCollector:
     Before the model running finished, the DataCollector dumps data to dataframe, and save to
     database.
     """
+    _CORE_PROPERTIES_ = ['id_scenario', 'id_run', 'period']
 
     def __init__(self, target="sqlite"):
         """
@@ -75,6 +82,9 @@ class DataCollector:
 
         self.agent_properties_dict: Dict[str, Table] = {}
         self.environment_properties_list: Dict[str, Table] = None
+        self._custom_collectors: Dict[str,
+                                      Tuple[Callable[[Model], Dict[str, Any]], List[str]]] = {}
+        self._custom_collected_data: Dict[str, GeneralTable] = {}
 
         self._time_elapsed = 0
 
@@ -132,6 +142,18 @@ class DataCollector:
             PropertyToCollect(property_name, as_type)
         )
 
+    def add_custom_collector(self, table_name: str, row_collector:
+                             "Callable[[M], Union[Dict[str, Any], List[Dict[str, Any]]]]", columns: List[str]):
+        """
+        Add a custom data collector to generate a standalone table.
+
+        :param table_name: The name of table storing the data collected.
+        :param row_collector: A callable function, returning a `dict` computed from `Model` forming one 
+            row in the table.
+        """
+        self._custom_collectors[table_name] = (
+            cast(Any, row_collector), columns)
+
     def env_property_names(self) -> List[str]:
         """
         Get the environment property names to collect
@@ -177,6 +199,33 @@ class DataCollector:
                 container_name, agent_property_names[container_name], container, period
             )
 
+    def collect_custom_properties(self, period: int):
+        """
+        Collect custom properties by calling custom callbacks.
+
+        :param period: Current simulation step
+        :return: None
+        """
+        for collector_name in self._custom_collectors.keys():
+            self.collect_single_custom_property(collector_name, period)
+
+    def collect_single_custom_property(self, collector_name: str, period: int):
+        collector_func, column_names = self._custom_collectors[collector_name]
+        if collector_name not in self._custom_collected_data:
+            self._custom_collected_data[collector_name] = GeneralTable(
+                {k: None for k in column_names}, column_names)
+        assert self.model is not None
+        data = collector_func(self.model)
+        if isinstance(data, list):
+            for item in data:
+                assert isinstance(item, dict)
+                self._custom_collected_data[collector_name].data.append(item)
+        elif isinstance(data, dict):
+            self._custom_collected_data[collector_name].data.append(data)
+        else:
+            raise NotImplementedError(
+                "Data collector function should return a list or dict")
+
     def append_agent_properties_by_records(
         self,
         container_name: str,
@@ -190,6 +239,7 @@ class DataCollector:
 
         :return: None
         """
+        assert self.model is not None
         id_run, id_scenario = self.model.run_id_in_scenario, self.model.scenario.id
         if container_name not in self.agent_properties_dict:
             if len(container) == 0:
@@ -206,7 +256,7 @@ class DataCollector:
 
             row_cls = TableRow.subcls_from_dict(props)
             self.agent_properties_dict[container_name] = Table(
-                row_cls, ['id_scenario', 'id_run', 'period', 'id'] + prop_names)
+                row_cls, self._CORE_PROPERTIES_+['id'] + prop_names)
             self._agent_properties_collectors[
                 container_name
             ] = objs_to_table_row_vectorizer(row_cls, prop_names)
@@ -223,6 +273,9 @@ class DataCollector:
             props_list.append(row)
 
     def append_environment_properties(self, period: int):
+        assert self.model is not None
+        assert self.model.environment is not None
+        assert self.model.scenario is not None
         env_dic = {
             "id_scenario": self.model.scenario.id,
             "id_run": self.model.run_id_in_scenario,
@@ -233,7 +286,7 @@ class DataCollector:
         if self.environment_properties_list is None:
             row_cls = TableRow.subcls_from_dict(env_dic)
             self.environment_properties_list = Table(
-                row_cls, ['id_scenario', 'id_run', 'period']+self.env_property_names())
+                row_cls, self._CORE_PROPERTIES_+self.env_property_names())
         self.environment_properties_list.append_from_dicts([env_dic])
 
     @property
@@ -263,6 +316,7 @@ class DataCollector:
         t0 = time.time()
         self.append_environment_properties(period)
         self.collect_agent_properties(period)
+        self.collect_custom_properties(period)
         t1 = time.time()
 
         self._time_elapsed += t1 - t0
@@ -304,7 +358,7 @@ class DataCollector:
         container_data = self.agent_properties_dict[agent_container_name]
         return list(filter(lambda item: item["id"] == agent_id, container_data))
 
-    def _write_list_to_table(self, engine, table_name: str, data: Table):
+    def _write_list_to_table(self, engine, table_name: str, data: Union[Table, GeneralTable]):
         """
         Write a list of dict into database.
 
@@ -338,11 +392,6 @@ class DataCollector:
                 DBConn.ENVIRONMENT_RESULT_TABLE,
                 self.environment_properties_list,
             )
-            # self._write_list_to_table(
-            #     connection.get_engine(),
-            #     DBConn.ENVIRONMENT_RESULT_TABLE,
-            #     self.environment_properties_list,
-            # )
         self.environment_properties_list = None
         write_db_time += time.time() - _t
 
@@ -350,10 +399,21 @@ class DataCollector:
             _t = time.time()
             self._write_list_to_table(
                 connection.get_engine(),
-                container_name + "_result",
+                # "agent_list" -> "AgentList"
+                # "agent_list" -> "Agent_list"
+                # "Agent"
+                "Result_"+underline_to_camel(container_name),
                 self.agent_properties_dict[container_name],
             )
-            # print("wrote agent properties!", container_name+"_result")
+            write_db_time += time.time() - _t
+
+        for custom_table_name in self._custom_collected_data.keys():
+            _t = time.time()
+            self._write_list_to_table(
+                connection.get_engine(),
+                custom_table_name,
+                self._custom_collected_data[custom_table_name]
+            )
             write_db_time += time.time() - _t
         self.agent_properties_dict = {}
 

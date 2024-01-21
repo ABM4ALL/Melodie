@@ -137,7 +137,7 @@ TableRowGeneric = TypeVar("TableRowGeneric")
 class Table(TableBase, Generic[TableRowGeneric]):
     data: List[TableRowGeneric]
 
-    def __init__(self, row_type: Type[TableRowGeneric], columns_order: Optional[List[str]] = None) -> None:
+    def __init__(self, row_type: Type[TableRowGeneric], columns: Optional[List[str]] = None) -> None:
         super().__init__()
         self.row_cls: Type[TableRow] = row_type
         self._db_model_cls: Type = None
@@ -153,16 +153,16 @@ class Table(TableBase, Generic[TableRowGeneric]):
             raise NotImplementedError(
                 f"Cannot recognize table row type {type(row_type)}"
             )
-        if columns_order is not None:
-            self.columns_order = columns_order
+        if columns is not None:
+            self._columns = columns
             assert set([row for row in self.row_types.keys()]) == set(
-                self.columns_order), f"columns_order {self.columns_order} should contain the same names as row_types: {self.row_types.keys()}"
+                self._columns), f"columns_order {self._columns} should contain the same names as row_types: {self.row_types.keys()}"
         else:
-            self.columns_order = [row for row in self.row_types.keys()]
+            self._columns = [row for row in self.row_types.keys()]
 
     @property
     def columns(self):
-        return self.columns_order
+        return self._columns
 
     def clear(self):
         self.data = []

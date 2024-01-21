@@ -70,7 +70,8 @@ class DCTestModel(Model):
             TestAgent, 20, params_df_2)
         self.agent_list2.setup_agents(20, params_df_2)
         self.environment = self.create_environment(TestEnv)
-        self.data_collector = self.create_data_collector(DataCollector1)
+        self.data_collector: DataCollector1[DCTestModel] = self.create_data_collector(
+            DataCollector1)
 
 
 class Simulator4Test(Simulator):
@@ -100,6 +101,16 @@ class DataCollector1(DataCollector):
         self.add_agent_property("agent_list1", "a")
         self.add_agent_property("agent_list2", "b")
 
+        def get_data(model: DCTestModel):
+            return {"agent1_num": len(model.agent_list1), "agent2_num": len(model.agent_list2)}
+
+        def get_data2(model: DCTestModel):
+            return [{"agent1_num": len(model.agent_list1), "agent2_num": len(model.agent_list2)} for i in range(2)]
+        self.add_custom_collector("my_collector", get_data, [
+                                  'agent1_num', "agent2_num"])
+        self.add_custom_collector("my_collector2", get_data2, [
+                                  'agent1_num', "agent2_num"])
+
 
 def test_model_run():
     global data_collector
@@ -118,4 +129,7 @@ def test_model_run():
     dc.collect(1)
     assert len(dc.agent_properties_dict["agent_list1"]) == AGENT_NUM_1 * 2
     assert len(dc.agent_properties_dict["agent_list2"]) == AGENT_NUM_2 * 2
+
+    assert len(dc._custom_collected_data['my_collector'].data) == 2
+    assert len(dc._custom_collected_data['my_collector2'].data) == 4
     dc.save()

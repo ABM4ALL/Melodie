@@ -72,15 +72,10 @@ class Scenario(Element):
 
         :df_info: The file name of that containing the data frame, or pass a `DataFrameInfo`
         """
-        from .data_loader import DataFrameInfo
 
         assert self.manager is not None, MelodieExceptions.MLD_INTL_EXC
         assert self.manager.data_loader is not None, MelodieExceptions.MLD_INTL_EXC
-        if isinstance(df_info, str):
-            info = DataFrameInfo(os.path.basename(df_info), {}, df_info)
-            return self.manager.data_loader.load_dataframe(info)
-        else:
-            return self.manager.data_loader.load_dataframe(df_info)
+        return self.manager.data_loader.load_dataframe(df_info)
 
     def load_matrix(self, mat_info: Union[str, "MatrixInfo"]) -> np.ndarray:
         """
@@ -88,15 +83,10 @@ class Scenario(Element):
 
         :mat_info: The file name of that containing the matrix, or pass a `DataFrameInfo`
         """
-        from .data_loader import MatrixInfo
 
         assert self.manager is not None, MelodieExceptions.MLD_INTL_EXC
         assert self.manager.data_loader is not None, MelodieExceptions.MLD_INTL_EXC
-        if isinstance(mat_info, str):
-            info = MatrixInfo(os.path.basename(mat_info), None, mat_info)
-            return self.manager.data_loader.load_matrix(info)
-        else:
-            return self.manager.data_loader.load_matrix(mat_info)
+        return self.manager.data_loader.load_matrix(mat_info)
 
     def to_dict(self):
         """

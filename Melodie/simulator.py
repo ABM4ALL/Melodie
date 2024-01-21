@@ -19,9 +19,10 @@ from MelodieInfra import (
     MelodieExceptions,
     show_prettified_warning,
     MelodieGlobalConfig,
+
 )
 
-from .data_loader import DataLoader
+from .data_loader import DataLoader, DataFrameInfo
 from .model import Model
 from .scenario_manager import Scenario
 from .visualizer import BaseVisualizer, MelodieModelReset
@@ -100,7 +101,8 @@ class BaseModellingManager(abc.ABC):
         Clear all output tables
         """
         output_path = self.config.output_tables_path()
-        shutil.rmtree(output_path)
+        if os.path.exists(output_path):
+            shutil.rmtree(output_path)
         os.mkdir(output_path)
 
     def pre_run(self, clear_output_data=True):
@@ -209,7 +211,8 @@ class Simulator(BaseModellingManager):
         """
         if self.data_loader is None:
             raise MelodieExceptions.Data.NoDataframeLoaderDefined()
-        return self.data_loader.generate_scenarios("simulator")
+
+        return self.data_loader.generate_scenarios("Simulator")
 
     def run_model(
         self, config, scenario, id_run, model_class: Type["Model"], visualizer=None
@@ -221,6 +224,8 @@ class Simulator(BaseModellingManager):
             f"Simulation started - id_scenario = {scenario.id}, id_run = {id_run}"
         )
         t0 = time.time()
+
+        scenario.id_run = id_run
 
         model: Model = model_class(
             config, scenario, run_id_in_scenario=id_run, visualizer=visualizer
@@ -234,20 +239,6 @@ class Simulator(BaseModellingManager):
                 self.visualizer.params_manager._initialized = True
             else:
                 self.visualizer.params_manager.modify_scenario(scenario)
-            # with open('test.json', 'w') as f:
-            #     json.dump({
-            #         'model': self.visualizer.params_manager.to_json(),
-            #         'params-values': self.visualizer.params_manager.to_value_json()
-            #     }, f, indent=4)
-            # with open('123.json') as f:
-            #     self.visualizer.params_manager.from_json(json.load(f))
-            # with open('out.json', 'w') as f:
-            #     json.dump({
-            #         'model': self.visualizer.params_manager.to_json(),
-            #         'params-values': self.visualizer.params_manager.to_value_json()
-            #     }, f, indent=4)
-            # self.visualizer.params_manager.modify_scenario(scenario)
-            # print('aaa', self.visualizer.params_manager.to_value_json()[0])
             visualizer.start()
         else:
             model._setup()
@@ -302,7 +293,6 @@ class Simulator(BaseModellingManager):
         assert self.scenarios is not None, MelodieExceptions.MLD_INTL_EXC
         for scenario_index, scenario in enumerate(self.scenarios):
             for id_run in range(scenario.run_num):
-                # TODO: scenario.id_run = id_run might cause wrong result when parallel executing.
                 self.run_model(
                     self.config, scenario, id_run, self.model_cls, visualizer=None
                 )

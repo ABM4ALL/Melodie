@@ -96,10 +96,14 @@ class ParallelManager:
         self.th_server.setDaemon(True)
         self.th_server.start()
         for core_id in range(self.cores):
+            python_path = os.environ.get('PYTHONPATH', "")
+            # paths = paths
+            print("python_path", python_path, ":".join(sys.path))
             p = subprocess.Popen(
                 [
                     sys.executable,
-                    os.path.join(os.path.dirname(__file__), "parallel_worker.py"),
+                    os.path.join(os.path.dirname(__file__),
+                                 "parallel_worker.py"),
                     "--core_id",
                     str(core_id),
                     "--workdirs",

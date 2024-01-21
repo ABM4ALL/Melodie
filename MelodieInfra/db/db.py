@@ -25,8 +25,7 @@ class DBConn:
 
     table_dtypes: Dict[str, TABLE_DTYPES] = {}
     existing_connections: Dict[str, "DBConn"] = {}
-    SCENARIO_TABLE = "simulator_scenarios"
-    ENVIRONMENT_RESULT_TABLE = "environment_result"
+    ENVIRONMENT_RESULT_TABLE = "Result_Environment"
 
     def __init__(
         self,

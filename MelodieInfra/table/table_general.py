@@ -13,20 +13,27 @@ def vectorize_template(obj):
 """
 
 
-RowType = Dict[str, TypeEngine]
+RowType = Dict[str, Optional[TypeEngine]]
 
 
 class GeneralTable(TableBase):
     data: List[dict]
 
-    def __init__(self, row_type: RowType) -> None:
+    def __init__(self, row_type: RowType, columns: Optional[List[str]] = None) -> None:
         super().__init__()
         self._row_type = row_type
         self._db_model_cls: Type = None
         self.row_types: Dict[str, Column] = {}
+
         if row_type is not None:
-            for prop_name, prop_value in row_type.items():
-                self.row_types[prop_name] = Column(prop_value)
+            for prop_name, prop_type in row_type.items():
+                self.row_types[prop_name] = Column(prop_type)
+
+        if columns is None:
+            self._columns = list(row_type.keys())
+        else:
+            assert set(columns) == set(row_type.keys())
+            self._columns = columns
 
     def create_empty(self):
         return GeneralTable(self._row_type)
@@ -84,7 +91,8 @@ class GeneralTable(TableBase):
             assert (
                 len(dicts) > 0
             ), "Initial data must have at least one row for Melodie to detect data type."
-            row_type = {k: py_types_to_sa_types[type(v)] for k, v in dicts[0].items()}
+            row_type = {k: py_types_to_sa_types[type(
+                v)] for k, v in dicts[0].items()}
         table = GeneralTable(row_type)
         if not copy:
             for dic in dicts:
