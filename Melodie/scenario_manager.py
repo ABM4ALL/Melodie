@@ -59,6 +59,12 @@ class Scenario(Element):
     def _setup(self):
         self.load()
         self.setup()
+    
+    def initialize(self):
+        """
+        Have same effect as calling `_setup`, and must be called when generating scenarios.
+        """
+        self._setup()
 
     def setup(self):
         """

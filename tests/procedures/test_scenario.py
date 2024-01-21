@@ -6,6 +6,7 @@ import random
 from typing import List
 
 import pandas as pd
+import pytest
 
 from Melodie import (
     Agent,
@@ -24,7 +25,7 @@ cfg_for_temp = Config(
     input_folder=os.path.join(os.path.dirname(
         __file__), "resources", "excels"),
     output_folder=os.path.join(os.path.dirname(
-        __file__), "resources", "output"),
+        __file__), "resources", "output/test_scenario"),
 )
 AGENT_NUM_1 = 10
 AGENT_NUM_2 = 20
@@ -47,15 +48,17 @@ class TestEnv(Environment):
 
 
 class TestScenario(Scenario):
+    def load(self):
+        self.demo_data1 = self.load_dataframe("demo-data.xlsx")
+        self.demo_data2 = self.load_dataframe("demo-data.csv")
+        self.demo_matrix1 = self.load_matrix("demo-matrix.xlsx")
+        self.demo_matrix2 = self.load_matrix("demo-matrix.csv")
+
     def setup(self):
         self.period_num = 1
         self.productivity = random.random()
 
     # def setup(self):
-        self.demo_data1 = self.load_dataframe("demo-data.xlsx")
-        self.demo_data2 = self.load_dataframe("demo-data.csv")
-        self.demo_matrix1 = self.load_matrix("demo-matrix.xlsx")
-        self.demo_matrix2 = self.load_matrix("demo-matrix.csv")
 
         # self.demo_matrix1 = self.load
 
@@ -108,9 +111,11 @@ class Simulator4Test(Simulator):
         for s in scenarios:
             s.run_num = 2
             s.manager = self
+            s.initialize()
         return scenarios
 
 
+@pytest.mark.timeout(15)
 def test_load_data():
     s = Simulator4Test(cfg_for_temp, TestScenario, DCTestModel)
     # s.data_loader.load_dataframe("demo-data.xlsx")

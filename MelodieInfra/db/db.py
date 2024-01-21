@@ -1,5 +1,6 @@
 import logging
 import os
+import time
 from typing import Dict, TYPE_CHECKING, Optional, List, Tuple
 
 import sqlalchemy
@@ -140,7 +141,8 @@ class DBConn:
         Clear the database, deleting all tables.
         """
         if database_exists(self.connection.url):
-            logger.info(f"Database contains tables: {self.connection.table_names()}.")
+            logger.info(
+                f"Database contains tables: {self.connection.table_names()}.")
             table_names = list(self.connection.table_names())
             for table_name in table_names:
                 self.connection.execute(f"drop table {table_name}")
@@ -164,13 +166,14 @@ class DBConn:
         :param if_exists: A string in {'replace', 'fail', 'append'}.
         :return:
         """
-
         if isinstance(data_frame, TableBase):
             data_frame.to_database(self.connection, table_name)
         else:
+            t0 = time.time()
             if data_types is None:
                 data_types = DBConn.get_table_dtypes(table_name)
             logger.debug(f"datatype of table `{table_name}` is: {data_types}")
+            t2 = time.time()
             data_frame.to_sql(
                 table_name,
                 self.connection,
@@ -178,6 +181,8 @@ class DBConn:
                 dtype=data_types,
                 if_exists=if_exists,
             )
+            t1 = time.time()
+            print("t1-t0", t1-t0, t2-t0, data_frame.shape)
 
     def read_dataframe(
         self,
@@ -210,7 +215,8 @@ class DBConn:
         where_condition_phrase = ""
         condition_phrases = []
         if conditions is not None:
-            condition_phrases.extend([item[0] + item[1] for item in conditions])
+            condition_phrases.extend([item[0] + item[1]
+                                     for item in conditions])
         if id_scenario is not None:
             condition_phrases.append(f"id_scenario={id_scenario}")
         if id_run is not None:
@@ -230,7 +236,8 @@ class DBConn:
             import traceback
 
             traceback.print_exc()
-            raise MelodieExceptions.Data.AttemptingReadingFromUnexistedTable(table_name)
+            raise MelodieExceptions.Data.AttemptingReadingFromUnexistedTable(
+                table_name)
 
     def drop_table(self, table_name: str):
         """

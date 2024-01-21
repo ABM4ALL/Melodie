@@ -8,6 +8,7 @@ import rpyc
 from typing import Dict, Tuple, Any, Type, Union, TYPE_CHECKING
 
 import cloudpickle
+from Melodie.utils.profiler import run_profile
 
 from MelodieInfra.config.global_configs import MelodieGlobalConfig
 
@@ -49,7 +50,8 @@ class ParallelWorker:
                 return tuple(task)
 
     def put_result(self, result):
-        return self.conn.root.put_result(result)
+        ret = self.conn.root.put_result(result)
+        return ret
 
     def close(self):
         self.conn.close()
@@ -108,6 +110,8 @@ def sub_routine_trainer(
     :param config_raw:
     :return:
     """
+    # TODO: Have to set this path!
+    
     from Melodie import Config, Trainer, Environment, AgentList, Agent
     import logging
 
@@ -117,17 +121,23 @@ def sub_routine_trainer(
     try:
         config = Config.from_dict(config_raw)
         trainer: Trainer
-        trainer, scenario_cls, model_cls = get_scenario_manager(config, modules)
+        
+        trainer, scenario_cls, model_cls = get_scenario_manager(
+            config, modules)
     except BaseException:
         import traceback
 
         traceback.print_exc()
+        dumped = cloudpickle.dumps(0)
+        worker.put_result(base64.b64encode(dumped))
         return
 
     while 1:
         try:
             t0 = time.time()
-
+            # chrom = -1
+            # def test():
+            #     nonlocal chrom
             chrom, d, agent_params = worker.get_task()
             logger.debug(f"processor {proc_id} got chrom {chrom}")
             scenario = scenario_cls()
@@ -151,17 +161,21 @@ def sub_routine_trainer(
                 agent_data[container.container_name] = df
                 for row in df:
                     agent = agent_container.get_agent(row["id"])
-                    row["target_function_value"] = trainer.target_function(agent)
+                    row["target_function_value"] = trainer.target_function(
+                        agent)
                     row["utility"] = trainer.utility(agent)
                     row["agent_id"] = row.pop("id")
             env: Environment = model.environment
             env_data = env.to_dict(trainer.environment_properties)
             dumped = cloudpickle.dumps((chrom, agent_data, env_data))
+
+            worker.put_result(base64.b64encode(dumped))
+            # run_profile(test)
+            # test()
             t1 = time.time()
             logger.info(
                 f"Processor {proc_id}, chromosome {chrom}, time: {MelodieGlobalConfig.Logger.round_elapsed_time(t1 - t0)}s"
             )
-            worker.put_result(base64.b64encode(dumped))
         except Exception:
             import traceback
 
@@ -191,7 +205,8 @@ def sub_routine_calibrator(
     try:
         config = Config.from_dict(config_raw)
         calibrator: "Calibrator"
-        calibrator, scenario_cls, model_cls = get_scenario_manager(config, modules)
+        calibrator, scenario_cls, model_cls = get_scenario_manager(
+            config, modules)
     except BaseException:
         import traceback
 
@@ -222,7 +237,8 @@ def sub_routine_calibrator(
             env: Environment = model.environment
             env_data = env.to_dict(calibrator.watched_env_properties)
             env_data.update(
-                {prop: scenario.to_dict()[prop] for prop in calibrator.properties}
+                {prop: scenario.to_dict()[prop]
+                 for prop in calibrator.properties}
             )
             env_data["target_function_value"] = env_data[
                 "distance"
@@ -262,7 +278,8 @@ def sub_routine_simulator(
     try:
         config = Config.from_dict(config_raw)
         simulator: "Simulator"
-        simulator, scenario_cls, model_cls = get_scenario_manager(config, modules)
+        simulator, scenario_cls, model_cls = get_scenario_manager(
+            config, modules)
     except BaseException:
         import traceback
 

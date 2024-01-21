@@ -1,5 +1,7 @@
 import copy
 import logging
+import time
+import sys
 from typing import (
     Dict,
     Tuple,
@@ -14,7 +16,7 @@ from typing import (
 )
 
 from MelodieInfra import Config, MelodieExceptions, create_db_conn
-
+from .utils import run_profile
 from .algorithms import AlgorithmParameters
 from .algorithms.ga import MelodieGA
 from MelodieInfra.core import AgentList, Agent
@@ -346,6 +348,7 @@ class GATrainerAlgorithm:
                 d.update(agent_container_data)
                 d.pop("target_function_value")
                 agent_records[container_name].append(d)
+            
             create_db_conn(self.manager.config).write_dataframe(
                 f"{container_name}_trainer_result",
                 pd.DataFrame(agent_records[container_name]),
@@ -444,7 +447,7 @@ class GATrainerAlgorithm:
                 f"Scenario {scenario.id} Path {meta.id_path} Generation {i + 1}/{self.params.generation_num}"
                 f"======================="
             )
-
+            t0 = time.time()
             for id_chromosome in range(self.params.strategy_population):
                 params = self.get_agent_params(id_chromosome)
                 self.parallel_manager.put_task(
@@ -461,7 +464,8 @@ class GATrainerAlgorithm:
 
             for _id_chromosome in range(self.params.strategy_population):
                 # v = result_queue.get()
-
+                dt = 0
+                
                 (
                     chrom,
                     agents_data,
@@ -469,24 +473,32 @@ class GATrainerAlgorithm:
                 ) = (
                     self.parallel_manager.get_result()
                 )  # cloudpickle.loads(base64.b64decode(v))
+                t00 = time.time()
+                # def f():
+                print("got result!", _id_chromosome, time.time(), file=sys.stderr)
                 meta.id_chromosome = chrom
                 agent_records, env_record = self.record_agent_properties(
                     agents_data, env_data, meta
                 )
+                print(agent_records, env_record, agents_data, env_data)
                 for container_name, records in agent_records.items():
                     agent_records_collector[container_name] += records
                 env_records_list.append(env_record)
                 self.target_function_to_cache(agents_data, i, chrom)
-
+                # run_profile(f)
+                # f()
+                print("iter!", time.time() - t00, file=sys.stderr)
+            t1 = time.time()
+            print(t1 - t0)
             self.calc_cov_df(
                 {k: pd.DataFrame(v) for k, v in agent_records_collector.items()},
                 pd.DataFrame(env_records_list),
                 meta,
             )
-
             for key, algorithm in self.algorithms_dict.items():
                 self._chromosome_counter = -1
                 algorithm.run(1)
+            # print("AAAAAAAAAAAAAAAA")
 
 
 class RelatedAgentContainerModel:
