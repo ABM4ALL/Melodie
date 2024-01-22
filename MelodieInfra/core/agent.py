@@ -15,7 +15,8 @@ class Element:
             # assert (
             #     paramName in self.__dict__.keys()
             # ), f"param named {paramName}, value {paramValue} not in Agent.params:{self.__dict__.keys()}"
-            setattr(self, paramName, paramValue)
+            if paramName in self.__dict__.keys():
+                setattr(self, paramName, paramValue)
 
     def to_dict(self, properties: List[str] = None) -> Dict:
         """
