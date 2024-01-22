@@ -50,14 +50,14 @@ class Scenario(Element):
             parameter.init = getattr(self, parameter.name)
         return new_scenario
 
-    def load(self):
+    def load_data(self):
         """
         This method loads should load data into the scenario as its properties.
         """
         pass
 
     def _setup(self):
-        self.load()
+        self.load_data()
         self.setup()
     
     def initialize(self):
