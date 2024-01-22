@@ -8,6 +8,7 @@ import sqlalchemy
 
 from MelodieInfra import (
     DBConn,
+    Config,
     MelodieExceptions,
     is_pypy,
     Table,
@@ -72,6 +73,7 @@ class DataCollector():
             MelodieExceptions.Data.InvalidDatabaseType(target, {"sqlite"})
 
         self.target = target
+        self.config: Optional[Config] = None
         self.model: Optional[Model] = None
         self.scenario: Optional["Scenario"] = None
         self._agent_properties_to_collect: Dict[str,

@@ -207,6 +207,7 @@ class Model:
         data_collector = data_collector_cls()
         data_collector.model = self
         data_collector.scenario = self.scenario
+        data_collector.config = self.config
         self.initialization_queue.append(data_collector)
         return data_collector
 
