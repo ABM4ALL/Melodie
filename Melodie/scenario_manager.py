@@ -56,9 +56,16 @@ class Scenario(Element):
         """
         pass
 
+    def setup_data(self):
+        """
+        This method creates the data (e.g., agent_params) based on its properties or the loaded data.
+        """
+        pass
+
     def _setup(self):
-        self.load_data()
         self.setup()
+        self.load_data()
+        self.setup_data()
     
     def initialize(self):
         """
