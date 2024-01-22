@@ -62,11 +62,14 @@ class Scenario(Element):
         """
         pass
 
-    def _setup(self):
+    def _setup(self, data: dict = None):
         self.setup()
+        if data is not None:
+            for col_name in data.keys():
+                setattr(self, col_name, data[col_name])
         self.load_data()
         self.setup_data()
-    
+
     def initialize(self):
         """
         Have same effect as calling `_setup`, and must be called when generating scenarios.

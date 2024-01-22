@@ -177,7 +177,7 @@ class AgentList(BaseAgentContainer):
                 agent.set_params(params)
         else:
             row: Dict[str, Any]
-            params_table.df.data("out.csv")
+            # params_table.df.data("out.csv")
             assert len(self) == len(params_table), (len(self), len(params_table))
 
             for i, row in enumerate(params_table.iter_dicts()):

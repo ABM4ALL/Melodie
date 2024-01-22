@@ -346,11 +346,8 @@ class DataLoader:
         for i, row in enumerate(scenarios_dataframe.iter_dicts()):
             scenario = self.scenario_cls()
             scenario.manager = self.manager
-            scenario._setup()
-            for col_name in cols:
-                value = row[col_name]
-                scenario.__dict__[col_name] = value
-
+            
+            scenario._setup(row)
             scenarios.append(scenario)
         if len(scenarios) == 0:
             raise MelodieExceptions.Scenario.NoValidScenarioGenerated(

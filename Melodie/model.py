@@ -121,11 +121,6 @@ class Model:
         """
         pass
 
-    def load(self):
-        """
-        An initialization method for injecting data.
-        """
-
     def setup(self):
         """
         General method for model setup, which is called after ``Model.create()``
@@ -262,7 +257,8 @@ class Model:
             if isinstance(prop, BaseAgentContainer):
                 all_ids = prop.all_agent_ids()
                 if len(set(all_ids)) < len(all_ids):
-                    raise MelodieExceptions.Agents.AgentIDConflict(prop_name, all_ids)
+                    raise MelodieExceptions.Agents.AgentIDConflict(
+                        prop_name, all_ids)
 
     def run(self):
         """
@@ -306,7 +302,6 @@ class Model:
 
         :return:
         """
-        self.load()
         self.create()
         self.setup()
         for component_to_init in self.initialization_queue:
