@@ -67,6 +67,7 @@ class Scenario(Element):
         if data is not None:
             for col_name in data.keys():
                 setattr(self, col_name, data[col_name])
+        # self.load()
         self.load_data()
         self.setup_data()
 

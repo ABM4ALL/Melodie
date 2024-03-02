@@ -524,7 +524,6 @@ class ParamsManager:
 
         :return:
         """
-        print([param.to_value_json() for param in self.params], file=sys.stderr)
         return [param.to_value_json() for param in self.params]
 
     def from_json(self, l: List[Union[Dict, List]]):

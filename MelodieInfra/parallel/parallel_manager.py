@@ -31,7 +31,7 @@ class Tasks:
         while 1:
             try:
                 task = self.task_queue.get(block=False)
-                logger.info(f"got task {task}")
+                logger.debug(f"got task {task}")
                 if task is not None:
                     return task
             except queue.Empty:

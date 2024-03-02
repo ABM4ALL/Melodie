@@ -15,7 +15,7 @@ from typing import (
     cast,
 )
 
-from MelodieInfra import Config, MelodieExceptions, create_db_conn
+from MelodieInfra import Config, MelodieExceptions
 from .utils import run_profile
 from .algorithms import AlgorithmParameters
 from .algorithms.ga import MelodieGA
@@ -185,7 +185,8 @@ class GATrainerAlgorithm:
         self.algorithms_dict: Dict[Tuple[int, str], Union["GA"]] = {}
 
         self.target_fcn_cache = TargetFcnCache()
-        self.agent_container_getters: Dict[str, Callable[[Model], AgentList]] = {}
+        self.agent_container_getters: Dict[str,
+                                           Callable[[Model], AgentList]] = {}
         self.agent_ids: Dict[str, List[int]] = {}  # {category : [agent_id]}
         self.agent_params_defined: Dict[
             str, List[str]
@@ -193,7 +194,8 @@ class GATrainerAlgorithm:
         self.recorded_agent_properties: Dict[
             str, List[str]
         ] = {}  # category: [prop1, prop2...]
-        self.recorded_env_properties: List[str] = []  # category: [prop1, prop2...]
+        # category: [prop1, prop2...]
+        self.recorded_env_properties: List[str] = []
 
         self._chromosome_counter = 0
         self._current_generation = 0
@@ -241,7 +243,8 @@ class GATrainerAlgorithm:
         for agent_id in agent_id_list:
             self.algorithms_dict[(agent_id, container_name)] = MelodieGA(
                 func=cast(
-                    "function", self.generate_target_function(agent_id, container_name)
+                    "function", self.generate_target_function(
+                        agent_id, container_name)
                 ),
                 n_dim=len(param_names),
                 size_pop=self.params.strategy_population,
@@ -267,7 +270,8 @@ class GATrainerAlgorithm:
         }
         # {category : [{id: 0, param1: 1, param2: 2, ...}]}
         for key, algorithm in self.algorithms_dict.items():
-            chromosome_value = algorithm.chrom2x(algorithm.Chrom)[id_chromosome]
+            chromosome_value = algorithm.chrom2x(
+                algorithm.Chrom)[id_chromosome]
             agent_id, agent_category = key
             d = {"id": agent_id}
             for i, param_name in enumerate(self.agent_params_defined[agent_category]):
@@ -348,18 +352,15 @@ class GATrainerAlgorithm:
                 d.update(agent_container_data)
                 d.pop("target_function_value")
                 agent_records[container_name].append(d)
-            
-            create_db_conn(self.manager.config).write_dataframe(
-                f"{container_name}_trainer_result",
-                pd.DataFrame(agent_records[container_name]),
-                if_exists="append",
-            )
+
+            self.manager._write_to_table(
+                "csv", f"{container_name}_trainer_result", pd.DataFrame(agent_records[container_name]))
+
         env_record.update(meta_dict)
         env_record.update(env_data)
 
-        create_db_conn(self.manager.config).write_dataframe(
-            "environment_trainer_result", pd.DataFrame([env_record]), if_exists="append"
-        )
+        self.manager._write_to_table(
+            "csv", "environment_trainer_result", pd.DataFrame([env_record]),)
 
         return agent_records, env_record
 
@@ -401,22 +402,17 @@ class GATrainerAlgorithm:
                         {prop_name + "_mean": mean, prop_name + "_cov": cov}
                     )
                 container_agent_record_list.append(cov_records)
-            create_db_conn(self.manager.config).write_dataframe(
-                f"{container_name}_trainer_result_cov",
-                pd.DataFrame(container_agent_record_list),
-                if_exists="append",
-            )
+            self.manager._write_to_table("csv",  f"{container_name}_trainer_result_cov",
+                                         pd.DataFrame(container_agent_record_list),)
         env_record = {}
         env_record.update(meta_dict)
         for prop_name in self.recorded_env_properties:
             mean = env_df[prop_name].mean()
             cov = env_df[prop_name].std() / env_df[prop_name].mean()
-            env_record.update({prop_name + "_mean": mean, prop_name + "_cov": cov})
-        create_db_conn(self.manager.config).write_dataframe(
-            "environment_trainer_result_cov",
-            pd.DataFrame([env_record]),
-            if_exists="append",
-        )
+            env_record.update(
+                {prop_name + "_mean": mean, prop_name + "_cov": cov})
+        self.manager._write_to_table("csv",  "environment_trainer_result_cov",
+                                     pd.DataFrame([env_record]))
 
     def pre_check(self, meta):
         """
@@ -429,10 +425,6 @@ class GATrainerAlgorithm:
         Recording environment parameters: {self.recorded_env_properties}
         Recording Agent agent_lists: {self.recorded_agent_properties}\n"""
         )
-        # print("Algorithm will run with:")
-        # print("    Meta value", meta)
-        # print("    Recording environment parameters: ", self.recorded_env_properties)
-        # print("    Recording Agent agent_lists:", self.agent_container_getters)
 
     def run(self, scenario: Scenario, meta: Union[GATrainerAlgorithmMeta]):
         import pandas as pd
@@ -465,7 +457,7 @@ class GATrainerAlgorithm:
             for _id_chromosome in range(self.params.strategy_population):
                 # v = result_queue.get()
                 dt = 0
-                
+
                 (
                     chrom,
                     agents_data,
@@ -474,31 +466,26 @@ class GATrainerAlgorithm:
                     self.parallel_manager.get_result()
                 )  # cloudpickle.loads(base64.b64decode(v))
                 t00 = time.time()
-                # def f():
-                print("got result!", _id_chromosome, time.time(), file=sys.stderr)
                 meta.id_chromosome = chrom
                 agent_records, env_record = self.record_agent_properties(
                     agents_data, env_data, meta
                 )
-                print(agent_records, env_record, agents_data, env_data)
                 for container_name, records in agent_records.items():
                     agent_records_collector[container_name] += records
                 env_records_list.append(env_record)
                 self.target_function_to_cache(agents_data, i, chrom)
-                # run_profile(f)
-                # f()
-                print("iter!", time.time() - t00, file=sys.stderr)
+                
             t1 = time.time()
             print(t1 - t0)
             self.calc_cov_df(
-                {k: pd.DataFrame(v) for k, v in agent_records_collector.items()},
+                {k: pd.DataFrame(v)
+                 for k, v in agent_records_collector.items()},
                 pd.DataFrame(env_records_list),
                 meta,
             )
             for key, algorithm in self.algorithms_dict.items():
                 self._chromosome_counter = -1
                 algorithm.run(1)
-            # print("AAAAAAAAAAAAAAAA")
 
 
 class RelatedAgentContainerModel:
@@ -541,7 +528,8 @@ class AgentContainerManager:
         :return:
         """
         self.agent_containers.append(
-            RelatedAgentContainerModel(container_name, used_properties, [], agent_ids)
+            RelatedAgentContainerModel(
+                container_name, used_properties, [], agent_ids)
         )
 
     def get_agent_container(
@@ -681,7 +669,8 @@ class Trainer(BaseModellingManager):
         :return: None
         """
 
-        self.algorithm = GATrainerAlgorithm(trainer_params, self, self.processors)
+        self.algorithm = GATrainerAlgorithm(
+            trainer_params, self, self.processors)
         self.algorithm.recorded_env_properties = self.environment_properties
         for agent_container in self.container_manager.agent_containers:
             self.algorithm.setup_agent_locations(
@@ -742,7 +731,7 @@ class Trainer(BaseModellingManager):
         :return: A list of scenario objects.
         """
         assert self.data_loader is not None
-        return self.data_loader.generate_scenarios("trainer")
+        return self.data_loader.generate_scenarios("Trainer")
 
     def generate_trainer_params_list(
         self, trainer_scenario_cls: Type[GATrainerParams]
@@ -759,7 +748,8 @@ class Trainer(BaseModellingManager):
             trainer_params_table, pd.DataFrame
         ), "No learning scenarios table specified!"
 
-        trainer_params_raw_list = trainer_params_table.to_dict(orient="records")
+        trainer_params_raw_list = trainer_params_table.to_dict(
+            orient="records")
 
         trainer_params_list = []
         for trainer_params_raw in trainer_params_raw_list:

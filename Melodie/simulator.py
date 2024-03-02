@@ -9,7 +9,9 @@ import shutil
 import threading
 import time
 from multiprocessing import Pool
-from typing import Optional, List, Tuple, Type
+from typing import Literal, Optional, List, Tuple, Type
+
+import pandas as pd
 
 from MelodieInfra import (
     create_db_conn,
@@ -135,6 +137,26 @@ class BaseModellingManager(abc.ABC):
         Abstract method for generation of scenarios.
         """
         pass
+
+    def _write_to_table(self, kind: Literal["csv", "sql"], table_name: str, data: pd.DataFrame):
+        """
+        Write a pandas dataframe to a table in output directory or database
+        """
+        if kind == "sql":
+            create_db_conn(self.config).write_dataframe(
+                table_name,
+                data,
+                if_exists="append",
+            )
+        elif kind == "csv":
+            csv_file = os.path.join(self.config.output_tables_path(),
+                                    table_name+".csv")
+            if os.path.exists(csv_file):
+                data.to_csv(csv_file, mode="a", header=False)
+            else:
+                data.to_csv(csv_file)
+        else:
+            raise NotImplementedError
 
 
 class SimulatorMeta:
@@ -419,7 +441,6 @@ class Simulator(BaseModellingManager):
         logger.info(
             f"Verification finished, now using {cores} cores for parallel computing!"
         )
-        print(parameters[0])
         pool.starmap(self.run_model, parameters)
 
         pool.close()
@@ -501,7 +522,6 @@ class Simulator(BaseModellingManager):
         try:
             logger.info(f"Melodie will run for {len(self.scenarios)} times!.")
             first_run = False
-            print(self.scenarios)
             tasks_count = 0
             for scenario in self.scenarios:
                 for id_run in range(scenario.run_num):
@@ -514,7 +534,6 @@ class Simulator(BaseModellingManager):
                         )
                         first_run = True
                     else:
-                        print("put task:", scenario.to_json())
                         parallel_manager.put_task(
                             (id_run, scenario.to_json(), None))
                         tasks_count += 1

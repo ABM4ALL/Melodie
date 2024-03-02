@@ -48,7 +48,7 @@ class TestEnv(Environment):
 
 
 class TestScenario(Scenario):
-    def load(self):
+    def load_data(self):
         self.demo_data1 = self.load_dataframe("demo-data.xlsx")
         self.demo_data2 = self.load_dataframe("demo-data.csv")
         self.demo_matrix1 = self.load_matrix("demo-matrix.xlsx")
