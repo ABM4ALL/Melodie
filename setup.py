@@ -36,6 +36,12 @@ def scientific_toolchain_versions():
     return [numpy_requirement, matplotlib_requirement, scipy_requirement]
 
 
+def db_tools_versions():
+    pandas_req = "pandas"
+    sqlalchemy_req = "sqlalchemy"
+    return []
+
+
 setuptools.setup(
     name="Melodie",
     version=version,
@@ -69,11 +75,11 @@ setuptools.setup(
     install_requires=scientific_toolchain_versions()
     + [
         "chardet",
-        "pandas<=2.1",
+        "pandas",
         "seaborn",
         "networkx",
         "openpyxl",
-        "sqlalchemy~=1.4",
+        "sqlalchemy>=2.0",
         "sqlalchemy_utils",
         "astunparse",
         "pprintast",

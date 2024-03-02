@@ -340,15 +340,6 @@ class DataCollector:
 
         self._time_elapsed += t1 - t0
 
-    @property
-    def db(self):
-        """
-        Create a database connection
-
-        :return: ``melodie.DB`` object.
-        """
-        return self.model.create_db_conn()
-
     @staticmethod
     def calc_time(method):
         """
@@ -404,6 +395,7 @@ class DataCollector:
             return
         t0 = time.time()
         write_db_time = 0
+        assert self.model is not None
         connection = self.model.create_db_conn()
 
         _t = time.time()
@@ -447,3 +439,4 @@ class DataCollector:
             f"    {MelodieGlobalConfig.Logger.round_elapsed_time(write_db_time)} for writing into database, and "
             f"{MelodieGlobalConfig.Logger.round_elapsed_time(collect_time)} for collect data."
         )
+        connection.close()

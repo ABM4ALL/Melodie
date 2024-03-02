@@ -18,7 +18,7 @@ from typing import (
 )
 import pandas as pd
 
-from MelodieInfra import create_db_conn, Config, MelodieExceptions
+from MelodieInfra import Config, MelodieExceptions
 from MelodieInfra.parallel.parallel_manager import ParallelManager
 
 from .algorithms import AlgorithmParameters

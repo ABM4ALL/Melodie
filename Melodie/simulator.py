@@ -22,8 +22,9 @@ from MelodieInfra import (
     show_prettified_warning,
     MelodieGlobalConfig,
 )
+from MelodieInfra.db.db import db_conn
 
-from .data_loader import DataLoader, DataFrameInfo
+from .data_loader import DataLoader
 from .model import Model
 from .scenario_manager import Scenario
 from .visualizer import BaseVisualizer, MelodieModelReset
@@ -116,7 +117,9 @@ class BaseModellingManager(abc.ABC):
         """
         assert self.config is not None, MelodieExceptions.MLD_INTL_EXC
         if clear_output_data:
-            create_db_conn(self.config).clear_database()
+            with db_conn(self.config) as conn:
+                conn.clear_database()
+
             self.clear_output_tables()
 
         if self.df_loader_cls is not None:
@@ -349,8 +352,6 @@ class Simulator(BaseModellingManager):
             logger.info(
                 f"Visualizer interactive paramerters for this scenario are: {self.visualizer.scenario_param}"
             )
-            # create_db_conn(self.config).clear_database()
-            # create_db_conn()
             fn = get_sqlite_filename(self.config)
             if os.path.exists(fn):
                 os.remove(fn)

@@ -1,13 +1,13 @@
 import logging
 import os
 import time
-from typing import Dict, TYPE_CHECKING, Optional, List, Tuple
+from typing import Dict, TYPE_CHECKING, Generator, Optional, List, Tuple
 
 import sqlalchemy
 from sqlalchemy.exc import OperationalError
 from sqlalchemy_utils import database_exists, create_database
 import pandas as pd
-
+from contextlib import contextmanager
 from ..table import TableBase, TABLE_TYPE, GeneralTable, DatabaseConnector
 from ..exceptions import MelodieExceptions
 
@@ -137,16 +137,35 @@ class DBConn:
         """
         self.connection.dispose()
 
+    def table_names(self) -> List[str]:
+        """
+        Get all table names
+        """
+        if sqlalchemy.__version__[0] == "2":
+            return sqlalchemy.inspect(self.connection).get_table_names()
+        else:
+            return self.connection.table_names()
+
+    def execute(self, sql: str):
+        """
+        Execute a sql
+        """
+        if sqlalchemy.__version__[0] == "2":
+            with self.connection.connect() as conn:
+                return conn.execute(sqlalchemy.text(sql))
+        else:
+            return self.connection.execute(sql)
+
     def clear_database(self):
         """
         Clear the database, deleting all tables.
         """
         if database_exists(self.connection.url):
-            logger.info(f"Database contains tables: {self.connection.table_names()}.")
-            table_names = list(self.connection.table_names())
+            table_names = self.table_names()
+            logger.info(f"Database contains tables: {table_names}.")
             for table_name in table_names:
-                self.connection.execute(f"drop table {table_name}")
-            logger.info(f"Database drops tables: {table_names}.")
+                self.execute(f"drop table {table_name}")
+            logger.info(f"Dropped tables: {table_names}.")
         else:
             create_database(self.connection.url)
 
@@ -256,13 +275,21 @@ class DBConn:
         return pd.read_sql(sql, self.connection)
 
 
+@contextmanager
+def db_conn(config: "Config") -> Generator[DBConn, None, None]:
+    conn = create_db_conn(config)
+    yield conn
+    conn.close()
+
+
 def create_db_conn(config: "Config") -> DBConn:
     """
     create a Database by current config
 
     :return: DBConn object.
     """
-    return DBConn.from_connection_string(config.database_config.connection_string())
+    conn = DBConn.from_connection_string(config.database_config.connection_string())
+    return conn
 
 
 def get_sqlite_filename(config: "Config") -> str:

@@ -6,7 +6,7 @@ from pandas.api.types import is_float_dtype, is_integer_dtype
 from sqlalchemy.types import Integer
 
 from Melodie import Scenario
-from MelodieInfra import DBConn, MelodieException, create_db_conn
+from MelodieInfra import DBConn, MelodieException, db_conn
 from tests.infra.config import cfg
 
 cfg = cfg
@@ -25,13 +25,8 @@ def test_init_database():
         ]
     )
     print(df)
-    create_db_conn(cfg).write_dataframe("simulator_scenarios", df, if_exists="replace")
-
-
-# def test_connect_mysql():
-#     # engine = create_engine()
-#     db = DBConn.from_connection_string(conn_string="mysql+pymysql://root:123456@localhost/melodie?charset=utf8mb4")
-#     pd.DataFrame([{"a": 123}, {"a": 456}]).to_sql("temp_mysql_table", db.connection)
+    with db_conn(cfg) as conn:
+        conn.write_dataframe("simulator_scenarios", df, if_exists="replace")
 
 
 def test_sqlalchemy_data_types():
@@ -60,40 +55,8 @@ def test_sqlalchemy_data_types():
     # db.write_dataframe('df_with_dtypes', df, data_types={'A': Integer(), 'B': Integer()})
     db.write_dataframe("df_with_dtypes", df)
     # df.to_sql('df_with_dtypes', engine, index=False, dtype={'A': Integer(), 'B': Integer()})
-    data_with_types = db.get_engine().execute("select * from df_with_dtypes").fetchall()
+    data_with_types = db.execute("select * from df_with_dtypes").fetchall()
     print(data_with_types)
     assert isinstance(data_with_types[0][1], int)
     db.close()
     os.remove("test_db.sqlite")
-
-
-# def test_get_scenarios():
-#     scenarios = create_db_conn(cfg).query("select * from simulator_scenarios;")
-#
-#     assert scenarios.shape[0] == 3
-#     scenario_2 = create_db_conn(cfg).query_scenarios(id=2)
-#     assert scenario_2["id"][0] == 2
-
-#
-# def test_get_agent_results():
-#     agents_df = create_db_conn(cfg).query_agent_results(
-#         "agent", id_scenario=0, agent_id=1
-#     )
-#     assert agents_df.shape[0] == 200
-#     agents_df = create_db_conn(cfg).query_agent_results("agent", id_scenario=0, period=1)
-#     assert agents_df.shape[0] == 100
-
-
-# def test_get_env_results():
-#     env_df = create_db_conn(cfg).query_env_results()
-#     assert env_df.shape[0] == 600
-#     env_df = create_db_conn(cfg).query_env_results(id_scenario=0)
-#     assert env_df.shape[0] == 200
-#     print(env_df)
-#     env_df = create_db_conn(cfg).query_env_results(id_scenario=0, period=1)
-#     assert env_df.shape[0] == 1
-#     assert env_df["period"][0] == 1
-
-# scenario_2 = create_db_conn(
-#     Config('test', db_folder='resources/db', output_folder='resources/output')).query_scenarios(id=2)
-# assert scenario_2['id'][0] == 2

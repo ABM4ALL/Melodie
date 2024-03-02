@@ -10,7 +10,6 @@ import cloudpickle
 import pandas as pd
 from MelodieInfra import (
     DBConn,
-    create_db_conn,
     MelodieExceptions,
     Config,
     Table,
