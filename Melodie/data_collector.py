@@ -31,6 +31,7 @@ from MelodieInfra import (
     objs_to_table_row_vectorizer,
 )
 from MelodieInfra.config.global_configs import MelodieGlobalConfig
+from MelodieInfra.utils import underline_to_camel
 
 logger = logging.getLogger(__name__)
 
@@ -50,10 +51,6 @@ VEC_TEMPLATE = """
 def vectorize_template(obj):
     return [{exprs}]
 """
-
-
-def underline_to_camel(s: str):
-    return "".join(word.capitalize() for word in s.split("_"))
 
 
 def vectorizer(attrs):
@@ -412,9 +409,6 @@ class DataCollector:
             _t = time.time()
             self._write_list_to_table(
                 connection.get_engine(),
-                # "agent_list" -> "AgentList"
-                # "agent_list" -> "Agent_list"
-                # "Agent"
                 "Result_" + underline_to_camel(container_name),
                 self.agent_properties_dict[container_name],
             )
@@ -440,3 +434,17 @@ class DataCollector:
             f"{MelodieGlobalConfig.Logger.round_elapsed_time(collect_time)} for collect data."
         )
         connection.close()
+
+    def save_dataframe(self, df: pd.DataFrame, df_name: str, if_exists: str = "append"):
+        path = os.path.join(self.config.output_folder, f"{df_name}.csv")
+        if os.path.isfile(path):
+            if if_exists == "append":
+                df.to_csv(path, mode="a", header=False, index=False)
+            elif if_exists == "replace":
+                df.to_csv(path, index=False)
+            else:
+                raise NotImplementedError(
+                    f"if_exists = {if_exists} --> not implemented."
+                )
+        else:
+            df.to_csv(path, index=False)

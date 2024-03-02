@@ -16,25 +16,12 @@ from MelodieInfra import (
     TableInterface,
 )
 from MelodieInfra.table.table_general import GeneralTable
+from MelodieInfra.utils import underline_to_camel
 
 from .scenario_manager import Scenario
 from .table_generator import DataFrameGenerator
 
 logger = logging.getLogger(__name__)
-
-
-def first_char_upper(s: str) -> str:
-    if len(s) >= 1:
-        return s[0].upper() + s[1:]
-    else:
-        return s
-
-
-# TODO: move this function to utils
-
-
-def underline_to_camel(s):
-    return "".join(first_char_upper(word) for word in s.split("_"))
 
 
 class DataFrameInfo:
@@ -378,5 +365,5 @@ class DataLoader:
             return self.generate_scenarios_from_dataframe(underline_to_camel(df_name))
         else:
             raise NotImplementedError(
-                f"{manager_type}/{underline_to_camel(df_name)} is not supported!"
+                f"{manager_type}/{underline_to_camel(df_name)} is not supported! Registered tables are: {list(self.registered_dataframes.keys())}"
             )

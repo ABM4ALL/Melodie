@@ -18,6 +18,7 @@ from typing import (
 )
 
 from MelodieInfra import Config, MelodieExceptions
+from MelodieInfra.utils.utils import underline_to_camel
 from .utils import run_profile
 from .algorithms import AlgorithmParameters
 from .algorithms.ga import MelodieGA
@@ -353,7 +354,7 @@ class GATrainerAlgorithm:
 
             self.manager._write_to_table(
                 "csv",
-                f"{container_name}_trainer_result",
+                f"Result_Trainer_{underline_to_camel(container_name)}",
                 pd.DataFrame(agent_records[container_name]),
             )
 
@@ -362,7 +363,7 @@ class GATrainerAlgorithm:
 
         self.manager._write_to_table(
             "csv",
-            "environment_trainer_result",
+            "Result_Trainer_Environment",
             pd.DataFrame([env_record]),
         )
 
@@ -407,7 +408,7 @@ class GATrainerAlgorithm:
                 container_agent_record_list.append(cov_records)
             self.manager._write_to_table(
                 "csv",
-                f"{container_name}_trainer_result_cov",
+                f"Result_Trainer_{underline_to_camel(container_name)}",
                 pd.DataFrame(container_agent_record_list),
             )
         env_record = {}
@@ -417,7 +418,7 @@ class GATrainerAlgorithm:
             cov = env_df[prop_name].std() / env_df[prop_name].mean()
             env_record.update({prop_name + "_mean": mean, prop_name + "_cov": cov})
         self.manager._write_to_table(
-            "csv", "environment_trainer_result_cov", pd.DataFrame([env_record])
+            "csv", "Result_Trainer_Environment_Cov", pd.DataFrame([env_record])
         )
 
     def pre_check(self, meta):

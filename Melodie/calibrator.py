@@ -20,7 +20,7 @@ import pandas as pd
 
 from MelodieInfra import Config, MelodieExceptions
 from MelodieInfra.parallel.parallel_manager import ParallelManager
-
+from MelodieInfra.utils import underline_to_camel
 from .algorithms import AlgorithmParameters
 from .algorithms.ga import MelodieGA
 from .data_loader import DataLoader
@@ -259,7 +259,7 @@ class GACalibratorAlgorithm:
                 agent_records[container_name].append(d)
             self.manager._write_to_table(
                 "csv",
-                f"{container_name}_calibrator_result",
+                f"Result_Calibrator_{underline_to_camel(container_name)}",
                 pd.DataFrame(agent_records[container_name]),
             )
         environment_record.update(meta_dict)
@@ -267,7 +267,7 @@ class GACalibratorAlgorithm:
         environment_record.pop("target_function_value")
 
         self.manager._write_to_table(
-            "csv", "environment_calibrator_result", pd.DataFrame([environment_record])
+            "csv", "Result_Calibrator_Environment", pd.DataFrame([environment_record])
         )
         return agent_records, environment_record
 
@@ -312,7 +312,7 @@ class GACalibratorAlgorithm:
 
             self.manager._write_to_table(
                 "csv",
-                f"{container_name}_calibrator_result_cov",
+                f"Result_Calibrator_{underline_to_camel(container_name)}_Cov",
                 pd.DataFrame(container_agent_record_list),
             )
         env_record = {}
@@ -325,7 +325,7 @@ class GACalibratorAlgorithm:
             env_record.update({prop_name + "_mean": mean, prop_name + "_cov": cov})
 
         self.manager._write_to_table(
-            "csv", "environment_calibrator_result_cov", pd.DataFrame([env_record])
+            "csv", "Result_Calibrator_Environment_Cov", pd.DataFrame([env_record])
         )
 
     def pre_check(self, meta):
