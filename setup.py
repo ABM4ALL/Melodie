@@ -69,7 +69,7 @@ setuptools.setup(
     install_requires=scientific_toolchain_versions()
     + [
         "chardet",
-        "pandas~=2.1",
+        "pandas<=2.1",
         "seaborn",
         "networkx",
         "openpyxl",
