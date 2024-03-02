@@ -553,7 +553,7 @@ class Trainer(BaseModellingManager):
         config: "Config",
         scenario_cls: "Optional[Type[Scenario]]",
         model_cls: "Optional[Type[Model]]",
-        data_loader_cls: "Optional[Type[DataLoader]]",
+        data_loader_cls: "Optional[Type[DataLoader]]" = None,
         processors: int = 1,
     ):
         """
@@ -743,7 +743,7 @@ class Trainer(BaseModellingManager):
         :return: A list of trainer parameters.
         """
 
-        trainer_params_table = self.get_dataframe("trainer_params_scenarios")
+        trainer_params_table = self.get_dataframe("TrainerParamsScenarios")
         assert isinstance(
             trainer_params_table, pd.DataFrame
         ), "No learning scenarios table specified!"

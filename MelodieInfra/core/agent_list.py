@@ -1,15 +1,18 @@
 # import random
 import logging
 import random
-from typing import Any, Callable, TYPE_CHECKING
-
-from .types import (
+from typing import (
+    Any,
+    Callable,
+    TYPE_CHECKING,
+    Generic,
     ClassVar,
     List,
     Dict,
     Union,
     Set,
     TypeVar,
+    Type,
 )
 
 import pandas as pd
@@ -39,7 +42,7 @@ class SeqIter:
         return next_item
 
 
-class BaseAgentContainer:
+class BaseAgentContainer(Generic[AgentGeneric]):
     """
     The base class that contains agents
     """
@@ -68,16 +71,17 @@ class BaseAgentContainer:
 
         :param column_names:  property names
         """
+        raise NotImplementedError
 
     def get_agent(self, agent_id: int) -> "AgentGeneric":
         raise NotImplementedError
 
 
-class AgentList(BaseAgentContainer):
-    def __init__(self, agent_class: "ClassVar[AgentGeneric]", model: "Model") -> None:
+class AgentList(BaseAgentContainer, Generic[AgentGeneric]):
+    def __init__(self, agent_class: "Type[AgentGeneric]", model: "Model") -> None:
         super().__init__()
         self.scenario = model.scenario
-        self.agent_class: "ClassVar[AgentGeneric]" = agent_class
+        self.agent_class: "Type[AgentGeneric]" = agent_class
         self.model = model
         self.indices = {}
         self.agents: List[AgentGeneric] = []

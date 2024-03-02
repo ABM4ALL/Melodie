@@ -403,7 +403,7 @@ class Calibrator(BaseModellingManager):
         config: "Config",
         scenario_cls: "Optional[Type[Scenario]]",
         model_cls: "Optional[Type[Model]]",
-        data_loader_cls: Type["DataLoader"],
+        data_loader_cls: Type["DataLoader"] = None,
         processors=1,
     ):
         """
@@ -433,7 +433,6 @@ class Calibrator(BaseModellingManager):
         self.model: Optional[Model] = None
 
         self.current_algorithm_meta = GACalibratorAlgorithmMeta()
-        self.df_loader_cls = data_loader_cls
 
     def setup(self):
         """
@@ -454,9 +453,7 @@ class Calibrator(BaseModellingManager):
 
         :return: A list of generated scenarios.
         """
-        return self.data_loader.generate_scenarios_from_dataframe(
-            "calibrator_scenarios"
-        )
+        return self.data_loader.generate_scenarios("Calibrator")
 
     def get_params_scenarios(self) -> List:
         """
@@ -465,7 +462,7 @@ class Calibrator(BaseModellingManager):
         :return: A list of dict, and each dict contains parameters.
         """
 
-        calibrator_scenarios_table = self.get_dataframe("calibrator_params_scenarios")
+        calibrator_scenarios_table = self.get_dataframe("CalibratorParamsScenarios")
         assert isinstance(
             calibrator_scenarios_table, pd.DataFrame
         ), "No learning scenarios table specified!"

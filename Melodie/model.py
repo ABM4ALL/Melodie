@@ -1,5 +1,5 @@
 import logging
-from typing import Optional, Union, Type, List
+from typing import Optional, Union, Type, List, TypeVar
 
 from MelodieInfra import (
     create_db_conn,
@@ -30,6 +30,12 @@ from .network import Network, Edge
 from .visualizer import Visualizer
 
 logger = logging.getLogger(__name__)
+
+EnvironmentType = TypeVar("EnvironmentType", bound=Environment)
+AgentType = TypeVar("AgentType", bound=Agent)
+GridType = TypeVar("GridType", bound=Grid)
+SpotType = TypeVar("SpotType", bound=Spot)
+NetworkType = TypeVar("NetworkType", bound=Network)
 
 
 class ModelRunRoutine:
@@ -139,8 +145,8 @@ class Model:
 
     def create_agent_list(
         self,
-        agent_class: Type["Agent"],
-    ):
+        agent_class: Type[AgentType],
+    ) -> AgentList[AgentType]:
         """
         Create an agent list object. A model could contain multiple ``AgentList``s.
 
@@ -149,7 +155,7 @@ class Model:
         """
         return AgentList(agent_class, model=self)
 
-    def create_environment(self, env_class: Type["Environment"]):
+    def create_environment(self, env_class: Type[EnvironmentType]) -> EnvironmentType:
         """
         Create the environment of model. Notice that a model has only one environment.
 
@@ -162,7 +168,11 @@ class Model:
         self.initialization_queue.append(env)
         return env
 
-    def create_grid(self, grid_cls: Type["Grid"] = None, spot_cls: Type["Spot"] = None):
+    def create_grid(
+        self,
+        grid_cls: Optional[Type[GridType]] = None,
+        spot_cls: Optional[Type[SpotType]] = None,
+    ) -> GridType:
         """
         Create a grid.
 
@@ -177,7 +187,9 @@ class Model:
         return grid
 
     def create_network(
-        self, network_cls: Type["Network"] = None, edge_cls: Type["Edge"] = None
+        self,
+        network_cls: Optional[Type[NetworkType]] = None,
+        edge_cls: Type[Edge] = None,
     ):
         """
         Create the network of model.

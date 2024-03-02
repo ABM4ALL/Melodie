@@ -172,7 +172,11 @@ class DataLoader:
         assert self.manager is not None, MelodieExceptions.MLD_INTL_EXC
         assert self.manager.data_loader is not None, MelodieExceptions.MLD_INTL_EXC
         if isinstance(df_info, str):
-            df_name = df_name if df_name != "" else os.path.basename(df_info)
+            df_name = (
+                df_name
+                if df_name != ""
+                else os.path.splitext(os.path.basename(df_info))[0]
+            )
             info = DataFrameInfo(df_name, {}, df_info)
             return self._load_dataframe(info)
         else:

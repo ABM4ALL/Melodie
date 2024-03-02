@@ -15,7 +15,7 @@ class Element:
             if paramName not in self.__dict__.keys():
                 if asserts_key_exist:
                     raise ValueError(msg)
-                else:
-                    warnings.warn(msg)
+                # else:
+                # warnings.warn(msg)
 
             setattr(self, paramName, paramValue)

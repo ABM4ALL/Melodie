@@ -1,6 +1,6 @@
 from MelodieInfra.core.agent_list import AgentList
 from .api import floor, randint, _random as random, iterable, lru_cache
-from .types import ClassVar, Dict, List, Tuple
+from typing import ClassVar, Dict, List, Tuple
 
 from .agent import Agent
 
