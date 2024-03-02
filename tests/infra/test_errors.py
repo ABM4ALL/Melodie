@@ -1,5 +1,6 @@
-from Melodie import DataFrameInfo
 from sqlalchemy import Integer
+
+from Melodie import DataFrameInfo
 from MelodieInfra.exceptions.exceptions import assert_exc_occurs
 
 df_info = DataFrameInfo("df_name", {"a": Integer(), "b": Integer(), "c": Integer()})

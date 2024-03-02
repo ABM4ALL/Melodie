@@ -257,8 +257,7 @@ class Model:
             if isinstance(prop, BaseAgentContainer):
                 all_ids = prop.all_agent_ids()
                 if len(set(all_ids)) < len(all_ids):
-                    raise MelodieExceptions.Agents.AgentIDConflict(
-                        prop_name, all_ids)
+                    raise MelodieExceptions.Agents.AgentIDConflict(prop_name, all_ids)
 
     def run(self):
         """

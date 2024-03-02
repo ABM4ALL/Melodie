@@ -34,7 +34,9 @@ cfg_for_trainer = Config(
     "temp_db_trainer",
     os.path.dirname(__file__),
     input_folder=os.path.join(os.path.dirname(__file__), "resources", "excels"),
-    output_folder=os.path.join(os.path.dirname(__file__), "resources", "output", "trainer"),
+    output_folder=os.path.join(
+        os.path.dirname(__file__), "resources", "output", "trainer"
+    ),
 )
 
 cfg_dataloader_with_cache = Config(

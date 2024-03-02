@@ -21,7 +21,6 @@ from MelodieInfra import (
     MelodieExceptions,
     show_prettified_warning,
     MelodieGlobalConfig,
-
 )
 
 from .data_loader import DataLoader, DataFrameInfo
@@ -128,8 +127,7 @@ class BaseModellingManager(abc.ABC):
         self.scenarios = self.generate_scenarios()
 
         if self.scenarios is None or len(self.scenarios) == 0:
-            raise MelodieExceptions.Scenario.NoValidScenarioGenerated(
-                self.scenarios)
+            raise MelodieExceptions.Scenario.NoValidScenarioGenerated(self.scenarios)
 
     @abc.abstractmethod
     def generate_scenarios(self) -> List[Scenario]:
@@ -138,7 +136,9 @@ class BaseModellingManager(abc.ABC):
         """
         pass
 
-    def _write_to_table(self, kind: Literal["csv", "sql"], table_name: str, data: pd.DataFrame):
+    def _write_to_table(
+        self, kind: Literal["csv", "sql"], table_name: str, data: pd.DataFrame
+    ):
         """
         Write a pandas dataframe to a table in output directory or database
         """
@@ -149,8 +149,9 @@ class BaseModellingManager(abc.ABC):
                 if_exists="append",
             )
         elif kind == "csv":
-            csv_file = os.path.join(self.config.output_tables_path(),
-                                    table_name+".csv")
+            csv_file = os.path.join(
+                self.config.output_tables_path(), table_name + ".csv"
+            )
             if os.path.exists(csv_file):
                 data.to_csv(csv_file, mode="a", header=False)
             else:
@@ -534,8 +535,7 @@ class Simulator(BaseModellingManager):
                         )
                         first_run = True
                     else:
-                        parallel_manager.put_task(
-                            (id_run, scenario.to_json(), None))
+                        parallel_manager.put_task((id_run, scenario.to_json(), None))
                         tasks_count += 1
 
             for i in range(tasks_count):

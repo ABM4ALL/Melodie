@@ -4,7 +4,7 @@ from typing import Union
 
 import numpy as np
 
-from Melodie import Grid, Spot, GridAgent, Agent, AgentList
+from Melodie import Agent, AgentList, Grid, GridAgent, Spot
 from tests.infra.config import model
 
 logger = logging.getLogger(__name__)

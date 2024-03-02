@@ -9,8 +9,8 @@ from typing import TYPE_CHECKING
 from Melodie import DataCollector
 
 if TYPE_CHECKING:
-    from source.scenario import AMETSScenario
     from source.environment import AMETSEnvironment
+    from source.scenario import AMETSScenario
 
 
 class AMETSDataCollector(DataCollector):

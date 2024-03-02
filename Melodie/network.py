@@ -5,7 +5,7 @@ from typing import Dict, Set, Union, List, Tuple, Type, TYPE_CHECKING
 
 import networkx as nx
 
-
+import numpy as np
 from MelodieInfra.core import Agent, AgentList
 
 if TYPE_CHECKING:
@@ -305,8 +305,6 @@ class Network:
         :return: None
         """
         if os.path.exists(self.layout_file):
-            import numpy as np
-
             try:
                 G = nx.read_gexf(self.layout_file, node_type=ast.literal_eval)
                 positions = {}

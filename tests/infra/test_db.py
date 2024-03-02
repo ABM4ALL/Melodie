@@ -2,11 +2,11 @@
 import os
 
 import pandas as pd
-from pandas.api.types import is_integer_dtype, is_float_dtype
+from pandas.api.types import is_float_dtype, is_integer_dtype
 from sqlalchemy.types import Integer
 
-from MelodieInfra import create_db_conn, DBConn, MelodieException
 from Melodie import Scenario
+from MelodieInfra import DBConn, MelodieException, create_db_conn
 from tests.infra.config import cfg
 
 cfg = cfg

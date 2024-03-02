@@ -1,4 +1,5 @@
 import logging
+import numpy as np
 
 try:
     from sko.GA import GA
@@ -16,8 +17,6 @@ logger = logging.getLogger(__name__)
 
 class MelodieGA(GA):
     def run(self, max_iter=None):
-        import numpy as np
-
         self.max_iter = max_iter or self.max_iter
         best = []
         for i in range(self.max_iter):

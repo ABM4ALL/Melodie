@@ -1,4 +1,4 @@
-from MelodieInfra import objs_to_table_row_vectorizer, TableRow, Table
+from MelodieInfra import Table, TableRow, objs_to_table_row_vectorizer
 
 
 class CustomClass:

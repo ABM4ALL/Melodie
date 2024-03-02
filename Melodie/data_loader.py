@@ -26,15 +26,16 @@ logger = logging.getLogger(__name__)
 
 def first_char_upper(s: str) -> str:
     if len(s) >= 1:
-        return s[0].upper()+s[1:]
+        return s[0].upper() + s[1:]
     else:
         return s
+
 
 # TODO: move this function to utils
 
 
 def underline_to_camel(s):
-    return ''.join(first_char_upper(word) for word in s.split('_'))
+    return "".join(first_char_upper(word) for word in s.split("_"))
 
 
 class DataFrameInfo:
@@ -53,7 +54,7 @@ class DataFrameInfo:
         self,
         df_name: str,
         columns: Dict[str, "sqlalchemy.types"],
-        file_name: str = '',
+        file_name: str = "",
         engine: str = "pandas",
     ):
         """
@@ -102,7 +103,6 @@ class MatrixInfo:
 
     @property
     def dtype(self):
-        import numpy as np
         if self.data_type is None:
             return None
         py_type = self.data_type.python_type
@@ -155,7 +155,11 @@ class DataLoader:
         for file_name in os.listdir(self.config.input_folder):
             camel_case = underline_to_camel(os.path.splitext(file_name)[0])
 
-            if camel_case in ("SimulatorScenarios", "TrainerScenarios", "CalibratorScenarios"):
+            if camel_case in (
+                "SimulatorScenarios",
+                "TrainerScenarios",
+                "CalibratorScenarios",
+            ):
                 self.load_dataframe(file_name, camel_case)
 
     def load_dataframe(self, df_info: Union[str, "DataFrameInfo"], df_name=""):
@@ -175,7 +179,9 @@ class DataLoader:
         else:
             return self._load_dataframe(df_info)
 
-    def load_matrix(self, mat_info: Union[str, "MatrixInfo"], mat_name="") -> np.ndarray:
+    def load_matrix(
+        self, mat_info: Union[str, "MatrixInfo"], mat_name=""
+    ) -> np.ndarray:
         """
         Load a matrix from table file.
 
@@ -186,8 +192,7 @@ class DataLoader:
         assert self.manager is not None, MelodieExceptions.MLD_INTL_EXC
         assert self.manager.data_loader is not None, MelodieExceptions.MLD_INTL_EXC
         if isinstance(mat_info, str):
-            mat_name = mat_name if mat_name != "" else os.path.basename(
-                mat_info)
+            mat_name = mat_name if mat_name != "" else os.path.basename(mat_info)
             info = MatrixInfo(mat_name, None, mat_info)
             return self.manager.data_loader._load_matrix(info)
         else:
@@ -279,8 +284,7 @@ class DataLoader:
         if df_info.df_name in self.registered_dataframes:
             return self.registered_dataframes[df_info.df_name]
         assert df_info.file_name is not None
-        file_path_abs = os.path.join(
-            self.config.input_folder, df_info.file_name)
+        file_path_abs = os.path.join(self.config.input_folder, df_info.file_name)
 
         table = self._load_dataframe_cached(file_path_abs)
 
@@ -299,16 +303,15 @@ class DataLoader:
 
         assert matrix_info.file_name is not None
         _, ext = os.path.splitext(matrix_info.file_name)
-        file_path_abs = os.path.join(
-            self.config.input_folder, matrix_info.file_name
-        )
+        file_path_abs = os.path.join(self.config.input_folder, matrix_info.file_name)
         if ext in {".xls", ".xlsx"}:
             table: "pd.DataFrame" = pd.read_excel(file_path_abs, header=None)
         elif ext in {".csv"}:
             table: "pd.DataFrame" = pd.read_csv(file_path_abs, header=None)
         else:
             raise NotImplementedError(
-                f"Cannot load file with extension {ext} to matrix.")
+                f"Cannot load file with extension {ext} to matrix."
+            )
         array = table.to_numpy(matrix_info.dtype, copy=True)
         self.registered_matrices[matrix_info.mat_name] = array
         return array
@@ -338,20 +341,18 @@ class DataLoader:
         """
         scenarios_dataframe = self.registered_dataframes.get(df_name)
         if scenarios_dataframe is None:
-            MelodieExceptions.Data.TableNotFound(
-                df_name, self.registered_dataframes)
+            MelodieExceptions.Data.TableNotFound(df_name, self.registered_dataframes)
         scenarios_dataframe = TableInterface(scenarios_dataframe)
         cols = [col for col in scenarios_dataframe.columns]
         scenarios: List[Scenario] = []
         for i, row in enumerate(scenarios_dataframe.iter_dicts()):
             scenario = self.scenario_cls()
             scenario.manager = self.manager
-            
+
             scenario._setup(row)
             scenarios.append(scenario)
         if len(scenarios) == 0:
-            raise MelodieExceptions.Scenario.NoValidScenarioGenerated(
-                scenarios)
+            raise MelodieExceptions.Scenario.NoValidScenarioGenerated(scenarios)
         return scenarios
 
     def generate_scenarios(self, manager_type: str) -> List["Scenario"]:
@@ -363,8 +364,7 @@ class DataLoader:
         """
         if manager_type not in {"Simulator", "Trainer", "Calibrator"}:
             raise MelodieExceptions.Program.Variable.VariableNotInSet(
-                "manager_type", manager_type, {
-                    "Simulator", "Trainer", "Calibrator"}
+                "manager_type", manager_type, {"Simulator", "Trainer", "Calibrator"}
             )
 
         df_name = f"{manager_type}Scenarios"
@@ -375,4 +375,5 @@ class DataLoader:
             return self.generate_scenarios_from_dataframe(underline_to_camel(df_name))
         else:
             raise NotImplementedError(
-                f"{manager_type}/{underline_to_camel(df_name)} is not supported!")
+                f"{manager_type}/{underline_to_camel(df_name)} is not supported!"
+            )

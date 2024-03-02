@@ -1,9 +1,10 @@
 import os
 import time
-from typing import List
+
 from base import OUTPUT_DIR
+from sqlalchemy import Integer
+
 from MelodieInfra.table import GeneralTable
-from sqlalchemy import Integer, create_engine
 
 XLSFILE = os.path.join(os.path.dirname(__file__), "data", "params.xlsx")
 

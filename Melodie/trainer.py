@@ -2,6 +2,8 @@ import copy
 import logging
 import time
 import sys
+
+import pandas as pd
 from typing import (
     Dict,
     Tuple,
@@ -185,8 +187,7 @@ class GATrainerAlgorithm:
         self.algorithms_dict: Dict[Tuple[int, str], Union["GA"]] = {}
 
         self.target_fcn_cache = TargetFcnCache()
-        self.agent_container_getters: Dict[str,
-                                           Callable[[Model], AgentList]] = {}
+        self.agent_container_getters: Dict[str, Callable[[Model], AgentList]] = {}
         self.agent_ids: Dict[str, List[int]] = {}  # {category : [agent_id]}
         self.agent_params_defined: Dict[
             str, List[str]
@@ -243,8 +244,7 @@ class GATrainerAlgorithm:
         for agent_id in agent_id_list:
             self.algorithms_dict[(agent_id, container_name)] = MelodieGA(
                 func=cast(
-                    "function", self.generate_target_function(
-                        agent_id, container_name)
+                    "function", self.generate_target_function(agent_id, container_name)
                 ),
                 n_dim=len(param_names),
                 size_pop=self.params.strategy_population,
@@ -270,8 +270,7 @@ class GATrainerAlgorithm:
         }
         # {category : [{id: 0, param1: 1, param2: 2, ...}]}
         for key, algorithm in self.algorithms_dict.items():
-            chromosome_value = algorithm.chrom2x(
-                algorithm.Chrom)[id_chromosome]
+            chromosome_value = algorithm.chrom2x(algorithm.Chrom)[id_chromosome]
             agent_id, agent_category = key
             d = {"id": agent_id}
             for i, param_name in enumerate(self.agent_params_defined[agent_category]):
@@ -333,7 +332,6 @@ class GATrainerAlgorithm:
         :param meta:
         :return:
         """
-        import pandas as pd
 
         agent_records = {}
         env_record = {}
@@ -354,13 +352,19 @@ class GATrainerAlgorithm:
                 agent_records[container_name].append(d)
 
             self.manager._write_to_table(
-                "csv", f"{container_name}_trainer_result", pd.DataFrame(agent_records[container_name]))
+                "csv",
+                f"{container_name}_trainer_result",
+                pd.DataFrame(agent_records[container_name]),
+            )
 
         env_record.update(meta_dict)
         env_record.update(env_data)
 
         self.manager._write_to_table(
-            "csv", "environment_trainer_result", pd.DataFrame([env_record]),)
+            "csv",
+            "environment_trainer_result",
+            pd.DataFrame([env_record]),
+        )
 
         return agent_records, env_record
 
@@ -377,7 +381,6 @@ class GATrainerAlgorithm:
         :param meta:
         :return:
         """
-        import pandas as pd
 
         pd.set_option("max_colwidth", 500)
         pd.set_option("display.max_columns", None)
@@ -402,17 +405,20 @@ class GATrainerAlgorithm:
                         {prop_name + "_mean": mean, prop_name + "_cov": cov}
                     )
                 container_agent_record_list.append(cov_records)
-            self.manager._write_to_table("csv",  f"{container_name}_trainer_result_cov",
-                                         pd.DataFrame(container_agent_record_list),)
+            self.manager._write_to_table(
+                "csv",
+                f"{container_name}_trainer_result_cov",
+                pd.DataFrame(container_agent_record_list),
+            )
         env_record = {}
         env_record.update(meta_dict)
         for prop_name in self.recorded_env_properties:
             mean = env_df[prop_name].mean()
             cov = env_df[prop_name].std() / env_df[prop_name].mean()
-            env_record.update(
-                {prop_name + "_mean": mean, prop_name + "_cov": cov})
-        self.manager._write_to_table("csv",  "environment_trainer_result_cov",
-                                     pd.DataFrame([env_record]))
+            env_record.update({prop_name + "_mean": mean, prop_name + "_cov": cov})
+        self.manager._write_to_table(
+            "csv", "environment_trainer_result_cov", pd.DataFrame([env_record])
+        )
 
     def pre_check(self, meta):
         """
@@ -427,8 +433,6 @@ class GATrainerAlgorithm:
         )
 
     def run(self, scenario: Scenario, meta: Union[GATrainerAlgorithmMeta]):
-        import pandas as pd
-
         self.pre_check(meta)
 
         for i in range(self.params.generation_num):
@@ -474,12 +478,11 @@ class GATrainerAlgorithm:
                     agent_records_collector[container_name] += records
                 env_records_list.append(env_record)
                 self.target_function_to_cache(agents_data, i, chrom)
-                
+
             t1 = time.time()
             print(t1 - t0)
             self.calc_cov_df(
-                {k: pd.DataFrame(v)
-                 for k, v in agent_records_collector.items()},
+                {k: pd.DataFrame(v) for k, v in agent_records_collector.items()},
                 pd.DataFrame(env_records_list),
                 meta,
             )
@@ -528,8 +531,7 @@ class AgentContainerManager:
         :return:
         """
         self.agent_containers.append(
-            RelatedAgentContainerModel(
-                container_name, used_properties, [], agent_ids)
+            RelatedAgentContainerModel(container_name, used_properties, [], agent_ids)
         )
 
     def get_agent_container(
@@ -669,8 +671,7 @@ class Trainer(BaseModellingManager):
         :return: None
         """
 
-        self.algorithm = GATrainerAlgorithm(
-            trainer_params, self, self.processors)
+        self.algorithm = GATrainerAlgorithm(trainer_params, self, self.processors)
         self.algorithm.recorded_env_properties = self.environment_properties
         for agent_container in self.container_manager.agent_containers:
             self.algorithm.setup_agent_locations(
@@ -741,15 +742,13 @@ class Trainer(BaseModellingManager):
 
         :return: A list of trainer parameters.
         """
-        import pandas as pd
 
         trainer_params_table = self.get_dataframe("trainer_params_scenarios")
         assert isinstance(
             trainer_params_table, pd.DataFrame
         ), "No learning scenarios table specified!"
 
-        trainer_params_raw_list = trainer_params_table.to_dict(
-            orient="records")
+        trainer_params_raw_list = trainer_params_table.to_dict(orient="records")
 
         trainer_params_list = []
         for trainer_params_raw in trainer_params_raw_list:

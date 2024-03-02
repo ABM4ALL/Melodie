@@ -23,7 +23,7 @@ class Config:
         input_folder: str,
         output_folder: str,
         visualizer_entry: str = "",
-        data_output_type:  Literal["csv", "sqlite"] = "csv",
+        data_output_type: Literal["csv", "sqlite"] = "csv",
         database_config: Optional["DBConfigTypes"] = None,
         **kwargs,
     ):
@@ -40,8 +40,7 @@ class Config:
 
         if database_config is None:
             self.database_config = SQLiteDBConfig(
-                os.path.join(self.output_folder,
-                             self.project_name + SQLITE_FILE_SUFFIX)
+                os.path.join(self.output_folder, self.project_name + SQLITE_FILE_SUFFIX)
             )
         else:
             assert isinstance(database_config, BaseMelodieDBConfig), (
@@ -95,7 +94,7 @@ class Config:
     def output_tables_path(self):
         """
         Get the path to store the tables output from the model. It is `data/output/{project_name}`
-        
+
         If output to database and using sqlite, the output directory will be `data/output`
         """
         return os.path.join(self.output_folder)

@@ -99,8 +99,7 @@ class ParallelManager:
             p = subprocess.Popen(
                 [
                     sys.executable,
-                    os.path.join(os.path.dirname(__file__),
-                                 "parallel_worker.py"),
+                    os.path.join(os.path.dirname(__file__), "parallel_worker.py"),
                     "--core_id",
                     str(core_id),
                     "--workdirs",

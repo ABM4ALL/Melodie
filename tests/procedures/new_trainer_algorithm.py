@@ -1,25 +1,17 @@
 # -*- coding:utf-8 -*-
-from typing import List
 # import pytest
 import os
-from Melodie import (
-    Agent,
-    Model,
-    Scenario,
-    Trainer,
-    DataLoader,
-    Environment,
-    Config
-)
-from Melodie.trainer import GATrainerAlgorithm, GATrainerAlgorithmMeta, GATrainerParams
+from typing import List
+
+from Melodie import Agent, Config, DataLoader, Environment, Model, Scenario, Trainer
 
 cfg_for_trainer = Config(
     "temp_db_trainer",
     os.path.dirname(__file__),
-    input_folder=os.path.join(os.path.dirname(
-        __file__), "resources", "excels"),
-    output_folder=os.path.join(os.path.dirname(
-        __file__), "resources", "output", "trainer"),
+    input_folder=os.path.join(os.path.dirname(__file__), "resources", "excels"),
+    output_folder=os.path.join(
+        os.path.dirname(__file__), "resources", "output", "trainer"
+    ),
 )
 
 
@@ -44,8 +36,7 @@ class DFLoader(DataLoader):
 class MockTrainer(Trainer):
     def setup(self):
         self.add_agent_training_property(
-            "agent_list", ["param1", "param2"], lambda s: [
-                i for i in range(10)]
+            "agent_list", ["param1", "param2"], lambda s: [i for i in range(10)]
         )
 
     def utility(self, agent: Agent) -> float:

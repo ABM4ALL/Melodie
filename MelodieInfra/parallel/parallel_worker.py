@@ -111,7 +111,7 @@ def sub_routine_trainer(
     :return:
     """
     # TODO: Have to set this path!
-    
+
     from Melodie import Config, Trainer, Environment, AgentList, Agent
     import logging
 
@@ -121,9 +121,8 @@ def sub_routine_trainer(
     try:
         config = Config.from_dict(config_raw)
         trainer: Trainer
-        
-        trainer, scenario_cls, model_cls = get_scenario_manager(
-            config, modules)
+
+        trainer, scenario_cls, model_cls = get_scenario_manager(config, modules)
     except BaseException:
         import traceback
 
@@ -161,8 +160,7 @@ def sub_routine_trainer(
                 agent_data[container.container_name] = df
                 for row in df:
                     agent = agent_container.get_agent(row["id"])
-                    row["target_function_value"] = trainer.target_function(
-                        agent)
+                    row["target_function_value"] = trainer.target_function(agent)
                     row["utility"] = trainer.utility(agent)
                     row["agent_id"] = row.pop("id")
             env: Environment = model.environment
@@ -205,8 +203,7 @@ def sub_routine_calibrator(
     try:
         config = Config.from_dict(config_raw)
         calibrator: "Calibrator"
-        calibrator, scenario_cls, model_cls = get_scenario_manager(
-            config, modules)
+        calibrator, scenario_cls, model_cls = get_scenario_manager(config, modules)
     except BaseException:
         import traceback
 
@@ -237,8 +234,7 @@ def sub_routine_calibrator(
             env: Environment = model.environment
             env_data = env.to_dict(calibrator.watched_env_properties)
             env_data.update(
-                {prop: scenario.to_dict()[prop]
-                 for prop in calibrator.properties}
+                {prop: scenario.to_dict()[prop] for prop in calibrator.properties}
             )
             env_data["target_function_value"] = env_data[
                 "distance"
@@ -278,8 +274,7 @@ def sub_routine_simulator(
     try:
         config = Config.from_dict(config_raw)
         simulator: "Simulator"
-        simulator, scenario_cls, model_cls = get_scenario_manager(
-            config, modules)
+        simulator, scenario_cls, model_cls = get_scenario_manager(config, modules)
     except BaseException:
         import traceback
 

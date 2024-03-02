@@ -1,9 +1,9 @@
 # -*- coding:utf-8 -*-
-import sys
 import os
+import sys
+
 sys.path.insert(0, os.path.dirname(__file__))
 print(os.path.abspath(sys.path[0]))
-import base
 from new_trainer_algorithm import *
 
 
@@ -21,6 +21,7 @@ def test_chrom_params_algorithm():
     mgr.pre_run()
     ta.run(scenario, meta)
     ta.stop()
+
 
 if __name__ == "__main__":
     test_chrom_params_algorithm()

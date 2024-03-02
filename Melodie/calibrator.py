@@ -14,7 +14,7 @@ from typing import (
     Type,
     Iterator,
     cast,
-    Literal
+    Literal,
 )
 import pandas as pd
 
@@ -196,8 +196,7 @@ class GACalibratorAlgorithm:
         :param id_chromosome:
         :return:
         """
-        chromosome_value = self.algorithm.chrom2x(
-            self.algorithm.Chrom)[id_chromosome]
+        chromosome_value = self.algorithm.chrom2x(self.algorithm.Chrom)[id_chromosome]
         env_parameters_dict = {}
         for i, param_name in enumerate(self.env_param_names):
             env_parameters_dict[param_name] = chromosome_value[i]
@@ -214,8 +213,7 @@ class GACalibratorAlgorithm:
 
         :return:
         """
-        self.cache[(generation, id_chromosome)
-                   ] = env_data["target_function_value"]
+        self.cache[(generation, id_chromosome)] = env_data["target_function_value"]
 
     def generate_target_function(self) -> Callable[[], float]:
         """
@@ -226,8 +224,7 @@ class GACalibratorAlgorithm:
 
         def f(*args):
             self._chromosome_counter += 1
-            value = self.cache[(self._current_generation,
-                                self._chromosome_counter)]
+            value = self.cache[(self._current_generation, self._chromosome_counter)]
             return value
 
         return f
@@ -260,14 +257,18 @@ class GACalibratorAlgorithm:
                 d.update(agent_container_data)
 
                 agent_records[container_name].append(d)
-            self.manager._write_to_table("csv", f"{container_name}_calibrator_result", pd.DataFrame(
-                agent_records[container_name]))
+            self.manager._write_to_table(
+                "csv",
+                f"{container_name}_calibrator_result",
+                pd.DataFrame(agent_records[container_name]),
+            )
         environment_record.update(meta_dict)
         environment_record.update(env_data)
         environment_record.pop("target_function_value")
 
         self.manager._write_to_table(
-            "csv", "environment_calibrator_result", pd.DataFrame([environment_record]))
+            "csv", "environment_calibrator_result", pd.DataFrame([environment_record])
+        )
         return agent_records, environment_record
 
     def calc_cov_df(
@@ -309,8 +310,11 @@ class GACalibratorAlgorithm:
                     )
                 container_agent_record_list.append(cov_records)
 
-            self.manager._write_to_table("csv", f"{container_name}_calibrator_result_cov",
-                                         pd.DataFrame(container_agent_record_list))
+            self.manager._write_to_table(
+                "csv",
+                f"{container_name}_calibrator_result_cov",
+                pd.DataFrame(container_agent_record_list),
+            )
         env_record = {}
         env_record.update(meta_dict)
         for prop_name in (
@@ -318,11 +322,11 @@ class GACalibratorAlgorithm:
         ):
             mean = env_df[prop_name].mean()
             cov = env_df[prop_name].std() / env_df[prop_name].mean()
-            env_record.update(
-                {prop_name + "_mean": mean, prop_name + "_cov": cov})
+            env_record.update({prop_name + "_mean": mean, prop_name + "_cov": cov})
 
-        self.manager._write_to_table("csv", "environment_calibrator_result_cov",
-                                     pd.DataFrame([env_record]))
+        self.manager._write_to_table(
+            "csv", "environment_calibrator_result_cov", pd.DataFrame([env_record])
+        )
 
     def pre_check(self, meta):
         """
@@ -338,7 +342,6 @@ class GACalibratorAlgorithm:
         )
 
     def run(self, scenario: Scenario, meta: Union[GACalibratorAlgorithmMeta]):
-
         self.pre_check(meta)
 
         for i in range(self.params.generation_num):
@@ -378,8 +381,7 @@ class GACalibratorAlgorithm:
                 self.target_function_to_cache(env_data, i, chrom)
 
             self.calc_cov_df(
-                {k: pd.DataFrame(v)
-                 for k, v in agent_records_collector.items()},
+                {k: pd.DataFrame(v) for k, v in agent_records_collector.items()},
                 pd.DataFrame(env_records_list),
                 meta,
             )
@@ -463,8 +465,7 @@ class Calibrator(BaseModellingManager):
         :return: A list of dict, and each dict contains parameters.
         """
 
-        calibrator_scenarios_table = self.get_dataframe(
-            "calibrator_params_scenarios")
+        calibrator_scenarios_table = self.get_dataframe("calibrator_params_scenarios")
         assert isinstance(
             calibrator_scenarios_table, pd.DataFrame
         ), "No learning scenarios table specified!"

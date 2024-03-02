@@ -1,8 +1,8 @@
 import os
-import time
-from base import is_pypy, OUTPUT_DIR
-from MelodieInfra.table import PyAMTable, TableReader, TableWriter
-from sqlalchemy import Integer
+
+from base import OUTPUT_DIR
+
+from MelodieInfra.table import TableReader, TableWriter
 
 PATH = os.path.join(os.path.dirname(__file__), "data", "pyam_tutorial_data.csv")
 

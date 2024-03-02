@@ -16,6 +16,9 @@ from MelodieInfra.models import (
 )
 
 
+import pandas as pd
+
+
 def get_table_names(conn_string: str) -> List[str]:
     """
 
@@ -65,7 +68,5 @@ class DatabaseService:
 
     @staticmethod
     def execute_sql(conn_string, sql: str):
-        import pandas as pd
-
         engine = sqlalchemy.create_engine(conn_string)
         return pd.read_sql(sql, engine)

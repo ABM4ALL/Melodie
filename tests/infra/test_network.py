@@ -1,4 +1,4 @@
-from Melodie import AgentList, Model, Scenario, Edge, Network
+from Melodie import AgentList, Edge, Model, Network, Scenario
 from Melodie.network import NetworkAgent
 from tests.infra.config import cfg
 

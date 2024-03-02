@@ -1,9 +1,8 @@
 # -*- coding:utf-8 -*-
+import logging
 import random
 import sqlite3
 import time
-
-import logging
 
 
 def test_sqlite_performance():
@@ -47,4 +46,3 @@ def test_select():
     cx.commit()
     print(len(all))
     print(t1 - t0, t2 - t1)
-    pass

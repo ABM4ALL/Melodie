@@ -1,9 +1,10 @@
 import random
+
 import pandas as pd
-from Melodie import Agent, AgentList, GridAgent, set_seed, assert_exc_type_occurs
-from MelodieInfra import GeneralTable
 from sqlalchemy import Integer
 
+from Melodie import Agent, AgentList, GridAgent, set_seed
+from MelodieInfra import GeneralTable
 from tests.infra.config import model
 
 
@@ -123,7 +124,6 @@ def test_repr_agent_manager():
 
 
 def test_agent_list_iteration():
-    n = 20
     al = AgentList(TestAgent, model)
     times = 0
     for _ in al:

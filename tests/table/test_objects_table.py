@@ -1,10 +1,11 @@
-from dataclasses import dataclass
 import os
 import time
 from typing import List
+
 from base import OUTPUT_DIR
-from MelodieInfra.table import Table, TableRow, column_meta
 from sqlalchemy import BigInteger, Integer, create_engine
+
+from MelodieInfra.table import Table, TableRow, column_meta
 
 XLSFILE = os.path.join(os.path.dirname(__file__), "data", "params.xlsx")
 
@@ -177,4 +178,4 @@ def test_indicing():
 def test_create_autodetect():
     agents = [{"a": i, "b": i + 0.5} for i in range(1000)]
     row_cls = TableRow.subcls_from_dict(agents[0])
-    table = Table.from_dicts(row_cls, agents)
+    Table.from_dicts(row_cls, agents)

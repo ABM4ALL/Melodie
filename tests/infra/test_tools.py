@@ -1,4 +1,4 @@
-from Melodie import run_profile, get_system_info
+from Melodie import get_system_info, run_profile
 
 
 def test_profiler():

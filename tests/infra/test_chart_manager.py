@@ -10,4 +10,3 @@ def test_chart_manager():
         cm.to_json(), indent=4
     )  # It is fine if json.dumps function does not raise any exception.
     print(ret)
-    pass

@@ -1,7 +1,7 @@
 import pandas as pd
-import tests.procedures.base
-from Melodie.trainer import GATrainerParams
+
 from Melodie.calibrator import GACalibratorParams
+from Melodie.trainer import GATrainerParams
 
 
 def test_trainer_params():

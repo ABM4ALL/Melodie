@@ -1,7 +1,9 @@
-from Melodie import DataLoader, Scenario, DataFrameInfo, Simulator
-from tests.infra.config import cfg_dataloader_with_cache, cfg_dataloader_without_cache
 from collections import namedtuple
+
 from sqlalchemy import BigInteger, Float
+
+from Melodie import DataFrameInfo, DataLoader, Scenario
+from tests.infra.config import cfg_dataloader_with_cache
 
 
 def test_data_loader():

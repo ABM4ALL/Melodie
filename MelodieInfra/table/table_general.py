@@ -91,8 +91,7 @@ class GeneralTable(TableBase):
             assert (
                 len(dicts) > 0
             ), "Initial data must have at least one row for Melodie to detect data type."
-            row_type = {k: py_types_to_sa_types[type(
-                v)] for k, v in dicts[0].items()}
+            row_type = {k: py_types_to_sa_types[type(v)] for k, v in dicts[0].items()}
         table = GeneralTable(row_type)
         if not copy:
             for dic in dicts:

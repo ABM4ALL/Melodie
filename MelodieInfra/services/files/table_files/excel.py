@@ -8,6 +8,7 @@ import os
 import tempfile
 from typing import Any, List, cast, TYPE_CHECKING
 
+import pandas as pd
 import openpyxl
 
 from MelodieInfra.models import (
@@ -36,18 +37,12 @@ class ExcelManipulator:
         self.filename = filename
 
     def get_sheet_names(self):
-        import pandas as pd
-
         return pd.ExcelFile(self.filename).sheet_names
 
     def read_sheet(self, sheet_name: str = None, **kwargs):
-        import pandas as pd
-
         return pd.read_excel(self.filename, sheet_name, **kwargs)
 
     def write_to_sheet(self, df: "pd.DataFrame", sheet_name: str, **kwargs):
-        import pandas as pd
-
         book = None
         sheet_exist = False
         if os.path.exists(self.filename):
@@ -75,7 +70,6 @@ class ExcelDataService:
         :param req:
         :return: error message, None means success.
         """
-        import pandas as pd
 
         _, ext = os.path.splitext(req.path)
         ext = ext[1:]

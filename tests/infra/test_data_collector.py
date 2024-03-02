@@ -9,31 +9,28 @@ import pandas as pd
 
 from Melodie import (
     Agent,
+    Config,
     DataCollector,
+    DataLoader,
     Environment,
+    Model,
     Scenario,
     Simulator,
-    Model,
-    DataLoader,
-    Config
 )
+
 cfg_for_temp = Config(
     "temp_db_created",
     os.path.dirname(__file__),
-    input_folder=os.path.join(os.path.dirname(
-        __file__), "resources", "excels"),
-    output_folder=os.path.join(os.path.dirname(
-        __file__), "resources", "output"),
-    data_output_type="sqlite"
+    input_folder=os.path.join(os.path.dirname(__file__), "resources", "excels"),
+    output_folder=os.path.join(os.path.dirname(__file__), "resources", "output"),
+    data_output_type="sqlite",
 )
 cfg_for_calibrator = Config(
     "temp_db_calibrator",
     os.path.dirname(__file__),
-    input_folder=os.path.join(os.path.dirname(
-        __file__), "resources", "excels"),
-    output_folder=os.path.join(os.path.dirname(
-        __file__), "resources", "output"),
-    data_output_type="sqlite"
+    input_folder=os.path.join(os.path.dirname(__file__), "resources", "excels"),
+    output_folder=os.path.join(os.path.dirname(__file__), "resources", "output"),
+    data_output_type="sqlite",
 )
 AGENT_NUM_1 = 10
 AGENT_NUM_2 = 20
@@ -72,11 +69,9 @@ class DCTestModel(Model):
         # params_df_3 = pd.DataFrame(
         #     [{"a": 1.0, "b": 1, "productivity": 0} for i in range(20)]
         # )
-        self.agent_list1 = self.create_agent_container(
-            TestAgent, 10, params_df_1)
+        self.agent_list1 = self.create_agent_container(TestAgent, 10, params_df_1)
         self.agent_list1.setup_agents(10, params_df_1)
-        self.agent_list2 = self.create_agent_container(
-            TestAgent, 20, params_df_2)
+        self.agent_list2 = self.create_agent_container(TestAgent, 20, params_df_2)
         self.agent_list2.setup_agents(20, params_df_2)
         self.environment = self.create_environment(TestEnv)
         self.data_collector = self.create_data_collector(DataCollector1)
@@ -131,7 +126,7 @@ def test_model_run():
 
 
 def test_status():
-    from tests.procedures.calibrator import CovidCalibrator, CovidScenario, CovidModel
+    from tests.procedures.calibrator import CovidCalibrator, CovidModel, CovidScenario
 
     calibrator = CovidCalibrator(
         cfg_for_calibrator, CovidScenario, CovidModel, DFLoader

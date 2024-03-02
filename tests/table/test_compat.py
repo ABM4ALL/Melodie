@@ -1,4 +1,6 @@
-from MelodieInfra.table import Table, TableRow, TableInterface
+import pandas as pd
+
+from MelodieInfra.table import Table, TableInterface, TableRow
 
 
 def filter_test(df, table):
@@ -17,8 +19,6 @@ def iter_test(df, table):
 
 
 def test_filter():
-    import pandas as pd
-
     data = [[1, 2, 3], [1, 2, 4], [1, 3, 5], [2, 3, 4], [2, 4, 6]]
     df = pd.DataFrame(data, columns=["a", "b", "c"])
 

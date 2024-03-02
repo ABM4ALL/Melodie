@@ -12,6 +12,8 @@ from .types import (
     TypeVar,
 )
 
+import pandas as pd
+
 from .agent import Agent
 from ..exceptions import MelodieExceptions, show_prettified_warning
 from ..table import TABLE_TYPE, TableInterface
@@ -277,7 +279,6 @@ class AgentList(BaseAgentContainer):
         :param column_names: property names to store
         :return:
         """
-        import pandas as pd
 
         data_list = self.to_list(column_names)
         df = pd.DataFrame(data_list)

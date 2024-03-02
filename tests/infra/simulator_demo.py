@@ -9,13 +9,13 @@ import pandas as pd
 
 from Melodie import (
     Agent,
+    Config,
     DataCollector,
+    DataLoader,
     Environment,
+    Model,
     Scenario,
     Simulator,
-    Model,
-    DataLoader,
-    Config,
 )
 
 cfg_for_temp = Config(

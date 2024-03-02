@@ -8,7 +8,7 @@ import json
 import pandas as pd
 
 from Melodie import Scenario
-from MelodieInfra.lowcode.params import IntParam, ArrayParam, ParamsManager, FloatParam
+from MelodieInfra.lowcode.params import ArrayParam, FloatParam, IntParam, ParamsManager
 
 
 class TestScenario(Scenario):

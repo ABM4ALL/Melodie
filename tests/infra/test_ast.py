@@ -3,18 +3,7 @@
 # @Author: Zhanyi Hou
 # @Email: 1295752786@qq.com
 # @File: test_ast.py
-import ast
-import os.path
-import sys
 
-import astunparse
-import pprintast
-from MelodieInfra.lowcode.astmani.ast_manipulator import FuncDefManipulator
-
-from MelodieInfra.lowcode.astmani.model_static_inspector import (
-    get_model_ast,
-    walk_model_ast,
-)
 
 #
 # def test_ast_manipulator():

@@ -61,8 +61,7 @@ class TableRow(RowBase):
 
     @classmethod
     def get_aliases(cls):
-        attr_names = list(cls.__dict__.keys()) + \
-            list(cls.get_annotations().keys())
+        attr_names = list(cls.__dict__.keys()) + list(cls.get_annotations().keys())
         aliases = {}
         for attr_name in attr_names:
             if hasattr(cls, attr_name) and isinstance(
@@ -79,8 +78,7 @@ class TableRow(RowBase):
         """
         Get the datatype represented in database.
         """
-        attr_names = list(cls.__dict__.keys()) + \
-            list(cls.get_annotations().keys())
+        attr_names = list(cls.__dict__.keys()) + list(cls.get_annotations().keys())
         attr_names = [
             attr_name
             for attr_name in list(set(attr_names))
@@ -92,8 +90,7 @@ class TableRow(RowBase):
             #     attr_name in cls.get_annotations()
             # ), f'Attribute "{attr_name}" of class {cls.__name__} must be annotated!'
             if not hasattr(cls, attr_name):
-                dtype_ = py_types_to_sa_types[cls.get_annotations()[
-                    attr_name]]()
+                dtype_ = py_types_to_sa_types[cls.get_annotations()[attr_name]]()
                 dtype = Column(dtype_)
             else:
                 meta = getattr(cls, attr_name)
@@ -101,8 +98,7 @@ class TableRow(RowBase):
                 if meta.dtype is not None:
                     dtype = meta.dtype
                 else:
-                    dtype_ = py_types_to_sa_types[cls.get_annotations()[
-                        attr_name]]()
+                    dtype_ = py_types_to_sa_types[cls.get_annotations()[attr_name]]()
                     dtype = Column(dtype_)
             assert isinstance(dtype, Column)
             col_dtypes[attr_name] = dtype
@@ -137,7 +133,9 @@ TableRowGeneric = TypeVar("TableRowGeneric")
 class Table(TableBase, Generic[TableRowGeneric]):
     data: List[TableRowGeneric]
 
-    def __init__(self, row_type: Type[TableRowGeneric], columns: Optional[List[str]] = None) -> None:
+    def __init__(
+        self, row_type: Type[TableRowGeneric], columns: Optional[List[str]] = None
+    ) -> None:
         super().__init__()
         self.row_cls: Type[TableRow] = row_type
         self._db_model_cls: Type = None
@@ -156,7 +154,8 @@ class Table(TableBase, Generic[TableRowGeneric]):
         if columns is not None:
             self._columns = columns
             assert set([row for row in self.row_types.keys()]) == set(
-                self._columns), f"columns_order {self._columns} should contain the same names as row_types: {self.row_types.keys()}"
+                self._columns
+            ), f"columns_order {self._columns} should contain the same names as row_types: {self.row_types.keys()}"
         else:
             self._columns = [row for row in self.row_types.keys()]
 
@@ -195,16 +194,16 @@ class Table(TableBase, Generic[TableRowGeneric]):
         aliases = table.row_cls.get_aliases()
         for row_data in rows_iter:
             table_row_obj: TableRow = table.row_cls.from_dict(
-                table, {col: row_data[i]
-                        for i, col in enumerate(columns)}, aliases
+                table, {col: row_data[i] for i, col in enumerate(columns)}, aliases
             )
             table.data.append(table_row_obj)
         return table
 
     def to_file(self, file_name: str, encoding="utf-8"):
         is_new_file = True if not os.path.exists(file_name) else False
-        writer = TableWriter(file_name, text_encoding=encoding,
-                             append=not is_new_file).write()
+        writer = TableWriter(
+            file_name, text_encoding=encoding, append=not is_new_file
+        ).write()
         headers = self.columns
         if is_new_file:
             writer.send(headers)
@@ -214,8 +213,7 @@ class Table(TableBase, Generic[TableRowGeneric]):
 
     def to_database(self, engine, table_name: str):
         conn = DatabaseConnector(engine)
-        conn.write_table(table_name, self.row_types, [
-                         d.__dict__ for d in self.data])
+        conn.write_table(table_name, self.row_types, [d.__dict__ for d in self.data])
 
     def to_file_with_codegen(self, file_name: str, encoding="utf-8"):
         writer = TableWriter(file_name, text_encoding=encoding).write()

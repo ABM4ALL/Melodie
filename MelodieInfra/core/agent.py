@@ -1,8 +1,6 @@
 from typing import List
 from .types import Optional, TYPE_CHECKING, Dict, Any
 
-# import .types as types
-
 
 class Element:
     def set_params(self, params: Dict[str, Any]):

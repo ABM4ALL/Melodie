@@ -1,15 +1,15 @@
 import random
-from typing import List, Union
+from typing import List
 
 from Melodie import (
-    Calibrator,
-    Environment,
-    Model,
     AgentList,
-    GridAgent,
-    Scenario,
-    Grid,
+    Calibrator,
     DataCollector,
+    Environment,
+    Grid,
+    GridAgent,
+    Model,
+    Scenario,
 )
 
 

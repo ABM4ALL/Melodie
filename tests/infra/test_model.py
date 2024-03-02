@@ -1,8 +1,8 @@
 # -*- coding:utf-8 -*-
 import pandas as pd
 
-from MelodieInfra import MelodieException
 from Melodie import Agent, Model, Scenario
+from MelodieInfra import MelodieException
 from tests.infra.config import cfg
 
 

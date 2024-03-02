@@ -4,8 +4,8 @@ Compatibility layer for internal table types and pandas data frame.
 from typing import Callable, List, Union, TYPE_CHECKING, Iterator
 from .table_base import TableBase
 
-if TYPE_CHECKING:
-    import pandas as pd
+import pandas as pd
+
 TABLE_TYPE = Union["pd.DataFrame", TableBase]
 
 
@@ -27,8 +27,6 @@ class TableInterface:
         if isinstance(self.df, TableBase):
             return TableInterface(self.df.filter(condition))
         else:
-            import pandas as pd
-
             if not isinstance(self.df, pd.DataFrame):
                 raise TypeError(self.df)
             return TableInterface(self.df[self.df.apply(condition, axis=1)])
@@ -41,8 +39,6 @@ class TableInterface:
             for row in self.df.data:
                 yield row
         else:
-            import pandas as pd
-
             if not isinstance(self.df, pd.DataFrame):
                 raise TypeError(self.df)
             df_dict = self.df.to_dict(orient="records")
