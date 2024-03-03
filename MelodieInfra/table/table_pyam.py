@@ -1,7 +1,7 @@
 import csv
-
 from typing import (
     Callable,
+    Dict,
     Generic,
     List,
     Optional,
@@ -9,14 +9,15 @@ from typing import (
     Type,
     TypeVar,
     Union,
-    Dict,
     cast,
 )
+
 from sqlalchemy import Column
-from sqlalchemy.types import TypeEngine
 from sqlalchemy.orm import declarative_base
+from sqlalchemy.types import TypeEngine
+
 from .reader_writer import TableReader
-from .table_base import TableBase, RowBase
+from .table_base import RowBase, TableBase
 
 Base = declarative_base()
 

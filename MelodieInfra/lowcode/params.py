@@ -1,6 +1,6 @@
 import math
 import sys
-from typing import Callable, Any, TYPE_CHECKING, Tuple, Union, List, Dict
+from typing import TYPE_CHECKING, Any, Callable, Dict, List, Tuple, Union
 
 from ..models.jsonbase import JSONBase
 

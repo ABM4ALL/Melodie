@@ -1,9 +1,10 @@
-from typing import Any, Dict, Generator, List, Tuple, Union, Type
-import openpyxl
 import csv
-from sqlalchemy import Column, inspect, Integer
-from sqlalchemy.types import TypeEngine
+from typing import Any, Dict, Generator, List, Tuple, Type, Union
+
+import openpyxl
+from sqlalchemy import Column, Integer, inspect
 from sqlalchemy.orm import declarative_base
+from sqlalchemy.types import TypeEngine
 
 TableValues = Tuple[List[str], Generator[List[Union[str, int, float]], None, None]]
 Base = declarative_base()

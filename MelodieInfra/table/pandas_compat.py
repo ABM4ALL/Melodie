@@ -1,10 +1,11 @@
 """
 Compatibility layer for internal table types and pandas data frame.
 """
-from typing import Callable, List, Union, TYPE_CHECKING, Iterator
-from .table_base import TableBase
+from typing import TYPE_CHECKING, Callable, Iterator, List, Union
 
 import pandas as pd
+
+from .table_base import TableBase
 
 TABLE_TYPE = Union["pd.DataFrame", TableBase]
 

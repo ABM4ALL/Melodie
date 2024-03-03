@@ -3,24 +3,26 @@ import logging
 import os
 import time
 from typing import (
-    Dict,
-    Tuple,
-    Callable,
-    Union,
-    List,
-    Any,
-    Optional,
     TYPE_CHECKING,
-    Type,
+    Any,
+    Callable,
+    Dict,
     Iterator,
-    cast,
+    List,
     Literal,
+    Optional,
+    Tuple,
+    Type,
+    Union,
+    cast,
 )
+
 import pandas as pd
 
 from MelodieInfra import Config, MelodieExceptions
 from MelodieInfra.parallel.parallel_manager import ParallelManager
 from MelodieInfra.utils import underline_to_camel
+
 from .algorithms import AlgorithmParameters
 from .algorithms.ga import MelodieGA
 from .data_loader import DataLoader

@@ -6,11 +6,11 @@
 
 from .params import (
     ArrayParam,
+    BoolParam,
     FloatParam,
     IntParam,
-    StringParam,
-    SelectionParam,
-    ParamsManager,
     Param,
-    BoolParam,
+    ParamsManager,
+    SelectionParam,
+    StringParam,
 )

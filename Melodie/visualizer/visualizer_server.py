@@ -3,11 +3,12 @@ import json
 import logging
 import queue
 import threading
+from typing import List, Set
 
 from flask import Flask, Response, abort, request
 from flask_cors import CORS
-from flask_sock import Sock, Server, ConnectionClosed as WSClosed
-from typing import List, Set
+from flask_sock import ConnectionClosed as WSClosed
+from flask_sock import Server, Sock
 
 from .actions import ToolbarAction
 

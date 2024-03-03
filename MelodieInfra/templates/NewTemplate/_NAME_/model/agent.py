@@ -1,4 +1,5 @@
 from Melodie import Agent
+
 from .scenario import _ALIAS_Scenario
 
 

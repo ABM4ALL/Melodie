@@ -1,15 +1,14 @@
 from __future__ import absolute_import
-from collections import namedtuple, OrderedDict
-import copy
-import six
-import inspect
-from .exceptions import (
-    DeleteNotAllowed,
-    WrappingAttributeError,
-)
-from .base_properties import JsonProperty, DefaultProperty
-from .utils import check_type
 
+import copy
+import inspect
+from collections import OrderedDict, namedtuple
+
+import six
+
+from .base_properties import DefaultProperty, JsonProperty
+from .exceptions import DeleteNotAllowed, WrappingAttributeError
+from .utils import check_type
 
 JsonObjectClassSettings = namedtuple("JsonObjectClassSettings", ["type_config"])
 

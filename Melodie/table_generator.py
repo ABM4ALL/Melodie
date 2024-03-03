@@ -1,14 +1,17 @@
 # -*- coding:utf-8 -*-
 
 import logging
-from typing import Callable, Union, TYPE_CHECKING, Optional, Dict, Any
-from sqlalchemy import Integer, Float
-from MelodieInfra import MelodieExceptions, Table, GeneralTable
-from .utils import args_check
+from typing import TYPE_CHECKING, Any, Callable, Dict, Optional, Union
+
+from sqlalchemy import Float, Integer
+
+from MelodieInfra import GeneralTable, MelodieExceptions, Table
+
 from .scenario_manager import Scenario
+from .utils import args_check
 
 if TYPE_CHECKING:
-    from .data_loader import DataLoader, DataFrameInfo
+    from .data_loader import DataFrameInfo, DataLoader
 
 logger = logging.getLogger(__name__)
 

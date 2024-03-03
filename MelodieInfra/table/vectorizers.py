@@ -1,4 +1,5 @@
-from typing import List, Callable, Union, Type
+from typing import Callable, List, Type, Union
+
 from .table_objects import Table
 
 DATA_TYPES = Union[bool, int, float, str]

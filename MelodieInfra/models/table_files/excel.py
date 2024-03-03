@@ -7,11 +7,12 @@ import os
 from typing import List
 
 from MelodieInfra.jsonobject import (
-    StringProperty,
-    JsonObject,
     DefaultProperty,
+    JsonObject,
     ObjectProperty,
+    StringProperty,
 )
+
 from .base import ExcelMeta
 
 

@@ -1,6 +1,9 @@
 from __future__ import absolute_import
-import six
+
 import inspect
+
+import six
+
 from .exceptions import BadValueError
 
 function_name = None

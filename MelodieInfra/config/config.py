@@ -1,11 +1,11 @@
 import os
-from typing import Any, Dict, Literal, Optional, TYPE_CHECKING
+from typing import TYPE_CHECKING, Any, Dict, Literal, Optional
 
 from MelodieInfra.db.base import SQLITE_FILE_SUFFIX
 from MelodieInfra.db.db_configs import (
+    BaseMelodieDBConfig,
     DBConfigTypes,
     SQLiteDBConfig,
-    BaseMelodieDBConfig,
 )
 
 

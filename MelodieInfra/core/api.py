@@ -1,6 +1,6 @@
-from math import floor
 import random as random_module
 from functools import lru_cache
+from math import floor
 from random import randint
 
 

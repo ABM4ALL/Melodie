@@ -2,20 +2,20 @@
 # include code copied from couchdbkit
 from __future__ import absolute_import
 
+import datetime
+import decimal
 import inspect
 import sys
-import datetime
 import time
-import decimal
+
 from .base_properties import (
     AbstractDateProperty,
     AssertTypeProperty,
+    DefaultProperty,
     JsonContainerProperty,
     JsonProperty,
-    DefaultProperty,
 )
 from .containers import JsonArray, JsonDict, JsonSet
-
 
 if sys.version > "3":
     unicode = str

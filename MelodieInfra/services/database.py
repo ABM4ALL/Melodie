@@ -6,17 +6,16 @@
 import json
 from typing import List
 
+import pandas as pd
 import sqlalchemy
 from sqlalchemy.exc import OperationalError
+
 from MelodieInfra.models import (
-    DatabaseQueryRequest,
-    DataServiceStatus,
-    DataServiceState,
     DatabaseBasicRequest,
+    DatabaseQueryRequest,
+    DataServiceState,
+    DataServiceStatus,
 )
-
-
-import pandas as pd
 
 
 def get_table_names(conn_string: str) -> List[str]:

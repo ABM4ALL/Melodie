@@ -3,6 +3,7 @@ import json
 import logging
 import os.path
 import queue
+import subprocess
 import sys
 import threading
 import time
@@ -11,7 +12,6 @@ from typing import List, Optional, Tuple
 import cloudpickle
 from rpyc import Service
 from rpyc.utils.server import ThreadedServer
-import subprocess
 
 logger = logging.getLogger("ParallelManager-MainThread")
 

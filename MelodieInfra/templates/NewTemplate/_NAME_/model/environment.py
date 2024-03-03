@@ -1,4 +1,5 @@
 from Melodie import Environment
+
 from .scenario import _ALIAS_Scenario
 
 

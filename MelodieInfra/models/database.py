@@ -5,12 +5,13 @@
 # @File: database.py
 
 from typing import List
+
 from MelodieInfra.jsonobject import (
-    JsonObject,
-    StringProperty,
     BooleanProperty,
-    ListProperty,
     IntegerProperty,
+    JsonObject,
+    ListProperty,
+    StringProperty,
 )
 
 

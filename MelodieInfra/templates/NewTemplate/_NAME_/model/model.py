@@ -1,4 +1,5 @@
 from Melodie import Model
+
 from .data_collector import _ALIAS_DataCollector
 from .environment import _ALIAS_Environment
 

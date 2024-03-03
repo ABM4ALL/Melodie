@@ -2,21 +2,17 @@ import hashlib
 import logging
 import os
 import shutil
-from typing import Optional, Dict, List, Union, Callable, Type, TYPE_CHECKING
-import numpy as np
+from typing import TYPE_CHECKING, Callable, Dict, List, Optional, Type, Union
 
-import sqlalchemy
 import cloudpickle
+import numpy as np
+import pandas
 import pandas as pd
-from MelodieInfra import (
-    DBConn,
-    MelodieExceptions,
-    Config,
-    Table,
-    TableInterface,
-)
+import sqlalchemy
+
+from MelodieInfra import Config, DBConn, MelodieExceptions, Table, TableInterface
 from MelodieInfra.table.table_general import GeneralTable
-from MelodieInfra.utils import underline_to_camel
+from MelodieInfra.utils import PickledCacheFileReader, underline_to_camel
 
 from .scenario_manager import Scenario
 from .table_generator import DataFrameGenerator
@@ -206,19 +202,6 @@ class DataLoader:
             data_types = {}
         self.registered_dataframes[table_name] = data_frame
 
-    def _calc_hash(self, filename: str) -> str:
-        """
-        Calculate md5 hash value of file
-        """
-        with open(filename, "rb") as fp:
-            hash_func = hashlib.md5()
-            while True:
-                data = fp.read(2**20)
-                if not data:
-                    break
-                hash_func.update(data)
-            return hash_func.digest().hex()
-
     def clear_cache(self):
         """
         Clear all caches under caching directory.
@@ -233,40 +216,39 @@ class DataLoader:
     def _cache_dir(self):
         return os.path.join(self.config.temp_folder, "cache", "pd-df")
 
-    def _load_dataframe_cached(self, file_path_abs: str) -> "pd.DataFrame":
+    def _load_dataframe_cached(
+        self, file_path_abs: str, disable_cache: bool
+    ) -> "pd.DataFrame":
         """
         Load dataframe from file
         """
-        import pandas
 
-        if self.config.input_dataframe_cache:
-            hash_value = self._calc_hash(file_path_abs)
-            if not os.path.exists(self._cache_dir):
-                os.makedirs(self._cache_dir)
-            cache_file = os.path.join(self._cache_dir, f"{hash_value}.pkl")
-            if os.path.exists(cache_file):
-                with open(cache_file, "rb") as f:
-                    return cloudpickle.load(f)
+        def original_read_method(filename: str) -> pd.DataFrame:
+            _, ext = os.path.splitext(filename)
+            if ext in {".xls", ".xlsx"}:
+                return pandas.read_excel(filename)
+            elif ext in {".csv"}:
+                return pandas.read_csv(filename)
+            else:
+                raise NotImplemented(file_path_abs)
 
-        _, ext = os.path.splitext(file_path_abs)
-        if ext in {".xls", ".xlsx"}:
-            table = pandas.read_excel(file_path_abs)
-        elif ext in {".csv"}:
-            table = pandas.read_csv(file_path_abs)
+        if self.config.input_dataframe_cache and not disable_cache:
+            reader = PickledCacheFileReader(self._cache_dir, original_read_method)
+            return reader.read(file_path_abs)
         else:
-            raise NotImplemented(file_path_abs)
+            return original_read_method(file_path_abs)
 
-        if self.config.input_dataframe_cache:
-            with open(cache_file, "wb") as f:
-                cloudpickle.dump(table, f)
-        return table
-
-    def _load_dataframe(self, df_info: "DataFrameInfo") -> "pd.DataFrame":
+    def _load_dataframe(
+        self, df_info: "DataFrameInfo", disable_cache=False
+    ) -> "pd.DataFrame":
         """
         Register static table. The static table will be copied into database.
 
         The scenarios/agents parameter tables can also be registered by this method.
 
+        :df_info: Target dataframe to load.
+        :disable_cache: False by default. If true, this dataframe will be loaded from the original file
+            even though the `Config.input_dataframe_cache` is set to `True`.
         :return: None
         """
 
@@ -276,13 +258,15 @@ class DataLoader:
         assert df_info.file_name is not None
         file_path_abs = os.path.join(self.config.input_folder, df_info.file_name)
 
-        table = self._load_dataframe_cached(file_path_abs)
+        table = self._load_dataframe_cached(file_path_abs, disable_cache)
 
         self.registered_dataframes[df_info.df_name] = table
 
         return table
 
-    def _load_matrix(self, matrix_info: "MatrixInfo") -> "np.ndarray":
+    def _load_matrix(
+        self, matrix_info: "MatrixInfo", disable_cache=False
+    ) -> "np.ndarray":
         """
         Register static matrix.
 
@@ -294,15 +278,24 @@ class DataLoader:
         assert matrix_info.file_name is not None
         _, ext = os.path.splitext(matrix_info.file_name)
         file_path_abs = os.path.join(self.config.input_folder, matrix_info.file_name)
-        if ext in {".xls", ".xlsx"}:
-            table: "pd.DataFrame" = pd.read_excel(file_path_abs, header=None)
-        elif ext in {".csv"}:
-            table: "pd.DataFrame" = pd.read_csv(file_path_abs, header=None)
-        else:
-            raise NotImplementedError(
-                f"Cannot load file with extension {ext} to matrix."
+
+        def matrix_loader(filename: str) -> np.ndarray:
+            if ext in {".xls", ".xlsx"}:
+                table: "pd.DataFrame" = pd.read_excel(filename, header=None)
+            elif ext in {".csv"}:
+                table: "pd.DataFrame" = pd.read_csv(filename, header=None)
+            else:
+                raise NotImplementedError(
+                    f"Cannot load file with extension {ext} to matrix."
+                )
+            return table.to_numpy(matrix_info.dtype, copy=True)
+
+        if self.config.input_dataframe_cache and not disable_cache:
+            array = PickledCacheFileReader(self._cache_dir, matrix_loader).read(
+                file_path_abs
             )
-        array = table.to_numpy(matrix_info.dtype, copy=True)
+        else:
+            array = matrix_loader(file_path_abs)
         self.registered_matrices[matrix_info.mat_name] = array
         return array
 

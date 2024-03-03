@@ -1,9 +1,11 @@
-from typing import Callable, List, Optional, Tuple, Type, Union, Dict
+from typing import Callable, Dict, List, Optional, Tuple, Type, Union
+
 from sqlalchemy import Column
-from sqlalchemy.types import TypeEngine
 from sqlalchemy.orm import declarative_base
-from .reader_writer import TableReader, TableWriter, DatabaseConnector
-from .table_base import TableBase, RowBase, py_types_to_sa_types
+from sqlalchemy.types import TypeEngine
+
+from .reader_writer import DatabaseConnector, TableReader, TableWriter
+from .table_base import RowBase, TableBase, py_types_to_sa_types
 
 Base = declarative_base()
 

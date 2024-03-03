@@ -3,8 +3,9 @@
 # @Author: Zhanyi Hou
 # @Email: 1295752786@qq.com
 # @File: web.py
-from flask import send_file, Response
-from ..models.web import DataServiceStatus, DataServiceState
+from flask import Response, send_file
+
+from ..models.web import DataServiceState, DataServiceStatus
 
 
 def create_json_response(data) -> str:

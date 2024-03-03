@@ -1,4 +1,4 @@
-from typing import List, Tuple, Union, Dict
+from typing import Dict, List, Tuple, Union
 
 
 class AlgorithmParameters:

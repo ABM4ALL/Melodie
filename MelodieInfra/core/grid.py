@@ -1,8 +1,10 @@
-from MelodieInfra.core.agent_list import AgentList
-from .api import floor, randint, _random as random, iterable, lru_cache
 from typing import ClassVar, Dict, List, Tuple
 
+from MelodieInfra.core.agent_list import AgentList
+
 from .agent import Agent
+from .api import _random as random
+from .api import floor, iterable, lru_cache, randint
 
 
 class GridItem(Agent):

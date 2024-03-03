@@ -1,15 +1,16 @@
 import logging
 import os
 import time
-from typing import Dict, TYPE_CHECKING, Generator, Optional, List, Tuple
+from contextlib import contextmanager
+from typing import TYPE_CHECKING, Dict, Generator, List, Optional, Tuple
 
+import pandas as pd
 import sqlalchemy
 from sqlalchemy.exc import OperationalError
-from sqlalchemy_utils import database_exists, create_database
-import pandas as pd
-from contextlib import contextmanager
-from ..table import TableBase, TABLE_TYPE, GeneralTable, DatabaseConnector
+from sqlalchemy_utils import create_database, database_exists
+
 from ..exceptions import MelodieExceptions
+from ..table import TABLE_TYPE, DatabaseConnector, GeneralTable, TableBase
 
 if TYPE_CHECKING:
     from MelodieInfra.config.config import Config

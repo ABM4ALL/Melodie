@@ -9,18 +9,18 @@ import shutil
 import threading
 import time
 from multiprocessing import Pool
-from typing import Literal, Optional, List, Tuple, Type
+from typing import List, Literal, Optional, Tuple, Type
 
 import pandas as pd
 
 from MelodieInfra import (
+    Config,
+    DBConn,
+    MelodieExceptions,
+    MelodieGlobalConfig,
     create_db_conn,
     get_sqlite_filename,
-    DBConn,
-    Config,
-    MelodieExceptions,
     show_prettified_warning,
-    MelodieGlobalConfig,
 )
 from MelodieInfra.db.db import db_conn
 

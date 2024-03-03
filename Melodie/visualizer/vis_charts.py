@@ -1,19 +1,19 @@
 import logging
-
+from decimal import Decimal
 from typing import (
+    TYPE_CHECKING,
     Any,
     Callable,
-    List,
     Dict,
-    TYPE_CHECKING,
+    List,
+    Optional,
     Tuple,
     TypeVar,
     Union,
-    Optional,
 )
-from decimal import Decimal
-from MelodieInfra.models.typeutils import REAL_NUM_TYPE
+
 from MelodieInfra import JSONBase
+from MelodieInfra.models.typeutils import REAL_NUM_TYPE
 
 logger = logging.getLogger(__name__)
 

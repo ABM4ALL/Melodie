@@ -4,16 +4,16 @@ import importlib
 import json
 import sys
 import time
-import rpyc
-from typing import Dict, Tuple, Any, Type, Union, TYPE_CHECKING
+from typing import TYPE_CHECKING, Any, Dict, Tuple, Type, Union
 
 import cloudpickle
-from Melodie.utils.profiler import run_profile
+import rpyc
 
+from Melodie.utils.profiler import run_profile
 from MelodieInfra.config.global_configs import MelodieGlobalConfig
 
 if TYPE_CHECKING:
-    from Melodie import Calibrator, Trainer, Scenario, Model, Simulator
+    from Melodie import Calibrator, Model, Scenario, Simulator, Trainer
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--core_id", help="ID of core")
@@ -71,7 +71,7 @@ class ParallelWorker:
 def get_scenario_manager(
     config, modules: Dict
 ) -> Tuple[Union["Trainer", "Calibrator"], Type["Scenario"], Type["Model"]]:
-    from Melodie import Trainer, Calibrator
+    from Melodie import Calibrator, Trainer
 
     classes_dict = {}
     for module_type, content in modules.items():
@@ -112,8 +112,9 @@ def sub_routine_trainer(
     """
     # TODO: Have to set this path!
 
-    from Melodie import Config, Trainer, Environment, AgentList, Agent
     import logging
+
+    from Melodie import Agent, AgentList, Config, Environment, Trainer
 
     logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
     logger = logging.getLogger(f"Trainer-processor-{proc_id}")
@@ -195,8 +196,9 @@ def sub_routine_calibrator(
     :param config_raw:
     :return:
     """
-    from Melodie import Config, Environment
     import logging
+
+    from Melodie import Config, Environment
 
     logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
     logger = logging.getLogger(f"Calibrator-processor-{proc_id}")
@@ -267,8 +269,9 @@ def sub_routine_simulator(
     :param config_raw:
     :return:
     """
-    from Melodie import Config, Environment
     import logging
+
+    from Melodie import Config, Environment
 
     logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
     logger = logging.getLogger(f"Simulator-processor-{proc_id}")

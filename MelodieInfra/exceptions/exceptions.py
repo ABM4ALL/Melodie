@@ -1,5 +1,5 @@
 from collections import Counter
-from typing import TYPE_CHECKING, Any, List, Callable, Dict, Set
+from typing import TYPE_CHECKING, Any, Callable, Dict, List, Set
 
 if TYPE_CHECKING:
     from Melodie import Agent

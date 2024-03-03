@@ -6,7 +6,7 @@
 import ast
 import os
 import sys
-from typing import Dict, List, Optional, Type, TYPE_CHECKING, Union
+from typing import TYPE_CHECKING, Dict, List, Optional, Type, Union
 
 import astunparse
 import pprintast

@@ -2,15 +2,17 @@ import copy
 import logging
 import os
 import pickle
-from typing import List, Optional, Union, TYPE_CHECKING
+from typing import TYPE_CHECKING, List, Optional, Union
 
 import numpy as np
 
 from MelodieInfra import MelodieExceptions
+
 from .element import Element
 
 if TYPE_CHECKING:
     from Melodie import Calibrator, Simulator
+
     from .data_loader import DataFrameInfo, MatrixInfo
 logger = logging.getLogger(__name__)
 

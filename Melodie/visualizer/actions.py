@@ -4,10 +4,9 @@
 # @Email: 1295752786@qq.com
 # @File: actions.py
 from typing import Callable, Dict, List, Optional, Union
-from MelodieInfra import JSONBase
-from MelodieInfra.lowcode.params import ParamsManager
 
-from MelodieInfra import create_failed_response
+from MelodieInfra import JSONBase, create_failed_response
+from MelodieInfra.lowcode.params import ParamsManager
 
 
 class BasicOprandType(JSONBase):

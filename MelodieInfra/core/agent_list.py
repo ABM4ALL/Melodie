@@ -2,24 +2,24 @@
 import logging
 import random
 from typing import (
+    TYPE_CHECKING,
     Any,
     Callable,
-    TYPE_CHECKING,
-    Generic,
     ClassVar,
-    List,
     Dict,
-    Union,
+    Generic,
+    List,
     Set,
-    TypeVar,
     Type,
+    TypeVar,
+    Union,
 )
 
 import pandas as pd
 
-from .agent import Agent
 from ..exceptions import MelodieExceptions, show_prettified_warning
 from ..table import TABLE_TYPE, TableInterface
+from .agent import Agent
 
 AgentGeneric = TypeVar("AgentGeneric")
 logger = logging.getLogger("purepython-agent-list")

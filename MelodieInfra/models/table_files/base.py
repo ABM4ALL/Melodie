@@ -3,7 +3,7 @@
 # @Author: Zhanyi Hou
 # @Email: 1295752786@qq.com
 # @File: base.py.py
-from ...jsonobject import JsonObject, StringProperty, ListProperty
+from ...jsonobject import JsonObject, ListProperty, StringProperty
 
 
 def assert_is_list(obj):

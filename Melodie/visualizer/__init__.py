@@ -1,9 +1,9 @@
 from .actions import (
-    ToolbarAction,
-    Operation,
     DownloadOperation,
+    Operation,
     ResponseConversionOperation,
     ShowChartWindowOperation,
+    ToolbarAction,
 )
-from .vis_agent_series import AgentSeriesManager, AgentSeries
-from .visualizer import BaseVisualizer, Visualizer, MelodieModelReset
+from .vis_agent_series import AgentSeries, AgentSeriesManager
+from .visualizer import BaseVisualizer, MelodieModelReset, Visualizer

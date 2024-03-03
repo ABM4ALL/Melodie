@@ -1,33 +1,34 @@
 import copy
 import logging
-import time
 import sys
-
-import pandas as pd
+import time
 from typing import (
-    Dict,
-    Tuple,
-    Callable,
-    Union,
-    List,
     Any,
-    Optional,
+    Callable,
+    Dict,
     Iterator,
+    List,
+    Optional,
+    Tuple,
     Type,
+    Union,
     cast,
 )
 
+import pandas as pd
+
 from MelodieInfra import Config, MelodieExceptions
+from MelodieInfra.core import Agent, AgentList
+from MelodieInfra.parallel.parallel_manager import ParallelManager
 from MelodieInfra.utils.utils import underline_to_camel
-from .utils import run_profile
+
 from .algorithms import AlgorithmParameters
 from .algorithms.ga import MelodieGA
-from MelodieInfra.core import AgentList, Agent
 from .data_loader import DataLoader
 from .model import Model
 from .scenario_manager import Scenario
 from .simulator import BaseModellingManager
-from MelodieInfra.parallel.parallel_manager import ParallelManager
+from .utils import run_profile
 
 logger = logging.getLogger(__name__)
 

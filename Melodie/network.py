@@ -1,11 +1,11 @@
 import ast
 import logging
 import os
-from typing import Dict, Set, Union, List, Tuple, Type, TYPE_CHECKING
+from typing import TYPE_CHECKING, Dict, List, Set, Tuple, Type, Union
 
 import networkx as nx
-
 import numpy as np
+
 from MelodieInfra.core import Agent, AgentList
 
 if TYPE_CHECKING:

@@ -1,7 +1,8 @@
 from dataclasses import dataclass
+from typing import Any, Callable, Dict, List, Optional, Tuple, Type, TypeVar
+
 from sqlalchemy import Column
-from sqlalchemy.types import BigInteger, Text, TypeEngine, Float, Boolean
-from typing import Callable, Dict, List, Optional, Tuple, TypeVar, Type, Any
+from sqlalchemy.types import BigInteger, Boolean, Float, Text, TypeEngine
 
 py_types_to_sa_types: Dict[Type, Type[TypeEngine]] = {
     int: BigInteger,

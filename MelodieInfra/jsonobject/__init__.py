@@ -1,10 +1,11 @@
-from __future__ import absolute_import
-from __future__ import unicode_literals
+from __future__ import absolute_import, unicode_literals
+
+import six
+
+from .api import JsonObject
 from .base import JsonObjectMeta
 from .containers import JsonArray
 from .properties import *
-from .api import JsonObject
-import six
 
 if six.PY3:
     __all__ = [

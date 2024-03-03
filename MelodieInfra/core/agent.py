@@ -1,4 +1,4 @@
-from typing import List, Optional, TYPE_CHECKING, Dict, Any
+from typing import TYPE_CHECKING, Any, Dict, List, Optional
 
 
 class Element:

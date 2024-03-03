@@ -1,33 +1,34 @@
+import collections
 import logging
 import os
 import time
 from typing import (
+    TYPE_CHECKING,
+    Any,
     Callable,
+    Dict,
     Generic,
     List,
-    TYPE_CHECKING,
-    Dict,
     NewType,
-    Tuple,
-    Any,
     Optional,
+    Tuple,
     Type,
     TypeVar,
     Union,
     cast,
 )
+
 import pandas as pd
-import collections
 import sqlalchemy
 
 from MelodieInfra import (
-    DBConn,
     Config,
-    MelodieExceptions,
-    is_pypy,
-    Table,
+    DBConn,
     GeneralTable,
+    MelodieExceptions,
+    Table,
     TableRow,
+    is_pypy,
     objs_to_table_row_vectorizer,
 )
 from MelodieInfra.config.global_configs import MelodieGlobalConfig
@@ -36,7 +37,7 @@ from MelodieInfra.utils import underline_to_camel
 logger = logging.getLogger(__name__)
 
 if TYPE_CHECKING:
-    from Melodie import Model, Scenario, BaseAgentContainer, AgentList
+    from Melodie import AgentList, BaseAgentContainer, Model, Scenario
 
     M = TypeVar("M", bound=Model)
 

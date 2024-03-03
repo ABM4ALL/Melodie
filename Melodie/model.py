@@ -1,32 +1,31 @@
 import logging
-from typing import Optional, Union, Type, List, TypeVar
+from typing import List, Optional, Type, TypeVar, Union
 
 from MelodieInfra import (
-    create_db_conn,
     DBConn,
     MelodieExceptions,
-    show_prettified_warning,
+    create_db_conn,
     show_link,
-)
-
-# from .boost.agent_list import AgentList, BaseAgentContainer, AgentDict
-from MelodieInfra.core import (
-    AgentList,
-    BaseAgentContainer,
-    Agent,
-    Environment,
-    Grid,
-    Spot,
+    show_prettified_warning,
 )
 
 # from .boost.grid import Grid, Spot
 from MelodieInfra.config.config import Config
 
-from .data_collector import DataCollector
+# from .boost.agent_list import AgentList, BaseAgentContainer, AgentDict
+from MelodieInfra.core import (
+    Agent,
+    AgentList,
+    BaseAgentContainer,
+    Environment,
+    Grid,
+    Spot,
+)
 
+from .data_collector import DataCollector
+from .network import Edge, Network
 from .scenario_manager import Scenario
 from .table_generator import DataFrameGenerator
-from .network import Network, Edge
 from .visualizer import Visualizer
 
 logger = logging.getLogger(__name__)

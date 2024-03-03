@@ -1,30 +1,30 @@
 import base64
+import json
 import logging
 import os
-import json
 import queue
 import shutil
 import threading
 import time
 from enum import Enum
+from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional, Tuple, Union
 
-from typing import Dict, Tuple, List, Any, Callable, Union, TYPE_CHECKING, Optional
 from MelodieInfra import (
+    Config,
+    MelodieExceptions,
     OSTroubleShooter,
     get_sqlite_filename,
-    MelodieExceptions,
-    Config,
 )
+from MelodieInfra.core import Spot
+from MelodieInfra.lowcode.params import ParamsManager
 
 from .actions import ToolbarAction
-from .visualizer_server import create_visualizer_server
-from MelodieInfra.lowcode.params import ParamsManager
 from .vis_agent_series import AgentSeriesManager
 from .vis_charts import ChartManager
-from MelodieInfra.core import Spot
+from .visualizer_server import create_visualizer_server
 
 if TYPE_CHECKING:
-    from Melodie import Scenario, Model, Grid, Network, Agent, AgentList, Simulator
+    from Melodie import Agent, AgentList, Grid, Model, Network, Scenario, Simulator
 
     ComponentType = Union[Grid, Network]
 logger = logging.getLogger(__name__)

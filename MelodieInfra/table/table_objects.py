@@ -2,20 +2,22 @@ import os
 from typing import (
     Any,
     Callable,
+    Dict,
     Generic,
     List,
     Optional,
     Tuple,
     Type,
-    Union,
-    Dict,
     TypeVar,
+    Union,
 )
+
 from sqlalchemy import Column
-from sqlalchemy.types import TypeEngine
 from sqlalchemy.orm import declarative_base
-from .reader_writer import TableReader, TableWriter, DatabaseConnector, get_stat_cls
-from .table_base import TableBase, RowBase, py_types_to_sa_types, ColumnMeta
+from sqlalchemy.types import TypeEngine
+
+from .reader_writer import DatabaseConnector, TableReader, TableWriter, get_stat_cls
+from .table_base import ColumnMeta, RowBase, TableBase, py_types_to_sa_types
 
 Base = declarative_base()
 

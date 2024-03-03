@@ -5,5 +5,5 @@
 # @File: __init__.py.py
 
 from .exceptions import *
-from .pretty_warnings import show_prettified_warning, show_link
+from .pretty_warnings import show_link, show_prettified_warning
 from .troubleshooting import OSTroubleShooter

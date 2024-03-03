@@ -1,6 +1,7 @@
-from typing import Dict, List, Callable, Any
+from typing import Any, Callable, Dict, List
 
 from MelodieInfra import JSONBase
+
 from .. import Agent
 
 

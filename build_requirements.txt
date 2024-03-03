@@ -1,4 +1,0 @@
-setuptools; python_version >= '3.8'
-numpy >= "1.20"
-cython==3.0.0a11
-pytest-timeout

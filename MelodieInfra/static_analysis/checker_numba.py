@@ -1,8 +1,10 @@
 import ast
 from typing import Dict, Iterator, List, Literal, Optional, Set, Tuple, Union
+
 import pprintast
 
 from MelodieInfra.static_analysis.base import CheckerMessage
+
 from .base import BaseChecker, CheckerMessage, StaticCheckerRoutine
 
 
