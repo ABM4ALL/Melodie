@@ -28,7 +28,7 @@ class DBConn:
 
     table_dtypes: Dict[str, TABLE_DTYPES] = {}
     existing_connections: Dict[str, "DBConn"] = {}
-    ENVIRONMENT_RESULT_TABLE = "Result_Environment"
+    ENVIRONMENT_RESULT_TABLE = "Result_Simulator_Environment"
 
     def __init__(
         self,

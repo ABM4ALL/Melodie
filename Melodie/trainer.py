@@ -409,7 +409,7 @@ class GATrainerAlgorithm:
                 container_agent_record_list.append(cov_records)
             self.manager._write_to_table(
                 "csv",
-                f"Result_Trainer_{underline_to_camel(container_name)}",
+                f"Result_Trainer_{underline_to_camel(container_name)}_Cov",
                 pd.DataFrame(container_agent_record_list),
             )
         env_record = {}

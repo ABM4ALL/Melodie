@@ -410,7 +410,7 @@ class DataCollector:
             _t = time.time()
             self._write_list_to_table(
                 connection.get_engine(),
-                "Result_" + underline_to_camel(container_name),
+                "Result_Simulator_" + underline_to_camel(container_name),
                 self.agent_properties_dict[container_name],
             )
             write_db_time += time.time() - _t

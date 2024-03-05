@@ -25,6 +25,7 @@ class Config:
         visualizer_entry: str = "",
         data_output_type: Literal["csv", "sqlite"] = "csv",
         database_config: Optional["DBConfigTypes"] = None,
+        input_cache: bool = False,
         **kwargs,
     ):
         self.project_name = project_name
@@ -40,7 +41,8 @@ class Config:
 
         if database_config is None:
             self.database_config = SQLiteDBConfig(
-                os.path.join(self.output_folder, self.project_name + SQLITE_FILE_SUFFIX)
+                os.path.join(self.output_folder,
+                             self.project_name + SQLITE_FILE_SUFFIX)
             )
         else:
             assert isinstance(database_config, BaseMelodieDBConfig), (
@@ -55,7 +57,7 @@ class Config:
             )
         self.visualizer_entry = visualizer_entry
         self.visualizer_tmpdir = os.path.join(self.temp_folder, "visualizer")
-        self.input_dataframe_cache = kwargs.get("input_dataframe_cache", False)
+        self.input_dataframe_cache = input_cache
         self.init_temp_folders()
 
         self.setup()
