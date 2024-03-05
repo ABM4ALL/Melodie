@@ -482,7 +482,6 @@ class GATrainerAlgorithm:
                 self.target_function_to_cache(agents_data, i, chrom)
 
             t1 = time.time()
-            print(t1 - t0)
             self.calc_cov_df(
                 {k: pd.DataFrame(v) for k, v in agent_records_collector.items()},
                 pd.DataFrame(env_records_list),

@@ -35,6 +35,7 @@ AgentType = TypeVar("AgentType", bound=Agent)
 GridType = TypeVar("GridType", bound=Grid)
 SpotType = TypeVar("SpotType", bound=Spot)
 NetworkType = TypeVar("NetworkType", bound=Network)
+DataCollectorType = TypeVar("DataCollectorType", bound=DataCollector)
 
 
 class ModelRunRoutine:
@@ -203,7 +204,7 @@ class Model:
         self.initialization_queue.append(network)
         return network
 
-    def create_data_collector(self, data_collector_cls: Type["DataCollector"]):
+    def create_data_collector(self, data_collector_cls: Type[DataCollectorType]) -> DataCollectorType:
         """
         Create the data collector of model.
 
@@ -268,7 +269,8 @@ class Model:
             if isinstance(prop, BaseAgentContainer):
                 all_ids = prop.all_agent_ids()
                 if len(set(all_ids)) < len(all_ids):
-                    raise MelodieExceptions.Agents.AgentIDConflict(prop_name, all_ids)
+                    raise MelodieExceptions.Agents.AgentIDConflict(
+                        prop_name, all_ids)
 
     def run(self):
         """
