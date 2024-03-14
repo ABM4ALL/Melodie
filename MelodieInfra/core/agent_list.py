@@ -188,7 +188,7 @@ class AgentList(BaseAgentContainer, Generic[AgentGeneric]):
 
             for i, row in enumerate(params_table.iter_dicts()):
                 params = {k: row[k] for k in param_names}
-                agent = self.agents(i)
+                agent = self.agents[i]
                 agent.set_params(params)
 
     def filter(self, condition: Callable[[AgentGeneric], bool]):
