@@ -8,7 +8,7 @@ import os
 import shutil
 import threading
 import time
-from multiprocessing import Pool
+# from multiprocessing import Pool
 from typing import List, Literal, Optional, Tuple, Type
 
 import pandas as pd
@@ -418,79 +418,6 @@ class Simulator(BaseModellingManager):
 
         :return: None
         """
-        t0 = time.time()
-        self.pre_run()
-
-        t1 = time.time()
-        pool = Pool(cores)
-
-        parameters: List[Tuple] = []
-        for scenario_index, scenario in enumerate(self.scenarios):
-            for id_run in range(scenario.run_num):
-                params = (
-                    self.config,
-                    scenario,
-                    id_run,
-                    self.model_cls,
-                )
-                parameters.append(params)
-
-        logger.info(f"Melodie will run totally {len(parameters)} times!.")
-        logger.info(
-            "Running the first session with only one core to verify this model..."
-        )
-        self.run_model(*parameters.pop())
-        logger.info(
-            f"Verification finished, now using {cores} cores for parallel computing!"
-        )
-        pool.starmap(self.run_model, parameters)
-
-        pool.close()
-        pool.join()
-        t2 = time.time()
-        logger.info(
-            f"Melodie completed all runs, time elapsed totally {t2 - t0}s, and {t2 - t1}s for running."
-        )
-
-    def new_parallel(self, cores: int = 1):
-        """
-        Parallelized running through a series of scenarios.
-
-        Melodie does not start subprocesses directly. For the first shot, which means running one of the runs out of
-        one scenario, it will be run by the main-thread to verify the model and initialize the database.
-        After the first shot, subprocesses will be created as many as the value of parameter `cores`.
-
-        :param cores: How many subprocesses will be created in the parallel simulation.
-
-          - It is suggested that this parameter should be NO MORE THAN the **physical cores** of your computer.
-          - Beside 'cores', You may found that your cpu has one more metric: threads, which means your CPU supports
-            hyper-threading. If so, use 'physical cores', not 'threads' as the upper limit.
-          - For example, an Intel® I5-8250U has 4 physical cores and 8 threads. If you use a computer equipped with
-            this CPU, this parameter cannot be larger than 4.
-          - In short, hyper-threading only improves performance in io intensive programs. As Melodie was computation
-            intensive, if there are more subprocess than physical cores, subprocesses will fight for CPU, costing
-            a lot of extra time.
-
-        Sqlite itself was thread-safe for writing. However, pandas tries to create the table if table was not exist, which
-        might trigger conflict condition.
-
-        For example:
-            p1, p2 stands for process 1 and 2 request writing to a table `test`;
-            db stands for database;
-            1. p1 --> db <found no table named 'test'>
-            2. p2 --> db <found no table named 'test'>
-            3. p1 --> db <request the db to create a table 'test'>
-            4. p2 --> db <request the db to create a table 'test'>
-            5. db --> p1 <created table named 'test'>
-            6. db --> p2 <table 'test' already exists!> ERROR!
-
-        For multiple-cores, if running model this might happen very frequently. To avoid this, Melodie makes the first
-        shot, which means running one of the runs out of one scenario, by main-process. Only when first shot completes
-        will the subprocesses be launched.
-
-
-        :return: None
-        """
         from MelodieInfra.parallel.parallel_manager import ParallelManager
 
         t0 = time.time()
@@ -555,3 +482,49 @@ class Simulator(BaseModellingManager):
         finally:
             logger.info("quit parallel manager!")
             parallel_manager.close()
+
+    def run_parallel_multithread(self, cores: int = 1):
+        """
+        Experimental parallel execution utilizing Python 3.13+ Free-threaded mode (No-GIL).
+
+        This method uses a ThreadPoolExecutor.
+        - In Python 3.13+ (free-threaded build): It runs efficiently on multiple cores without the overhead
+          of process creation or object pickling.
+        - In older Python versions: It runs concurrently but is bound by the GIL, which may not improve
+          performance for CPU-bound ABM tasks.
+
+        :param cores: Number of threads to use.
+        """
+        import concurrent.futures
+
+        t0 = time.time()
+        self.pre_run()
+
+        # Prepare tasks
+        tasks = []
+        for scenario in self.scenarios:
+            for id_run in range(scenario.run_num):
+                tasks.append((self.config, scenario, id_run, self.model_cls))
+
+        logger.info(
+            f"Starting multithreaded simulation with {cores} threads (Targeting Python 3.13+ No-GIL)..."
+        )
+
+        # Use ThreadPoolExecutor instead of ProcessPool
+        with concurrent.futures.ThreadPoolExecutor(max_workers=cores) as executor:
+            # Submit all tasks
+            futures = [executor.submit(self.run_model, *args) for args in tasks]
+
+            # Wait for completion and handle exceptions
+            for future in concurrent.futures.as_completed(futures):
+                try:
+                    future.result()
+                except Exception as e:
+                    logger.error(f"Thread execution failed: {e}")
+                    import traceback
+
+                    traceback.print_exc()
+                    raise e
+
+        t2 = time.time()
+        logger.info(f"Multithreaded simulation completed. Time elapsed: {t2 - t0}s")
