@@ -13,6 +13,7 @@ we provide more example models to show how the other modules can be used.
     covid_contagion_grid_visual
     covid_contagion_network
     covid_contagion_calibrator
+    rock_paper_scissors_trainer
 
 .. toctree::
 
