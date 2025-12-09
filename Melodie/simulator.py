@@ -156,9 +156,9 @@ class BaseModellingManager(abc.ABC):
                 self.config.output_tables_path(), table_name + ".csv"
             )
             if os.path.exists(csv_file):
-                data.to_csv(csv_file, mode="a", header=False)
+                data.to_csv(csv_file, mode="a", header=False, index=False)
             else:
-                data.to_csv(csv_file)
+                data.to_csv(csv_file, index=False)
         else:
             raise NotImplementedError
 

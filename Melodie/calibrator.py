@@ -259,11 +259,6 @@ class GACalibratorAlgorithm:
                 d.update(agent_container_data)
 
                 agent_records[container_name].append(d)
-            self.manager._write_to_table(
-                "csv",
-                f"Result_Calibrator_{underline_to_camel(container_name)}",
-                pd.DataFrame(agent_records[container_name]),
-            )
         environment_record.update(meta_dict)
         environment_record.update(env_data)
         environment_record.pop("target_function_value")

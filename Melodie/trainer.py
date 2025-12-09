@@ -353,14 +353,14 @@ class GATrainerAlgorithm:
                 d.pop("target_function_value")
                 agent_records[container_name].append(d)
 
-            self.manager._write_to_table(
-                "csv",
-                f"Result_Trainer_{underline_to_camel(container_name)}",
-                pd.DataFrame(agent_records[container_name]),
-            )
-
         env_record.update(meta_dict)
         env_record.update(env_data)
+
+        self.manager._write_to_table(
+            "csv",
+            f"Result_Trainer_{underline_to_camel(container_name)}",
+            pd.DataFrame(agent_records[container_name]),
+        )
 
         self.manager._write_to_table(
             "csv",
