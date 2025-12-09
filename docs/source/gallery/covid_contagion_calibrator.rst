@@ -1,199 +1,149 @@
-
 CovidContagionCalibrator
 ========================
 
-To show how the ``Calibrator`` module can be used,
-we provide this `CovidContagionCalibrator <https://github.com/ABM4ALL/CovidContagionCalibrator>`_ model,
-which is almost same with the `CovidContagion <https://github.com/ABM4ALL/CovidContagion>`_ model.
-The only difference is that, we can run it with another :ref:`Modelling Manager` - ``Calibrator``.
-So, if you haven't, we will strongly suggest to read the :ref:`Tutorial` section first.
+This example shows how to use Melodie's **Calibrator** module to tune the
+``infection_prob`` parameter of the base ``covid_contagion`` model so that the
+final infected ratio matches a target value.
 
-Project Structure
-_________________
+Project Structure (Calibrator)
+------------------------------
 
-The project structure is as below.
-Compared with the structure of the `CovidContagion <https://github.com/ABM4ALL/CovidContagion>`_ model,
-two python files - ``calibrator.py`` and ``run_calibrator`` - files are added in the ``source`` and the ``root`` folders,
-and two excel files - ``CalibratorScenarios.xlsx`` and ``CalibratorParamsScenarios.xlsx`` - are added in the ``data/input`` folder.
+The layout follows the base example and adds two GA parameter tables plus a
+calibrator class:
 
-::
+.. code-block:: text
 
-    CovidContagionCalibrator
-    ├── data
-    │   ├── input
-    │   │   ├── SimulatorScenarios.xlsx
-    │   │   ├── CalibratorScenarios.xlsx
-    │   │   ├── CalibratorParamsScenarios.xlsx
-    │   │   ├── ID_HealthState.xlsx
-    │   │   ├── ID_AgeGroup.xlsx
-    │   │   └── Parameter_AgeGroup_TransitionProb.xlsx
-    │   └── output
-    │       ├── CovidGridContagionCalibrator.sqlite
-    │       ├── PopulationInfection_S0R0.png
-    │       └── PopulationInfection_S1R0.png
-    ├── source
-    │   ├── agent.py
-    │   ├── environment.py
-    │   ├── grid.py
-    │   ├── data_collector.py
-    │   ├── data_info.py
-    │   ├── data_loader.py
-    │   ├── scenario.py
-    │   ├── model.py
-    │   ├── calibrator.py
-    │   └── analyzer.py
-    ├── config.py
-    ├── run_simulator.py
-    ├── run_calibrator.py
-    ├── run_analyzer.py
-    └── readme.md
+    examples/covid_contagion_calibrator
+    ├── core/
+    │   ├── agent.py               # Same SIR agent as base
+    │   ├── environment.py         # Infection + recovery logic
+    │   ├── model.py               # Simulation loop
+    │   ├── scenario.py            # Adds target_infected_ratio for calibration
+    │   ├── data_collector.py      # Collects S/I/R counts and agent states
+    │   └── calibrator.py          # Defines calibration target and GA hooks
+    ├── data/
+    │   ├── input/
+    │   │   ├── SimulatorScenarios.csv           # Base run parameters
+    │   │   ├── CalibratorScenarios.csv          # Calibration scenarios (no run_num)
+    │   │   └── CalibratorParamsScenarios.csv    # GA bounds & settings
+    │   └── output/
+    ├── README.md
+    └── main.py                    # Entry point to run the calibrator
 
-Calibrator
-__________
+Key Differences from Base Model
+-------------------------------
 
-The idea of ``Calibrator`` in ``Melodie`` is to find the values of pre-defined parameters
-- attributes of the ``scenario`` object -
-so that the distance between model output and empirical data is minimized.
-In this example, we want to find the value of ``scenario.infection_prob``,
-so that  by the end of the simulation, the share of uninfected population is 50%.
+1. **Calibrator**: Uses genetic algorithm (GA) to search ``infection_prob``.
+2. **Target Metric**: Minimizes the squared gap between the final infected ratio
+   and a target (hardcoded as 0.8 in this example).
+3. **Extra Inputs**:
 
-For this, one file ``calibrator.py`` is added in the ``source`` folder.
+   - ``CalibratorScenarios.csv``: Similar to ``SimulatorScenarios.csv`` but defines the scenarios for calibration. It lacks ``run_num`` because the calibrator determines execution paths internally.
+   - ``CalibratorParamsScenarios.csv``: GA settings (generations, population,
+     mutation rate) and bounds (``infection_prob_min/max``).
 
-.. code-block:: Python
-   :caption: calibrator.py
+Scenario & Input Data
+---------------------
+
+- ``SimulatorScenarios.csv``: period/run/agent counts and initial probabilities.
+- ``CalibratorScenarios.csv``: defines scenarios for the calibrator (similar to SimulatorScenarios).
+- ``CalibratorParamsScenarios.csv``: GA controls and parameter bounds.
+
+Implementation Details
+----------------------
+
+Model Setup (`core/model.py`)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This file is identical to the base ``covid_contagion`` model.
+
+.. literalinclude:: ../../../examples/covid_contagion_calibrator/core/model.py
+   :language: python
    :linenos:
-   :emphasize-lines: 10, 14
 
-   from Melodie import Calibrator
+Environment Logic (`core/environment.py`)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-   from source.environment import CovidEnvironment
+This file is identical to the base ``covid_contagion`` model.
 
+.. note::
 
-   class CovidCalibrator(Calibrator):
+   In this example, the calibration target uses the **end-of-simulation** value of ``num_susceptible``.
+   If you want to calibrate based on time-series data or other aggregated metrics, you can calculate
+   them in the environment (e.g., in ``update_population_stats``) and store the result in a property.
+   As long as the property holds the desired value at the end of the simulation, the Calibrator can access it.
 
-       def setup(self):
-           self.add_scenario_calibrating_property("infection_prob")
-           self.add_environment_property("s0")
+.. literalinclude:: ../../../examples/covid_contagion_calibrator/core/environment.py
+   :language: python
+   :linenos:
 
-       def distance(self, model: "CovidModel") -> float:
-           environment = model.environment
-           return (environment.s0 / environment.scenario.agent_num - 0.5) ** 2
+Agent (`core/agent.py`)
+~~~~~~~~~~~~~~~~~~~~~~~
 
-Two functions are defined in this ``CovidCalibrator`` class.
+This file is identical to the base ``covid_contagion`` model.
 
-First, in the ``setup`` function, by using the ``add_scenario_calibrating_property`` function,
-we define which attribute of the ``scenario`` will be calibrated.
-``Melodie`` supports adding multiple parameters by calling the function again and passing in the name of the attribute.
-However, in general, the more parameters you want to calibrate,
-the longer time it could take and the lower quality of the results might be.
-Additionally, as shown in Line 10, you can also ``add_environment_property`` so that they can be included in the result tables (see below).
+.. literalinclude:: ../../../examples/covid_contagion_calibrator/core/agent.py
+   :language: python
+   :linenos:
 
-Second, in the ``distance`` function,
-you can define how the distance between the **model output** and the **empirical data** is measured.
-The parameter of the ``distance`` function must be ``model``,
-so that all the input data can be accessed through ``model.scenario``,
-and all the macro- and micro-variables can be accessed through ``model.environment`` and ``model.agents``.
-But, please note that, the values are all the values by the end of the simulation.
-In this example, the calibration target is "50% of the agents are not infected by the end of simulation",
+Scenario (`core/scenario.py`)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Algorithm
-_________
+.. literalinclude:: ../../../examples/covid_contagion_calibrator/core/scenario.py
+   :language: python
+   :linenos:
 
-In the current version, ``Melodie`` applies the `genetic algorithm (GA) <https://en.wikipedia.org/wiki/Genetic_algorithm>`_
-to search the parameter space.
-Relevant parameters are defined in the ``CalibratorParamsScenarios.xlsx`` file.
+Data Collector (`core/data_collector.py`)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. image:: ../image/calibrator_params.png
+.. literalinclude:: ../../../examples/covid_contagion_calibrator/core/data_collector.py
+   :language: python
+   :linenos:
 
-Please note that,
+Calibrator (`core/calibrator.py`)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-* First, in this model, we are only calibrating one parameter ``infection_prob`` and its space is :math:`[0, 1]`, as defined in the table by attributes ``infection_prob_min`` and ``infection_prob_max``.
+The ``CovidCalibrator`` class inherits from ``Melodie.Calibrator``.
 
-* Second, the attribute ``strategy_param_code_length`` decides the length of the binary series used to code the parameter being calibrated. In the GA, it is the length of "chromosome". The longer it is, the higher accuracy of the coding is and the longer it might take for the calibration.
+Key components:
 
-* Third, the ``generation_num``, ``strategy_population``, and ``mutation_prob`` are the three common parameters in GA. The larger the ``generation_num`` and ``strategy_population`` are, the longer the calibration process will take, but also the higher quality the results will be in general.
+- ``setup()``: Registers ``infection_prob`` as the tunable parameter via ``add_scenario_calibrating_property``.
+- ``distance()``: Defines the error function. Here, it calculates the squared difference between the actual infected ratio and a target (hardcoded as 0.8 in this example).
 
-* Fourth, to evaluate the uncertainty of the GA-based calibration process, ``Melodie`` also provides the ``path_num`` parameter that decides how many times the calibration process is done.
+.. literalinclude:: ../../../examples/covid_contagion_calibrator/core/calibrator.py
+   :language: python
+   :linenos:
 
-* Finally, ``Melodie`` also supports batching calibration runs. Each run is a combination of one row in the ``CalibratorScenarios.xlsx`` file and another row in the ``CalibratorParamsScenarios.xlsx`` file. You only need to edit these two files and ``Melodie`` will automatically iterate through all the combinations for you.
+Main Entry (`main.py`)
+~~~~~~~~~~~~~~~~~~~~~~
 
-Regarding the coding of parameter, for example,
-if we want to code a parameter ranging in :math:`[0, a]` with a five-digit binary series.
-First, map the five-digit binary number to a decimal number.
-Second, divide the number by 31, which is the biggest decimal number that a five-digit binary number can represent,
-then we get a number x in range :math:`[0, 1]`.
-Third, scale x to the range :math:`[0, a]` linearly.
-As a result, :math:`01001` is translated as :math:`x = 9a/31`.
+**Note on Import Paths and Multiprocessing**
 
-Results
-_______
+The ``Calibrator`` module uses Python's ``multiprocessing`` to run simulations in parallel.
+For the worker processes to correctly unpickle and import your model classes, the project package must be importable.
 
-After running the ``run_calibrator.py`` file, if you see following messages (or similar) printed,
-it means the calibration process successfully went through.
+1. **Standard Project Structure**:
+   If you are developing a standalone project where ``main.py`` is in the project root, and you have installed Melodie via ``pip``, typically no extra path configuration is needed. The current directory is usually implicitly added to ``sys.path``.
 
-.. code-block:: shell
+2. **Sub-directory / Complex Structure (This Example)**:
+   Since this example is nested deep within the Melodie repository (``examples/covid_contagion_calibrator``), the default path behavior might fail for worker processes spawned by ``multiprocessing``.
+   
+   To fix this, we explicitly insert the project root into ``sys.path`` in ``main.py``. This ensures that statements like ``from examples.covid_contagion_calibrator.core...`` work correctly in both the main process and all worker processes.
 
-   calibrator.py:391 INFO ====================Time Elapsed: 2.0582101345062256s====================
-   parallel_manager.py:110 INFO terminated subworker <subprocess.Popen object at 0x7f87bc2e0f10>
-   parallel_manager.py:110 INFO terminated subworker <subprocess.Popen object at 0x7f87bc361a60>
-   parallel_manager.py:110 INFO terminated subworker <subprocess.Popen object at 0x7f87bc3585b0>
-   parallel_manager.py:110 INFO terminated subworker <subprocess.Popen object at 0x7f87bc487820>
-   parallel_manager.py:110 INFO terminated subworker <subprocess.Popen object at 0x7f87bc358190>
-   parallel_manager.py:110 INFO terminated subworker <subprocess.Popen object at 0x7f87bc459430>
-   parallel_manager.py:110 INFO terminated subworker <subprocess.Popen object at 0x7f87bc257880>
-   parallel_manager.py:110 INFO terminated subworker <subprocess.Popen object at 0x7f87bc2572e0>
-   server.py:123 INFO listener closed
-   server.py:207 INFO goodbye ('127.0.0.1', 51509)
-   server.py:207 INFO goodbye ('127.0.0.1', 51511)
-   server.py:271 INFO server has terminated
-   server.py:123 INFO listener closed
-   parallel_manager.py:113 INFO Server closed!
+.. literalinclude:: ../../../examples/covid_contagion_calibrator/main.py
+   :language: python
+   :linenos:
 
-Then, you will find two result table in the database.
+Running the Calibrator
+----------------------
 
-First is the ``environment_calibrator_result`` table:
+Run the entry script:
 
-.. image:: ../image/calibrator_results.png
+.. code-block:: bash
 
-Second is the ``environment_calibrator_result_cov`` table:
+   python examples/covid_contagion_calibrator/main.py
 
-.. image:: ../image/calibrator_results_cov.png
-
-As shown, ``environment_calibrator_result`` has one more index column, the ``id_chromosome`` column.
-Then, ``environment_calibrator_result_cov`` calculates the ``mean`` and ``coefficient of variance`` (:math:`\mu / \sigma`)
-of ``infection_prob``, ``s0``, and ``distance`` in each generation.
-
-On top of the tutorial model,
-one more function - ``plot_calibration_process`` - is added to plot the calibration process.
-By calling it in the ``run_analyzer.py`` file,
-two figures are produced based on the results in ``environment_calibrator_result_cov`` and saved in the ``data/output`` folder.
-They are shown below.
-
-.. image:: ../image/calibrator_infection_prob.png
-
-.. image:: ../image/calibrator_s0.png
-
-For more details of the ``Calibrator`` module, please refer to the :ref:`API Reference` section.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+Outputs (e.g., ``Result_Simulator_Environment.csv`` and GA logs) will appear in
+``examples/covid_contagion_calibrator/data/output``.
 
 

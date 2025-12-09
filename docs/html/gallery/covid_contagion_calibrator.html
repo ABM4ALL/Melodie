@@ -16,12 +16,11 @@
       <script src="../_static/documentation_options.js?v=292eb321"></script>
       <script src="../_static/doctools.js?v=9bcbadda"></script>
       <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
-      <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="author" title="About these documents" href="../about.html" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="RockPaperScissorsTrainer" href="rock_paper_scissors.html" />
+    <link rel="next" title="Advanced Topics" href="../advanced/_index.html" />
     <link rel="prev" title="CovidContagionNetwork" href="covid_contagion_network.html" /> 
 </head>
 
@@ -88,6 +87,7 @@
 <li class="toctree-l4"><a class="reference internal" href="covid_contagion_grid.html#model-setup-core-model-py">Model Setup (<cite>core/model.py</cite>)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="covid_contagion_grid.html#environment-logic-core-environment-py">Environment Logic (<cite>core/environment.py</cite>)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="covid_contagion_grid.html#spatial-agent-core-agent-py">Spatial Agent (<cite>core/agent.py</cite>)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="covid_contagion_grid.html#data-collector-core-data-collector-py">Data Collector (<cite>core/data_collector.py</cite>)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="covid_contagion_grid.html#grid-definition-core-grid-py">Grid Definition (<cite>core/grid.py</cite>)</a></li>
 </ul>
 </li>
@@ -124,22 +124,20 @@
 </ul>
 </li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">CovidContagionCalibrator</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#project-structure">Project Structure</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#calibrator">Calibrator</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#algorithm">Algorithm</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#results">Results</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#project-structure-calibrator">Project Structure (Calibrator)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#key-differences-from-base-model">Key Differences from Base Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#scenario-input-data">Scenario &amp; Input Data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#implementation-details">Implementation Details</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#model-setup-core-model-py">Model Setup (<cite>core/model.py</cite>)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#environment-logic-core-environment-py">Environment Logic (<cite>core/environment.py</cite>)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#agent-core-agent-py">Agent (<cite>core/agent.py</cite>)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#scenario-core-scenario-py">Scenario (<cite>core/scenario.py</cite>)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#data-collector-core-data-collector-py">Data Collector (<cite>core/data_collector.py</cite>)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#calibrator-core-calibrator-py">Calibrator (<cite>core/calibrator.py</cite>)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#main-entry-main-py">Main Entry (<cite>main.py</cite>)</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="rock_paper_scissors.html">RockPaperScissorsTrainer</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="rock_paper_scissors.html#model-setup">Model Setup</a></li>
-<li class="toctree-l3"><a class="reference internal" href="rock_paper_scissors.html#trainer">Trainer</a></li>
-<li class="toctree-l3"><a class="reference internal" href="rock_paper_scissors.html#results">Results</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="covid_contagion_visual.html">CovidContagionVisual</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="covid_contagion_visual.html#visualizer">Visualizer</a></li>
-<li class="toctree-l3"><a class="reference internal" href="covid_contagion_visual.html#melodiestudio">MelodieStudio</a></li>
-<li class="toctree-l3"><a class="reference internal" href="covid_contagion_visual.html#how-to-start">How to start?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#running-the-calibrator">Running the Calibrator</a></li>
 </ul>
 </li>
 </ul>
@@ -533,150 +531,407 @@
              
   <section id="covidcontagioncalibrator">
 <h1>CovidContagionCalibrator<a class="headerlink" href="#covidcontagioncalibrator" title="Link to this heading"></a></h1>
-<p>To show how the <code class="docutils literal notranslate"><span class="pre">Calibrator</span></code> module can be used,
-we provide this <a class="reference external" href="https://github.com/ABM4ALL/CovidContagionCalibrator">CovidContagionCalibrator</a> model,
-which is almost same with the <a class="reference external" href="https://github.com/ABM4ALL/CovidContagion">CovidContagion</a> model.
-The only difference is that, we can run it with another <a class="reference internal" href="../introduction.html#modelling-manager"><span class="std std-ref">Modelling Manager</span></a> - <code class="docutils literal notranslate"><span class="pre">Calibrator</span></code>.
-So, if you haven’t, we will strongly suggest to read the <a class="reference internal" href="../tutorial.html#tutorial"><span class="std std-ref">Tutorial</span></a> section first.</p>
-<section id="project-structure">
-<h2>Project Structure<a class="headerlink" href="#project-structure" title="Link to this heading"></a></h2>
-<p>The project structure is as below.
-Compared with the structure of the <a class="reference external" href="https://github.com/ABM4ALL/CovidContagion">CovidContagion</a> model,
-two python files - <code class="docutils literal notranslate"><span class="pre">calibrator.py</span></code> and <code class="docutils literal notranslate"><span class="pre">run_calibrator</span></code> - files are added in the <code class="docutils literal notranslate"><span class="pre">source</span></code> and the <code class="docutils literal notranslate"><span class="pre">root</span></code> folders,
-and two excel files - <code class="docutils literal notranslate"><span class="pre">CalibratorScenarios.xlsx</span></code> and <code class="docutils literal notranslate"><span class="pre">CalibratorParamsScenarios.xlsx</span></code> - are added in the <code class="docutils literal notranslate"><span class="pre">data/input</span></code> folder.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>CovidContagionCalibrator
-├── data
-│   ├── input
-│   │   ├── SimulatorScenarios.xlsx
-│   │   ├── CalibratorScenarios.xlsx
-│   │   ├── CalibratorParamsScenarios.xlsx
-│   │   ├── ID_HealthState.xlsx
-│   │   ├── ID_AgeGroup.xlsx
-│   │   └── Parameter_AgeGroup_TransitionProb.xlsx
-│   └── output
-│       ├── CovidGridContagionCalibrator.sqlite
-│       ├── PopulationInfection_S0R0.png
-│       └── PopulationInfection_S1R0.png
-├── source
-│   ├── agent.py
-│   ├── environment.py
-│   ├── grid.py
-│   ├── data_collector.py
-│   ├── data_info.py
-│   ├── data_loader.py
-│   ├── scenario.py
-│   ├── model.py
-│   ├── calibrator.py
-│   └── analyzer.py
-├── config.py
-├── run_simulator.py
-├── run_calibrator.py
-├── run_analyzer.py
-└── readme.md
+<p>This example shows how to use Melodie’s <strong>Calibrator</strong> module to tune the
+<code class="docutils literal notranslate"><span class="pre">infection_prob</span></code> parameter of the base <code class="docutils literal notranslate"><span class="pre">covid_contagion</span></code> model so that the
+final infected ratio matches a target value.</p>
+<section id="project-structure-calibrator">
+<h2>Project Structure (Calibrator)<a class="headerlink" href="#project-structure-calibrator" title="Link to this heading"></a></h2>
+<p>The layout follows the base example and adds two GA parameter tables plus a
+calibrator class:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>examples/covid_contagion_calibrator
+├── core/
+│   ├── agent.py               # Same SIR agent as base
+│   ├── environment.py         # Infection + recovery logic
+│   ├── model.py               # Simulation loop
+│   ├── scenario.py            # Adds target_infected_ratio for calibration
+│   ├── data_collector.py      # Collects S/I/R counts and agent states
+│   └── calibrator.py          # Defines calibration target and GA hooks
+├── data/
+│   ├── input/
+│   │   ├── SimulatorScenarios.csv           # Base run parameters
+│   │   ├── CalibratorScenarios.csv          # Calibration scenarios (no run_num)
+│   │   └── CalibratorParamsScenarios.csv    # GA bounds &amp; settings
+│   └── output/
+├── README.md
+└── main.py                    # Entry point to run the calibrator
 </pre></div>
 </div>
 </section>
-<section id="calibrator">
-<h2>Calibrator<a class="headerlink" href="#calibrator" title="Link to this heading"></a></h2>
-<p>The idea of <code class="docutils literal notranslate"><span class="pre">Calibrator</span></code> in <code class="docutils literal notranslate"><span class="pre">Melodie</span></code> is to find the values of pre-defined parameters
-- attributes of the <code class="docutils literal notranslate"><span class="pre">scenario</span></code> object -
-so that the distance between model output and empirical data is minimized.
-In this example, we want to find the value of <code class="docutils literal notranslate"><span class="pre">scenario.infection_prob</span></code>,
-so that  by the end of the simulation, the share of uninfected population is 50%.</p>
-<p>For this, one file <code class="docutils literal notranslate"><span class="pre">calibrator.py</span></code> is added in the <code class="docutils literal notranslate"><span class="pre">source</span></code> folder.</p>
-<div class="literal-block-wrapper docutils container" id="id3">
-<div class="code-block-caption"><span class="caption-text">calibrator.py</span><a class="headerlink" href="#id3" title="Link to this code"></a></div>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">from</span><span class="w"> </span><span class="nn">Melodie</span><span class="w"> </span><span class="kn">import</span> <span class="n">Calibrator</span>
-<span class="linenos"> 2</span>
-<span class="linenos"> 3</span><span class="kn">from</span><span class="w"> </span><span class="nn">source.environment</span><span class="w"> </span><span class="kn">import</span> <span class="n">CovidEnvironment</span>
-<span class="linenos"> 4</span>
-<span class="linenos"> 5</span>
-<span class="linenos"> 6</span><span class="k">class</span><span class="w"> </span><span class="nc">CovidCalibrator</span><span class="p">(</span><span class="n">Calibrator</span><span class="p">):</span>
-<span class="linenos"> 7</span>
-<span class="linenos"> 8</span>    <span class="k">def</span><span class="w"> </span><span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="linenos"> 9</span>        <span class="bp">self</span><span class="o">.</span><span class="n">add_scenario_calibrating_property</span><span class="p">(</span><span class="s2">&quot;infection_prob&quot;</span><span class="p">)</span>
-<span class="hll"><span class="linenos">10</span>        <span class="bp">self</span><span class="o">.</span><span class="n">add_environment_property</span><span class="p">(</span><span class="s2">&quot;s0&quot;</span><span class="p">)</span>
-</span><span class="linenos">11</span>
-<span class="linenos">12</span>    <span class="k">def</span><span class="w"> </span><span class="nf">distance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="s2">&quot;CovidModel&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<span class="linenos">13</span>        <span class="n">environment</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">environment</span>
-<span class="hll"><span class="linenos">14</span>        <span class="k">return</span> <span class="p">(</span><span class="n">environment</span><span class="o">.</span><span class="n">s0</span> <span class="o">/</span> <span class="n">environment</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">agent_num</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span>
-</span></pre></div>
-</div>
-</div>
-<p>Two functions are defined in this <code class="docutils literal notranslate"><span class="pre">CovidCalibrator</span></code> class.</p>
-<p>First, in the <code class="docutils literal notranslate"><span class="pre">setup</span></code> function, by using the <code class="docutils literal notranslate"><span class="pre">add_scenario_calibrating_property</span></code> function,
-we define which attribute of the <code class="docutils literal notranslate"><span class="pre">scenario</span></code> will be calibrated.
-<code class="docutils literal notranslate"><span class="pre">Melodie</span></code> supports adding multiple parameters by calling the function again and passing in the name of the attribute.
-However, in general, the more parameters you want to calibrate,
-the longer time it could take and the lower quality of the results might be.
-Additionally, as shown in Line 10, you can also <code class="docutils literal notranslate"><span class="pre">add_environment_property</span></code> so that they can be included in the result tables (see below).</p>
-<p>Second, in the <code class="docutils literal notranslate"><span class="pre">distance</span></code> function,
-you can define how the distance between the <strong>model output</strong> and the <strong>empirical data</strong> is measured.
-The parameter of the <code class="docutils literal notranslate"><span class="pre">distance</span></code> function must be <code class="docutils literal notranslate"><span class="pre">model</span></code>,
-so that all the input data can be accessed through <code class="docutils literal notranslate"><span class="pre">model.scenario</span></code>,
-and all the macro- and micro-variables can be accessed through <code class="docutils literal notranslate"><span class="pre">model.environment</span></code> and <code class="docutils literal notranslate"><span class="pre">model.agents</span></code>.
-But, please note that, the values are all the values by the end of the simulation.
-In this example, the calibration target is “50% of the agents are not infected by the end of simulation”,</p>
-</section>
-<section id="algorithm">
-<h2>Algorithm<a class="headerlink" href="#algorithm" title="Link to this heading"></a></h2>
-<p>In the current version, <code class="docutils literal notranslate"><span class="pre">Melodie</span></code> applies the <a class="reference external" href="https://en.wikipedia.org/wiki/Genetic_algorithm">genetic algorithm (GA)</a>
-to search the parameter space.
-Relevant parameters are defined in the <code class="docutils literal notranslate"><span class="pre">CalibratorParamsScenarios.xlsx</span></code> file.</p>
-<img alt="../_images/calibrator_params.png" src="../_images/calibrator_params.png" />
-<p>Please note that,</p>
+<section id="key-differences-from-base-model">
+<h2>Key Differences from Base Model<a class="headerlink" href="#key-differences-from-base-model" title="Link to this heading"></a></h2>
+<ol class="arabic simple">
+<li><p><strong>Calibrator</strong>: Uses genetic algorithm (GA) to search <code class="docutils literal notranslate"><span class="pre">infection_prob</span></code>.</p></li>
+<li><p><strong>Target Metric</strong>: Minimizes the squared gap between the final infected ratio
+and a target (hardcoded as 0.8 in this example).</p></li>
+<li><p><strong>Extra Inputs</strong>:</p>
 <ul class="simple">
-<li><p>First, in this model, we are only calibrating one parameter <code class="docutils literal notranslate"><span class="pre">infection_prob</span></code> and its space is <span class="math notranslate nohighlight">\([0, 1]\)</span>, as defined in the table by attributes <code class="docutils literal notranslate"><span class="pre">infection_prob_min</span></code> and <code class="docutils literal notranslate"><span class="pre">infection_prob_max</span></code>.</p></li>
-<li><p>Second, the attribute <code class="docutils literal notranslate"><span class="pre">strategy_param_code_length</span></code> decides the length of the binary series used to code the parameter being calibrated. In the GA, it is the length of “chromosome”. The longer it is, the higher accuracy of the coding is and the longer it might take for the calibration.</p></li>
-<li><p>Third, the <code class="docutils literal notranslate"><span class="pre">generation_num</span></code>, <code class="docutils literal notranslate"><span class="pre">strategy_population</span></code>, and <code class="docutils literal notranslate"><span class="pre">mutation_prob</span></code> are the three common parameters in GA. The larger the <code class="docutils literal notranslate"><span class="pre">generation_num</span></code> and <code class="docutils literal notranslate"><span class="pre">strategy_population</span></code> are, the longer the calibration process will take, but also the higher quality the results will be in general.</p></li>
-<li><p>Fourth, to evaluate the uncertainty of the GA-based calibration process, <code class="docutils literal notranslate"><span class="pre">Melodie</span></code> also provides the <code class="docutils literal notranslate"><span class="pre">path_num</span></code> parameter that decides how many times the calibration process is done.</p></li>
-<li><p>Finally, <code class="docutils literal notranslate"><span class="pre">Melodie</span></code> also supports batching calibration runs. Each run is a combination of one row in the <code class="docutils literal notranslate"><span class="pre">CalibratorScenarios.xlsx</span></code> file and another row in the <code class="docutils literal notranslate"><span class="pre">CalibratorParamsScenarios.xlsx</span></code> file. You only need to edit these two files and <code class="docutils literal notranslate"><span class="pre">Melodie</span></code> will automatically iterate through all the combinations for you.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">CalibratorScenarios.csv</span></code>: Similar to <code class="docutils literal notranslate"><span class="pre">SimulatorScenarios.csv</span></code> but defines the scenarios for calibration. It lacks <code class="docutils literal notranslate"><span class="pre">run_num</span></code> because the calibrator determines execution paths internally.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">CalibratorParamsScenarios.csv</span></code>: GA settings (generations, population,
+mutation rate) and bounds (<code class="docutils literal notranslate"><span class="pre">infection_prob_min/max</span></code>).</p></li>
 </ul>
-<p>Regarding the coding of parameter, for example,
-if we want to code a parameter ranging in <span class="math notranslate nohighlight">\([0, a]\)</span> with a five-digit binary series.
-First, map the five-digit binary number to a decimal number.
-Second, divide the number by 31, which is the biggest decimal number that a five-digit binary number can represent,
-then we get a number x in range <span class="math notranslate nohighlight">\([0, 1]\)</span>.
-Third, scale x to the range <span class="math notranslate nohighlight">\([0, a]\)</span> linearly.
-As a result, <span class="math notranslate nohighlight">\(01001\)</span> is translated as <span class="math notranslate nohighlight">\(x = 9a/31\)</span>.</p>
+</li>
+</ol>
 </section>
-<section id="results">
-<h2>Results<a class="headerlink" href="#results" title="Link to this heading"></a></h2>
-<p>After running the <code class="docutils literal notranslate"><span class="pre">run_calibrator.py</span></code> file, if you see following messages (or similar) printed,
-it means the calibration process successfully went through.</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>calibrator.py:391<span class="w"> </span><span class="nv">INFO</span><span class="w"> </span><span class="o">====================</span>Time<span class="w"> </span>Elapsed:<span class="w"> </span><span class="m">2</span>.0582101345062256s<span class="o">====================</span>
-parallel_manager.py:110<span class="w"> </span>INFO<span class="w"> </span>terminated<span class="w"> </span>subworker<span class="w"> </span>&lt;subprocess.Popen<span class="w"> </span>object<span class="w"> </span>at<span class="w"> </span>0x7f87bc2e0f10&gt;
-parallel_manager.py:110<span class="w"> </span>INFO<span class="w"> </span>terminated<span class="w"> </span>subworker<span class="w"> </span>&lt;subprocess.Popen<span class="w"> </span>object<span class="w"> </span>at<span class="w"> </span>0x7f87bc361a60&gt;
-parallel_manager.py:110<span class="w"> </span>INFO<span class="w"> </span>terminated<span class="w"> </span>subworker<span class="w"> </span>&lt;subprocess.Popen<span class="w"> </span>object<span class="w"> </span>at<span class="w"> </span>0x7f87bc3585b0&gt;
-parallel_manager.py:110<span class="w"> </span>INFO<span class="w"> </span>terminated<span class="w"> </span>subworker<span class="w"> </span>&lt;subprocess.Popen<span class="w"> </span>object<span class="w"> </span>at<span class="w"> </span>0x7f87bc487820&gt;
-parallel_manager.py:110<span class="w"> </span>INFO<span class="w"> </span>terminated<span class="w"> </span>subworker<span class="w"> </span>&lt;subprocess.Popen<span class="w"> </span>object<span class="w"> </span>at<span class="w"> </span>0x7f87bc358190&gt;
-parallel_manager.py:110<span class="w"> </span>INFO<span class="w"> </span>terminated<span class="w"> </span>subworker<span class="w"> </span>&lt;subprocess.Popen<span class="w"> </span>object<span class="w"> </span>at<span class="w"> </span>0x7f87bc459430&gt;
-parallel_manager.py:110<span class="w"> </span>INFO<span class="w"> </span>terminated<span class="w"> </span>subworker<span class="w"> </span>&lt;subprocess.Popen<span class="w"> </span>object<span class="w"> </span>at<span class="w"> </span>0x7f87bc257880&gt;
-parallel_manager.py:110<span class="w"> </span>INFO<span class="w"> </span>terminated<span class="w"> </span>subworker<span class="w"> </span>&lt;subprocess.Popen<span class="w"> </span>object<span class="w"> </span>at<span class="w"> </span>0x7f87bc2572e0&gt;
-server.py:123<span class="w"> </span>INFO<span class="w"> </span>listener<span class="w"> </span>closed
-server.py:207<span class="w"> </span>INFO<span class="w"> </span>goodbye<span class="w"> </span><span class="o">(</span><span class="s1">&#39;127.0.0.1&#39;</span>,<span class="w"> </span><span class="m">51509</span><span class="o">)</span>
-server.py:207<span class="w"> </span>INFO<span class="w"> </span>goodbye<span class="w"> </span><span class="o">(</span><span class="s1">&#39;127.0.0.1&#39;</span>,<span class="w"> </span><span class="m">51511</span><span class="o">)</span>
-server.py:271<span class="w"> </span>INFO<span class="w"> </span>server<span class="w"> </span>has<span class="w"> </span>terminated
-server.py:123<span class="w"> </span>INFO<span class="w"> </span>listener<span class="w"> </span>closed
-parallel_manager.py:113<span class="w"> </span>INFO<span class="w"> </span>Server<span class="w"> </span>closed!
+<section id="scenario-input-data">
+<h2>Scenario &amp; Input Data<a class="headerlink" href="#scenario-input-data" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">SimulatorScenarios.csv</span></code>: period/run/agent counts and initial probabilities.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">CalibratorScenarios.csv</span></code>: defines scenarios for the calibrator (similar to SimulatorScenarios).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">CalibratorParamsScenarios.csv</span></code>: GA controls and parameter bounds.</p></li>
+</ul>
+</section>
+<section id="implementation-details">
+<h2>Implementation Details<a class="headerlink" href="#implementation-details" title="Link to this heading"></a></h2>
+<section id="model-setup-core-model-py">
+<h3>Model Setup (<cite>core/model.py</cite>)<a class="headerlink" href="#model-setup-core-model-py" title="Link to this heading"></a></h3>
+<p>This file is identical to the base <code class="docutils literal notranslate"><span class="pre">covid_contagion</span></code> model.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TYPE_CHECKING</span>
+<span class="linenos"> 2</span>
+<span class="linenos"> 3</span><span class="kn">from</span><span class="w"> </span><span class="nn">Melodie</span><span class="w"> </span><span class="kn">import</span> <span class="n">Model</span>
+<span class="linenos"> 4</span><span class="kn">from</span><span class="w"> </span><span class="nn">.agent</span><span class="w"> </span><span class="kn">import</span> <span class="n">CovidAgent</span>
+<span class="linenos"> 5</span><span class="kn">from</span><span class="w"> </span><span class="nn">.environment</span><span class="w"> </span><span class="kn">import</span> <span class="n">CovidEnvironment</span>
+<span class="linenos"> 6</span><span class="kn">from</span><span class="w"> </span><span class="nn">.data_collector</span><span class="w"> </span><span class="kn">import</span> <span class="n">CovidDataCollector</span>
+<span class="linenos"> 7</span><span class="kn">from</span><span class="w"> </span><span class="nn">.scenario</span><span class="w"> </span><span class="kn">import</span> <span class="n">CovidScenario</span>
+<span class="linenos"> 8</span>
+<span class="linenos"> 9</span><span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
+<span class="linenos">10</span>    <span class="kn">from</span><span class="w"> </span><span class="nn">Melodie</span><span class="w"> </span><span class="kn">import</span> <span class="n">AgentList</span>
+<span class="linenos">11</span>
+<span class="linenos">12</span>
+<span class="linenos">13</span><span class="k">class</span><span class="w"> </span><span class="nc">CovidModel</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+<span class="linenos">14</span>    <span class="n">scenario</span><span class="p">:</span> <span class="s2">&quot;CovidScenario&quot;</span>
+<span class="linenos">15</span>    <span class="n">agents</span><span class="p">:</span> <span class="s2">&quot;AgentList[CovidAgent]&quot;</span>
+<span class="linenos">16</span>    <span class="n">environment</span><span class="p">:</span> <span class="n">CovidEnvironment</span>
+<span class="linenos">17</span>    <span class="n">data_collector</span><span class="p">:</span> <span class="n">CovidDataCollector</span>
+<span class="linenos">18</span>
+<span class="linenos">19</span>    <span class="k">def</span><span class="w"> </span><span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="linenos">20</span><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos">21</span><span class="sd">        This method is called once at the beginning of the simulation</span>
+<span class="linenos">22</span><span class="sd">        to create the core components of the model.</span>
+<span class="linenos">23</span><span class="sd">        &quot;&quot;&quot;</span>
+<span class="linenos">24</span>        <span class="bp">self</span><span class="o">.</span><span class="n">agents</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_agent_list</span><span class="p">(</span><span class="n">CovidAgent</span><span class="p">)</span>
+<span class="linenos">25</span>        <span class="bp">self</span><span class="o">.</span><span class="n">environment</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_environment</span><span class="p">(</span><span class="n">CovidEnvironment</span><span class="p">)</span>
+<span class="linenos">26</span>        <span class="bp">self</span><span class="o">.</span><span class="n">data_collector</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_data_collector</span><span class="p">(</span><span class="n">CovidDataCollector</span><span class="p">)</span>
+<span class="linenos">27</span>
+<span class="linenos">28</span>    <span class="k">def</span><span class="w"> </span><span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="linenos">29</span><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos">30</span><span class="sd">        This method is called once after `create` to set up the initial state</span>
+<span class="linenos">31</span><span class="sd">        of the model components.</span>
+<span class="linenos">32</span><span class="sd">        &quot;&quot;&quot;</span>
+<span class="linenos">33</span>        <span class="bp">self</span><span class="o">.</span><span class="n">agents</span><span class="o">.</span><span class="n">setup_agents</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">agent_num</span><span class="p">)</span>
+<span class="linenos">34</span>        <span class="bp">self</span><span class="o">.</span><span class="n">environment</span><span class="o">.</span><span class="n">setup_infection</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">agents</span><span class="p">)</span>
+<span class="linenos">35</span>
+<span class="linenos">36</span>    <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="linenos">37</span><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos">38</span><span class="sd">        This method defines the main simulation loop that runs for `scenario.period_num` periods.</span>
+<span class="linenos">39</span><span class="sd">        &quot;&quot;&quot;</span>
+<span class="linenos">40</span>        <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">iterator</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">period_num</span><span class="p">):</span>
+<span class="linenos">41</span>            <span class="bp">self</span><span class="o">.</span><span class="n">environment</span><span class="o">.</span><span class="n">agents_interaction</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">agents</span><span class="p">)</span>
+<span class="linenos">42</span>            <span class="bp">self</span><span class="o">.</span><span class="n">environment</span><span class="o">.</span><span class="n">agents_recover</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">agents</span><span class="p">)</span>
+<span class="linenos">43</span>            <span class="bp">self</span><span class="o">.</span><span class="n">environment</span><span class="o">.</span><span class="n">update_population_stats</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">agents</span><span class="p">)</span>
+<span class="linenos">44</span>            <span class="bp">self</span><span class="o">.</span><span class="n">data_collector</span><span class="o">.</span><span class="n">collect</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+<span class="linenos">45</span>        <span class="bp">self</span><span class="o">.</span><span class="n">data_collector</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
 </pre></div>
 </div>
-<p>Then, you will find two result table in the database.</p>
-<p>First is the <code class="docutils literal notranslate"><span class="pre">environment_calibrator_result</span></code> table:</p>
-<img alt="../_images/calibrator_results.png" src="../_images/calibrator_results.png" />
-<p>Second is the <code class="docutils literal notranslate"><span class="pre">environment_calibrator_result_cov</span></code> table:</p>
-<img alt="../_images/calibrator_results_cov.png" src="../_images/calibrator_results_cov.png" />
-<p>As shown, <code class="docutils literal notranslate"><span class="pre">environment_calibrator_result</span></code> has one more index column, the <code class="docutils literal notranslate"><span class="pre">id_chromosome</span></code> column.
-Then, <code class="docutils literal notranslate"><span class="pre">environment_calibrator_result_cov</span></code> calculates the <code class="docutils literal notranslate"><span class="pre">mean</span></code> and <code class="docutils literal notranslate"><span class="pre">coefficient</span> <span class="pre">of</span> <span class="pre">variance</span></code> (<span class="math notranslate nohighlight">\(\mu / \sigma\)</span>)
-of <code class="docutils literal notranslate"><span class="pre">infection_prob</span></code>, <code class="docutils literal notranslate"><span class="pre">s0</span></code>, and <code class="docutils literal notranslate"><span class="pre">distance</span></code> in each generation.</p>
-<p>On top of the tutorial model,
-one more function - <code class="docutils literal notranslate"><span class="pre">plot_calibration_process</span></code> - is added to plot the calibration process.
-By calling it in the <code class="docutils literal notranslate"><span class="pre">run_analyzer.py</span></code> file,
-two figures are produced based on the results in <code class="docutils literal notranslate"><span class="pre">environment_calibrator_result_cov</span></code> and saved in the <code class="docutils literal notranslate"><span class="pre">data/output</span></code> folder.
-They are shown below.</p>
-<img alt="../_images/calibrator_infection_prob.png" src="../_images/calibrator_infection_prob.png" />
-<img alt="../_images/calibrator_s0.png" src="../_images/calibrator_s0.png" />
-<p>For more details of the <code class="docutils literal notranslate"><span class="pre">Calibrator</span></code> module, please refer to the <a class="reference internal" href="../api/_index.html#api-reference"><span class="std std-ref">API Reference</span></a> section.</p>
+</section>
+<section id="environment-logic-core-environment-py">
+<h3>Environment Logic (<cite>core/environment.py</cite>)<a class="headerlink" href="#environment-logic-core-environment-py" title="Link to this heading"></a></h3>
+<p>This file is identical to the base <code class="docutils literal notranslate"><span class="pre">covid_contagion</span></code> model.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>In this example, the calibration target uses the <strong>end-of-simulation</strong> value of <code class="docutils literal notranslate"><span class="pre">num_susceptible</span></code>.
+If you want to calibrate based on time-series data or other aggregated metrics, you can calculate
+them in the environment (e.g., in <code class="docutils literal notranslate"><span class="pre">update_population_stats</span></code>) and store the result in a property.
+As long as the property holds the desired value at the end of the simulation, the Calibrator can access it.</p>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
+<span class="linenos"> 2</span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TYPE_CHECKING</span>
+<span class="linenos"> 3</span>
+<span class="linenos"> 4</span><span class="kn">from</span><span class="w"> </span><span class="nn">Melodie</span><span class="w"> </span><span class="kn">import</span> <span class="n">Environment</span>
+<span class="linenos"> 5</span><span class="kn">from</span><span class="w"> </span><span class="nn">.agent</span><span class="w"> </span><span class="kn">import</span> <span class="n">CovidAgent</span>
+<span class="linenos"> 6</span><span class="kn">from</span><span class="w"> </span><span class="nn">.scenario</span><span class="w"> </span><span class="kn">import</span> <span class="n">CovidScenario</span>
+<span class="linenos"> 7</span>
+<span class="linenos"> 8</span><span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
+<span class="linenos"> 9</span>    <span class="kn">from</span><span class="w"> </span><span class="nn">Melodie</span><span class="w"> </span><span class="kn">import</span> <span class="n">AgentList</span>
+<span class="linenos">10</span>
+<span class="linenos">11</span>
+<span class="linenos">12</span><span class="k">class</span><span class="w"> </span><span class="nc">CovidEnvironment</span><span class="p">(</span><span class="n">Environment</span><span class="p">):</span>
+<span class="linenos">13</span>    <span class="n">scenario</span><span class="p">:</span> <span class="s2">&quot;CovidScenario&quot;</span>
+<span class="linenos">14</span>
+<span class="linenos">15</span>    <span class="k">def</span><span class="w"> </span><span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="linenos">16</span>        <span class="c1"># Macro-level counters for population statistics.</span>
+<span class="linenos">17</span>        <span class="c1"># These are updated each period by `update_population_stats` and recorded by the DataCollector.</span>
+<span class="linenos">18</span>        <span class="bp">self</span><span class="o">.</span><span class="n">num_susceptible</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="linenos">19</span>        <span class="bp">self</span><span class="o">.</span><span class="n">num_infected</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="linenos">20</span>        <span class="bp">self</span><span class="o">.</span><span class="n">num_recovered</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="linenos">21</span>
+<span class="linenos">22</span>    <span class="k">def</span><span class="w"> </span><span class="nf">setup_infection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agents</span><span class="p">:</span> <span class="s2">&quot;AgentList[CovidAgent]&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="linenos">23</span>        <span class="c1"># Sets the initial percentage of infected agents based on scenario parameters.</span>
+<span class="linenos">24</span>        <span class="k">for</span> <span class="n">agent</span> <span class="ow">in</span> <span class="n">agents</span><span class="p">:</span>
+<span class="linenos">25</span>            <span class="k">if</span> <span class="p">(</span>
+<span class="linenos">26</span>                <span class="n">agent</span><span class="o">.</span><span class="n">health_state</span> <span class="o">==</span> <span class="mi">0</span>
+<span class="linenos">27</span>                <span class="ow">and</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">initial_infected_percentage</span>
+<span class="linenos">28</span>            <span class="p">):</span>
+<span class="linenos">29</span>                <span class="n">agent</span><span class="o">.</span><span class="n">health_state</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="linenos">30</span>
+<span class="linenos">31</span>    <span class="k">def</span><span class="w"> </span><span class="nf">agents_interaction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agents</span><span class="p">:</span> <span class="s2">&quot;AgentList[CovidAgent]&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="linenos">32</span>        <span class="c1"># Simulates random interactions where infected agents can spread the virus.</span>
+<span class="linenos">33</span>        <span class="k">for</span> <span class="n">agent</span> <span class="ow">in</span> <span class="n">agents</span><span class="p">:</span>
+<span class="linenos">34</span>            <span class="k">if</span> <span class="n">agent</span><span class="o">.</span><span class="n">health_state</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+<span class="linenos">35</span>                <span class="c1"># Randomly meet another agent</span>
+<span class="linenos">36</span>                <span class="c1"># Note: Melodie&#39;s AgentList.random_sample returns a list</span>
+<span class="linenos">37</span>                <span class="n">other_agent</span> <span class="o">=</span> <span class="n">agents</span><span class="o">.</span><span class="n">random_sample</span><span class="p">(</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+<span class="linenos">38</span>                <span class="k">if</span> <span class="n">other_agent</span><span class="o">.</span><span class="n">health_state</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+<span class="linenos">39</span>                    <span class="k">if</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">infection_prob</span><span class="p">:</span>
+<span class="linenos">40</span>                        <span class="n">other_agent</span><span class="o">.</span><span class="n">health_state</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="linenos">41</span>    
+<span class="linenos">42</span>    <span class="k">def</span><span class="w"> </span><span class="nf">agents_recover</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agents</span><span class="p">:</span> <span class="s2">&quot;AgentList[CovidAgent]&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="linenos">43</span>        <span class="c1"># Triggers the recovery process for all infected agents.</span>
+<span class="linenos">44</span>        <span class="k">for</span> <span class="n">agent</span> <span class="ow">in</span> <span class="n">agents</span><span class="p">:</span>
+<span class="linenos">45</span>            <span class="n">agent</span><span class="o">.</span><span class="n">health_state_update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">recovery_prob</span><span class="p">)</span>
+<span class="linenos">46</span>
+<span class="linenos">47</span>    <span class="k">def</span><span class="w"> </span><span class="nf">update_population_stats</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agents</span><span class="p">:</span> <span class="s2">&quot;AgentList[CovidAgent]&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="linenos">48</span>        <span class="c1"># Aggregates agent states into environment-level population counts.</span>
+<span class="linenos">49</span>        <span class="bp">self</span><span class="o">.</span><span class="n">num_susceptible</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="linenos">50</span>        <span class="bp">self</span><span class="o">.</span><span class="n">num_infected</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="linenos">51</span>        <span class="bp">self</span><span class="o">.</span><span class="n">num_recovered</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="linenos">52</span>
+<span class="linenos">53</span>        <span class="k">for</span> <span class="n">agent</span> <span class="ow">in</span> <span class="n">agents</span><span class="p">:</span>
+<span class="linenos">54</span>            <span class="k">if</span> <span class="n">agent</span><span class="o">.</span><span class="n">health_state</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+<span class="linenos">55</span>                <span class="bp">self</span><span class="o">.</span><span class="n">num_susceptible</span> <span class="o">+=</span> <span class="mi">1</span>
+<span class="linenos">56</span>            <span class="k">elif</span> <span class="n">agent</span><span class="o">.</span><span class="n">health_state</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+<span class="linenos">57</span>                <span class="bp">self</span><span class="o">.</span><span class="n">num_infected</span> <span class="o">+=</span> <span class="mi">1</span>
+<span class="linenos">58</span>            <span class="k">elif</span> <span class="n">agent</span><span class="o">.</span><span class="n">health_state</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+<span class="linenos">59</span>                <span class="bp">self</span><span class="o">.</span><span class="n">num_recovered</span> <span class="o">+=</span> <span class="mi">1</span>
+</pre></div>
+</div>
+</section>
+<section id="agent-core-agent-py">
+<h3>Agent (<cite>core/agent.py</cite>)<a class="headerlink" href="#agent-core-agent-py" title="Link to this heading"></a></h3>
+<p>This file is identical to the base <code class="docutils literal notranslate"><span class="pre">covid_contagion</span></code> model.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
+<span class="linenos"> 2</span><span class="kn">from</span><span class="w"> </span><span class="nn">Melodie</span><span class="w"> </span><span class="kn">import</span> <span class="n">Agent</span>
+<span class="linenos"> 3</span>
+<span class="linenos"> 4</span>
+<span class="linenos"> 5</span><span class="k">class</span><span class="w"> </span><span class="nc">CovidAgent</span><span class="p">(</span><span class="n">Agent</span><span class="p">):</span>
+<span class="linenos"> 6</span>    <span class="k">def</span><span class="w"> </span><span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="linenos"> 7</span><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos"> 8</span><span class="sd">        Initializes the agent&#39;s state.</span>
+<span class="linenos"> 9</span><span class="sd">        `health_state`: 0 = susceptible, 1 = infected, 2 = recovered.</span>
+<span class="linenos">10</span><span class="sd">        &quot;&quot;&quot;</span>
+<span class="linenos">11</span>        <span class="bp">self</span><span class="o">.</span><span class="n">health_state</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># All agents start as susceptible.</span>
+<span class="linenos">12</span>
+<span class="linenos">13</span>    <span class="k">def</span><span class="w"> </span><span class="nf">health_state_update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">recovery_prob</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="linenos">14</span><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos">15</span><span class="sd">        Agent-level logic for transitioning from infected to recovered.</span>
+<span class="linenos">16</span><span class="sd">        &quot;&quot;&quot;</span>
+<span class="linenos">17</span>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">health_state</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">recovery_prob</span><span class="p">:</span>
+<span class="linenos">18</span>            <span class="bp">self</span><span class="o">.</span><span class="n">health_state</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="linenos">19</span>
+</pre></div>
+</div>
+</section>
+<section id="scenario-core-scenario-py">
+<h3>Scenario (<cite>core/scenario.py</cite>)<a class="headerlink" href="#scenario-core-scenario-py" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">from</span><span class="w"> </span><span class="nn">Melodie</span><span class="w"> </span><span class="kn">import</span> <span class="n">Scenario</span>
+<span class="linenos"> 2</span>
+<span class="linenos"> 3</span>
+<span class="linenos"> 4</span><span class="k">class</span><span class="w"> </span><span class="nc">CovidScenario</span><span class="p">(</span><span class="n">Scenario</span><span class="p">):</span>
+<span class="linenos"> 5</span><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos"> 6</span><span class="sd">    Defines the parameters for each simulation run of the virus contagion model.</span>
+<span class="linenos"> 7</span><span class="sd">    It inherits from the base `Melodie.Scenario`.</span>
+<span class="linenos"> 8</span>
+<span class="linenos"> 9</span><span class="sd">    Special Melodie attributes (automatically populated from `SimulatorScenarios`):</span>
+<span class="linenos">10</span><span class="sd">    - `id`: A unique identifier for the scenario.</span>
+<span class="linenos">11</span><span class="sd">    - `run_num`: How many times to repeat this scenario (for stochastic models). Defaults to 1.</span>
+<span class="linenos">12</span><span class="sd">    - `period_num`: How many simulation steps (periods) for each run. Defaults to 0.</span>
+<span class="linenos">13</span><span class="sd">    &quot;&quot;&quot;</span>
+<span class="linenos">14</span>
+<span class="linenos">15</span>    <span class="k">def</span><span class="w"> </span><span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="linenos">16</span><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos">17</span><span class="sd">        Declares custom scenario parameters for type hinting and clarity.</span>
+<span class="linenos">18</span><span class="sd">        These are automatically populated from columns in `SimulatorScenarios`.</span>
+<span class="linenos">19</span><span class="sd">        &quot;&quot;&quot;</span>
+<span class="linenos">20</span>        <span class="bp">self</span><span class="o">.</span><span class="n">agent_num</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="linenos">21</span>        <span class="bp">self</span><span class="o">.</span><span class="n">initial_infected_percentage</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
+<span class="linenos">22</span>        <span class="bp">self</span><span class="o">.</span><span class="n">infection_prob</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
+<span class="linenos">23</span>        <span class="bp">self</span><span class="o">.</span><span class="n">recovery_prob</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
+<span class="linenos">24</span>
+<span class="linenos">25</span>    <span class="k">def</span><span class="w"> </span><span class="nf">load_data</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="linenos">26</span><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos">27</span><span class="sd">        This method is automatically called by Melodie after scenario parameters are set.</span>
+<span class="linenos">28</span><span class="sd">        It is the recommended place to load all static input dataframes, making them</span>
+<span class="linenos">29</span><span class="sd">        accessible via `self.scenario.*` from `Model`, `Agent`, and `Environment`.</span>
+<span class="linenos">30</span><span class="sd">        &quot;&quot;&quot;</span>
+<span class="linenos">31</span>        <span class="bp">self</span><span class="o">.</span><span class="n">health_states</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_dataframe</span><span class="p">(</span><span class="s2">&quot;ID_HealthState.csv&quot;</span><span class="p">)</span>
+<span class="linenos">32</span>        <span class="c1"># Load the GA parameters configuration from &#39;CalibratorParamsScenarios.csv&#39;.</span>
+<span class="linenos">33</span>        <span class="c1"># This file defines bounds (min/max) for parameters like &#39;infection_prob&#39;.</span>
+<span class="linenos">34</span>        <span class="bp">self</span><span class="o">.</span><span class="n">calibrator_params_scenarios</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_dataframe</span><span class="p">(</span><span class="s2">&quot;CalibratorParamsScenarios.csv&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="data-collector-core-data-collector-py">
+<h3>Data Collector (<cite>core/data_collector.py</cite>)<a class="headerlink" href="#data-collector-core-data-collector-py" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">from</span><span class="w"> </span><span class="nn">Melodie</span><span class="w"> </span><span class="kn">import</span> <span class="n">DataCollector</span>
+<span class="linenos"> 2</span>
+<span class="linenos"> 3</span>
+<span class="linenos"> 4</span><span class="k">class</span><span class="w"> </span><span class="nc">CovidDataCollector</span><span class="p">(</span><span class="n">DataCollector</span><span class="p">):</span>
+<span class="linenos"> 5</span>    <span class="k">def</span><span class="w"> </span><span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="linenos"> 6</span><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos"> 7</span><span class="sd">        Registers which properties of agents and the environment should be recorded.</span>
+<span class="linenos"> 8</span>
+<span class="linenos"> 9</span><span class="sd">        In this minimal example we record:</span>
+<span class="linenos">10</span><span class="sd">        - micro-level results: each agent&#39;s ``health_state``;</span>
+<span class="linenos">11</span><span class="sd">        - macro-level results: population counts on the environment</span>
+<span class="linenos">12</span><span class="sd">          (``num_susceptible``, ``num_infected``, ``num_recovered``).</span>
+<span class="linenos">13</span><span class="sd">        &quot;&quot;&quot;</span>
+<span class="linenos">14</span>        <span class="bp">self</span><span class="o">.</span><span class="n">add_agent_property</span><span class="p">(</span><span class="s2">&quot;agents&quot;</span><span class="p">,</span> <span class="s2">&quot;health_state&quot;</span><span class="p">)</span>
+<span class="linenos">15</span>        <span class="bp">self</span><span class="o">.</span><span class="n">add_environment_property</span><span class="p">(</span><span class="s2">&quot;num_susceptible&quot;</span><span class="p">)</span>
+<span class="linenos">16</span>        <span class="bp">self</span><span class="o">.</span><span class="n">add_environment_property</span><span class="p">(</span><span class="s2">&quot;num_infected&quot;</span><span class="p">)</span>
+<span class="linenos">17</span>        <span class="bp">self</span><span class="o">.</span><span class="n">add_environment_property</span><span class="p">(</span><span class="s2">&quot;num_recovered&quot;</span><span class="p">)</span>
+<span class="linenos">18</span>
+</pre></div>
+</div>
+</section>
+<section id="calibrator-core-calibrator-py">
+<h3>Calibrator (<cite>core/calibrator.py</cite>)<a class="headerlink" href="#calibrator-core-calibrator-py" title="Link to this heading"></a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">CovidCalibrator</span></code> class inherits from <code class="docutils literal notranslate"><span class="pre">Melodie.Calibrator</span></code>.</p>
+<p>Key components:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">setup()</span></code>: Registers <code class="docutils literal notranslate"><span class="pre">infection_prob</span></code> as the tunable parameter via <code class="docutils literal notranslate"><span class="pre">add_scenario_calibrating_property</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">distance()</span></code>: Defines the error function. Here, it calculates the squared difference between the actual infected ratio and a target (hardcoded as 0.8 in this example).</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="linenos"> 2</span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span>
+<span class="linenos"> 3</span>
+<span class="linenos"> 4</span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="linenos"> 5</span><span class="kn">from</span><span class="w"> </span><span class="nn">Melodie</span><span class="w"> </span><span class="kn">import</span> <span class="n">Calibrator</span>
+<span class="linenos"> 6</span>
+<span class="linenos"> 7</span><span class="kn">from</span><span class="w"> </span><span class="nn">examples.covid_contagion_calibrator.core.model</span><span class="w"> </span><span class="kn">import</span> <span class="n">CovidModel</span>
+<span class="linenos"> 8</span><span class="kn">from</span><span class="w"> </span><span class="nn">examples.covid_contagion_calibrator.core.scenario</span><span class="w"> </span><span class="kn">import</span> <span class="n">CovidScenario</span>
+<span class="linenos"> 9</span>
+<span class="linenos">10</span>
+<span class="linenos">11</span><span class="k">class</span><span class="w"> </span><span class="nc">CovidCalibrator</span><span class="p">(</span><span class="n">Calibrator</span><span class="p">):</span>
+<span class="linenos">12</span><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos">13</span><span class="sd">    Simple calibrator that tunes `infection_prob` so the final infected ratio matches a target.</span>
+<span class="linenos">14</span><span class="sd">    </span>
+<span class="linenos">15</span><span class="sd">    In this example, the target infected ratio is hardcoded to 0.8 inside the `distance` method.</span>
+<span class="linenos">16</span><span class="sd">    The calibrator minimizes the squared difference between the actual infected ratio and this target.</span>
+<span class="linenos">17</span><span class="sd">    &quot;&quot;&quot;</span>
+<span class="linenos">18</span>
+<span class="linenos">19</span>    <span class="n">scenario_cls</span><span class="p">:</span> <span class="nb">type</span><span class="p">[</span><span class="n">CovidScenario</span><span class="p">]</span>
+<span class="linenos">20</span>    <span class="n">model_cls</span><span class="p">:</span> <span class="nb">type</span><span class="p">[</span><span class="n">CovidModel</span><span class="p">]</span>
+<span class="linenos">21</span>
+<span class="linenos">22</span>    <span class="k">def</span><span class="w"> </span><span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="linenos">23</span><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos">24</span><span class="sd">        Setup the calibrator by defining which properties to tune and which to record.</span>
+<span class="linenos">25</span><span class="sd">        &quot;&quot;&quot;</span>
+<span class="linenos">26</span>        <span class="c1"># Calibrate the `infection_prob` parameter in the scenario.</span>
+<span class="linenos">27</span>        <span class="c1"># This tells the Genetic Algorithm (GA) to optimize this specific attribute.</span>
+<span class="linenos">28</span>        <span class="bp">self</span><span class="o">.</span><span class="n">add_scenario_calibrating_property</span><span class="p">(</span><span class="s2">&quot;infection_prob&quot;</span><span class="p">)</span>
+<span class="linenos">29</span>        
+<span class="linenos">30</span>        <span class="c1"># Record environment-level data for analysis.</span>
+<span class="linenos">31</span>        <span class="c1"># &#39;num_susceptible&#39; will be recorded in `Result_Calibrator_Environment.csv`</span>
+<span class="linenos">32</span>        <span class="c1"># allowing us to verify the calibration result.</span>
+<span class="linenos">33</span>        <span class="bp">self</span><span class="o">.</span><span class="n">add_environment_property</span><span class="p">(</span><span class="s2">&quot;num_susceptible&quot;</span><span class="p">)</span>
+<span class="linenos">34</span>
+<span class="linenos">35</span>    <span class="k">def</span><span class="w"> </span><span class="nf">distance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">CovidModel</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="linenos">36</span><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos">37</span><span class="sd">        Calculates the distance (error) between the model&#39;s result and the target.</span>
+<span class="linenos">38</span><span class="sd">        The GA minimizes this value.</span>
+<span class="linenos">39</span><span class="sd">        &quot;&quot;&quot;</span>
+<span class="linenos">40</span>        <span class="n">env</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">environment</span>
+<span class="linenos">41</span>        
+<span class="linenos">42</span>        <span class="c1"># Calculate the ratio of agents who were infected (including recovered)</span>
+<span class="linenos">43</span>        <span class="c1"># 1 - (susceptible / total)</span>
+<span class="linenos">44</span>        <span class="n">infected_ratio</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">env</span><span class="o">.</span><span class="n">num_susceptible</span> <span class="o">/</span> <span class="n">env</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">agent_num</span>
+<span class="linenos">45</span>        
+<span class="linenos">46</span>        <span class="c1"># Return squared error. </span>
+<span class="linenos">47</span>        <span class="c1"># Target is hardcoded as 0.8 (80% infection rate).</span>
+<span class="linenos">48</span>        <span class="k">return</span> <span class="p">(</span><span class="n">infected_ratio</span> <span class="o">-</span> <span class="mf">0.8</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span>
+<span class="linenos">49</span>
+</pre></div>
+</div>
+</section>
+<section id="main-entry-main-py">
+<h3>Main Entry (<cite>main.py</cite>)<a class="headerlink" href="#main-entry-main-py" title="Link to this heading"></a></h3>
+<p><strong>Note on Import Paths and Multiprocessing</strong></p>
+<p>The <code class="docutils literal notranslate"><span class="pre">Calibrator</span></code> module uses Python’s <code class="docutils literal notranslate"><span class="pre">multiprocessing</span></code> to run simulations in parallel.
+For the worker processes to correctly unpickle and import your model classes, the project package must be importable.</p>
+<ol class="arabic">
+<li><p><strong>Standard Project Structure</strong>:
+If you are developing a standalone project where <code class="docutils literal notranslate"><span class="pre">main.py</span></code> is in the project root, and you have installed Melodie via <code class="docutils literal notranslate"><span class="pre">pip</span></code>, typically no extra path configuration is needed. The current directory is usually implicitly added to <code class="docutils literal notranslate"><span class="pre">sys.path</span></code>.</p></li>
+<li><p><strong>Sub-directory / Complex Structure (This Example)</strong>:
+Since this example is nested deep within the Melodie repository (<code class="docutils literal notranslate"><span class="pre">examples/covid_contagion_calibrator</span></code>), the default path behavior might fail for worker processes spawned by <code class="docutils literal notranslate"><span class="pre">multiprocessing</span></code>.</p>
+<p>To fix this, we explicitly insert the project root into <code class="docutils literal notranslate"><span class="pre">sys.path</span></code> in <code class="docutils literal notranslate"><span class="pre">main.py</span></code>. This ensures that statements like <code class="docutils literal notranslate"><span class="pre">from</span> <span class="pre">examples.covid_contagion_calibrator.core...</span></code> work correctly in both the main process and all worker processes.</p>
+</li>
+</ol>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="linenos"> 2</span><span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="linenos"> 3</span><span class="kn">from</span><span class="w"> </span><span class="nn">Melodie</span><span class="w"> </span><span class="kn">import</span> <span class="n">Config</span><span class="p">,</span> <span class="n">Simulator</span>
+<span class="linenos"> 4</span>
+<span class="linenos"> 5</span><span class="c1"># -------------------------------------------------------------------------</span>
+<span class="linenos"> 6</span><span class="c1"># IMPORT PATH HACK FOR PARALLEL WORKERS</span>
+<span class="linenos"> 7</span><span class="c1"># -------------------------------------------------------------------------</span>
+<span class="linenos"> 8</span><span class="c1"># Calibrator uses multiprocessing. Sub-processes must be able to import </span>
+<span class="linenos"> 9</span><span class="c1"># the &#39;examples&#39; package to load model/scenario classes.</span>
+<span class="linenos">10</span><span class="c1"># By adding the project root (../../) to sys.path, we ensure that:</span>
+<span class="linenos">11</span><span class="c1">#   from examples.covid_contagion_calibrator.core...</span>
+<span class="linenos">12</span><span class="c1"># works correctly in both the main process and worker processes.</span>
+<span class="linenos">13</span><span class="n">PROJECT_ROOT</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">),</span> <span class="s2">&quot;..&quot;</span><span class="p">,</span> <span class="s2">&quot;..&quot;</span><span class="p">))</span>
+<span class="linenos">14</span><span class="k">if</span> <span class="n">PROJECT_ROOT</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="p">:</span>
+<span class="linenos">15</span>    <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">PROJECT_ROOT</span><span class="p">)</span>
+<span class="linenos">16</span><span class="c1"># -------------------------------------------------------------------------</span>
+<span class="linenos">17</span>
+<span class="linenos">18</span><span class="kn">from</span><span class="w"> </span><span class="nn">examples.covid_contagion_calibrator.core.calibrator</span><span class="w"> </span><span class="kn">import</span> <span class="n">CovidCalibrator</span>
+<span class="linenos">19</span><span class="kn">from</span><span class="w"> </span><span class="nn">examples.covid_contagion_calibrator.core.model</span><span class="w"> </span><span class="kn">import</span> <span class="n">CovidModel</span>
+<span class="linenos">20</span><span class="kn">from</span><span class="w"> </span><span class="nn">examples.covid_contagion_calibrator.core.scenario</span><span class="w"> </span><span class="kn">import</span> <span class="n">CovidScenario</span>
+<span class="linenos">21</span>
+<span class="linenos">22</span>
+<span class="linenos">23</span><span class="k">def</span><span class="w"> </span><span class="nf">run_calibrator</span><span class="p">(</span><span class="n">cfg</span><span class="p">):</span>
+<span class="linenos">24</span>    <span class="n">calibrator</span> <span class="o">=</span> <span class="n">CovidCalibrator</span><span class="p">(</span>
+<span class="linenos">25</span>        <span class="n">config</span><span class="o">=</span><span class="n">cfg</span><span class="p">,</span>
+<span class="linenos">26</span>        <span class="n">model_cls</span><span class="o">=</span><span class="n">CovidModel</span><span class="p">,</span>
+<span class="linenos">27</span>        <span class="n">scenario_cls</span><span class="o">=</span><span class="n">CovidScenario</span><span class="p">,</span>
+<span class="linenos">28</span>        <span class="n">processors</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span>
+<span class="linenos">29</span>    <span class="p">)</span>
+<span class="linenos">30</span>    <span class="n">calibrator</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+<span class="linenos">31</span>
+<span class="linenos">32</span>
+<span class="linenos">33</span><span class="k">def</span><span class="w"> </span><span class="nf">run_simulator</span><span class="p">(</span><span class="n">cfg</span><span class="p">):</span>
+<span class="linenos">34</span>    <span class="n">simulator</span> <span class="o">=</span> <span class="n">Simulator</span><span class="p">(</span>
+<span class="linenos">35</span>        <span class="n">config</span><span class="o">=</span><span class="n">cfg</span><span class="p">,</span>
+<span class="linenos">36</span>        <span class="n">model_cls</span><span class="o">=</span><span class="n">CovidModel</span><span class="p">,</span>
+<span class="linenos">37</span>        <span class="n">scenario_cls</span><span class="o">=</span><span class="n">CovidScenario</span>
+<span class="linenos">38</span>    <span class="p">)</span>
+<span class="linenos">39</span>    <span class="n">simulator</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+<span class="linenos">40</span>
+<span class="linenos">41</span>
+<span class="linenos">42</span><span class="k">def</span><span class="w"> </span><span class="nf">get_config</span><span class="p">():</span>
+<span class="linenos">43</span>    <span class="n">base_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">))</span>
+<span class="linenos">44</span>    <span class="k">return</span> <span class="n">Config</span><span class="p">(</span>
+<span class="linenos">45</span>        <span class="n">project_name</span><span class="o">=</span><span class="s2">&quot;CovidContagionCalibrator&quot;</span><span class="p">,</span>
+<span class="linenos">46</span>        <span class="n">project_root</span><span class="o">=</span><span class="n">base_dir</span><span class="p">,</span>
+<span class="linenos">47</span>        <span class="n">input_folder</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">base_dir</span><span class="p">,</span> <span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="s2">&quot;input&quot;</span><span class="p">),</span>
+<span class="linenos">48</span>        <span class="n">output_folder</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">base_dir</span><span class="p">,</span> <span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="s2">&quot;output&quot;</span><span class="p">),</span>
+<span class="linenos">49</span>    <span class="p">)</span>
+<span class="linenos">50</span>
+<span class="linenos">51</span><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+<span class="linenos">52</span>    
+<span class="linenos">53</span>    <span class="n">config</span> <span class="o">=</span> <span class="n">get_config</span><span class="p">()</span>
+<span class="linenos">54</span>    <span class="c1"># run_simulator(config)</span>
+<span class="linenos">55</span>    <span class="n">run_calibrator</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="running-the-calibrator">
+<h2>Running the Calibrator<a class="headerlink" href="#running-the-calibrator" title="Link to this heading"></a></h2>
+<p>Run the entry script:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>examples/covid_contagion_calibrator/main.py
+</pre></div>
+</div>
+<p>Outputs (e.g., <code class="docutils literal notranslate"><span class="pre">Result_Simulator_Environment.csv</span></code> and GA logs) will appear in
+<code class="docutils literal notranslate"><span class="pre">examples/covid_contagion_calibrator/data/output</span></code>.</p>
 </section>
 </section>
 
@@ -685,7 +940,7 @@ They are shown below.</p>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="covid_contagion_network.html" class="btn btn-neutral float-left" title="CovidContagionNetwork" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="rock_paper_scissors.html" class="btn btn-neutral float-right" title="RockPaperScissorsTrainer" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="../advanced/_index.html" class="btn btn-neutral float-right" title="Advanced Topics" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

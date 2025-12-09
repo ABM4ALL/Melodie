@@ -87,6 +87,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#model-setup-core-model-py">Model Setup (<cite>core/model.py</cite>)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#environment-logic-core-environment-py">Environment Logic (<cite>core/environment.py</cite>)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#spatial-agent-core-agent-py">Spatial Agent (<cite>core/agent.py</cite>)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#data-collector-core-data-collector-py">Data Collector (<cite>core/data_collector.py</cite>)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#grid-definition-core-grid-py">Grid Definition (<cite>core/grid.py</cite>)</a></li>
 </ul>
 </li>
@@ -123,22 +124,20 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="covid_contagion_calibrator.html">CovidContagionCalibrator</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="covid_contagion_calibrator.html#project-structure">Project Structure</a></li>
-<li class="toctree-l3"><a class="reference internal" href="covid_contagion_calibrator.html#calibrator">Calibrator</a></li>
-<li class="toctree-l3"><a class="reference internal" href="covid_contagion_calibrator.html#algorithm">Algorithm</a></li>
-<li class="toctree-l3"><a class="reference internal" href="covid_contagion_calibrator.html#results">Results</a></li>
+<li class="toctree-l3"><a class="reference internal" href="covid_contagion_calibrator.html#project-structure-calibrator">Project Structure (Calibrator)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="covid_contagion_calibrator.html#key-differences-from-base-model">Key Differences from Base Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="covid_contagion_calibrator.html#scenario-input-data">Scenario &amp; Input Data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="covid_contagion_calibrator.html#implementation-details">Implementation Details</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="covid_contagion_calibrator.html#model-setup-core-model-py">Model Setup (<cite>core/model.py</cite>)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="covid_contagion_calibrator.html#environment-logic-core-environment-py">Environment Logic (<cite>core/environment.py</cite>)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="covid_contagion_calibrator.html#agent-core-agent-py">Agent (<cite>core/agent.py</cite>)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="covid_contagion_calibrator.html#scenario-core-scenario-py">Scenario (<cite>core/scenario.py</cite>)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="covid_contagion_calibrator.html#data-collector-core-data-collector-py">Data Collector (<cite>core/data_collector.py</cite>)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="covid_contagion_calibrator.html#calibrator-core-calibrator-py">Calibrator (<cite>core/calibrator.py</cite>)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="covid_contagion_calibrator.html#main-entry-main-py">Main Entry (<cite>main.py</cite>)</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="rock_paper_scissors.html">RockPaperScissorsTrainer</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="rock_paper_scissors.html#model-setup">Model Setup</a></li>
-<li class="toctree-l3"><a class="reference internal" href="rock_paper_scissors.html#trainer">Trainer</a></li>
-<li class="toctree-l3"><a class="reference internal" href="rock_paper_scissors.html#results">Results</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="covid_contagion_visual.html">CovidContagionVisual</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="covid_contagion_visual.html#visualizer">Visualizer</a></li>
-<li class="toctree-l3"><a class="reference internal" href="covid_contagion_visual.html#melodiestudio">MelodieStudio</a></li>
-<li class="toctree-l3"><a class="reference internal" href="covid_contagion_visual.html#how-to-start">How to start?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="covid_contagion_calibrator.html#running-the-calibrator">Running the Calibrator</a></li>
 </ul>
 </li>
 </ul>
@@ -813,6 +812,23 @@ Infection now happens locally. An infected agent searches for neighbors within a
 <span class="linenos">72</span><span class="sd">        &quot;&quot;&quot;</span>
 <span class="linenos">73</span>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">health_state</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">recovery_prob</span><span class="p">:</span>
 <span class="linenos">74</span>            <span class="bp">self</span><span class="o">.</span><span class="n">health_state</span> <span class="o">=</span> <span class="mi">2</span>
+</pre></div>
+</div>
+</section>
+<section id="data-collector-core-data-collector-py">
+<h3>Data Collector (<cite>core/data_collector.py</cite>)<a class="headerlink" href="#data-collector-core-data-collector-py" title="Link to this heading"></a></h3>
+<p>This file is identical to the base <code class="docutils literal notranslate"><span class="pre">covid_contagion</span></code> model.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">from</span><span class="w"> </span><span class="nn">Melodie</span><span class="w"> </span><span class="kn">import</span> <span class="n">DataCollector</span>
+<span class="linenos"> 2</span>
+<span class="linenos"> 3</span>
+<span class="linenos"> 4</span><span class="k">class</span><span class="w"> </span><span class="nc">CovidDataCollector</span><span class="p">(</span><span class="n">DataCollector</span><span class="p">):</span>
+<span class="linenos"> 5</span><span class="w">    </span><span class="sd">&quot;&quot;&quot;Collect micro and macro results for the grid contagion model.&quot;&quot;&quot;</span>
+<span class="linenos"> 6</span>
+<span class="linenos"> 7</span>    <span class="k">def</span><span class="w"> </span><span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="linenos"> 8</span>        <span class="bp">self</span><span class="o">.</span><span class="n">add_agent_property</span><span class="p">(</span><span class="s2">&quot;agents&quot;</span><span class="p">,</span> <span class="s2">&quot;health_state&quot;</span><span class="p">)</span>
+<span class="linenos"> 9</span>        <span class="bp">self</span><span class="o">.</span><span class="n">add_environment_property</span><span class="p">(</span><span class="s2">&quot;num_susceptible&quot;</span><span class="p">)</span>
+<span class="linenos">10</span>        <span class="bp">self</span><span class="o">.</span><span class="n">add_environment_property</span><span class="p">(</span><span class="s2">&quot;num_infected&quot;</span><span class="p">)</span>
+<span class="linenos">11</span>        <span class="bp">self</span><span class="o">.</span><span class="n">add_environment_property</span><span class="p">(</span><span class="s2">&quot;num_recovered&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </section>

@@ -1,0 +1,2 @@
+id,path_num,generation_num,strategy_population,mutation_prob,strategy_param_code_length,infection_prob_min,infection_prob_max
+0,1,50,50,0.02,10,0,1

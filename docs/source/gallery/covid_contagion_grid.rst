@@ -90,6 +90,15 @@ Spatial Agent (`core/agent.py`)
    :language: python
    :linenos:
 
+Data Collector (`core/data_collector.py`)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This file is identical to the base ``covid_contagion`` model.
+
+.. literalinclude:: ../../../examples/covid_contagion_grid/core/data_collector.py
+   :language: python
+   :linenos:
+
 Grid Definition (`core/grid.py`)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

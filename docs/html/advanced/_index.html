@@ -21,7 +21,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="TroubleShooting" href="troubleshooting.html" />
-    <link rel="prev" title="CovidContagionVisual" href="../gallery/covid_contagion_visual.html" /> 
+    <link rel="prev" title="CovidContagionCalibrator" href="../gallery/covid_contagion_calibrator.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -87,6 +87,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../gallery/covid_contagion_grid.html#model-setup-core-model-py">Model Setup (<cite>core/model.py</cite>)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../gallery/covid_contagion_grid.html#environment-logic-core-environment-py">Environment Logic (<cite>core/environment.py</cite>)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../gallery/covid_contagion_grid.html#spatial-agent-core-agent-py">Spatial Agent (<cite>core/agent.py</cite>)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../gallery/covid_contagion_grid.html#data-collector-core-data-collector-py">Data Collector (<cite>core/data_collector.py</cite>)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../gallery/covid_contagion_grid.html#grid-definition-core-grid-py">Grid Definition (<cite>core/grid.py</cite>)</a></li>
 </ul>
 </li>
@@ -123,22 +124,20 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../gallery/covid_contagion_calibrator.html">CovidContagionCalibrator</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../gallery/covid_contagion_calibrator.html#project-structure">Project Structure</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../gallery/covid_contagion_calibrator.html#calibrator">Calibrator</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../gallery/covid_contagion_calibrator.html#algorithm">Algorithm</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../gallery/covid_contagion_calibrator.html#results">Results</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../gallery/covid_contagion_calibrator.html#project-structure-calibrator">Project Structure (Calibrator)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../gallery/covid_contagion_calibrator.html#key-differences-from-base-model">Key Differences from Base Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../gallery/covid_contagion_calibrator.html#scenario-input-data">Scenario &amp; Input Data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../gallery/covid_contagion_calibrator.html#implementation-details">Implementation Details</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../gallery/covid_contagion_calibrator.html#model-setup-core-model-py">Model Setup (<cite>core/model.py</cite>)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../gallery/covid_contagion_calibrator.html#environment-logic-core-environment-py">Environment Logic (<cite>core/environment.py</cite>)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../gallery/covid_contagion_calibrator.html#agent-core-agent-py">Agent (<cite>core/agent.py</cite>)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../gallery/covid_contagion_calibrator.html#scenario-core-scenario-py">Scenario (<cite>core/scenario.py</cite>)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../gallery/covid_contagion_calibrator.html#data-collector-core-data-collector-py">Data Collector (<cite>core/data_collector.py</cite>)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../gallery/covid_contagion_calibrator.html#calibrator-core-calibrator-py">Calibrator (<cite>core/calibrator.py</cite>)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../gallery/covid_contagion_calibrator.html#main-entry-main-py">Main Entry (<cite>main.py</cite>)</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../gallery/rock_paper_scissors.html">RockPaperScissorsTrainer</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../gallery/rock_paper_scissors.html#model-setup">Model Setup</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../gallery/rock_paper_scissors.html#trainer">Trainer</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../gallery/rock_paper_scissors.html#results">Results</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="../gallery/covid_contagion_visual.html">CovidContagionVisual</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../gallery/covid_contagion_visual.html#visualizer">Visualizer</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../gallery/covid_contagion_visual.html#melodiestudio">MelodieStudio</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../gallery/covid_contagion_visual.html#how-to-start">How to start?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../gallery/covid_contagion_calibrator.html#running-the-calibrator">Running the Calibrator</a></li>
 </ul>
 </li>
 </ul>
@@ -547,7 +546,7 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="../gallery/covid_contagion_visual.html" class="btn btn-neutral float-left" title="CovidContagionVisual" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../gallery/covid_contagion_calibrator.html" class="btn btn-neutral float-left" title="CovidContagionCalibrator" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="troubleshooting.html" class="btn btn-neutral float-right" title="TroubleShooting" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
