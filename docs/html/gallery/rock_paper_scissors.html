@@ -1,22 +1,22 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>RockPaperScissorsTrainer &mdash; Melodie 0.9.0a0 documentation</title>
-      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
+  <title>RockPaperScissorsTrainer &mdash; Melodie 1.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
   
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-        <script src="../_static/doctools.js"></script>
-        <script src="../_static/sphinx_highlight.js"></script>
-        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=292eb321"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="author" title="About these documents" href="../about.html" />
     <link rel="index" title="Index" href="../genindex.html" />
@@ -55,8 +55,8 @@
 <li class="toctree-l1"><a class="reference internal" href="../introduction.html">Introduction</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../introduction.html#agent-based-model-abm">Agent-based Model (ABM)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../introduction.html#melodie-framework">Melodie Framework</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../introduction.html#model">Model</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../introduction.html#scenario">Scenario</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../introduction.html#the-model">The Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../introduction.html#the-scenario">The Scenario</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../introduction.html#modelling-manager">Modelling Manager</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../introduction.html#infrastructure">Infrastructure</a></li>
 </ul>
@@ -64,55 +64,63 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorial.html">Tutorial</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../tutorial.html#project-structure">Project Structure</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorial.html#agent">Agent</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorial.html#scenario">Scenario</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../tutorial.html#generate-agent-params">Generate <code class="docutils literal notranslate"><span class="pre">agent_params</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="../tutorial.html#load-simulator-scenarios">Load <code class="docutils literal notranslate"><span class="pre">simulator_scenarios</span></code></a></li>
-</ul>
-</li>
 <li class="toctree-l2"><a class="reference internal" href="../tutorial.html#model">Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial.html#scenario">Scenario</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../tutorial.html#environment">Environment</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorial.html#datacollector">DataCollector</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorial.html#last-words">Last Words</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial.html#agent">Agent</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial.html#data-collector">Data Collector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial.html#run-the-model">Run the model</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../framework_comparison.html">Framework Comparison</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../framework_comparison.html#project-structure">Project Structure</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../framework_comparison.html#model-components">Model Components</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../framework_comparison.html#melodie">Melodie</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../framework_comparison.html#id2">Mesa</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../framework_comparison.html#id3">AgentPy</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../framework_comparison.html#summary">Summary</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="../framework_comparison.html#scenario-management">Scenario Management</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../framework_comparison.html#id4">Melodie</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../framework_comparison.html#id5">Mesa</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../framework_comparison.html#id6">AgentPy</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../framework_comparison.html#id7">Summary</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="../framework_comparison.html#modeling-manager">Modeling Manager</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../framework_comparison.html#calibrator">Calibrator</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../framework_comparison.html#trainer">Trainer</a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="../framework_comparison.html#high-level-comparison">High-Level Comparison</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../framework_comparison.html#a-note-on-this-comparison">A Note on This Comparison</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../framework_comparison.html#advanced-features-in-melodie">Advanced Features in Melodie</a></li>
 </ul>
 </li>
 <li class="toctree-l1 current"><a class="reference internal" href="_index.html">Model Gallery</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="covid_grid_contagion.html">CovidGridContagion</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="covid_grid_contagion.html#project-structure">Project Structure</a></li>
-<li class="toctree-l3"><a class="reference internal" href="covid_grid_contagion.html#grid-and-spot">Grid and Spot</a></li>
-<li class="toctree-l3"><a class="reference internal" href="covid_grid_contagion.html#matrix-data">Matrix Data</a></li>
-<li class="toctree-l3"><a class="reference internal" href="covid_grid_contagion.html#model">Model</a></li>
-<li class="toctree-l3"><a class="reference internal" href="covid_grid_contagion.html#gridagent">GridAgent</a></li>
+<li class="toctree-l2"><a class="reference internal" href="covid_contagion_grid.html">CovidContagionGrid</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="covid_contagion_grid.html#project-structure-grid">Project Structure (Grid)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="covid_contagion_grid.html#key-differences-from-base-model">Key Differences from Base Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="covid_contagion_grid.html#scenario-input-data">Scenario &amp; Input Data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="covid_contagion_grid.html#implementation-details">Implementation Details</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="covid_contagion_grid.html#model-setup-core-model-py">Model Setup (<cite>core/model.py</cite>)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="covid_contagion_grid.html#environment-logic-core-environment-py">Environment Logic (<cite>core/environment.py</cite>)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="covid_contagion_grid.html#spatial-agent-core-agent-py">Spatial Agent (<cite>core/agent.py</cite>)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="covid_contagion_grid.html#grid-definition-core-grid-py">Grid Definition (<cite>core/grid.py</cite>)</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="covid_network_contagion.html">CovidNetworkContagion</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="covid_network_contagion.html#project-structure">Project Structure</a></li>
-<li class="toctree-l3"><a class="reference internal" href="covid_network_contagion.html#model">Model</a></li>
-<li class="toctree-l3"><a class="reference internal" href="covid_network_contagion.html#scenario">Scenario</a></li>
+<li class="toctree-l3"><a class="reference internal" href="covid_contagion_grid.html#running-the-model">Running the Model</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="covid_contagion_grid_visual.html">CovidContagionGridVisual</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="covid_contagion_grid_visual.html#project-structure-visual">Project Structure (Visual)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="covid_contagion_grid_visual.html#key-differences-from-grid-model">Key Differences from Grid Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="covid_contagion_grid_visual.html#implementation-details-visual">Implementation Details (Visual)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="covid_contagion_grid_visual.html#model-setup-visual">Model Setup (Visual)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="covid_contagion_grid_visual.html#environment-logic-visual">Environment Logic (Visual)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="covid_contagion_grid_visual.html#spatial-agent-visual">Spatial Agent (Visual)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="covid_contagion_grid_visual.html#grid-definition-visual">Grid Definition (Visual)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="covid_contagion_grid_visual.html#visualizer-configuration-core-visualizer-py">Visualizer Configuration (<cite>core/visualizer.py</cite>)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="covid_contagion_grid_visual.html#running-the-model-with-studio">Running the Model with Studio</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="covid_contagion_network.html">CovidContagionNetwork</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="covid_contagion_network.html#project-structure-network">Project Structure (Network)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="covid_contagion_network.html#key-differences-from-base-model">Key Differences from Base Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="covid_contagion_network.html#scenario-input-data">Scenario &amp; Input Data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="covid_contagion_network.html#implementation-details">Implementation Details</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="covid_contagion_network.html#model-setup-core-model-py">Model Setup (<cite>core/model.py</cite>)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="covid_contagion_network.html#environment-logic-core-environment-py">Environment Logic (<cite>core/environment.py</cite>)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="covid_contagion_network.html#network-agent-core-agent-py">Network Agent (<cite>core/agent.py</cite>)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="covid_contagion_network.html#scenario-configuration-core-scenario-py">Scenario Configuration (<cite>core/scenario.py</cite>)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="covid_contagion_network.html#data-collector-core-data-collector-py">Data Collector (<cite>core/data_collector.py</cite>)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="covid_contagion_network.html#running-the-model">Running the Model</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="covid_contagion_calibrator.html">CovidContagionCalibrator</a><ul>
@@ -150,6 +158,8 @@
 <li class="toctree-l3"><a class="reference internal" href="../advanced/datatypes.html#notice">Notice</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../advanced/project_template.html">Project Template</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../advanced/acceleration.html">Speed Improvement</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../api/_index.html">API Reference</a><ul>
@@ -224,18 +234,21 @@
 <li class="toctree-l4"><a class="reference internal" href="../api/data_collector.html#Melodie.data_collector.DataCollector.time_elapsed"><code class="docutils literal notranslate"><span class="pre">DataCollector.time_elapsed()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/data_collector.html#Melodie.data_collector.DataCollector.add_agent_property"><code class="docutils literal notranslate"><span class="pre">DataCollector.add_agent_property()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/data_collector.html#Melodie.data_collector.DataCollector.add_environment_property"><code class="docutils literal notranslate"><span class="pre">DataCollector.add_environment_property()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/data_collector.html#Melodie.data_collector.DataCollector.add_custom_collector"><code class="docutils literal notranslate"><span class="pre">DataCollector.add_custom_collector()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/data_collector.html#Melodie.data_collector.DataCollector.env_property_names"><code class="docutils literal notranslate"><span class="pre">DataCollector.env_property_names()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/data_collector.html#Melodie.data_collector.DataCollector.agent_property_names"><code class="docutils literal notranslate"><span class="pre">DataCollector.agent_property_names()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/data_collector.html#Melodie.data_collector.DataCollector.agent_containers"><code class="docutils literal notranslate"><span class="pre">DataCollector.agent_containers()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/data_collector.html#Melodie.data_collector.DataCollector.collect_agent_properties"><code class="docutils literal notranslate"><span class="pre">DataCollector.collect_agent_properties()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/data_collector.html#Melodie.data_collector.DataCollector.collect_custom_properties"><code class="docutils literal notranslate"><span class="pre">DataCollector.collect_custom_properties()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/data_collector.html#Melodie.data_collector.DataCollector.collect_single_custom_property"><code class="docutils literal notranslate"><span class="pre">DataCollector.collect_single_custom_property()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/data_collector.html#Melodie.data_collector.DataCollector.append_agent_properties_by_records"><code class="docutils literal notranslate"><span class="pre">DataCollector.append_agent_properties_by_records()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/data_collector.html#Melodie.data_collector.DataCollector.append_environment_properties"><code class="docutils literal notranslate"><span class="pre">DataCollector.append_environment_properties()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/data_collector.html#Melodie.data_collector.DataCollector.status"><code class="docutils literal notranslate"><span class="pre">DataCollector.status</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/data_collector.html#Melodie.data_collector.DataCollector.collect"><code class="docutils literal notranslate"><span class="pre">DataCollector.collect()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/data_collector.html#Melodie.data_collector.DataCollector.db"><code class="docutils literal notranslate"><span class="pre">DataCollector.db</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/data_collector.html#Melodie.data_collector.DataCollector.calc_time"><code class="docutils literal notranslate"><span class="pre">DataCollector.calc_time()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/data_collector.html#Melodie.data_collector.DataCollector.get_single_agent_data"><code class="docutils literal notranslate"><span class="pre">DataCollector.get_single_agent_data()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/data_collector.html#Melodie.data_collector.DataCollector.save"><code class="docutils literal notranslate"><span class="pre">DataCollector.save()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/data_collector.html#Melodie.data_collector.DataCollector.save_dataframe"><code class="docutils literal notranslate"><span class="pre">DataCollector.save_dataframe()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -325,10 +338,10 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../api/data_loader.html">DataLoader</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../api/data_loader.html#Melodie.data_loader.DataLoader"><code class="docutils literal notranslate"><span class="pre">DataLoader</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../api/data_loader.html#Melodie.data_loader.DataLoader.register_dataframe"><code class="docutils literal notranslate"><span class="pre">DataLoader.register_dataframe()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/data_loader.html#Melodie.data_loader.DataLoader.clear_cache"><code class="docutils literal notranslate"><span class="pre">DataLoader.clear_cache()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/data_loader.html#Melodie.data_loader.DataLoader.load_dataframe"><code class="docutils literal notranslate"><span class="pre">DataLoader.load_dataframe()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/data_loader.html#Melodie.data_loader.DataLoader.load_matrix"><code class="docutils literal notranslate"><span class="pre">DataLoader.load_matrix()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/data_loader.html#Melodie.data_loader.DataLoader.register_dataframe"><code class="docutils literal notranslate"><span class="pre">DataLoader.register_dataframe()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/data_loader.html#Melodie.data_loader.DataLoader.clear_cache"><code class="docutils literal notranslate"><span class="pre">DataLoader.clear_cache()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/data_loader.html#Melodie.data_loader.DataLoader.dataframe_generator"><code class="docutils literal notranslate"><span class="pre">DataLoader.dataframe_generator()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/data_loader.html#Melodie.data_loader.DataLoader.generate_scenarios_from_dataframe"><code class="docutils literal notranslate"><span class="pre">DataLoader.generate_scenarios_from_dataframe()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/data_loader.html#Melodie.data_loader.DataLoader.generate_scenarios"><code class="docutils literal notranslate"><span class="pre">DataLoader.generate_scenarios()</span></code></a></li>
@@ -339,7 +352,12 @@
 <li class="toctree-l2"><a class="reference internal" href="../api/scenario.html">Scenario</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../api/scenario.html#Melodie.scenario_manager.Scenario"><code class="docutils literal notranslate"><span class="pre">Scenario</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../api/scenario.html#Melodie.scenario_manager.Scenario.copy"><code class="docutils literal notranslate"><span class="pre">Scenario.copy()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/scenario.html#Melodie.scenario_manager.Scenario.load_data"><code class="docutils literal notranslate"><span class="pre">Scenario.load_data()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/scenario.html#Melodie.scenario_manager.Scenario.setup_data"><code class="docutils literal notranslate"><span class="pre">Scenario.setup_data()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/scenario.html#Melodie.scenario_manager.Scenario.initialize"><code class="docutils literal notranslate"><span class="pre">Scenario.initialize()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/scenario.html#Melodie.scenario_manager.Scenario.setup"><code class="docutils literal notranslate"><span class="pre">Scenario.setup()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/scenario.html#Melodie.scenario_manager.Scenario.load_dataframe"><code class="docutils literal notranslate"><span class="pre">Scenario.load_dataframe()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/scenario.html#Melodie.scenario_manager.Scenario.load_matrix"><code class="docutils literal notranslate"><span class="pre">Scenario.load_matrix()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/scenario.html#Melodie.scenario_manager.Scenario.to_dict"><code class="docutils literal notranslate"><span class="pre">Scenario.to_dict()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/scenario.html#Melodie.scenario_manager.Scenario.to_json"><code class="docutils literal notranslate"><span class="pre">Scenario.to_json()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/scenario.html#Melodie.scenario_manager.Scenario.get_dataframe"><code class="docutils literal notranslate"><span class="pre">Scenario.get_dataframe()</span></code></a></li>
@@ -353,6 +371,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../api/simulator.html#Melodie.simulator.BaseModellingManager.get_dataframe"><code class="docutils literal notranslate"><span class="pre">BaseModellingManager.get_dataframe()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/simulator.html#Melodie.simulator.BaseModellingManager.get_matrix"><code class="docutils literal notranslate"><span class="pre">BaseModellingManager.get_matrix()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/simulator.html#Melodie.simulator.BaseModellingManager.subworker_prerun"><code class="docutils literal notranslate"><span class="pre">BaseModellingManager.subworker_prerun()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/simulator.html#Melodie.simulator.BaseModellingManager.clear_output_tables"><code class="docutils literal notranslate"><span class="pre">BaseModellingManager.clear_output_tables()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/simulator.html#Melodie.simulator.BaseModellingManager.pre_run"><code class="docutils literal notranslate"><span class="pre">BaseModellingManager.pre_run()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/simulator.html#Melodie.simulator.BaseModellingManager.generate_scenarios"><code class="docutils literal notranslate"><span class="pre">BaseModellingManager.generate_scenarios()</span></code></a></li>
 </ul>
@@ -411,7 +430,6 @@
 <li class="toctree-l3"><a class="reference internal" href="../api/db.html#MelodieInfra.db.db.DBConn"><code class="docutils literal notranslate"><span class="pre">DBConn</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../api/db.html#MelodieInfra.db.db.DBConn.table_dtypes"><code class="docutils literal notranslate"><span class="pre">DBConn.table_dtypes</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/db.html#MelodieInfra.db.db.DBConn.existing_connections"><code class="docutils literal notranslate"><span class="pre">DBConn.existing_connections</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/db.html#MelodieInfra.db.db.DBConn.SCENARIO_TABLE"><code class="docutils literal notranslate"><span class="pre">DBConn.SCENARIO_TABLE</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/db.html#MelodieInfra.db.db.DBConn.ENVIRONMENT_RESULT_TABLE"><code class="docutils literal notranslate"><span class="pre">DBConn.ENVIRONMENT_RESULT_TABLE</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/db.html#MelodieInfra.db.db.DBConn.from_connection_string"><code class="docutils literal notranslate"><span class="pre">DBConn.from_connection_string()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/db.html#MelodieInfra.db.db.DBConn.get_engine"><code class="docutils literal notranslate"><span class="pre">DBConn.get_engine()</span></code></a></li>
@@ -420,6 +438,8 @@
 <li class="toctree-l4"><a class="reference internal" href="../api/db.html#MelodieInfra.db.db.DBConn.register_dtypes"><code class="docutils literal notranslate"><span class="pre">DBConn.register_dtypes()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/db.html#MelodieInfra.db.db.DBConn.get_table_dtypes"><code class="docutils literal notranslate"><span class="pre">DBConn.get_table_dtypes()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/db.html#MelodieInfra.db.db.DBConn.close"><code class="docutils literal notranslate"><span class="pre">DBConn.close()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/db.html#MelodieInfra.db.db.DBConn.table_names"><code class="docutils literal notranslate"><span class="pre">DBConn.table_names()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/db.html#MelodieInfra.db.db.DBConn.execute"><code class="docutils literal notranslate"><span class="pre">DBConn.execute()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/db.html#MelodieInfra.db.db.DBConn.clear_database"><code class="docutils literal notranslate"><span class="pre">DBConn.clear_database()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/db.html#MelodieInfra.db.db.DBConn.write_dataframe"><code class="docutils literal notranslate"><span class="pre">DBConn.write_dataframe()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/db.html#MelodieInfra.db.db.DBConn.read_dataframe"><code class="docutils literal notranslate"><span class="pre">DBConn.read_dataframe()</span></code></a></li>
@@ -427,6 +447,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../api/db.html#MelodieInfra.db.db.DBConn.query"><code class="docutils literal notranslate"><span class="pre">DBConn.query()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../api/db.html#MelodieInfra.db.db.db_conn"><code class="docutils literal notranslate"><span class="pre">db_conn()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api/db.html#MelodieInfra.db.db.create_db_conn"><code class="docutils literal notranslate"><span class="pre">create_db_conn()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api/db.html#MelodieInfra.db.db.get_sqlite_filename"><code class="docutils literal notranslate"><span class="pre">get_sqlite_filename()</span></code></a></li>
 </ul>
@@ -436,6 +457,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../api/exceptions.html#MelodieInfra.exceptions.exceptions.assert_exc_type_occurs"><code class="docutils literal notranslate"><span class="pre">assert_exc_type_occurs()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api/exceptions.html#MelodieInfra.exceptions.exceptions.MelodieException"><code class="docutils literal notranslate"><span class="pre">MelodieException</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api/exceptions.html#MelodieInfra.exceptions.exceptions.MelodieExceptions"><code class="docutils literal notranslate"><span class="pre">MelodieExceptions</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/exceptions.html#MelodieInfra.exceptions.exceptions.MelodieExceptions.MLD_INTL_EXC"><code class="docutils literal notranslate"><span class="pre">MelodieExceptions.MLD_INTL_EXC</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/exceptions.html#MelodieInfra.exceptions.exceptions.MelodieExceptions.Assertions"><code class="docutils literal notranslate"><span class="pre">MelodieExceptions.Assertions</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/exceptions.html#MelodieInfra.exceptions.exceptions.MelodieExceptions.General"><code class="docutils literal notranslate"><span class="pre">MelodieExceptions.General</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/exceptions.html#MelodieInfra.exceptions.exceptions.MelodieExceptions.Program"><code class="docutils literal notranslate"><span class="pre">MelodieExceptions.Program</span></code></a></li>
@@ -450,6 +472,7 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../api/studio.html">Studio</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../changelog.html">Change Log</a><ul>
@@ -509,7 +532,7 @@
            <div itemprop="articleBody">
              
   <section id="rockpaperscissorstrainer">
-<h1>RockPaperScissorsTrainer<a class="headerlink" href="#rockpaperscissorstrainer" title="Permalink to this heading"></a></h1>
+<h1>RockPaperScissorsTrainer<a class="headerlink" href="#rockpaperscissorstrainer" title="Link to this heading"></a></h1>
 <p>To show how the <code class="docutils literal notranslate"><span class="pre">Trainer</span></code> module can be used,
 we provide this <a class="reference external" href="https://github.com/ABM4ALL/RockPaperScissorsTrainer">RockPaperScissorsTrainer</a> model,
 which implements the “evolutionary training” framework proposed in this
@@ -534,7 +557,7 @@ As explained in the <a class="reference external" href="https://ieeexplore.ieee.
 by combining the optimization (evolutionary training) and simulation methods in such a framework,
 the validity and flexibility of agent-based modeling are balanced.</p>
 <section id="model-setup">
-<h2>Model Setup<a class="headerlink" href="#model-setup" title="Permalink to this heading"></a></h2>
+<h2>Model Setup<a class="headerlink" href="#model-setup" title="Link to this heading"></a></h2>
 <p>In this model, the agents play the rock-paper-scissors game with each other.</p>
 <p>We make following assumptions:</p>
 <ul class="simple">
@@ -556,19 +579,19 @@ Then, the probability for the agent to play the three options are:</p>
 <code class="docutils literal notranslate"><span class="pre">Melodie</span></code> provides the <code class="docutils literal notranslate"><span class="pre">Trainer</span></code> module.</p>
 </section>
 <section id="trainer">
-<h2>Trainer<a class="headerlink" href="#trainer" title="Permalink to this heading"></a></h2>
+<h2>Trainer<a class="headerlink" href="#trainer" title="Link to this heading"></a></h2>
 <p>Following the methodology introduced in the <a class="reference external" href="https://ieeexplore.ieee.org/document/9857838/">paper</a> above,
 the <code class="docutils literal notranslate"><span class="pre">Trainer</span></code> module applies individual GA-based evolutionary training to “calibrate” the behavioral parameters of agents.
 All the relevant mechanisms are written in the <code class="docutils literal notranslate"><span class="pre">trainer.py</span></code> file as follows.</p>
 <div class="literal-block-wrapper docutils container" id="id5">
-<div class="code-block-caption"><span class="caption-text">trainer.py</span><a class="headerlink" href="#id5" title="Permalink to this code"></a></div>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">from</span> <span class="nn">Melodie</span> <span class="kn">import</span> <span class="n">Trainer</span>
-<span class="linenos"> 2</span><span class="kn">from</span> <span class="nn">source.agent</span> <span class="kn">import</span> <span class="n">RPSAgent</span>
+<div class="code-block-caption"><span class="caption-text">trainer.py</span><a class="headerlink" href="#id5" title="Link to this code"></a></div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">from</span><span class="w"> </span><span class="nn">Melodie</span><span class="w"> </span><span class="kn">import</span> <span class="n">Trainer</span>
+<span class="linenos"> 2</span><span class="kn">from</span><span class="w"> </span><span class="nn">source.agent</span><span class="w"> </span><span class="kn">import</span> <span class="n">RPSAgent</span>
 <span class="linenos"> 3</span>
 <span class="linenos"> 4</span>
-<span class="linenos"> 5</span><span class="k">class</span> <span class="nc">RPSTrainer</span><span class="p">(</span><span class="n">Trainer</span><span class="p">):</span>
+<span class="linenos"> 5</span><span class="k">class</span><span class="w"> </span><span class="nc">RPSTrainer</span><span class="p">(</span><span class="n">Trainer</span><span class="p">):</span>
 <span class="linenos"> 6</span>
-<span class="linenos"> 7</span>    <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="linenos"> 7</span>    <span class="k">def</span><span class="w"> </span><span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="linenos"> 8</span>        <span class="bp">self</span><span class="o">.</span><span class="n">add_agent_training_property</span><span class="p">(</span>
 <span class="hll"><span class="linenos"> 9</span>            <span class="s2">&quot;agents&quot;</span><span class="p">,</span>
 </span><span class="hll"><span class="linenos">10</span>            <span class="p">[</span>
@@ -579,7 +602,7 @@ All the relevant mechanisms are written in the <code class="docutils literal not
 </span><span class="hll"><span class="linenos">15</span>            <span class="k">lambda</span> <span class="n">scenario</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">scenario</span><span class="o">.</span><span class="n">agent_num</span><span class="p">)),</span>
 </span><span class="linenos">16</span>        <span class="p">)</span>
 <span class="linenos">17</span>
-<span class="linenos">18</span>    <span class="k">def</span> <span class="nf">collect_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="linenos">18</span>    <span class="k">def</span><span class="w"> </span><span class="nf">collect_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="linenos">19</span>        <span class="bp">self</span><span class="o">.</span><span class="n">add_agent_property</span><span class="p">(</span><span class="s2">&quot;agents&quot;</span><span class="p">,</span> <span class="s2">&quot;strategy_param_1&quot;</span><span class="p">)</span>
 <span class="linenos">20</span>        <span class="bp">self</span><span class="o">.</span><span class="n">add_agent_property</span><span class="p">(</span><span class="s2">&quot;agents&quot;</span><span class="p">,</span> <span class="s2">&quot;strategy_param_2&quot;</span><span class="p">)</span>
 <span class="linenos">21</span>        <span class="bp">self</span><span class="o">.</span><span class="n">add_agent_property</span><span class="p">(</span><span class="s2">&quot;agents&quot;</span><span class="p">,</span> <span class="s2">&quot;strategy_param_3&quot;</span><span class="p">)</span>
@@ -588,7 +611,7 @@ All the relevant mechanisms are written in the <code class="docutils literal not
 <span class="linenos">24</span>        <span class="bp">self</span><span class="o">.</span><span class="n">add_agent_property</span><span class="p">(</span><span class="s2">&quot;agents&quot;</span><span class="p">,</span> <span class="s2">&quot;share_scissors&quot;</span><span class="p">)</span>
 <span class="linenos">25</span>        <span class="bp">self</span><span class="o">.</span><span class="n">add_environment_property</span><span class="p">(</span><span class="s2">&quot;total_accumulated_payoff&quot;</span><span class="p">)</span>
 <span class="linenos">26</span>
-<span class="linenos">27</span>    <span class="k">def</span> <span class="nf">utility</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">:</span> <span class="n">RPSAgent</span><span class="p">):</span>
+<span class="linenos">27</span>    <span class="k">def</span><span class="w"> </span><span class="nf">utility</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">:</span> <span class="n">RPSAgent</span><span class="p">):</span>
 <span class="linenos">28</span>        <span class="k">return</span> <span class="n">agent</span><span class="o">.</span><span class="n">accumulated_payoff</span>
 </pre></div>
 </div>
@@ -603,7 +626,7 @@ All the relevant mechanisms are written in the <code class="docutils literal not
 please read the <a class="reference external" href="https://ieeexplore.ieee.org/document/9857838/">paper</a> mentioned above.</p>
 </section>
 <section id="results">
-<h2>Results<a class="headerlink" href="#results" title="Permalink to this heading"></a></h2>
+<h2>Results<a class="headerlink" href="#results" title="Link to this heading"></a></h2>
 <p>After running the <code class="docutils literal notranslate"><span class="pre">run_trainer</span></code> file, four tables will be generated:</p>
 <ul class="simple">
 <li><p>agents_trainer_result</p></li>

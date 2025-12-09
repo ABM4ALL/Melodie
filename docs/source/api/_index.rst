@@ -23,6 +23,7 @@ Under development.
     trainer
     db
     exceptions
+    studio
 
 
 

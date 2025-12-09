@@ -1,21 +1,21 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Network &mdash; Melodie 0.9.0a0 documentation</title>
-      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
+  <title>Network &mdash; Melodie 1.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
   
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-        <script src="../_static/doctools.js"></script>
-        <script src="../_static/sphinx_highlight.js"></script>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=292eb321"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="author" title="About these documents" href="../about.html" />
     <link rel="index" title="Index" href="../genindex.html" />
@@ -54,8 +54,8 @@
 <li class="toctree-l1"><a class="reference internal" href="../introduction.html">Introduction</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../introduction.html#agent-based-model-abm">Agent-based Model (ABM)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../introduction.html#melodie-framework">Melodie Framework</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../introduction.html#model">Model</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../introduction.html#scenario">Scenario</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../introduction.html#the-model">The Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../introduction.html#the-scenario">The Scenario</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../introduction.html#modelling-manager">Modelling Manager</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../introduction.html#infrastructure">Infrastructure</a></li>
 </ul>
@@ -63,55 +63,63 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorial.html">Tutorial</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../tutorial.html#project-structure">Project Structure</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorial.html#agent">Agent</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorial.html#scenario">Scenario</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../tutorial.html#generate-agent-params">Generate <code class="docutils literal notranslate"><span class="pre">agent_params</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="../tutorial.html#load-simulator-scenarios">Load <code class="docutils literal notranslate"><span class="pre">simulator_scenarios</span></code></a></li>
-</ul>
-</li>
 <li class="toctree-l2"><a class="reference internal" href="../tutorial.html#model">Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial.html#scenario">Scenario</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../tutorial.html#environment">Environment</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorial.html#datacollector">DataCollector</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorial.html#last-words">Last Words</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial.html#agent">Agent</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial.html#data-collector">Data Collector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial.html#run-the-model">Run the model</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../framework_comparison.html">Framework Comparison</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../framework_comparison.html#project-structure">Project Structure</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../framework_comparison.html#model-components">Model Components</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../framework_comparison.html#melodie">Melodie</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../framework_comparison.html#id2">Mesa</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../framework_comparison.html#id3">AgentPy</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../framework_comparison.html#summary">Summary</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="../framework_comparison.html#scenario-management">Scenario Management</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../framework_comparison.html#id4">Melodie</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../framework_comparison.html#id5">Mesa</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../framework_comparison.html#id6">AgentPy</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../framework_comparison.html#id7">Summary</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="../framework_comparison.html#modeling-manager">Modeling Manager</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../framework_comparison.html#calibrator">Calibrator</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../framework_comparison.html#trainer">Trainer</a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="../framework_comparison.html#high-level-comparison">High-Level Comparison</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../framework_comparison.html#a-note-on-this-comparison">A Note on This Comparison</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../framework_comparison.html#advanced-features-in-melodie">Advanced Features in Melodie</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../gallery/_index.html">Model Gallery</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../gallery/covid_grid_contagion.html">CovidGridContagion</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../gallery/covid_grid_contagion.html#project-structure">Project Structure</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../gallery/covid_grid_contagion.html#grid-and-spot">Grid and Spot</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../gallery/covid_grid_contagion.html#matrix-data">Matrix Data</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../gallery/covid_grid_contagion.html#model">Model</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../gallery/covid_grid_contagion.html#gridagent">GridAgent</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gallery/covid_contagion_grid.html">CovidContagionGrid</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../gallery/covid_contagion_grid.html#project-structure-grid">Project Structure (Grid)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../gallery/covid_contagion_grid.html#key-differences-from-base-model">Key Differences from Base Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../gallery/covid_contagion_grid.html#scenario-input-data">Scenario &amp; Input Data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../gallery/covid_contagion_grid.html#implementation-details">Implementation Details</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../gallery/covid_contagion_grid.html#model-setup-core-model-py">Model Setup (<cite>core/model.py</cite>)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../gallery/covid_contagion_grid.html#environment-logic-core-environment-py">Environment Logic (<cite>core/environment.py</cite>)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../gallery/covid_contagion_grid.html#spatial-agent-core-agent-py">Spatial Agent (<cite>core/agent.py</cite>)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../gallery/covid_contagion_grid.html#grid-definition-core-grid-py">Grid Definition (<cite>core/grid.py</cite>)</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../gallery/covid_network_contagion.html">CovidNetworkContagion</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../gallery/covid_network_contagion.html#project-structure">Project Structure</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../gallery/covid_network_contagion.html#model">Model</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../gallery/covid_network_contagion.html#scenario">Scenario</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../gallery/covid_contagion_grid.html#running-the-model">Running the Model</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../gallery/covid_contagion_grid_visual.html">CovidContagionGridVisual</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../gallery/covid_contagion_grid_visual.html#project-structure-visual">Project Structure (Visual)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../gallery/covid_contagion_grid_visual.html#key-differences-from-grid-model">Key Differences from Grid Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../gallery/covid_contagion_grid_visual.html#implementation-details-visual">Implementation Details (Visual)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../gallery/covid_contagion_grid_visual.html#model-setup-visual">Model Setup (Visual)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../gallery/covid_contagion_grid_visual.html#environment-logic-visual">Environment Logic (Visual)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../gallery/covid_contagion_grid_visual.html#spatial-agent-visual">Spatial Agent (Visual)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../gallery/covid_contagion_grid_visual.html#grid-definition-visual">Grid Definition (Visual)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../gallery/covid_contagion_grid_visual.html#visualizer-configuration-core-visualizer-py">Visualizer Configuration (<cite>core/visualizer.py</cite>)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../gallery/covid_contagion_grid_visual.html#running-the-model-with-studio">Running the Model with Studio</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../gallery/covid_contagion_network.html">CovidContagionNetwork</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../gallery/covid_contagion_network.html#project-structure-network">Project Structure (Network)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../gallery/covid_contagion_network.html#key-differences-from-base-model">Key Differences from Base Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../gallery/covid_contagion_network.html#scenario-input-data">Scenario &amp; Input Data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../gallery/covid_contagion_network.html#implementation-details">Implementation Details</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../gallery/covid_contagion_network.html#model-setup-core-model-py">Model Setup (<cite>core/model.py</cite>)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../gallery/covid_contagion_network.html#environment-logic-core-environment-py">Environment Logic (<cite>core/environment.py</cite>)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../gallery/covid_contagion_network.html#network-agent-core-agent-py">Network Agent (<cite>core/agent.py</cite>)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../gallery/covid_contagion_network.html#scenario-configuration-core-scenario-py">Scenario Configuration (<cite>core/scenario.py</cite>)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../gallery/covid_contagion_network.html#data-collector-core-data-collector-py">Data Collector (<cite>core/data_collector.py</cite>)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../gallery/covid_contagion_network.html#running-the-model">Running the Model</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../gallery/covid_contagion_calibrator.html">CovidContagionCalibrator</a><ul>
@@ -149,6 +157,8 @@
 <li class="toctree-l3"><a class="reference internal" href="../advanced/datatypes.html#notice">Notice</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../advanced/project_template.html">Project Template</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../advanced/acceleration.html">Speed Improvement</a></li>
 </ul>
 </li>
 <li class="toctree-l1 current"><a class="reference internal" href="_index.html">API Reference</a><ul class="current">
@@ -223,18 +233,21 @@
 <li class="toctree-l4"><a class="reference internal" href="data_collector.html#Melodie.data_collector.DataCollector.time_elapsed"><code class="docutils literal notranslate"><span class="pre">DataCollector.time_elapsed()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="data_collector.html#Melodie.data_collector.DataCollector.add_agent_property"><code class="docutils literal notranslate"><span class="pre">DataCollector.add_agent_property()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="data_collector.html#Melodie.data_collector.DataCollector.add_environment_property"><code class="docutils literal notranslate"><span class="pre">DataCollector.add_environment_property()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="data_collector.html#Melodie.data_collector.DataCollector.add_custom_collector"><code class="docutils literal notranslate"><span class="pre">DataCollector.add_custom_collector()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="data_collector.html#Melodie.data_collector.DataCollector.env_property_names"><code class="docutils literal notranslate"><span class="pre">DataCollector.env_property_names()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="data_collector.html#Melodie.data_collector.DataCollector.agent_property_names"><code class="docutils literal notranslate"><span class="pre">DataCollector.agent_property_names()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="data_collector.html#Melodie.data_collector.DataCollector.agent_containers"><code class="docutils literal notranslate"><span class="pre">DataCollector.agent_containers()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="data_collector.html#Melodie.data_collector.DataCollector.collect_agent_properties"><code class="docutils literal notranslate"><span class="pre">DataCollector.collect_agent_properties()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="data_collector.html#Melodie.data_collector.DataCollector.collect_custom_properties"><code class="docutils literal notranslate"><span class="pre">DataCollector.collect_custom_properties()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="data_collector.html#Melodie.data_collector.DataCollector.collect_single_custom_property"><code class="docutils literal notranslate"><span class="pre">DataCollector.collect_single_custom_property()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="data_collector.html#Melodie.data_collector.DataCollector.append_agent_properties_by_records"><code class="docutils literal notranslate"><span class="pre">DataCollector.append_agent_properties_by_records()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="data_collector.html#Melodie.data_collector.DataCollector.append_environment_properties"><code class="docutils literal notranslate"><span class="pre">DataCollector.append_environment_properties()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="data_collector.html#Melodie.data_collector.DataCollector.status"><code class="docutils literal notranslate"><span class="pre">DataCollector.status</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="data_collector.html#Melodie.data_collector.DataCollector.collect"><code class="docutils literal notranslate"><span class="pre">DataCollector.collect()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="data_collector.html#Melodie.data_collector.DataCollector.db"><code class="docutils literal notranslate"><span class="pre">DataCollector.db</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="data_collector.html#Melodie.data_collector.DataCollector.calc_time"><code class="docutils literal notranslate"><span class="pre">DataCollector.calc_time()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="data_collector.html#Melodie.data_collector.DataCollector.get_single_agent_data"><code class="docutils literal notranslate"><span class="pre">DataCollector.get_single_agent_data()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="data_collector.html#Melodie.data_collector.DataCollector.save"><code class="docutils literal notranslate"><span class="pre">DataCollector.save()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="data_collector.html#Melodie.data_collector.DataCollector.save_dataframe"><code class="docutils literal notranslate"><span class="pre">DataCollector.save_dataframe()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -324,10 +337,10 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="data_loader.html">DataLoader</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="data_loader.html#Melodie.data_loader.DataLoader"><code class="docutils literal notranslate"><span class="pre">DataLoader</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="data_loader.html#Melodie.data_loader.DataLoader.register_dataframe"><code class="docutils literal notranslate"><span class="pre">DataLoader.register_dataframe()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="data_loader.html#Melodie.data_loader.DataLoader.clear_cache"><code class="docutils literal notranslate"><span class="pre">DataLoader.clear_cache()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="data_loader.html#Melodie.data_loader.DataLoader.load_dataframe"><code class="docutils literal notranslate"><span class="pre">DataLoader.load_dataframe()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="data_loader.html#Melodie.data_loader.DataLoader.load_matrix"><code class="docutils literal notranslate"><span class="pre">DataLoader.load_matrix()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="data_loader.html#Melodie.data_loader.DataLoader.register_dataframe"><code class="docutils literal notranslate"><span class="pre">DataLoader.register_dataframe()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="data_loader.html#Melodie.data_loader.DataLoader.clear_cache"><code class="docutils literal notranslate"><span class="pre">DataLoader.clear_cache()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="data_loader.html#Melodie.data_loader.DataLoader.dataframe_generator"><code class="docutils literal notranslate"><span class="pre">DataLoader.dataframe_generator()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="data_loader.html#Melodie.data_loader.DataLoader.generate_scenarios_from_dataframe"><code class="docutils literal notranslate"><span class="pre">DataLoader.generate_scenarios_from_dataframe()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="data_loader.html#Melodie.data_loader.DataLoader.generate_scenarios"><code class="docutils literal notranslate"><span class="pre">DataLoader.generate_scenarios()</span></code></a></li>
@@ -338,7 +351,12 @@
 <li class="toctree-l2"><a class="reference internal" href="scenario.html">Scenario</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="scenario.html#Melodie.scenario_manager.Scenario"><code class="docutils literal notranslate"><span class="pre">Scenario</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="scenario.html#Melodie.scenario_manager.Scenario.copy"><code class="docutils literal notranslate"><span class="pre">Scenario.copy()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="scenario.html#Melodie.scenario_manager.Scenario.load_data"><code class="docutils literal notranslate"><span class="pre">Scenario.load_data()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="scenario.html#Melodie.scenario_manager.Scenario.setup_data"><code class="docutils literal notranslate"><span class="pre">Scenario.setup_data()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="scenario.html#Melodie.scenario_manager.Scenario.initialize"><code class="docutils literal notranslate"><span class="pre">Scenario.initialize()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="scenario.html#Melodie.scenario_manager.Scenario.setup"><code class="docutils literal notranslate"><span class="pre">Scenario.setup()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="scenario.html#Melodie.scenario_manager.Scenario.load_dataframe"><code class="docutils literal notranslate"><span class="pre">Scenario.load_dataframe()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="scenario.html#Melodie.scenario_manager.Scenario.load_matrix"><code class="docutils literal notranslate"><span class="pre">Scenario.load_matrix()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="scenario.html#Melodie.scenario_manager.Scenario.to_dict"><code class="docutils literal notranslate"><span class="pre">Scenario.to_dict()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="scenario.html#Melodie.scenario_manager.Scenario.to_json"><code class="docutils literal notranslate"><span class="pre">Scenario.to_json()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="scenario.html#Melodie.scenario_manager.Scenario.get_dataframe"><code class="docutils literal notranslate"><span class="pre">Scenario.get_dataframe()</span></code></a></li>
@@ -352,6 +370,7 @@
 <li class="toctree-l4"><a class="reference internal" href="simulator.html#Melodie.simulator.BaseModellingManager.get_dataframe"><code class="docutils literal notranslate"><span class="pre">BaseModellingManager.get_dataframe()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="simulator.html#Melodie.simulator.BaseModellingManager.get_matrix"><code class="docutils literal notranslate"><span class="pre">BaseModellingManager.get_matrix()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="simulator.html#Melodie.simulator.BaseModellingManager.subworker_prerun"><code class="docutils literal notranslate"><span class="pre">BaseModellingManager.subworker_prerun()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="simulator.html#Melodie.simulator.BaseModellingManager.clear_output_tables"><code class="docutils literal notranslate"><span class="pre">BaseModellingManager.clear_output_tables()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="simulator.html#Melodie.simulator.BaseModellingManager.pre_run"><code class="docutils literal notranslate"><span class="pre">BaseModellingManager.pre_run()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="simulator.html#Melodie.simulator.BaseModellingManager.generate_scenarios"><code class="docutils literal notranslate"><span class="pre">BaseModellingManager.generate_scenarios()</span></code></a></li>
 </ul>
@@ -410,7 +429,6 @@
 <li class="toctree-l3"><a class="reference internal" href="db.html#MelodieInfra.db.db.DBConn"><code class="docutils literal notranslate"><span class="pre">DBConn</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="db.html#MelodieInfra.db.db.DBConn.table_dtypes"><code class="docutils literal notranslate"><span class="pre">DBConn.table_dtypes</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="db.html#MelodieInfra.db.db.DBConn.existing_connections"><code class="docutils literal notranslate"><span class="pre">DBConn.existing_connections</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="db.html#MelodieInfra.db.db.DBConn.SCENARIO_TABLE"><code class="docutils literal notranslate"><span class="pre">DBConn.SCENARIO_TABLE</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="db.html#MelodieInfra.db.db.DBConn.ENVIRONMENT_RESULT_TABLE"><code class="docutils literal notranslate"><span class="pre">DBConn.ENVIRONMENT_RESULT_TABLE</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="db.html#MelodieInfra.db.db.DBConn.from_connection_string"><code class="docutils literal notranslate"><span class="pre">DBConn.from_connection_string()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="db.html#MelodieInfra.db.db.DBConn.get_engine"><code class="docutils literal notranslate"><span class="pre">DBConn.get_engine()</span></code></a></li>
@@ -419,6 +437,8 @@
 <li class="toctree-l4"><a class="reference internal" href="db.html#MelodieInfra.db.db.DBConn.register_dtypes"><code class="docutils literal notranslate"><span class="pre">DBConn.register_dtypes()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="db.html#MelodieInfra.db.db.DBConn.get_table_dtypes"><code class="docutils literal notranslate"><span class="pre">DBConn.get_table_dtypes()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="db.html#MelodieInfra.db.db.DBConn.close"><code class="docutils literal notranslate"><span class="pre">DBConn.close()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="db.html#MelodieInfra.db.db.DBConn.table_names"><code class="docutils literal notranslate"><span class="pre">DBConn.table_names()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="db.html#MelodieInfra.db.db.DBConn.execute"><code class="docutils literal notranslate"><span class="pre">DBConn.execute()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="db.html#MelodieInfra.db.db.DBConn.clear_database"><code class="docutils literal notranslate"><span class="pre">DBConn.clear_database()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="db.html#MelodieInfra.db.db.DBConn.write_dataframe"><code class="docutils literal notranslate"><span class="pre">DBConn.write_dataframe()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="db.html#MelodieInfra.db.db.DBConn.read_dataframe"><code class="docutils literal notranslate"><span class="pre">DBConn.read_dataframe()</span></code></a></li>
@@ -426,6 +446,7 @@
 <li class="toctree-l4"><a class="reference internal" href="db.html#MelodieInfra.db.db.DBConn.query"><code class="docutils literal notranslate"><span class="pre">DBConn.query()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="db.html#MelodieInfra.db.db.db_conn"><code class="docutils literal notranslate"><span class="pre">db_conn()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="db.html#MelodieInfra.db.db.create_db_conn"><code class="docutils literal notranslate"><span class="pre">create_db_conn()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="db.html#MelodieInfra.db.db.get_sqlite_filename"><code class="docutils literal notranslate"><span class="pre">get_sqlite_filename()</span></code></a></li>
 </ul>
@@ -435,6 +456,7 @@
 <li class="toctree-l3"><a class="reference internal" href="exceptions.html#MelodieInfra.exceptions.exceptions.assert_exc_type_occurs"><code class="docutils literal notranslate"><span class="pre">assert_exc_type_occurs()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="exceptions.html#MelodieInfra.exceptions.exceptions.MelodieException"><code class="docutils literal notranslate"><span class="pre">MelodieException</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="exceptions.html#MelodieInfra.exceptions.exceptions.MelodieExceptions"><code class="docutils literal notranslate"><span class="pre">MelodieExceptions</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="exceptions.html#MelodieInfra.exceptions.exceptions.MelodieExceptions.MLD_INTL_EXC"><code class="docutils literal notranslate"><span class="pre">MelodieExceptions.MLD_INTL_EXC</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="exceptions.html#MelodieInfra.exceptions.exceptions.MelodieExceptions.Assertions"><code class="docutils literal notranslate"><span class="pre">MelodieExceptions.Assertions</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="exceptions.html#MelodieInfra.exceptions.exceptions.MelodieExceptions.General"><code class="docutils literal notranslate"><span class="pre">MelodieExceptions.General</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="exceptions.html#MelodieInfra.exceptions.exceptions.MelodieExceptions.Program"><code class="docutils literal notranslate"><span class="pre">MelodieExceptions.Program</span></code></a></li>
@@ -449,6 +471,7 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="studio.html">Studio</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../changelog.html">Change Log</a><ul>
@@ -508,21 +531,21 @@
            <div itemprop="articleBody">
              
   <section id="network">
-<h1>Network<a class="headerlink" href="#network" title="Permalink to this heading"></a></h1>
+<h1>Network<a class="headerlink" href="#network" title="Link to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="Melodie.network.NetworkAgent">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Melodie.network.</span></span><span class="sig-name descname"><span class="pre">NetworkAgent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.network.NetworkAgent" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Melodie.network.</span></span><span class="sig-name descname"><span class="pre">NetworkAgent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.network.NetworkAgent" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="agent.html#Melodie.Agent" title="MelodieInfra.core.agent.Agent"><code class="xref py py-class docutils literal notranslate"><span class="pre">Agent</span></code></a></p>
 <p>Base Class for <code class="docutils literal notranslate"><span class="pre">Agent</span></code> s connected with <code class="docutils literal notranslate"><span class="pre">Network</span></code>.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="Melodie.network.NetworkAgent.category">
-<span class="sig-name descname"><span class="pre">category</span></span><a class="headerlink" href="#Melodie.network.NetworkAgent.category" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">category</span></span><a class="headerlink" href="#Melodie.network.NetworkAgent.category" title="Link to this definition"></a></dt>
 <dd><p>Category indicating agent class, an <code class="docutils literal notranslate"><span class="pre">int</span></code>.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="Melodie.network.NetworkAgent.set_category">
-<span class="sig-name descname"><span class="pre">set_category</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.network.NetworkAgent.set_category" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">set_category</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.network.NetworkAgent.set_category" title="Link to this definition"></a></dt>
 <dd><p>Set the category of network agent.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -535,7 +558,7 @@
 
 <dl class="py class">
 <dt class="sig sig-object py" id="Melodie.network.Edge">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Melodie.network.</span></span><span class="sig-name descname"><span class="pre">Edge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">category_1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agent_1_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">category_2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agent_2_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_properties</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">bool</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.network.Edge" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Melodie.network.</span></span><span class="sig-name descname"><span class="pre">Edge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">category_1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agent_1_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">category_2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agent_2_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_properties</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">bool</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.network.Edge" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Base Class for <code class="docutils literal notranslate"><span class="pre">Edges</span></code> s on the <code class="docutils literal notranslate"><span class="pre">Network</span></code>.</p>
 <p>Edge objects links the agents, and could store custom parameters.</p>
@@ -555,7 +578,7 @@
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="Melodie.network.Edge.setup">
-<span class="sig-name descname"><span class="pre">setup</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.network.Edge.setup" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">setup</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.network.Edge.setup" title="Link to this definition"></a></dt>
 <dd><p>Setup method. Be sure to inherit it for custom <code class="docutils literal notranslate"><span class="pre">Edge</span></code>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -566,7 +589,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="Melodie.network.Edge.post_setup">
-<span class="sig-name descname"><span class="pre">post_setup</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.network.Edge.post_setup" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">post_setup</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.network.Edge.post_setup" title="Link to this definition"></a></dt>
 <dd><p>This method is executed after <code class="docutils literal notranslate"><span class="pre">setup()</span></code></p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -579,7 +602,7 @@
 
 <dl class="py class">
 <dt class="sig sig-object py" id="Melodie.network.Network">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Melodie.network.</span></span><span class="sig-name descname"><span class="pre">Network</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_cls</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Type</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#Melodie.network.Edge" title="Melodie.network.Edge"><span class="pre">Edge</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'network'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.network.Network" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Melodie.network.</span></span><span class="sig-name descname"><span class="pre">Network</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_cls</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Type</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#Melodie.network.Edge" title="Melodie.network.Edge"><span class="pre">Edge</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'network'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.network.Network" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Base class for the Network. Network is constructed with edge, describes the network (if exists) that links the agents,
 and provides the relevant functions.</p>
@@ -595,7 +618,7 @@ and provides the relevant functions.</p>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="Melodie.network.Network.setup">
-<span class="sig-name descname"><span class="pre">setup</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.network.Network.setup" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">setup</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.network.Network.setup" title="Link to this definition"></a></dt>
 <dd><p>Setup function of network. Be sure to inherit this method for custom implementation.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -606,7 +629,7 @@ and provides the relevant functions.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="Melodie.network.Network.add_edge">
-<span class="sig-name descname"><span class="pre">add_edge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#Melodie.network.Edge" title="Melodie.network.Edge"><span class="pre">Edge</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.network.Network.add_edge" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">add_edge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#Melodie.network.Edge" title="Melodie.network.Edge"><span class="pre">Edge</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.network.Network.add_edge" title="Link to this definition"></a></dt>
 <dd><p>Add an edge onto the network.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -624,7 +647,7 @@ and provides the relevant functions.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="Melodie.network.Network.get_edge">
-<span class="sig-name descname"><span class="pre">get_edge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.network.Network.get_edge" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">get_edge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.network.Network.get_edge" title="Link to this definition"></a></dt>
 <dd><p>Get an edge from the network</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -641,7 +664,7 @@ and provides the relevant functions.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="Melodie.network.Network.remove_edge">
-<span class="sig-name descname"><span class="pre">remove_edge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.network.Network.remove_edge" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">remove_edge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.network.Network.remove_edge" title="Link to this definition"></a></dt>
 <dd><p>Remove an edge from the network</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -658,7 +681,7 @@ and provides the relevant functions.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="Melodie.network.Network.get_neighbors">
-<span class="sig-name descname"><span class="pre">get_neighbors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="agent.html#Melodie.Agent" title="MelodieInfra.core.agent.Agent"><span class="pre">Agent</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.network.Network.get_neighbors" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">get_neighbors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="agent.html#Melodie.Agent" title="MelodieInfra.core.agent.Agent"><span class="pre">Agent</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.network.Network.get_neighbors" title="Link to this definition"></a></dt>
 <dd><p>Get surrounding neighbors of agent.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -672,7 +695,7 @@ and provides the relevant functions.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="Melodie.network.Network.remove_agent">
-<span class="sig-name descname"><span class="pre">remove_agent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="agent.html#Melodie.Agent" title="MelodieInfra.core.agent.Agent"><span class="pre">Agent</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.network.Network.remove_agent" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">remove_agent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="agent.html#Melodie.Agent" title="MelodieInfra.core.agent.Agent"><span class="pre">Agent</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.network.Network.remove_agent" title="Link to this definition"></a></dt>
 <dd><p>Remove agent from network.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -686,7 +709,7 @@ and provides the relevant functions.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="Melodie.network.Network.add_agent">
-<span class="sig-name descname"><span class="pre">add_agent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="agent.html#Melodie.Agent" title="MelodieInfra.core.agent.Agent"><span class="pre">Agent</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.network.Network.add_agent" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">add_agent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="agent.html#Melodie.Agent" title="MelodieInfra.core.agent.Agent"><span class="pre">Agent</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.network.Network.add_agent" title="Link to this definition"></a></dt>
 <dd><p>Add an agent onto the network.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -700,7 +723,7 @@ and provides the relevant functions.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="Melodie.network.Network.create_edge">
-<span class="sig-name descname"><span class="pre">create_edge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent_1_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">category_1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agent_2_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">category_2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">edge_properties</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.network.Network.create_edge" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">create_edge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent_1_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">category_1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agent_2_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">category_2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">edge_properties</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.network.Network.create_edge" title="Link to this definition"></a></dt>
 <dd><p>Create a new edge from one agent to another agent.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -720,7 +743,7 @@ and provides the relevant functions.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="Melodie.network.Network.all_agents">
-<span class="sig-name descname"><span class="pre">all_agents</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Set</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#Melodie.network.Network.all_agents" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">all_agents</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Set</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#Melodie.network.Network.all_agents" title="Link to this definition"></a></dt>
 <dd><p>Get all agents on the network.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -731,7 +754,7 @@ and provides the relevant functions.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="Melodie.network.Network.get_node_edges">
-<span class="sig-name descname"><span class="pre">get_node_edges</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="agent.html#Melodie.Agent" title="MelodieInfra.core.agent.Agent"><span class="pre">Agent</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.network.Network.get_node_edges" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">get_node_edges</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="agent.html#Melodie.Agent" title="MelodieInfra.core.agent.Agent"><span class="pre">Agent</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.network.Network.get_node_edges" title="Link to this definition"></a></dt>
 <dd><p>Get the edges from one node.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -745,7 +768,7 @@ and provides the relevant functions.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="Melodie.network.Network.setup_layout_creator">
-<span class="sig-name descname"><span class="pre">setup_layout_creator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">layout_creator</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">nx.Graph</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">NodeType</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">np.ndarray</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.network.Network.setup_layout_creator" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">setup_layout_creator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">layout_creator</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">nx.Graph</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">NodeType</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">np.ndarray</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.network.Network.setup_layout_creator" title="Link to this definition"></a></dt>
 <dd><p>Set the creator function to create network layout.</p>
 <p>The input argument of layout_creator is a networkx graph, and the output was a dict type mapping from node id to
 position.</p>
@@ -768,7 +791,7 @@ n.setup_layout_creator(lambda G: nx.spring_layout(G))</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="Melodie.network.Network.update_layout">
-<span class="sig-name descname"><span class="pre">update_layout</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.network.Network.update_layout" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">update_layout</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.network.Network.update_layout" title="Link to this definition"></a></dt>
 <dd><p>Update the layout of network.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -779,7 +802,7 @@ n.setup_layout_creator(lambda G: nx.spring_layout(G))</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="Melodie.network.Network.get_position">
-<span class="sig-name descname"><span class="pre">get_position</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent_category</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agent_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.network.Network.get_position" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">get_position</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent_category</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agent_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.network.Network.get_position" title="Link to this definition"></a></dt>
 <dd><p>Get the position of agent.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -796,7 +819,7 @@ n.setup_layout_creator(lambda G: nx.spring_layout(G))</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="Melodie.network.Network.setup_agent_connections">
-<span class="sig-name descname"><span class="pre">setup_agent_connections</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent_lists</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="agent_list.html#Melodie.AgentList" title="MelodieInfra.core.agent_list.AgentList"><span class="pre">AgentList</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">network_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">network_params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.network.Network.setup_agent_connections" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">setup_agent_connections</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent_lists</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="agent_list.html#Melodie.AgentList" title="MelodieInfra.core.agent_list.AgentList"><span class="pre">AgentList</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">network_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">network_params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.network.Network.setup_agent_connections" title="Link to this definition"></a></dt>
 <dd><p>Set up the connection between agents.
 The name and parameters come from NetworkX package. For example, The documentation for BA scale-free network
 is here: <a class="reference external" href="https://networkx.org/documentation/stable/reference/generated/networkx.generators.random_graphs.barabasi_albert_graph.html">https://networkx.org/documentation/stable/reference/generated/networkx.generators.random_graphs.barabasi_albert_graph.html</a>.

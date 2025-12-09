@@ -9,8 +9,9 @@ we provide more example models to show how the other modules can be used.
     :caption: Content
     :maxdepth: 1
 
-    covid_grid_contagion
-    covid_network_contagion
+    covid_contagion_grid
+    covid_contagion_grid_visual
+    covid_contagion_network
     covid_contagion_calibrator
     rock_paper_scissors
     covid_contagion_visual

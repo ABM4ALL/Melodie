@@ -1,26 +1,26 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Melodie Exceptions &mdash; Melodie 0.9.0a0 documentation</title>
-      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
+  <title>Melodie Exceptions &mdash; Melodie 1.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
   
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-        <script src="../_static/doctools.js"></script>
-        <script src="../_static/sphinx_highlight.js"></script>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=292eb321"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="author" title="About these documents" href="../about.html" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Change Log" href="../changelog.html" />
+    <link rel="next" title="Studio" href="studio.html" />
     <link rel="prev" title="DB" href="db.html" /> 
 </head>
 
@@ -54,8 +54,8 @@
 <li class="toctree-l1"><a class="reference internal" href="../introduction.html">Introduction</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../introduction.html#agent-based-model-abm">Agent-based Model (ABM)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../introduction.html#melodie-framework">Melodie Framework</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../introduction.html#model">Model</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../introduction.html#scenario">Scenario</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../introduction.html#the-model">The Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../introduction.html#the-scenario">The Scenario</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../introduction.html#modelling-manager">Modelling Manager</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../introduction.html#infrastructure">Infrastructure</a></li>
 </ul>
@@ -63,55 +63,63 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorial.html">Tutorial</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../tutorial.html#project-structure">Project Structure</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorial.html#agent">Agent</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorial.html#scenario">Scenario</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../tutorial.html#generate-agent-params">Generate <code class="docutils literal notranslate"><span class="pre">agent_params</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="../tutorial.html#load-simulator-scenarios">Load <code class="docutils literal notranslate"><span class="pre">simulator_scenarios</span></code></a></li>
-</ul>
-</li>
 <li class="toctree-l2"><a class="reference internal" href="../tutorial.html#model">Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial.html#scenario">Scenario</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../tutorial.html#environment">Environment</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorial.html#datacollector">DataCollector</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorial.html#last-words">Last Words</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial.html#agent">Agent</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial.html#data-collector">Data Collector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial.html#run-the-model">Run the model</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../framework_comparison.html">Framework Comparison</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../framework_comparison.html#project-structure">Project Structure</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../framework_comparison.html#model-components">Model Components</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../framework_comparison.html#melodie">Melodie</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../framework_comparison.html#id2">Mesa</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../framework_comparison.html#id3">AgentPy</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../framework_comparison.html#summary">Summary</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="../framework_comparison.html#scenario-management">Scenario Management</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../framework_comparison.html#id4">Melodie</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../framework_comparison.html#id5">Mesa</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../framework_comparison.html#id6">AgentPy</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../framework_comparison.html#id7">Summary</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="../framework_comparison.html#modeling-manager">Modeling Manager</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../framework_comparison.html#calibrator">Calibrator</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../framework_comparison.html#trainer">Trainer</a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="../framework_comparison.html#high-level-comparison">High-Level Comparison</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../framework_comparison.html#a-note-on-this-comparison">A Note on This Comparison</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../framework_comparison.html#advanced-features-in-melodie">Advanced Features in Melodie</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../gallery/_index.html">Model Gallery</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../gallery/covid_grid_contagion.html">CovidGridContagion</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../gallery/covid_grid_contagion.html#project-structure">Project Structure</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../gallery/covid_grid_contagion.html#grid-and-spot">Grid and Spot</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../gallery/covid_grid_contagion.html#matrix-data">Matrix Data</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../gallery/covid_grid_contagion.html#model">Model</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../gallery/covid_grid_contagion.html#gridagent">GridAgent</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gallery/covid_contagion_grid.html">CovidContagionGrid</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../gallery/covid_contagion_grid.html#project-structure-grid">Project Structure (Grid)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../gallery/covid_contagion_grid.html#key-differences-from-base-model">Key Differences from Base Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../gallery/covid_contagion_grid.html#scenario-input-data">Scenario &amp; Input Data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../gallery/covid_contagion_grid.html#implementation-details">Implementation Details</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../gallery/covid_contagion_grid.html#model-setup-core-model-py">Model Setup (<cite>core/model.py</cite>)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../gallery/covid_contagion_grid.html#environment-logic-core-environment-py">Environment Logic (<cite>core/environment.py</cite>)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../gallery/covid_contagion_grid.html#spatial-agent-core-agent-py">Spatial Agent (<cite>core/agent.py</cite>)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../gallery/covid_contagion_grid.html#grid-definition-core-grid-py">Grid Definition (<cite>core/grid.py</cite>)</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../gallery/covid_network_contagion.html">CovidNetworkContagion</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../gallery/covid_network_contagion.html#project-structure">Project Structure</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../gallery/covid_network_contagion.html#model">Model</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../gallery/covid_network_contagion.html#scenario">Scenario</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../gallery/covid_contagion_grid.html#running-the-model">Running the Model</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../gallery/covid_contagion_grid_visual.html">CovidContagionGridVisual</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../gallery/covid_contagion_grid_visual.html#project-structure-visual">Project Structure (Visual)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../gallery/covid_contagion_grid_visual.html#key-differences-from-grid-model">Key Differences from Grid Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../gallery/covid_contagion_grid_visual.html#implementation-details-visual">Implementation Details (Visual)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../gallery/covid_contagion_grid_visual.html#model-setup-visual">Model Setup (Visual)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../gallery/covid_contagion_grid_visual.html#environment-logic-visual">Environment Logic (Visual)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../gallery/covid_contagion_grid_visual.html#spatial-agent-visual">Spatial Agent (Visual)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../gallery/covid_contagion_grid_visual.html#grid-definition-visual">Grid Definition (Visual)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../gallery/covid_contagion_grid_visual.html#visualizer-configuration-core-visualizer-py">Visualizer Configuration (<cite>core/visualizer.py</cite>)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../gallery/covid_contagion_grid_visual.html#running-the-model-with-studio">Running the Model with Studio</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../gallery/covid_contagion_network.html">CovidContagionNetwork</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../gallery/covid_contagion_network.html#project-structure-network">Project Structure (Network)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../gallery/covid_contagion_network.html#key-differences-from-base-model">Key Differences from Base Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../gallery/covid_contagion_network.html#scenario-input-data">Scenario &amp; Input Data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../gallery/covid_contagion_network.html#implementation-details">Implementation Details</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../gallery/covid_contagion_network.html#model-setup-core-model-py">Model Setup (<cite>core/model.py</cite>)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../gallery/covid_contagion_network.html#environment-logic-core-environment-py">Environment Logic (<cite>core/environment.py</cite>)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../gallery/covid_contagion_network.html#network-agent-core-agent-py">Network Agent (<cite>core/agent.py</cite>)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../gallery/covid_contagion_network.html#scenario-configuration-core-scenario-py">Scenario Configuration (<cite>core/scenario.py</cite>)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../gallery/covid_contagion_network.html#data-collector-core-data-collector-py">Data Collector (<cite>core/data_collector.py</cite>)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../gallery/covid_contagion_network.html#running-the-model">Running the Model</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../gallery/covid_contagion_calibrator.html">CovidContagionCalibrator</a><ul>
@@ -149,6 +157,8 @@
 <li class="toctree-l3"><a class="reference internal" href="../advanced/datatypes.html#notice">Notice</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../advanced/project_template.html">Project Template</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../advanced/acceleration.html">Speed Improvement</a></li>
 </ul>
 </li>
 <li class="toctree-l1 current"><a class="reference internal" href="_index.html">API Reference</a><ul class="current">
@@ -223,18 +233,21 @@
 <li class="toctree-l4"><a class="reference internal" href="data_collector.html#Melodie.data_collector.DataCollector.time_elapsed"><code class="docutils literal notranslate"><span class="pre">DataCollector.time_elapsed()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="data_collector.html#Melodie.data_collector.DataCollector.add_agent_property"><code class="docutils literal notranslate"><span class="pre">DataCollector.add_agent_property()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="data_collector.html#Melodie.data_collector.DataCollector.add_environment_property"><code class="docutils literal notranslate"><span class="pre">DataCollector.add_environment_property()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="data_collector.html#Melodie.data_collector.DataCollector.add_custom_collector"><code class="docutils literal notranslate"><span class="pre">DataCollector.add_custom_collector()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="data_collector.html#Melodie.data_collector.DataCollector.env_property_names"><code class="docutils literal notranslate"><span class="pre">DataCollector.env_property_names()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="data_collector.html#Melodie.data_collector.DataCollector.agent_property_names"><code class="docutils literal notranslate"><span class="pre">DataCollector.agent_property_names()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="data_collector.html#Melodie.data_collector.DataCollector.agent_containers"><code class="docutils literal notranslate"><span class="pre">DataCollector.agent_containers()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="data_collector.html#Melodie.data_collector.DataCollector.collect_agent_properties"><code class="docutils literal notranslate"><span class="pre">DataCollector.collect_agent_properties()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="data_collector.html#Melodie.data_collector.DataCollector.collect_custom_properties"><code class="docutils literal notranslate"><span class="pre">DataCollector.collect_custom_properties()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="data_collector.html#Melodie.data_collector.DataCollector.collect_single_custom_property"><code class="docutils literal notranslate"><span class="pre">DataCollector.collect_single_custom_property()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="data_collector.html#Melodie.data_collector.DataCollector.append_agent_properties_by_records"><code class="docutils literal notranslate"><span class="pre">DataCollector.append_agent_properties_by_records()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="data_collector.html#Melodie.data_collector.DataCollector.append_environment_properties"><code class="docutils literal notranslate"><span class="pre">DataCollector.append_environment_properties()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="data_collector.html#Melodie.data_collector.DataCollector.status"><code class="docutils literal notranslate"><span class="pre">DataCollector.status</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="data_collector.html#Melodie.data_collector.DataCollector.collect"><code class="docutils literal notranslate"><span class="pre">DataCollector.collect()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="data_collector.html#Melodie.data_collector.DataCollector.db"><code class="docutils literal notranslate"><span class="pre">DataCollector.db</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="data_collector.html#Melodie.data_collector.DataCollector.calc_time"><code class="docutils literal notranslate"><span class="pre">DataCollector.calc_time()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="data_collector.html#Melodie.data_collector.DataCollector.get_single_agent_data"><code class="docutils literal notranslate"><span class="pre">DataCollector.get_single_agent_data()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="data_collector.html#Melodie.data_collector.DataCollector.save"><code class="docutils literal notranslate"><span class="pre">DataCollector.save()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="data_collector.html#Melodie.data_collector.DataCollector.save_dataframe"><code class="docutils literal notranslate"><span class="pre">DataCollector.save_dataframe()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -324,10 +337,10 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="data_loader.html">DataLoader</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="data_loader.html#Melodie.data_loader.DataLoader"><code class="docutils literal notranslate"><span class="pre">DataLoader</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="data_loader.html#Melodie.data_loader.DataLoader.register_dataframe"><code class="docutils literal notranslate"><span class="pre">DataLoader.register_dataframe()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="data_loader.html#Melodie.data_loader.DataLoader.clear_cache"><code class="docutils literal notranslate"><span class="pre">DataLoader.clear_cache()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="data_loader.html#Melodie.data_loader.DataLoader.load_dataframe"><code class="docutils literal notranslate"><span class="pre">DataLoader.load_dataframe()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="data_loader.html#Melodie.data_loader.DataLoader.load_matrix"><code class="docutils literal notranslate"><span class="pre">DataLoader.load_matrix()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="data_loader.html#Melodie.data_loader.DataLoader.register_dataframe"><code class="docutils literal notranslate"><span class="pre">DataLoader.register_dataframe()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="data_loader.html#Melodie.data_loader.DataLoader.clear_cache"><code class="docutils literal notranslate"><span class="pre">DataLoader.clear_cache()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="data_loader.html#Melodie.data_loader.DataLoader.dataframe_generator"><code class="docutils literal notranslate"><span class="pre">DataLoader.dataframe_generator()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="data_loader.html#Melodie.data_loader.DataLoader.generate_scenarios_from_dataframe"><code class="docutils literal notranslate"><span class="pre">DataLoader.generate_scenarios_from_dataframe()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="data_loader.html#Melodie.data_loader.DataLoader.generate_scenarios"><code class="docutils literal notranslate"><span class="pre">DataLoader.generate_scenarios()</span></code></a></li>
@@ -338,7 +351,12 @@
 <li class="toctree-l2"><a class="reference internal" href="scenario.html">Scenario</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="scenario.html#Melodie.scenario_manager.Scenario"><code class="docutils literal notranslate"><span class="pre">Scenario</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="scenario.html#Melodie.scenario_manager.Scenario.copy"><code class="docutils literal notranslate"><span class="pre">Scenario.copy()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="scenario.html#Melodie.scenario_manager.Scenario.load_data"><code class="docutils literal notranslate"><span class="pre">Scenario.load_data()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="scenario.html#Melodie.scenario_manager.Scenario.setup_data"><code class="docutils literal notranslate"><span class="pre">Scenario.setup_data()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="scenario.html#Melodie.scenario_manager.Scenario.initialize"><code class="docutils literal notranslate"><span class="pre">Scenario.initialize()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="scenario.html#Melodie.scenario_manager.Scenario.setup"><code class="docutils literal notranslate"><span class="pre">Scenario.setup()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="scenario.html#Melodie.scenario_manager.Scenario.load_dataframe"><code class="docutils literal notranslate"><span class="pre">Scenario.load_dataframe()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="scenario.html#Melodie.scenario_manager.Scenario.load_matrix"><code class="docutils literal notranslate"><span class="pre">Scenario.load_matrix()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="scenario.html#Melodie.scenario_manager.Scenario.to_dict"><code class="docutils literal notranslate"><span class="pre">Scenario.to_dict()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="scenario.html#Melodie.scenario_manager.Scenario.to_json"><code class="docutils literal notranslate"><span class="pre">Scenario.to_json()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="scenario.html#Melodie.scenario_manager.Scenario.get_dataframe"><code class="docutils literal notranslate"><span class="pre">Scenario.get_dataframe()</span></code></a></li>
@@ -352,6 +370,7 @@
 <li class="toctree-l4"><a class="reference internal" href="simulator.html#Melodie.simulator.BaseModellingManager.get_dataframe"><code class="docutils literal notranslate"><span class="pre">BaseModellingManager.get_dataframe()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="simulator.html#Melodie.simulator.BaseModellingManager.get_matrix"><code class="docutils literal notranslate"><span class="pre">BaseModellingManager.get_matrix()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="simulator.html#Melodie.simulator.BaseModellingManager.subworker_prerun"><code class="docutils literal notranslate"><span class="pre">BaseModellingManager.subworker_prerun()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="simulator.html#Melodie.simulator.BaseModellingManager.clear_output_tables"><code class="docutils literal notranslate"><span class="pre">BaseModellingManager.clear_output_tables()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="simulator.html#Melodie.simulator.BaseModellingManager.pre_run"><code class="docutils literal notranslate"><span class="pre">BaseModellingManager.pre_run()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="simulator.html#Melodie.simulator.BaseModellingManager.generate_scenarios"><code class="docutils literal notranslate"><span class="pre">BaseModellingManager.generate_scenarios()</span></code></a></li>
 </ul>
@@ -410,7 +429,6 @@
 <li class="toctree-l3"><a class="reference internal" href="db.html#MelodieInfra.db.db.DBConn"><code class="docutils literal notranslate"><span class="pre">DBConn</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="db.html#MelodieInfra.db.db.DBConn.table_dtypes"><code class="docutils literal notranslate"><span class="pre">DBConn.table_dtypes</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="db.html#MelodieInfra.db.db.DBConn.existing_connections"><code class="docutils literal notranslate"><span class="pre">DBConn.existing_connections</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="db.html#MelodieInfra.db.db.DBConn.SCENARIO_TABLE"><code class="docutils literal notranslate"><span class="pre">DBConn.SCENARIO_TABLE</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="db.html#MelodieInfra.db.db.DBConn.ENVIRONMENT_RESULT_TABLE"><code class="docutils literal notranslate"><span class="pre">DBConn.ENVIRONMENT_RESULT_TABLE</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="db.html#MelodieInfra.db.db.DBConn.from_connection_string"><code class="docutils literal notranslate"><span class="pre">DBConn.from_connection_string()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="db.html#MelodieInfra.db.db.DBConn.get_engine"><code class="docutils literal notranslate"><span class="pre">DBConn.get_engine()</span></code></a></li>
@@ -419,6 +437,8 @@
 <li class="toctree-l4"><a class="reference internal" href="db.html#MelodieInfra.db.db.DBConn.register_dtypes"><code class="docutils literal notranslate"><span class="pre">DBConn.register_dtypes()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="db.html#MelodieInfra.db.db.DBConn.get_table_dtypes"><code class="docutils literal notranslate"><span class="pre">DBConn.get_table_dtypes()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="db.html#MelodieInfra.db.db.DBConn.close"><code class="docutils literal notranslate"><span class="pre">DBConn.close()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="db.html#MelodieInfra.db.db.DBConn.table_names"><code class="docutils literal notranslate"><span class="pre">DBConn.table_names()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="db.html#MelodieInfra.db.db.DBConn.execute"><code class="docutils literal notranslate"><span class="pre">DBConn.execute()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="db.html#MelodieInfra.db.db.DBConn.clear_database"><code class="docutils literal notranslate"><span class="pre">DBConn.clear_database()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="db.html#MelodieInfra.db.db.DBConn.write_dataframe"><code class="docutils literal notranslate"><span class="pre">DBConn.write_dataframe()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="db.html#MelodieInfra.db.db.DBConn.read_dataframe"><code class="docutils literal notranslate"><span class="pre">DBConn.read_dataframe()</span></code></a></li>
@@ -426,6 +446,7 @@
 <li class="toctree-l4"><a class="reference internal" href="db.html#MelodieInfra.db.db.DBConn.query"><code class="docutils literal notranslate"><span class="pre">DBConn.query()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="db.html#MelodieInfra.db.db.db_conn"><code class="docutils literal notranslate"><span class="pre">db_conn()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="db.html#MelodieInfra.db.db.create_db_conn"><code class="docutils literal notranslate"><span class="pre">create_db_conn()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="db.html#MelodieInfra.db.db.get_sqlite_filename"><code class="docutils literal notranslate"><span class="pre">get_sqlite_filename()</span></code></a></li>
 </ul>
@@ -435,6 +456,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#MelodieInfra.exceptions.exceptions.assert_exc_type_occurs"><code class="docutils literal notranslate"><span class="pre">assert_exc_type_occurs()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#MelodieInfra.exceptions.exceptions.MelodieException"><code class="docutils literal notranslate"><span class="pre">MelodieException</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#MelodieInfra.exceptions.exceptions.MelodieExceptions"><code class="docutils literal notranslate"><span class="pre">MelodieExceptions</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#MelodieInfra.exceptions.exceptions.MelodieExceptions.MLD_INTL_EXC"><code class="docutils literal notranslate"><span class="pre">MelodieExceptions.MLD_INTL_EXC</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#MelodieInfra.exceptions.exceptions.MelodieExceptions.Assertions"><code class="docutils literal notranslate"><span class="pre">MelodieExceptions.Assertions</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#MelodieInfra.exceptions.exceptions.MelodieExceptions.General"><code class="docutils literal notranslate"><span class="pre">MelodieExceptions.General</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#MelodieInfra.exceptions.exceptions.MelodieExceptions.Program"><code class="docutils literal notranslate"><span class="pre">MelodieExceptions.Program</span></code></a></li>
@@ -449,6 +471,7 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="studio.html">Studio</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../changelog.html">Change Log</a><ul>
@@ -508,48 +531,53 @@
            <div itemprop="articleBody">
              
   <section id="module-MelodieInfra.exceptions.exceptions">
-<span id="melodie-exceptions"></span><h1>Melodie Exceptions<a class="headerlink" href="#module-MelodieInfra.exceptions.exceptions" title="Permalink to this heading"></a></h1>
+<span id="melodie-exceptions"></span><h1>Melodie Exceptions<a class="headerlink" href="#module-MelodieInfra.exceptions.exceptions" title="Link to this heading"></a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="MelodieInfra.exceptions.exceptions.assert_exc_occurs">
-<span class="sig-prename descclassname"><span class="pre">MelodieInfra.exceptions.exceptions.</span></span><span class="sig-name descname"><span class="pre">assert_exc_occurs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">exc_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">func</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MelodieInfra.exceptions.exceptions.assert_exc_occurs" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">MelodieInfra.exceptions.exceptions.</span></span><span class="sig-name descname"><span class="pre">assert_exc_occurs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">exc_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">func</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MelodieInfra.exceptions.exceptions.assert_exc_occurs" title="Link to this definition"></a></dt>
 <dd><p>Assert that this exception will occur.</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="MelodieInfra.exceptions.exceptions.assert_exc_type_occurs">
-<span class="sig-prename descclassname"><span class="pre">MelodieInfra.exceptions.exceptions.</span></span><span class="sig-name descname"><span class="pre">assert_exc_type_occurs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">exc_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">BaseException</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">func</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MelodieInfra.exceptions.exceptions.assert_exc_type_occurs" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">MelodieInfra.exceptions.exceptions.</span></span><span class="sig-name descname"><span class="pre">assert_exc_type_occurs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">exc_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">BaseException</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">func</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MelodieInfra.exceptions.exceptions.assert_exc_type_occurs" title="Link to this definition"></a></dt>
 <dd><p>Assert that exception of <cite>exc_type</cite> must occur.</p>
 </dd></dl>
 
 <dl class="py exception">
 <dt class="sig sig-object py" id="MelodieInfra.exceptions.exceptions.MelodieException">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">MelodieInfra.exceptions.exceptions.</span></span><span class="sig-name descname"><span class="pre">MelodieException</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">exc_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MelodieInfra.exceptions.exceptions.MelodieException" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">MelodieInfra.exceptions.exceptions.</span></span><span class="sig-name descname"><span class="pre">MelodieException</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">exc_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MelodieInfra.exceptions.exceptions.MelodieException" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="MelodieInfra.exceptions.exceptions.MelodieExceptions">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">MelodieInfra.exceptions.exceptions.</span></span><span class="sig-name descname"><span class="pre">MelodieExceptions</span></span><a class="headerlink" href="#MelodieInfra.exceptions.exceptions.MelodieExceptions" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">MelodieInfra.exceptions.exceptions.</span></span><span class="sig-name descname"><span class="pre">MelodieExceptions</span></span><a class="headerlink" href="#MelodieInfra.exceptions.exceptions.MelodieExceptions" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="MelodieInfra.exceptions.exceptions.MelodieExceptions.MLD_INTL_EXC">
+<span class="sig-name descname"><span class="pre">MLD_INTL_EXC</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#MelodieInfra.exceptions.exceptions.MelodieException" title="MelodieInfra.exceptions.exceptions.MelodieException"><span class="pre">MelodieException</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">MelodieException('An</span> <span class="pre">internal</span> <span class="pre">error</span> <span class="pre">of</span> <span class="pre">Melodie</span> <span class="pre">occurred,</span> <span class="pre">and</span> <span class="pre">this</span> <span class="pre">kind</span> <span class="pre">of</span> <span class="pre">error</span> <span class="pre">is</span> <span class="pre">likely</span> <span class="pre">to</span> <span class="pre">be</span> <span class="pre">by</span> <span class="pre">Melodie</span> <span class="pre">internal</span> <span class="pre">logics.Feel</span> <span class="pre">free</span> <span class="pre">to</span> <span class="pre">report</span> <span class="pre">this</span> <span class="pre">problem</span> <span class="pre">with</span> <span class="pre">detailed</span> <span class="pre">failure</span> <span class="pre">information</span> <span class="pre">at</span> <span class="pre">https://github.com/ABM4ALL/Melodie</span> <span class="pre">&lt;Error</span> <span class="pre">ID</span> <span class="pre">1030&gt;')</span></em><a class="headerlink" href="#MelodieInfra.exceptions.exceptions.MelodieExceptions.MLD_INTL_EXC" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
 <dl class="py class">
 <dt class="sig sig-object py" id="MelodieInfra.exceptions.exceptions.MelodieExceptions.Assertions">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Assertions</span></span><a class="headerlink" href="#MelodieInfra.exceptions.exceptions.MelodieExceptions.Assertions" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Assertions</span></span><a class="headerlink" href="#MelodieInfra.exceptions.exceptions.MelodieExceptions.Assertions" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="MelodieInfra.exceptions.exceptions.MelodieExceptions.Assertions.Type">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expected_type</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MelodieInfra.exceptions.exceptions.MelodieExceptions.Assertions.Type" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expected_type</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MelodieInfra.exceptions.exceptions.MelodieExceptions.Assertions.Type" title="Link to this definition"></a></dt>
 <dd><p>Assert that the type of <cite>obj</cite> is the <cite>expected_type</cite>.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="MelodieInfra.exceptions.exceptions.MelodieExceptions.Assertions.IsNone">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">IsNone</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obj</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MelodieInfra.exceptions.exceptions.MelodieExceptions.Assertions.IsNone" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">IsNone</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obj</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MelodieInfra.exceptions.exceptions.MelodieExceptions.Assertions.IsNone" title="Link to this definition"></a></dt>
 <dd><p>Assert variable <cite>obj</cite> is None.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="MelodieInfra.exceptions.exceptions.MelodieExceptions.Assertions.NotNone">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">NotNone</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obj</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MelodieInfra.exceptions.exceptions.MelodieExceptions.Assertions.NotNone" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">NotNone</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obj</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MelodieInfra.exceptions.exceptions.MelodieExceptions.Assertions.NotNone" title="Link to this definition"></a></dt>
 <dd><p>Assert that the <cite>obj</cite> is not None</p>
 </dd></dl>
 
@@ -557,17 +585,17 @@
 
 <dl class="py class">
 <dt class="sig sig-object py" id="MelodieInfra.exceptions.exceptions.MelodieExceptions.General">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">General</span></span><a class="headerlink" href="#MelodieInfra.exceptions.exceptions.MelodieExceptions.General" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">General</span></span><a class="headerlink" href="#MelodieInfra.exceptions.exceptions.MelodieExceptions.General" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="MelodieInfra.exceptions.exceptions.MelodieExceptions.General.TypeError">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">TypeError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expected_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">type</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MelodieInfra.exceptions.exceptions.MelodieExceptions.General.TypeError" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">TypeError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expected_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">type</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MelodieInfra.exceptions.exceptions.MelodieExceptions.General.TypeError" title="Link to this definition"></a></dt>
 <dd><p>The encapsulation of TypeError</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="MelodieInfra.exceptions.exceptions.MelodieExceptions.General.NoAttributeError">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">NoAttributeError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attr_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MelodieInfra.exceptions.exceptions.MelodieExceptions.General.NoAttributeError" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">NoAttributeError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attr_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MelodieInfra.exceptions.exceptions.MelodieExceptions.General.NoAttributeError" title="Link to this definition"></a></dt>
 <dd><p>The encapsulation of AttributeError</p>
 </dd></dl>
 
@@ -575,7 +603,7 @@
 
 <dl class="py class">
 <dt class="sig sig-object py" id="MelodieInfra.exceptions.exceptions.MelodieExceptions.Program">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Program</span></span><a class="headerlink" href="#MelodieInfra.exceptions.exceptions.MelodieExceptions.Program" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Program</span></span><a class="headerlink" href="#MelodieInfra.exceptions.exceptions.MelodieExceptions.Program" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Errors related to programming</p>
 <ul class="simple">
@@ -583,21 +611,21 @@
 </ul>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="MelodieInfra.exceptions.exceptions.MelodieExceptions.Program.ID">
-<span class="sig-name descname"><span class="pre">ID</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1000</span></em><a class="headerlink" href="#MelodieInfra.exceptions.exceptions.MelodieExceptions.Program.ID" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">ID</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1000</span></em><a class="headerlink" href="#MelodieInfra.exceptions.exceptions.MelodieExceptions.Program.ID" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="MelodieInfra.exceptions.exceptions.MelodieExceptions.Program.Variable">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Variable</span></span><a class="headerlink" href="#MelodieInfra.exceptions.exceptions.MelodieExceptions.Program.Variable" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Variable</span></span><a class="headerlink" href="#MelodieInfra.exceptions.exceptions.MelodieExceptions.Program.Variable" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="MelodieInfra.exceptions.exceptions.MelodieExceptions.Program.Variable.ID">
-<span class="sig-name descname"><span class="pre">ID</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1010</span></em><a class="headerlink" href="#MelodieInfra.exceptions.exceptions.MelodieExceptions.Program.Variable.ID" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">ID</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1010</span></em><a class="headerlink" href="#MelodieInfra.exceptions.exceptions.MelodieExceptions.Program.Variable.ID" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="MelodieInfra.exceptions.exceptions.MelodieExceptions.Program.Variable.VariableInvalid">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">VariableInvalid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">var_desc</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">var_value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expected_value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MelodieInfra.exceptions.exceptions.MelodieExceptions.Program.Variable.VariableInvalid" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">VariableInvalid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">var_desc</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">var_value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expected_value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MelodieInfra.exceptions.exceptions.MelodieExceptions.Program.Variable.VariableInvalid" title="Link to this definition"></a></dt>
 <dd><p>If this occurs, please check the value of variable</p>
 <ul class="simple">
 <li><p>code: 1011</p></li>
@@ -606,7 +634,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="MelodieInfra.exceptions.exceptions.MelodieExceptions.Program.Variable.VariableNotInSet">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">VariableNotInSet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">var_desc</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">var_value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allowed_set</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Set</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MelodieInfra.exceptions.exceptions.MelodieExceptions.Program.Variable.VariableNotInSet" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">VariableNotInSet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">var_desc</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">var_value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allowed_set</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Set</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MelodieInfra.exceptions.exceptions.MelodieExceptions.Program.Variable.VariableNotInSet" title="Link to this definition"></a></dt>
 <dd><p>Please check if variable is in the allowed set.</p>
 <ul class="simple">
 <li><p>code: 1012</p></li>
@@ -618,16 +646,16 @@
 
 <dl class="py class">
 <dt class="sig sig-object py" id="MelodieInfra.exceptions.exceptions.MelodieExceptions.Program.Function">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Function</span></span><a class="headerlink" href="#MelodieInfra.exceptions.exceptions.MelodieExceptions.Program.Function" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Function</span></span><a class="headerlink" href="#MelodieInfra.exceptions.exceptions.MelodieExceptions.Program.Function" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="MelodieInfra.exceptions.exceptions.MelodieExceptions.Program.Function.ID">
-<span class="sig-name descname"><span class="pre">ID</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1020</span></em><a class="headerlink" href="#MelodieInfra.exceptions.exceptions.MelodieExceptions.Program.Function.ID" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">ID</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1020</span></em><a class="headerlink" href="#MelodieInfra.exceptions.exceptions.MelodieExceptions.Program.Function.ID" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="MelodieInfra.exceptions.exceptions.MelodieExceptions.Program.Function.FunctionArgsNumError">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">FunctionArgsNumError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expected_arg_num</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">actual_arg_num</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MelodieInfra.exceptions.exceptions.MelodieExceptions.Program.Function.FunctionArgsNumError" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">FunctionArgsNumError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expected_arg_num</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">actual_arg_num</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MelodieInfra.exceptions.exceptions.MelodieExceptions.Program.Function.FunctionArgsNumError" title="Link to this definition"></a></dt>
 <dd><p>Function should have correct number of arguments. If not, this error will be raised.</p>
 <ul class="simple">
 <li><p>code: 1021</p></li>
@@ -637,46 +665,63 @@
 
 </dd></dl>
 
+<dl class="py class">
+<dt class="sig sig-object py" id="MelodieInfra.exceptions.exceptions.MelodieExceptions.Program.Internal">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Internal</span></span><a class="headerlink" href="#MelodieInfra.exceptions.exceptions.MelodieExceptions.Program.Internal" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="MelodieInfra.exceptions.exceptions.MelodieExceptions.Program.Internal.ID">
+<span class="sig-name descname"><span class="pre">ID</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1030</span></em><a class="headerlink" href="#MelodieInfra.exceptions.exceptions.MelodieExceptions.Program.Internal.ID" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="MelodieInfra.exceptions.exceptions.MelodieExceptions.Program.Internal.InternalError">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">InternalError</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#MelodieInfra.exceptions.exceptions.MelodieExceptions.Program.Internal.InternalError" title="Link to this definition"></a></dt>
+<dd><p>Internal error of Melodie.</p>
+</dd></dl>
+
+</dd></dl>
+
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="MelodieInfra.exceptions.exceptions.MelodieExceptions.State">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">State</span></span><a class="headerlink" href="#MelodieInfra.exceptions.exceptions.MelodieExceptions.State" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">State</span></span><a class="headerlink" href="#MelodieInfra.exceptions.exceptions.MelodieExceptions.State" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="MelodieInfra.exceptions.exceptions.MelodieExceptions.State.ID">
-<span class="sig-name descname"><span class="pre">ID</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1100</span></em><a class="headerlink" href="#MelodieInfra.exceptions.exceptions.MelodieExceptions.State.ID" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">ID</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1100</span></em><a class="headerlink" href="#MelodieInfra.exceptions.exceptions.MelodieExceptions.State.ID" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="MelodieInfra.exceptions.exceptions.MelodieExceptions.State.StateNotFoundError">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">StateNotFoundError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">all_states</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MelodieInfra.exceptions.exceptions.MelodieExceptions.State.StateNotFoundError" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">StateNotFoundError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">all_states</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MelodieInfra.exceptions.exceptions.MelodieExceptions.State.StateNotFoundError" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="MelodieInfra.exceptions.exceptions.MelodieExceptions.State.CannotMoveToNewStateError">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">CannotMoveToNewStateError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">old_state</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_state</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">all_possible_new_states</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">set</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MelodieInfra.exceptions.exceptions.MelodieExceptions.State.CannotMoveToNewStateError" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">CannotMoveToNewStateError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">old_state</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_state</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">all_possible_new_states</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">set</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MelodieInfra.exceptions.exceptions.MelodieExceptions.State.CannotMoveToNewStateError" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="MelodieInfra.exceptions.exceptions.MelodieExceptions.State.NotAStateAttributeError">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">NotAStateAttributeError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent_cls</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state_attr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MelodieInfra.exceptions.exceptions.MelodieExceptions.State.NotAStateAttributeError" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">NotAStateAttributeError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent_cls</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state_attr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MelodieInfra.exceptions.exceptions.MelodieExceptions.State.NotAStateAttributeError" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="MelodieInfra.exceptions.exceptions.MelodieExceptions.Scenario">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Scenario</span></span><a class="headerlink" href="#MelodieInfra.exceptions.exceptions.MelodieExceptions.Scenario" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Scenario</span></span><a class="headerlink" href="#MelodieInfra.exceptions.exceptions.MelodieExceptions.Scenario" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="MelodieInfra.exceptions.exceptions.MelodieExceptions.Scenario.ID">
-<span class="sig-name descname"><span class="pre">ID</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1200</span></em><a class="headerlink" href="#MelodieInfra.exceptions.exceptions.MelodieExceptions.Scenario.ID" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">ID</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1200</span></em><a class="headerlink" href="#MelodieInfra.exceptions.exceptions.MelodieExceptions.Scenario.ID" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="MelodieInfra.exceptions.exceptions.MelodieExceptions.Scenario.ScenarioIDDuplicatedError">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ScenarioIDDuplicatedError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id_scenario</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MelodieInfra.exceptions.exceptions.MelodieExceptions.Scenario.ScenarioIDDuplicatedError" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ScenarioIDDuplicatedError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id_scenario</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MelodieInfra.exceptions.exceptions.MelodieExceptions.Scenario.ScenarioIDDuplicatedError" title="Link to this definition"></a></dt>
 <dd><p>Scenario ID should be unique. If there are identical scenario-id in the scenario table or generated,
 this error will be raised.</p>
 <ul class="simple">
@@ -684,12 +729,12 @@ this error will be raised.</p>
 <li><p>example: The scenario table below could make this error occur.</p></li>
 </ul>
 <table class="docutils align-default" id="id1">
-<caption><span class="caption-text">Scenarios</span><a class="headerlink" href="#id1" title="Permalink to this table"></a></caption>
+<caption><span class="caption-text">Scenarios</span><a class="headerlink" href="#id1" title="Link to this table"></a></caption>
 <colgroup>
-<col style="width: 25%" />
-<col style="width: 25%" />
-<col style="width: 25%" />
-<col style="width: 25%" />
+<col style="width: 25.0%" />
+<col style="width: 25.0%" />
+<col style="width: 25.0%" />
+<col style="width: 25.0%" />
 </colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>ID</p></th>
@@ -716,7 +761,7 @@ this error will be raised.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="MelodieInfra.exceptions.exceptions.MelodieExceptions.Scenario.ScenarioIDTypeError">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ScenarioIDTypeError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id_scenario</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MelodieInfra.exceptions.exceptions.MelodieExceptions.Scenario.ScenarioIDTypeError" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ScenarioIDTypeError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id_scenario</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MelodieInfra.exceptions.exceptions.MelodieExceptions.Scenario.ScenarioIDTypeError" title="Link to this definition"></a></dt>
 <dd><p>Scenario ID should be integer type.</p>
 <ul class="simple">
 <li><p>code: 1202</p></li>
@@ -726,7 +771,7 @@ this error will be raised.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="MelodieInfra.exceptions.exceptions.MelodieExceptions.Scenario.NoValidScenarioGenerated">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">NoValidScenarioGenerated</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenarios</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MelodieInfra.exceptions.exceptions.MelodieExceptions.Scenario.NoValidScenarioGenerated" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">NoValidScenarioGenerated</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenarios</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MelodieInfra.exceptions.exceptions.MelodieExceptions.Scenario.NoValidScenarioGenerated" title="Link to this definition"></a></dt>
 <dd><p>Operators (Simulator/Trainer/Calibrator) will generate a list of scenarios.
 If no scenario has been generated, this error will be raised.</p>
 <ul class="simple">
@@ -742,7 +787,7 @@ is not empty.</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="MelodieInfra.exceptions.exceptions.MelodieExceptions.Scenario.ParameterRedefinedError">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ParameterRedefinedError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parameter_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">all_params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MelodieInfra.exceptions.exceptions.MelodieExceptions.Scenario.ParameterRedefinedError" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ParameterRedefinedError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parameter_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">all_params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MelodieInfra.exceptions.exceptions.MelodieExceptions.Scenario.ParameterRedefinedError" title="Link to this definition"></a></dt>
 <dd><p>For the interactive parameters of Scenario, the name should be unique.
 If two parameters has the same name, this exception will be raised.</p>
 <ul class="simple">
@@ -754,16 +799,16 @@ If two parameters has the same name, this exception will be raised.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="MelodieInfra.exceptions.exceptions.MelodieExceptions.Agents">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Agents</span></span><a class="headerlink" href="#MelodieInfra.exceptions.exceptions.MelodieExceptions.Agents" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Agents</span></span><a class="headerlink" href="#MelodieInfra.exceptions.exceptions.MelodieExceptions.Agents" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="MelodieInfra.exceptions.exceptions.MelodieExceptions.Agents.ID">
-<span class="sig-name descname"><span class="pre">ID</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1300</span></em><a class="headerlink" href="#MelodieInfra.exceptions.exceptions.MelodieExceptions.Agents.ID" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">ID</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1300</span></em><a class="headerlink" href="#MelodieInfra.exceptions.exceptions.MelodieExceptions.Agents.ID" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="MelodieInfra.exceptions.exceptions.MelodieExceptions.Agents.AgentListEmpty">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">AgentListEmpty</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent_manager</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MelodieInfra.exceptions.exceptions.MelodieExceptions.Agents.AgentListEmpty" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">AgentListEmpty</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent_manager</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MelodieInfra.exceptions.exceptions.MelodieExceptions.Agents.AgentListEmpty" title="Link to this definition"></a></dt>
 <dd><ul class="simple">
 <li><p>code: 1301</p></li>
 </ul>
@@ -771,7 +816,7 @@ If two parameters has the same name, this exception will be raised.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="MelodieInfra.exceptions.exceptions.MelodieExceptions.Agents.AgentPropertyNameNotExist">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">AgentPropertyNameNotExist</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">property_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agent</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MelodieInfra.exceptions.exceptions.MelodieExceptions.Agents.AgentPropertyNameNotExist" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">AgentPropertyNameNotExist</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">property_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agent</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MelodieInfra.exceptions.exceptions.MelodieExceptions.Agents.AgentPropertyNameNotExist" title="Link to this definition"></a></dt>
 <dd><ul class="simple">
 <li><p>code: 1302</p></li>
 </ul>
@@ -779,7 +824,7 @@ If two parameters has the same name, this exception will be raised.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="MelodieInfra.exceptions.exceptions.MelodieExceptions.Agents.AgentIDConflict">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">AgentIDConflict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent_container_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agent_ids</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MelodieInfra.exceptions.exceptions.MelodieExceptions.Agents.AgentIDConflict" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">AgentIDConflict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent_container_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agent_ids</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MelodieInfra.exceptions.exceptions.MelodieExceptions.Agents.AgentIDConflict" title="Link to this definition"></a></dt>
 <dd><p>Agent ID should be unique.</p>
 <ul class="simple">
 <li><p>code: 1303</p></li>
@@ -790,33 +835,33 @@ If two parameters has the same name, this exception will be raised.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="MelodieInfra.exceptions.exceptions.MelodieExceptions.Environment">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Environment</span></span><a class="headerlink" href="#MelodieInfra.exceptions.exceptions.MelodieExceptions.Environment" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Environment</span></span><a class="headerlink" href="#MelodieInfra.exceptions.exceptions.MelodieExceptions.Environment" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="MelodieInfra.exceptions.exceptions.MelodieExceptions.Environment.ID">
-<span class="sig-name descname"><span class="pre">ID</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1400</span></em><a class="headerlink" href="#MelodieInfra.exceptions.exceptions.MelodieExceptions.Environment.ID" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">ID</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1400</span></em><a class="headerlink" href="#MelodieInfra.exceptions.exceptions.MelodieExceptions.Environment.ID" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="MelodieInfra.exceptions.exceptions.MelodieExceptions.Data">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Data</span></span><a class="headerlink" href="#MelodieInfra.exceptions.exceptions.MelodieExceptions.Data" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Data</span></span><a class="headerlink" href="#MelodieInfra.exceptions.exceptions.MelodieExceptions.Data" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>This class is used when external data is imported or exported.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="MelodieInfra.exceptions.exceptions.MelodieExceptions.Data.ID">
-<span class="sig-name descname"><span class="pre">ID</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1500</span></em><a class="headerlink" href="#MelodieInfra.exceptions.exceptions.MelodieExceptions.Data.ID" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">ID</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1500</span></em><a class="headerlink" href="#MelodieInfra.exceptions.exceptions.MelodieExceptions.Data.ID" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="MelodieInfra.exceptions.exceptions.MelodieExceptions.Data.TableNameAlreadyExists">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">TableNameAlreadyExists</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">table_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">existed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MelodieInfra.exceptions.exceptions.MelodieExceptions.Data.TableNameAlreadyExists" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">TableNameAlreadyExists</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">table_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">existed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MelodieInfra.exceptions.exceptions.MelodieExceptions.Data.TableNameAlreadyExists" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="MelodieInfra.exceptions.exceptions.MelodieExceptions.Data.StaticTableNotRegistered">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">StaticTableNotRegistered</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">table_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">all_table_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MelodieInfra.exceptions.exceptions.MelodieExceptions.Data.StaticTableNotRegistered" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">StaticTableNotRegistered</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">table_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">all_table_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MelodieInfra.exceptions.exceptions.MelodieExceptions.Data.StaticTableNotRegistered" title="Link to this definition"></a></dt>
 <dd><p>Static table should be registered before use.</p>
 <ul class="simple">
 <li><p>code: 1502</p></li>
@@ -826,14 +871,14 @@ If two parameters has the same name, this exception will be raised.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="MelodieInfra.exceptions.exceptions.MelodieExceptions.Data.AttemptingReadingFromUnexistedTable">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">AttemptingReadingFromUnexistedTable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">table_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MelodieInfra.exceptions.exceptions.MelodieExceptions.Data.AttemptingReadingFromUnexistedTable" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">AttemptingReadingFromUnexistedTable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">table_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MelodieInfra.exceptions.exceptions.MelodieExceptions.Data.AttemptingReadingFromUnexistedTable" title="Link to this definition"></a></dt>
 <dd><p>When reading the database, the table must exist in the database.
 * code: 1503</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="MelodieInfra.exceptions.exceptions.MelodieExceptions.Data.ObjectPropertyTypeUnMatchTheDataFrameError">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ObjectPropertyTypeUnMatchTheDataFrameError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">param_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">param_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dataframe_dtypes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">type</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="agent.html#Melodie.Agent" title="Melodie.Agent"><span class="pre">Agent</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MelodieInfra.exceptions.exceptions.MelodieExceptions.Data.ObjectPropertyTypeUnMatchTheDataFrameError" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ObjectPropertyTypeUnMatchTheDataFrameError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">param_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">param_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dataframe_dtypes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">type</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="agent.html#Melodie.Agent" title="Melodie.Agent"><span class="pre">Agent</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MelodieInfra.exceptions.exceptions.MelodieExceptions.Data.ObjectPropertyTypeUnMatchTheDataFrameError" title="Link to this definition"></a></dt>
 <dd><p>Object type should match the type defined in dataframe.</p>
 <ul class="simple">
 <li><p>code: 1504</p></li>
@@ -843,7 +888,7 @@ If two parameters has the same name, this exception will be raised.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="MelodieInfra.exceptions.exceptions.MelodieExceptions.Data.TableNameInvalid">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">TableNameInvalid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">table_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MelodieInfra.exceptions.exceptions.MelodieExceptions.Data.TableNameInvalid" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">TableNameInvalid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">table_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MelodieInfra.exceptions.exceptions.MelodieExceptions.Data.TableNameInvalid" title="Link to this definition"></a></dt>
 <dd><p>The table name should be an identifier.</p>
 <ul class="simple">
 <li><p>code: 1505</p></li>
@@ -854,7 +899,7 @@ If two parameters has the same name, this exception will be raised.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="MelodieInfra.exceptions.exceptions.MelodieExceptions.Data.TableNotFound">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">TableNotFound</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">table_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">all_tables</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MelodieInfra.exceptions.exceptions.MelodieExceptions.Data.TableNotFound" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">TableNotFound</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">table_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">all_tables</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MelodieInfra.exceptions.exceptions.MelodieExceptions.Data.TableNotFound" title="Link to this definition"></a></dt>
 <dd><p>Table may not be registered.</p>
 <ul class="simple">
 <li><p>code: 1506</p></li>
@@ -863,7 +908,7 @@ If two parameters has the same name, this exception will be raised.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="MelodieInfra.exceptions.exceptions.MelodieExceptions.Data.InvalidDatabaseType">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">InvalidDatabaseType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">database</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">supported_db_types</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Set</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MelodieInfra.exceptions.exceptions.MelodieExceptions.Data.InvalidDatabaseType" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">InvalidDatabaseType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">database</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">supported_db_types</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Set</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MelodieInfra.exceptions.exceptions.MelodieExceptions.Data.InvalidDatabaseType" title="Link to this definition"></a></dt>
 <dd><ul class="simple">
 <li><p>code: 1508</p></li>
 </ul>
@@ -871,7 +916,7 @@ If two parameters has the same name, this exception will be raised.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="MelodieInfra.exceptions.exceptions.MelodieExceptions.Data.NoDataframeLoaderDefined">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">NoDataframeLoaderDefined</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#MelodieInfra.exceptions.exceptions.MelodieExceptions.Data.NoDataframeLoaderDefined" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">NoDataframeLoaderDefined</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#MelodieInfra.exceptions.exceptions.MelodieExceptions.Data.NoDataframeLoaderDefined" title="Link to this definition"></a></dt>
 <dd><p>Dataframe Loader must be defined if you want to use the static table.</p>
 <ul class="simple">
 <li><p>code: 1509</p></li>
@@ -880,7 +925,7 @@ If two parameters has the same name, this exception will be raised.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="MelodieInfra.exceptions.exceptions.MelodieExceptions.Data.ColumnNameConsistencyError">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ColumnNameConsistencyError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">missing</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Set</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">undefined</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Set</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MelodieInfra.exceptions.exceptions.MelodieExceptions.Data.ColumnNameConsistencyError" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ColumnNameConsistencyError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">missing</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Set</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">undefined</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Set</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MelodieInfra.exceptions.exceptions.MelodieExceptions.Data.ColumnNameConsistencyError" title="Link to this definition"></a></dt>
 <dd><p>The column name in code should be consistent to the table.</p>
 <ul class="simple">
 <li><p>code: 1510</p></li>
@@ -891,17 +936,17 @@ If two parameters has the same name, this exception will be raised.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="MelodieInfra.exceptions.exceptions.MelodieExceptions.Tools">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Tools</span></span><a class="headerlink" href="#MelodieInfra.exceptions.exceptions.MelodieExceptions.Tools" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Tools</span></span><a class="headerlink" href="#MelodieInfra.exceptions.exceptions.MelodieExceptions.Tools" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>This class is for errors related to dev tools such as MelodieStudio</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="MelodieInfra.exceptions.exceptions.MelodieExceptions.Tools.ID">
-<span class="sig-name descname"><span class="pre">ID</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1600</span></em><a class="headerlink" href="#MelodieInfra.exceptions.exceptions.MelodieExceptions.Tools.ID" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">ID</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1600</span></em><a class="headerlink" href="#MelodieInfra.exceptions.exceptions.MelodieExceptions.Tools.ID" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="MelodieInfra.exceptions.exceptions.MelodieExceptions.Tools.MelodieStudioUnAvailable">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">MelodieStudioUnAvailable</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#MelodieInfra.exceptions.exceptions.MelodieExceptions.Tools.MelodieStudioUnAvailable" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">MelodieStudioUnAvailable</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#MelodieInfra.exceptions.exceptions.MelodieExceptions.Tools.MelodieStudioUnAvailable" title="Link to this definition"></a></dt>
 <dd><p>Melodie studio must be started before visualizer process start.</p>
 <ul class="simple">
 <li><p>code: 1601</p></li>
@@ -912,26 +957,26 @@ If two parameters has the same name, this exception will be raised.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="MelodieInfra.exceptions.exceptions.MelodieExceptions.Visualizer">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Visualizer</span></span><a class="headerlink" href="#MelodieInfra.exceptions.exceptions.MelodieExceptions.Visualizer" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Visualizer</span></span><a class="headerlink" href="#MelodieInfra.exceptions.exceptions.MelodieExceptions.Visualizer" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>This class is for errors related to visualizer.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="MelodieInfra.exceptions.exceptions.MelodieExceptions.Visualizer.ID">
-<span class="sig-name descname"><span class="pre">ID</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1700</span></em><a class="headerlink" href="#MelodieInfra.exceptions.exceptions.MelodieExceptions.Visualizer.ID" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">ID</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1700</span></em><a class="headerlink" href="#MelodieInfra.exceptions.exceptions.MelodieExceptions.Visualizer.ID" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="MelodieInfra.exceptions.exceptions.MelodieExceptions.Visualizer.Charts">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Charts</span></span><a class="headerlink" href="#MelodieInfra.exceptions.exceptions.MelodieExceptions.Visualizer.Charts" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Charts</span></span><a class="headerlink" href="#MelodieInfra.exceptions.exceptions.MelodieExceptions.Visualizer.Charts" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="MelodieInfra.exceptions.exceptions.MelodieExceptions.Visualizer.Charts.ID">
-<span class="sig-name descname"><span class="pre">ID</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1700</span></em><a class="headerlink" href="#MelodieInfra.exceptions.exceptions.MelodieExceptions.Visualizer.Charts.ID" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">ID</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1700</span></em><a class="headerlink" href="#MelodieInfra.exceptions.exceptions.MelodieExceptions.Visualizer.Charts.ID" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="MelodieInfra.exceptions.exceptions.MelodieExceptions.Visualizer.Charts.ChartNameAlreadyDefined">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ChartNameAlreadyDefined</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">chart_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">all_chart_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MelodieInfra.exceptions.exceptions.MelodieExceptions.Visualizer.Charts.ChartNameAlreadyDefined" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ChartNameAlreadyDefined</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">chart_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">all_chart_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#MelodieInfra.exceptions.exceptions.MelodieExceptions.Visualizer.Charts.ChartNameAlreadyDefined" title="Link to this definition"></a></dt>
 <dd><ul class="simple">
 <li><p>code: 1701</p></li>
 </ul>
@@ -950,7 +995,7 @@ If two parameters has the same name, this exception will be raised.</p>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="db.html" class="btn btn-neutral float-left" title="DB" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="../changelog.html" class="btn btn-neutral float-right" title="Change Log" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="studio.html" class="btn btn-neutral float-right" title="Studio" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
