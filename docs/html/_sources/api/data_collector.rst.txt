@@ -1,10 +1,10 @@
 
-DataCollector
-================
+Data Collector
+==============
 
-.. automodule:: Melodie.data_collector
-               :members: DataCollector
-               :undoc-members:
-               :show-inheritance:
+.. autoclass:: Melodie.DataCollector
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
 

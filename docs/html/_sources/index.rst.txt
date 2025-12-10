@@ -37,15 +37,38 @@ I take the German translation - \"Melodie\" - as the name of this package.
 Now, let's start the journey :)
 
 .. toctree::
-    :hidden:
+   :caption: User Guide
+   :maxdepth: 1
+   :hidden:
 
-    installation
-    introduction
-    tutorial
-    framework_comparison
-    gallery/_index
-    advanced/_index
-    api/_index
-    changelog
-    contribution
-    about
+   installation
+   introduction
+   tutorial
+   framework_comparison
+   gallery/_index
+
+.. toctree::
+   :caption: API Reference
+   :maxdepth: 1
+   :hidden:
+
+   api/simulator
+   api/model
+   api/scenario
+   api/environment
+   api/agent
+   api/agent_list
+   api/data_collector
+   api/grid
+   api/network
+   api/calibrator
+   api/trainer
+
+.. toctree::
+   :caption: Development
+   :maxdepth: 1
+   :hidden:
+
+   contribution
+   changelog
+   about
