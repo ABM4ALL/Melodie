@@ -8,6 +8,7 @@ from typing import (
     Dict,
     Iterator,
     List,
+    Literal,
     Optional,
     Tuple,
     Type,
@@ -19,7 +20,7 @@ import pandas as pd
 
 from MelodieInfra import Config, MelodieExceptions
 from MelodieInfra.core import Agent, AgentList
-from MelodieInfra.parallel.parallel_manager import ParallelManager
+from MelodieInfra.parallel.parallel_manager import ParallelManager, ThreadParallelManager
 from MelodieInfra.utils.utils import underline_to_camel
 
 from .algorithms import AlgorithmParameters
@@ -184,7 +185,11 @@ class GATrainerAlgorithm:
     """
 
     def __init__(
-        self, params: GATrainerParams, manager: "Trainer" = None, processors=1
+        self,
+        params: GATrainerParams,
+        manager: "Trainer" = None,
+        processors: int = 1,
+        parallel_mode: Literal["process", "thread"] = "process",
     ):
         self.manager = manager
         self.params = params
@@ -206,30 +211,83 @@ class GATrainerAlgorithm:
         self._chromosome_counter = 0
         self._current_generation = 0
         self.processors = processors
+        self.parallel_mode = parallel_mode
 
-        # for i in range(processors):
-        d = {
-            "model": (
-                self.manager.model_cls.__name__,
-                self.manager.model_cls.__module__,
-            ),
-            "scenario": (
-                self.manager.scenario_cls.__name__,
-                self.manager.scenario_cls.__module__,
-            ),
-            "trainer": (
-                self.manager.__class__.__name__,
-                self.manager.__class__.__module__,
-            ),
-            "data_loader": (
-                self.manager.df_loader_cls.__name__,
-                self.manager.df_loader_cls.__module__,
-            ),
-        }
-        self.parallel_manager = ParallelManager(
-            self.processors, configs=(d, self.manager.config.to_dict())
-        )
-        self.parallel_manager.run("trainer")
+        if self.parallel_mode == "process":
+            d = {
+                "model": (
+                    self.manager.model_cls.__name__,
+                    self.manager.model_cls.__module__,
+                ),
+                "scenario": (
+                    self.manager.scenario_cls.__name__,
+                    self.manager.scenario_cls.__module__,
+                ),
+                "trainer": (
+                    self.manager.__class__.__name__,
+                    self.manager.__class__.__module__,
+                ),
+                "data_loader": (
+                    self.manager.df_loader_cls.__name__,
+                    self.manager.df_loader_cls.__module__,
+                ),
+            }
+            self.parallel_manager = ParallelManager(
+                self.processors, configs=(d, self.manager.config.to_dict())
+            )
+            self.parallel_manager.run("trainer")
+        elif self.parallel_mode == "thread":
+            self.parallel_manager = ThreadParallelManager(
+                cores=self.processors,
+                worker_func=self._thread_worker_func,
+                worker_init_args=(self.manager,),
+            )
+            self.parallel_manager.run("trainer")
+        else:
+            raise ValueError(f"Unknown parallel_mode: {parallel_mode}")
+
+    def _thread_worker_func(
+        self, core_id: int, task: Tuple, trainer: "Trainer"
+    ) -> Tuple:
+        """
+        Worker function for thread-based parallelism.
+        Runs a single simulation for a given chromosome.
+        """
+        from Melodie import Environment
+
+        chrom, scenario_json, agent_params = task
+        scenario = trainer.scenario_cls()
+        scenario.manager = trainer
+        scenario._setup(scenario_json)
+
+        model = trainer.model_cls(trainer.config, scenario)
+        model.create()
+        model._setup()
+
+        # Apply agent parameters from the GA chromosome
+        for category, params in agent_params.items():
+            agent_container: AgentList[Agent] = getattr(model, category)
+            for param in params:
+                agent = agent_container.get_agent(param["id"])
+                agent.set_params(param)
+
+        model.run()
+
+        agent_data = {}
+        for container in trainer.container_manager.agent_containers:
+            agent_container = getattr(model, container.container_name)
+            df = agent_container.to_list(container.recorded_properties)
+            agent_data[container.container_name] = df
+            for row in df:
+                agent = agent_container.get_agent(row["id"])
+                row["target_function_value"] = trainer.target_function(agent)
+                row["utility"] = trainer.utility(agent)
+                row["agent_id"] = row.pop("id")
+
+        env: Environment = model.environment
+        env_data = env.to_dict(trainer.environment_properties)
+
+        return (chrom, agent_data, env_data)
 
     def stop(self):
         self.parallel_manager.close()
@@ -575,6 +633,7 @@ class Trainer(BaseModellingManager):
         model_cls: "Optional[Type[Model]]",
         data_loader_cls: "Optional[Type[DataLoader]]" = None,
         processors: int = 1,
+        parallel_mode: Literal["process", "thread"] = "process",
     ):
         """
         :param config: The project :class:`~Melodie.Config` object.
@@ -584,6 +643,10 @@ class Trainer(BaseModellingManager):
             model.
         :param processors: The number of processor cores to use for parallel
             computation of the genetic algorithm.
+        :param parallel_mode: The parallelization mode. ``"process"`` (default)
+            uses subprocess-based parallelism, suitable for all Python versions.
+            ``"thread"`` uses thread-based parallelism, which is recommended for
+            Python 3.13+ (free-threaded/No-GIL builds) for better performance.
         """
         super().__init__(
             config=config,
@@ -609,6 +672,7 @@ class Trainer(BaseModellingManager):
         self.agent_result = []
         self.current_algorithm_meta = None
         self.processors = processors
+        self.parallel_mode = parallel_mode
 
     def add_agent_training_property(
         self,
@@ -692,7 +756,9 @@ class Trainer(BaseModellingManager):
         (Internal) Run a single training path.
         """
 
-        self.algorithm = GATrainerAlgorithm(trainer_params, self, self.processors)
+        self.algorithm = GATrainerAlgorithm(
+            trainer_params, self, self.processors, self.parallel_mode
+        )
         self.algorithm.recorded_env_properties = self.environment_properties
         for agent_container in self.container_manager.agent_containers:
             self.algorithm.setup_agent_locations(

@@ -37,11 +37,18 @@ def run_simulator(cfg: Config) -> None:
 
 
 def run_trainer(cfg: Config) -> None:
+    # The `parallel_mode` parameter controls the parallelization strategy:
+    #   - "process" (default): Uses subprocess-based parallelism. Works on all
+    #     Python versions. Recommended for most use cases.
+    #   - "thread": Uses thread-based parallelism. Recommended for Python 3.13+
+    #     (free-threaded/No-GIL builds) for potentially faster performance by
+    #     avoiding process creation overhead.
     trainer = RPSTrainer(
         config=cfg,
         scenario_cls=RPSScenario,
         model_cls=RPSModel,
-        processors=4,  # Number of parallel processes for training
+        processors=4,
+        parallel_mode="process",  # or "thread" for Python 3.13+
     )
     trainer.run()
 

@@ -20,7 +20,7 @@ from typing import (
 import pandas as pd
 
 from MelodieInfra import Config, MelodieExceptions
-from MelodieInfra.parallel.parallel_manager import ParallelManager
+from MelodieInfra.parallel.parallel_manager import ParallelManager, ThreadParallelManager
 from MelodieInfra.utils import underline_to_camel
 
 from .algorithms import AlgorithmParameters
@@ -138,6 +138,7 @@ class GACalibratorAlgorithm:
         target_func: "Callable[[Model], Union[float, int]]",
         manager: "Calibrator" = None,
         processors=1,
+        parallel_mode: Literal["process", "thread"] = "process",
     ):
         self.manager = manager
         self.params = params
@@ -167,29 +168,77 @@ class GACalibratorAlgorithm:
         self._chromosome_counter = 0
         self._current_generation = 0
         self.processors = processors
-        d = {
-            "model": (
-                self.manager.model_cls.__name__,
-                self.manager.model_cls.__module__,
-            ),
-            "scenario": (
-                self.manager.scenario_cls.__name__,
-                self.manager.scenario_cls.__module__,
-            ),
-            "trainer": (
-                self.manager.__class__.__name__,
-                self.manager.__class__.__module__,
-            ),
-            "data_loader": (
-                self.manager.df_loader_cls.__name__,
-                self.manager.df_loader_cls.__module__,
-            ),
-        }
+        self.parallel_mode = parallel_mode
 
-        self.parallel_manager = ParallelManager(
-            self.processors, configs=(d, self.manager.config.to_dict())
+        if self.parallel_mode == "process":
+            d = {
+                "model": (
+                    self.manager.model_cls.__name__,
+                    self.manager.model_cls.__module__,
+                ),
+                "scenario": (
+                    self.manager.scenario_cls.__name__,
+                    self.manager.scenario_cls.__module__,
+                ),
+                "trainer": (
+                    self.manager.__class__.__name__,
+                    self.manager.__class__.__module__,
+                ),
+                "data_loader": (
+                    self.manager.df_loader_cls.__name__,
+                    self.manager.df_loader_cls.__module__,
+                ),
+            }
+            self.parallel_manager = ParallelManager(
+                self.processors, configs=(d, self.manager.config.to_dict())
+            )
+            self.parallel_manager.run("calibrator")
+        elif self.parallel_mode == "thread":
+            self.parallel_manager = ThreadParallelManager(
+                cores=self.processors,
+                worker_func=self._thread_worker_func,
+                worker_init_args=(self.manager,),
+            )
+            self.parallel_manager.run("calibrator")
+        else:
+            raise ValueError(f"Unknown parallel_mode: {parallel_mode}")
+
+    def _thread_worker_func(
+        self, core_id: int, task: Tuple, calibrator: "Calibrator"
+    ) -> Tuple:
+        """
+        Worker function for thread-based parallelism.
+        Runs a single simulation for a given chromosome.
+        """
+        from Melodie import Environment
+
+        chrom, scenario_json, env_params = task
+        scenario = calibrator.scenario_cls()
+        scenario.manager = calibrator
+        scenario._setup(scenario_json)
+        scenario.set_params(env_params, asserts_key_exist=False)
+
+        model = calibrator.model_cls(calibrator.config, scenario)
+        model.create()
+        model._setup()
+        model.run()
+
+        agent_data = {}
+        for container_name, props in calibrator.recorded_agent_properties.items():
+            agent_container = getattr(model, container_name)
+            df = agent_container.to_list(props)
+            agent_data[container_name] = df
+            for row in df:
+                row["agent_id"] = row.pop("id")
+
+        env: Environment = model.environment
+        env_data = env.to_dict(calibrator.watched_env_properties)
+        env_data.update({prop: scenario.to_dict()[prop] for prop in calibrator.properties})
+        env_data["target_function_value"] = env_data["distance"] = calibrator.distance(
+            model
         )
-        self.parallel_manager.run("calibrator")
+
+        return (chrom, agent_data, env_data)
 
     def stop(self):
         self.parallel_manager.close()
@@ -407,7 +456,8 @@ class Calibrator(BaseModellingManager):
         scenario_cls: "Optional[Type[Scenario]]",
         model_cls: "Optional[Type[Model]]",
         data_loader_cls: Type["DataLoader"] = None,
-        processors=1,
+        processors: int = 1,
+        parallel_mode: Literal["process", "thread"] = "process",
     ):
         """
         :param config: The project :class:`~Melodie.Config` object.
@@ -417,6 +467,10 @@ class Calibrator(BaseModellingManager):
             model.
         :param processors: The number of processor cores to use for parallel
             computation of the genetic algorithm.
+        :param parallel_mode: The parallelization mode. ``"process"`` (default)
+            uses subprocess-based parallelism, suitable for all Python versions.
+            ``"thread"`` uses thread-based parallelism, which is recommended for
+            Python 3.13+ (free-threaded/No-GIL builds) for better performance.
         """
         super().__init__(
             config=config,
@@ -425,6 +479,7 @@ class Calibrator(BaseModellingManager):
             data_loader_cls=data_loader_cls,
         )
         self.processes = processors
+        self.parallel_mode = parallel_mode
         self.training_strategy: "Optional[Type[SearchingAlgorithm]]" = None
         self.container_name: str = ""
 
@@ -516,6 +571,7 @@ class Calibrator(BaseModellingManager):
             self.target_function,
             manager=self,
             processors=self.processes,
+            parallel_mode=self.parallel_mode,
         )
         self.algorithm.run(scenario, self.current_algorithm_meta)
         self.algorithm.stop()
