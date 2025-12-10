@@ -143,6 +143,20 @@ class BaseModellingManager(abc.ABC):
 
         self.scenarios = self.generate_scenarios()
 
+        standard_table_map = {
+            "SimulatorScenarios": "simulator_scenarios",
+            "TrainerScenarios": "trainer_scenarios",
+            "CalibratorScenarios": "calibrator_scenarios",
+            "CalibratorParamsScenarios": "calibrator_params_scenarios",
+            "TrainerParamsScenarios": "trainer_params_scenarios",
+        }
+        if self.data_loader is not None:
+            for table_name, attr_name in standard_table_map.items():
+                if table_name in self.data_loader.registered_dataframes:
+                    df = self.data_loader.registered_dataframes[table_name]
+                    for scenario in self.scenarios:
+                        setattr(scenario, attr_name, df)
+
         if self.scenarios is None or len(self.scenarios) == 0:
             raise MelodieExceptions.Scenario.NoValidScenarioGenerated(self.scenarios)
 

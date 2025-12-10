@@ -146,6 +146,17 @@ class DataLoader:
         self.setup()
 
     def load_scenarios(self):
+        """
+        Automatically find and load standard scenario tables from the input
+        directory.
+
+        This method scans the input folder for files corresponding to the five
+        standard scenario table names: ``SimulatorScenarios``,
+        ``TrainerScenarios``, ``CalibratorScenarios``,
+        ``TrainerParamsScenarios``, and ``CalibratorParamsScenarios``. Once
+        loaded, these DataFrames are also automatically attached to each
+        ``Scenario`` object.
+        """
         for file_name in os.listdir(self.config.input_folder):
             camel_case = underline_to_camel(os.path.splitext(file_name)[0])
 
@@ -153,6 +164,8 @@ class DataLoader:
                 "SimulatorScenarios",
                 "TrainerScenarios",
                 "CalibratorScenarios",
+                "CalibratorParamsScenarios",
+                "TrainerParamsScenarios",
             ):
                 self.load_dataframe(file_name, camel_case)
 
