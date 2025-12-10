@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Data Collector &mdash; Melodie 1.0.1 documentation</title>
+  <title>API Reference &mdash; Melodie 1.0.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
 
@@ -20,8 +20,8 @@
     <link rel="author" title="About these documents" href="../about.html" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Grid &amp; Spot" href="grid.html" />
-    <link rel="prev" title="Agent List" href="agent_list.html" /> 
+    <link rel="next" title="Simulator" href="simulator.html" />
+    <link rel="prev" title="RockPaperScissorsTrainer" href="../gallery/rock_paper_scissors_trainer.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -163,7 +163,7 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="reference internal" href="index.html">API Reference</a><ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">API Reference</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="simulator.html">Simulator</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="simulator.html#Melodie.Simulator"><code class="docutils literal notranslate"><span class="pre">Simulator</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="simulator.html#Melodie.Simulator.generate_scenarios"><code class="docutils literal notranslate"><span class="pre">Simulator.generate_scenarios()</span></code></a></li>
@@ -246,27 +246,27 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Data Collector</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#Melodie.DataCollector"><code class="docutils literal notranslate"><span class="pre">DataCollector</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#Melodie.DataCollector.setup"><code class="docutils literal notranslate"><span class="pre">DataCollector.setup()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#Melodie.DataCollector.time_elapsed"><code class="docutils literal notranslate"><span class="pre">DataCollector.time_elapsed()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#Melodie.DataCollector.add_agent_property"><code class="docutils literal notranslate"><span class="pre">DataCollector.add_agent_property()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#Melodie.DataCollector.add_environment_property"><code class="docutils literal notranslate"><span class="pre">DataCollector.add_environment_property()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#Melodie.DataCollector.add_custom_collector"><code class="docutils literal notranslate"><span class="pre">DataCollector.add_custom_collector()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#Melodie.DataCollector.env_property_names"><code class="docutils literal notranslate"><span class="pre">DataCollector.env_property_names()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#Melodie.DataCollector.agent_property_names"><code class="docutils literal notranslate"><span class="pre">DataCollector.agent_property_names()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#Melodie.DataCollector.agent_containers"><code class="docutils literal notranslate"><span class="pre">DataCollector.agent_containers()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#Melodie.DataCollector.collect_agent_properties"><code class="docutils literal notranslate"><span class="pre">DataCollector.collect_agent_properties()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#Melodie.DataCollector.collect_custom_properties"><code class="docutils literal notranslate"><span class="pre">DataCollector.collect_custom_properties()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#Melodie.DataCollector.collect_single_custom_property"><code class="docutils literal notranslate"><span class="pre">DataCollector.collect_single_custom_property()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#Melodie.DataCollector.append_agent_properties_by_records"><code class="docutils literal notranslate"><span class="pre">DataCollector.append_agent_properties_by_records()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#Melodie.DataCollector.append_environment_properties"><code class="docutils literal notranslate"><span class="pre">DataCollector.append_environment_properties()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#Melodie.DataCollector.status"><code class="docutils literal notranslate"><span class="pre">DataCollector.status</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#Melodie.DataCollector.collect"><code class="docutils literal notranslate"><span class="pre">DataCollector.collect()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#Melodie.DataCollector.calc_time"><code class="docutils literal notranslate"><span class="pre">DataCollector.calc_time()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#Melodie.DataCollector.get_single_agent_data"><code class="docutils literal notranslate"><span class="pre">DataCollector.get_single_agent_data()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#Melodie.DataCollector.save"><code class="docutils literal notranslate"><span class="pre">DataCollector.save()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#Melodie.DataCollector.save_dataframe"><code class="docutils literal notranslate"><span class="pre">DataCollector.save_dataframe()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="data_collector.html">Data Collector</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="data_collector.html#Melodie.DataCollector"><code class="docutils literal notranslate"><span class="pre">DataCollector</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="data_collector.html#Melodie.DataCollector.setup"><code class="docutils literal notranslate"><span class="pre">DataCollector.setup()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="data_collector.html#Melodie.DataCollector.time_elapsed"><code class="docutils literal notranslate"><span class="pre">DataCollector.time_elapsed()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="data_collector.html#Melodie.DataCollector.add_agent_property"><code class="docutils literal notranslate"><span class="pre">DataCollector.add_agent_property()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="data_collector.html#Melodie.DataCollector.add_environment_property"><code class="docutils literal notranslate"><span class="pre">DataCollector.add_environment_property()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="data_collector.html#Melodie.DataCollector.add_custom_collector"><code class="docutils literal notranslate"><span class="pre">DataCollector.add_custom_collector()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="data_collector.html#Melodie.DataCollector.env_property_names"><code class="docutils literal notranslate"><span class="pre">DataCollector.env_property_names()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="data_collector.html#Melodie.DataCollector.agent_property_names"><code class="docutils literal notranslate"><span class="pre">DataCollector.agent_property_names()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="data_collector.html#Melodie.DataCollector.agent_containers"><code class="docutils literal notranslate"><span class="pre">DataCollector.agent_containers()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="data_collector.html#Melodie.DataCollector.collect_agent_properties"><code class="docutils literal notranslate"><span class="pre">DataCollector.collect_agent_properties()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="data_collector.html#Melodie.DataCollector.collect_custom_properties"><code class="docutils literal notranslate"><span class="pre">DataCollector.collect_custom_properties()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="data_collector.html#Melodie.DataCollector.collect_single_custom_property"><code class="docutils literal notranslate"><span class="pre">DataCollector.collect_single_custom_property()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="data_collector.html#Melodie.DataCollector.append_agent_properties_by_records"><code class="docutils literal notranslate"><span class="pre">DataCollector.append_agent_properties_by_records()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="data_collector.html#Melodie.DataCollector.append_environment_properties"><code class="docutils literal notranslate"><span class="pre">DataCollector.append_environment_properties()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="data_collector.html#Melodie.DataCollector.status"><code class="docutils literal notranslate"><span class="pre">DataCollector.status</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="data_collector.html#Melodie.DataCollector.collect"><code class="docutils literal notranslate"><span class="pre">DataCollector.collect()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="data_collector.html#Melodie.DataCollector.calc_time"><code class="docutils literal notranslate"><span class="pre">DataCollector.calc_time()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="data_collector.html#Melodie.DataCollector.get_single_agent_data"><code class="docutils literal notranslate"><span class="pre">DataCollector.get_single_agent_data()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="data_collector.html#Melodie.DataCollector.save"><code class="docutils literal notranslate"><span class="pre">DataCollector.save()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="data_collector.html#Melodie.DataCollector.save_dataframe"><code class="docutils literal notranslate"><span class="pre">DataCollector.save_dataframe()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -413,10 +413,9 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
-          <li class="breadcrumb-item"><a href="index.html">API Reference</a></li>
-      <li class="breadcrumb-item active">Data Collector</li>
+      <li class="breadcrumb-item active">API Reference</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="../_sources/api/data_collector.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/api/index.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -424,249 +423,66 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="data-collector">
-<h1>Data Collector<a class="headerlink" href="#data-collector" title="Link to this heading"></a></h1>
-<dl class="py class">
-<dt class="sig sig-object py" id="Melodie.DataCollector">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Melodie.</span></span><span class="sig-name descname"><span class="pre">DataCollector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'sqlite'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.DataCollector" title="Link to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>The DataCollector is responsible for recording data from the model’s simulation.</p>
-<p>The DataCollector is initialized by the Model at the beginning of a
-simulation run. It allows users to specify which properties of agents and
-the environment should be collected at each time step.</p>
-<p>At the end of the simulation, the <code class="docutils literal notranslate"><span class="pre">save()</span></code> method is called to write the
-recorded data to the specified output format (e.g., CSV files or a SQLite
-database).</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>target</strong> – A string indicating the output format. Supported values
-are “sqlite” (default) and “csv”.</p>
-</dd>
-</dl>
-<dl class="py method">
-<dt class="sig sig-object py" id="Melodie.DataCollector.setup">
-<span class="sig-name descname"><span class="pre">setup</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.DataCollector.setup" title="Link to this definition"></a></dt>
-<dd><p>A hook for setting up the DataCollector.</p>
-<p>This method should be overridden in a subclass to specify which data to
-collect using <code class="docutils literal notranslate"><span class="pre">add_agent_property()</span></code> and <code class="docutils literal notranslate"><span class="pre">add_environment_property()</span></code>.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="Melodie.DataCollector.time_elapsed">
-<span class="sig-name descname"><span class="pre">time_elapsed</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.DataCollector.time_elapsed" title="Link to this definition"></a></dt>
-<dd><p>Get the time spent in data collection.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Elapsed time, a <code class="docutils literal notranslate"><span class="pre">float</span></code> value.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="Melodie.DataCollector.add_agent_property">
-<span class="sig-name descname"><span class="pre">add_agent_property</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">container_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">property_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">as_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Type</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.DataCollector.add_agent_property" title="Link to this definition"></a></dt>
-<dd><p>Register an agent property to be collected from an agent container.</p>
-<p>The data type for the corresponding database column can be explicitly
-defined using <code class="docutils literal notranslate"><span class="pre">as_type</span></code>.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>container_name</strong> – The name of the agent container attribute on the
-Model object (e.g., ‘agents’).</p></li>
-<li><p><strong>property_name</strong> – The name of the property to be collected from each
-agent in the container.</p></li>
-<li><p><strong>as_type</strong> – The desired data type for the database column.</p></li>
+  <section id="api-reference">
+<h1>API Reference<a class="headerlink" href="#api-reference" title="Link to this heading"></a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="simulator.html">Simulator</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="simulator.html#Melodie.Simulator"><code class="docutils literal notranslate"><span class="pre">Simulator</span></code></a></li>
 </ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="Melodie.DataCollector.add_environment_property">
-<span class="sig-name descname"><span class="pre">add_environment_property</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">property_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">as_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Type</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.DataCollector.add_environment_property" title="Link to this definition"></a></dt>
-<dd><p>Register an environment property to be collected.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>property_name</strong> – The name of the property on the Environment object.</p></li>
-<li><p><strong>as_type</strong> – The desired data type for the database column.</p></li>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="model.html">Model</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="model.html#Melodie.Model"><code class="docutils literal notranslate"><span class="pre">Model</span></code></a></li>
 </ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="Melodie.DataCollector.add_custom_collector">
-<span class="sig-name descname"><span class="pre">add_custom_collector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">table_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">row_collector</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">M</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">columns</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.DataCollector.add_custom_collector" title="Link to this definition"></a></dt>
-<dd><p>Add a custom data collector to generate a standalone data table.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>table_name</strong> – The name of the table for storing the collected data.</p></li>
-<li><p><strong>row_collector</strong> – A callable that takes the <code class="docutils literal notranslate"><span class="pre">Model</span></code> instance as an
-argument and returns either a dictionary for a single row or a list
-of dictionaries for multiple rows.</p></li>
-<li><p><strong>columns</strong> – A list of column names for the custom table.</p></li>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="scenario.html">Scenario</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="scenario.html#Melodie.Scenario"><code class="docutils literal notranslate"><span class="pre">Scenario</span></code></a></li>
 </ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="Melodie.DataCollector.env_property_names">
-<span class="sig-name descname"><span class="pre">env_property_names</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#Melodie.DataCollector.env_property_names" title="Link to this definition"></a></dt>
-<dd><p>Get the names of all registered environment properties.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>A list of property names.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="Melodie.DataCollector.agent_property_names">
-<span class="sig-name descname"><span class="pre">agent_property_names</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#Melodie.DataCollector.agent_property_names" title="Link to this definition"></a></dt>
-<dd><p>Get the names of all registered agent properties, grouped by container.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>A dictionary mapping container names to lists of property names.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="Melodie.DataCollector.agent_containers">
-<span class="sig-name descname"><span class="pre">agent_containers</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">BaseAgentContainer</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#Melodie.DataCollector.agent_containers" title="Link to this definition"></a></dt>
-<dd><p>Get all agent containers that have properties registered for collection.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>A list of tuples, where each tuple contains the container name
-and the container object itself.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="Melodie.DataCollector.collect_agent_properties">
-<span class="sig-name descname"><span class="pre">collect_agent_properties</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">period</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.DataCollector.collect_agent_properties" title="Link to this definition"></a></dt>
-<dd><p>(Internal) Collect properties for all registered agent containers.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>period</strong> – The current simulation period.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="Melodie.DataCollector.collect_custom_properties">
-<span class="sig-name descname"><span class="pre">collect_custom_properties</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">period</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.DataCollector.collect_custom_properties" title="Link to this definition"></a></dt>
-<dd><p>(Internal) Collect data using all registered custom collectors.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>period</strong> – The current simulation period.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="Melodie.DataCollector.collect_single_custom_property">
-<span class="sig-name descname"><span class="pre">collect_single_custom_property</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">collector_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">period</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.DataCollector.collect_single_custom_property" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="Melodie.DataCollector.append_agent_properties_by_records">
-<span class="sig-name descname"><span class="pre">append_agent_properties_by_records</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">container_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prop_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">container</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="agent_list.html#Melodie.AgentList" title="Melodie.AgentList"><span class="pre">AgentList</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">period</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.DataCollector.append_agent_properties_by_records" title="Link to this definition"></a></dt>
-<dd><p>(Internal) Record properties for a list of agents for the current period.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="Melodie.DataCollector.append_environment_properties">
-<span class="sig-name descname"><span class="pre">append_environment_properties</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">period</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.DataCollector.append_environment_properties" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="Melodie.DataCollector.status">
-<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">status</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#Melodie.DataCollector.status" title="Link to this definition"></a></dt>
-<dd><p>Check if the data collector is enabled.</p>
-<p>The <code class="docutils literal notranslate"><span class="pre">DataCollector</span></code> is only enabled when running under the <code class="docutils literal notranslate"><span class="pre">Simulator</span></code>.
-The <code class="docutils literal notranslate"><span class="pre">Trainer</span></code> and <code class="docutils literal notranslate"><span class="pre">Calibrator</span></code> are typically concerned only with the
-final state of a simulation, so recording time-series data is disabled
-during their execution to improve performance.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">True</span></code> if the collector is enabled, otherwise <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="Melodie.DataCollector.collect">
-<span class="sig-name descname"><span class="pre">collect</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">period</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#Melodie.DataCollector.collect" title="Link to this definition"></a></dt>
-<dd><p>The main data collection method, called by the <code class="docutils literal notranslate"><span class="pre">Simulator</span></code> at each step.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>period</strong> – The current simulation period.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="Melodie.DataCollector.calc_time">
-<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">calc_time</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">method</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.DataCollector.calc_time" title="Link to this definition"></a></dt>
-<dd><p>Works as a decorator.</p>
-<p>If you would like to define a custom data-collect method, please use <code class="docutils literal notranslate"><span class="pre">DataCollector.calc_time</span></code> as a decorator.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="Melodie.DataCollector.get_single_agent_data">
-<span class="sig-name descname"><span class="pre">get_single_agent_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent_container_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agent_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.DataCollector.get_single_agent_data" title="Link to this definition"></a></dt>
-<dd><p>Get time series data of one agent.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>agent_container_name</strong> – Attribute name in model.</p></li>
-<li><p><strong>agent_id</strong> – Agent id</p></li>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="environment.html">Environment</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="environment.html#Melodie.Environment"><code class="docutils literal notranslate"><span class="pre">Environment</span></code></a></li>
 </ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="Melodie.DataCollector.save">
-<span class="sig-name descname"><span class="pre">save</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.DataCollector.save" title="Link to this definition"></a></dt>
-<dd><p>Save all collected data to the specified output (CSV files or database).</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="Melodie.DataCollector.save_dataframe">
-<span class="sig-name descname"><span class="pre">save_dataframe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">df_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">if_exists</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'append'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.DataCollector.save_dataframe" title="Link to this definition"></a></dt>
-<dd><p>A utility method to save a pandas DataFrame to a CSV file in the
-output directory.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>df</strong> – The pandas DataFrame to save.</p></li>
-<li><p><strong>df_name</strong> – The desired name for the output file (without extension).</p></li>
-<li><p><strong>if_exists</strong> – What to do if the file already exists. Can be
-‘append’, ‘replace’, or ‘fail’.</p></li>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="agent.html">Agent</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="agent.html#Melodie.Agent"><code class="docutils literal notranslate"><span class="pre">Agent</span></code></a></li>
 </ul>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
+</li>
+<li class="toctree-l1"><a class="reference internal" href="agent_list.html">Agent List</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="agent_list.html#Melodie.AgentList"><code class="docutils literal notranslate"><span class="pre">AgentList</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="data_collector.html">Data Collector</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="data_collector.html#Melodie.DataCollector"><code class="docutils literal notranslate"><span class="pre">DataCollector</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="grid.html">Grid &amp; Spot</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="grid.html#Melodie.Grid"><code class="docutils literal notranslate"><span class="pre">Grid</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="grid.html#Melodie.Spot"><code class="docutils literal notranslate"><span class="pre">Spot</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="network.html">Network &amp; Edge</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="network.html#Melodie.Network"><code class="docutils literal notranslate"><span class="pre">Network</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="network.html#Melodie.Edge"><code class="docutils literal notranslate"><span class="pre">Edge</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="calibrator.html">Calibrator</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="calibrator.html#Melodie.Calibrator"><code class="docutils literal notranslate"><span class="pre">Calibrator</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="trainer.html">Trainer</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="trainer.html#Melodie.Trainer"><code class="docutils literal notranslate"><span class="pre">Trainer</span></code></a></li>
+</ul>
+</li>
+</ul>
+</div>
 </section>
 
 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="agent_list.html" class="btn btn-neutral float-left" title="Agent List" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="grid.html" class="btn btn-neutral float-right" title="Grid &amp; Spot" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="../gallery/rock_paper_scissors_trainer.html" class="btn btn-neutral float-left" title="RockPaperScissorsTrainer" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="simulator.html" class="btn btn-neutral float-right" title="Simulator" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

@@ -11,17 +11,19 @@ class Environment(Element):
 
     def setup(self):
         """
-        The setup method of the environment.
-        Use `self.scenario` to get the parameters from the scenario.
+        Set up the environment at the beginning of a simulation run.
 
+        This method is called after the scenario has been initialized, so scenario
+        parameters can be accessed via ``self.scenario``. It is intended for
+        initializing environment-level properties or states.
         """
         pass
 
     def to_dict(self, properties: List[str]) -> Dict:
         """
-        Dump Environment to a plain dict.
+        Convert a list of environment properties to a dictionary.
 
-        :param properties:
+        :param properties: A list of property names to include in the dictionary.
         """
         if properties is None:
             properties = self.__dict__.keys()

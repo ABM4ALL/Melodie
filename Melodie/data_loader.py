@@ -22,7 +22,7 @@ logger = logging.getLogger(__name__)
 
 class DataFrameInfo:
     """
-    DataFrameInfo provides standard format for input tables as parameters.
+    A descriptor class for defining and loading static DataFrames.
     """
 
     df_name: str
@@ -40,12 +40,16 @@ class DataFrameInfo:
         engine: str = "pandas",
     ):
         """
-        :param df_name: Name of dataframe.
-        :param columns: A dict, ``column name --> column data type``.
-        :param file_name: File name to load this dataframe, None by default. If None, be sure to
-            generate the dataframe in the DataLoader.
-        :param engine: The library used to load this table file. Valid values are "pandas" and "melodie-table".
-            However, if ``DataFrameInfo.FORCE_PANDAS`` was ``True``, Melodie will use ``"pandas"`` to load all dataframes.
+        :param df_name: The name used to register and retrieve the DataFrame.
+        :param columns: A dictionary mapping column names to their SQLAlchemy
+            data types. This is currently used for validation and future database
+            integration.
+        :param file_name: The name of the CSV or Excel file in the input
+            directory. If empty, the DataFrame is expected to be generated
+            programmatically.
+        :param engine: The backend for reading the file. Can be "pandas" or
+            "melodie-table". Note that if ``DataFrameInfo.FORCE_PANDAS`` is
+            ``True``, "pandas" will be used regardless of this setting.
         """
         self.df_name: str = df_name
         self.columns: Dict[str, "sqlalchemy.types"] = columns
@@ -64,7 +68,7 @@ class DataFrameInfo:
 
 class MatrixInfo:
     """
-    MatrixInfo provides standard format for input matrices as parameters.
+    A descriptor class for defining and loading static matrices.
     """
 
     def __init__(
@@ -74,10 +78,12 @@ class MatrixInfo:
         file_name: Optional[str] = None,
     ):
         """
-        :param mat_name: Name of the current matrix.
-        :param columns: A type indicating the data type in the matrix.
-        :param file_name: File name to load this dataframe, None by default. If None, be sure to
-            generate the dataframe in the DataLoader.
+        :param mat_name: The name used to register and retrieve the matrix.
+        :param data_type: An SQLAlchemy type (e.g., ``sqlalchemy.Integer``,
+            ``sqlalchemy.Float``) indicating the data type of the matrix
+            elements. This is used for converting the data to a numpy array.
+        :param file_name: The name of the CSV or Excel file in the input
+            directory.
         """
         self.mat_name: str = mat_name
         self.data_type: "sqlalchemy.types" = data_type
@@ -101,9 +107,12 @@ class MatrixInfo:
 
 class DataLoader:
     """
-    DataLoader loads dataframes or matrices.
+    The DataLoader is responsible for loading all static input data for a model.
 
-    ``Simulator``/``Trainer``/``Calibrator`` will have reference to DataLoader to avoid defining tables multiple times.
+    It is initialized by a modelling manager (e.g., ``Simulator``) and handles
+    the loading of scenario tables, agent parameter tables, and other static
+    data from CSV or Excel files. It also provides caching capabilities to speed
+    up subsequent runs.
     """
 
     def __init__(
@@ -114,10 +123,13 @@ class DataLoader:
         as_sub_worker=False,
     ):
         """
-        :param manager: The ``Simulator``/``Trainer``/``Calibrator`` this dataloader belongs to.
-        :param config: A ``Melodie.Config`` instance, the configuration in current project.
-        :param scenario_cls: The class of scenario used in this project.
-        :param as_sub_worker: If True, DataLoader will be disabled to avoid unneed database operations.
+        :param manager: The modelling manager (e.g., ``Simulator``, ``Trainer``,
+            or ``Calibrator``) that owns this data loader.
+        :param config: The project :class:`~Melodie.Config` object.
+        :param scenario_cls: The :class:`~Melodie.Scenario` subclass for the model.
+        :param as_sub_worker: A boolean flag indicating if the data loader is
+            running in a parallel worker process. If ``True``, certain database
+            operations are skipped.
         """
         MelodieExceptions.Assertions.NotNone(
             scenario_cls, "Scenario class should not be None!"
@@ -191,12 +203,15 @@ class DataLoader:
         self, table_name: str, data_frame: "pd.DataFrame", data_types: dict = None
     ) -> None:
         """
-        Register a pandas dataframe.
+        Register a pandas DataFrame with the data loader.
 
-        :param table_name: Name of dataframe
-        :param data_frame: A pandas dataframe
-        :param data_types: A dictionary describing data types.
-        :return: None
+        This is useful for DataFrames that are generated programmatically rather
+        than loaded from a file.
+
+        :param table_name: The name under which to register the DataFrame.
+        :param data_frame: The pandas DataFrame object.
+        :param data_types: (Optional) A dictionary describing the data types of
+            the columns.
         """
         if data_types is None:
             data_types = {}
@@ -204,7 +219,7 @@ class DataLoader:
 
     def clear_cache(self):
         """
-        Clear all caches under caching directory.
+        Remove all cached input data files from the temporary directory.
         """
         if os.path.exists(self._cache_dir):
             shutil.rmtree(self._cache_dir)
@@ -305,22 +320,29 @@ class DataLoader:
         rows_in_scenario: Union[int, Callable[[Scenario], int]],
     ) -> DataFrameGenerator:
         """
-        Create a new generator for dataframes.
+        Create a generator for programmatically creating a DataFrame.
 
-        :param df_info: Dataframe info indicating the dataframe to be generated.
-        :param rows_in_scenario: How many rows will be generated for a specific scenario. \
-            This argument should be an integer as number of rows for each scenario, or a function with a parameter \
-            with type `Scenario` and return an integer for how many rows to generate for this scenario .
-        :return: A dataframe generator object
+        This method returns a ``DataFrameGenerator`` context manager that allows
+        for the dynamic generation of tables, such as agent parameter tables.
+
+        :param df_info: A ``DataFrameInfo`` object or a string specifying the
+            name of the DataFrame to be generated.
+        :param rows_in_scenario: An integer specifying a fixed number of rows
+            for each scenario, or a callable that takes a ``Scenario`` object
+            and returns the number of rows to generate for that scenario.
+        :return: A ``DataFrameGenerator`` object.
         """
         return DataFrameGenerator(self, df_info, rows_in_scenario)
 
     def generate_scenarios_from_dataframe(self, df_name: str) -> List["Scenario"]:
         """
-        Generate scenario objects by the parameter from static table named ``df_name``.
+        Generate a list of scenario objects from a registered DataFrame.
 
-        :param df_name: Name of static table.
-        :return: A list of scenario object.
+        Each row of the DataFrame is converted into a ``Scenario`` object.
+
+        :param df_name: The name of the registered DataFrame containing the
+            scenario parameters.
+        :return: A list of ``Scenario`` objects.
         """
         scenarios_dataframe = self.registered_dataframes.get(df_name)
         if scenarios_dataframe is None:
@@ -340,10 +362,15 @@ class DataLoader:
 
     def generate_scenarios(self, manager_type: str) -> List["Scenario"]:
         """
-        Generate scenario objects by the parameter from static tables or scenarios_dataframe.
+        Generate scenarios for a specific type of modelling manager.
 
-        :param manager_type: The type of scenario manager, a ``str`` in "simulator", "trainer" or "calibrator".
-        :return: A list of scenarios.
+        This method looks for a standard scenario table (e.g.,
+        ``'SimulatorScenarios'``, ``'TrainerScenarios'``) in the registered
+        DataFrames and uses it to generate a list of ``Scenario`` objects.
+
+        :param manager_type: A string indicating the manager type, which can be
+            "Simulator", "Trainer", or "Calibrator".
+        :return: A list of ``Scenario`` objects.
         """
         if manager_type not in {"Simulator", "Trainer", "Calibrator"}:
             raise MelodieExceptions.Program.Variable.VariableNotInSet(

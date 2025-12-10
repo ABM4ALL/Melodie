@@ -63,40 +63,40 @@ Network: Code
 
 This section shows the key code implementation for the network model.
 
-Model
-~~~~~
+Model Structure
+~~~~~~~~~~~~~~~
 Defined in ``core/model.py``.
 
 .. literalinclude:: ../../../examples/covid_contagion_network/core/model.py
    :language: python
    :linenos:
 
-Environment
-~~~~~~~~~~~
+Environment Logic
+~~~~~~~~~~~~~~~~~
 Defined in ``core/environment.py``.
 
 .. literalinclude:: ../../../examples/covid_contagion_network/core/environment.py
    :language: python
    :linenos:
 
-Agent
-~~~~~
+Agent Behavior
+~~~~~~~~~~~~~~
 Defined in ``core/agent.py``.
 
 .. literalinclude:: ../../../examples/covid_contagion_network/core/agent.py
    :language: python
    :linenos:
 
-Scenario
-~~~~~~~~
+Scenario Definition
+~~~~~~~~~~~~~~~~~~~
 Defined in ``core/scenario.py``.
 
 .. literalinclude:: ../../../examples/covid_contagion_network/core/scenario.py
    :language: python
    :linenos:
 
-Data Collector
-~~~~~~~~~~~~~~
+Data Collection Setup
+~~~~~~~~~~~~~~~~~~~~~
 Defined in ``core/data_collector.py``.
 
 .. literalinclude:: ../../../examples/covid_contagion_network/core/data_collector.py

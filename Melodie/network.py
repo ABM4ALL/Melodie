@@ -288,7 +288,9 @@ class Network:
         position.
 
         For example:
+
         .. code-block:: python
+
             import networkx as nx
             n = Network()
             n.setup_layout_creator(lambda G: nx.spring_layout(G))

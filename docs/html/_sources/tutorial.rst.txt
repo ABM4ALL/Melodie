@@ -51,8 +51,8 @@ Notes:
 
 Think of the Model as the **orchestrator of components**: it decides *what components exist*, in *what order* they are called each period, and delegates the concrete simulation logic to them. This allows you to reuse Agent and Environment classes in different experimental setups by only changing the ``run`` logic in the Model.
 
-Scenario
---------
+Scenario Definition
+-------------------
 
 The Scenario defines parameters and loads static data tables. It acts as the single source of truth for all configuration and input data, allowing the other components to focus on behavior rather than I/O.
 
@@ -70,8 +70,8 @@ These special attributes are defined in the base ``Melodie.Scenario`` class. The
 
 The ``load_data`` method is a special hook that is automatically called by Melodie, so you should not change its name. It runs after parameters are loaded from the current ``SimulatorScenarios`` row. Inside ``load_data``, you can load any other required data tables and attach them as attributes to the scenario instance. All other components (Model, Agent, Environment) can then access this data uniformly via ``self.scenario.xxx``. For data-heavy models, you can also pre-process large tables in ``load_data`` (e.g., into dictionaries) to improve performance.
 
-Environment
------------
+Environment Logic
+-----------------
 
 The Environment coordinates interactions, the initial infection, and recovery. It acts as the "director" that arranges agent interactions and maintains macro-level summaries.
 
@@ -86,8 +86,8 @@ Notes:
 - ``agents_recover``: Delegates the recovery logic to each agent.
 - ``update_population_stats``: Aggregates micro-level agent states into macro-level population counts.
 
-Agent
------
+Agent Behavior
+--------------
 
 The Agent defines micro-level state and behavior. Agents in Melodie are deliberately lightweight: they only store their own state and expose methods for state transitions. The Environment decides *when* these methods are called.
 
@@ -102,8 +102,8 @@ Notes:
 
 This "smart environment, simple agents" pattern is a core design principle in Melodie. It keeps agent classes simple and testable, centralizes interaction logic in the Environment, and makes it easier to modify interaction rules (e.g., from random-mixing to a grid-based model) without changing agent code.
 
-Data Collector
---------------
+Data Collection Setup
+---------------------
 
 The Data Collector specifies which micro and macro results to save to ``data/output``.
 

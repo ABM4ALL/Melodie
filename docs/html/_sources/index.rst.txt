@@ -28,11 +28,11 @@ I take the German translation - \"Melodie\" - as the name of this package.
 
 **Suggested reading path**
 
-* First, you might want to start with the :ref:`Introduction` section to get a brief idea what agent-based modeling is about, then an overview of the modules in Melodie and how they fit together.
-* Second, you can continue with the :ref:`Tutorial` section, in which we explain how an example model (`CovidContagion <https://github.com/ABM4ALL/CovidContagion>`_) is developed with Melodie step by step. It is a minimum example but shows a clear structure and the most important modules in **Melodie**.
-* Third, for those who are familiar with `Mesa <https://github.com/projectmesa/mesa>`_ or `AgentPy <https://github.com/JoelForamitti/agentpy>`_, we also provide a comparison between **Melodie** and the two packages in the :ref:`Framework Comparison` section. The comparison is done based on the CovidContagion model in the tutorial.
-* Fourth, since the tutorial only provides a minimum model developed with Melodie, in the :ref:`Model Gallery`, we provide more example models to show how other modules can be used.
-* Finally, for more details, you may try reading the :ref:`Advanced Topics` and :ref:`API Reference` sections.
+* First, you might want to start with the :doc:`introduction` section to get a brief idea what agent-based modeling is about, then an overview of the modules in Melodie and how they fit together.
+* Second, you can continue with the :doc:`tutorial` section, in which we explain how an example model (`CovidContagion <https://github.com/ABM4ALL/CovidContagion>`_) is developed with Melodie step by step. It is a minimum example but shows a clear structure and the most important modules in **Melodie**.
+* Third, for those who are familiar with `Mesa <https://github.com/projectmesa/mesa>`_ or `AgentPy <https://github.com/JoelForamitti/agentpy>`_, we also provide a comparison between **Melodie** and the two packages in the :doc:`framework_comparison` section. The comparison is done based on the CovidContagion model in the tutorial.
+* Fourth, since the tutorial only provides a minimum model developed with Melodie, in the :doc:`gallery/_index`, we provide more example models to show how other modules can be used.
+* Finally, the :doc:`API Reference <api/index>` section provides detailed information on all public interfaces.
 
 Now, let's start the journey :)
 
@@ -52,17 +52,7 @@ Now, let's start the journey :)
    :maxdepth: 1
    :hidden:
 
-   api/simulator
-   api/model
-   api/scenario
-   api/environment
-   api/agent
-   api/agent_list
-   api/data_collector
-   api/grid
-   api/network
-   api/calibrator
-   api/trainer
+   api/index
 
 .. toctree::
    :caption: Development

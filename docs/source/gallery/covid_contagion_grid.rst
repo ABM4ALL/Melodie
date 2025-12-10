@@ -84,40 +84,40 @@ Grid: Code
 
 This section shows the key code implementation for the grid model.
 
-Model
-~~~~~
+Model Structure
+~~~~~~~~~~~~~~~
 Defined in ``core/model.py``.
 
 .. literalinclude:: ../../../examples/covid_contagion_grid/core/model.py
    :language: python
    :linenos:
 
-Environment
-~~~~~~~~~~~
+Environment Logic
+~~~~~~~~~~~~~~~~~
 Defined in ``core/environment.py``.
 
 .. literalinclude:: ../../../examples/covid_contagion_grid/core/environment.py
    :language: python
    :linenos:
 
-Agent
-~~~~~
+Agent Behavior
+~~~~~~~~~~~~~~
 Defined in ``core/agent.py``.
 
 .. literalinclude:: ../../../examples/covid_contagion_grid/core/agent.py
    :language: python
    :linenos:
 
-Data Collector
-~~~~~~~~~~~~~~
+Data Collection Setup
+~~~~~~~~~~~~~~~~~~~~~
 *Identical to the base model.* Defined in ``core/data_collector.py``.
 
 .. literalinclude:: ../../../examples/covid_contagion_grid/core/data_collector.py
    :language: python
    :linenos:
 
-Grid
-~~~~
+Grid and Spot Definition
+~~~~~~~~~~~~~~~~~~~~~~~~
 Defined in ``core/grid.py``.
 
 .. literalinclude:: ../../../examples/covid_contagion_grid/core/grid.py

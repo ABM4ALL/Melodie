@@ -59,40 +59,40 @@ Visualizer: Code
 
 This section shows the key code additions for the visualizer. Core logic files are the same as the ``covid_contagagion_grid`` example.
 
-Visualizer
-~~~~~~~~~~
+Visualizer Definition
+~~~~~~~~~~~~~~~~~~~~~
 This file is the core addition. It maps model data to visual elements. Defined in ``core/visualizer.py``.
 
 .. literalinclude:: ../../../examples/covid_contagion_grid_visual/core/visualizer.py
    :language: python
    :linenos:
 
-Model
-~~~~~
+Model Structure
+~~~~~~~~~~~~~~~
 *Same as the grid example.* Defined in ``core/model.py``.
 
 .. literalinclude:: ../../../examples/covid_contagion_grid_visual/core/model.py
    :language: python
    :linenos:
 
-Environment
-~~~~~~~~~~~
+Environment Logic
+~~~~~~~~~~~~~~~~~
 *Same as the grid example.* Defined in ``core/environment.py``.
 
 .. literalinclude:: ../../../examples/covid_contagion_grid_visual/core/environment.py
    :language: python
    :linenos:
 
-Agent
-~~~~~
+Agent Behavior
+~~~~~~~~~~~~~~
 *Same as the grid example.* Defined in ``core/agent.py``.
 
 .. literalinclude:: ../../../examples/covid_contagion_grid_visual/core/agent.py
    :language: python
    :linenos:
 
-Grid
-~~~~
+Grid Definition
+~~~~~~~~~~~~~~~
 *Same as the grid example.* Defined in ``core/grid.py``.
 
 .. literalinclude:: ../../../examples/covid_contagion_grid_visual/core/grid.py

@@ -46,7 +46,7 @@ The Trainer applies a separate genetic algorithm to *each agent individually*.
 - **Population**: For each agent, the GA maintains a "population" of these chromosomes (i.e., different sets of strategy weights).
 - **Fitness**: To evaluate a chromosome, the model is run with the agent using that set of strategy weights. The agent's final ``utility`` (accumulated payoff) serves as the fitness score.
 - **Evolution**: Through generations, the GA for each agent independently selects, breeds, and mutates its population of strategy weights, converging on the strategy that yields the highest personal payoff for that agent, given the behavior of all other agents.
-- **Parameter Encoding**: The Trainer uses the same binary encoding mechanism as the Calibrator to represent continuous strategy parameters for the GA. For a detailed explanation, please see :ref:`ga-encoding-explanation`.
+- **Parameter Encoding**: The Trainer uses the same binary encoding mechanism as the Calibrator to represent continuous strategy parameters for the GA. For a detailed explanation of this process, please see the *Parameter Encoding: From Float to Binary* section in the :doc:`covid_contagion_calibrator` documentation.
 
 **Parameter Configuration (`TrainerParamsScenarios.csv`)**
 
@@ -100,48 +100,48 @@ Trainer: Code
 
 This section shows the key code implementation for the trainer model.
 
-Model
-~~~~~
+Model Structure
+~~~~~~~~~~~~~~~
 Defined in ``core/model.py``.
 
 .. literalinclude:: ../../../examples/rock_paper_scissors_trainer/core/model.py
    :language: python
    :linenos:
 
-Environment
-~~~~~~~~~~~
+Environment Logic
+~~~~~~~~~~~~~~~~~
 Defined in ``core/environment.py``.
 
 .. literalinclude:: ../../../examples/rock_paper_scissors_trainer/core/environment.py
    :language: python
    :linenos:
 
-Agent
-~~~~~
+Agent Behavior
+~~~~~~~~~~~~~~
 Defined in ``core/agent.py``.
 
 .. literalinclude:: ../../../examples/rock_paper_scissors_trainer/core/agent.py
    :language: python
    :linenos:
 
-Data Collector
-~~~~~~~~~~~~~~
+Data Collection Setup
+~~~~~~~~~~~~~~~~~~~~~
 Defined in ``core/data_collector.py``.
 
 .. literalinclude:: ../../../examples/rock_paper_scissors_trainer/core/data_collector.py
    :language: python
    :linenos:
 
-Scenario
-~~~~~~~~
+Scenario Definition
+~~~~~~~~~~~~~~~~~~~
 Defined in ``core/scenario.py``.
 
 .. literalinclude:: ../../../examples/rock_paper_scissors_trainer/core/scenario.py
    :language: python
    :linenos:
 
-Trainer
-~~~~~~~
+Trainer Definition
+~~~~~~~~~~~~~~~~~~
 Defined in ``core/trainer.py``.
 
 .. literalinclude:: ../../../examples/rock_paper_scissors_trainer/core/trainer.py

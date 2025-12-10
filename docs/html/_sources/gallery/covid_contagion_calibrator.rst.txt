@@ -51,8 +51,6 @@ Melodie uses a genetic algorithm to search the parameter space efficiently.
 - **Fitness**: For each chromosome, the model is run, and the ``distance`` function is calculated. This distance is the fitness score (where lower is better).
 - **Evolution**: The GA then proceeds through "generations." In each generation, it selects the best-performing chromosomes (those that produced the smallest distance), "breeds" them (crossover), and introduces random changes (mutation) to create a new population of parameter sets to test. This process iteratively converges toward the parameter set that produces the best fit to the target.
 
-.. _ga-encoding-explanation:
-
 **Parameter Encoding: From Float to Binary**
 
 A key aspect of the genetic algorithm is how it represents continuous parameters like ``infection_prob`` (a float between 0.0 and 1.0). The GA does not work with the float values directly; instead, it converts them into a **binary string** of a fixed length. This process is called discretization.
@@ -98,48 +96,48 @@ Calibrator: Code
 
 This section shows the key code implementation for the calibrator model. Files that are identical to the base ``covid_contagion`` model are noted.
 
-Calibrator
-~~~~~~~~~~
+Calibrator Definition
+~~~~~~~~~~~~~~~~~~~~~
 Defined in ``core/calibrator.py``.
 
 .. literalinclude:: ../../../examples/covid_contagion_calibrator/core/calibrator.py
    :language: python
    :linenos:
 
-Scenario
-~~~~~~~~
+Scenario Definition
+~~~~~~~~~~~~~~~~~~~
 Defined in ``core/scenario.py``.
 
 .. literalinclude:: ../../../examples/covid_contagion_calibrator/core/scenario.py
    :language: python
    :linenos:
 
-Model
-~~~~~
+Model Structure
+~~~~~~~~~~~~~~~
 *Identical to the base model.* Defined in ``core/model.py``.
 
 .. literalinclude:: ../../../examples/covid_contagion_calibrator/core/model.py
    :language: python
    :linenos:
 
-Environment
-~~~~~~~~~~~
+Environment Logic
+~~~~~~~~~~~~~~~~~
 *Identical to the base model.* Defined in ``core/environment.py``.
 
 .. literalinclude:: ../../../examples/covid_contagion_calibrator/core/environment.py
    :language: python
    :linenos:
 
-Agent
-~~~~~
+Agent Behavior
+~~~~~~~~~~~~~~
 *Identical to the base model.* Defined in ``core/agent.py``.
 
 .. literalinclude:: ../../../examples/covid_contagion_calibrator/core/agent.py
    :language: python
    :linenos:
 
-Data Collector
-~~~~~~~~~~~~~~
+Data Collection Setup
+~~~~~~~~~~~~~~~~~~~~~
 *Identical to the base model.* Defined in ``core/data_collector.py``.
 
 .. literalinclude:: ../../../examples/covid_contagion_calibrator/core/data_collector.py
