@@ -22,8 +22,8 @@ As a general framework for developing agent-based models (ABMs),
 **Melodie** is designed in a modular structure and the modules are organized into four clusters:
 **Model**, **Scenario**, **Modeling Manager**, and **Infrastructure**.
 
-Model
-~~~~~
+The Model
+~~~~~~~~~
 
 The modules in the **Model Cluster** focus on describing the logics of the target system.
 Developed with **Melodie**, a ``model: Model`` object can contain following components:
@@ -35,16 +35,14 @@ Developed with **Melodie**, a ``model: Model`` object can contain following comp
 * ``grid: Grid`` - constructed with ``spot: Spot`` objects, describes the grid (*if exists*) that the agents walk on, stores grid variables, and provides the relevant functions.
 * ``network: Network`` - constructed with ``edge: Edge`` objects, describes the network (*if exists*) that links the agents, and provides the relevant functions.
 
-Scenario
-~~~~~~~~
+The Scenario
+~~~~~~~~~~~~
 
 The modules in the **Scenario Cluster** focus on formatting, importing,
-and delivering the input data to the ``model``. The modules include
+and delivering the input data to the ``model``. 
 
-* ``DataFrameInfo`` and ``MatrixInfo`` - provide standard format for input tables as parameters.
-* ``DataLoader`` - whose object loads all the input data into the ``model``.
-* ``Scenario`` - whose object contains all the input data that is needed to run the model, and can be accessed by the ``model``, the ``environment``, the ``data_collector``, and each ``agent``.
-
+* ``Scenario`` - is the central component for data handling. Its instance contains all input data needed to run the model. It can load data directly via its ``load_data`` method, making it accessible to all other model components.
+ 
 Modelling Manager
 ~~~~~~~~~~~~~~~~~
 
@@ -52,41 +50,47 @@ To combine everything and finally start running, the **Modelling Manager Cluster
 which can be constructed and run for different objectives:
 
 * ``Simulator`` - simulates the logics written in the ``model``.
-* ``Calibrator`` - calibrates the parameters of the ``scenario`` by minimizing the distance between model output and empirical evidence.
-* ``Trainer`` - trains the ``agents`` to update their behavioral parameters for higher payoff.
+* ``Calibrator`` - calibrates model parameters by minimizing the distance between simulation output and empirical data.
+* ``Trainer`` - trains agents to find behavioral parameters that optimize their payoffs.
+ 
+Taking the ``CovidContagion`` model from the tutorial as an example, the ``Simulator`` is initialized with a ``Config`` object and the classes for the ``Model`` and ``Scenario``.
+ 
+.. code-block:: python
+ 
+   import os
+   from Melodie import Config, Simulator
+   from core.model import CovidModel
+   from core.scenario import CovidScenario
 
-Taking the CovidContagion model in the tutorial as example, as shown below,
-the ``simulator`` is initialized with a ``config`` object (incl. project name and folder paths) and
-the class variables of the ``model``, the ``scenario``, and the ``data_loader``.
-
-.. code-block:: Python
-
-   from Melodie import Simulator
-   from config import config
-   from source.model import CovidModel
-   from source.scenario import CovidScenario
-   from source.data_loader import CovidDataLoader
-
-   simulator = Simulator(
-        config=config,
-        model_cls=CovidModel,
-        scenario_cls=CovidScenario,
-        data_loader_cls=CovidDataLoader
+   # In a real script, 'core' would be the folder containing your model files.
+   
+   config = Config(
+       project_name="CovidContagion",
+       project_root=os.path.dirname(__file__),
+       input_folder="data/input",
+       output_folder="data/output",
    )
-   simulator.run()
-
-At last, by calling the ``simulator.run`` function, the simulation starts.
+ 
+    simulator = Simulator(
+         config=config,
+         model_cls=CovidModel,
+         scenario_cls=CovidScenario
+    )
+    simulator.run()
+ 
+At last, by calling the ``simulator.run()`` method, the simulation starts.
 
 Infrastructure
 ~~~~~~~~~~~~~~
 
-The last **Infrastructure Cluster** includes the modules that provide support for the modules above.
+The **Infrastructure Cluster** provides a rich set of foundational modules that support the entire framework. Key components include:
 
-* ``Visualizer`` - provides the APIs to interact with ``MelodieStudio`` for visualization.
-* ``MelodieStudio`` - another separate package which goes in parallel with **Melodie**, which supports the visualization of simulation results in your browser.
-* ``Config`` - provides the channel to define project information, e.g., project name, folder paths.
-* ``DBConn`` - provides the functions to write to or read from the database.
-* ``MelodieException`` - provides the pre-defined exceptions in **Melodie** to support debugging.
+* ``Config``: A centralized object for managing all project settings, such as names and file paths.
+* ``DBConn``: Handles database connections, allowing models to read from and write to databases.
+* ``Parallel``: Provides the backend for parallel simulation runs.
+* ``Visualizer`` & ``MelodieStudio``: An API (``Visualizer``) to connect the simulation to ``MelodieStudio`` (a separate package) for real-time, browser-based visualization.
+* ``Table`` & ``JSONObject``: Utilities for robust data handling, serialization, and validation.
+* ``MelodieException``: A set of pre-defined custom exceptions to aid in debugging and error handling.
 
 
 

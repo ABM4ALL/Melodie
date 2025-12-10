@@ -1,0 +1,2 @@
+id,period_num,agent_num,payoff_win_min,payoff_win_max,payoff_lose_min,payoff_lose_max,payoff_tie
+0,10,100,0,10,-10,0,0

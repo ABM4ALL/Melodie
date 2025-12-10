@@ -40,13 +40,11 @@ DataCollectorType = TypeVar("DataCollectorType", bound=DataCollector)
 
 class ModelRunRoutine:
     """
-    A simple iterator for model run.
+    An iterator for the model's main run loop.
 
-
-    When calling ``Model.iterator()`` method, a ModelRunRoutine object will be created, yielding an ``int``  value
-    reprensenting the current number of step, ranging ``[0, max_step - 1]``.
-
-
+    When ``Model.iterator()`` is called, a ``ModelRunRoutine`` object is
+    created. It yields an integer representing the current step, ranging from
+    0 to ``max_step - 1``.
     """
 
     def __init__(self, max_step: int, model: "Model"):
@@ -66,21 +64,23 @@ class ModelRunRoutine:
 
     def __del__(self):
         """
-        Remove circular reference before deletion
-
-        :return:
+        Clean up resources to avoid circular references.
         """
         self.model = None
 
 
 class Model:
     """
-    The base class for Model.
+    The base class for a Melodie model.
 
-    There are three major methods, ``create()``, ``setup()`` and ``run()``. ``create()`` and then ``setup()`` are called when the model creates,
-    and ``run()`` is called for model running.
+    The model class is the central component that orchestrates the simulation.
+    It follows a structured lifecycle managed by three main methods: ``create()``,
+    ``setup()``, and ``run()``. The ``Simulator`` calls ``create()`` and then
+    ``setup()`` once at the beginning of a simulation run. The ``run()`` method
+    is then called to execute the main simulation loop.
 
-    To build up your own model, inherit this class and override ``create()``, ``setup()`` and ``run()``
+    To implement a custom model, users should inherit from this class and
+    override these three methods.
     """
 
     def __init__(
@@ -91,10 +91,11 @@ class Model:
         visualizer: "Visualizer" = None,
     ):
         """
-        :param config: Type ``Melodie.Config``
-        :param scenario: Type ``Melodie.Scenario`` containing model parameters.
-        :param run_id_in_scenario: Current ``run_id`` in the current scenario, an ``int`` from [0, ``number_of_run`` ), and 0 by default.
-        :param visualizer: ``Visualizer`` instance if needs visualization, ``None`` by default, indicating no need for visualization.
+        :param config: The framework configuration object.
+        :param scenario: The scenario object providing parameters for the model run.
+        :param run_id_in_scenario: The ID of the current simulation run for this
+            scenario. It is an integer in ``[0, scenario.run_num - 1]``.
+        :param visualizer: The visualizer instance, if visualization is enabled.
         """
 
         self.scenario = scenario
@@ -113,33 +114,37 @@ class Model:
 
     def __del__(self):
         """
-        Remove circular reference before deletion
-
-        :return:
+        Clean up resources to avoid circular references.
         """
         self.visualizer = None
 
     def create(self):
         """
-        An initialization method, which is called immediately right after the ``Model`` object is created.
+        Create and initialize model components.
 
-        :return: None
+        This method is the first part of the model's initialization process. It
+        should be used to create all the necessary components of the model, such
+        as agent lists, the environment, grid/network structures, and the data
+        collector.
         """
         pass
 
     def setup(self):
         """
-        General method for model setup, which is called after ``Model.create()``
+        Set up the initial state of the model.
 
-        :return: None
+        This method is the second part of the model's initialization process,
+        called after ``create()``. It should be used to establish the initial
+        state of the model's components, such as setting initial agent
+        properties or creating network connections.
         """
         pass
 
     def create_db_conn(self) -> "DBConn":
         """
-        Create a database connection with the project configuration.
+        Create a database connection using the project configuration.
 
-        :return: DBConn object
+        :return: A ``DBConn`` object for database interaction.
         """
         return create_db_conn(self.config)
 
@@ -148,19 +153,23 @@ class Model:
         agent_class: Type[AgentType],
     ) -> AgentList[AgentType]:
         """
-        Create an agent list object. A model could contain multiple ``AgentList``s.
+        Create an :class:`~Melodie.AgentList` object.
 
-        :param agent_class: The class of desired agent type.
-        :return: Agentlist object created
+        A model can contain multiple agent lists for different types of agents.
+
+        :param agent_class: The class of the agent to be contained in the list.
+        :return: An :class:`~Melodie.AgentList` object.
         """
         return AgentList(agent_class, model=self)
 
     def create_environment(self, env_class: Type[EnvironmentType]) -> EnvironmentType:
         """
-        Create the environment of model. Notice that a model has only one environment.
+        Create the environment for the model.
 
-        :param env_class:
-        :return: Environment object created
+        A model should have only one environment.
+
+        :param env_class: The class of the environment to be created.
+        :return: The created environment object.
         """
         env = env_class()
         env.model = self
@@ -174,11 +183,13 @@ class Model:
         spot_cls: Optional[Type[SpotType]] = None,
     ) -> GridType:
         """
-        Create a grid.
+        Create a grid for spatial simulations.
 
-        :param grid_cls: The class of grid, ``Melodie.Grid`` by default.
-        :param spot_cls: The class of spot, ``Melodie.Spot`` by default.
-        :return: Grid object.
+        :param grid_cls: The class of the grid. Defaults to
+            :class:`~MelodieInfra.core.grid.Grid`.
+        :param spot_cls: The class of the spots that make up the grid. Defaults
+            to :class:`~MelodieInfra.core.grid.Spot`.
+        :return: The created grid object.
         """
         grid_cls = grid_cls if grid_cls is not None else Grid
         spot_cls = spot_cls if spot_cls is not None else Spot
@@ -192,11 +203,13 @@ class Model:
         edge_cls: Type[Edge] = None,
     ):
         """
-        Create the network of model.
+        Create a network for agent interactions.
 
-        :param network_cls: The type of network object, ``Melodie.Network`` by default.
-        :param edge_cls: The type of edge object, ``Melodie.Edge`` by default.
-        :return: Network object created
+        :param network_cls: The class of the network. Defaults to
+            :class:`~Melodie.Network`.
+        :param edge_cls: The class for edges in the network. Defaults to
+            :class:`~Melodie.Edge`.
+        :return: The created network object.
         """
         if network_cls is None:
             network_cls = Network
@@ -206,10 +219,11 @@ class Model:
 
     def create_data_collector(self, data_collector_cls: Type[DataCollectorType]) -> DataCollectorType:
         """
-        Create the data collector of model.
+        Create the data collector for the model.
 
-        :param data_collector_cls: The datacollector class, must be a custom class inheriting ``Melodie.DataCollector``.
-        :return: Datacollector object created.
+        :param data_collector_cls: The DataCollector class, which must be a custom
+            class inheriting from :class:`~Melodie.DataCollector`.
+        :return: A ``DataCollector`` object.
         """
         data_collector = data_collector_cls()
         data_collector.model = self
@@ -228,11 +242,16 @@ class Model:
         """
         Create a container for agents.
 
-        :param agent_class:
-        :param initial_num: Initial number of agents
-        :param params_df:   Pandas DataFrame
-        :param container_type: a str, "list" or "dict"
-        :return: Agent container created
+        .. note::
+            This is a legacy method. The recommended way to create agent
+            containers is to use :meth:`create_agent_list`.
+
+        :param agent_class: The class of the agent.
+        :param initial_num: The initial number of agents to create.
+        :param params_df: A pandas DataFrame to initialize agent properties.
+        :param container_type: A string specifying the container type, either
+            "list" or "dict". "dict" is not yet implemented.
+        :return: The created agent container.
         """
         from Melodie import AgentList
 
@@ -259,11 +278,7 @@ class Model:
 
     def _check_agent_containers(self):
         """
-        Check the agent agent_lists in the model.
-        Check list is:
-        - Each agent, no matter which container it was in, should have a unique id.
-
-        :return: None
+        Check that all agents across all containers have unique IDs.
         """
         for prop_name, prop in self.__dict__.items():
             if isinstance(prop, BaseAgentContainer):
@@ -274,45 +289,45 @@ class Model:
 
     def run(self):
         """
-        Model run. Be sure to inherit this method on your model.
+        The main entry point for the simulation run.
 
-        :return: None
+        This method should be overridden in a subclass to define the model's
+        primary logic, which is executed after ``create()`` and ``setup()``.
         """
         pass
 
     def iterator(self, period_num: int):
         """
-        Return an iterator which iterates from `0` to `period_num-1`. In each iteration, the iterator updates the
-        visualizer if it exists.
+        Get an iterator for the simulation loop.
 
-        :param period_num: How many periods will this model run.
-        :return: None
+        The iterator yields the current period, from ``0`` to ``period_num - 1``,
+        and handles visualizer updates at each step.
+
+        :param period_num: The total number of periods for the simulation run.
+        :return: A ``ModelRunRoutine`` iterator object.
         """
         return ModelRunRoutine(period_num, self)
 
     def _visualizer_step(self, current_step: int):
         """
-        If visualizer is defined, make it step.
-
-        :param current_step:
-        :return:
+        If a visualizer is present, advance it by one step.
         """
         if (self.visualizer is not None) and (current_step > 0):
             self.visualizer.step(current_step)
 
     def init_visualize(self):
         """
-        Be sure to implement it if you would like to use visualizer.
+        A hook for initializing the visualizer.
 
-        :return:
+        This method should be overridden in the model subclass if custom
+        visualization setup is required.
         """
         # raise NotImplementedError
 
     def _setup(self):
         """
-        Wrapper of setup()
-
-        :return:
+        The main setup routine that calls ``create()``, ``setup()``, and the
+        ``_setup()`` methods of all initialized components in order.
         """
         self.create()
         self.setup()

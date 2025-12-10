@@ -25,7 +25,6 @@ class DataFrameGenerator:
         self.df_loader.register_dataframe(
             self.df_info.df_name, new_df, self.df_info.columns
         )
-        return
 
     def __init__(
         self,
@@ -34,9 +33,11 @@ class DataFrameGenerator:
         num_generator: Union[int, Callable[[Scenario], int]],
     ):
         """
-        :param df_loader:
-        :param df_info:
-        :param num_generator
+        :param df_loader: The ``DataLoader`` instance.
+        :param df_info: The ``DataFrameInfo`` describing the table to generate.
+        :param num_generator: An integer for a fixed number of rows per scenario,
+            or a callable that takes a ``Scenario`` object and returns the
+            number of rows to generate.
         """
 
         self.num_generator = self.convert_to_num_generator(num_generator)
@@ -52,18 +53,17 @@ class DataFrameGenerator:
 
     def increment(self):
         """
-        Get increment value.
+        Get a new, auto-incrementing integer value, starting from 0.
 
-        :return:
+        This is useful for generating unique IDs within a scenario's rows. The
+        counter is automatically reset for each new scenario.
         """
         self._self_incremental_value += 1
         return self._self_incremental_value
 
     def reset_increment(self):
         """
-        Reset increment
-
-        :return:
+        Reset the auto-incrementing counter to -1.
         """
         self._self_incremental_value = -1
 
@@ -82,25 +82,26 @@ class DataFrameGenerator:
         self, row_generator: Callable[[Union[Any, Scenario]], Union[Dict[str, Any]]]
     ):
         """
-        Set the geneator for each row. Every time the row_generator is called, this function
-        returns a dict standing for one row.
-        For example, if row_generator is called twice, and the return values are {"id": 0, "a": 1},
-            and {"id": 1, "a": 2}. The generated table will be:
-        | id | a |
-        |----|---|
-        | 0  | 1 |
-        | 1  | 2 |
+        Set the function that generates the data for a single row.
 
-        :param row_generator:
-        :return:
+        The provided callable will be executed for each row to be generated. It
+        should take the current ``Scenario`` object as its argument and return a
+        dictionary representing the data for one row.
+
+        Example:
+            If ``row_generator`` is called twice and returns ``{"id": 0, "a": 1}``
+            and ``{"id": 1, "a": 2}``, the generated table will contain these two
+            rows.
+
+        :param row_generator: A callable that takes a ``Scenario`` and returns a
+            dictionary.
         """
         args_check(row_generator, 1)
         self._row_generator = row_generator
 
     def gen_agent_param_table_each_scenario(self):
         """
-
-        :return:
+        (Internal) Generate the full table by iterating through all scenarios.
         """
         scenarios = self.df_loader.manager.generate_scenarios()
         data_list = []
@@ -116,9 +117,7 @@ class DataFrameGenerator:
 
     def gen_agent_params(self, scenario: Scenario):
         """
-
-        :param scenario:
-        :return:
+        (Internal) Generate the rows for a single scenario.
         """
         data_list = []
         for agent_id in range(0, self.num_generator(scenario)):

@@ -1,0 +1,14 @@
+{
+    "visualizer-grid": {
+        "left": 30,
+        "top": 0,
+        "height": 600,
+        "width": 600
+    },
+    "chart-health_state_trend": {
+        "left": 650,
+        "top": 0,
+        "height": 600,
+        "width": 500
+    }
+}

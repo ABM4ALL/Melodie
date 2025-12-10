@@ -19,14 +19,17 @@ logger = logging.getLogger(__name__)
 
 class Scenario(Element):
     """
-    Scenario contains a set of parameters used in simulation model.
-    It is created before the initialization of ``Model``.
+    The Scenario class defines a particular parameterization of the model.
 
+    A Scenario object holds all parameters and data required for a simulation
+    run. It is created by the ``Simulator`` or ``Calibrator`` for each scenario
+    defined in the input data tables.
     """
 
     def __init__(self, id_scenario: Optional[Union[int, str]] = 0):
         """
-        :param id_scenario: the id of scenario. if None, this will be self-increment from 0 to scenarios_number-1
+        :param id_scenario: The unique identifier for this scenario. If not
+            provided, it will be assigned automatically by the ``Simulator``.
         """
         super().__init__()
         if (id_scenario is not None) and (not isinstance(id_scenario, (int, str))):
@@ -40,9 +43,9 @@ class Scenario(Element):
 
     def copy(self) -> "Scenario":
         """
-        Copy current scenario to a new scenario.
+        Create a deep copy of the current scenario object.
 
-        :return: New scenario object.
+        :return: A new ``Scenario`` object.
         """
         new_scenario = self.__class__()
         for property_name, property in self.__dict__.items():
@@ -54,13 +57,21 @@ class Scenario(Element):
 
     def load_data(self):
         """
-        This method loads should load data into the scenario as its properties.
+        A hook for loading static data tables.
+
+        This method is called automatically by the framework after scenario
+        parameters have been loaded. It should be used to load any static data
+        files (e.g., CSVs, matrices) that the model requires.
         """
         pass
 
     def setup_data(self):
         """
-        This method creates the data (e.g., agent_params) based on its properties or the loaded data.
+        A hook for pre-computing data based on scenario parameters.
+
+        This method is called automatically after ``load_data()``. It is useful
+        for generating derived data, such as agent parameter DataFrames, before
+        the model components are created.
         """
         pass
 
@@ -74,21 +85,29 @@ class Scenario(Element):
 
     def initialize(self):
         """
-        Have same effect as calling `_setup`, and must be called when generating scenarios.
+        A wrapper for the internal ``_setup`` method.
+
+        This should be called if a scenario object is created and set up
+        manually, outside the standard ``Simulator`` execution loop.
         """
         self._setup()
 
     def setup(self):
         """
-        Setup method, be sure to inherit it on the custom scenario class.
+        A hook for custom scenario initialization.
+
+        This method is called at the beginning of the scenario setup process,
+        before parameters are loaded from the scenario table. It can be used
+        to define scenario-level properties.
         """
         pass
 
     def load_dataframe(self, df_info: Union[str, "DataFrameInfo"]):
         """
-        Load a data frame from table file.
+        Load a data frame from a table file in the input directory.
 
-        :df_info: The file name of that containing the data frame, or pass a `DataFrameInfo`
+        :param df_info: The name of the CSV or Excel file (e.g.,
+            ``'my_data.csv'``).
         """
 
         assert self.manager is not None, MelodieExceptions.MLD_INTL_EXC
@@ -97,9 +116,10 @@ class Scenario(Element):
 
     def load_matrix(self, mat_info: Union[str, "MatrixInfo"]) -> np.ndarray:
         """
-        Load a matrix from table file.
+        Load a matrix from a table file in the input directory.
 
-        :mat_info: The file name of that containing the matrix, or pass a `DataFrameInfo`
+        :param mat_info: The name of the CSV or Excel file (e.g.,
+            ``'my_matrix.csv'``).
         """
 
         assert self.manager is not None, MelodieExceptions.MLD_INTL_EXC
@@ -108,9 +128,9 @@ class Scenario(Element):
 
     def to_dict(self):
         """
-        Convert this scenario object to a dict.
+        Convert this scenario object to a dictionary.
 
-        :return: A ``dict``, ``property_name->property_value``
+        :return: A ``dict`` mapping property names to their values.
         """
         d = {}
         for k in self.__dict__.keys():
@@ -120,9 +140,12 @@ class Scenario(Element):
 
     def to_json(self):
         """
-        Convert this scenario to a dict without concerning non-serializable properties.
+        Convert the scenario to a JSON-serializable dictionary.
 
-        :return: a ``dict``, ``property_name->property_value``, without non-serializable properties
+        This method excludes properties that cannot be serialized, such as the
+        'manager' object.
+
+        :return: A ``dict`` containing serializable properties.
         """
         d = {}
         for k in self.__dict__.keys():
@@ -135,20 +158,20 @@ class Scenario(Element):
 
     def get_dataframe(self, df_info: "DataFrameInfo") -> "pd.DataFrame":
         """
-        Get dataframe from scenario
+        (Internal) Get a dataframe from the scenario.
 
-        :param df_info:
-        :return: pandas dataframe.
+        :param df_info: A ``DataFrameInfo`` object.
+        :return: A pandas DataFrame.
         """
         assert self.manager is not None
         return self.manager.get_dataframe(df_info.df_name)
 
     def get_matrix(self, matrix_info: "MatrixInfo") -> "np.ndarray":
         """
-        Get matrix from scenario.
+        (Internal) Get a matrix from the scenario.
 
-        :param matrix_info:
-        :return: 2D numpy array
+        :param matrix_info: A ``MatrixInfo`` object.
+        :return: A 2D numpy array.
         """
         assert self.manager is not None
         return self.manager.get_matrix(matrix_info.mat_name)

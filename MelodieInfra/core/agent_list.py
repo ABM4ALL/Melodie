@@ -100,11 +100,14 @@ class AgentList(BaseAgentContainer, Generic[AgentGeneric]):
 
     def setup_agents(self, agents_num: int, params_df: TABLE_TYPE = None):
         """
-        Setup agents with specific number, and initialize their property by a dataframe if a dataframe is passed.
+        Setup agents with a specific number, and initialize their properties from a
+        dataframe if it is provided.
 
-        :param agents_num: A integer.
-        :param params_df : A pandas dataframe whose specification is the same as the argument of ``set_properties``
-        :return:
+        :param agents_num: The number of agents to create.
+        :param params_df: A pandas DataFrame containing agent properties. Its
+            structure should be consistent with the one used in the
+            ``set_properties`` method.
+        :return: None
         """
         self.initial_agent_num = agents_num
         self.agents = self.init_agents()

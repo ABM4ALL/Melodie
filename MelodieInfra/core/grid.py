@@ -121,15 +121,17 @@ class Grid:
         self, width: int, height: int, wrap=True, caching=True, multi=True
     ):
         """
-        Setup the parameters of grid.
+        Setup the parameters of the grid.
 
-        :param width: int
-        :param height: int
-        :param wrap: bool, True by default.
-        If True, GridAgent will re-enter the grid on the other side if it moves out of the grid on one side.
-        :param caching: bool, True by default. If true, the grid caches the neighbor of each spot.
-        :param multi: bool, True by default. If true, more than one agent could stand on one spot. If false, error will
-        be raised when attempting to place multiple agents on one spot.
+        :param width: An integer for the grid width.
+        :param height: An integer for the grid height.
+        :param wrap: A boolean (default True). If True, an agent moving out of
+            the grid on one side will re-enter from the opposite side.
+        :param caching: A boolean (default True). If True, the grid caches the
+            neighbors of each spot to improve performance.
+        :param multi: A boolean (default True). If True, more than one agent can
+            stand on the same spot. If False, an error will be raised when
+            attempting to place multiple agents on one spot.
         :return: None
         """
         self._width = width

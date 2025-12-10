@@ -1,8 +1,8 @@
 
 Scenario
-===============
+========
 
-.. automodule:: Melodie.scenario_manager
-               :members:
-               :undoc-members:
-               :show-inheritance:
+.. autoclass:: Melodie.Scenario
+   :members:
+   :undoc-members:
+   :show-inheritance:

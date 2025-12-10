@@ -66,24 +66,26 @@ vectorizers = {}
 
 class DataCollector:
     """
-    Data Collector collects data in the model.
+    The DataCollector is responsible for recording data from the model's simulation.
 
-    At the beginning of simulation, the ``DataCollector`` creates as the model creates;
+    The DataCollector is initialized by the Model at the beginning of a
+    simulation run. It allows users to specify which properties of agents and
+    the environment should be collected at each time step.
 
-    User could customize which property of agents or environment should be collected.
-
-    Before the model running finished, the DataCollector dumps data to dataframe, and save to
-    database.
+    At the end of the simulation, the ``save()`` method is called to write the
+    recorded data to the specified output format (e.g., CSV files or a SQLite
+    database).
     """
 
     _CORE_PROPERTIES_ = ["id_scenario", "id_run", "period"]
 
     def __init__(self, target="sqlite"):
         """
-        :param target: A string indicating database type, currently just support "sqlite".
+        :param target: A string indicating the output format. Supported values
+            are "sqlite" (default) and "csv".
         """
-        if target not in {"sqlite", None}:
-            MelodieExceptions.Data.InvalidDatabaseType(target, {"sqlite"})
+        if target not in {"sqlite", "csv", None}:
+            MelodieExceptions.Data.InvalidDatabaseType(target, {"sqlite", "csv"})
 
         self.target = target
         self.config: Optional[Config] = None
@@ -104,9 +106,10 @@ class DataCollector:
 
     def setup(self):
         """
-        Setup method, be sure to inherit it.
+        A hook for setting up the DataCollector.
 
-        :return:
+        This method should be overridden in a subclass to specify which data to
+        collect using ``add_agent_property()`` and ``add_environment_property()``.
         """
         pass
 
@@ -126,14 +129,16 @@ class DataCollector:
         self, container_name: str, property_name: str, as_type: Type = None
     ):
         """
-        This method adds a property of agents in an agent_container to the data collector.
+        Register an agent property to be collected from an agent container.
 
-        The type which the data will be represented in the database can also be determined by ``as_type``.
+        The data type for the corresponding database column can be explicitly
+        defined using ``as_type``.
 
-        :param container_name: Container name, also a property name on model.
-        :param property_name: Property name on the agent.
-        :param as_type: Data type.
-        :return:
+        :param container_name: The name of the agent container attribute on the
+            Model object (e.g., 'agents').
+        :param property_name: The name of the property to be collected from each
+            agent in the container.
+        :param as_type: The desired data type for the database column.
         """
         if not hasattr(self.model, container_name):
             raise AttributeError(f"Model has no agent container '{container_name}'")
@@ -145,11 +150,10 @@ class DataCollector:
 
     def add_environment_property(self, property_name: str, as_type: Type = None):
         """
-        This method tells the data collector which property of environment should be collected.
+        Register an environment property to be collected.
 
-        :param property_name: Environment properties
-        :param as_type: Data type.
-        :return:
+        :param property_name: The name of the property on the Environment object.
+        :param as_type: The desired data type for the database column.
         """
         self._environment_properties_to_collect.append(
             PropertyToCollect(property_name, as_type)
@@ -162,27 +166,29 @@ class DataCollector:
         columns: List[str],
     ):
         """
-        Add a custom data collector to generate a standalone table.
+        Add a custom data collector to generate a standalone data table.
 
-        :param table_name: The name of table storing the data collected.
-        :param row_collector: A callable function, returning a `dict` computed from `Model` forming one
-            row in the table.
+        :param table_name: The name of the table for storing the collected data.
+        :param row_collector: A callable that takes the ``Model`` instance as an
+            argument and returns either a dictionary for a single row or a list
+            of dictionaries for multiple rows.
+        :param columns: A list of column names for the custom table.
         """
         self._custom_collectors[table_name] = (cast(Any, row_collector), columns)
 
     def env_property_names(self) -> List[str]:
         """
-        Get the environment property names to collect
+        Get the names of all registered environment properties.
 
-        :return: List of environment property names
+        :return: A list of property names.
         """
         return [prop.property_name for prop in self._environment_properties_to_collect]
 
     def agent_property_names(self) -> Dict[str, List[str]]:
         """
-        Get the agent property names to collect
+        Get the names of all registered agent properties, grouped by container.
 
-        :return: A ``dict``,  ``<agent_container_name --> agent list properties to gather>[]``
+        :return: A dictionary mapping container names to lists of property names.
         """
         return {
             container_name: [prop.property_name for prop in props]
@@ -191,9 +197,10 @@ class DataCollector:
 
     def agent_containers(self) -> List[Tuple[str, "BaseAgentContainer"]]:
         """
-        Get all agent containers with attributes to collect in the model.
+        Get all agent containers that have properties registered for collection.
 
-        :return: A list of tuples, ``<agent_container_name, agent_container_object>[]``
+        :return: A list of tuples, where each tuple contains the container name
+            and the container object itself.
         """
         containers = []
         for container_name in self._agent_properties_to_collect.keys():
@@ -202,10 +209,9 @@ class DataCollector:
 
     def collect_agent_properties(self, period: int):
         """
-        Collect agent properties.
+        (Internal) Collect properties for all registered agent containers.
 
-        :param period: Current simulation step
-        :return: None
+        :param period: The current simulation period.
         """
         agent_containers = self.agent_containers()
         agent_property_names = self.agent_property_names()
@@ -216,10 +222,9 @@ class DataCollector:
 
     def collect_custom_properties(self, period: int):
         """
-        Collect custom properties by calling custom callbacks.
+        (Internal) Collect data using all registered custom collectors.
 
-        :param period: Current simulation step
-        :return: None
+        :param period: The current simulation period.
         """
         for collector_name in self._custom_collectors.keys():
             self.collect_single_custom_property(collector_name, period)
@@ -251,10 +256,7 @@ class DataCollector:
         period: int,
     ):
         """
-        Directly append properties to the properties recorder dict.
-        If used dynamic-linked-lib as speed up extensions, directly calling this method will be necessary.
-
-        :return: None
+        (Internal) Record properties for a list of agents for the current period.
         """
         assert self.model is not None
         id_run, id_scenario = self.model.run_id_in_scenario, self.model.scenario.id
@@ -309,12 +311,14 @@ class DataCollector:
     @property
     def status(self) -> bool:
         """
-        If data collector is enabled.
+        Check if the data collector is enabled.
 
-        ``DataCollector`` is only enabled in the ``Simulator``, because ``Trainer`` and ``Calibrator`` are only concerned over
-        the properties at the end of the model-running, so recording middle status in ``Trainer`` or ``Calibrator`` is a waste of time and space.
+        The ``DataCollector`` is only enabled when running under the ``Simulator``.
+        The ``Trainer`` and ``Calibrator`` are typically concerned only with the
+        final state of a simulation, so recording time-series data is disabled
+        during their execution to improve performance.
 
-        :return: bool.
+        :return: ``True`` if the collector is enabled, otherwise ``False``.
         """
         from .simulator import Simulator
 
@@ -323,10 +327,9 @@ class DataCollector:
 
     def collect(self, period: int) -> None:
         """
-        The main function to collect data.
+        The main data collection method, called by the ``Simulator`` at each step.
 
-        :param period: Current simulation step.
-        :return: None
+        :param period: The current simulation period.
         """
         if not self.status:
             return
@@ -370,9 +373,7 @@ class DataCollector:
         self, engine, table_name: str, data: Union[Table, GeneralTable]
     ):
         """
-        Write a list of dict into database.
-
-        :return:
+        (Internal) Write a data table to the specified output (CSV or database).
         """
         if self.model.config.data_output_type == "csv":
             base_path = self.model.config.output_tables_path()
@@ -385,9 +386,7 @@ class DataCollector:
 
     def save(self):
         """
-        Save the collected data into database.
-
-        :return: None
+        Save all collected data to the specified output (CSV files or database).
         """
         if not self.status:
             return
@@ -437,6 +436,15 @@ class DataCollector:
         connection.close()
 
     def save_dataframe(self, df: pd.DataFrame, df_name: str, if_exists: str = "append"):
+        """
+        A utility method to save a pandas DataFrame to a CSV file in the
+        output directory.
+
+        :param df: The pandas DataFrame to save.
+        :param df_name: The desired name for the output file (without extension).
+        :param if_exists: What to do if the file already exists. Can be
+            'append', 'replace', or 'fail'.
+        """
         path = os.path.join(self.config.output_folder, f"{df_name}.csv")
         if os.path.isfile(path):
             if if_exists == "append":

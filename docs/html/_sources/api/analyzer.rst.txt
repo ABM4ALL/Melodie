@@ -1,6 +1,0 @@
-
-Analyzer
-=============
-
-.. include plotter
-

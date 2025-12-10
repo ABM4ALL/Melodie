@@ -34,7 +34,12 @@ logger = logging.getLogger(__name__)
 
 class BaseModellingManager(abc.ABC):
     """
-    Base class of ``Simulator``/``Trainer``/``Calibrator``.
+    An abstract base class for managers that orchestrate model execution, such
+    as :class:`~Melodie.Simulator`, :class:`~Melodie.Trainer`, and
+    :class:`~Melodie.Calibrator`.
+
+    This class provides the core functionalities for initializing scenarios and
+    loading data.
     """
 
     def __init__(
@@ -57,10 +62,11 @@ class BaseModellingManager(abc.ABC):
 
     def get_dataframe(self, table_name) -> "pd.DataFrame":
         """
-        Get a static ``DataFrame`` from the data loader.
+        Get a static DataFrame from the data loader.
 
-        :param table_name: Name of dataframe.
-        :return:
+        :param table_name: The name of the table as registered in the
+            :class:`~Melodie.DataLoader`.
+        :return: A pandas DataFrame.
         """
         if self.data_loader is None:
             raise MelodieExceptions.Data.NoDataframeLoaderDefined()
@@ -73,10 +79,11 @@ class BaseModellingManager(abc.ABC):
 
     def get_matrix(self, matrix_name) -> "np.ndarray":
         """
-        Get a matrix from data loader.
+        Get a static matrix from the data loader.
 
-        :param matrix_name: Name of matrix.
-        :return:
+        :param matrix_name: The name of the matrix as registered in the
+            :class:`~Melodie.DataLoader`.
+        :return: A numpy ndarray.
         """
         if self.data_loader is None:
             raise MelodieExceptions.Data.NoDataframeLoaderDefined()
@@ -89,7 +96,11 @@ class BaseModellingManager(abc.ABC):
 
     def subworker_prerun(self):
         """
-        If run as sub-worker, run this function to avoid deleting the existing tables in database.
+        A pre-run routine for parallel worker processes.
+
+        This method initializes the data loader and generates scenarios for a
+        worker process without clearing existing output data, which should only
+        be done by the main process.
         """
         if self.df_loader_cls is not None:
             self.data_loader: DataLoader = self.df_loader_cls(
@@ -100,7 +111,7 @@ class BaseModellingManager(abc.ABC):
 
     def clear_output_tables(self):
         """
-        Clear all output tables
+        Clear all generated files in the output directory.
         """
         output_path = self.config.output_tables_path()
         if os.path.exists(output_path):
@@ -109,11 +120,14 @@ class BaseModellingManager(abc.ABC):
 
     def pre_run(self, clear_output_data=True):
         """
-        `pre_run` means this function should be executed before ``run``, to initialize the scenario
-        parameters.
+        The main pre-run routine for the manager.
 
-        :param clear_db: If ``True``, this method will clear database.
-        :return:
+        This method should be called before the main execution loop. It
+        initializes the database and output directories, sets up the data
+        loader, and generates the scenarios to be run.
+
+        :param clear_output_data: If ``True``, all existing output tables in the
+            database and CSV files in the output directory will be deleted.
         """
         assert self.config is not None, MelodieExceptions.MLD_INTL_EXC
         if clear_output_data:
@@ -129,13 +143,30 @@ class BaseModellingManager(abc.ABC):
 
         self.scenarios = self.generate_scenarios()
 
+        standard_table_map = {
+            "SimulatorScenarios": "simulator_scenarios",
+            "TrainerScenarios": "trainer_scenarios",
+            "CalibratorScenarios": "calibrator_scenarios",
+            "CalibratorParamsScenarios": "calibrator_params_scenarios",
+            "TrainerParamsScenarios": "trainer_params_scenarios",
+        }
+        if self.data_loader is not None:
+            for table_name, attr_name in standard_table_map.items():
+                if table_name in self.data_loader.registered_dataframes:
+                    df = self.data_loader.registered_dataframes[table_name]
+                    for scenario in self.scenarios:
+                        setattr(scenario, attr_name, df)
+
         if self.scenarios is None or len(self.scenarios) == 0:
             raise MelodieExceptions.Scenario.NoValidScenarioGenerated(self.scenarios)
 
     @abc.abstractmethod
     def generate_scenarios(self) -> List[Scenario]:
         """
-        Abstract method for generation of scenarios.
+        An abstract method for generating a list of scenarios.
+
+        This method must be implemented by subclasses to define how scenarios
+        are created, typically by loading them from a scenario table.
         """
         pass
 
@@ -143,7 +174,10 @@ class BaseModellingManager(abc.ABC):
         self, kind: Literal["csv", "sql"], table_name: str, data: pd.DataFrame
     ):
         """
-        Write a pandas dataframe to a table in output directory or database
+        (Internal) Write a pandas DataFrame to a specified table.
+
+        Depending on the ``kind``, the table will be written to a CSV file in
+        the output directory or to a table in the database.
         """
         if kind == "sql":
             create_db_conn(self.config).write_dataframe(
@@ -156,17 +190,16 @@ class BaseModellingManager(abc.ABC):
                 self.config.output_tables_path(), table_name + ".csv"
             )
             if os.path.exists(csv_file):
-                data.to_csv(csv_file, mode="a", header=False)
+                data.to_csv(csv_file, mode="a", header=False, index=False)
             else:
-                data.to_csv(csv_file)
+                data.to_csv(csv_file, index=False)
         else:
             raise NotImplementedError
 
 
 class SimulatorMeta:
     """
-    Record the current scenario, params scenario of simulator
-
+    (Internal) A metadata class for the simulator.
     """
 
     def __init__(self):
@@ -193,8 +226,11 @@ class SimulatorMeta:
 
 class Simulator(BaseModellingManager):
     """
-    Simulator simulates the logics written in the model.
+    The ``Simulator`` is the primary manager for running model simulations.
 
+    It orchestrates the entire simulation process, including initializing the
+    model and scenarios, running the simulation for each scenario, and handling
+    data collection and visualization.
     """
 
     def __init__(
@@ -206,11 +242,13 @@ class Simulator(BaseModellingManager):
         visualizer_cls: "type[BaseVisualizer]" = None,
     ):
         """
-        :param config: Config instance for current project.
-        :param scenario_cls: Scenario class for current project.
-        :param model_cls: Model class in current project.
-        :param data_loader_cls: DataLoader class in current project.
-        :param visualizer_cls: Visualizer class in current project.
+        :param config: The project :class:`~Melodie.Config` object.
+        :param scenario_cls: The :class:`~Melodie.Scenario` subclass for the model.
+        :param model_cls: The :class:`~Melodie.Model` subclass for the model.
+        :param data_loader_cls: The :class:`~Melodie.DataLoader` subclass for the
+            model.
+        :param visualizer_cls: The :class:`~Melodie.BaseVisualizer` subclass for
+            the model, if visualization is needed.
         """
         super(Simulator, self).__init__(
             config=config,
@@ -231,9 +269,12 @@ class Simulator(BaseModellingManager):
 
     def generate_scenarios(self) -> List["Scenario"]:
         """
-        Generate scenarios from the dataframe_loader
+        Generate scenarios using the data loader.
 
-        :return: A list of generated scenarios.
+        This method calls the data loader to generate a list of scenario objects
+        based on the ``SimulatorScenarios`` table.
+
+        :return: A list of ``Scenario`` objects.
         """
         if self.data_loader is None:
             raise MelodieExceptions.Data.NoDataframeLoaderDefined()
@@ -244,7 +285,7 @@ class Simulator(BaseModellingManager):
         self, config, scenario, id_run, model_class: Type["Model"], visualizer=None
     ):
         """
-        Run a model once.
+        Run a single simulation for one scenario and one run ID.
         """
         logger.info(
             f"Simulation started - id_scenario = {scenario.id}, id_run = {id_run}"
@@ -292,17 +333,16 @@ class Simulator(BaseModellingManager):
 
     def setup(self):
         """
-        Setup method of simulator, usually need not to inherit.
-
-        :return: None
+        A hook for custom simulator setup. This method is called before ``pre_run``.
         """
         pass
 
     def run(self):
         """
-        Main function for running model.
+        The main entry point for running batch simulations without visualization.
 
-        :return: None
+        This method iterates through all defined scenarios and their specified
+        number of runs, executing the model for each.
         """
         t0 = time.time()
         BaseVisualizer.enabled = False
@@ -330,9 +370,11 @@ class Simulator(BaseModellingManager):
 
     def run_visual(self):
         """
-        Main function for running model with visualization.
+        The main entry point for running a simulation with visualization.
 
-        :return: None
+        This method starts the visualizer and runs the model for the first
+        scenario in a loop, allowing for interactive parameter changes and
+        resets from the web interface.
         """
         t0 = time.time()
         self._init_visualizer()
@@ -381,42 +423,19 @@ class Simulator(BaseModellingManager):
 
     def run_parallel(self, cores: int = 1):
         """
-        Parallelized running through a series of scenarios.
+        Run simulations in parallel using multiple processes.
 
-        Melodie does not start subprocesses directly. For the first shot, which means running one of the runs out of
-        one scenario, it will be run by the main-thread to verify the model and initialize the database.
-        After the first shot, subprocesses will be created as many as the value of parameter `cores`.
+        This method uses Python's ``multiprocessing.Pool`` to distribute the
+        simulation runs across a specified number of CPU cores.
 
-        :param cores: How many subprocesses will be created in the parallel simulation.
+        To avoid race conditions during database table creation, the first
+        simulation run is executed in the main process. This ensures that all
+        necessary tables are created before the parallel workers start writing
+        to them.
 
-          - It is suggested that this parameter should be NO MORE THAN the **physical cores** of your computer.
-          - Beside 'cores', You may found that your cpu has one more metric: threads, which means your CPU supports
-            hyper-threading. If so, use 'physical cores', not 'threads' as the upper limit.
-          - For example, an Intel® I5-8250U has 4 physical cores and 8 threads. If you use a computer equipped with
-            this CPU, this parameter cannot be larger than 4.
-          - In short, hyper-threading only improves performance in io intensive programs. As Melodie was computation
-            intensive, if there are more subprocess than physical cores, subprocesses will fight for CPU, costing
-            a lot of extra time.
-
-        Sqlite itself was thread-safe for writing. However, pandas tries to create the table if table was not exist, which
-        might trigger conflict condition.
-
-        For example:
-            p1, p2 stands for process 1 and 2 request writing to a table `test`;
-            db stands for database;
-            1. p1 --> db <found no table named 'test'>
-            2. p2 --> db <found no table named 'test'>
-            3. p1 --> db <request the db to create a table 'test'>
-            4. p2 --> db <request the db to create a table 'test'>
-            5. db --> p1 <created table named 'test'>
-            6. db --> p2 <table 'test' already exists!> ERROR!
-
-        For multiple-cores, if running model this might happen very frequently. To avoid this, Melodie makes the first
-        shot, which means running one of the runs out of one scenario, by main-process. Only when first shot completes
-        will the subprocesses be launched.
-
-
-        :return: None
+        :param cores: The number of CPU cores to use for parallel execution. It is
+            recommended to set this to the number of **physical cores** on your
+            machine for optimal performance.
         """
         from MelodieInfra.parallel.parallel_manager import ParallelManager
 

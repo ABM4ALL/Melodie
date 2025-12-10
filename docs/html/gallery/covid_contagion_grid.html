@@ -1,0 +1,813 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CovidContagionGrid &mdash; Melodie 1.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=292eb321"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="CovidContagionGridVisual" href="covid_contagion_grid_visual.html" />
+    <link rel="prev" title="Model Gallery" href="_index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Melodie
+              <img src="../_static/logo.jpg" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#user-installation">User Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#developer-installation">Developer Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#dependency-note">Dependency Note</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction.html">Introduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../introduction.html#agent-based-model-abm">Agent-based Model (ABM)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../introduction.html#melodie-framework">Melodie Framework</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../introduction.html#the-model">The Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../introduction.html#the-scenario">The Scenario</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../introduction.html#modelling-manager">Modelling Manager</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../introduction.html#infrastructure">Infrastructure</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">Tutorial</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial.html#model">Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial.html#scenario-definition">Scenario Definition</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial.html#environment-logic">Environment Logic</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial.html#agent-behavior">Agent Behavior</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial.html#data-collection-setup">Data Collection Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial.html#run-the-model">Run the model</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../framework_comparison.html">Framework Comparison</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../framework_comparison.html#project-structure">Project Structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../framework_comparison.html#high-level-comparison">High-Level Comparison</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../framework_comparison.html#a-note-on-this-comparison">A Note on This Comparison</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../framework_comparison.html#advanced-features-in-melodie">Advanced Features in Melodie</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="_index.html">Model Gallery</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">CovidContagionGrid</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#grid-project-structure">Grid: Project Structure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#grid-key-changes">Grid: Key Changes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#grid-input-data">Grid: Input Data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#grid-running-the-model">Grid: Running the Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#grid-code">Grid: Code</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#model-structure">Model Structure</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#environment-logic">Environment Logic</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#agent-behavior">Agent Behavior</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#data-collection-setup">Data Collection Setup</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#grid-and-spot-definition">Grid and Spot Definition</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="covid_contagion_grid_visual.html">CovidContagionGridVisual</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="covid_contagion_grid_visual.html#visualizer-project-structure">Visualizer: Project Structure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="covid_contagion_grid_visual.html#visualizer-key-changes">Visualizer: Key Changes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="covid_contagion_grid_visual.html#visualizer-running-the-model">Visualizer: Running the Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="covid_contagion_grid_visual.html#visualizer-code">Visualizer: Code</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="covid_contagion_grid_visual.html#visualizer-definition">Visualizer Definition</a></li>
+<li class="toctree-l4"><a class="reference internal" href="covid_contagion_grid_visual.html#model-structure">Model Structure</a></li>
+<li class="toctree-l4"><a class="reference internal" href="covid_contagion_grid_visual.html#environment-logic">Environment Logic</a></li>
+<li class="toctree-l4"><a class="reference internal" href="covid_contagion_grid_visual.html#agent-behavior">Agent Behavior</a></li>
+<li class="toctree-l4"><a class="reference internal" href="covid_contagion_grid_visual.html#grid-definition">Grid Definition</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="covid_contagion_network.html">CovidContagionNetwork</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="covid_contagion_network.html#network-project-structure">Network: Project Structure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="covid_contagion_network.html#network-key-changes">Network: Key Changes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="covid_contagion_network.html#network-input-data">Network: Input Data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="covid_contagion_network.html#network-running-the-model">Network: Running the Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="covid_contagion_network.html#network-code">Network: Code</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="covid_contagion_network.html#model-structure">Model Structure</a></li>
+<li class="toctree-l4"><a class="reference internal" href="covid_contagion_network.html#environment-logic">Environment Logic</a></li>
+<li class="toctree-l4"><a class="reference internal" href="covid_contagion_network.html#agent-behavior">Agent Behavior</a></li>
+<li class="toctree-l4"><a class="reference internal" href="covid_contagion_network.html#scenario-definition">Scenario Definition</a></li>
+<li class="toctree-l4"><a class="reference internal" href="covid_contagion_network.html#data-collection-setup">Data Collection Setup</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="covid_contagion_calibrator.html">CovidContagionCalibrator</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="covid_contagion_calibrator.html#calibrator-project-structure">Calibrator: Project Structure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="covid_contagion_calibrator.html#calibrator-key-changes">Calibrator: Key Changes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="covid_contagion_calibrator.html#calibrator-ga-concepts">Calibrator: GA Concepts</a></li>
+<li class="toctree-l3"><a class="reference internal" href="covid_contagion_calibrator.html#calibrator-input-data">Calibrator: Input Data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="covid_contagion_calibrator.html#calibrator-running-the-model">Calibrator: Running the Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="covid_contagion_calibrator.html#calibrator-code">Calibrator: Code</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="covid_contagion_calibrator.html#calibrator-definition">Calibrator Definition</a></li>
+<li class="toctree-l4"><a class="reference internal" href="covid_contagion_calibrator.html#scenario-definition">Scenario Definition</a></li>
+<li class="toctree-l4"><a class="reference internal" href="covid_contagion_calibrator.html#model-structure">Model Structure</a></li>
+<li class="toctree-l4"><a class="reference internal" href="covid_contagion_calibrator.html#environment-logic">Environment Logic</a></li>
+<li class="toctree-l4"><a class="reference internal" href="covid_contagion_calibrator.html#agent-behavior">Agent Behavior</a></li>
+<li class="toctree-l4"><a class="reference internal" href="covid_contagion_calibrator.html#data-collection-setup">Data Collection Setup</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="rock_paper_scissors_trainer.html">RockPaperScissorsTrainer</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="rock_paper_scissors_trainer.html#trainer-project-structure">Trainer: Project Structure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rock_paper_scissors_trainer.html#trainer-ga-concepts">Trainer: GA Concepts</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rock_paper_scissors_trainer.html#trainer-how-it-works">Trainer: How It Works</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rock_paper_scissors_trainer.html#trainer-results">Trainer: Results</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rock_paper_scissors_trainer.html#trainer-running-the-model">Trainer: Running the Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rock_paper_scissors_trainer.html#trainer-code">Trainer: Code</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="rock_paper_scissors_trainer.html#model-structure">Model Structure</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rock_paper_scissors_trainer.html#environment-logic">Environment Logic</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rock_paper_scissors_trainer.html#agent-behavior">Agent Behavior</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rock_paper_scissors_trainer.html#data-collection-setup">Data Collection Setup</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rock_paper_scissors_trainer.html#scenario-definition">Scenario Definition</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rock_paper_scissors_trainer.html#trainer-definition">Trainer Definition</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api/index.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../api/simulator.html">Simulator</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api/simulator.html#Melodie.Simulator"><code class="docutils literal notranslate"><span class="pre">Simulator</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/simulator.html#Melodie.Simulator.generate_scenarios"><code class="docutils literal notranslate"><span class="pre">Simulator.generate_scenarios()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/simulator.html#Melodie.Simulator.run_model"><code class="docutils literal notranslate"><span class="pre">Simulator.run_model()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/simulator.html#Melodie.Simulator.setup"><code class="docutils literal notranslate"><span class="pre">Simulator.setup()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/simulator.html#Melodie.Simulator.run"><code class="docutils literal notranslate"><span class="pre">Simulator.run()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/simulator.html#Melodie.Simulator.run_visual"><code class="docutils literal notranslate"><span class="pre">Simulator.run_visual()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/simulator.html#Melodie.Simulator.run_parallel"><code class="docutils literal notranslate"><span class="pre">Simulator.run_parallel()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/simulator.html#Melodie.Simulator.new_parallel"><code class="docutils literal notranslate"><span class="pre">Simulator.new_parallel()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api/model.html">Model</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api/model.html#Melodie.Model"><code class="docutils literal notranslate"><span class="pre">Model</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/model.html#Melodie.Model.create"><code class="docutils literal notranslate"><span class="pre">Model.create()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/model.html#Melodie.Model.setup"><code class="docutils literal notranslate"><span class="pre">Model.setup()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/model.html#Melodie.Model.create_db_conn"><code class="docutils literal notranslate"><span class="pre">Model.create_db_conn()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/model.html#Melodie.Model.create_agent_list"><code class="docutils literal notranslate"><span class="pre">Model.create_agent_list()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/model.html#Melodie.Model.create_environment"><code class="docutils literal notranslate"><span class="pre">Model.create_environment()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/model.html#Melodie.Model.create_grid"><code class="docutils literal notranslate"><span class="pre">Model.create_grid()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/model.html#Melodie.Model.create_network"><code class="docutils literal notranslate"><span class="pre">Model.create_network()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/model.html#Melodie.Model.create_data_collector"><code class="docutils literal notranslate"><span class="pre">Model.create_data_collector()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/model.html#Melodie.Model.create_agent_container"><code class="docutils literal notranslate"><span class="pre">Model.create_agent_container()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/model.html#Melodie.Model.run"><code class="docutils literal notranslate"><span class="pre">Model.run()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/model.html#Melodie.Model.iterator"><code class="docutils literal notranslate"><span class="pre">Model.iterator()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/model.html#Melodie.Model.init_visualize"><code class="docutils literal notranslate"><span class="pre">Model.init_visualize()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api/scenario.html">Scenario</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api/scenario.html#Melodie.Scenario"><code class="docutils literal notranslate"><span class="pre">Scenario</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/scenario.html#Melodie.Scenario.copy"><code class="docutils literal notranslate"><span class="pre">Scenario.copy()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/scenario.html#Melodie.Scenario.load_data"><code class="docutils literal notranslate"><span class="pre">Scenario.load_data()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/scenario.html#Melodie.Scenario.setup_data"><code class="docutils literal notranslate"><span class="pre">Scenario.setup_data()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/scenario.html#Melodie.Scenario.initialize"><code class="docutils literal notranslate"><span class="pre">Scenario.initialize()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/scenario.html#Melodie.Scenario.setup"><code class="docutils literal notranslate"><span class="pre">Scenario.setup()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/scenario.html#Melodie.Scenario.load_dataframe"><code class="docutils literal notranslate"><span class="pre">Scenario.load_dataframe()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/scenario.html#Melodie.Scenario.load_matrix"><code class="docutils literal notranslate"><span class="pre">Scenario.load_matrix()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/scenario.html#Melodie.Scenario.to_dict"><code class="docutils literal notranslate"><span class="pre">Scenario.to_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/scenario.html#Melodie.Scenario.to_json"><code class="docutils literal notranslate"><span class="pre">Scenario.to_json()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/scenario.html#Melodie.Scenario.get_dataframe"><code class="docutils literal notranslate"><span class="pre">Scenario.get_dataframe()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/scenario.html#Melodie.Scenario.get_matrix"><code class="docutils literal notranslate"><span class="pre">Scenario.get_matrix()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api/environment.html">Environment</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api/environment.html#Melodie.Environment"><code class="docutils literal notranslate"><span class="pre">Environment</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/environment.html#Melodie.Environment.setup"><code class="docutils literal notranslate"><span class="pre">Environment.setup()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/environment.html#Melodie.Environment.to_dict"><code class="docutils literal notranslate"><span class="pre">Environment.to_dict()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api/agent.html">Agent</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api/agent.html#Melodie.Agent"><code class="docutils literal notranslate"><span class="pre">Agent</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/agent.html#Melodie.Agent.setup"><code class="docutils literal notranslate"><span class="pre">Agent.setup()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api/agent_list.html">Agent List</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api/agent_list.html#Melodie.AgentList"><code class="docutils literal notranslate"><span class="pre">AgentList</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/agent_list.html#Melodie.AgentList.setup_agents"><code class="docutils literal notranslate"><span class="pre">AgentList.setup_agents()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/agent_list.html#Melodie.AgentList.setup"><code class="docutils literal notranslate"><span class="pre">AgentList.setup()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/agent_list.html#Melodie.AgentList.init_agents"><code class="docutils literal notranslate"><span class="pre">AgentList.init_agents()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/agent_list.html#Melodie.AgentList.random_sample"><code class="docutils literal notranslate"><span class="pre">AgentList.random_sample()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/agent_list.html#Melodie.AgentList.filter"><code class="docutils literal notranslate"><span class="pre">AgentList.filter()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/agent_list.html#Melodie.AgentList.add"><code class="docutils literal notranslate"><span class="pre">AgentList.add()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/agent_list.html#Melodie.AgentList.to_list"><code class="docutils literal notranslate"><span class="pre">AgentList.to_list()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/agent_list.html#Melodie.AgentList.to_dataframe"><code class="docutils literal notranslate"><span class="pre">AgentList.to_dataframe()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/agent_list.html#Melodie.AgentList.set_properties"><code class="docutils literal notranslate"><span class="pre">AgentList.set_properties()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/agent_list.html#Melodie.AgentList.get_agent"><code class="docutils literal notranslate"><span class="pre">AgentList.get_agent()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/agent_list.html#Melodie.AgentList.method_foreach"><code class="docutils literal notranslate"><span class="pre">AgentList.method_foreach()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/agent_list.html#Melodie.AgentList.vectorize"><code class="docutils literal notranslate"><span class="pre">AgentList.vectorize()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/agent_list.html#Melodie.AgentList.remove"><code class="docutils literal notranslate"><span class="pre">AgentList.remove()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api/data_collector.html">Data Collector</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api/data_collector.html#Melodie.DataCollector"><code class="docutils literal notranslate"><span class="pre">DataCollector</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/data_collector.html#Melodie.DataCollector.setup"><code class="docutils literal notranslate"><span class="pre">DataCollector.setup()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/data_collector.html#Melodie.DataCollector.time_elapsed"><code class="docutils literal notranslate"><span class="pre">DataCollector.time_elapsed()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/data_collector.html#Melodie.DataCollector.add_agent_property"><code class="docutils literal notranslate"><span class="pre">DataCollector.add_agent_property()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/data_collector.html#Melodie.DataCollector.add_environment_property"><code class="docutils literal notranslate"><span class="pre">DataCollector.add_environment_property()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/data_collector.html#Melodie.DataCollector.add_custom_collector"><code class="docutils literal notranslate"><span class="pre">DataCollector.add_custom_collector()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/data_collector.html#Melodie.DataCollector.env_property_names"><code class="docutils literal notranslate"><span class="pre">DataCollector.env_property_names()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/data_collector.html#Melodie.DataCollector.agent_property_names"><code class="docutils literal notranslate"><span class="pre">DataCollector.agent_property_names()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/data_collector.html#Melodie.DataCollector.agent_containers"><code class="docutils literal notranslate"><span class="pre">DataCollector.agent_containers()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/data_collector.html#Melodie.DataCollector.collect_agent_properties"><code class="docutils literal notranslate"><span class="pre">DataCollector.collect_agent_properties()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/data_collector.html#Melodie.DataCollector.collect_custom_properties"><code class="docutils literal notranslate"><span class="pre">DataCollector.collect_custom_properties()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/data_collector.html#Melodie.DataCollector.collect_single_custom_property"><code class="docutils literal notranslate"><span class="pre">DataCollector.collect_single_custom_property()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/data_collector.html#Melodie.DataCollector.append_agent_properties_by_records"><code class="docutils literal notranslate"><span class="pre">DataCollector.append_agent_properties_by_records()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/data_collector.html#Melodie.DataCollector.append_environment_properties"><code class="docutils literal notranslate"><span class="pre">DataCollector.append_environment_properties()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/data_collector.html#Melodie.DataCollector.status"><code class="docutils literal notranslate"><span class="pre">DataCollector.status</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/data_collector.html#Melodie.DataCollector.collect"><code class="docutils literal notranslate"><span class="pre">DataCollector.collect()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/data_collector.html#Melodie.DataCollector.calc_time"><code class="docutils literal notranslate"><span class="pre">DataCollector.calc_time()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/data_collector.html#Melodie.DataCollector.get_single_agent_data"><code class="docutils literal notranslate"><span class="pre">DataCollector.get_single_agent_data()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/data_collector.html#Melodie.DataCollector.save"><code class="docutils literal notranslate"><span class="pre">DataCollector.save()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/data_collector.html#Melodie.DataCollector.save_dataframe"><code class="docutils literal notranslate"><span class="pre">DataCollector.save_dataframe()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api/grid.html">Grid &amp; Spot</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api/grid.html#Melodie.Grid"><code class="docutils literal notranslate"><span class="pre">Grid</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/grid.html#Melodie.Grid.init_grid"><code class="docutils literal notranslate"><span class="pre">Grid.init_grid()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/grid.html#Melodie.Grid.setup_params"><code class="docutils literal notranslate"><span class="pre">Grid.setup_params()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/grid.html#Melodie.Grid.setup"><code class="docutils literal notranslate"><span class="pre">Grid.setup()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/grid.html#Melodie.Grid.add_category"><code class="docutils literal notranslate"><span class="pre">Grid.add_category()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/grid.html#Melodie.Grid.get_spot"><code class="docutils literal notranslate"><span class="pre">Grid.get_spot()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/grid.html#Melodie.Grid.get_agent_ids"><code class="docutils literal notranslate"><span class="pre">Grid.get_agent_ids()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/grid.html#Melodie.Grid.coords_wrap"><code class="docutils literal notranslate"><span class="pre">Grid.coords_wrap()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/grid.html#Melodie.Grid.get_agent_neighborhood"><code class="docutils literal notranslate"><span class="pre">Grid.get_agent_neighborhood()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/grid.html#Melodie.Grid.get_spot_neighborhood"><code class="docutils literal notranslate"><span class="pre">Grid.get_spot_neighborhood()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/grid.html#Melodie.Grid.add_agent"><code class="docutils literal notranslate"><span class="pre">Grid.add_agent()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/grid.html#Melodie.Grid.remove_agent"><code class="docutils literal notranslate"><span class="pre">Grid.remove_agent()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/grid.html#Melodie.Grid.move_agent"><code class="docutils literal notranslate"><span class="pre">Grid.move_agent()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/grid.html#Melodie.Grid.get_agent_pos"><code class="docutils literal notranslate"><span class="pre">Grid.get_agent_pos()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/grid.html#Melodie.Grid.height"><code class="docutils literal notranslate"><span class="pre">Grid.height()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/grid.html#Melodie.Grid.width"><code class="docutils literal notranslate"><span class="pre">Grid.width()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/grid.html#Melodie.Grid.get_neighbors"><code class="docutils literal notranslate"><span class="pre">Grid.get_neighbors()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/grid.html#Melodie.Grid.get_spot_agents"><code class="docutils literal notranslate"><span class="pre">Grid.get_spot_agents()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/grid.html#Melodie.Grid.get_colormap"><code class="docutils literal notranslate"><span class="pre">Grid.get_colormap()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/grid.html#Melodie.Grid.spots_to_json"><code class="docutils literal notranslate"><span class="pre">Grid.spots_to_json()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/grid.html#Melodie.Grid.get_empty_spots"><code class="docutils literal notranslate"><span class="pre">Grid.get_empty_spots()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/grid.html#Melodie.Grid.find_empty_spot"><code class="docutils literal notranslate"><span class="pre">Grid.find_empty_spot()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/grid.html#Melodie.Grid.setup_agent_locations"><code class="docutils literal notranslate"><span class="pre">Grid.setup_agent_locations()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/grid.html#Melodie.Grid.set_spot_property"><code class="docutils literal notranslate"><span class="pre">Grid.set_spot_property()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/grid.html#Melodie.Grid.rand_move_agent"><code class="docutils literal notranslate"><span class="pre">Grid.rand_move_agent()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/grid.html#Melodie.Grid.get_agent_container"><code class="docutils literal notranslate"><span class="pre">Grid.get_agent_container()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/grid.html#Melodie.Grid.agent_categories"><code class="docutils literal notranslate"><span class="pre">Grid.agent_categories</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api/grid.html#Melodie.Spot"><code class="docutils literal notranslate"><span class="pre">Spot</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/grid.html#Melodie.Spot.get_spot_agents"><code class="docutils literal notranslate"><span class="pre">Spot.get_spot_agents()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/grid.html#Melodie.Spot.get_style"><code class="docutils literal notranslate"><span class="pre">Spot.get_style()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api/network.html">Network &amp; Edge</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api/network.html#Melodie.Network"><code class="docutils literal notranslate"><span class="pre">Network</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/network.html#Melodie.Network.setup"><code class="docutils literal notranslate"><span class="pre">Network.setup()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/network.html#Melodie.Network.add_edge"><code class="docutils literal notranslate"><span class="pre">Network.add_edge()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/network.html#Melodie.Network.get_edge"><code class="docutils literal notranslate"><span class="pre">Network.get_edge()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/network.html#Melodie.Network.remove_edge"><code class="docutils literal notranslate"><span class="pre">Network.remove_edge()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/network.html#Melodie.Network.get_neighbors"><code class="docutils literal notranslate"><span class="pre">Network.get_neighbors()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/network.html#Melodie.Network.remove_agent"><code class="docutils literal notranslate"><span class="pre">Network.remove_agent()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/network.html#Melodie.Network.add_agent"><code class="docutils literal notranslate"><span class="pre">Network.add_agent()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/network.html#Melodie.Network.create_edge"><code class="docutils literal notranslate"><span class="pre">Network.create_edge()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/network.html#Melodie.Network.all_agents"><code class="docutils literal notranslate"><span class="pre">Network.all_agents()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/network.html#Melodie.Network.get_node_edges"><code class="docutils literal notranslate"><span class="pre">Network.get_node_edges()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/network.html#Melodie.Network.setup_layout_creator"><code class="docutils literal notranslate"><span class="pre">Network.setup_layout_creator()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/network.html#Melodie.Network.update_layout"><code class="docutils literal notranslate"><span class="pre">Network.update_layout()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/network.html#Melodie.Network.get_position"><code class="docutils literal notranslate"><span class="pre">Network.get_position()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/network.html#Melodie.Network.setup_agent_connections"><code class="docutils literal notranslate"><span class="pre">Network.setup_agent_connections()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api/network.html#Melodie.Edge"><code class="docutils literal notranslate"><span class="pre">Edge</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/network.html#Melodie.Edge.setup"><code class="docutils literal notranslate"><span class="pre">Edge.setup()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/network.html#Melodie.Edge.post_setup"><code class="docutils literal notranslate"><span class="pre">Edge.post_setup()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api/calibrator.html">Calibrator</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api/calibrator.html#Melodie.Calibrator"><code class="docutils literal notranslate"><span class="pre">Calibrator</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/calibrator.html#Melodie.Calibrator.setup"><code class="docutils literal notranslate"><span class="pre">Calibrator.setup()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/calibrator.html#Melodie.Calibrator.collect_data"><code class="docutils literal notranslate"><span class="pre">Calibrator.collect_data()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/calibrator.html#Melodie.Calibrator.generate_scenarios"><code class="docutils literal notranslate"><span class="pre">Calibrator.generate_scenarios()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/calibrator.html#Melodie.Calibrator.get_params_scenarios"><code class="docutils literal notranslate"><span class="pre">Calibrator.get_params_scenarios()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/calibrator.html#Melodie.Calibrator.run"><code class="docutils literal notranslate"><span class="pre">Calibrator.run()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/calibrator.html#Melodie.Calibrator.run_once_new"><code class="docutils literal notranslate"><span class="pre">Calibrator.run_once_new()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/calibrator.html#Melodie.Calibrator.target_function"><code class="docutils literal notranslate"><span class="pre">Calibrator.target_function()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/calibrator.html#Melodie.Calibrator.distance"><code class="docutils literal notranslate"><span class="pre">Calibrator.distance()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/calibrator.html#Melodie.Calibrator.add_scenario_calibrating_property"><code class="docutils literal notranslate"><span class="pre">Calibrator.add_scenario_calibrating_property()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/calibrator.html#Melodie.Calibrator.add_environment_property"><code class="docutils literal notranslate"><span class="pre">Calibrator.add_environment_property()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api/trainer.html">Trainer</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api/trainer.html#Melodie.Trainer"><code class="docutils literal notranslate"><span class="pre">Trainer</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/trainer.html#Melodie.Trainer.add_agent_training_property"><code class="docutils literal notranslate"><span class="pre">Trainer.add_agent_training_property()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/trainer.html#Melodie.Trainer.setup"><code class="docutils literal notranslate"><span class="pre">Trainer.setup()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/trainer.html#Melodie.Trainer.get_trainer_scenario_cls"><code class="docutils literal notranslate"><span class="pre">Trainer.get_trainer_scenario_cls()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/trainer.html#Melodie.Trainer.collect_data"><code class="docutils literal notranslate"><span class="pre">Trainer.collect_data()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/trainer.html#Melodie.Trainer.run"><code class="docutils literal notranslate"><span class="pre">Trainer.run()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/trainer.html#Melodie.Trainer.run_once_new"><code class="docutils literal notranslate"><span class="pre">Trainer.run_once_new()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/trainer.html#Melodie.Trainer.utility"><code class="docutils literal notranslate"><span class="pre">Trainer.utility()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/trainer.html#Melodie.Trainer.target_function"><code class="docutils literal notranslate"><span class="pre">Trainer.target_function()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/trainer.html#Melodie.Trainer.add_agent_property"><code class="docutils literal notranslate"><span class="pre">Trainer.add_agent_property()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/trainer.html#Melodie.Trainer.add_environment_property"><code class="docutils literal notranslate"><span class="pre">Trainer.add_environment_property()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/trainer.html#Melodie.Trainer.generate_scenarios"><code class="docutils literal notranslate"><span class="pre">Trainer.generate_scenarios()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/trainer.html#Melodie.Trainer.generate_trainer_params_list"><code class="docutils literal notranslate"><span class="pre">Trainer.generate_trainer_params_list()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Development</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../contribution.html">Contribution</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../contribution.html#reporting-issues">Reporting Issues</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../contribution.html#contributing-code">Contributing Code</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../contribution.html#adding-to-the-model-gallery">Adding to the Model Gallery</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Change Log</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../changelog.html#major-version-0-x">Major Version 0.x</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../changelog.html#v0-8-0-may-10-2023">v0.8.0 (May. 10, 2023)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../changelog.html#v0-7-0-mar-25-2023">v0.7.0 (Mar. 25, 2023)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../changelog.html#v0-6-0-jan-04-2023">v0.6.0 (Jan. 04, 2023)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../changelog.html#v0-5-0-dec-17-2022">v0.5.0 (Dec. 17, 2022)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../changelog.html#v0-4-2-dec-15-2022">v0.4.2 (Dec. 15, 2022)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../changelog.html#v0-4-1-dec-12-2022">v0.4.1 (Dec. 12, 2022)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../changelog.html#v0-4-0-nov-15-2022">v0.4.0 (Nov. 15, 2022)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../changelog.html#v0-3-0-oct-28-2022">v0.3.0 (Oct. 28, 2022)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../changelog.html#v0-2-0-oct-24-2022">v0.2.0 (Oct. 24, 2022)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../changelog.html#v0-1-1-aug-23-2022">v0.1.1 (Aug. 23, 2022)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../changelog.html#v0-1-0-jul-22-2022">v0.1.0 (Jul. 22, 2022)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../changelog.html#start-may-10-2021">Start (May. 10, 2021)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../about.html">About</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Melodie</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="_index.html">Model Gallery</a></li>
+      <li class="breadcrumb-item active">CovidContagionGrid</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/gallery/covid_contagion_grid.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="covidcontagiongrid">
+<span id="covid-contagion-grid"></span><h1>CovidContagionGrid<a class="headerlink" href="#covidcontagiongrid" title="Link to this heading"></a></h1>
+<p>This example extends the base <code class="docutils literal notranslate"><span class="pre">covid_contagion</span></code> model by introducing Melodie’s <strong>Grid</strong> module.
+It demonstrates how to simulate agents moving and interacting in a 2D spatial environment.</p>
+<section id="grid-project-structure">
+<h2>Grid: Project Structure<a class="headerlink" href="#grid-project-structure" title="Link to this heading"></a></h2>
+<p>The structure mirrors the base example but includes specific grid-related implementations:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>examples/covid_contagion_grid
+├── core/
+│   ├── agent.py            # Agents with spatial coordinates (x, y)
+│   ├── grid.py             # Definition of Grid and Spot classes
+│   ├── environment.py      # Orchestrates agent movement and infection
+│   ├── model.py            # Initializes the grid and places agents
+│   ├── scenario.py         # Loads parameters and grid-related matrices
+│   └── ...
+├── data/
+│   ├── input/
+│   │   ├── SimulatorScenarios.csv      # Adds grid_x_size, grid_y_size
+│   │   ├── ID_HealthState.csv          # Same as base example
+│   │   └── Parameter_GridStayProb.csv  # 2D matrix controlling movement
+│   └── output/
+└── ...
+</pre></div>
+</div>
+</section>
+<section id="grid-key-changes">
+<h2>Grid: Key Changes<a class="headerlink" href="#grid-key-changes" title="Link to this heading"></a></h2>
+<ol class="arabic simple">
+<li><p><strong>Spatial Agents (``GridAgent``)</strong>:
+Agents now inherit from <code class="docutils literal notranslate"><span class="pre">GridAgent</span></code> instead of <code class="docutils literal notranslate"><span class="pre">Agent</span></code>. This gives them <code class="docutils literal notranslate"><span class="pre">x</span></code> and <code class="docutils literal notranslate"><span class="pre">y</span></code> attributes and built-in methods for movement.</p>
+<ul class="simple">
+<li><p><strong>Category</strong>: The <code class="docutils literal notranslate"><span class="pre">set_category()</span></code> method is required for <code class="docutils literal notranslate"><span class="pre">GridAgent</span></code>. It assigns an integer ID to the agent type (e.g., 0 for humans, 1 for animals). This is used by the Grid to:</p>
+<ul>
+<li><p>Efficiently manage multiple types of agents on the same map.</p></li>
+<li><p>Return <code class="docutils literal notranslate"><span class="pre">(category,</span> <span class="pre">id)</span></code> tuples when querying neighbors.</p></li>
+<li><p>Differentiate agents for visualization (e.g., drawing humans as circles and hospitals as crosses).</p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>The Grid and Spots</strong>:
+We define a <code class="docutils literal notranslate"><span class="pre">CovidGrid</span></code> and <code class="docutils literal notranslate"><span class="pre">CovidSpot</span></code>.
+- Each <strong>Spot</strong> represents a cell on the grid and can hold properties (e.g., <code class="docutils literal notranslate"><span class="pre">stay_prob</span></code>).
+- The <strong>Grid</strong> manages these spots and agent positions.</p></li>
+<li><p><strong>Movement Logic</strong>:
+Agents decide whether to move based on the <code class="docutils literal notranslate"><span class="pre">stay_prob</span></code> of their current spot. If they move, they choose a random neighbor cell.</p></li>
+<li><p><strong>Spatial Infection</strong>:
+Infection now happens locally. An infected agent searches for neighbors within a certain radius (Moore neighborhood by default) and tries to infect them.</p></li>
+</ol>
+</section>
+<section id="grid-input-data">
+<h2>Grid: Input Data<a class="headerlink" href="#grid-input-data" title="Link to this heading"></a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">CovidScenario</span></code> class is updated to load spatial data:</p>
+<ul class="simple">
+<li><p><strong>Grid Dimensions</strong>: Loaded from <code class="docutils literal notranslate"><span class="pre">SimulatorScenarios.csv</span></code> (<code class="docutils literal notranslate"><span class="pre">grid_x_size</span></code>, <code class="docutils literal notranslate"><span class="pre">y_size</span></code>).</p></li>
+<li><p><strong>Spatial Heterogeneity</strong>: A matrix file <code class="docutils literal notranslate"><span class="pre">Parameter_GridStayProb.csv</span></code> is loaded to set the <code class="docutils literal notranslate"><span class="pre">stay_prob</span></code> for each spot on the grid.</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">CovidScenario</span><span class="p">(</span><span class="n">Scenario</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">load_data</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">health_states</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_dataframe</span><span class="p">(</span><span class="s2">&quot;ID_HealthState.csv&quot;</span><span class="p">)</span>
+        <span class="c1"># Load the 2D matrix for spot properties</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stay_prob_matrix</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_matrix</span><span class="p">(</span><span class="s2">&quot;Parameter_GridStayProb.csv&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="grid-running-the-model">
+<h2>Grid: Running the Model<a class="headerlink" href="#grid-running-the-model" title="Link to this heading"></a></h2>
+<p>Run the model using the provided entry script:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>examples/covid_contagion_grid/main.py
+</pre></div>
+</div>
+<p>This will generate <code class="docutils literal notranslate"><span class="pre">Result_Simulator_Agents.csv</span></code> and <code class="docutils literal notranslate"><span class="pre">Result_Simulator_Environment.csv</span></code> in the <code class="docutils literal notranslate"><span class="pre">data/output</span></code> folder.</p>
+</section>
+<section id="grid-code">
+<h2>Grid: Code<a class="headerlink" href="#grid-code" title="Link to this heading"></a></h2>
+<p>This section shows the key code implementation for the grid model.</p>
+<section id="model-structure">
+<h3>Model Structure<a class="headerlink" href="#model-structure" title="Link to this heading"></a></h3>
+<p>Defined in <code class="docutils literal notranslate"><span class="pre">core/model.py</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TYPE_CHECKING</span>
+<span class="linenos"> 2</span>
+<span class="linenos"> 3</span><span class="kn">from</span><span class="w"> </span><span class="nn">Melodie</span><span class="w"> </span><span class="kn">import</span> <span class="n">Model</span>
+<span class="linenos"> 4</span>
+<span class="linenos"> 5</span><span class="kn">from</span><span class="w"> </span><span class="nn">.agent</span><span class="w"> </span><span class="kn">import</span> <span class="n">CovidAgent</span>
+<span class="linenos"> 6</span><span class="kn">from</span><span class="w"> </span><span class="nn">.data_collector</span><span class="w"> </span><span class="kn">import</span> <span class="n">CovidDataCollector</span>
+<span class="linenos"> 7</span><span class="kn">from</span><span class="w"> </span><span class="nn">.environment</span><span class="w"> </span><span class="kn">import</span> <span class="n">CovidEnvironment</span>
+<span class="linenos"> 8</span><span class="kn">from</span><span class="w"> </span><span class="nn">.grid</span><span class="w"> </span><span class="kn">import</span> <span class="n">CovidGrid</span><span class="p">,</span> <span class="n">CovidSpot</span>
+<span class="linenos"> 9</span><span class="kn">from</span><span class="w"> </span><span class="nn">.scenario</span><span class="w"> </span><span class="kn">import</span> <span class="n">CovidScenario</span>
+<span class="linenos">10</span>
+<span class="linenos">11</span><span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
+<span class="linenos">12</span>    <span class="kn">from</span><span class="w"> </span><span class="nn">Melodie</span><span class="w"> </span><span class="kn">import</span> <span class="n">AgentList</span>
+<span class="linenos">13</span>
+<span class="linenos">14</span>
+<span class="linenos">15</span><span class="k">class</span><span class="w"> </span><span class="nc">CovidModel</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+<span class="linenos">16</span><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos">17</span><span class="sd">    The Model class assembles all components: agents, environment, grid, and data collector.</span>
+<span class="linenos">18</span><span class="sd">    &quot;&quot;&quot;</span>
+<span class="linenos">19</span>
+<span class="linenos">20</span>    <span class="n">scenario</span><span class="p">:</span> <span class="s2">&quot;CovidScenario&quot;</span>
+<span class="linenos">21</span>    <span class="n">agents</span><span class="p">:</span> <span class="s2">&quot;AgentList[CovidAgent]&quot;</span>
+<span class="linenos">22</span>    <span class="n">environment</span><span class="p">:</span> <span class="n">CovidEnvironment</span>
+<span class="linenos">23</span>    <span class="n">data_collector</span><span class="p">:</span> <span class="n">CovidDataCollector</span>
+<span class="linenos">24</span>    <span class="n">grid</span><span class="p">:</span> <span class="n">CovidGrid</span>
+<span class="linenos">25</span>
+<span class="linenos">26</span>    <span class="k">def</span><span class="w"> </span><span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="linenos">27</span><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos">28</span><span class="sd">        Create component instances.</span>
+<span class="linenos">29</span><span class="sd">        &quot;&quot;&quot;</span>
+<span class="linenos">30</span>        <span class="bp">self</span><span class="o">.</span><span class="n">agents</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_agent_list</span><span class="p">(</span><span class="n">CovidAgent</span><span class="p">)</span>
+<span class="linenos">31</span>        <span class="bp">self</span><span class="o">.</span><span class="n">environment</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_environment</span><span class="p">(</span><span class="n">CovidEnvironment</span><span class="p">)</span>
+<span class="linenos">32</span>        <span class="bp">self</span><span class="o">.</span><span class="n">data_collector</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_data_collector</span><span class="p">(</span><span class="n">CovidDataCollector</span><span class="p">)</span>
+<span class="linenos">33</span>        <span class="bp">self</span><span class="o">.</span><span class="n">grid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_grid</span><span class="p">(</span><span class="n">CovidGrid</span><span class="p">,</span> <span class="n">CovidSpot</span><span class="p">)</span>
+<span class="linenos">34</span>
+<span class="linenos">35</span>    <span class="k">def</span><span class="w"> </span><span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="linenos">36</span><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos">37</span><span class="sd">        Setup the model components.</span>
+<span class="linenos">38</span><span class="sd">        &quot;&quot;&quot;</span>
+<span class="linenos">39</span>        <span class="c1"># 1. Initialize agents based on scenario parameter</span>
+<span class="linenos">40</span>        <span class="bp">self</span><span class="o">.</span><span class="n">agents</span><span class="o">.</span><span class="n">setup_agents</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">agent_num</span><span class="p">)</span>
+<span class="linenos">41</span>        
+<span class="linenos">42</span>        <span class="c1"># 2. Setup grid dimensions and apply properties (like stay_prob)</span>
+<span class="linenos">43</span>        <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">setup_params</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">grid_x_size</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">grid_y_size</span><span class="p">)</span>
+<span class="linenos">44</span>        
+<span class="linenos">45</span>        <span class="c1"># 3. Place agents randomly on the grid</span>
+<span class="linenos">46</span>        <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">setup_agent_locations</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">agents</span><span class="p">)</span>
+<span class="linenos">47</span>        
+<span class="linenos">48</span>        <span class="c1"># 4. Seed initial infections</span>
+<span class="linenos">49</span>        <span class="bp">self</span><span class="o">.</span><span class="n">environment</span><span class="o">.</span><span class="n">seed_infection</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">agents</span><span class="p">)</span>
+<span class="linenos">50</span>
+<span class="linenos">51</span>    <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="linenos">52</span><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos">53</span><span class="sd">        The main simulation loop.</span>
+<span class="linenos">54</span><span class="sd">        &quot;&quot;&quot;</span>
+<span class="linenos">55</span>        <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">iterator</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">period_num</span><span class="p">):</span>
+<span class="linenos">56</span>            <span class="bp">self</span><span class="o">.</span><span class="n">environment</span><span class="o">.</span><span class="n">agents_move</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">agents</span><span class="p">)</span>
+<span class="linenos">57</span>            <span class="bp">self</span><span class="o">.</span><span class="n">environment</span><span class="o">.</span><span class="n">agents_infect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">agents</span><span class="p">)</span>
+<span class="linenos">58</span>            <span class="bp">self</span><span class="o">.</span><span class="n">environment</span><span class="o">.</span><span class="n">agents_recover</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">agents</span><span class="p">)</span>
+<span class="linenos">59</span>            <span class="bp">self</span><span class="o">.</span><span class="n">environment</span><span class="o">.</span><span class="n">update_population_stats</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">agents</span><span class="p">)</span>
+<span class="linenos">60</span>            <span class="bp">self</span><span class="o">.</span><span class="n">data_collector</span><span class="o">.</span><span class="n">collect</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+<span class="linenos">61</span>        <span class="bp">self</span><span class="o">.</span><span class="n">data_collector</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="environment-logic">
+<h3>Environment Logic<a class="headerlink" href="#environment-logic" title="Link to this heading"></a></h3>
+<p>Defined in <code class="docutils literal notranslate"><span class="pre">core/environment.py</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
+<span class="linenos"> 2</span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TYPE_CHECKING</span>
+<span class="linenos"> 3</span>
+<span class="linenos"> 4</span><span class="kn">from</span><span class="w"> </span><span class="nn">Melodie</span><span class="w"> </span><span class="kn">import</span> <span class="n">Environment</span>
+<span class="linenos"> 5</span>
+<span class="linenos"> 6</span><span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
+<span class="linenos"> 7</span>    <span class="kn">from</span><span class="w"> </span><span class="nn">Melodie</span><span class="w"> </span><span class="kn">import</span> <span class="n">AgentList</span>
+<span class="linenos"> 8</span>    <span class="kn">from</span><span class="w"> </span><span class="nn">.agent</span><span class="w"> </span><span class="kn">import</span> <span class="n">CovidAgent</span>
+<span class="linenos"> 9</span>    <span class="kn">from</span><span class="w"> </span><span class="nn">.scenario</span><span class="w"> </span><span class="kn">import</span> <span class="n">CovidScenario</span>
+<span class="linenos">10</span>
+<span class="linenos">11</span>
+<span class="linenos">12</span><span class="k">class</span><span class="w"> </span><span class="nc">CovidEnvironment</span><span class="p">(</span><span class="n">Environment</span><span class="p">):</span>
+<span class="linenos">13</span><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos">14</span><span class="sd">    The environment class orchestrates the simulation steps and manages macro-level logic.</span>
+<span class="linenos">15</span><span class="sd">    &quot;&quot;&quot;</span>
+<span class="linenos">16</span>
+<span class="linenos">17</span>    <span class="n">scenario</span><span class="p">:</span> <span class="s2">&quot;CovidScenario&quot;</span>
+<span class="linenos">18</span>
+<span class="linenos">19</span>    <span class="k">def</span><span class="w"> </span><span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="linenos">20</span><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos">21</span><span class="sd">        Initialize macro-level counters for statistics.</span>
+<span class="linenos">22</span><span class="sd">        &quot;&quot;&quot;</span>
+<span class="linenos">23</span>        <span class="bp">self</span><span class="o">.</span><span class="n">num_susceptible</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="linenos">24</span>        <span class="bp">self</span><span class="o">.</span><span class="n">num_infected</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="linenos">25</span>        <span class="bp">self</span><span class="o">.</span><span class="n">num_recovered</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="linenos">26</span>
+<span class="linenos">27</span>    <span class="k">def</span><span class="w"> </span><span class="nf">agents_move</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agents</span><span class="p">:</span> <span class="s2">&quot;AgentList[CovidAgent]&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="linenos">28</span><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos">29</span><span class="sd">        1. Agents move.</span>
+<span class="linenos">30</span><span class="sd">        &quot;&quot;&quot;</span>
+<span class="linenos">31</span>        <span class="k">for</span> <span class="n">agent</span> <span class="ow">in</span> <span class="n">agents</span><span class="p">:</span>
+<span class="linenos">32</span>            <span class="n">agent</span><span class="o">.</span><span class="n">move</span><span class="p">()</span>
+<span class="linenos">33</span>
+<span class="linenos">34</span>    <span class="k">def</span><span class="w"> </span><span class="nf">agents_infect</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agents</span><span class="p">:</span> <span class="s2">&quot;AgentList[CovidAgent]&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="linenos">35</span><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos">36</span><span class="sd">        2. Infected agents spread the virus.</span>
+<span class="linenos">37</span><span class="sd">        &quot;&quot;&quot;</span>
+<span class="linenos">38</span>        <span class="k">for</span> <span class="n">agent</span> <span class="ow">in</span> <span class="n">agents</span><span class="p">:</span>
+<span class="linenos">39</span>            <span class="n">agent</span><span class="o">.</span><span class="n">infect_neighbors</span><span class="p">(</span><span class="n">agents</span><span class="p">)</span>
+<span class="linenos">40</span>
+<span class="linenos">41</span>    <span class="k">def</span><span class="w"> </span><span class="nf">agents_recover</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agents</span><span class="p">:</span> <span class="s2">&quot;AgentList[CovidAgent]&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="linenos">42</span><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos">43</span><span class="sd">        3. Infected agents try to recover.</span>
+<span class="linenos">44</span><span class="sd">        &quot;&quot;&quot;</span>
+<span class="linenos">45</span>        <span class="k">for</span> <span class="n">agent</span> <span class="ow">in</span> <span class="n">agents</span><span class="p">:</span>
+<span class="linenos">46</span>            <span class="n">agent</span><span class="o">.</span><span class="n">recover</span><span class="p">()</span>
+<span class="linenos">47</span>
+<span class="linenos">48</span>    <span class="k">def</span><span class="w"> </span><span class="nf">seed_infection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agents</span><span class="p">:</span> <span class="s2">&quot;AgentList[CovidAgent]&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="linenos">49</span><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos">50</span><span class="sd">        Infect a percentage of agents at the start of the simulation.</span>
+<span class="linenos">51</span><span class="sd">        &quot;&quot;&quot;</span>
+<span class="linenos">52</span>        <span class="k">for</span> <span class="n">agent</span> <span class="ow">in</span> <span class="n">agents</span><span class="p">:</span>
+<span class="linenos">53</span>            <span class="k">if</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">initial_infected_percentage</span><span class="p">:</span>
+<span class="linenos">54</span>                <span class="n">agent</span><span class="o">.</span><span class="n">health_state</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="linenos">55</span>
+<span class="linenos">56</span>    <span class="k">def</span><span class="w"> </span><span class="nf">update_population_stats</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agents</span><span class="p">:</span> <span class="s2">&quot;AgentList[CovidAgent]&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="linenos">57</span><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos">58</span><span class="sd">        Count the number of agents in each health state.</span>
+<span class="linenos">59</span><span class="sd">        &quot;&quot;&quot;</span>
+<span class="linenos">60</span>        <span class="bp">self</span><span class="o">.</span><span class="n">num_susceptible</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="linenos">61</span>        <span class="bp">self</span><span class="o">.</span><span class="n">num_infected</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="linenos">62</span>        <span class="bp">self</span><span class="o">.</span><span class="n">num_recovered</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="linenos">63</span>        <span class="k">for</span> <span class="n">agent</span> <span class="ow">in</span> <span class="n">agents</span><span class="p">:</span>
+<span class="linenos">64</span>            <span class="k">if</span> <span class="n">agent</span><span class="o">.</span><span class="n">health_state</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+<span class="linenos">65</span>                <span class="bp">self</span><span class="o">.</span><span class="n">num_susceptible</span> <span class="o">+=</span> <span class="mi">1</span>
+<span class="linenos">66</span>            <span class="k">elif</span> <span class="n">agent</span><span class="o">.</span><span class="n">health_state</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+<span class="linenos">67</span>                <span class="bp">self</span><span class="o">.</span><span class="n">num_infected</span> <span class="o">+=</span> <span class="mi">1</span>
+<span class="linenos">68</span>            <span class="k">elif</span> <span class="n">agent</span><span class="o">.</span><span class="n">health_state</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+<span class="linenos">69</span>                <span class="bp">self</span><span class="o">.</span><span class="n">num_recovered</span> <span class="o">+=</span> <span class="mi">1</span>
+</pre></div>
+</div>
+</section>
+<section id="agent-behavior">
+<h3>Agent Behavior<a class="headerlink" href="#agent-behavior" title="Link to this heading"></a></h3>
+<p>Defined in <code class="docutils literal notranslate"><span class="pre">core/agent.py</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
+<span class="linenos"> 2</span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TYPE_CHECKING</span>
+<span class="linenos"> 3</span>
+<span class="linenos"> 4</span><span class="kn">from</span><span class="w"> </span><span class="nn">Melodie</span><span class="w"> </span><span class="kn">import</span> <span class="n">GridAgent</span>
+<span class="linenos"> 5</span>
+<span class="linenos"> 6</span><span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
+<span class="linenos"> 7</span>    <span class="kn">from</span><span class="w"> </span><span class="nn">.grid</span><span class="w"> </span><span class="kn">import</span> <span class="n">CovidGrid</span><span class="p">,</span> <span class="n">CovidSpot</span>
+<span class="linenos"> 8</span>    <span class="kn">from</span><span class="w"> </span><span class="nn">.scenario</span><span class="w"> </span><span class="kn">import</span> <span class="n">CovidScenario</span>
+<span class="linenos"> 9</span>    <span class="kn">from</span><span class="w"> </span><span class="nn">Melodie</span><span class="w"> </span><span class="kn">import</span> <span class="n">AgentList</span>
+<span class="linenos">10</span>
+<span class="linenos">11</span>
+<span class="linenos">12</span><span class="k">class</span><span class="w"> </span><span class="nc">CovidAgent</span><span class="p">(</span><span class="n">GridAgent</span><span class="p">):</span>
+<span class="linenos">13</span><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos">14</span><span class="sd">    An agent capable of moving on a grid and spreading infection to neighbors.</span>
+<span class="linenos">15</span><span class="sd">    Inherits from GridAgent to gain spatial attributes (x, y) and methods.</span>
+<span class="linenos">16</span><span class="sd">    &quot;&quot;&quot;</span>
+<span class="linenos">17</span>
+<span class="linenos">18</span>    <span class="n">scenario</span><span class="p">:</span> <span class="s2">&quot;CovidScenario&quot;</span>
+<span class="linenos">19</span>    <span class="n">grid</span><span class="p">:</span> <span class="s2">&quot;CovidGrid&quot;</span>
+<span class="linenos">20</span>    <span class="n">spot</span><span class="p">:</span> <span class="s2">&quot;CovidSpot&quot;</span>
+<span class="linenos">21</span>
+<span class="linenos">22</span>    <span class="k">def</span><span class="w"> </span><span class="nf">set_category</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="linenos">23</span><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos">24</span><span class="sd">        Set the category of the agent. </span>
+<span class="linenos">25</span><span class="sd">        Melodie uses this to manage different groups of agents.</span>
+<span class="linenos">26</span><span class="sd">        &quot;&quot;&quot;</span>
+<span class="linenos">27</span>        <span class="bp">self</span><span class="o">.</span><span class="n">category</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="linenos">28</span>
+<span class="linenos">29</span>    <span class="k">def</span><span class="w"> </span><span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="linenos">30</span><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos">31</span><span class="sd">        Initialize agent attributes.</span>
+<span class="linenos">32</span><span class="sd">        &quot;&quot;&quot;</span>
+<span class="linenos">33</span>        <span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="linenos">34</span>        <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="linenos">35</span>        <span class="c1"># Health state: 0 = Susceptible, 1 = Infected, 2 = Recovered</span>
+<span class="linenos">36</span>        <span class="bp">self</span><span class="o">.</span><span class="n">health_state</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="linenos">37</span>
+<span class="linenos">38</span>    <span class="k">def</span><span class="w"> </span><span class="nf">move</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="linenos">39</span><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos">40</span><span class="sd">        Move the agent based on the property of the current spot.</span>
+<span class="linenos">41</span><span class="sd">        The agent has a probability (1 - stay_prob) to move to a random neighboring cell.</span>
+<span class="linenos">42</span><span class="sd">        &quot;&quot;&quot;</span>
+<span class="linenos">43</span>        <span class="n">current_spot</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">get_spot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
+<span class="linenos">44</span>        <span class="k">if</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">&gt;</span> <span class="n">current_spot</span><span class="o">.</span><span class="n">stay_prob</span><span class="p">:</span>
+<span class="linenos">45</span>            <span class="c1"># Move randomly within a radius of 1 cell (Moore neighborhood)</span>
+<span class="linenos">46</span>            <span class="bp">self</span><span class="o">.</span><span class="n">rand_move_agent</span><span class="p">(</span><span class="n">x_range</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">y_range</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="linenos">47</span>
+<span class="linenos">48</span>    <span class="k">def</span><span class="w"> </span><span class="nf">infect_neighbors</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agents</span><span class="p">:</span> <span class="s2">&quot;AgentList[CovidAgent]&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="linenos">49</span><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos">50</span><span class="sd">        If infected, try to infect susceptible neighbors.</span>
+<span class="linenos">51</span><span class="sd">        &quot;&quot;&quot;</span>
+<span class="linenos">52</span>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">health_state</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+<span class="linenos">53</span>            <span class="k">return</span>
+<span class="linenos">54</span>
+<span class="linenos">55</span>        <span class="c1"># Get neighbors within a radius of 1</span>
+<span class="linenos">56</span>        <span class="n">neighbors</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">get_neighbors</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="linenos">57</span>        
+<span class="linenos">58</span>        <span class="k">for</span> <span class="n">neighbor_id</span> <span class="ow">in</span> <span class="n">neighbors</span><span class="p">:</span>
+<span class="linenos">59</span>            <span class="c1"># In Melodie, get_neighbors returns a list of agent IDs (or objects depending on config).</span>
+<span class="linenos">60</span>            <span class="c1"># Here we assume it returns IDs or we access the agent list directly.</span>
+<span class="linenos">61</span>            <span class="c1"># Actually, standard Grid.get_neighbors returns list of (agent_category, agent_id).</span>
+<span class="linenos">62</span>            <span class="n">category</span><span class="p">,</span> <span class="n">agent_id</span> <span class="o">=</span> <span class="n">neighbor_id</span>
+<span class="linenos">63</span>            <span class="n">neighbor</span><span class="p">:</span> <span class="s2">&quot;CovidAgent&quot;</span> <span class="o">=</span> <span class="n">agents</span><span class="o">.</span><span class="n">get_agent</span><span class="p">(</span><span class="n">agent_id</span><span class="p">)</span>
+<span class="linenos">64</span>            
+<span class="linenos">65</span>            <span class="k">if</span> <span class="n">neighbor</span><span class="o">.</span><span class="n">health_state</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+<span class="linenos">66</span>                <span class="k">if</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">infection_prob</span><span class="p">:</span>
+<span class="linenos">67</span>                    <span class="n">neighbor</span><span class="o">.</span><span class="n">health_state</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="linenos">68</span>
+<span class="linenos">69</span>    <span class="k">def</span><span class="w"> </span><span class="nf">recover</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="linenos">70</span><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos">71</span><span class="sd">        If infected, there is a chance to recover.</span>
+<span class="linenos">72</span><span class="sd">        &quot;&quot;&quot;</span>
+<span class="linenos">73</span>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">health_state</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">recovery_prob</span><span class="p">:</span>
+<span class="linenos">74</span>            <span class="bp">self</span><span class="o">.</span><span class="n">health_state</span> <span class="o">=</span> <span class="mi">2</span>
+</pre></div>
+</div>
+</section>
+<section id="data-collection-setup">
+<h3>Data Collection Setup<a class="headerlink" href="#data-collection-setup" title="Link to this heading"></a></h3>
+<p><em>Identical to the base model.</em> Defined in <code class="docutils literal notranslate"><span class="pre">core/data_collector.py</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">from</span><span class="w"> </span><span class="nn">Melodie</span><span class="w"> </span><span class="kn">import</span> <span class="n">DataCollector</span>
+<span class="linenos"> 2</span>
+<span class="linenos"> 3</span>
+<span class="linenos"> 4</span><span class="k">class</span><span class="w"> </span><span class="nc">CovidDataCollector</span><span class="p">(</span><span class="n">DataCollector</span><span class="p">):</span>
+<span class="linenos"> 5</span><span class="w">    </span><span class="sd">&quot;&quot;&quot;Collect micro and macro results for the grid contagion model.&quot;&quot;&quot;</span>
+<span class="linenos"> 6</span>
+<span class="linenos"> 7</span>    <span class="k">def</span><span class="w"> </span><span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="linenos"> 8</span>        <span class="bp">self</span><span class="o">.</span><span class="n">add_agent_property</span><span class="p">(</span><span class="s2">&quot;agents&quot;</span><span class="p">,</span> <span class="s2">&quot;health_state&quot;</span><span class="p">)</span>
+<span class="linenos"> 9</span>        <span class="bp">self</span><span class="o">.</span><span class="n">add_environment_property</span><span class="p">(</span><span class="s2">&quot;num_susceptible&quot;</span><span class="p">)</span>
+<span class="linenos">10</span>        <span class="bp">self</span><span class="o">.</span><span class="n">add_environment_property</span><span class="p">(</span><span class="s2">&quot;num_infected&quot;</span><span class="p">)</span>
+<span class="linenos">11</span>        <span class="bp">self</span><span class="o">.</span><span class="n">add_environment_property</span><span class="p">(</span><span class="s2">&quot;num_recovered&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="grid-and-spot-definition">
+<h3>Grid and Spot Definition<a class="headerlink" href="#grid-and-spot-definition" title="Link to this heading"></a></h3>
+<p>Defined in <code class="docutils literal notranslate"><span class="pre">core/grid.py</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">from</span><span class="w"> </span><span class="nn">Melodie</span><span class="w"> </span><span class="kn">import</span> <span class="n">Grid</span><span class="p">,</span> <span class="n">Spot</span>
+<span class="linenos"> 2</span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TYPE_CHECKING</span>
+<span class="linenos"> 3</span>
+<span class="linenos"> 4</span><span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
+<span class="linenos"> 5</span>    <span class="kn">from</span><span class="w"> </span><span class="nn">.scenario</span><span class="w"> </span><span class="kn">import</span> <span class="n">CovidScenario</span>
+<span class="linenos"> 6</span>
+<span class="linenos"> 7</span>
+<span class="linenos"> 8</span><span class="k">class</span><span class="w"> </span><span class="nc">CovidSpot</span><span class="p">(</span><span class="n">Spot</span><span class="p">):</span>
+<span class="linenos"> 9</span><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos">10</span><span class="sd">    Represents a single cell on the grid.</span>
+<span class="linenos">11</span><span class="sd">    Can hold properties that affect agent behavior, like &#39;stay_prob&#39;.</span>
+<span class="linenos">12</span><span class="sd">    &quot;&quot;&quot;</span>
+<span class="linenos">13</span>
+<span class="linenos">14</span>    <span class="k">def</span><span class="w"> </span><span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="linenos">15</span>        <span class="bp">self</span><span class="o">.</span><span class="n">stay_prob</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
+<span class="linenos">16</span>
+<span class="linenos">17</span>
+<span class="linenos">18</span><span class="k">class</span><span class="w"> </span><span class="nc">CovidGrid</span><span class="p">(</span><span class="n">Grid</span><span class="p">):</span>
+<span class="linenos">19</span><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos">20</span><span class="sd">    Manages the 2D space, spots, and agent positions.</span>
+<span class="linenos">21</span><span class="sd">    &quot;&quot;&quot;</span>
+<span class="linenos">22</span>    
+<span class="linenos">23</span>    <span class="n">scenario</span><span class="p">:</span> <span class="s2">&quot;CovidScenario&quot;</span>
+<span class="linenos">24</span>
+<span class="linenos">25</span>    <span class="k">def</span><span class="w"> </span><span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="linenos">26</span><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos">27</span><span class="sd">        Configure the grid.</span>
+<span class="linenos">28</span><span class="sd">        Here we apply the &#39;stay_prob&#39; matrix loaded in the scenario to the spots.</span>
+<span class="linenos">29</span><span class="sd">        &quot;&quot;&quot;</span>
+<span class="linenos">30</span>        <span class="c1"># set_spot_property loads a 2D numpy array or list of lists into the grid spots</span>
+<span class="linenos">31</span>        <span class="bp">self</span><span class="o">.</span><span class="n">set_spot_property</span><span class="p">(</span><span class="s2">&quot;stay_prob&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">stay_prob_matrix</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="_index.html" class="btn btn-neutral float-left" title="Model Gallery" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="covid_contagion_grid_visual.html" class="btn btn-neutral float-right" title="CovidContagionGridVisual" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021-2022, ABM4ALL.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

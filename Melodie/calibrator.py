@@ -121,9 +121,12 @@ class GACalibratorAlgorithmMeta(CalibratorAlgorithmMeta):
 
 class GACalibratorAlgorithm:
     """
-    参数：一个tuple
-    每次会跑20条染色体，然后将参数缓存起来。
-    目标函数从TargetFcnCache中查询。
+    (Internal) The genetic algorithm implementation for the Calibrator.
+
+    This class orchestrates the GA process, including managing the population of
+    chromosomes (parameter sets), distributing simulation tasks to parallel
+
+    workers, caching results, and evolving the population across generations.
     """
 
     def __init__(
@@ -193,10 +196,11 @@ class GACalibratorAlgorithm:
 
     def get_params(self, id_chromosome: int) -> Dict[str, Any]:
         """
-        Pass parameters from the chromosome to the Environment.
+        Decode a chromosome into a dictionary of scenario parameters.
 
-        :param id_chromosome:
-        :return:
+        :param id_chromosome: The index of the chromosome in the current
+            population.
+        :return: A dictionary mapping parameter names to their float values.
         """
         chromosome_value = self.algorithm.chrom2x(self.algorithm.Chrom)[id_chromosome]
         env_parameters_dict = {}
@@ -211,17 +215,17 @@ class GACalibratorAlgorithm:
         id_chromosome: int,
     ):
         """
-        Extract the value of target functions from Model, and write them into cache.
-
-        :return:
+        (Internal) Store the output of the target function (distance) in a cache.
         """
         self.cache[(generation, id_chromosome)] = env_data["target_function_value"]
 
     def generate_target_function(self) -> Callable[[], float]:
         """
-        Generate the target function.
+        (Internal) Create the fitness function for the genetic algorithm.
 
-        :return:
+        This function retrieves pre-computed distance values from the cache for
+        each chromosome, allowing the GA to evaluate fitness without re-running
+        the simulation.
         """
 
         def f(*args):
@@ -259,11 +263,6 @@ class GACalibratorAlgorithm:
                 d.update(agent_container_data)
 
                 agent_records[container_name].append(d)
-            self.manager._write_to_table(
-                "csv",
-                f"Result_Calibrator_{underline_to_camel(container_name)}",
-                pd.DataFrame(agent_records[container_name]),
-            )
         environment_record.update(meta_dict)
         environment_record.update(env_data)
         environment_record.pop("target_function_value")
@@ -396,8 +395,10 @@ class GACalibratorAlgorithm:
 
 class Calibrator(BaseModellingManager):
     """
-    Calibrator calibrates the parameters of the scenario
-    by minimizing the distance between model output and empirical evidence.
+    The ``Calibrator`` uses a genetic algorithm to tune scenario parameters.
+
+    It aims to find the parameter set that minimizes the "distance" between a
+    model's output and a predefined target (e.g., empirical data).
     """
 
     def __init__(
@@ -409,12 +410,13 @@ class Calibrator(BaseModellingManager):
         processors=1,
     ):
         """
-        :param config: Config instance for current project.
-        :param scenario_cls: Scenario class for current project.
-        :param model_cls: Model class in current project.
-        :param data_loader_cls: DataLoader class in current project.
-        :param processors: Each path in current iteration will be computed parallelly, this parameter
-         stands for processor cores used in parallel computation.
+        :param config: The project :class:`~Melodie.Config` object.
+        :param scenario_cls: The :class:`~Melodie.Scenario` subclass for the model.
+        :param model_cls: The :class:`~Melodie.Model` subclass for the model.
+        :param data_loader_cls: The :class:`~Melodie.DataLoader` subclass for the
+            model.
+        :param processors: The number of processor cores to use for parallel
+            computation of the genetic algorithm.
         """
         super().__init__(
             config=config,
@@ -438,30 +440,39 @@ class Calibrator(BaseModellingManager):
 
     def setup(self):
         """
-        Setup method, be sure to inherit this method in custom calibrator class.
+        A hook for setting up the Calibrator.
+
+        This method should be overridden in a subclass to define which
+        scenario properties to calibrate using
+        :meth:`add_scenario_calibrating_property`.
         """
         pass
 
     def collect_data(self):
         """
-        Set the agent and environment properties to be collected.
+        (Optional) A hook to define which agent and environment properties to record.
 
+        This is not required for calibration itself but is useful for saving
+        detailed simulation data during the calibration process. Use
+        :meth:`add_environment_property` to register properties.
         """
         pass
 
     def generate_scenarios(self) -> List["Scenario"]:
         """
-        Generate scenario objects by the parameter from static tables or scenarios_dataframe.
+        Generate scenarios from the ``CalibratorScenarios`` table.
 
-        :return: A list of generated scenarios.
+        :return: A list of ``Scenario`` objects.
         """
         return self.data_loader.generate_scenarios("Calibrator")
 
     def get_params_scenarios(self) -> List:
         """
-        Get the parameters of calibrator parameters from the registered dataframe.
+        Load the genetic algorithm parameters from the
+        ``CalibratorParamsScenarios`` table.
 
-        :return: A list of dict, and each dict contains parameters.
+        :return: A list of dictionaries, where each dictionary contains the GA
+            parameters for one calibration run.
         """
 
         calibrator_scenarios_table = self.get_dataframe("CalibratorParamsScenarios")
@@ -472,8 +483,7 @@ class Calibrator(BaseModellingManager):
 
     def run(self):
         """
-        The main method for calibrator.
-
+        The main entry point for starting the calibration process.
         """
         self.setup()
         self.pre_run()
@@ -496,11 +506,7 @@ class Calibrator(BaseModellingManager):
 
     def run_once_new(self, scenario: Scenario, calibration_params: GACalibratorParams):
         """
-        Run for one calibration path
-
-        :param scenario: The scenario to run.
-        :param calibration_params: calibration parameters.
-        :return: None
+        (Internal) Run a single calibration path.
         """
         self.algorithm = GACalibratorAlgorithm(
             self.properties,
@@ -516,21 +522,21 @@ class Calibrator(BaseModellingManager):
 
     def target_function(self, model: "Model") -> Union[float, int]:
         """
-        The target function to be minimized
-
-        :param env: Environment of the current model.
-        :return:
+        (Internal) A wrapper for the user-defined distance function.
         """
         return self.distance(model)
 
     def distance(self, model: "Model") -> float:
         """
-        The optimization of calibrator is to minimize the distance.
+        The distance function to be minimized by the calibrator.
 
-        Be sure to inherit this function in custom calibrator, and return a float value.
+        This method **must be overridden** in a subclass. It should take a
+        ``Model`` object (representing the final state of a simulation run) and
+        return a single float value representing the "distance" or error between
+        the model's output and the desired target.
 
-        :param model: The current model after running the current parameter set.
-        :return: None
+        :param model: The ``Model`` object after a simulation run.
+        :return: A float representing the distance.
         """
         raise NotImplementedError(
             "Calibrator.distance(model) must be overridden in sub-class!"
@@ -538,10 +544,12 @@ class Calibrator(BaseModellingManager):
 
     def add_scenario_calibrating_property(self, prop: str):
         """
-        Add a property to be tuned in the calibration, and ``prop`` should be a name of property in the environment.
+        Register a scenario property to be calibrated.
 
-        :param prop: Property name
-        :return: None
+        The specified property will be tuned by the genetic algorithm within the
+        bounds defined in the ``CalibratorParamsScenarios`` table.
+
+        :param prop: The name of the scenario property to calibrate.
         """
         assert (
             prop not in self.properties
@@ -550,10 +558,12 @@ class Calibrator(BaseModellingManager):
 
     def add_environment_property(self, prop: str):
         """
-        Add a property of environment to be recorded in the calibration voyage.
+        Register an environment property to be recorded during calibration.
 
-        :param prop: Property name
-        :return: None
+        This allows for saving the values of specific environment properties
+        for each simulation run within the calibration process.
+
+        :param prop: The name of the environment property to record.
         """
         assert prop not in self.watched_env_properties
         self.watched_env_properties.append(prop)

@@ -1,0 +1,2 @@
+id,run_num,period_num,agent_num,initial_infected_percentage,infection_prob,recovery_prob
+0,1,100,200,0.1,0.5,0.1

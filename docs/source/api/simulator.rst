@@ -1,8 +1,8 @@
 
 Simulator
-=============
+=========
 
-.. automodule:: Melodie.simulator
-               :members:
-               :undoc-members:
-               :show-inheritance:
+.. autoclass:: Melodie.Simulator
+   :members:
+   :undoc-members:
+   :show-inheritance:
