@@ -5,9 +5,15 @@ This script sets up the Melodie configuration and launches the simulator.
 It uses the grid-enabled Model, Scenario, and other core components.
 """
 import os
+import sys
 from Melodie import Config, Simulator
-from core.model import CovidModel
-from core.scenario import CovidScenario
+# Get the project root directory
+PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+if PROJECT_ROOT not in sys.path:
+    sys.path.insert(0, PROJECT_ROOT)
+
+from examples.covid_contagion_grid.core.model import CovidModel
+from examples.covid_contagion_grid.core.scenario import CovidScenario
 
 
 if __name__ == "__main__":

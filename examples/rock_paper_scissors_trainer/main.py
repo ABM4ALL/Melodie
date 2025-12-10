@@ -48,7 +48,7 @@ def run_trainer(cfg: Config) -> None:
         scenario_cls=RPSScenario,
         model_cls=RPSModel,
         processors=4,
-        parallel_mode="process",  # or "thread" for Python 3.13+
+        parallel_mode="thread",  # or "thread" for Python 3.13+
     )
     trainer.run()
 

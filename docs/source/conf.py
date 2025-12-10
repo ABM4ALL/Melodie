@@ -44,7 +44,6 @@ extensions = [
     "sphinx.ext.coverage",
     "sphinx.ext.mathjax",
     "sphinx_rtd_theme",
-    "recommonmark",
     "sphinx_markdown_tables",
     "sphinx.ext.autosectionlabel",
     # "sphinx_autodoc_typehints"

@@ -210,9 +210,18 @@ class GACalibratorAlgorithm:
         Worker function for thread-based parallelism.
         Runs a single simulation for a given chromosome.
         """
+        import logging
+        import time
         from Melodie import Environment
+        from MelodieInfra.config.global_configs import MelodieGlobalConfig
 
+        # Set up logging for this thread worker (similar to process workers)
+        thread_logger = logging.getLogger(f"Calibrator-processor-{core_id}")
+        
+        t0 = time.time()
         chrom, scenario_json, env_params = task
+        thread_logger.debug(f"processor {core_id} got chrom {chrom}")
+        
         scenario = calibrator.scenario_cls()
         scenario.manager = calibrator
         scenario._setup(scenario_json)
@@ -238,6 +247,11 @@ class GACalibratorAlgorithm:
             model
         )
 
+        t1 = time.time()
+        thread_logger.info(
+            f"Processor {core_id}, chromosome {chrom}, time: {MelodieGlobalConfig.Logger.round_elapsed_time(t1 - t0)}s"
+        )
+
         return (chrom, agent_data, env_data)
 
     def stop(self):
@@ -254,7 +268,8 @@ class GACalibratorAlgorithm:
         chromosome_value = self.algorithm.chrom2x(self.algorithm.Chrom)[id_chromosome]
         env_parameters_dict = {}
         for i, param_name in enumerate(self.env_param_names):
-            env_parameters_dict[param_name] = chromosome_value[i]
+            # Convert numpy float to native Python float for serialization
+            env_parameters_dict[param_name] = float(chromosome_value[i])
         return env_parameters_dict
 
     def target_function_to_cache(

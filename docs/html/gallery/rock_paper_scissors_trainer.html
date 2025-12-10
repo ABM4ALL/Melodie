@@ -382,18 +382,20 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../changelog.html">Change Log</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../changelog.html#major-version-0-x">Major Version 0.x</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../changelog.html#v0-8-0-may-10-2023">v0.8.0 (May. 10, 2023)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../changelog.html#v0-7-0-mar-25-2023">v0.7.0 (Mar. 25, 2023)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../changelog.html#v0-6-0-jan-04-2023">v0.6.0 (Jan. 04, 2023)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../changelog.html#v0-5-0-dec-17-2022">v0.5.0 (Dec. 17, 2022)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../changelog.html#v0-4-2-dec-15-2022">v0.4.2 (Dec. 15, 2022)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../changelog.html#v0-4-1-dec-12-2022">v0.4.1 (Dec. 12, 2022)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../changelog.html#v0-4-0-nov-15-2022">v0.4.0 (Nov. 15, 2022)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../changelog.html#v0-3-0-oct-28-2022">v0.3.0 (Oct. 28, 2022)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../changelog.html#v0-2-0-oct-24-2022">v0.2.0 (Oct. 24, 2022)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../changelog.html#v0-1-1-aug-23-2022">v0.1.1 (Aug. 23, 2022)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../changelog.html#v0-1-0-jul-22-2022">v0.1.0 (Jul. 22, 2022)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../changelog.html#start-may-10-2021">Start (May. 10, 2021)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../changelog.html#version-1-1-0-dec-10-2025">Version 1.1.0 (Dec. 10, 2025)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../changelog.html#version-1-0-0-mar-14-2024">Version 1.0.0 (Mar. 14, 2024)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../changelog.html#version-0-8-0-may-10-2023">Version 0.8.0 (May. 10, 2023)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../changelog.html#version-0-7-0-mar-25-2023">Version 0.7.0 (Mar. 25, 2023)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../changelog.html#version-0-6-0-jan-04-2023">Version 0.6.0 (Jan. 04, 2023)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../changelog.html#version-0-5-0-dec-17-2022">Version 0.5.0 (Dec. 17, 2022)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../changelog.html#version-0-4-2-dec-15-2022">Version 0.4.2 (Dec. 15, 2022)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../changelog.html#version-0-4-1-dec-12-2022">Version 0.4.1 (Dec. 12, 2022)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../changelog.html#version-0-4-0-nov-15-2022">Version 0.4.0 (Nov. 15, 2022)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../changelog.html#version-0-3-0-oct-28-2022">Version 0.3.0 (Oct. 28, 2022)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../changelog.html#version-0-2-0-oct-24-2022">Version 0.2.0 (Oct. 24, 2022)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../changelog.html#version-0-1-1-aug-23-2022">Version 0.1.1 (Aug. 23, 2022)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../changelog.html#version-0-1-0-jul-22-2022">Version 0.1.0 (Jul. 22, 2022)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../changelog.html#project-start-may-10-2021">Project Start (May. 10, 2021)</a></li>
 </ul>
 </li>
 </ul>
@@ -503,6 +505,22 @@ In this model, agents start with heterogeneous payoff preferences and strategy w
 </pre></div>
 </div>
 <p>The trainer clears the output directory before it runs. Therefore, after executing the command, you will only find the trainer’s output tables in <code class="docutils literal notranslate"><span class="pre">examples/rock_paper_scissors_trainer/data/output</span></code>. If you need the simulator’s results, you should run it separately (for example, by commenting out the <code class="docutils literal notranslate"><span class="pre">run_trainer</span></code> call in <code class="docutils literal notranslate"><span class="pre">main.py</span></code>).</p>
+<p><strong>Parallel Execution Mode</strong></p>
+<p>The <code class="docutils literal notranslate"><span class="pre">Trainer</span></code> supports two parallelization modes, controlled by the <code class="docutils literal notranslate"><span class="pre">parallel_mode</span></code> parameter when creating the trainer instance:</p>
+<ul class="simple">
+<li><p><strong>``parallel_mode=”process”``</strong> (default): Uses subprocess-based parallelism via <code class="docutils literal notranslate"><span class="pre">multiprocessing</span></code>. This is the traditional approach and works on all Python versions. It is recommended for most use cases.</p></li>
+<li><p><strong>``parallel_mode=”thread”``</strong>: Uses thread-based parallelism via <code class="docutils literal notranslate"><span class="pre">ThreadPoolExecutor</span></code>. This mode is <strong>recommended for Python 3.13+</strong> (free-threaded/No-GIL builds) as it can provide better performance by avoiding the overhead of process creation and data serialization. In older Python versions, this mode will still run but may be limited by the Global Interpreter Lock (GIL).</p></li>
+</ul>
+<p>You can specify the mode when creating the trainer:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">trainer</span> <span class="o">=</span> <span class="n">RPSTrainer</span><span class="p">(</span>
+    <span class="n">config</span><span class="o">=</span><span class="n">cfg</span><span class="p">,</span>
+    <span class="n">scenario_cls</span><span class="o">=</span><span class="n">RPSScenario</span><span class="p">,</span>
+    <span class="n">model_cls</span><span class="o">=</span><span class="n">RPSModel</span><span class="p">,</span>
+    <span class="n">processors</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+    <span class="n">parallel_mode</span><span class="o">=</span><span class="s2">&quot;thread&quot;</span><span class="p">,</span>  <span class="c1"># or &quot;process&quot; (default)</span>
+<span class="p">)</span>
+</pre></div>
+</div>
 </section>
 <section id="trainer-code">
 <h2>Trainer: Code<a class="headerlink" href="#trainer-code" title="Link to this heading"></a></h2>

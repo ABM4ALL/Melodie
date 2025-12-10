@@ -91,6 +91,26 @@ You can run the calibrator using the main script:
 
 This will execute the genetic algorithm, running multiple simulations in parallel to find the optimal ``infection_prob``. The results, including the progression of parameters and distances across generations, are saved to the ``data/output`` folder.
 
+**Parallel Execution Mode**
+
+The ``Calibrator`` supports two parallelization modes, controlled by the ``parallel_mode`` parameter when creating the calibrator instance:
+
+- **``parallel_mode="process"``** (default): Uses subprocess-based parallelism via ``multiprocessing``. This is the traditional approach and works on all Python versions. It is recommended for most use cases.
+
+- **``parallel_mode="thread"``**: Uses thread-based parallelism via ``ThreadPoolExecutor``. This mode is **recommended for Python 3.13+** (free-threaded/No-GIL builds) as it can provide better performance by avoiding the overhead of process creation and data serialization. In older Python versions, this mode will still run but may be limited by the Global Interpreter Lock (GIL).
+
+You can specify the mode when creating the calibrator:
+
+.. code-block:: python
+
+   calibrator = CovidCalibrator(
+       config=cfg,
+       model_cls=CovidModel,
+       scenario_cls=CovidScenario,
+       processors=8,
+       parallel_mode="thread",  # or "process" (default)
+   )
+
 Calibrator: Code
 ----------------
 

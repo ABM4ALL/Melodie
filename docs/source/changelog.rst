@@ -9,8 +9,9 @@ Version 1.1.0 (Dec. 10, 2025)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 - Add new examples and update documentation.
 - Fixed small bugs in `Calibrator` and `Trainer`.
-- Add a new parallel execution mode for the simulator: ``run_parallel_multithread``.
-- Upgrade supported Python version from 3.12 to 3.14.2.
+- Add a new parallel execution mode for the simulator: ``run_parallel_multithread`` based on Python 3.14+ free-threaded mode (No-GIL).
+- Add thread-based parallel execution mode for `Calibrator` and `Trainer` via the ``parallel_mode`` parameter (recommended for Python 3.13+).
+- Upgrade supported Python version from 3.12 to 3.14+ (tested on 3.14.2).
 
 Version 1.0.0 (Mar. 14, 2024)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

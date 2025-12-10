@@ -21,11 +21,18 @@ from examples.covid_contagion_calibrator.core.scenario import CovidScenario
 
 
 def run_calibrator(cfg):
+    # The `parallel_mode` parameter controls the parallelization strategy:
+    #   - "process" (default): Uses subprocess-based parallelism. Works on all
+    #     Python versions. Recommended for most use cases.
+    #   - "thread": Uses thread-based parallelism. Recommended for Python 3.13+
+    #     (free-threaded/No-GIL builds) for potentially faster performance by
+    #     avoiding process creation overhead.
     calibrator = CovidCalibrator(
         config=cfg,
         model_cls=CovidModel,
         scenario_cls=CovidScenario,
         processors=8,
+        parallel_mode="process",  # or "thread" for Python 3.13+
     )
     calibrator.run()
 

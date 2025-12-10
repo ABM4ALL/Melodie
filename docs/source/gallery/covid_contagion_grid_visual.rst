@@ -24,8 +24,8 @@ The structure is similar to the grid example but adds a visualizer component:
     │   └── ...
     ├── data/
     │   └── ...
-    ├── main.py                 # Launches MelodieStudio
-    └── ...
+    ├── run_studio.py           # Launches MelodieStudio
+    └── run_simulator.py         # Runs headless simulation
 
 Visualizer: Key Changes
 -----------------------
@@ -37,7 +37,7 @@ Visualizer: Key Changes
    - **Grid View**: A visual representation of the grid where agents appear as colored dots (Green=Susceptible, Red=Infected, Gray=Recovered).
 
 2. **MelodieStudio**:
-   Instead of running a batch simulation immediately, the ``main.py`` script starts a local web server (MelodieStudio). You can control the simulation (Start, Pause, Reset) from the browser.
+   Instead of running a batch simulation immediately, the ``run_studio.py`` script starts a local web server (MelodieStudio). You can control the simulation (Start, Pause, Reset) from the browser.
 
 Visualizer: Running the Model
 -----------------------------
@@ -46,7 +46,7 @@ To run the model with the visualizer, execute the main script:
 
 .. code-block:: bash
 
-   python examples/covid_contagion_grid_visual/main.py
+   python examples/covid_contagion_grid_visual/run_studio.py
 
 Then, open your browser and navigate to ``http://localhost:8089``. This is the web gateway for MelodieStudio. The backend simulation service will automatically run on ``127.0.0.1:8765``.
 

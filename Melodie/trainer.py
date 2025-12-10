@@ -253,9 +253,18 @@ class GATrainerAlgorithm:
         Worker function for thread-based parallelism.
         Runs a single simulation for a given chromosome.
         """
+        import logging
+        import time
         from Melodie import Environment
+        from MelodieInfra.config.global_configs import MelodieGlobalConfig
 
+        # Set up logging for this thread worker (similar to process workers)
+        thread_logger = logging.getLogger(f"Trainer-processor-{core_id}")
+        
+        t0 = time.time()
         chrom, scenario_json, agent_params = task
+        thread_logger.debug(f"processor {core_id} got chrom {chrom}")
+        
         scenario = trainer.scenario_cls()
         scenario.manager = trainer
         scenario._setup(scenario_json)
@@ -286,6 +295,11 @@ class GATrainerAlgorithm:
 
         env: Environment = model.environment
         env_data = env.to_dict(trainer.environment_properties)
+
+        t1 = time.time()
+        thread_logger.info(
+            f"Processor {core_id}, chromosome {chrom}, time: {MelodieGlobalConfig.Logger.round_elapsed_time(t1 - t0)}s"
+        )
 
         return (chrom, agent_data, env_data)
 
@@ -343,7 +357,8 @@ class GATrainerAlgorithm:
             agent_id, agent_category = key
             d = {"id": agent_id}
             for i, param_name in enumerate(self.agent_params_defined[agent_category]):
-                d[param_name] = chromosome_value[i]
+                # Convert numpy float to native Python float for serialization
+                d[param_name] = float(chromosome_value[i])
             params[agent_category].append(d)
         return params
 

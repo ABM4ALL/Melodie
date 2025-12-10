@@ -382,18 +382,20 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../changelog.html">Change Log</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../changelog.html#major-version-0-x">Major Version 0.x</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../changelog.html#v0-8-0-may-10-2023">v0.8.0 (May. 10, 2023)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../changelog.html#v0-7-0-mar-25-2023">v0.7.0 (Mar. 25, 2023)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../changelog.html#v0-6-0-jan-04-2023">v0.6.0 (Jan. 04, 2023)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../changelog.html#v0-5-0-dec-17-2022">v0.5.0 (Dec. 17, 2022)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../changelog.html#v0-4-2-dec-15-2022">v0.4.2 (Dec. 15, 2022)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../changelog.html#v0-4-1-dec-12-2022">v0.4.1 (Dec. 12, 2022)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../changelog.html#v0-4-0-nov-15-2022">v0.4.0 (Nov. 15, 2022)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../changelog.html#v0-3-0-oct-28-2022">v0.3.0 (Oct. 28, 2022)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../changelog.html#v0-2-0-oct-24-2022">v0.2.0 (Oct. 24, 2022)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../changelog.html#v0-1-1-aug-23-2022">v0.1.1 (Aug. 23, 2022)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../changelog.html#v0-1-0-jul-22-2022">v0.1.0 (Jul. 22, 2022)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../changelog.html#start-may-10-2021">Start (May. 10, 2021)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../changelog.html#version-1-1-0-dec-10-2025">Version 1.1.0 (Dec. 10, 2025)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../changelog.html#version-1-0-0-mar-14-2024">Version 1.0.0 (Mar. 14, 2024)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../changelog.html#version-0-8-0-may-10-2023">Version 0.8.0 (May. 10, 2023)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../changelog.html#version-0-7-0-mar-25-2023">Version 0.7.0 (Mar. 25, 2023)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../changelog.html#version-0-6-0-jan-04-2023">Version 0.6.0 (Jan. 04, 2023)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../changelog.html#version-0-5-0-dec-17-2022">Version 0.5.0 (Dec. 17, 2022)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../changelog.html#version-0-4-2-dec-15-2022">Version 0.4.2 (Dec. 15, 2022)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../changelog.html#version-0-4-1-dec-12-2022">Version 0.4.1 (Dec. 12, 2022)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../changelog.html#version-0-4-0-nov-15-2022">Version 0.4.0 (Nov. 15, 2022)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../changelog.html#version-0-3-0-oct-28-2022">Version 0.3.0 (Oct. 28, 2022)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../changelog.html#version-0-2-0-oct-24-2022">Version 0.2.0 (Oct. 24, 2022)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../changelog.html#version-0-1-1-aug-23-2022">Version 0.1.1 (Aug. 23, 2022)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../changelog.html#version-0-1-0-jul-22-2022">Version 0.1.0 (Jul. 22, 2022)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../changelog.html#project-start-may-10-2021">Project Start (May. 10, 2021)</a></li>
 </ul>
 </li>
 </ul>
@@ -444,8 +446,8 @@ It demonstrates how to use <strong>MelodieStudio</strong> to interactively run t
 │   └── ...
 ├── data/
 │   └── ...
-├── main.py                 # Launches MelodieStudio
-└── ...
+├── run_studio.py           # Launches MelodieStudio
+└── run_simulator.py         # Runs headless simulation
 </pre></div>
 </div>
 </section>
@@ -460,13 +462,13 @@ A new class <code class="docutils literal notranslate"><span class="pre">CovidVi
 </ul>
 </li>
 <li><p><strong>MelodieStudio</strong>:
-Instead of running a batch simulation immediately, the <code class="docutils literal notranslate"><span class="pre">main.py</span></code> script starts a local web server (MelodieStudio). You can control the simulation (Start, Pause, Reset) from the browser.</p></li>
+Instead of running a batch simulation immediately, the <code class="docutils literal notranslate"><span class="pre">run_studio.py</span></code> script starts a local web server (MelodieStudio). You can control the simulation (Start, Pause, Reset) from the browser.</p></li>
 </ol>
 </section>
 <section id="visualizer-running-the-model">
 <h2>Visualizer: Running the Model<a class="headerlink" href="#visualizer-running-the-model" title="Link to this heading"></a></h2>
 <p>To run the model with the visualizer, execute the main script:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>examples/covid_contagion_grid_visual/main.py
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>examples/covid_contagion_grid_visual/run_studio.py
 </pre></div>
 </div>
 <p>Then, open your browser and navigate to <code class="docutils literal notranslate"><span class="pre">http://localhost:8089</span></code>. This is the web gateway for MelodieStudio. The backend simulation service will automatically run on <code class="docutils literal notranslate"><span class="pre">127.0.0.1:8765</span></code>.</p>

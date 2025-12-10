@@ -59,26 +59,11 @@ class CovidVisualizer(Visualizer):
         )
 
         # Configure the chart to show population health states over time
-        def get_susceptible():
-            val = self.model.environment.num_susceptible
-            print(f"[DEBUG] Susceptible: {val}")
-            return val
-        
-        def get_infected():
-            val = self.model.environment.num_infected
-            print(f"[DEBUG] Infected: {val}")
-            return val
-        
-        def get_recovered():
-            val = self.model.environment.num_recovered
-            print(f"[DEBUG] Recovered: {val}")
-            return val
-        
         self.plot_charts.add_line_chart("health_state_trend") \
             .set_data_source({
-                "Susceptible": get_susceptible,
-                "Infected": get_infected,
-                "Recovered": get_recovered
+                "Susceptible": lambda: self.model.environment.num_susceptible,
+                "Infected": lambda: self.model.environment.num_infected,
+                "Recovered": lambda: self.model.environment.num_recovered
             })
 
         # Configure the grid visualization

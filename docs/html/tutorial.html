@@ -382,18 +382,20 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="changelog.html">Change Log</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="changelog.html#major-version-0-x">Major Version 0.x</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="changelog.html#v0-8-0-may-10-2023">v0.8.0 (May. 10, 2023)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="changelog.html#v0-7-0-mar-25-2023">v0.7.0 (Mar. 25, 2023)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="changelog.html#v0-6-0-jan-04-2023">v0.6.0 (Jan. 04, 2023)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="changelog.html#v0-5-0-dec-17-2022">v0.5.0 (Dec. 17, 2022)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="changelog.html#v0-4-2-dec-15-2022">v0.4.2 (Dec. 15, 2022)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="changelog.html#v0-4-1-dec-12-2022">v0.4.1 (Dec. 12, 2022)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="changelog.html#v0-4-0-nov-15-2022">v0.4.0 (Nov. 15, 2022)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="changelog.html#v0-3-0-oct-28-2022">v0.3.0 (Oct. 28, 2022)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="changelog.html#v0-2-0-oct-24-2022">v0.2.0 (Oct. 24, 2022)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="changelog.html#v0-1-1-aug-23-2022">v0.1.1 (Aug. 23, 2022)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="changelog.html#v0-1-0-jul-22-2022">v0.1.0 (Jul. 22, 2022)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="changelog.html#start-may-10-2021">Start (May. 10, 2021)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#version-1-1-0-dec-10-2025">Version 1.1.0 (Dec. 10, 2025)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#version-1-0-0-mar-14-2024">Version 1.0.0 (Mar. 14, 2024)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#version-0-8-0-may-10-2023">Version 0.8.0 (May. 10, 2023)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#version-0-7-0-mar-25-2023">Version 0.7.0 (Mar. 25, 2023)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#version-0-6-0-jan-04-2023">Version 0.6.0 (Jan. 04, 2023)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#version-0-5-0-dec-17-2022">Version 0.5.0 (Dec. 17, 2022)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#version-0-4-2-dec-15-2022">Version 0.4.2 (Dec. 15, 2022)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#version-0-4-1-dec-12-2022">Version 0.4.1 (Dec. 12, 2022)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#version-0-4-0-nov-15-2022">Version 0.4.0 (Nov. 15, 2022)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#version-0-3-0-oct-28-2022">Version 0.3.0 (Oct. 28, 2022)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#version-0-2-0-oct-24-2022">Version 0.2.0 (Oct. 24, 2022)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#version-0-1-1-aug-23-2022">Version 0.1.1 (Aug. 23, 2022)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#version-0-1-0-jul-22-2022">Version 0.1.0 (Jul. 22, 2022)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="changelog.html#project-start-may-10-2021">Project Start (May. 10, 2021)</a></li>
 </ul>
 </li>
 </ul>
@@ -716,24 +718,29 @@ them manually in <code class="docutils literal notranslate"><span class="pre">lo
 <p>This <code class="docutils literal notranslate"><span class="pre">main.py</span></code> file is the entry point that loads the configuration and starts the simulation. It mirrors how you would run any Melodie project from a script.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 <span class="linenos"> 2</span><span class="kn">from</span><span class="w"> </span><span class="nn">Melodie</span><span class="w"> </span><span class="kn">import</span> <span class="n">Config</span><span class="p">,</span> <span class="n">Simulator</span>
-<span class="linenos"> 3</span><span class="kn">from</span><span class="w"> </span><span class="nn">core.model</span><span class="w"> </span><span class="kn">import</span> <span class="n">CovidModel</span>
-<span class="linenos"> 4</span><span class="kn">from</span><span class="w"> </span><span class="nn">core.scenario</span><span class="w"> </span><span class="kn">import</span> <span class="n">CovidScenario</span>
+<span class="linenos"> 3</span><span class="kn">from</span><span class="w"> </span><span class="nn">examples.covid_contagion.core.model</span><span class="w"> </span><span class="kn">import</span> <span class="n">CovidModel</span>
+<span class="linenos"> 4</span><span class="kn">from</span><span class="w"> </span><span class="nn">examples.covid_contagion.core.scenario</span><span class="w"> </span><span class="kn">import</span> <span class="n">CovidScenario</span>
 <span class="linenos"> 5</span>
 <span class="linenos"> 6</span><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
 <span class="linenos"> 7</span>    <span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">(</span>
-<span class="linenos"> 8</span>        <span class="n">project_name</span><span class="o">=</span><span class="s2">&quot;CovidContagion&quot;</span><span class="p">,</span>
-<span class="linenos"> 9</span>        <span class="n">project_root</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">),</span>
-<span class="linenos">10</span>        <span class="n">input_folder</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">),</span> <span class="s2">&quot;data/input&quot;</span><span class="p">),</span>
-<span class="linenos">11</span>        <span class="n">output_folder</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">),</span> <span class="s2">&quot;data/output&quot;</span><span class="p">),</span>
-<span class="linenos">12</span>    <span class="p">)</span>
-<span class="linenos">13</span>    
-<span class="linenos">14</span>    <span class="n">simulator</span> <span class="o">=</span> <span class="n">Simulator</span><span class="p">(</span>
-<span class="linenos">15</span>        <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span>
-<span class="linenos">16</span>        <span class="n">model_cls</span><span class="o">=</span><span class="n">CovidModel</span><span class="p">,</span>
-<span class="linenos">17</span>        <span class="n">scenario_cls</span><span class="o">=</span><span class="n">CovidScenario</span>
-<span class="linenos">18</span>    <span class="p">)</span>
-<span class="linenos">19</span>    
-<span class="linenos">20</span>    <span class="n">simulator</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+<span class="linenos"> 8</span>        <span class="n">project_name</span><span class="o">=</span><span class="s2">&quot;covid_contagion&quot;</span><span class="p">,</span>
+<span class="linenos"> 9</span>        <span class="n">project_root</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)),</span>
+<span class="linenos">10</span>        <span class="n">input_folder</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+<span class="linenos">11</span>            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)),</span> <span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="s2">&quot;input&quot;</span>
+<span class="linenos">12</span>        <span class="p">),</span>
+<span class="linenos">13</span>        <span class="n">output_folder</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+<span class="linenos">14</span>            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)),</span> <span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="s2">&quot;output&quot;</span>
+<span class="linenos">15</span>        <span class="p">),</span>
+<span class="linenos">16</span>    <span class="p">)</span>
+<span class="linenos">17</span>
+<span class="linenos">18</span>    <span class="n">simulator</span> <span class="o">=</span> <span class="n">Simulator</span><span class="p">(</span>
+<span class="linenos">19</span>        <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span>
+<span class="linenos">20</span>        <span class="n">model_cls</span><span class="o">=</span><span class="n">CovidModel</span><span class="p">,</span>
+<span class="linenos">21</span>        <span class="n">scenario_cls</span><span class="o">=</span><span class="n">CovidScenario</span><span class="p">,</span>
+<span class="linenos">22</span>    <span class="p">)</span>
+<span class="linenos">23</span>    <span class="n">simulator</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+<span class="linenos">24</span>    <span class="c1"># simulator.run_parallel(cores=8)</span>
+<span class="linenos">25</span>    <span class="c1"># simulator.run_parallel_multithread(cores=8)</span>
 </pre></div>
 </div>
 <p>Notes:</p>
@@ -788,6 +795,54 @@ them manually in <code class="docutils literal notranslate"><span class="pre">lo
 <span class="n">simulator</span><span class="o">.</span><span class="n">run_parallel_multithread</span><span class="p">(</span><span class="n">cores</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
 </pre></div>
 </div>
+<p><strong>Performance Comparison: A Quick Case Study</strong></p>
+<p>To demonstrate the difference, we ran the <code class="docutils literal notranslate"><span class="pre">covid_contagion</span></code> example with 24 scenarios (each with <code class="docutils literal notranslate"><span class="pre">run_num</span> <span class="pre">=</span> <span class="pre">1</span></code>) on a machine with a Python 3.11 environment and 8 cores.</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt><strong>`run_parallel(cores=8)`</strong>:</dt><dd><ul>
+<li><p><strong>Total Time</strong>: ~0.90 seconds</p></li>
+<li><p><strong>Mechanism</strong>: Spawns 8 separate Python processes. Each process has its own memory and GIL, allowing them to run computations on different cores simultaneously. This is highly effective for CPU-bound tasks like ABM.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>`run_parallel_multithread(cores=8)`</strong>:</dt><dd><ul>
+<li><p><strong>Total Time</strong>: ~1.01 seconds</p></li>
+<li><p><strong>Mechanism</strong>: Spawns 8 threads within a single Python process. In Python versions before 3.13, the GIL prevents these threads from executing Python code on more than one core at a time. The overhead of thread management can even make it slightly slower than the process-based approach.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+<p><strong>Update: Test Results on Python 3.14.2 (Free-Threaded)</strong></p>
+<p>With the official support for a free-threaded model (No-GIL) in Python 3.14+, the performance dynamic has shifted dramatically as predicted. We ran the same test on the same 8-core machine using Python 3.14.2:</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt><strong>`run_parallel(cores=8)`</strong>:</dt><dd><ul>
+<li><p><strong>Total Time</strong>: ~5.37 seconds</p></li>
+<li><p><strong>Mechanism</strong>: Still effective, but the overhead of creating 8 separate processes and pickling data for communication is now more apparent compared to the lightweight thread-based alternative.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>`run_parallel_multithread(cores=8)`</strong>:</dt><dd><ul>
+<li><p><strong>Total Time</strong>: ~1.56 seconds</p></li>
+<li><p><strong>Mechanism</strong>: The 8 threads now run on 8 cores in true parallelism within a single process. By avoiding the overhead of process creation and data serialization, this method is now <strong>over 3.4x faster</strong> for this specific task.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+<p><strong>Conclusion</strong>: For CPU-bound agent-based models, <code class="docutils literal notranslate"><span class="pre">run_parallel()</span></code> remains a robust choice for all Python versions. However, if you are using <strong>Python 3.14+</strong>, <code class="docutils literal notranslate"><span class="pre">run_parallel_multithread()</span></code> is now the <strong>highly recommended method</strong> for achieving superior performance on multi-core systems, thanks to the removal of the GIL.</p>
+<p><strong>A Note on Performance Trade-offs</strong></p>
+<p>An astute observer might notice that the absolute execution times on Python 3.14.2 for <em>both</em> methods were slower than on Python 3.11. This is an expected trade-off. The Python 3.14+ interpreter is more complex to support features like free-threading, leading to a higher startup overhead for each process.</p>
+<p>In our test, the simulation task for each scenario is very short (milliseconds). Consequently, the overhead of creating new Python processes for <code class="docutils literal notranslate"><span class="pre">run_parallel()</span></code> becomes a significant portion of the total time, causing its slowdown from ~0.9s to ~5.37s.</p>
+<p>The key takeaway is not the absolute speed on this micro-task, but the <strong>relative speedup</strong>. The test clearly demonstrates that for Python 3.14+, <code class="docutils literal notranslate"><span class="pre">run_parallel_multithread()</span></code> effectively eliminates this high process-creation overhead, making it the superior architecture for computationally intensive models where the simulation time far outweighs the initial setup time.</p>
+<p><strong>A Note on Paths and Parallel Execution</strong></p>
+<p>You may have noticed that some examples in the <cite>examples/</cite> directory require special handling to run in parallel, such as being executed as a module (e.g., <cite>python -m examples.covid_contagion.main</cite>) and having <cite>__init__.py</cite> files in their directories.</p>
+<p>This is a specific consequence of these examples being <strong>nested inside a larger project structure</strong> (the Melodie repository itself). When <cite>run_parallel()</cite> creates new processes, those processes need to be able to import the model’s code (like <cite>core.model</cite>). The path manipulation ensures they can find the <cite>examples</cite> package from the project’s root.</p>
 </section>
 </section>
 

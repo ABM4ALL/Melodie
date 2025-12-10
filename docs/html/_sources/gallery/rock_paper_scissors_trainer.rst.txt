@@ -95,6 +95,26 @@ You can run both the simulator and the trainer using the main script:
 
 The trainer clears the output directory before it runs. Therefore, after executing the command, you will only find the trainer's output tables in ``examples/rock_paper_scissors_trainer/data/output``. If you need the simulator's results, you should run it separately (for example, by commenting out the ``run_trainer`` call in ``main.py``).
 
+**Parallel Execution Mode**
+
+The ``Trainer`` supports two parallelization modes, controlled by the ``parallel_mode`` parameter when creating the trainer instance:
+
+- **``parallel_mode="process"``** (default): Uses subprocess-based parallelism via ``multiprocessing``. This is the traditional approach and works on all Python versions. It is recommended for most use cases.
+
+- **``parallel_mode="thread"``**: Uses thread-based parallelism via ``ThreadPoolExecutor``. This mode is **recommended for Python 3.13+** (free-threaded/No-GIL builds) as it can provide better performance by avoiding the overhead of process creation and data serialization. In older Python versions, this mode will still run but may be limited by the Global Interpreter Lock (GIL).
+
+You can specify the mode when creating the trainer:
+
+.. code-block:: python
+
+   trainer = RPSTrainer(
+       config=cfg,
+       scenario_cls=RPSScenario,
+       model_cls=RPSModel,
+       processors=4,
+       parallel_mode="thread",  # or "process" (default)
+   )
+
 Trainer: Code
 -------------
 

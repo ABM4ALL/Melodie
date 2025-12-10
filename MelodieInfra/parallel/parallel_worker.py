@@ -116,7 +116,12 @@ def sub_routine_trainer(
 
     from Melodie import Agent, AgentList, Config, Environment, Trainer
 
-    logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
+    logging.basicConfig(
+        stream=sys.stderr,
+        level=logging.DEBUG,
+        format="%(filename)s:%(lineno)d %(levelname)s %(message)s",
+        datefmt="%a, %d %b %Y %H:%M:%S",
+    )
     logger = logging.getLogger(f"Trainer-processor-{proc_id}")
     logger.info("subroutine started!")
     try:

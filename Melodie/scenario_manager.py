@@ -143,14 +143,26 @@ class Scenario(Element):
         Convert the scenario to a JSON-serializable dictionary.
 
         This method excludes properties that cannot be serialized, such as the
-        'manager' object.
+        'manager' object, pandas DataFrames, and numpy arrays. These excluded
+        objects will be reloaded independently in worker processes via the
+        ``load_data()`` method.
 
         :return: A ``dict`` containing serializable properties.
         """
+        import pandas as pd
+        import numpy as np
+
         d = {}
         for k in self.__dict__.keys():
-            if k not in {"manager"}:
-                d[k] = self.__dict__[k]
+            if k.startswith("_"):
+                continue
+            v = self.__dict__[k]
+            # Skip non-serializable objects
+            if k == "manager":
+                continue
+            if isinstance(v, (pd.DataFrame, np.ndarray)):
+                continue
+            d[k] = v
         return d
 
     def __repr__(self):
