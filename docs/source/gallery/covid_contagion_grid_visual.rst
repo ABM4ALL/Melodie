@@ -39,6 +39,11 @@ Visualizer: Key Changes
 2. **MelodieStudio**:
    Instead of running a batch simulation immediately, the ``run_studio.py`` script starts a local web server (MelodieStudio). You can control the simulation (Start, Pause, Reset) from the browser.
 
+.. image:: ../image/covid_contagion_grid_visual.png
+   :width: 100%
+   :align: center
+   :alt: Visualizer Screenshot
+
 Visualizer: Running the Model
 -----------------------------
 
