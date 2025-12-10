@@ -70,14 +70,17 @@ Dependency Note
 ---------------
 Melodie's core functionality relies on several key packages:
 
-* Python >=3.8
+* Python 3.8+
 * numpy
 * pandas
 * matplotlib
 * scikit-opt
 * networkx
+* sqlalchemy (Database connection)
+* rpyc (Parallel computing)
+* flask (Web interface)
 
-Python versions 3.8 through 3.12 are tested and supported.
+Python versions 3.8 through 3.14 are tested and supported.
 
 For detailed dependencies, please visit
 `requirements.txt <https://github.com/ABM4ALL/Melodie/blob/master/requirements.txt>`_
