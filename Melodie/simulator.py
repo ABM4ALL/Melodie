@@ -507,10 +507,9 @@ class Simulator(BaseModellingManager):
         Experimental parallel execution utilizing Python 3.13+ Free-threaded mode (No-GIL).
 
         This method uses a ThreadPoolExecutor.
-        - In Python 3.13+ (free-threaded build): It runs efficiently on multiple cores without the overhead
-          of process creation or object pickling.
-        - In older Python versions: It runs concurrently but is bound by the GIL, which may not improve
-          performance for CPU-bound ABM tasks.
+        In Python 3.13+ (free-threaded build), it can leverage multiple cores without the overhead of
+        process creation or object pickling. In older Python versions, it still runs concurrently but is
+        limited by the GIL, so CPU-bound workloads may not see a speedup.
 
         :param cores: Number of threads to use.
         """

@@ -70,6 +70,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../tutorial.html#agent-behavior">Agent Behavior</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../tutorial.html#data-collection-setup">Data Collection Setup</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../tutorial.html#run-the-model">Run the model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial.html#parallel-execution">Parallel Execution</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../framework_comparison.html">Framework Comparison</a><ul>
@@ -99,6 +100,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#visualizer-project-structure">Visualizer: Project Structure</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#visualizer-key-changes">Visualizer: Key Changes</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#visualizer-running-the-model">Visualizer: Running the Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#visualizer-customization-guide">Visualizer: Customization Guide</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#visualizer-code">Visualizer: Code</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#visualizer-definition">Visualizer Definition</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#model-structure">Model Structure</a></li>
@@ -172,7 +174,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../api/simulator.html#Melodie.Simulator.run"><code class="docutils literal notranslate"><span class="pre">Simulator.run()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/simulator.html#Melodie.Simulator.run_visual"><code class="docutils literal notranslate"><span class="pre">Simulator.run_visual()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/simulator.html#Melodie.Simulator.run_parallel"><code class="docutils literal notranslate"><span class="pre">Simulator.run_parallel()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/simulator.html#Melodie.Simulator.new_parallel"><code class="docutils literal notranslate"><span class="pre">Simulator.new_parallel()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/simulator.html#Melodie.Simulator.run_parallel_multithread"><code class="docutils literal notranslate"><span class="pre">Simulator.run_parallel_multithread()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -463,76 +465,168 @@ Instead of running a batch simulation immediately, the <code class="docutils lit
 </section>
 <section id="visualizer-running-the-model">
 <h2>Visualizer: Running the Model<a class="headerlink" href="#visualizer-running-the-model" title="Link to this heading"></a></h2>
-<p>Run the studio server:</p>
+<p>To run the model with the visualizer, execute the main script:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>examples/covid_contagion_grid_visual/main.py
 </pre></div>
 </div>
-<p>Then open your browser and visit <code class="docutils literal notranslate"><span class="pre">http://localhost:8765</span></code>.</p>
+<p>Then, open your browser and navigate to <code class="docutils literal notranslate"><span class="pre">http://localhost:8089</span></code>. This is the web gateway for MelodieStudio. The backend simulation service will automatically run on <code class="docutils literal notranslate"><span class="pre">127.0.0.1:8765</span></code>.</p>
 <ul class="simple">
-<li><p>Click the <strong>Simulator</strong> page.</p></li>
-<li><p>Select a scenario and click <strong>Start</strong>.</p></li>
-<li><p>You will see the grid animation on the left and the health state chart on the right.</p></li>
+<li><p>In the web interface, go to the <strong>Simulator</strong> page.</p></li>
+<li><p>The interactive parameter controls will appear on the left. You can adjust them and click <strong>Reset</strong> to apply the new values.</p></li>
+<li><p>Click <strong>Start</strong> to begin the simulation.</p></li>
+<li><p>The grid animation will be displayed in the center, and the line chart showing health state trends will be on the right.</p></li>
+</ul>
+</section>
+<section id="visualizer-customization-guide">
+<h2>Visualizer: Customization Guide<a class="headerlink" href="#visualizer-customization-guide" title="Link to this heading"></a></h2>
+<p>Here’s how you can customize the visualizer components:</p>
+<p><strong>1. Adding Data Charts (e.g., Line Chart)</strong></p>
+<ul class="simple">
+<li><p>In <code class="docutils literal notranslate"><span class="pre">core/visualizer.py</span></code>, use <code class="docutils literal notranslate"><span class="pre">self.plot_charts.add_line_chart(&quot;unique_chart_name&quot;)</span></code> to create a new chart.</p></li>
+<li><p>Chain it with <code class="docutils literal notranslate"><span class="pre">.set_data_source({...})</span></code> to bind data series. The values of the dictionary should be functions that return the numerical data for each time step (e.g., <code class="docutils literal notranslate"><span class="pre">self.model.environment.num_susceptible</span></code>).</p></li>
+<li><p>You can add multiple charts (line, pie, bar) as long as each has a unique name.</p></li>
+</ul>
+<p><strong>2. Configuring the Grid View</strong></p>
+<ul class="simple">
+<li><p>Use <code class="docutils literal notranslate"><span class="pre">self.add_grid(...)</span></code> to link the visualizer to your model’s <code class="docutils literal notranslate"><span class="pre">Grid</span></code> object.</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">var_style</span></code> dictionary is key: it maps the integer values returned by <code class="docutils literal notranslate"><span class="pre">var_getter</span></code> to a specific color and a label for the legend.</p></li>
+<li><p>The legend for the grid is automatically generated based on these labels.</p></li>
+</ul>
+<p><strong>3. Adding an Interactive Parameter Panel</strong></p>
+<ul>
+<li><p>Use <code class="docutils literal notranslate"><span class="pre">self.params_manager.add_param(...)</span></code> to register interactive parameters. The example adds three <code class="docutils literal notranslate"><span class="pre">FloatParam</span></code> instances for:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">initial_infected_percentage</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">infection_prob</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">recovery_prob</span></code></p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>Each parameter requires a <code class="docutils literal notranslate"><span class="pre">getter</span></code> to read its current value from the <code class="docutils literal notranslate"><span class="pre">Scenario</span></code> and a <code class="docutils literal notranslate"><span class="pre">setter</span></code> to write the new value from the web UI back to the <code class="docutils literal notranslate"><span class="pre">Scenario</span></code>.</p></li>
+<li><p>After changing a parameter in the UI, click the <strong>Reset</strong> button to restart the simulation with the new settings.</p></li>
+</ul>
+<p><strong>4. Adjusting the Layout</strong></p>
+<ul>
+<li><p>The layout is controlled by <code class="docutils literal notranslate"><span class="pre">.melodie/studio/chart_layout.json</span></code>. Each key in the JSON object corresponds to a component on the page:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;controls&quot;</span></code>: The parameter panel on the left.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;visualizer-grid&quot;</span></code>: The grid animation component.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;chart-health_state_trend&quot;</span></code>: The line chart (the name must match the one defined in <code class="docutils literal notranslate"><span class="pre">add_line_chart</span></code>).</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>You can adjust the position and size of each component using pixel values for <code class="docutils literal notranslate"><span class="pre">left</span></code>, <code class="docutils literal notranslate"><span class="pre">top</span></code>, <code class="docutils literal notranslate"><span class="pre">width</span></code>, and <code class="docutils literal notranslate"><span class="pre">height</span></code>. Changes take effect after restarting the server.</p></li>
+</ul>
+<p><strong>5. Styling Charts</strong></p>
+<ul class="simple">
+<li><p>You can provide additional <a class="reference external" href="https://echarts.apache.org/en/option.html">ECharts options</a> in <code class="docutils literal notranslate"><span class="pre">.melodie/studio/chart_options.json</span></code>.</p></li>
+<li><p>The key must match the chart’s name (e.g., <code class="docutils literal notranslate"><span class="pre">&quot;health_state_trend&quot;</span></code>).</p></li>
+<li><p>In the example, this is used to enable the legend, add axis titles, and adjust the chart’s internal grid margins for better spacing.</p></li>
 </ul>
 </section>
 <section id="visualizer-code">
 <h2>Visualizer: Code<a class="headerlink" href="#visualizer-code" title="Link to this heading"></a></h2>
-<p>This section shows the key code additions for the visualizer. Core logic files are the same as the <code class="docutils literal notranslate"><span class="pre">covid_contagagion_grid</span></code> example.</p>
+<p>This section shows the key code additions for the visualizer. Core logic files are the same as the <code class="docutils literal notranslate"><span class="pre">covid_contagion_grid</span></code> example.</p>
 <section id="visualizer-definition">
 <h3>Visualizer Definition<a class="headerlink" href="#visualizer-definition" title="Link to this heading"></a></h3>
 <p>This file is the core addition. It maps model data to visual elements. Defined in <code class="docutils literal notranslate"><span class="pre">core/visualizer.py</span></code>.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">from</span><span class="w"> </span><span class="nn">Melodie</span><span class="w"> </span><span class="kn">import</span> <span class="n">Visualizer</span>
 <span class="linenos"> 2</span><span class="kn">from</span><span class="w"> </span><span class="nn">.model</span><span class="w"> </span><span class="kn">import</span> <span class="n">CovidModel</span>
-<span class="linenos"> 3</span>
+<span class="linenos"> 3</span><span class="kn">from</span><span class="w"> </span><span class="nn">MelodieInfra.lowcode.params</span><span class="w"> </span><span class="kn">import</span> <span class="n">FloatParam</span>
 <span class="linenos"> 4</span>
-<span class="linenos"> 5</span><span class="k">class</span><span class="w"> </span><span class="nc">CovidVisualizer</span><span class="p">(</span><span class="n">Visualizer</span><span class="p">):</span>
-<span class="linenos"> 6</span>    <span class="n">model</span><span class="p">:</span> <span class="n">CovidModel</span>
-<span class="linenos"> 7</span>
-<span class="linenos"> 8</span>    <span class="k">def</span><span class="w"> </span><span class="nf">set_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">CovidModel</span><span class="p">):</span>
-<span class="linenos"> 9</span><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="linenos">10</span><span class="sd">        Called when the visualizer is bound to a model instance.</span>
-<span class="linenos">11</span><span class="sd">        Set grid dimensions here (model is available now).</span>
-<span class="linenos">12</span><span class="sd">        &quot;&quot;&quot;</span>
-<span class="linenos">13</span>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">set_model</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
-<span class="linenos">14</span>        <span class="c1"># Ensure grid dimensions are passed to frontend for correct scaling</span>
-<span class="linenos">15</span>        <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">width</span><span class="p">()</span>
-<span class="linenos">16</span>        <span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">height</span><span class="p">()</span>
-<span class="linenos">17</span>
-<span class="linenos">18</span>    <span class="k">def</span><span class="w"> </span><span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="linenos">19</span>        <span class="c1"># Configure the chart to show population health states over time</span>
-<span class="linenos">20</span>        <span class="k">def</span><span class="w"> </span><span class="nf">get_susceptible</span><span class="p">():</span>
-<span class="linenos">21</span>            <span class="n">val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">environment</span><span class="o">.</span><span class="n">num_susceptible</span>
-<span class="linenos">22</span>            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[DEBUG] Susceptible: </span><span class="si">{</span><span class="n">val</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="linenos">23</span>            <span class="k">return</span> <span class="n">val</span>
-<span class="linenos">24</span>        
-<span class="linenos">25</span>        <span class="k">def</span><span class="w"> </span><span class="nf">get_infected</span><span class="p">():</span>
-<span class="linenos">26</span>            <span class="n">val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">environment</span><span class="o">.</span><span class="n">num_infected</span>
-<span class="linenos">27</span>            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[DEBUG] Infected: </span><span class="si">{</span><span class="n">val</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="linenos">28</span>            <span class="k">return</span> <span class="n">val</span>
-<span class="linenos">29</span>        
-<span class="linenos">30</span>        <span class="k">def</span><span class="w"> </span><span class="nf">get_recovered</span><span class="p">():</span>
-<span class="linenos">31</span>            <span class="n">val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">environment</span><span class="o">.</span><span class="n">num_recovered</span>
-<span class="linenos">32</span>            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[DEBUG] Recovered: </span><span class="si">{</span><span class="n">val</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="linenos">33</span>            <span class="k">return</span> <span class="n">val</span>
-<span class="linenos">34</span>        
-<span class="linenos">35</span>        <span class="bp">self</span><span class="o">.</span><span class="n">plot_charts</span><span class="o">.</span><span class="n">add_line_chart</span><span class="p">(</span><span class="s2">&quot;health_state_trend&quot;</span><span class="p">)</span> \
-<span class="linenos">36</span>            <span class="o">.</span><span class="n">set_data_source</span><span class="p">({</span>
-<span class="linenos">37</span>                <span class="s2">&quot;Susceptible&quot;</span><span class="p">:</span> <span class="n">get_susceptible</span><span class="p">,</span>
-<span class="linenos">38</span>                <span class="s2">&quot;Infected&quot;</span><span class="p">:</span> <span class="n">get_infected</span><span class="p">,</span>
-<span class="linenos">39</span>                <span class="s2">&quot;Recovered&quot;</span><span class="p">:</span> <span class="n">get_recovered</span>
-<span class="linenos">40</span>            <span class="p">})</span>
-<span class="linenos">41</span>
-<span class="linenos">42</span>        <span class="c1"># Configure the grid visualization</span>
-<span class="linenos">43</span>        <span class="bp">self</span><span class="o">.</span><span class="n">add_grid</span><span class="p">(</span>
-<span class="linenos">44</span>            <span class="n">name</span><span class="o">=</span><span class="s2">&quot;covid_grid&quot;</span><span class="p">,</span>
-<span class="linenos">45</span>            <span class="n">grid_getter</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">grid</span><span class="p">,</span>
-<span class="linenos">46</span>            <span class="n">var_getter</span><span class="o">=</span><span class="k">lambda</span> <span class="n">agent</span><span class="p">:</span> <span class="n">agent</span><span class="o">.</span><span class="n">health_state</span><span class="p">,</span>
-<span class="linenos">47</span>            <span class="n">var_style</span><span class="o">=</span><span class="p">{</span>
-<span class="linenos">48</span>                <span class="mi">0</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="s2">&quot;Susceptible&quot;</span><span class="p">,</span> <span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="s2">&quot;#00FF00&quot;</span><span class="p">},</span>
-<span class="linenos">49</span>                <span class="mi">1</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="s2">&quot;Infected&quot;</span><span class="p">,</span> <span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="s2">&quot;#FF0000&quot;</span><span class="p">},</span>
-<span class="linenos">50</span>                <span class="mi">2</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="s2">&quot;Recovered&quot;</span><span class="p">,</span> <span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="s2">&quot;#808080&quot;</span><span class="p">}</span>
-<span class="linenos">51</span>            <span class="p">},</span>
-<span class="linenos">52</span>            <span class="n">update_spots</span><span class="o">=</span><span class="kc">False</span>
-<span class="linenos">53</span>        <span class="p">)</span>
+<span class="linenos"> 5</span>
+<span class="linenos"> 6</span><span class="k">class</span><span class="w"> </span><span class="nc">CovidVisualizer</span><span class="p">(</span><span class="n">Visualizer</span><span class="p">):</span>
+<span class="linenos"> 7</span>    <span class="n">model</span><span class="p">:</span> <span class="n">CovidModel</span>
+<span class="linenos"> 8</span>
+<span class="linenos"> 9</span>    <span class="k">def</span><span class="w"> </span><span class="nf">set_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">CovidModel</span><span class="p">):</span>
+<span class="linenos">10</span><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos">11</span><span class="sd">        Called when the visualizer is bound to a model instance.</span>
+<span class="linenos">12</span><span class="sd">        Set grid dimensions here (model is available now).</span>
+<span class="linenos">13</span><span class="sd">        &quot;&quot;&quot;</span>
+<span class="linenos">14</span>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">set_model</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+<span class="linenos">15</span>        <span class="c1"># Ensure grid dimensions are passed to frontend for correct scaling</span>
+<span class="linenos">16</span>        <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">width</span><span class="p">()</span>
+<span class="linenos">17</span>        <span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">height</span><span class="p">()</span>
+<span class="linenos">18</span>
+<span class="linenos">19</span>    <span class="k">def</span><span class="w"> </span><span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="linenos">20</span>        <span class="c1"># Add interactive parameters to the left control panel</span>
+<span class="linenos">21</span>        <span class="bp">self</span><span class="o">.</span><span class="n">params_manager</span><span class="o">.</span><span class="n">add_param</span><span class="p">(</span>
+<span class="linenos">22</span>            <span class="n">FloatParam</span><span class="p">(</span>
+<span class="linenos">23</span>                <span class="n">name</span><span class="o">=</span><span class="s2">&quot;initial_infected_percentage&quot;</span><span class="p">,</span>
+<span class="linenos">24</span>                <span class="n">value_range</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span>
+<span class="linenos">25</span>                <span class="n">step</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span>
+<span class="linenos">26</span>                <span class="n">getter</span><span class="o">=</span><span class="k">lambda</span> <span class="n">scenario</span><span class="p">:</span> <span class="n">scenario</span><span class="o">.</span><span class="n">initial_infected_percentage</span><span class="p">,</span>
+<span class="linenos">27</span>                <span class="n">setter</span><span class="o">=</span><span class="k">lambda</span> <span class="n">scenario</span><span class="p">,</span> <span class="n">val</span><span class="p">:</span> <span class="nb">setattr</span><span class="p">(</span>
+<span class="linenos">28</span>                    <span class="n">scenario</span><span class="p">,</span> <span class="s2">&quot;initial_infected_percentage&quot;</span><span class="p">,</span> <span class="n">val</span>
+<span class="linenos">29</span>                <span class="p">),</span>
+<span class="linenos">30</span>                <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Initial infected %&quot;</span><span class="p">,</span>
+<span class="linenos">31</span>                <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Share of agents initially infected (0-1).&quot;</span><span class="p">,</span>
+<span class="linenos">32</span>            <span class="p">)</span>
+<span class="linenos">33</span>        <span class="p">)</span>
+<span class="linenos">34</span>        <span class="bp">self</span><span class="o">.</span><span class="n">params_manager</span><span class="o">.</span><span class="n">add_param</span><span class="p">(</span>
+<span class="linenos">35</span>            <span class="n">FloatParam</span><span class="p">(</span>
+<span class="linenos">36</span>                <span class="n">name</span><span class="o">=</span><span class="s2">&quot;infection_prob&quot;</span><span class="p">,</span>
+<span class="linenos">37</span>                <span class="n">value_range</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span>
+<span class="linenos">38</span>                <span class="n">step</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span>
+<span class="linenos">39</span>                <span class="n">getter</span><span class="o">=</span><span class="k">lambda</span> <span class="n">scenario</span><span class="p">:</span> <span class="n">scenario</span><span class="o">.</span><span class="n">infection_prob</span><span class="p">,</span>
+<span class="linenos">40</span>                <span class="n">setter</span><span class="o">=</span><span class="k">lambda</span> <span class="n">scenario</span><span class="p">,</span> <span class="n">val</span><span class="p">:</span> <span class="nb">setattr</span><span class="p">(</span>
+<span class="linenos">41</span>                    <span class="n">scenario</span><span class="p">,</span> <span class="s2">&quot;infection_prob&quot;</span><span class="p">,</span> <span class="n">val</span>
+<span class="linenos">42</span>                <span class="p">),</span>
+<span class="linenos">43</span>                <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Infection prob&quot;</span><span class="p">,</span>
+<span class="linenos">44</span>                <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Probability an infected agent infects a neighbor each step.&quot;</span><span class="p">,</span>
+<span class="linenos">45</span>            <span class="p">)</span>
+<span class="linenos">46</span>        <span class="p">)</span>
+<span class="linenos">47</span>        <span class="bp">self</span><span class="o">.</span><span class="n">params_manager</span><span class="o">.</span><span class="n">add_param</span><span class="p">(</span>
+<span class="linenos">48</span>            <span class="n">FloatParam</span><span class="p">(</span>
+<span class="linenos">49</span>                <span class="n">name</span><span class="o">=</span><span class="s2">&quot;recovery_prob&quot;</span><span class="p">,</span>
+<span class="linenos">50</span>                <span class="n">value_range</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span>
+<span class="linenos">51</span>                <span class="n">step</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span>
+<span class="linenos">52</span>                <span class="n">getter</span><span class="o">=</span><span class="k">lambda</span> <span class="n">scenario</span><span class="p">:</span> <span class="n">scenario</span><span class="o">.</span><span class="n">recovery_prob</span><span class="p">,</span>
+<span class="linenos">53</span>                <span class="n">setter</span><span class="o">=</span><span class="k">lambda</span> <span class="n">scenario</span><span class="p">,</span> <span class="n">val</span><span class="p">:</span> <span class="nb">setattr</span><span class="p">(</span>
+<span class="linenos">54</span>                    <span class="n">scenario</span><span class="p">,</span> <span class="s2">&quot;recovery_prob&quot;</span><span class="p">,</span> <span class="n">val</span>
+<span class="linenos">55</span>                <span class="p">),</span>
+<span class="linenos">56</span>                <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Recovery prob&quot;</span><span class="p">,</span>
+<span class="linenos">57</span>                <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Probability an infected agent recovers each step.&quot;</span><span class="p">,</span>
+<span class="linenos">58</span>            <span class="p">)</span>
+<span class="linenos">59</span>        <span class="p">)</span>
+<span class="linenos">60</span>
+<span class="linenos">61</span>        <span class="c1"># Configure the chart to show population health states over time</span>
+<span class="linenos">62</span>        <span class="k">def</span><span class="w"> </span><span class="nf">get_susceptible</span><span class="p">():</span>
+<span class="linenos">63</span>            <span class="n">val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">environment</span><span class="o">.</span><span class="n">num_susceptible</span>
+<span class="linenos">64</span>            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[DEBUG] Susceptible: </span><span class="si">{</span><span class="n">val</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="linenos">65</span>            <span class="k">return</span> <span class="n">val</span>
+<span class="linenos">66</span>        
+<span class="linenos">67</span>        <span class="k">def</span><span class="w"> </span><span class="nf">get_infected</span><span class="p">():</span>
+<span class="linenos">68</span>            <span class="n">val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">environment</span><span class="o">.</span><span class="n">num_infected</span>
+<span class="linenos">69</span>            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[DEBUG] Infected: </span><span class="si">{</span><span class="n">val</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="linenos">70</span>            <span class="k">return</span> <span class="n">val</span>
+<span class="linenos">71</span>        
+<span class="linenos">72</span>        <span class="k">def</span><span class="w"> </span><span class="nf">get_recovered</span><span class="p">():</span>
+<span class="linenos">73</span>            <span class="n">val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">environment</span><span class="o">.</span><span class="n">num_recovered</span>
+<span class="linenos">74</span>            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[DEBUG] Recovered: </span><span class="si">{</span><span class="n">val</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="linenos">75</span>            <span class="k">return</span> <span class="n">val</span>
+<span class="linenos">76</span>        
+<span class="linenos">77</span>        <span class="bp">self</span><span class="o">.</span><span class="n">plot_charts</span><span class="o">.</span><span class="n">add_line_chart</span><span class="p">(</span><span class="s2">&quot;health_state_trend&quot;</span><span class="p">)</span> \
+<span class="linenos">78</span>            <span class="o">.</span><span class="n">set_data_source</span><span class="p">({</span>
+<span class="linenos">79</span>                <span class="s2">&quot;Susceptible&quot;</span><span class="p">:</span> <span class="n">get_susceptible</span><span class="p">,</span>
+<span class="linenos">80</span>                <span class="s2">&quot;Infected&quot;</span><span class="p">:</span> <span class="n">get_infected</span><span class="p">,</span>
+<span class="linenos">81</span>                <span class="s2">&quot;Recovered&quot;</span><span class="p">:</span> <span class="n">get_recovered</span>
+<span class="linenos">82</span>            <span class="p">})</span>
+<span class="linenos">83</span>
+<span class="linenos">84</span>        <span class="c1"># Configure the grid visualization</span>
+<span class="linenos">85</span>        <span class="bp">self</span><span class="o">.</span><span class="n">add_grid</span><span class="p">(</span>
+<span class="linenos">86</span>            <span class="n">name</span><span class="o">=</span><span class="s2">&quot;covid_grid&quot;</span><span class="p">,</span>
+<span class="linenos">87</span>            <span class="n">grid_getter</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">grid</span><span class="p">,</span>
+<span class="linenos">88</span>            <span class="n">var_getter</span><span class="o">=</span><span class="k">lambda</span> <span class="n">agent</span><span class="p">:</span> <span class="n">agent</span><span class="o">.</span><span class="n">health_state</span><span class="p">,</span>
+<span class="linenos">89</span>            <span class="n">var_style</span><span class="o">=</span><span class="p">{</span>
+<span class="linenos">90</span>                <span class="mi">0</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="s2">&quot;Susceptible&quot;</span><span class="p">,</span> <span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="s2">&quot;#0000FF&quot;</span><span class="p">},</span>
+<span class="linenos">91</span>                <span class="mi">1</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="s2">&quot;Infected&quot;</span><span class="p">,</span> <span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="s2">&quot;#FF0000&quot;</span><span class="p">},</span>
+<span class="linenos">92</span>                <span class="mi">2</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="s2">&quot;Recovered&quot;</span><span class="p">,</span> <span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="s2">&quot;#808080&quot;</span><span class="p">}</span>
+<span class="linenos">93</span>            <span class="p">},</span>
+<span class="linenos">94</span>            <span class="n">update_spots</span><span class="o">=</span><span class="kc">False</span>
+<span class="linenos">95</span>        <span class="p">)</span>
 </pre></div>
 </div>
 </section>
@@ -584,7 +678,7 @@ Instead of running a batch simulation immediately, the <code class="docutils lit
 <span class="linenos">43</span>        <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">setup_params</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">grid_x_size</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">grid_y_size</span><span class="p">)</span>
 <span class="linenos">44</span>        
 <span class="linenos">45</span>        <span class="c1"># 3. Place agents randomly on the grid</span>
-<span class="linenos">46</span>        <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">setup_agent_locations</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">agents</span><span class="p">)</span>
+<span class="linenos">46</span>        <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">setup_agent_locations</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">agents</span><span class="p">,</span> <span class="s2">&quot;random_single&quot;</span><span class="p">)</span>
 <span class="linenos">47</span>        
 <span class="linenos">48</span>        <span class="c1"># 4. Seed initial infections</span>
 <span class="linenos">49</span>        <span class="bp">self</span><span class="o">.</span><span class="n">environment</span><span class="o">.</span><span class="n">seed_infection</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">agents</span><span class="p">)</span>

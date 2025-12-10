@@ -165,3 +165,36 @@ After a run, the ``data/output`` folder will contain CSV files for analysis:
 
 - ``Result_Simulator_Agents.csv``: Per-period agent states.
 - ``Result_Simulator_Environment.csv``: Per-period environment aggregates (the macro metrics registered in the DataCollector).
+
+Parallel Execution
+------------------
+
+For large-scale experiments, running simulations sequentially can be time-consuming. Melodie provides two methods for parallel execution on multi-core machines, available on the ``Simulator`` object.
+
+**1. ``run_parallel()``: Process-Based Parallelism**
+
+This is the recommended and most robust method for parallelization in Melodie.
+
+- **Mechanism**: It uses Python's ``multiprocessing`` module to spawn multiple independent worker processes. Each worker runs a subset of the simulation scenarios/runs on a separate CPU core.
+- **Use Case**: Ideal for any substantial simulation task. It scales well as it bypasses Python's Global Interpreter Lock (GIL), allowing for true parallel computation on CPU-bound models.
+- **Usage**:
+
+.. code-block:: python
+
+   # In main.py, instead of simulator.run():
+   simulator.run_parallel(cores=4)  # Use 4 CPU cores
+
+**2. ``run_parallel_multithread()``: Thread-Based Parallelism (Experimental)**
+
+This method is an experimental feature designed to leverage modern Python versions (3.13+).
+
+- **Mechanism**: It uses a thread pool instead of a process pool. This avoids the overhead of creating new processes and serializing (pickling) data between them.
+- **Use Case**:
+    - **Python 3.13+ (with free-threading mode)**: This method can offer significant performance gains over ``run_parallel()`` by running threads on multiple cores without the GIL.
+    - **Older Python Versions**: It will run concurrently but will be limited by the GIL. For CPU-bound ABM simulations, it is unlikely to provide a speedup and may even be slower than a sequential run.
+- **Usage**:
+
+.. code-block:: python
+
+   # In main.py, for experiments on Python 3.13+
+   simulator.run_parallel_multithread(cores=4)

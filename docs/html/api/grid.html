@@ -70,6 +70,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../tutorial.html#agent-behavior">Agent Behavior</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../tutorial.html#data-collection-setup">Data Collection Setup</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../tutorial.html#run-the-model">Run the model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial.html#parallel-execution">Parallel Execution</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../framework_comparison.html">Framework Comparison</a><ul>
@@ -99,6 +100,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../gallery/covid_contagion_grid_visual.html#visualizer-project-structure">Visualizer: Project Structure</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../gallery/covid_contagion_grid_visual.html#visualizer-key-changes">Visualizer: Key Changes</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../gallery/covid_contagion_grid_visual.html#visualizer-running-the-model">Visualizer: Running the Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../gallery/covid_contagion_grid_visual.html#visualizer-customization-guide">Visualizer: Customization Guide</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../gallery/covid_contagion_grid_visual.html#visualizer-code">Visualizer: Code</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../gallery/covid_contagion_grid_visual.html#visualizer-definition">Visualizer Definition</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../gallery/covid_contagion_grid_visual.html#model-structure">Model Structure</a></li>
@@ -172,7 +174,7 @@
 <li class="toctree-l4"><a class="reference internal" href="simulator.html#Melodie.Simulator.run"><code class="docutils literal notranslate"><span class="pre">Simulator.run()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="simulator.html#Melodie.Simulator.run_visual"><code class="docutils literal notranslate"><span class="pre">Simulator.run_visual()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="simulator.html#Melodie.Simulator.run_parallel"><code class="docutils literal notranslate"><span class="pre">Simulator.run_parallel()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="simulator.html#Melodie.Simulator.new_parallel"><code class="docutils literal notranslate"><span class="pre">Simulator.new_parallel()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="simulator.html#Melodie.Simulator.run_parallel_multithread"><code class="docutils literal notranslate"><span class="pre">Simulator.run_parallel_multithread()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -676,7 +678,7 @@ attempting to place multiple agents on one spot.</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="Melodie.Grid.setup_agent_locations">
-<span class="sig-name descname"><span class="pre">setup_agent_locations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">category</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_placement</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'direct'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#Melodie.Grid.setup_agent_locations" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">setup_agent_locations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">category</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_placement</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'direct'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'random_single'</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'direct'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#Melodie.Grid.setup_agent_locations" title="Link to this definition"></a></dt>
 <dd><p>Add an agent category.</p>
 <p>For example, if there are two classes of agents: <cite>Wolf(GridAgent)</cite> and <cite>Sheep(GridAgent)</cite>,
 and there are 100 agents with id 0~99 for each class. It is obvious in such a circumstance that
@@ -686,7 +688,9 @@ we cannot identify an agent only with agent <em>id</em>.So it is essential to us
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>category_id</strong> – The id of new category.</p></li>
 <li><p><strong>category</strong> – An AgentList object</p></li>
-<li><p><strong>initial_placement</strong> – A str object stand for initial placement.</p></li>
+<li><p><strong>initial_placement</strong> – A str object stand for initial placement, which can be <code class="docutils literal notranslate"><span class="pre">direct</span></code> or <code class="docutils literal notranslate"><span class="pre">random_single</span></code>
+<code class="docutils literal notranslate"><span class="pre">direct</span></code> means that the agent is placed at the position of its x and y;
+<code class="docutils literal notranslate"><span class="pre">random_single</span></code> means that the agent is placed at a random position.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>

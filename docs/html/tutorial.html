@@ -70,6 +70,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#agent-behavior">Agent Behavior</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#data-collection-setup">Data Collection Setup</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#run-the-model">Run the model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#parallel-execution">Parallel Execution</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="framework_comparison.html">Framework Comparison</a><ul>
@@ -99,6 +100,7 @@
 <li class="toctree-l3"><a class="reference internal" href="gallery/covid_contagion_grid_visual.html#visualizer-project-structure">Visualizer: Project Structure</a></li>
 <li class="toctree-l3"><a class="reference internal" href="gallery/covid_contagion_grid_visual.html#visualizer-key-changes">Visualizer: Key Changes</a></li>
 <li class="toctree-l3"><a class="reference internal" href="gallery/covid_contagion_grid_visual.html#visualizer-running-the-model">Visualizer: Running the Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gallery/covid_contagion_grid_visual.html#visualizer-customization-guide">Visualizer: Customization Guide</a></li>
 <li class="toctree-l3"><a class="reference internal" href="gallery/covid_contagion_grid_visual.html#visualizer-code">Visualizer: Code</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="gallery/covid_contagion_grid_visual.html#visualizer-definition">Visualizer Definition</a></li>
 <li class="toctree-l4"><a class="reference internal" href="gallery/covid_contagion_grid_visual.html#model-structure">Model Structure</a></li>
@@ -172,7 +174,7 @@
 <li class="toctree-l4"><a class="reference internal" href="api/simulator.html#Melodie.Simulator.run"><code class="docutils literal notranslate"><span class="pre">Simulator.run()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="api/simulator.html#Melodie.Simulator.run_visual"><code class="docutils literal notranslate"><span class="pre">Simulator.run_visual()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="api/simulator.html#Melodie.Simulator.run_parallel"><code class="docutils literal notranslate"><span class="pre">Simulator.run_parallel()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="api/simulator.html#Melodie.Simulator.new_parallel"><code class="docutils literal notranslate"><span class="pre">Simulator.new_parallel()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/simulator.html#Melodie.Simulator.run_parallel_multithread"><code class="docutils literal notranslate"><span class="pre">Simulator.run_parallel_multithread()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -753,6 +755,39 @@ them manually in <code class="docutils literal notranslate"><span class="pre">lo
 <li><p><code class="docutils literal notranslate"><span class="pre">Result_Simulator_Agents.csv</span></code>: Per-period agent states.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">Result_Simulator_Environment.csv</span></code>: Per-period environment aggregates (the macro metrics registered in the DataCollector).</p></li>
 </ul>
+</section>
+<section id="parallel-execution">
+<h2>Parallel Execution<a class="headerlink" href="#parallel-execution" title="Link to this heading"></a></h2>
+<p>For large-scale experiments, running simulations sequentially can be time-consuming. Melodie provides two methods for parallel execution on multi-core machines, available on the <code class="docutils literal notranslate"><span class="pre">Simulator</span></code> object.</p>
+<p><strong>1. ``run_parallel()``: Process-Based Parallelism</strong></p>
+<p>This is the recommended and most robust method for parallelization in Melodie.</p>
+<ul class="simple">
+<li><p><strong>Mechanism</strong>: It uses Python’s <code class="docutils literal notranslate"><span class="pre">multiprocessing</span></code> module to spawn multiple independent worker processes. Each worker runs a subset of the simulation scenarios/runs on a separate CPU core.</p></li>
+<li><p><strong>Use Case</strong>: Ideal for any substantial simulation task. It scales well as it bypasses Python’s Global Interpreter Lock (GIL), allowing for true parallel computation on CPU-bound models.</p></li>
+<li><p><strong>Usage</strong>:</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># In main.py, instead of simulator.run():</span>
+<span class="n">simulator</span><span class="o">.</span><span class="n">run_parallel</span><span class="p">(</span><span class="n">cores</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>  <span class="c1"># Use 4 CPU cores</span>
+</pre></div>
+</div>
+<p><strong>2. ``run_parallel_multithread()``: Thread-Based Parallelism (Experimental)</strong></p>
+<p>This method is an experimental feature designed to leverage modern Python versions (3.13+).</p>
+<ul class="simple">
+<li><p><strong>Mechanism</strong>: It uses a thread pool instead of a process pool. This avoids the overhead of creating new processes and serializing (pickling) data between them.</p></li>
+<li><dl class="simple">
+<dt><strong>Use Case</strong>:</dt><dd><ul>
+<li><p><strong>Python 3.13+ (with free-threading mode)</strong>: This method can offer significant performance gains over <code class="docutils literal notranslate"><span class="pre">run_parallel()</span></code> by running threads on multiple cores without the GIL.</p></li>
+<li><p><strong>Older Python Versions</strong>: It will run concurrently but will be limited by the GIL. For CPU-bound ABM simulations, it is unlikely to provide a speedup and may even be slower than a sequential run.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p><strong>Usage</strong>:</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># In main.py, for experiments on Python 3.13+</span>
+<span class="n">simulator</span><span class="o">.</span><span class="n">run_parallel_multithread</span><span class="p">(</span><span class="n">cores</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+</pre></div>
+</div>
 </section>
 </section>
 
