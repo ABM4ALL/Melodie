@@ -80,78 +80,79 @@
 </li>
 <li class="toctree-l1 current"><a class="reference internal" href="_index.html">Model Gallery</a><ul class="current">
 <li class="toctree-l2 current"><a class="current reference internal" href="#">CovidContagionGrid</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#project-structure-grid">Project Structure (Grid)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#key-differences-from-base-model">Key Differences from Base Model</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#scenario-input-data">Scenario &amp; Input Data</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#implementation-details">Implementation Details</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#model-setup-core-model-py">Model Setup (<cite>core/model.py</cite>)</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#environment-logic-core-environment-py">Environment Logic (<cite>core/environment.py</cite>)</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#spatial-agent-core-agent-py">Spatial Agent (<cite>core/agent.py</cite>)</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#data-collector-core-data-collector-py">Data Collector (<cite>core/data_collector.py</cite>)</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#grid-definition-core-grid-py">Grid Definition (<cite>core/grid.py</cite>)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#grid-project-structure">Grid: Project Structure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#grid-key-changes">Grid: Key Changes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#grid-input-data">Grid: Input Data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#grid-running-the-model">Grid: Running the Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#grid-code">Grid: Code</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#model">Model</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#environment">Environment</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#agent">Agent</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#data-collector">Data Collector</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#grid">Grid</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#running-the-model">Running the Model</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="covid_contagion_grid_visual.html">CovidContagionGridVisual</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="covid_contagion_grid_visual.html#project-structure-visual">Project Structure (Visual)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="covid_contagion_grid_visual.html#key-differences-from-grid-model">Key Differences from Grid Model</a></li>
-<li class="toctree-l3"><a class="reference internal" href="covid_contagion_grid_visual.html#implementation-details-visual">Implementation Details (Visual)</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="covid_contagion_grid_visual.html#model-setup-visual">Model Setup (Visual)</a></li>
-<li class="toctree-l4"><a class="reference internal" href="covid_contagion_grid_visual.html#environment-logic-visual">Environment Logic (Visual)</a></li>
-<li class="toctree-l4"><a class="reference internal" href="covid_contagion_grid_visual.html#spatial-agent-visual">Spatial Agent (Visual)</a></li>
-<li class="toctree-l4"><a class="reference internal" href="covid_contagion_grid_visual.html#grid-definition-visual">Grid Definition (Visual)</a></li>
-<li class="toctree-l4"><a class="reference internal" href="covid_contagion_grid_visual.html#visualizer-configuration-core-visualizer-py">Visualizer Configuration (<cite>core/visualizer.py</cite>)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="covid_contagion_grid_visual.html#visualizer-project-structure">Visualizer: Project Structure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="covid_contagion_grid_visual.html#visualizer-key-changes">Visualizer: Key Changes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="covid_contagion_grid_visual.html#visualizer-running-the-model">Visualizer: Running the Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="covid_contagion_grid_visual.html#visualizer-code">Visualizer: Code</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="covid_contagion_grid_visual.html#visualizer">Visualizer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="covid_contagion_grid_visual.html#model">Model</a></li>
+<li class="toctree-l4"><a class="reference internal" href="covid_contagion_grid_visual.html#environment">Environment</a></li>
+<li class="toctree-l4"><a class="reference internal" href="covid_contagion_grid_visual.html#agent">Agent</a></li>
+<li class="toctree-l4"><a class="reference internal" href="covid_contagion_grid_visual.html#grid">Grid</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="covid_contagion_grid_visual.html#running-the-model-with-studio">Running the Model with Studio</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="covid_contagion_network.html">CovidContagionNetwork</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="covid_contagion_network.html#project-structure-network">Project Structure (Network)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="covid_contagion_network.html#key-differences-from-base-model">Key Differences from Base Model</a></li>
-<li class="toctree-l3"><a class="reference internal" href="covid_contagion_network.html#scenario-input-data">Scenario &amp; Input Data</a></li>
-<li class="toctree-l3"><a class="reference internal" href="covid_contagion_network.html#implementation-details">Implementation Details</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="covid_contagion_network.html#model-setup-core-model-py">Model Setup (<cite>core/model.py</cite>)</a></li>
-<li class="toctree-l4"><a class="reference internal" href="covid_contagion_network.html#environment-logic-core-environment-py">Environment Logic (<cite>core/environment.py</cite>)</a></li>
-<li class="toctree-l4"><a class="reference internal" href="covid_contagion_network.html#network-agent-core-agent-py">Network Agent (<cite>core/agent.py</cite>)</a></li>
-<li class="toctree-l4"><a class="reference internal" href="covid_contagion_network.html#scenario-configuration-core-scenario-py">Scenario Configuration (<cite>core/scenario.py</cite>)</a></li>
-<li class="toctree-l4"><a class="reference internal" href="covid_contagion_network.html#data-collector-core-data-collector-py">Data Collector (<cite>core/data_collector.py</cite>)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="covid_contagion_network.html#network-project-structure">Network: Project Structure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="covid_contagion_network.html#network-key-changes">Network: Key Changes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="covid_contagion_network.html#network-input-data">Network: Input Data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="covid_contagion_network.html#network-running-the-model">Network: Running the Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="covid_contagion_network.html#network-code">Network: Code</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="covid_contagion_network.html#model">Model</a></li>
+<li class="toctree-l4"><a class="reference internal" href="covid_contagion_network.html#environment">Environment</a></li>
+<li class="toctree-l4"><a class="reference internal" href="covid_contagion_network.html#agent">Agent</a></li>
+<li class="toctree-l4"><a class="reference internal" href="covid_contagion_network.html#scenario">Scenario</a></li>
+<li class="toctree-l4"><a class="reference internal" href="covid_contagion_network.html#data-collector">Data Collector</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="covid_contagion_network.html#running-the-model">Running the Model</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="covid_contagion_calibrator.html">CovidContagionCalibrator</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="covid_contagion_calibrator.html#project-structure-calibrator">Project Structure (Calibrator)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="covid_contagion_calibrator.html#key-differences-from-base-model">Key Differences from Base Model</a></li>
-<li class="toctree-l3"><a class="reference internal" href="covid_contagion_calibrator.html#scenario-input-data">Scenario &amp; Input Data</a></li>
-<li class="toctree-l3"><a class="reference internal" href="covid_contagion_calibrator.html#implementation-details">Implementation Details</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="covid_contagion_calibrator.html#model-setup-core-model-py">Model Setup (<cite>core/model.py</cite>)</a></li>
-<li class="toctree-l4"><a class="reference internal" href="covid_contagion_calibrator.html#environment-logic-core-environment-py">Environment Logic (<cite>core/environment.py</cite>)</a></li>
-<li class="toctree-l4"><a class="reference internal" href="covid_contagion_calibrator.html#agent-core-agent-py">Agent (<cite>core/agent.py</cite>)</a></li>
-<li class="toctree-l4"><a class="reference internal" href="covid_contagion_calibrator.html#scenario-core-scenario-py">Scenario (<cite>core/scenario.py</cite>)</a></li>
-<li class="toctree-l4"><a class="reference internal" href="covid_contagion_calibrator.html#data-collector-core-data-collector-py">Data Collector (<cite>core/data_collector.py</cite>)</a></li>
-<li class="toctree-l4"><a class="reference internal" href="covid_contagion_calibrator.html#calibrator-core-calibrator-py">Calibrator (<cite>core/calibrator.py</cite>)</a></li>
-<li class="toctree-l4"><a class="reference internal" href="covid_contagion_calibrator.html#main-entry-main-py">Main Entry (<cite>main.py</cite>)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="covid_contagion_calibrator.html#calibrator-project-structure">Calibrator: Project Structure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="covid_contagion_calibrator.html#calibrator-key-changes">Calibrator: Key Changes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="covid_contagion_calibrator.html#calibrator-ga-concepts">Calibrator: GA Concepts</a></li>
+<li class="toctree-l3"><a class="reference internal" href="covid_contagion_calibrator.html#calibrator-input-data">Calibrator: Input Data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="covid_contagion_calibrator.html#calibrator-running-the-model">Calibrator: Running the Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="covid_contagion_calibrator.html#calibrator-code">Calibrator: Code</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="covid_contagion_calibrator.html#calibrator">Calibrator</a></li>
+<li class="toctree-l4"><a class="reference internal" href="covid_contagion_calibrator.html#scenario">Scenario</a></li>
+<li class="toctree-l4"><a class="reference internal" href="covid_contagion_calibrator.html#model">Model</a></li>
+<li class="toctree-l4"><a class="reference internal" href="covid_contagion_calibrator.html#environment">Environment</a></li>
+<li class="toctree-l4"><a class="reference internal" href="covid_contagion_calibrator.html#agent">Agent</a></li>
+<li class="toctree-l4"><a class="reference internal" href="covid_contagion_calibrator.html#data-collector">Data Collector</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="covid_contagion_calibrator.html#running-the-calibrator">Running the Calibrator</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="rock_paper_scissors_trainer.html">RockPaperScissorsTrainer</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="rock_paper_scissors_trainer.html#project-structure-trainer">Project Structure (Trainer)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="rock_paper_scissors_trainer.html#how-it-works">How It Works</a></li>
-<li class="toctree-l3"><a class="reference internal" href="rock_paper_scissors_trainer.html#results">Results</a></li>
-<li class="toctree-l3"><a class="reference internal" href="rock_paper_scissors_trainer.html#running-the-model">Running the Model</a></li>
-<li class="toctree-l3"><a class="reference internal" href="rock_paper_scissors_trainer.html#implementation-details-trainer">Implementation Details (Trainer)</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="rock_paper_scissors_trainer.html#model-core-model-py-rps">Model (<cite>core/model.py</cite>) (RPS)</a></li>
-<li class="toctree-l4"><a class="reference internal" href="rock_paper_scissors_trainer.html#environment-core-environment-py-rps">Environment (<cite>core/environment.py</cite>) (RPS)</a></li>
-<li class="toctree-l4"><a class="reference internal" href="rock_paper_scissors_trainer.html#agent-core-agent-py-rps">Agent (<cite>core/agent.py</cite>) (RPS)</a></li>
-<li class="toctree-l4"><a class="reference internal" href="rock_paper_scissors_trainer.html#data-collector-core-data-collector-py-rps">Data Collector (<cite>core/data_collector.py</cite>) (RPS)</a></li>
-<li class="toctree-l4"><a class="reference internal" href="rock_paper_scissors_trainer.html#scenario-core-scenario-py-rps">Scenario (<cite>core/scenario.py</cite>) (RPS)</a></li>
-<li class="toctree-l4"><a class="reference internal" href="rock_paper_scissors_trainer.html#trainer-core-trainer-py-rps">Trainer (<cite>core/trainer.py</cite>) (RPS)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rock_paper_scissors_trainer.html#trainer-project-structure">Trainer: Project Structure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rock_paper_scissors_trainer.html#trainer-ga-concepts">Trainer: GA Concepts</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rock_paper_scissors_trainer.html#trainer-how-it-works">Trainer: How It Works</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rock_paper_scissors_trainer.html#trainer-results">Trainer: Results</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rock_paper_scissors_trainer.html#trainer-running-the-model">Trainer: Running the Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rock_paper_scissors_trainer.html#trainer-code">Trainer: Code</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="rock_paper_scissors_trainer.html#model">Model</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rock_paper_scissors_trainer.html#environment">Environment</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rock_paper_scissors_trainer.html#agent">Agent</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rock_paper_scissors_trainer.html#data-collector">Data Collector</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rock_paper_scissors_trainer.html#scenario">Scenario</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rock_paper_scissors_trainer.html#trainer">Trainer</a></li>
 </ul>
 </li>
 </ul>
@@ -546,11 +547,11 @@
            <div itemprop="articleBody">
              
   <section id="covidcontagiongrid">
-<h1>CovidContagionGrid<a class="headerlink" href="#covidcontagiongrid" title="Link to this heading"></a></h1>
+<span id="covid-contagion-grid"></span><h1>CovidContagionGrid<a class="headerlink" href="#covidcontagiongrid" title="Link to this heading"></a></h1>
 <p>This example extends the base <code class="docutils literal notranslate"><span class="pre">covid_contagion</span></code> model by introducing Melodie’s <strong>Grid</strong> module.
 It demonstrates how to simulate agents moving and interacting in a 2D spatial environment.</p>
-<section id="project-structure-grid">
-<h2>Project Structure (Grid)<a class="headerlink" href="#project-structure-grid" title="Link to this heading"></a></h2>
+<section id="grid-project-structure">
+<h2>Grid: Project Structure<a class="headerlink" href="#grid-project-structure" title="Link to this heading"></a></h2>
 <p>The structure mirrors the base example but includes specific grid-related implementations:</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>examples/covid_contagion_grid
 ├── core/
@@ -570,10 +571,10 @@ It demonstrates how to simulate agents moving and interacting in a 2D spatial en
 </pre></div>
 </div>
 </section>
-<section id="key-differences-from-base-model">
-<h2>Key Differences from Base Model<a class="headerlink" href="#key-differences-from-base-model" title="Link to this heading"></a></h2>
+<section id="grid-key-changes">
+<h2>Grid: Key Changes<a class="headerlink" href="#grid-key-changes" title="Link to this heading"></a></h2>
 <ol class="arabic simple">
-<li><p><strong>Spatial Agents (`GridAgent`)</strong>:
+<li><p><strong>Spatial Agents (``GridAgent``)</strong>:
 Agents now inherit from <code class="docutils literal notranslate"><span class="pre">GridAgent</span></code> instead of <code class="docutils literal notranslate"><span class="pre">Agent</span></code>. This gives them <code class="docutils literal notranslate"><span class="pre">x</span></code> and <code class="docutils literal notranslate"><span class="pre">y</span></code> attributes and built-in methods for movement.</p>
 <ul class="simple">
 <li><p><strong>Category</strong>: The <code class="docutils literal notranslate"><span class="pre">set_category()</span></code> method is required for <code class="docutils literal notranslate"><span class="pre">GridAgent</span></code>. It assigns an integer ID to the agent type (e.g., 0 for humans, 1 for animals). This is used by the Grid to:</p>
@@ -595,11 +596,11 @@ Agents decide whether to move based on the <code class="docutils literal notrans
 Infection now happens locally. An infected agent searches for neighbors within a certain radius (Moore neighborhood by default) and tries to infect them.</p></li>
 </ol>
 </section>
-<section id="scenario-input-data">
-<h2>Scenario &amp; Input Data<a class="headerlink" href="#scenario-input-data" title="Link to this heading"></a></h2>
+<section id="grid-input-data">
+<h2>Grid: Input Data<a class="headerlink" href="#grid-input-data" title="Link to this heading"></a></h2>
 <p>The <code class="docutils literal notranslate"><span class="pre">CovidScenario</span></code> class is updated to load spatial data:</p>
 <ul class="simple">
-<li><p><strong>Grid Dimensions</strong>: Loaded from <code class="docutils literal notranslate"><span class="pre">SimulatorScenarios.csv</span></code> (<code class="docutils literal notranslate"><span class="pre">grid_x_size</span></code>, <code class="docutils literal notranslate"><span class="pre">grid_y_size</span></code>).</p></li>
+<li><p><strong>Grid Dimensions</strong>: Loaded from <code class="docutils literal notranslate"><span class="pre">SimulatorScenarios.csv</span></code> (<code class="docutils literal notranslate"><span class="pre">grid_x_size</span></code>, <code class="docutils literal notranslate"><span class="pre">y_size</span></code>).</p></li>
 <li><p><strong>Spatial Heterogeneity</strong>: A matrix file <code class="docutils literal notranslate"><span class="pre">Parameter_GridStayProb.csv</span></code> is loaded to set the <code class="docutils literal notranslate"><span class="pre">stay_prob</span></code> for each spot on the grid.</p></li>
 </ul>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">CovidScenario</span><span class="p">(</span><span class="n">Scenario</span><span class="p">):</span>
@@ -610,10 +611,20 @@ Infection now happens locally. An infected agent searches for neighbors within a
 </pre></div>
 </div>
 </section>
-<section id="implementation-details">
-<h2>Implementation Details<a class="headerlink" href="#implementation-details" title="Link to this heading"></a></h2>
-<section id="model-setup-core-model-py">
-<h3>Model Setup (<cite>core/model.py</cite>)<a class="headerlink" href="#model-setup-core-model-py" title="Link to this heading"></a></h3>
+<section id="grid-running-the-model">
+<h2>Grid: Running the Model<a class="headerlink" href="#grid-running-the-model" title="Link to this heading"></a></h2>
+<p>Run the model using the provided entry script:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>examples/covid_contagion_grid/main.py
+</pre></div>
+</div>
+<p>This will generate <code class="docutils literal notranslate"><span class="pre">Result_Simulator_Agents.csv</span></code> and <code class="docutils literal notranslate"><span class="pre">Result_Simulator_Environment.csv</span></code> in the <code class="docutils literal notranslate"><span class="pre">data/output</span></code> folder.</p>
+</section>
+<section id="grid-code">
+<h2>Grid: Code<a class="headerlink" href="#grid-code" title="Link to this heading"></a></h2>
+<p>This section shows the key code implementation for the grid model.</p>
+<section id="model">
+<h3>Model<a class="headerlink" href="#model" title="Link to this heading"></a></h3>
+<p>Defined in <code class="docutils literal notranslate"><span class="pre">core/model.py</span></code>.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TYPE_CHECKING</span>
 <span class="linenos"> 2</span>
 <span class="linenos"> 3</span><span class="kn">from</span><span class="w"> </span><span class="nn">Melodie</span><span class="w"> </span><span class="kn">import</span> <span class="n">Model</span>
@@ -678,8 +689,9 @@ Infection now happens locally. An infected agent searches for neighbors within a
 </pre></div>
 </div>
 </section>
-<section id="environment-logic-core-environment-py">
-<h3>Environment Logic (<cite>core/environment.py</cite>)<a class="headerlink" href="#environment-logic-core-environment-py" title="Link to this heading"></a></h3>
+<section id="environment">
+<h3>Environment<a class="headerlink" href="#environment" title="Link to this heading"></a></h3>
+<p>Defined in <code class="docutils literal notranslate"><span class="pre">core/environment.py</span></code>.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
 <span class="linenos"> 2</span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TYPE_CHECKING</span>
 <span class="linenos"> 3</span>
@@ -752,8 +764,9 @@ Infection now happens locally. An infected agent searches for neighbors within a
 </pre></div>
 </div>
 </section>
-<section id="spatial-agent-core-agent-py">
-<h3>Spatial Agent (<cite>core/agent.py</cite>)<a class="headerlink" href="#spatial-agent-core-agent-py" title="Link to this heading"></a></h3>
+<section id="agent">
+<h3>Agent<a class="headerlink" href="#agent" title="Link to this heading"></a></h3>
+<p>Defined in <code class="docutils literal notranslate"><span class="pre">core/agent.py</span></code>.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
 <span class="linenos"> 2</span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TYPE_CHECKING</span>
 <span class="linenos"> 3</span>
@@ -831,9 +844,9 @@ Infection now happens locally. An infected agent searches for neighbors within a
 </pre></div>
 </div>
 </section>
-<section id="data-collector-core-data-collector-py">
-<h3>Data Collector (<cite>core/data_collector.py</cite>)<a class="headerlink" href="#data-collector-core-data-collector-py" title="Link to this heading"></a></h3>
-<p>This file is identical to the base <code class="docutils literal notranslate"><span class="pre">covid_contagion</span></code> model.</p>
+<section id="data-collector">
+<h3>Data Collector<a class="headerlink" href="#data-collector" title="Link to this heading"></a></h3>
+<p><em>Identical to the base model.</em> Defined in <code class="docutils literal notranslate"><span class="pre">core/data_collector.py</span></code>.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">from</span><span class="w"> </span><span class="nn">Melodie</span><span class="w"> </span><span class="kn">import</span> <span class="n">DataCollector</span>
 <span class="linenos"> 2</span>
 <span class="linenos"> 3</span>
@@ -848,8 +861,9 @@ Infection now happens locally. An infected agent searches for neighbors within a
 </pre></div>
 </div>
 </section>
-<section id="grid-definition-core-grid-py">
-<h3>Grid Definition (<cite>core/grid.py</cite>)<a class="headerlink" href="#grid-definition-core-grid-py" title="Link to this heading"></a></h3>
+<section id="grid">
+<h3>Grid<a class="headerlink" href="#grid" title="Link to this heading"></a></h3>
+<p>Defined in <code class="docutils literal notranslate"><span class="pre">core/grid.py</span></code>.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">from</span><span class="w"> </span><span class="nn">Melodie</span><span class="w"> </span><span class="kn">import</span> <span class="n">Grid</span><span class="p">,</span> <span class="n">Spot</span>
 <span class="linenos"> 2</span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TYPE_CHECKING</span>
 <span class="linenos"> 3</span>
@@ -884,14 +898,6 @@ Infection now happens locally. An infected agent searches for neighbors within a
 </pre></div>
 </div>
 </section>
-</section>
-<section id="running-the-model">
-<h2>Running the Model<a class="headerlink" href="#running-the-model" title="Link to this heading"></a></h2>
-<p>Run the model using the provided entry script:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>examples/covid_contagion_grid/main.py
-</pre></div>
-</div>
-<p>This will generate <code class="docutils literal notranslate"><span class="pre">Result_Simulator_Agents.csv</span></code> and <code class="docutils literal notranslate"><span class="pre">Result_Simulator_Environment.csv</span></code> in the <code class="docutils literal notranslate"><span class="pre">data/output</span></code> folder.</p>
 </section>
 </section>
 

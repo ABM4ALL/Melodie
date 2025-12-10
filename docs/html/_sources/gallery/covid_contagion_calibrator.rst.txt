@@ -1,149 +1,147 @@
+.. _covid_contagion_calibrator:
+
 CovidContagionCalibrator
 ========================
 
-This example shows how to use Melodie's **Calibrator** module to tune the
-``infection_prob`` parameter of the base ``covid_contagion`` model so that the
-final infected ratio matches a target value.
+This example demonstrates how to use Melodie's **Calibrator** module. It extends the base ``covid_contagion`` model by using a genetic algorithm (GA) to find the value of the ``infection_prob`` parameter that results in a target final infected ratio.
 
-Project Structure (Calibrator)
-------------------------------
-
-The layout follows the base example and adds two GA parameter tables plus a
-calibrator class:
+Calibrator: Project Structure
+-----------------------------
 
 .. code-block:: text
 
     examples/covid_contagion_calibrator
-    ├── core/
-    │   ├── agent.py               # Same SIR agent as base
-    │   ├── environment.py         # Infection + recovery logic
-    │   ├── model.py               # Simulation loop
-    │   ├── scenario.py            # Adds target_infected_ratio for calibration
-    │   ├── data_collector.py      # Collects S/I/R counts and agent states
-    │   └── calibrator.py          # Defines calibration target and GA hooks
-    ├── data/
-    │   ├── input/
-    │   │   ├── SimulatorScenarios.csv           # Base run parameters
-    │   │   ├── CalibratorScenarios.csv          # Calibration scenarios (no run_num)
-    │   │   └── CalibratorParamsScenarios.csv    # GA bounds & settings
+    │   ├── core/
+    │   │   ├── calibrator.py
+    │   │   ├── scenario.py
+    │   │   ├── data_collector.py
+    │   │   └── model.py
+    │   ├── data/
+    │   │   ├── CalibratorScenarios.csv
+    │   │   └── CalibratorParamsScenarios.csv
     │   └── output/
-    ├── README.md
-    └── main.py                    # Entry point to run the calibrator
+    └── main.py
 
-Key Differences from Base Model
--------------------------------
+Calibrator: Key Changes
+-----------------------
 
-1. **Calibrator**: Uses genetic algorithm (GA) to search ``infection_prob``.
-2. **Target Metric**: Minimizes the squared gap between the final infected ratio
-   and a target (hardcoded as 0.8 in this example).
-3. **Extra Inputs**:
+The primary changes for the calibrator example are:
 
-   - ``CalibratorScenarios.csv``: Similar to ``SimulatorScenarios.csv`` but defines the scenarios for calibration. It lacks ``run_num`` because the calibrator determines execution paths internally.
-   - ``CalibratorParamsScenarios.csv``: GA settings (generations, population,
-     mutation rate) and bounds (``infection_prob_min/max``).
+- **A ``calibrator.py`` Module**: This new file defines the ``CovidCalibrator`` class, which inherits from ``Melodie.Calibrator``.
+- **Calibrator Scenarios**: The input data now includes ``CalibratorScenarios.csv`` and ``CalibratorParamsScenarios.csv`` to control the calibration process. ``CalibratorScenarios.csv`` is similar to ``SimulatorScenarios`` but does not use a ``run_num`` column.
+- **Path Modification in ``main.py``**: A special modification to ``sys.path`` is included. This is necessary because the ``Calibrator`` uses multiprocessing for parallel execution. Worker processes are spawned in a new environment and need to be able to find and import the project's modules (e.g., `from examples.covid_contagion_calibrator.core...`). This path modification is a robust way to ensure modules are discoverable when running examples directly from the Melodie repository, which is not a standard installed package.
 
-Scenario & Input Data
----------------------
+Calibrator: GA Concepts
+-----------------------
 
-- ``SimulatorScenarios.csv``: period/run/agent counts and initial probabilities.
-- ``CalibratorScenarios.csv``: defines scenarios for the calibrator (similar to SimulatorScenarios).
-- ``CalibratorParamsScenarios.csv``: GA controls and parameter bounds.
+The primary goal of the ``Calibrator`` is to automatically tune one or more model parameters to match observed, real-world data. It treats this as an optimization problem: finding the set of parameters that minimizes the "distance" between the model's output and a specified target.
 
-Implementation Details
+**Core Idea: Minimizing Distance**
+
+- **Target**: You define a target outcome. In this example, the target is for the final proportion of the population that has been infected to be 80%. This target is hard-coded in the ``distance`` function.
+- **Parameters**: You specify which scenario parameter(s) the Calibrator should adjust. Here, it's the ``infection_prob``.
+- **Distance Function**: You must implement a ``distance(model)`` method. This function is the core of the calibration. It runs after a simulation is complete, calculates a metric from the model's final state, and returns a single float value representing how far off that metric is from the target. The Calibrator's goal is to make this value as close to zero as possible.
+
+**Genetic Algorithm (GA) for Optimization**
+
+Melodie uses a genetic algorithm to search the parameter space efficiently.
+
+- **Chromosome**: A single set of the parameters being calibrated (in this case, just a single value for ``infection_prob``) is treated as a "chromosome."
+- **Population**: The GA starts with a "population" of these chromosomes, i.e., many different random values for ``infection_prob``.
+- **Fitness**: For each chromosome, the model is run, and the ``distance`` function is calculated. This distance is the fitness score (where lower is better).
+- **Evolution**: The GA then proceeds through "generations." In each generation, it selects the best-performing chromosomes (those that produced the smallest distance), "breeds" them (crossover), and introduces random changes (mutation) to create a new population of parameter sets to test. This process iteratively converges toward the parameter set that produces the best fit to the target.
+
+.. _ga-encoding-explanation:
+
+**Parameter Encoding: From Float to Binary**
+
+A key aspect of the genetic algorithm is how it represents continuous parameters like ``infection_prob`` (a float between 0.0 and 1.0). The GA does not work with the float values directly; instead, it converts them into a **binary string** of a fixed length. This process is called discretization.
+
+- **Encoding**: The range of a parameter (e.g., from `infection_prob_min` to `infection_prob_max`) is mapped to a sequence of integers, which are then represented as binary numbers. For instance, a float value is converted into a binary string like ``01101``.
+- **GA Operations**: All genetic operations, such as crossover (swapping parts of two binary strings) and mutation (flipping a random bit, e.g., ``01101`` -> ``01111``), are performed on these binary representations.
+- **Decoding**: When a simulation needs to be run, the binary string is decoded back into its corresponding float value. This is done in three steps:
+    1. The binary string is converted to its decimal integer representation.
+    2. This integer is normalized to a float between 0.0 and 1.0 by dividing it by the maximum possible integer for that bit length (which is 2\ :sup:`length` - 1).
+    3. This normalized float is linearly mapped to the parameter's defined range (e.g., from `infection_prob_min` to `infection_prob_max`).
+- **Precision**: The ``strategy_param_code_length`` parameter in the ``.csv`` file determines the length of this binary string. A longer string allows for a more fine-grained representation of the parameter space (more steps between the min and max bounds), thus offering higher precision at the cost of a larger search space.
+
+**Parameter Configuration (`CalibratorParamsScenarios.csv`)**
+
+This file controls the behavior of the genetic algorithm:
+
+- ``id``: Unique identifier for a set of GA parameters.
+- ``path_num``: How many independent calibration processes (paths) to run. Each path is a complete run of the GA from a random start, which helps ensure the result is robust and not just a local minimum.
+- ``generation_num``: The number of generations the GA will run for in each path.
+- ``strategy_population``: The size of the population in each generation (how many different parameter sets are tested).
+- ``mutation_prob``: The probability of a random mutation occurring during breeding.
+- ``strategy_param_code_length``: The precision of the parameters, defined by the bit-length of the chromosome.
+- ``infection_prob_min``, ``infection_prob_max``: The lower and upper bounds for the ``infection_prob`` parameter search space.
+
+Calibrator: Input Data
 ----------------------
 
-Model Setup (`core/model.py`)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In this example, the ``distance`` is calculated based on the model's state at the **end of the simulation**. If you need to use data from all periods to calculate the target metric, you can compute and store the required value in an environment property throughout the simulation, ensuring it holds the final desired value at the last period.
 
-This file is identical to the base ``covid_contagion`` model.
+Calibrator: Running the Model
+-----------------------------
 
-.. literalinclude:: ../../../examples/covid_contagion_calibrator/core/model.py
-   :language: python
-   :linenos:
-
-Environment Logic (`core/environment.py`)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-This file is identical to the base ``covid_contagion`` model.
-
-.. note::
-
-   In this example, the calibration target uses the **end-of-simulation** value of ``num_susceptible``.
-   If you want to calibrate based on time-series data or other aggregated metrics, you can calculate
-   them in the environment (e.g., in ``update_population_stats``) and store the result in a property.
-   As long as the property holds the desired value at the end of the simulation, the Calibrator can access it.
-
-.. literalinclude:: ../../../examples/covid_contagion_calibrator/core/environment.py
-   :language: python
-   :linenos:
-
-Agent (`core/agent.py`)
-~~~~~~~~~~~~~~~~~~~~~~~
-
-This file is identical to the base ``covid_contagion`` model.
-
-.. literalinclude:: ../../../examples/covid_contagion_calibrator/core/agent.py
-   :language: python
-   :linenos:
-
-Scenario (`core/scenario.py`)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-.. literalinclude:: ../../../examples/covid_contagion_calibrator/core/scenario.py
-   :language: python
-   :linenos:
-
-Data Collector (`core/data_collector.py`)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-.. literalinclude:: ../../../examples/covid_contagion_calibrator/core/data_collector.py
-   :language: python
-   :linenos:
-
-Calibrator (`core/calibrator.py`)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-The ``CovidCalibrator`` class inherits from ``Melodie.Calibrator``.
-
-Key components:
-
-- ``setup()``: Registers ``infection_prob`` as the tunable parameter via ``add_scenario_calibrating_property``.
-- ``distance()``: Defines the error function. Here, it calculates the squared difference between the actual infected ratio and a target (hardcoded as 0.8 in this example).
-
-.. literalinclude:: ../../../examples/covid_contagion_calibrator/core/calibrator.py
-   :language: python
-   :linenos:
-
-Main Entry (`main.py`)
-~~~~~~~~~~~~~~~~~~~~~~
-
-**Note on Import Paths and Multiprocessing**
-
-The ``Calibrator`` module uses Python's ``multiprocessing`` to run simulations in parallel.
-For the worker processes to correctly unpickle and import your model classes, the project package must be importable.
-
-1. **Standard Project Structure**:
-   If you are developing a standalone project where ``main.py`` is in the project root, and you have installed Melodie via ``pip``, typically no extra path configuration is needed. The current directory is usually implicitly added to ``sys.path``.
-
-2. **Sub-directory / Complex Structure (This Example)**:
-   Since this example is nested deep within the Melodie repository (``examples/covid_contagion_calibrator``), the default path behavior might fail for worker processes spawned by ``multiprocessing``.
-   
-   To fix this, we explicitly insert the project root into ``sys.path`` in ``main.py``. This ensures that statements like ``from examples.covid_contagion_calibrator.core...`` work correctly in both the main process and all worker processes.
-
-.. literalinclude:: ../../../examples/covid_contagion_calibrator/main.py
-   :language: python
-   :linenos:
-
-Running the Calibrator
-----------------------
-
-Run the entry script:
+You can run the calibrator using the main script:
 
 .. code-block:: bash
 
    python examples/covid_contagion_calibrator/main.py
 
-Outputs (e.g., ``Result_Simulator_Environment.csv`` and GA logs) will appear in
-``examples/covid_contagion_calibrator/data/output``.
+This will execute the genetic algorithm, running multiple simulations in parallel to find the optimal ``infection_prob``. The results, including the progression of parameters and distances across generations, are saved to the ``data/output`` folder.
 
+Calibrator: Code
+----------------
 
+This section shows the key code implementation for the calibrator model. Files that are identical to the base ``covid_contagion`` model are noted.
+
+Calibrator
+~~~~~~~~~~
+Defined in ``core/calibrator.py``.
+
+.. literalinclude:: ../../../examples/covid_contagion_calibrator/core/calibrator.py
+   :language: python
+   :linenos:
+
+Scenario
+~~~~~~~~
+Defined in ``core/scenario.py``.
+
+.. literalinclude:: ../../../examples/covid_contagion_calibrator/core/scenario.py
+   :language: python
+   :linenos:
+
+Model
+~~~~~
+*Identical to the base model.* Defined in ``core/model.py``.
+
+.. literalinclude:: ../../../examples/covid_contagion_calibrator/core/model.py
+   :language: python
+   :linenos:
+
+Environment
+~~~~~~~~~~~
+*Identical to the base model.* Defined in ``core/environment.py``.
+
+.. literalinclude:: ../../../examples/covid_contagion_calibrator/core/environment.py
+   :language: python
+   :linenos:
+
+Agent
+~~~~~
+*Identical to the base model.* Defined in ``core/agent.py``.
+
+.. literalinclude:: ../../../examples/covid_contagion_calibrator/core/agent.py
+   :language: python
+   :linenos:
+
+Data Collector
+~~~~~~~~~~~~~~
+*Identical to the base model.* Defined in ``core/data_collector.py``.
+
+.. literalinclude:: ../../../examples/covid_contagion_calibrator/core/data_collector.py
+   :language: python
+   :linenos:
