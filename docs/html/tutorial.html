@@ -557,6 +557,25 @@ structure is as follows:</p>
 </ul>
 <p>These special attributes are defined in the base <code class="docutils literal notranslate"><span class="pre">Melodie.Scenario</span></code> class. They are typically controlled by adding corresponding columns to <code class="docutils literal notranslate"><span class="pre">SimulatorScenarios</span></code>, but you do not need to redeclare them in your subclass’s <code class="docutils literal notranslate"><span class="pre">setup</span></code> method unless you want explicit type hints. Other columns are user-defined.</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">load_data</span></code> method is a special hook that is automatically called by Melodie, so you should not change its name. It runs after parameters are loaded from the current <code class="docutils literal notranslate"><span class="pre">SimulatorScenarios</span></code> row. Inside <code class="docutils literal notranslate"><span class="pre">load_data</span></code>, you can load any other required data tables and attach them as attributes to the scenario instance. All other components (Model, Agent, Environment) can then access this data uniformly via <code class="docutils literal notranslate"><span class="pre">self.scenario.xxx</span></code>. For data-heavy models, you can also pre-process large tables in <code class="docutils literal notranslate"><span class="pre">load_data</span></code> (e.g., into dictionaries) to improve performance.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Melodie automatically loads several standard scenario tables by recognizing
+their filenames. These tables are essential for the <code class="docutils literal notranslate"><span class="pre">Simulator</span></code>,
+<code class="docutils literal notranslate"><span class="pre">Trainer</span></code>, and <code class="docutils literal notranslate"><span class="pre">Calibrator</span></code> to function correctly. The recognized names
+are:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">SimulatorScenarios</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">CalibratorScenarios</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">CalibratorParamsScenarios</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">TrainerScenarios</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">TrainerParamsScenarios</span></code></p></li>
+</ul>
+<p>These files are automatically loaded and attached to each <code class="docutils literal notranslate"><span class="pre">Scenario</span></code>
+object, becoming accessible via attributes like
+<code class="docutils literal notranslate"><span class="pre">self.scenario.simulator_scenarios</span></code> or
+<code class="docutils literal notranslate"><span class="pre">self.scenario.calibrator_params_scenarios</span></code>. You do not need to load
+them manually in <code class="docutils literal notranslate"><span class="pre">load_data</span></code>.</p>
+</div>
 </section>
 <section id="environment-logic">
 <h2>Environment Logic<a class="headerlink" href="#environment-logic" title="Link to this heading"></a></h2>

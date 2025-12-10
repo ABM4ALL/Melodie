@@ -1,2 +1,2 @@
 id,path_num,generation_num,strategy_population,mutation_prob,strategy_param_code_length,strategy_param_1_min,strategy_param_1_max,strategy_param_2_min,strategy_param_2_max,strategy_param_3_min,strategy_param_3_max
-0,1,30,30,0.02,5,0,100,0,100,0,100
+0,1,15,20,0.02,5,0,100,0,100,0,100

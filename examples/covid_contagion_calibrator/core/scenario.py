@@ -29,6 +29,3 @@ class CovidScenario(Scenario):
         accessible via `self.scenario.*` from `Model`, `Agent`, and `Environment`.
         """
         self.health_states = self.load_dataframe("ID_HealthState.csv")
-        # Load the GA parameters configuration from 'CalibratorParamsScenarios.csv'.
-        # This file defines bounds (min/max) for parameters like 'infection_prob'.
-        self.calibrator_params_scenarios = self.load_dataframe("CalibratorParamsScenarios.csv")

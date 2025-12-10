@@ -90,7 +90,7 @@ by defining parameters directly in the code and using a more basic output format
 Advanced Features in Melodie
 ----------------------------
 
-Beyond the core simulation loop, Melodie also provides "Modeling Managers" for
+Beyond the core simulation loop, Melodie also provides two types of "Modeling Managers" - Calibrator and Trainer - for
 more advanced use cases, which are not present in Mesa or AgentPy.
 
 *   ``Simulator``: The standard manager for running simulations.
@@ -99,5 +99,4 @@ more advanced use cases, which are not present in Mesa or AgentPy.
 *   ``Trainer``: Trains agents to optimize their individual behaviors using
     evolutionary algorithms.
 
-Detailed examples for the ``Calibrator`` and ``Trainer`` will be provided in the
-Model Gallery.
+In the Model Gallery section, we provide two examples (:doc:`Calibrator <gallery/covid_contagion_calibrator>` and :doc:`Trainer <gallery/rock_paper_scissors_trainer>`) to explain the design philosophy behind these modules.

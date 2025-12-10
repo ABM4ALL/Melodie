@@ -16,23 +16,15 @@ class RPSScenario(Scenario):
     based on the scenario's defined bounds.
     """
 
-    def setup(self) -> None:
-        # Parameters to be populated from SimulatorScenarios.csv or TrainerScenarios.csv
-        self.period_num: int = 0
-        self.agent_num: int = 0
-        self.payoff_win_min: float = 0.0
-        self.payoff_win_max: float = 0.0
-        self.payoff_lose_min: float = 0.0
-        self.payoff_lose_max: float = 0.0
-        self.payoff_tie: float = 0.0
+    def setup(self):
+        # Payoff parameters, loaded from scenario tables.
+        self.payoff_win_min = 0.0
+        self.payoff_win_max = 0.0
+        self.payoff_lose_min = 0.0
+        self.payoff_lose_max = 0.0
+        self.payoff_tie = 0.0
 
     def load_data(self) -> None:
-        """
-        Loads all scenario tables and synthesizes the agent-level parameter table.
-        """
-        self.simulator_scenarios = self.load_dataframe("SimulatorScenarios.csv")
-        self.trainer_scenarios = self.load_dataframe("TrainerScenarios.csv")
-        self.trainer_params_scenarios = self.load_dataframe("TrainerParamsScenarios.csv")
         self.agent_params = self._generate_agent_params()
 
     def _generate_agent_params(self) -> pd.DataFrame:

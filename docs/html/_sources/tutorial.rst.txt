@@ -70,6 +70,24 @@ These special attributes are defined in the base ``Melodie.Scenario`` class. The
 
 The ``load_data`` method is a special hook that is automatically called by Melodie, so you should not change its name. It runs after parameters are loaded from the current ``SimulatorScenarios`` row. Inside ``load_data``, you can load any other required data tables and attach them as attributes to the scenario instance. All other components (Model, Agent, Environment) can then access this data uniformly via ``self.scenario.xxx``. For data-heavy models, you can also pre-process large tables in ``load_data`` (e.g., into dictionaries) to improve performance.
 
+.. note::
+   Melodie automatically loads several standard scenario tables by recognizing
+   their filenames. These tables are essential for the ``Simulator``,
+   ``Trainer``, and ``Calibrator`` to function correctly. The recognized names
+   are:
+
+   - ``SimulatorScenarios``
+   - ``CalibratorScenarios``
+   - ``CalibratorParamsScenarios``
+   - ``TrainerScenarios``
+   - ``TrainerParamsScenarios``
+
+   These files are automatically loaded and attached to each ``Scenario``
+   object, becoming accessible via attributes like
+   ``self.scenario.simulator_scenarios`` or
+   ``self.scenario.calibrator_params_scenarios``. You do not need to load
+   them manually in ``load_data``.
+
 Environment Logic
 -----------------
 
