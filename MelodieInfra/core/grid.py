@@ -1,4 +1,4 @@
-from typing import ClassVar, Dict, List, Tuple
+from typing import ClassVar, Dict, List, Literal, Tuple
 
 from MelodieInfra.core.agent_list import AgentList
 
@@ -511,7 +511,7 @@ class Grid:
                 return self._num_to_2d_coor(item)
             i += 1
 
-    def setup_agent_locations(self, category, initial_placement="direct") -> None:
+    def setup_agent_locations(self, category, initial_placement: Literal["direct", "random_single"]="direct") -> None:
         """
         Add an agent category.
 
@@ -521,7 +521,9 @@ class Grid:
 
         :param category_id: The id of new category.
         :param category: An AgentList object
-        :param initial_placement: A str object stand for initial placement.
+        :param initial_placement: A str object stand for initial placement, which can be ``direct`` or ``random_single``
+            ``direct`` means that the agent is placed at the position of its x and y;
+            ``random_single`` means that the agent is placed at a random position.
         :return: None
         """
         initial_placement = initial_placement.lower()

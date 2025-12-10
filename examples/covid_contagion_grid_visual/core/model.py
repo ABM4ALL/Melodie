@@ -43,7 +43,7 @@ class CovidModel(Model):
         self.grid.setup_params(width=self.scenario.grid_x_size, height=self.scenario.grid_y_size)
         
         # 3. Place agents randomly on the grid
-        self.grid.setup_agent_locations(self.agents)
+        self.grid.setup_agent_locations(self.agents, "random_single")
         
         # 4. Seed initial infections
         self.environment.seed_infection(self.agents)
