@@ -8,6 +8,7 @@ from typing import (
     Dict,
     Iterator,
     List,
+    Literal,
     Optional,
     Tuple,
     Type,
@@ -19,7 +20,7 @@ import pandas as pd
 
 from MelodieInfra import Config, MelodieExceptions
 from MelodieInfra.core import Agent, AgentList
-from MelodieInfra.parallel.parallel_manager import ParallelManager
+from MelodieInfra.parallel.parallel_manager import ParallelManager, ThreadParallelManager
 from MelodieInfra.utils.utils import underline_to_camel
 
 from .algorithms import AlgorithmParameters
@@ -175,13 +176,20 @@ class TargetFcnCache:
 
 class GATrainerAlgorithm:
     """
-    参数：一个tuple
-    每次会跑20条染色体，然后将参数缓存起来。
-    目标函数从TargetFcnCache中查询。
+    (Internal) The genetic algorithm implementation for the Trainer.
+
+    This class orchestrates the GA process for agent-level parameter training.
+    It manages separate GA instances for each agent, distributes simulation
+    tasks to parallel workers, caches fitness (utility) scores, and evolves
+    each agent's strategy population across generations.
     """
 
     def __init__(
-        self, params: GATrainerParams, manager: "Trainer" = None, processors=1
+        self,
+        params: GATrainerParams,
+        manager: "Trainer" = None,
+        processors: int = 1,
+        parallel_mode: Literal["process", "thread"] = "process",
     ):
         self.manager = manager
         self.params = params
@@ -203,30 +211,97 @@ class GATrainerAlgorithm:
         self._chromosome_counter = 0
         self._current_generation = 0
         self.processors = processors
+        self.parallel_mode = parallel_mode
 
-        # for i in range(processors):
-        d = {
-            "model": (
-                self.manager.model_cls.__name__,
-                self.manager.model_cls.__module__,
-            ),
-            "scenario": (
-                self.manager.scenario_cls.__name__,
-                self.manager.scenario_cls.__module__,
-            ),
-            "trainer": (
-                self.manager.__class__.__name__,
-                self.manager.__class__.__module__,
-            ),
-            "data_loader": (
-                self.manager.df_loader_cls.__name__,
-                self.manager.df_loader_cls.__module__,
-            ),
-        }
-        self.parallel_manager = ParallelManager(
-            self.processors, configs=(d, self.manager.config.to_dict())
+        if self.parallel_mode == "process":
+            d = {
+                "model": (
+                    self.manager.model_cls.__name__,
+                    self.manager.model_cls.__module__,
+                ),
+                "scenario": (
+                    self.manager.scenario_cls.__name__,
+                    self.manager.scenario_cls.__module__,
+                ),
+                "trainer": (
+                    self.manager.__class__.__name__,
+                    self.manager.__class__.__module__,
+                ),
+                "data_loader": (
+                    self.manager.df_loader_cls.__name__,
+                    self.manager.df_loader_cls.__module__,
+                ),
+            }
+            self.parallel_manager = ParallelManager(
+                self.processors, configs=(d, self.manager.config.to_dict())
+            )
+            self.parallel_manager.run("trainer")
+        elif self.parallel_mode == "thread":
+            self.parallel_manager = ThreadParallelManager(
+                cores=self.processors,
+                worker_func=self._thread_worker_func,
+                worker_init_args=(self.manager,),
+            )
+            self.parallel_manager.run("trainer")
+        else:
+            raise ValueError(f"Unknown parallel_mode: {parallel_mode}")
+
+    def _thread_worker_func(
+        self, core_id: int, task: Tuple, trainer: "Trainer"
+    ) -> Tuple:
+        """
+        Worker function for thread-based parallelism.
+        Runs a single simulation for a given chromosome.
+        """
+        import logging
+        import time
+        from Melodie import Environment
+        from MelodieInfra.config.global_configs import MelodieGlobalConfig
+
+        # Set up logging for this thread worker (similar to process workers)
+        thread_logger = logging.getLogger(f"Trainer-processor-{core_id}")
+        
+        t0 = time.time()
+        chrom, scenario_json, agent_params = task
+        thread_logger.debug(f"processor {core_id} got chrom {chrom}")
+        
+        scenario = trainer.scenario_cls()
+        scenario.manager = trainer
+        scenario._setup(scenario_json)
+
+        model = trainer.model_cls(trainer.config, scenario)
+        model.create()
+        model._setup()
+
+        # Apply agent parameters from the GA chromosome
+        for category, params in agent_params.items():
+            agent_container: AgentList[Agent] = getattr(model, category)
+            for param in params:
+                agent = agent_container.get_agent(param["id"])
+                agent.set_params(param)
+
+        model.run()
+
+        agent_data = {}
+        for container in trainer.container_manager.agent_containers:
+            agent_container = getattr(model, container.container_name)
+            df = agent_container.to_list(container.recorded_properties)
+            agent_data[container.container_name] = df
+            for row in df:
+                agent = agent_container.get_agent(row["id"])
+                row["target_function_value"] = trainer.target_function(agent)
+                row["utility"] = trainer.utility(agent)
+                row["agent_id"] = row.pop("id")
+
+        env: Environment = model.environment
+        env_data = env.to_dict(trainer.environment_properties)
+
+        t1 = time.time()
+        thread_logger.info(
+            f"Processor {core_id}, chromosome {chrom}, time: {MelodieGlobalConfig.Logger.round_elapsed_time(t1 - t0)}s"
         )
-        self.parallel_manager.run("trainer")
+
+        return (chrom, agent_data, env_data)
 
     def stop(self):
         self.parallel_manager.close()
@@ -262,10 +337,16 @@ class GATrainerAlgorithm:
 
     def get_agent_params(self, id_chromosome: int):
         """
-        Pass parameters from the chromosome to the agent container.
+        (Internal) Decode the chromosomes for all agents for a given chromosome ID.
 
-        :param id_chromosome:
-        :return:
+        This method constructs the parameter sets for every agent being trained,
+        based on the state of their individual GAs at a specific chromosome
+        index in the current population.
+
+        :param id_chromosome: The index of the chromosome in the current
+            population for all agents.
+        :return: A dictionary mapping agent container names to a list of agent
+            parameter dictionaries.
         """
         params: Dict[str, List[Dict[str, Any]]] = {
             category: [] for category in self.agent_ids.keys()
@@ -276,7 +357,8 @@ class GATrainerAlgorithm:
             agent_id, agent_category = key
             d = {"id": agent_id}
             for i, param_name in enumerate(self.agent_params_defined[agent_category]):
-                d[param_name] = chromosome_value[i]
+                # Convert numpy float to native Python float for serialization
+                d[param_name] = float(chromosome_value[i])
             params[agent_category].append(d)
         return params
 
@@ -287,9 +369,7 @@ class GATrainerAlgorithm:
         id_chromosome: int,
     ):
         """
-        Extract the value of target functions from Model, and write them into cache.
-
-        :return:
+        (Internal) Store the output of the target function (utility) in a cache.
         """
         for (
             container_category,
@@ -308,6 +388,14 @@ class GATrainerAlgorithm:
     def generate_target_function(
         self, agent_id: int, container_name: str
     ) -> Callable[[], float]:
+        """
+        (Internal) Create the fitness function for an agent's genetic algorithm.
+
+        This function retrieves the pre-computed utility value from the cache for
+        a specific agent and chromosome, allowing the GA to evaluate fitness
+        without re-running the simulation.
+        """
+
         def f(*args):
             self._chromosome_counter += 1
             value = self.target_fcn_cache.lookup_agent_target_value(
@@ -353,14 +441,14 @@ class GATrainerAlgorithm:
                 d.pop("target_function_value")
                 agent_records[container_name].append(d)
 
-            self.manager._write_to_table(
-                "csv",
-                f"Result_Trainer_{underline_to_camel(container_name)}",
-                pd.DataFrame(agent_records[container_name]),
-            )
-
         env_record.update(meta_dict)
         env_record.update(env_data)
+
+        self.manager._write_to_table(
+            "csv",
+            f"Result_Trainer_{underline_to_camel(container_name)}",
+            pd.DataFrame(agent_records[container_name]),
+        )
 
         self.manager._write_to_table(
             "csv",
@@ -546,7 +634,11 @@ class AgentContainerManager:
 
 class Trainer(BaseModellingManager):
     """
-    Trainer trains the agents to update their behavioral parameters for higher payoff.
+    The ``Trainer`` uses a genetic algorithm to evolve agent-level parameters.
+
+    It is designed for models where agents can "learn" or adapt their
+    strategies to maximize a personal objective, defined by a ``utility``
+    function.
     """
 
     def __init__(
@@ -556,14 +648,20 @@ class Trainer(BaseModellingManager):
         model_cls: "Optional[Type[Model]]",
         data_loader_cls: "Optional[Type[DataLoader]]" = None,
         processors: int = 1,
+        parallel_mode: Literal["process", "thread"] = "process",
     ):
         """
-        :param config: Config instance for current project.
-        :param scenario_cls: Scenario class for current project.
-        :param model_cls: Model class in current project.
-        :param data_loader_cls: DataLoader class in current project.
-        :param processors: Each path in current iteration will be computed parallelly, this parameter
-         stands for processor cores used in parallel computation.
+        :param config: The project :class:`~Melodie.Config` object.
+        :param scenario_cls: The :class:`~Melodie.Scenario` subclass for the model.
+        :param model_cls: The :class:`~Melodie.Model` subclass for the model.
+        :param data_loader_cls: The :class:`~Melodie.DataLoader` subclass for the
+            model.
+        :param processors: The number of processor cores to use for parallel
+            computation of the genetic algorithm.
+        :param parallel_mode: The parallelization mode. ``"process"`` (default)
+            uses subprocess-based parallelism, suitable for all Python versions.
+            ``"thread"`` uses thread-based parallelism, which is recommended for
+            Python 3.13+ (free-threaded/No-GIL builds) for better performance.
         """
         super().__init__(
             config=config,
@@ -589,6 +687,7 @@ class Trainer(BaseModellingManager):
         self.agent_result = []
         self.current_algorithm_meta = None
         self.processors = processors
+        self.parallel_mode = parallel_mode
 
     def add_agent_training_property(
         self,
@@ -597,12 +696,14 @@ class Trainer(BaseModellingManager):
         agent_ids: Callable[[Scenario], List[int]],
     ):
         """
-        Add a container into the trainer.
+        Register an agent container and its properties for training.
 
-        :param agent_list_name: The name of agent container.
-        :param training_attributes: The properties used in training.
-        :param agent_ids: The agent with id contained in `agent_ids` will be trained.
-        :return: None
+        :param agent_list_name: The name of the agent container attribute on the
+            Model object (e.g., 'agents').
+        :param training_attributes: A list of agent property names to be tuned by
+            the genetic algorithm.
+        :param agent_ids: A callable that takes a ``Scenario`` object and returns
+            a list of agent IDs to be trained.
         """
         self.container_manager.add_container(
             agent_list_name, training_attributes, agent_ids
@@ -610,15 +711,16 @@ class Trainer(BaseModellingManager):
 
     def setup(self):
         """
-        Setup method, be sure to inherit this method in custom trainer class.
+        A hook for setting up the Trainer.
+
+        This method should be overridden in a subclass to define which agent
+        properties to train, using :meth:`add_agent_training_property`.
         """
         pass
 
     def get_trainer_scenario_cls(self):
         """
-        Get the class of trainer scenario.
-
-        :return: Trainer parameters
+        (Internal) Get the parameter class for the trainer's algorithm.
         """
         assert self.algorithm_type in {"ga"}
 
@@ -630,17 +732,18 @@ class Trainer(BaseModellingManager):
 
     def collect_data(self):
         """
-        Set the agent and environment properties to be collected.
+        (Optional) A hook to define which agent and environment properties to record.
 
-        :return:
+        This is not required for training itself but is useful for saving
+        detailed simulation data during the training process. Use
+        :meth:`add_agent_property` and :meth:`add_environment_property` to
+        register properties.
         """
         pass
 
     def run(self):
         """
-        The main method for Trainer.
-
-        :return:
+        The main entry point for starting the training process.
         """
         self.setup()
         self.collect_data()
@@ -665,14 +768,12 @@ class Trainer(BaseModellingManager):
 
     def run_once_new(self, scenario: Scenario, trainer_params: Union[GATrainerParams]):
         """
-        Run for one training path
-
-        :param scenario: The scenario to run
-        :param trainer_params: calibration parameters.
-        :return: None
+        (Internal) Run a single training path.
         """
 
-        self.algorithm = GATrainerAlgorithm(trainer_params, self, self.processors)
+        self.algorithm = GATrainerAlgorithm(
+            trainer_params, self, self.processors, self.parallel_mode
+        )
         self.algorithm.recorded_env_properties = self.environment_properties
         for agent_container in self.container_manager.agent_containers:
             self.algorithm.setup_agent_locations(
@@ -687,11 +788,16 @@ class Trainer(BaseModellingManager):
 
     def utility(self, agent: Agent) -> float:
         """
-        The utility is to be maximized.
-        be sure to inherit inside the custom trainer class.
+        The utility function to be maximized by the trainer.
 
-        :param agent: Agent object.
-        :return:
+        This method **must be overridden** in a subclass. It should take an
+        ``Agent`` object (representing the final state of an agent after a
+        simulation run) and return a single float value representing the
+        agent's "utility" or "fitness." The genetic algorithm will attempt to
+        find the strategy parameters that maximize this value for each agent.
+
+        :param agent: The ``Agent`` object after a simulation run.
+        :return: A float representing the agent's utility.
         """
         raise NotImplementedError(
             "Trainer.utility(agent) must be overridden in sub-class!"
@@ -699,19 +805,16 @@ class Trainer(BaseModellingManager):
 
     def target_function(self, agent: Agent) -> float:
         """
-        The target function to be minimized.
-
-        :param agent:
-        :return:
+        (Internal) The target function to be minimized, which is the negative of utility.
         """
         return -self.utility(agent)
 
     def add_agent_property(self, agent_list_name: str, prop: str):
         """
-        Add a property of agent to be recorded.
+        Register an agent property to be recorded during training.
 
-        :param agent_list_name: Name of agent list
-        :param prop: Property name of agent
+        :param agent_list_name: The name of the agent container.
+        :param prop: The name of the agent property to record.
         """
         self.container_manager.get_agent_container(
             agent_list_name
@@ -719,18 +822,18 @@ class Trainer(BaseModellingManager):
 
     def add_environment_property(self, prop: str):
         """
-        Add a property of environment to be recorded.
+        Register an environment property to be recorded during training.
 
-        :param prop: Property name of environment.
+        :param prop: The name of the environment property to record.
         """
         assert prop not in self.environment_properties
         self.environment_properties.append(prop)
 
     def generate_scenarios(self):
         """
-        Generate Scenarios for trainer
+        Generate scenarios from the ``TrainerScenarios`` table.
 
-        :return: A list of scenario objects.
+        :return: A list of ``Scenario`` objects.
         """
         assert self.data_loader is not None
         return self.data_loader.generate_scenarios("Trainer")
@@ -739,9 +842,7 @@ class Trainer(BaseModellingManager):
         self, trainer_scenario_cls: Type[GATrainerParams]
     ) -> List[GATrainerParams]:
         """
-        Generate Trainer Parameters.
-
-        :return: A list of trainer parameters.
+        (Internal) Load GA parameters from the ``TrainerParamsScenarios`` table.
         """
 
         trainer_params_table = self.get_dataframe("TrainerParamsScenarios")

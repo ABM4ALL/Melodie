@@ -487,6 +487,8 @@ class Visualizer(BaseVisualizer):
             "type": "grid",
             "agents": agents_vis_dicts,
             "spots": spots,
+            "columns": grid.width(),
+            "rows": grid.height(),
         }
 
     def parse_network_series(
@@ -634,6 +636,8 @@ class Visualizer(BaseVisualizer):
         ) in self.visualizer_components:
             if vis_component_type == "grid":
                 r = self.parse_grid_series(vis_component(), roles, var_getter)
+                r['rows'] = 40
+                r['columns'] = 40
                 visualizers.append(r)
             elif vis_component_type == "network":
                 visualizers.append(

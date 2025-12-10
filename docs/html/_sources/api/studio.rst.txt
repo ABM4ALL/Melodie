@@ -9,3 +9,6 @@ Under development.
     .. include db viewer
     .. include visualizer
 
+.. automodule:: Melodie.visualizer
+   :members:
+

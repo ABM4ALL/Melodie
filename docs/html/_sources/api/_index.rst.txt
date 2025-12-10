@@ -8,21 +8,19 @@ Under development.
     :caption: Content
     :maxdepth: 1
 
-    model
-    agent
-    agent_list
-    environment
+    calibrator
     data_collector
-    grid
-    network
-    data_info
     data_loader
+    db
+    environment
+    exceptions
+    grid
+    model
+    network
     scenario
     simulator
-    calibrator
+    studio
     trainer
-    db
-    exceptions
 
 
 

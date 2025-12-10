@@ -1,4 +1,4 @@
-from typing import ClassVar, Dict, List, Tuple
+from typing import ClassVar, Dict, List, Literal, Tuple
 
 from MelodieInfra.core.agent_list import AgentList
 
@@ -121,15 +121,17 @@ class Grid:
         self, width: int, height: int, wrap=True, caching=True, multi=True
     ):
         """
-        Setup the parameters of grid.
+        Setup the parameters of the grid.
 
-        :param width: int
-        :param height: int
-        :param wrap: bool, True by default.
-        If True, GridAgent will re-enter the grid on the other side if it moves out of the grid on one side.
-        :param caching: bool, True by default. If true, the grid caches the neighbor of each spot.
-        :param multi: bool, True by default. If true, more than one agent could stand on one spot. If false, error will
-        be raised when attempting to place multiple agents on one spot.
+        :param width: An integer for the grid width.
+        :param height: An integer for the grid height.
+        :param wrap: A boolean (default True). If True, an agent moving out of
+            the grid on one side will re-enter from the opposite side.
+        :param caching: A boolean (default True). If True, the grid caches the
+            neighbors of each spot to improve performance.
+        :param multi: A boolean (default True). If True, more than one agent can
+            stand on the same spot. If False, an error will be raised when
+            attempting to place multiple agents on one spot.
         :return: None
         """
         self._width = width
@@ -509,7 +511,7 @@ class Grid:
                 return self._num_to_2d_coor(item)
             i += 1
 
-    def setup_agent_locations(self, category, initial_placement="direct") -> None:
+    def setup_agent_locations(self, category, initial_placement: Literal["direct", "random_single"]="direct") -> None:
         """
         Add an agent category.
 
@@ -519,7 +521,9 @@ class Grid:
 
         :param category_id: The id of new category.
         :param category: An AgentList object
-        :param initial_placement: A str object stand for initial placement.
+        :param initial_placement: A str object stand for initial placement, which can be ``direct`` or ``random_single``
+            ``direct`` means that the agent is placed at the position of its x and y;
+            ``random_single`` means that the agent is placed at a random position.
         :return: None
         """
         initial_placement = initial_placement.lower()

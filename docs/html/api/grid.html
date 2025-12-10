@@ -1,27 +1,27 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Grid &mdash; Melodie 0.9.0a0 documentation</title>
-      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
+  <title>Grid &amp; Spot &mdash; Melodie 1.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
   
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-        <script src="../_static/doctools.js"></script>
-        <script src="../_static/sphinx_highlight.js"></script>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=292eb321"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="author" title="About these documents" href="../about.html" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Network" href="network.html" />
-    <link rel="prev" title="DataCollector" href="data_collector.html" /> 
+    <link rel="next" title="Network &amp; Edge" href="network.html" />
+    <link rel="prev" title="Data Collector" href="data_collector.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -44,7 +44,8 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <ul class="current">
+              <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../installation.html#user-installation">User Installation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../installation.html#developer-installation">Developer Installation</a></li>
@@ -54,8 +55,8 @@
 <li class="toctree-l1"><a class="reference internal" href="../introduction.html">Introduction</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../introduction.html#agent-based-model-abm">Agent-based Model (ABM)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../introduction.html#melodie-framework">Melodie Framework</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../introduction.html#model">Model</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../introduction.html#scenario">Scenario</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../introduction.html#the-model">The Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../introduction.html#the-scenario">The Scenario</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../introduction.html#modelling-manager">Modelling Manager</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../introduction.html#infrastructure">Infrastructure</a></li>
 </ul>
@@ -63,133 +64,173 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorial.html">Tutorial</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../tutorial.html#project-structure">Project Structure</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorial.html#agent">Agent</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorial.html#scenario">Scenario</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../tutorial.html#generate-agent-params">Generate <code class="docutils literal notranslate"><span class="pre">agent_params</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="../tutorial.html#load-simulator-scenarios">Load <code class="docutils literal notranslate"><span class="pre">simulator_scenarios</span></code></a></li>
-</ul>
-</li>
 <li class="toctree-l2"><a class="reference internal" href="../tutorial.html#model">Model</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorial.html#environment">Environment</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorial.html#datacollector">DataCollector</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../tutorial.html#last-words">Last Words</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial.html#scenario-definition">Scenario Definition</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial.html#environment-logic">Environment Logic</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial.html#agent-behavior">Agent Behavior</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial.html#data-collection-setup">Data Collection Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial.html#run-the-model">Run the model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial.html#parallel-execution">Parallel Execution</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../framework_comparison.html">Framework Comparison</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../framework_comparison.html#project-structure">Project Structure</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../framework_comparison.html#model-components">Model Components</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../framework_comparison.html#melodie">Melodie</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../framework_comparison.html#id2">Mesa</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../framework_comparison.html#id3">AgentPy</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../framework_comparison.html#summary">Summary</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="../framework_comparison.html#scenario-management">Scenario Management</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../framework_comparison.html#id4">Melodie</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../framework_comparison.html#id5">Mesa</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../framework_comparison.html#id6">AgentPy</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../framework_comparison.html#id7">Summary</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="../framework_comparison.html#modeling-manager">Modeling Manager</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../framework_comparison.html#calibrator">Calibrator</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../framework_comparison.html#trainer">Trainer</a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="../framework_comparison.html#high-level-comparison">High-Level Comparison</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../framework_comparison.html#a-note-on-this-comparison">A Note on This Comparison</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../framework_comparison.html#advanced-features-in-melodie">Advanced Features in Melodie</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../gallery/_index.html">Model Gallery</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../gallery/covid_grid_contagion.html">CovidGridContagion</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../gallery/covid_grid_contagion.html#project-structure">Project Structure</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../gallery/covid_grid_contagion.html#grid-and-spot">Grid and Spot</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../gallery/covid_grid_contagion.html#matrix-data">Matrix Data</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../gallery/covid_grid_contagion.html#model">Model</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../gallery/covid_grid_contagion.html#gridagent">GridAgent</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gallery/covid_contagion_grid.html">CovidContagionGrid</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../gallery/covid_contagion_grid.html#grid-project-structure">Grid: Project Structure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../gallery/covid_contagion_grid.html#grid-key-changes">Grid: Key Changes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../gallery/covid_contagion_grid.html#grid-input-data">Grid: Input Data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../gallery/covid_contagion_grid.html#grid-running-the-model">Grid: Running the Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../gallery/covid_contagion_grid.html#grid-code">Grid: Code</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../gallery/covid_contagion_grid.html#model-structure">Model Structure</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../gallery/covid_contagion_grid.html#environment-logic">Environment Logic</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../gallery/covid_contagion_grid.html#agent-behavior">Agent Behavior</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../gallery/covid_contagion_grid.html#data-collection-setup">Data Collection Setup</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../gallery/covid_contagion_grid.html#grid-and-spot-definition">Grid and Spot Definition</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../gallery/covid_network_contagion.html">CovidNetworkContagion</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../gallery/covid_network_contagion.html#project-structure">Project Structure</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../gallery/covid_network_contagion.html#model">Model</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../gallery/covid_network_contagion.html#scenario">Scenario</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../gallery/covid_contagion_grid_visual.html">CovidContagionGridVisual</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../gallery/covid_contagion_grid_visual.html#visualizer-project-structure">Visualizer: Project Structure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../gallery/covid_contagion_grid_visual.html#visualizer-key-changes">Visualizer: Key Changes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../gallery/covid_contagion_grid_visual.html#visualizer-running-the-model">Visualizer: Running the Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../gallery/covid_contagion_grid_visual.html#visualizer-customization-guide">Visualizer: Customization Guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../gallery/covid_contagion_grid_visual.html#visualizer-code">Visualizer: Code</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../gallery/covid_contagion_grid_visual.html#visualizer-definition">Visualizer Definition</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../gallery/covid_contagion_grid_visual.html#model-structure">Model Structure</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../gallery/covid_contagion_grid_visual.html#environment-logic">Environment Logic</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../gallery/covid_contagion_grid_visual.html#agent-behavior">Agent Behavior</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../gallery/covid_contagion_grid_visual.html#grid-definition">Grid Definition</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../gallery/covid_contagion_network.html">CovidContagionNetwork</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../gallery/covid_contagion_network.html#network-project-structure">Network: Project Structure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../gallery/covid_contagion_network.html#network-key-changes">Network: Key Changes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../gallery/covid_contagion_network.html#network-input-data">Network: Input Data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../gallery/covid_contagion_network.html#network-running-the-model">Network: Running the Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../gallery/covid_contagion_network.html#network-code">Network: Code</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../gallery/covid_contagion_network.html#model-structure">Model Structure</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../gallery/covid_contagion_network.html#environment-logic">Environment Logic</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../gallery/covid_contagion_network.html#agent-behavior">Agent Behavior</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../gallery/covid_contagion_network.html#scenario-definition">Scenario Definition</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../gallery/covid_contagion_network.html#data-collection-setup">Data Collection Setup</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../gallery/covid_contagion_calibrator.html">CovidContagionCalibrator</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../gallery/covid_contagion_calibrator.html#project-structure">Project Structure</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../gallery/covid_contagion_calibrator.html#calibrator">Calibrator</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../gallery/covid_contagion_calibrator.html#algorithm">Algorithm</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../gallery/covid_contagion_calibrator.html#results">Results</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="../gallery/rock_paper_scissors.html">RockPaperScissorsTrainer</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../gallery/rock_paper_scissors.html#model-setup">Model Setup</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../gallery/rock_paper_scissors.html#trainer">Trainer</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../gallery/rock_paper_scissors.html#results">Results</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="../gallery/covid_contagion_visual.html">CovidContagionVisual</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../gallery/covid_contagion_visual.html#visualizer">Visualizer</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../gallery/covid_contagion_visual.html#melodiestudio">MelodieStudio</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../gallery/covid_contagion_visual.html#how-to-start">How to start?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../gallery/covid_contagion_calibrator.html#calibrator-project-structure">Calibrator: Project Structure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../gallery/covid_contagion_calibrator.html#calibrator-key-changes">Calibrator: Key Changes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../gallery/covid_contagion_calibrator.html#calibrator-ga-concepts">Calibrator: GA Concepts</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../gallery/covid_contagion_calibrator.html#calibrator-input-data">Calibrator: Input Data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../gallery/covid_contagion_calibrator.html#calibrator-running-the-model">Calibrator: Running the Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../gallery/covid_contagion_calibrator.html#calibrator-code">Calibrator: Code</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../gallery/covid_contagion_calibrator.html#calibrator-definition">Calibrator Definition</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../gallery/covid_contagion_calibrator.html#scenario-definition">Scenario Definition</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../gallery/covid_contagion_calibrator.html#model-structure">Model Structure</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../gallery/covid_contagion_calibrator.html#environment-logic">Environment Logic</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../gallery/covid_contagion_calibrator.html#agent-behavior">Agent Behavior</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../gallery/covid_contagion_calibrator.html#data-collection-setup">Data Collection Setup</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../advanced/_index.html">Advanced Topics</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../advanced/troubleshooting.html">TroubleShooting</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../advanced/troubleshooting.html#port-already-in-use">Port Already in use</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../advanced/troubleshooting.html#windows">Windows</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../advanced/troubleshooting.html#macos-linux-or-other-nix-systems">MacOS, Linux or other *nix systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gallery/rock_paper_scissors_trainer.html">RockPaperScissorsTrainer</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../gallery/rock_paper_scissors_trainer.html#trainer-project-structure">Trainer: Project Structure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../gallery/rock_paper_scissors_trainer.html#trainer-ga-concepts">Trainer: GA Concepts</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../gallery/rock_paper_scissors_trainer.html#trainer-how-it-works">Trainer: How It Works</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../gallery/rock_paper_scissors_trainer.html#trainer-results">Trainer: Results</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../gallery/rock_paper_scissors_trainer.html#trainer-running-the-model">Trainer: Running the Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../gallery/rock_paper_scissors_trainer.html#trainer-code">Trainer: Code</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../gallery/rock_paper_scissors_trainer.html#model-structure">Model Structure</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../gallery/rock_paper_scissors_trainer.html#environment-logic">Environment Logic</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../gallery/rock_paper_scissors_trainer.html#agent-behavior">Agent Behavior</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../gallery/rock_paper_scissors_trainer.html#data-collection-setup">Data Collection Setup</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../gallery/rock_paper_scissors_trainer.html#scenario-definition">Scenario Definition</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../gallery/rock_paper_scissors_trainer.html#trainer-definition">Trainer Definition</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../advanced/melodie_error_list.html">Melodie Errors</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../advanced/datatypes.html">Data Types</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../advanced/datatypes.html#notice">Notice</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">API Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="simulator.html">Simulator</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="simulator.html#Melodie.Simulator"><code class="docutils literal notranslate"><span class="pre">Simulator</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="simulator.html#Melodie.Simulator.generate_scenarios"><code class="docutils literal notranslate"><span class="pre">Simulator.generate_scenarios()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="simulator.html#Melodie.Simulator.run_model"><code class="docutils literal notranslate"><span class="pre">Simulator.run_model()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="simulator.html#Melodie.Simulator.setup"><code class="docutils literal notranslate"><span class="pre">Simulator.setup()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="simulator.html#Melodie.Simulator.run"><code class="docutils literal notranslate"><span class="pre">Simulator.run()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="simulator.html#Melodie.Simulator.run_visual"><code class="docutils literal notranslate"><span class="pre">Simulator.run_visual()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="simulator.html#Melodie.Simulator.run_parallel"><code class="docutils literal notranslate"><span class="pre">Simulator.run_parallel()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="simulator.html#Melodie.Simulator.run_parallel_multithread"><code class="docutils literal notranslate"><span class="pre">Simulator.run_parallel_multithread()</span></code></a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l1 current"><a class="reference internal" href="_index.html">API Reference</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="model.html">Model</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="model.html#Melodie.model.ModelRunRoutine"><code class="docutils literal notranslate"><span class="pre">ModelRunRoutine</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="model.html#Melodie.model.Model"><code class="docutils literal notranslate"><span class="pre">Model</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="model.html#Melodie.model.Model.create"><code class="docutils literal notranslate"><span class="pre">Model.create()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="model.html#Melodie.model.Model.setup"><code class="docutils literal notranslate"><span class="pre">Model.setup()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="model.html#Melodie.model.Model.create_db_conn"><code class="docutils literal notranslate"><span class="pre">Model.create_db_conn()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="model.html#Melodie.model.Model.create_agent_list"><code class="docutils literal notranslate"><span class="pre">Model.create_agent_list()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="model.html#Melodie.model.Model.create_environment"><code class="docutils literal notranslate"><span class="pre">Model.create_environment()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="model.html#Melodie.model.Model.create_grid"><code class="docutils literal notranslate"><span class="pre">Model.create_grid()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="model.html#Melodie.model.Model.create_network"><code class="docutils literal notranslate"><span class="pre">Model.create_network()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="model.html#Melodie.model.Model.create_data_collector"><code class="docutils literal notranslate"><span class="pre">Model.create_data_collector()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="model.html#Melodie.model.Model.create_agent_container"><code class="docutils literal notranslate"><span class="pre">Model.create_agent_container()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="model.html#Melodie.model.Model.run"><code class="docutils literal notranslate"><span class="pre">Model.run()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="model.html#Melodie.model.Model.iterator"><code class="docutils literal notranslate"><span class="pre">Model.iterator()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="model.html#Melodie.model.Model.init_visualize"><code class="docutils literal notranslate"><span class="pre">Model.init_visualize()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="model.html#Melodie.Model"><code class="docutils literal notranslate"><span class="pre">Model</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="model.html#Melodie.Model.create"><code class="docutils literal notranslate"><span class="pre">Model.create()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="model.html#Melodie.Model.setup"><code class="docutils literal notranslate"><span class="pre">Model.setup()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="model.html#Melodie.Model.create_db_conn"><code class="docutils literal notranslate"><span class="pre">Model.create_db_conn()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="model.html#Melodie.Model.create_agent_list"><code class="docutils literal notranslate"><span class="pre">Model.create_agent_list()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="model.html#Melodie.Model.create_environment"><code class="docutils literal notranslate"><span class="pre">Model.create_environment()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="model.html#Melodie.Model.create_grid"><code class="docutils literal notranslate"><span class="pre">Model.create_grid()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="model.html#Melodie.Model.create_network"><code class="docutils literal notranslate"><span class="pre">Model.create_network()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="model.html#Melodie.Model.create_data_collector"><code class="docutils literal notranslate"><span class="pre">Model.create_data_collector()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="model.html#Melodie.Model.create_agent_container"><code class="docutils literal notranslate"><span class="pre">Model.create_agent_container()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="model.html#Melodie.Model.run"><code class="docutils literal notranslate"><span class="pre">Model.run()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="model.html#Melodie.Model.iterator"><code class="docutils literal notranslate"><span class="pre">Model.iterator()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="model.html#Melodie.Model.init_visualize"><code class="docutils literal notranslate"><span class="pre">Model.init_visualize()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="scenario.html">Scenario</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="scenario.html#Melodie.Scenario"><code class="docutils literal notranslate"><span class="pre">Scenario</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="scenario.html#Melodie.Scenario.copy"><code class="docutils literal notranslate"><span class="pre">Scenario.copy()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="scenario.html#Melodie.Scenario.load_data"><code class="docutils literal notranslate"><span class="pre">Scenario.load_data()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="scenario.html#Melodie.Scenario.setup_data"><code class="docutils literal notranslate"><span class="pre">Scenario.setup_data()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="scenario.html#Melodie.Scenario.initialize"><code class="docutils literal notranslate"><span class="pre">Scenario.initialize()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="scenario.html#Melodie.Scenario.setup"><code class="docutils literal notranslate"><span class="pre">Scenario.setup()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="scenario.html#Melodie.Scenario.load_dataframe"><code class="docutils literal notranslate"><span class="pre">Scenario.load_dataframe()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="scenario.html#Melodie.Scenario.load_matrix"><code class="docutils literal notranslate"><span class="pre">Scenario.load_matrix()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="scenario.html#Melodie.Scenario.to_dict"><code class="docutils literal notranslate"><span class="pre">Scenario.to_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="scenario.html#Melodie.Scenario.to_json"><code class="docutils literal notranslate"><span class="pre">Scenario.to_json()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="scenario.html#Melodie.Scenario.get_dataframe"><code class="docutils literal notranslate"><span class="pre">Scenario.get_dataframe()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="scenario.html#Melodie.Scenario.get_matrix"><code class="docutils literal notranslate"><span class="pre">Scenario.get_matrix()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="environment.html">Environment</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="environment.html#Melodie.Environment"><code class="docutils literal notranslate"><span class="pre">Environment</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="environment.html#Melodie.Environment.setup"><code class="docutils literal notranslate"><span class="pre">Environment.setup()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="environment.html#Melodie.Environment.to_dict"><code class="docutils literal notranslate"><span class="pre">Environment.to_dict()</span></code></a></li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="agent.html">Agent</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="agent.html#Melodie.Agent"><code class="docutils literal notranslate"><span class="pre">Agent</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="agent.html#Melodie.Agent.id"><code class="docutils literal notranslate"><span class="pre">Agent.id</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="agent.html#Melodie.Agent.scenario"><code class="docutils literal notranslate"><span class="pre">Agent.scenario</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="agent.html#Melodie.Agent.model"><code class="docutils literal notranslate"><span class="pre">Agent.model</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="agent.html#Melodie.Agent.setup"><code class="docutils literal notranslate"><span class="pre">Agent.setup()</span></code></a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="agent_list.html">AgentList</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="agent_list.html#MelodieInfra.core.agent_list.BaseAgentContainer"><code class="docutils literal notranslate"><span class="pre">BaseAgentContainer</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="agent_list.html#MelodieInfra.core.agent_list.BaseAgentContainer.new_id"><code class="docutils literal notranslate"><span class="pre">BaseAgentContainer.new_id()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="agent_list.html#MelodieInfra.core.agent_list.BaseAgentContainer.all_agent_ids"><code class="docutils literal notranslate"><span class="pre">BaseAgentContainer.all_agent_ids()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="agent_list.html#MelodieInfra.core.agent_list.BaseAgentContainer.to_list"><code class="docutils literal notranslate"><span class="pre">BaseAgentContainer.to_list()</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="agent_list.html">Agent List</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="agent_list.html#Melodie.AgentList"><code class="docutils literal notranslate"><span class="pre">AgentList</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="agent_list.html#Melodie.AgentList.agents"><code class="docutils literal notranslate"><span class="pre">AgentList.agents</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="agent_list.html#Melodie.AgentList.setup_agents"><code class="docutils literal notranslate"><span class="pre">AgentList.setup_agents()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="agent_list.html#Melodie.AgentList.setup"><code class="docutils literal notranslate"><span class="pre">AgentList.setup()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="agent_list.html#Melodie.AgentList.init_agents"><code class="docutils literal notranslate"><span class="pre">AgentList.init_agents()</span></code></a></li>
@@ -207,62 +248,42 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="environment.html">Environment</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="environment.html#Melodie.Environment"><code class="docutils literal notranslate"><span class="pre">Environment</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="environment.html#Melodie.Environment.scenario"><code class="docutils literal notranslate"><span class="pre">Environment.scenario</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="environment.html#Melodie.Environment.model"><code class="docutils literal notranslate"><span class="pre">Environment.model</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="environment.html#Melodie.Environment.setup"><code class="docutils literal notranslate"><span class="pre">Environment.setup()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="environment.html#Melodie.Environment.to_dict"><code class="docutils literal notranslate"><span class="pre">Environment.to_dict()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="data_collector.html">Data Collector</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="data_collector.html#Melodie.DataCollector"><code class="docutils literal notranslate"><span class="pre">DataCollector</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="data_collector.html#Melodie.DataCollector.setup"><code class="docutils literal notranslate"><span class="pre">DataCollector.setup()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="data_collector.html#Melodie.DataCollector.time_elapsed"><code class="docutils literal notranslate"><span class="pre">DataCollector.time_elapsed()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="data_collector.html#Melodie.DataCollector.add_agent_property"><code class="docutils literal notranslate"><span class="pre">DataCollector.add_agent_property()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="data_collector.html#Melodie.DataCollector.add_environment_property"><code class="docutils literal notranslate"><span class="pre">DataCollector.add_environment_property()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="data_collector.html#Melodie.DataCollector.add_custom_collector"><code class="docutils literal notranslate"><span class="pre">DataCollector.add_custom_collector()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="data_collector.html#Melodie.DataCollector.env_property_names"><code class="docutils literal notranslate"><span class="pre">DataCollector.env_property_names()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="data_collector.html#Melodie.DataCollector.agent_property_names"><code class="docutils literal notranslate"><span class="pre">DataCollector.agent_property_names()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="data_collector.html#Melodie.DataCollector.agent_containers"><code class="docutils literal notranslate"><span class="pre">DataCollector.agent_containers()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="data_collector.html#Melodie.DataCollector.collect_agent_properties"><code class="docutils literal notranslate"><span class="pre">DataCollector.collect_agent_properties()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="data_collector.html#Melodie.DataCollector.collect_custom_properties"><code class="docutils literal notranslate"><span class="pre">DataCollector.collect_custom_properties()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="data_collector.html#Melodie.DataCollector.collect_single_custom_property"><code class="docutils literal notranslate"><span class="pre">DataCollector.collect_single_custom_property()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="data_collector.html#Melodie.DataCollector.append_agent_properties_by_records"><code class="docutils literal notranslate"><span class="pre">DataCollector.append_agent_properties_by_records()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="data_collector.html#Melodie.DataCollector.append_environment_properties"><code class="docutils literal notranslate"><span class="pre">DataCollector.append_environment_properties()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="data_collector.html#Melodie.DataCollector.status"><code class="docutils literal notranslate"><span class="pre">DataCollector.status</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="data_collector.html#Melodie.DataCollector.collect"><code class="docutils literal notranslate"><span class="pre">DataCollector.collect()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="data_collector.html#Melodie.DataCollector.calc_time"><code class="docutils literal notranslate"><span class="pre">DataCollector.calc_time()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="data_collector.html#Melodie.DataCollector.get_single_agent_data"><code class="docutils literal notranslate"><span class="pre">DataCollector.get_single_agent_data()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="data_collector.html#Melodie.DataCollector.save"><code class="docutils literal notranslate"><span class="pre">DataCollector.save()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="data_collector.html#Melodie.DataCollector.save_dataframe"><code class="docutils literal notranslate"><span class="pre">DataCollector.save_dataframe()</span></code></a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="data_collector.html">DataCollector</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="data_collector.html#Melodie.data_collector.DataCollector"><code class="docutils literal notranslate"><span class="pre">DataCollector</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="data_collector.html#Melodie.data_collector.DataCollector.setup"><code class="docutils literal notranslate"><span class="pre">DataCollector.setup()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="data_collector.html#Melodie.data_collector.DataCollector.time_elapsed"><code class="docutils literal notranslate"><span class="pre">DataCollector.time_elapsed()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="data_collector.html#Melodie.data_collector.DataCollector.add_agent_property"><code class="docutils literal notranslate"><span class="pre">DataCollector.add_agent_property()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="data_collector.html#Melodie.data_collector.DataCollector.add_environment_property"><code class="docutils literal notranslate"><span class="pre">DataCollector.add_environment_property()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="data_collector.html#Melodie.data_collector.DataCollector.env_property_names"><code class="docutils literal notranslate"><span class="pre">DataCollector.env_property_names()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="data_collector.html#Melodie.data_collector.DataCollector.agent_property_names"><code class="docutils literal notranslate"><span class="pre">DataCollector.agent_property_names()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="data_collector.html#Melodie.data_collector.DataCollector.agent_containers"><code class="docutils literal notranslate"><span class="pre">DataCollector.agent_containers()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="data_collector.html#Melodie.data_collector.DataCollector.collect_agent_properties"><code class="docutils literal notranslate"><span class="pre">DataCollector.collect_agent_properties()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="data_collector.html#Melodie.data_collector.DataCollector.append_agent_properties_by_records"><code class="docutils literal notranslate"><span class="pre">DataCollector.append_agent_properties_by_records()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="data_collector.html#Melodie.data_collector.DataCollector.append_environment_properties"><code class="docutils literal notranslate"><span class="pre">DataCollector.append_environment_properties()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="data_collector.html#Melodie.data_collector.DataCollector.status"><code class="docutils literal notranslate"><span class="pre">DataCollector.status</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="data_collector.html#Melodie.data_collector.DataCollector.collect"><code class="docutils literal notranslate"><span class="pre">DataCollector.collect()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="data_collector.html#Melodie.data_collector.DataCollector.db"><code class="docutils literal notranslate"><span class="pre">DataCollector.db</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="data_collector.html#Melodie.data_collector.DataCollector.calc_time"><code class="docutils literal notranslate"><span class="pre">DataCollector.calc_time()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="data_collector.html#Melodie.data_collector.DataCollector.get_single_agent_data"><code class="docutils literal notranslate"><span class="pre">DataCollector.get_single_agent_data()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="data_collector.html#Melodie.data_collector.DataCollector.save"><code class="docutils literal notranslate"><span class="pre">DataCollector.save()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Grid</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#Melodie.GridItem"><code class="docutils literal notranslate"><span class="pre">GridItem</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#Melodie.GridItem.grid"><code class="docutils literal notranslate"><span class="pre">GridItem.grid</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#Melodie.GridItem.x"><code class="docutils literal notranslate"><span class="pre">GridItem.x</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#Melodie.GridItem.y"><code class="docutils literal notranslate"><span class="pre">GridItem.y</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="#Melodie.GridAgent"><code class="docutils literal notranslate"><span class="pre">GridAgent</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#Melodie.GridAgent.category"><code class="docutils literal notranslate"><span class="pre">GridAgent.category</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#Melodie.GridAgent.set_category"><code class="docutils literal notranslate"><span class="pre">GridAgent.set_category()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#Melodie.GridAgent.rand_move_agent"><code class="docutils literal notranslate"><span class="pre">GridAgent.rand_move_agent()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="#Melodie.Spot"><code class="docutils literal notranslate"><span class="pre">Spot</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#Melodie.Spot.get_spot_agents"><code class="docutils literal notranslate"><span class="pre">Spot.get_spot_agents()</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Grid &amp; Spot</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#Melodie.Grid"><code class="docutils literal notranslate"><span class="pre">Grid</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#Melodie.Grid.init_grid"><code class="docutils literal notranslate"><span class="pre">Grid.init_grid()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#Melodie.Grid.setup_params"><code class="docutils literal notranslate"><span class="pre">Grid.setup_params()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#Melodie.Grid.setup"><code class="docutils literal notranslate"><span class="pre">Grid.setup()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#Melodie.Grid.add_category"><code class="docutils literal notranslate"><span class="pre">Grid.add_category()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#Melodie.Grid.get_spot"><code class="docutils literal notranslate"><span class="pre">Grid.get_spot()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#Melodie.Grid.get_agent_ids"><code class="docutils literal notranslate"><span class="pre">Grid.get_agent_ids()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#Melodie.Grid.coords_wrap"><code class="docutils literal notranslate"><span class="pre">Grid.coords_wrap()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Melodie.Grid.get_agent_neighborhood"><code class="docutils literal notranslate"><span class="pre">Grid.get_agent_neighborhood()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Melodie.Grid.get_spot_neighborhood"><code class="docutils literal notranslate"><span class="pre">Grid.get_spot_neighborhood()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#Melodie.Grid.add_agent"><code class="docutils literal notranslate"><span class="pre">Grid.add_agent()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#Melodie.Grid.remove_agent"><code class="docutils literal notranslate"><span class="pre">Grid.remove_agent()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#Melodie.Grid.move_agent"><code class="docutils literal notranslate"><span class="pre">Grid.move_agent()</span></code></a></li>
@@ -274,209 +295,109 @@
 <li class="toctree-l4"><a class="reference internal" href="#Melodie.Grid.get_colormap"><code class="docutils literal notranslate"><span class="pre">Grid.get_colormap()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#Melodie.Grid.spots_to_json"><code class="docutils literal notranslate"><span class="pre">Grid.spots_to_json()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#Melodie.Grid.get_empty_spots"><code class="docutils literal notranslate"><span class="pre">Grid.get_empty_spots()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Melodie.Grid.find_empty_spot"><code class="docutils literal notranslate"><span class="pre">Grid.find_empty_spot()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#Melodie.Grid.setup_agent_locations"><code class="docutils literal notranslate"><span class="pre">Grid.setup_agent_locations()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#Melodie.Grid.set_spot_property"><code class="docutils literal notranslate"><span class="pre">Grid.set_spot_property()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#Melodie.Grid.rand_move_agent"><code class="docutils literal notranslate"><span class="pre">Grid.rand_move_agent()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Melodie.Grid.get_agent_container"><code class="docutils literal notranslate"><span class="pre">Grid.get_agent_container()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Melodie.Grid.agent_categories"><code class="docutils literal notranslate"><span class="pre">Grid.agent_categories</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#Melodie.Spot"><code class="docutils literal notranslate"><span class="pre">Spot</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#Melodie.Spot.get_spot_agents"><code class="docutils literal notranslate"><span class="pre">Spot.get_spot_agents()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Melodie.Spot.get_style"><code class="docutils literal notranslate"><span class="pre">Spot.get_style()</span></code></a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="network.html">Network</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="network.html#Melodie.network.NetworkAgent"><code class="docutils literal notranslate"><span class="pre">NetworkAgent</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="network.html#Melodie.network.NetworkAgent.category"><code class="docutils literal notranslate"><span class="pre">NetworkAgent.category</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="network.html#Melodie.network.NetworkAgent.set_category"><code class="docutils literal notranslate"><span class="pre">NetworkAgent.set_category()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="network.html">Network &amp; Edge</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="network.html#Melodie.Network"><code class="docutils literal notranslate"><span class="pre">Network</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="network.html#Melodie.Network.setup"><code class="docutils literal notranslate"><span class="pre">Network.setup()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="network.html#Melodie.Network.add_edge"><code class="docutils literal notranslate"><span class="pre">Network.add_edge()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="network.html#Melodie.Network.get_edge"><code class="docutils literal notranslate"><span class="pre">Network.get_edge()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="network.html#Melodie.Network.remove_edge"><code class="docutils literal notranslate"><span class="pre">Network.remove_edge()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="network.html#Melodie.Network.get_neighbors"><code class="docutils literal notranslate"><span class="pre">Network.get_neighbors()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="network.html#Melodie.Network.remove_agent"><code class="docutils literal notranslate"><span class="pre">Network.remove_agent()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="network.html#Melodie.Network.add_agent"><code class="docutils literal notranslate"><span class="pre">Network.add_agent()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="network.html#Melodie.Network.create_edge"><code class="docutils literal notranslate"><span class="pre">Network.create_edge()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="network.html#Melodie.Network.all_agents"><code class="docutils literal notranslate"><span class="pre">Network.all_agents()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="network.html#Melodie.Network.get_node_edges"><code class="docutils literal notranslate"><span class="pre">Network.get_node_edges()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="network.html#Melodie.Network.setup_layout_creator"><code class="docutils literal notranslate"><span class="pre">Network.setup_layout_creator()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="network.html#Melodie.Network.update_layout"><code class="docutils literal notranslate"><span class="pre">Network.update_layout()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="network.html#Melodie.Network.get_position"><code class="docutils literal notranslate"><span class="pre">Network.get_position()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="network.html#Melodie.Network.setup_agent_connections"><code class="docutils literal notranslate"><span class="pre">Network.setup_agent_connections()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="network.html#Melodie.network.Edge"><code class="docutils literal notranslate"><span class="pre">Edge</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="network.html#Melodie.network.Edge.setup"><code class="docutils literal notranslate"><span class="pre">Edge.setup()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="network.html#Melodie.network.Edge.post_setup"><code class="docutils literal notranslate"><span class="pre">Edge.post_setup()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="network.html#Melodie.network.Network"><code class="docutils literal notranslate"><span class="pre">Network</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="network.html#Melodie.network.Network.setup"><code class="docutils literal notranslate"><span class="pre">Network.setup()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="network.html#Melodie.network.Network.add_edge"><code class="docutils literal notranslate"><span class="pre">Network.add_edge()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="network.html#Melodie.network.Network.get_edge"><code class="docutils literal notranslate"><span class="pre">Network.get_edge()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="network.html#Melodie.network.Network.remove_edge"><code class="docutils literal notranslate"><span class="pre">Network.remove_edge()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="network.html#Melodie.network.Network.get_neighbors"><code class="docutils literal notranslate"><span class="pre">Network.get_neighbors()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="network.html#Melodie.network.Network.remove_agent"><code class="docutils literal notranslate"><span class="pre">Network.remove_agent()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="network.html#Melodie.network.Network.add_agent"><code class="docutils literal notranslate"><span class="pre">Network.add_agent()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="network.html#Melodie.network.Network.create_edge"><code class="docutils literal notranslate"><span class="pre">Network.create_edge()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="network.html#Melodie.network.Network.all_agents"><code class="docutils literal notranslate"><span class="pre">Network.all_agents()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="network.html#Melodie.network.Network.get_node_edges"><code class="docutils literal notranslate"><span class="pre">Network.get_node_edges()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="network.html#Melodie.network.Network.setup_layout_creator"><code class="docutils literal notranslate"><span class="pre">Network.setup_layout_creator()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="network.html#Melodie.network.Network.update_layout"><code class="docutils literal notranslate"><span class="pre">Network.update_layout()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="network.html#Melodie.network.Network.get_position"><code class="docutils literal notranslate"><span class="pre">Network.get_position()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="network.html#Melodie.network.Network.setup_agent_connections"><code class="docutils literal notranslate"><span class="pre">Network.setup_agent_connections()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="data_info.html">DataInfo</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="data_info.html#dataframeinfo">DataFrameInfo</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="data_info.html#Melodie.data_loader.DataFrameInfo"><code class="docutils literal notranslate"><span class="pre">DataFrameInfo</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="data_info.html#matrixinfo">MatrixInfo</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="data_info.html#Melodie.data_loader.MatrixInfo"><code class="docutils literal notranslate"><span class="pre">MatrixInfo</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="data_loader.html">DataLoader</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="data_loader.html#Melodie.data_loader.DataLoader"><code class="docutils literal notranslate"><span class="pre">DataLoader</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="data_loader.html#Melodie.data_loader.DataLoader.register_dataframe"><code class="docutils literal notranslate"><span class="pre">DataLoader.register_dataframe()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="data_loader.html#Melodie.data_loader.DataLoader.clear_cache"><code class="docutils literal notranslate"><span class="pre">DataLoader.clear_cache()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="data_loader.html#Melodie.data_loader.DataLoader.load_dataframe"><code class="docutils literal notranslate"><span class="pre">DataLoader.load_dataframe()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="data_loader.html#Melodie.data_loader.DataLoader.load_matrix"><code class="docutils literal notranslate"><span class="pre">DataLoader.load_matrix()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="data_loader.html#Melodie.data_loader.DataLoader.dataframe_generator"><code class="docutils literal notranslate"><span class="pre">DataLoader.dataframe_generator()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="data_loader.html#Melodie.data_loader.DataLoader.generate_scenarios_from_dataframe"><code class="docutils literal notranslate"><span class="pre">DataLoader.generate_scenarios_from_dataframe()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="data_loader.html#Melodie.data_loader.DataLoader.generate_scenarios"><code class="docutils literal notranslate"><span class="pre">DataLoader.generate_scenarios()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="scenario.html">Scenario</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="scenario.html#Melodie.scenario_manager.Scenario"><code class="docutils literal notranslate"><span class="pre">Scenario</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="scenario.html#Melodie.scenario_manager.Scenario.copy"><code class="docutils literal notranslate"><span class="pre">Scenario.copy()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="scenario.html#Melodie.scenario_manager.Scenario.setup"><code class="docutils literal notranslate"><span class="pre">Scenario.setup()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="scenario.html#Melodie.scenario_manager.Scenario.to_dict"><code class="docutils literal notranslate"><span class="pre">Scenario.to_dict()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="scenario.html#Melodie.scenario_manager.Scenario.to_json"><code class="docutils literal notranslate"><span class="pre">Scenario.to_json()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="scenario.html#Melodie.scenario_manager.Scenario.get_dataframe"><code class="docutils literal notranslate"><span class="pre">Scenario.get_dataframe()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="scenario.html#Melodie.scenario_manager.Scenario.get_matrix"><code class="docutils literal notranslate"><span class="pre">Scenario.get_matrix()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="simulator.html">Simulator</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="simulator.html#Melodie.simulator.BaseModellingManager"><code class="docutils literal notranslate"><span class="pre">BaseModellingManager</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="simulator.html#Melodie.simulator.BaseModellingManager.get_dataframe"><code class="docutils literal notranslate"><span class="pre">BaseModellingManager.get_dataframe()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="simulator.html#Melodie.simulator.BaseModellingManager.get_matrix"><code class="docutils literal notranslate"><span class="pre">BaseModellingManager.get_matrix()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="simulator.html#Melodie.simulator.BaseModellingManager.subworker_prerun"><code class="docutils literal notranslate"><span class="pre">BaseModellingManager.subworker_prerun()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="simulator.html#Melodie.simulator.BaseModellingManager.pre_run"><code class="docutils literal notranslate"><span class="pre">BaseModellingManager.pre_run()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="simulator.html#Melodie.simulator.BaseModellingManager.generate_scenarios"><code class="docutils literal notranslate"><span class="pre">BaseModellingManager.generate_scenarios()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="simulator.html#Melodie.simulator.SimulatorMeta"><code class="docutils literal notranslate"><span class="pre">SimulatorMeta</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="simulator.html#Melodie.simulator.SimulatorMeta.to_dict"><code class="docutils literal notranslate"><span class="pre">SimulatorMeta.to_dict()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="simulator.html#Melodie.simulator.Simulator"><code class="docutils literal notranslate"><span class="pre">Simulator</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="simulator.html#Melodie.simulator.Simulator.generate_scenarios"><code class="docutils literal notranslate"><span class="pre">Simulator.generate_scenarios()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="simulator.html#Melodie.simulator.Simulator.run_model"><code class="docutils literal notranslate"><span class="pre">Simulator.run_model()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="simulator.html#Melodie.simulator.Simulator.setup"><code class="docutils literal notranslate"><span class="pre">Simulator.setup()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="simulator.html#Melodie.simulator.Simulator.run"><code class="docutils literal notranslate"><span class="pre">Simulator.run()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="simulator.html#Melodie.simulator.Simulator.run_visual"><code class="docutils literal notranslate"><span class="pre">Simulator.run_visual()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="simulator.html#Melodie.simulator.Simulator.run_parallel"><code class="docutils literal notranslate"><span class="pre">Simulator.run_parallel()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="simulator.html#Melodie.simulator.Simulator.new_parallel"><code class="docutils literal notranslate"><span class="pre">Simulator.new_parallel()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="network.html#Melodie.Edge"><code class="docutils literal notranslate"><span class="pre">Edge</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="network.html#Melodie.Edge.setup"><code class="docutils literal notranslate"><span class="pre">Edge.setup()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="network.html#Melodie.Edge.post_setup"><code class="docutils literal notranslate"><span class="pre">Edge.post_setup()</span></code></a></li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="calibrator.html">Calibrator</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="calibrator.html#Melodie.calibrator.Calibrator"><code class="docutils literal notranslate"><span class="pre">Calibrator</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="calibrator.html#Melodie.calibrator.Calibrator.setup"><code class="docutils literal notranslate"><span class="pre">Calibrator.setup()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="calibrator.html#Melodie.calibrator.Calibrator.collect_data"><code class="docutils literal notranslate"><span class="pre">Calibrator.collect_data()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="calibrator.html#Melodie.calibrator.Calibrator.generate_scenarios"><code class="docutils literal notranslate"><span class="pre">Calibrator.generate_scenarios()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="calibrator.html#Melodie.calibrator.Calibrator.get_params_scenarios"><code class="docutils literal notranslate"><span class="pre">Calibrator.get_params_scenarios()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="calibrator.html#Melodie.calibrator.Calibrator.run"><code class="docutils literal notranslate"><span class="pre">Calibrator.run()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="calibrator.html#Melodie.calibrator.Calibrator.run_once_new"><code class="docutils literal notranslate"><span class="pre">Calibrator.run_once_new()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="calibrator.html#Melodie.calibrator.Calibrator.target_function"><code class="docutils literal notranslate"><span class="pre">Calibrator.target_function()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="calibrator.html#Melodie.calibrator.Calibrator.distance"><code class="docutils literal notranslate"><span class="pre">Calibrator.distance()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="calibrator.html#Melodie.calibrator.Calibrator.add_scenario_calibrating_property"><code class="docutils literal notranslate"><span class="pre">Calibrator.add_scenario_calibrating_property()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="calibrator.html#Melodie.calibrator.Calibrator.add_environment_property"><code class="docutils literal notranslate"><span class="pre">Calibrator.add_environment_property()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="calibrator.html#Melodie.Calibrator"><code class="docutils literal notranslate"><span class="pre">Calibrator</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="calibrator.html#Melodie.Calibrator.setup"><code class="docutils literal notranslate"><span class="pre">Calibrator.setup()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="calibrator.html#Melodie.Calibrator.collect_data"><code class="docutils literal notranslate"><span class="pre">Calibrator.collect_data()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="calibrator.html#Melodie.Calibrator.generate_scenarios"><code class="docutils literal notranslate"><span class="pre">Calibrator.generate_scenarios()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="calibrator.html#Melodie.Calibrator.get_params_scenarios"><code class="docutils literal notranslate"><span class="pre">Calibrator.get_params_scenarios()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="calibrator.html#Melodie.Calibrator.run"><code class="docutils literal notranslate"><span class="pre">Calibrator.run()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="calibrator.html#Melodie.Calibrator.run_once_new"><code class="docutils literal notranslate"><span class="pre">Calibrator.run_once_new()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="calibrator.html#Melodie.Calibrator.target_function"><code class="docutils literal notranslate"><span class="pre">Calibrator.target_function()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="calibrator.html#Melodie.Calibrator.distance"><code class="docutils literal notranslate"><span class="pre">Calibrator.distance()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="calibrator.html#Melodie.Calibrator.add_scenario_calibrating_property"><code class="docutils literal notranslate"><span class="pre">Calibrator.add_scenario_calibrating_property()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="calibrator.html#Melodie.Calibrator.add_environment_property"><code class="docutils literal notranslate"><span class="pre">Calibrator.add_environment_property()</span></code></a></li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="trainer.html">Trainer</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="trainer.html#Melodie.trainer.Trainer"><code class="docutils literal notranslate"><span class="pre">Trainer</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="trainer.html#Melodie.trainer.Trainer.add_agent_training_property"><code class="docutils literal notranslate"><span class="pre">Trainer.add_agent_training_property()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="trainer.html#Melodie.trainer.Trainer.setup"><code class="docutils literal notranslate"><span class="pre">Trainer.setup()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="trainer.html#Melodie.trainer.Trainer.get_trainer_scenario_cls"><code class="docutils literal notranslate"><span class="pre">Trainer.get_trainer_scenario_cls()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="trainer.html#Melodie.trainer.Trainer.collect_data"><code class="docutils literal notranslate"><span class="pre">Trainer.collect_data()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="trainer.html#Melodie.trainer.Trainer.run"><code class="docutils literal notranslate"><span class="pre">Trainer.run()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="trainer.html#Melodie.trainer.Trainer.run_once_new"><code class="docutils literal notranslate"><span class="pre">Trainer.run_once_new()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="trainer.html#Melodie.trainer.Trainer.utility"><code class="docutils literal notranslate"><span class="pre">Trainer.utility()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="trainer.html#Melodie.trainer.Trainer.target_function"><code class="docutils literal notranslate"><span class="pre">Trainer.target_function()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="trainer.html#Melodie.trainer.Trainer.add_agent_property"><code class="docutils literal notranslate"><span class="pre">Trainer.add_agent_property()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="trainer.html#Melodie.trainer.Trainer.add_environment_property"><code class="docutils literal notranslate"><span class="pre">Trainer.add_environment_property()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="trainer.html#Melodie.trainer.Trainer.generate_scenarios"><code class="docutils literal notranslate"><span class="pre">Trainer.generate_scenarios()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="trainer.html#Melodie.trainer.Trainer.generate_trainer_params_list"><code class="docutils literal notranslate"><span class="pre">Trainer.generate_trainer_params_list()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="trainer.html#Melodie.Trainer"><code class="docutils literal notranslate"><span class="pre">Trainer</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="trainer.html#Melodie.Trainer.add_agent_training_property"><code class="docutils literal notranslate"><span class="pre">Trainer.add_agent_training_property()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="trainer.html#Melodie.Trainer.setup"><code class="docutils literal notranslate"><span class="pre">Trainer.setup()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="trainer.html#Melodie.Trainer.get_trainer_scenario_cls"><code class="docutils literal notranslate"><span class="pre">Trainer.get_trainer_scenario_cls()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="trainer.html#Melodie.Trainer.collect_data"><code class="docutils literal notranslate"><span class="pre">Trainer.collect_data()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="trainer.html#Melodie.Trainer.run"><code class="docutils literal notranslate"><span class="pre">Trainer.run()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="trainer.html#Melodie.Trainer.run_once_new"><code class="docutils literal notranslate"><span class="pre">Trainer.run_once_new()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="trainer.html#Melodie.Trainer.utility"><code class="docutils literal notranslate"><span class="pre">Trainer.utility()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="trainer.html#Melodie.Trainer.target_function"><code class="docutils literal notranslate"><span class="pre">Trainer.target_function()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="trainer.html#Melodie.Trainer.add_agent_property"><code class="docutils literal notranslate"><span class="pre">Trainer.add_agent_property()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="trainer.html#Melodie.Trainer.add_environment_property"><code class="docutils literal notranslate"><span class="pre">Trainer.add_environment_property()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="trainer.html#Melodie.Trainer.generate_scenarios"><code class="docutils literal notranslate"><span class="pre">Trainer.generate_scenarios()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="trainer.html#Melodie.Trainer.generate_trainer_params_list"><code class="docutils literal notranslate"><span class="pre">Trainer.generate_trainer_params_list()</span></code></a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="db.html">DB</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="db.html#MelodieInfra.db.db.DBConn"><code class="docutils literal notranslate"><span class="pre">DBConn</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="db.html#MelodieInfra.db.db.DBConn.table_dtypes"><code class="docutils literal notranslate"><span class="pre">DBConn.table_dtypes</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="db.html#MelodieInfra.db.db.DBConn.existing_connections"><code class="docutils literal notranslate"><span class="pre">DBConn.existing_connections</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="db.html#MelodieInfra.db.db.DBConn.SCENARIO_TABLE"><code class="docutils literal notranslate"><span class="pre">DBConn.SCENARIO_TABLE</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="db.html#MelodieInfra.db.db.DBConn.ENVIRONMENT_RESULT_TABLE"><code class="docutils literal notranslate"><span class="pre">DBConn.ENVIRONMENT_RESULT_TABLE</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="db.html#MelodieInfra.db.db.DBConn.from_connection_string"><code class="docutils literal notranslate"><span class="pre">DBConn.from_connection_string()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="db.html#MelodieInfra.db.db.DBConn.get_engine"><code class="docutils literal notranslate"><span class="pre">DBConn.get_engine()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="db.html#MelodieInfra.db.db.DBConn.create_connection"><code class="docutils literal notranslate"><span class="pre">DBConn.create_connection()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="db.html#MelodieInfra.db.db.DBConn.create_from_existing_db"><code class="docutils literal notranslate"><span class="pre">DBConn.create_from_existing_db()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="db.html#MelodieInfra.db.db.DBConn.register_dtypes"><code class="docutils literal notranslate"><span class="pre">DBConn.register_dtypes()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="db.html#MelodieInfra.db.db.DBConn.get_table_dtypes"><code class="docutils literal notranslate"><span class="pre">DBConn.get_table_dtypes()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="db.html#MelodieInfra.db.db.DBConn.close"><code class="docutils literal notranslate"><span class="pre">DBConn.close()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="db.html#MelodieInfra.db.db.DBConn.clear_database"><code class="docutils literal notranslate"><span class="pre">DBConn.clear_database()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="db.html#MelodieInfra.db.db.DBConn.write_dataframe"><code class="docutils literal notranslate"><span class="pre">DBConn.write_dataframe()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="db.html#MelodieInfra.db.db.DBConn.read_dataframe"><code class="docutils literal notranslate"><span class="pre">DBConn.read_dataframe()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="db.html#MelodieInfra.db.db.DBConn.drop_table"><code class="docutils literal notranslate"><span class="pre">DBConn.drop_table()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="db.html#MelodieInfra.db.db.DBConn.query"><code class="docutils literal notranslate"><span class="pre">DBConn.query()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="db.html#MelodieInfra.db.db.create_db_conn"><code class="docutils literal notranslate"><span class="pre">create_db_conn()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="db.html#MelodieInfra.db.db.get_sqlite_filename"><code class="docutils literal notranslate"><span class="pre">get_sqlite_filename()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="exceptions.html">Melodie Exceptions</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="exceptions.html#MelodieInfra.exceptions.exceptions.assert_exc_occurs"><code class="docutils literal notranslate"><span class="pre">assert_exc_occurs()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="exceptions.html#MelodieInfra.exceptions.exceptions.assert_exc_type_occurs"><code class="docutils literal notranslate"><span class="pre">assert_exc_type_occurs()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="exceptions.html#MelodieInfra.exceptions.exceptions.MelodieException"><code class="docutils literal notranslate"><span class="pre">MelodieException</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="exceptions.html#MelodieInfra.exceptions.exceptions.MelodieExceptions"><code class="docutils literal notranslate"><span class="pre">MelodieExceptions</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="exceptions.html#MelodieInfra.exceptions.exceptions.MelodieExceptions.Assertions"><code class="docutils literal notranslate"><span class="pre">MelodieExceptions.Assertions</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="exceptions.html#MelodieInfra.exceptions.exceptions.MelodieExceptions.General"><code class="docutils literal notranslate"><span class="pre">MelodieExceptions.General</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="exceptions.html#MelodieInfra.exceptions.exceptions.MelodieExceptions.Program"><code class="docutils literal notranslate"><span class="pre">MelodieExceptions.Program</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="exceptions.html#MelodieInfra.exceptions.exceptions.MelodieExceptions.State"><code class="docutils literal notranslate"><span class="pre">MelodieExceptions.State</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="exceptions.html#MelodieInfra.exceptions.exceptions.MelodieExceptions.Scenario"><code class="docutils literal notranslate"><span class="pre">MelodieExceptions.Scenario</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="exceptions.html#MelodieInfra.exceptions.exceptions.MelodieExceptions.Agents"><code class="docutils literal notranslate"><span class="pre">MelodieExceptions.Agents</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="exceptions.html#MelodieInfra.exceptions.exceptions.MelodieExceptions.Environment"><code class="docutils literal notranslate"><span class="pre">MelodieExceptions.Environment</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="exceptions.html#MelodieInfra.exceptions.exceptions.MelodieExceptions.Data"><code class="docutils literal notranslate"><span class="pre">MelodieExceptions.Data</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="exceptions.html#MelodieInfra.exceptions.exceptions.MelodieExceptions.Tools"><code class="docutils literal notranslate"><span class="pre">MelodieExceptions.Tools</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="exceptions.html#MelodieInfra.exceptions.exceptions.MelodieExceptions.Visualizer"><code class="docutils literal notranslate"><span class="pre">MelodieExceptions.Visualizer</span></code></a></li>
 </ul>
 </li>
 </ul>
-</li>
+<p class="caption" role="heading"><span class="caption-text">Development</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../contribution.html">Contribution</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../contribution.html#reporting-issues">Reporting Issues</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../contribution.html#contributing-code">Contributing Code</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../contribution.html#adding-to-the-model-gallery">Adding to the Model Gallery</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../changelog.html">Change Log</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../changelog.html#major-version-0-x">Major Version 0.x</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../changelog.html#v0-8-0-may-10-2023">v0.8.0 (May. 10, 2023)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../changelog.html#v0-7-0-mar-25-2023">v0.7.0 (Mar. 25, 2023)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../changelog.html#v0-6-0-jan-04-2023">v0.6.0 (Jan. 04, 2023)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../changelog.html#v0-5-0-dec-17-2022">v0.5.0 (Dec. 17, 2022)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../changelog.html#v0-4-2-dec-15-2022">v0.4.2 (Dec. 15, 2022)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../changelog.html#v0-4-1-dec-12-2022">v0.4.1 (Dec. 12, 2022)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../changelog.html#v0-4-0-nov-15-2022">v0.4.0 (Nov. 15, 2022)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../changelog.html#v0-3-0-oct-28-2022">v0.3.0 (Oct. 28, 2022)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../changelog.html#v0-2-0-oct-24-2022">v0.2.0 (Oct. 24, 2022)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../changelog.html#v0-1-1-aug-23-2022">v0.1.1 (Aug. 23, 2022)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../changelog.html#v0-1-0-jul-22-2022">v0.1.0 (Jul. 22, 2022)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../changelog.html#start-may-10-2021">Start (May. 10, 2021)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../changelog.html#version-1-1-0-dec-10-2025">Version 1.1.0 (Dec. 10, 2025)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../changelog.html#version-1-0-0-mar-14-2024">Version 1.0.0 (Mar. 14, 2024)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../changelog.html#version-0-8-0-may-10-2023">Version 0.8.0 (May. 10, 2023)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../changelog.html#version-0-7-0-mar-25-2023">Version 0.7.0 (Mar. 25, 2023)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../changelog.html#version-0-6-0-jan-04-2023">Version 0.6.0 (Jan. 04, 2023)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../changelog.html#version-0-5-0-dec-17-2022">Version 0.5.0 (Dec. 17, 2022)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../changelog.html#version-0-4-2-dec-15-2022">Version 0.4.2 (Dec. 15, 2022)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../changelog.html#version-0-4-1-dec-12-2022">Version 0.4.1 (Dec. 12, 2022)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../changelog.html#version-0-4-0-nov-15-2022">Version 0.4.0 (Nov. 15, 2022)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../changelog.html#version-0-3-0-oct-28-2022">Version 0.3.0 (Oct. 28, 2022)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../changelog.html#version-0-2-0-oct-24-2022">Version 0.2.0 (Oct. 24, 2022)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../changelog.html#version-0-1-1-aug-23-2022">Version 0.1.1 (Aug. 23, 2022)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../changelog.html#version-0-1-0-jul-22-2022">Version 0.1.0 (Jul. 22, 2022)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../changelog.html#project-start-may-10-2021">Project Start (May. 10, 2021)</a></li>
 </ul>
 </li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="../contribution.html">Contribution</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../contribution.html#report-bugs">Report Bugs</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../contribution.html#report-melodie-bugs">Report Melodie Bugs</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../contribution.html#report-documentation-bugs">Report Documentation Bugs</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="../contribution.html#ask-for-functionalities">Ask for Functionalities</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../contribution.html#how-to-contribute">How to Contribute</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../about.html">About</a></li>
@@ -496,8 +417,8 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
-          <li class="breadcrumb-item"><a href="_index.html">API Reference</a></li>
-      <li class="breadcrumb-item active">Grid</li>
+          <li class="breadcrumb-item"><a href="index.html">API Reference</a></li>
+      <li class="breadcrumb-item active">Grid &amp; Spot</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/api/grid.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -507,88 +428,11 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="grid">
-<h1>Grid<a class="headerlink" href="#grid" title="Permalink to this heading"></a></h1>
-<dl class="py class">
-<dt class="sig sig-object py" id="Melodie.GridItem">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Melodie.</span></span><span class="sig-name descname"><span class="pre">GridItem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.GridItem" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="agent.html#Melodie.Agent" title="MelodieInfra.core.agent.Agent"><code class="xref py py-class docutils literal notranslate"><span class="pre">Agent</span></code></a></p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="Melodie.GridItem.grid">
-<span class="sig-name descname"><span class="pre">grid</span></span><a class="headerlink" href="#Melodie.GridItem.grid" title="Permalink to this definition"></a></dt>
-<dd><p>A <code class="docutils literal notranslate"><span class="pre">Grid</span></code> that this <code class="docutils literal notranslate"><span class="pre">GridItem</span></code> belongs to.</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="Melodie.GridItem.x">
-<span class="sig-name descname"><span class="pre">x</span></span><a class="headerlink" href="#Melodie.GridItem.x" title="Permalink to this definition"></a></dt>
-<dd><p>Coordinate x on the grid, an <code class="docutils literal notranslate"><span class="pre">int</span></code>.</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="Melodie.GridItem.y">
-<span class="sig-name descname"><span class="pre">y</span></span><a class="headerlink" href="#Melodie.GridItem.y" title="Permalink to this definition"></a></dt>
-<dd><p>Coordinate y on the grid, an <code class="docutils literal notranslate"><span class="pre">int</span></code>.</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="Melodie.GridAgent">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Melodie.</span></span><span class="sig-name descname"><span class="pre">GridAgent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grid</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.GridAgent" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="#Melodie.GridItem" title="MelodieInfra.core.grid.GridItem"><code class="xref py py-class docutils literal notranslate"><span class="pre">GridItem</span></code></a></p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="Melodie.GridAgent.category">
-<span class="sig-name descname"><span class="pre">category</span></span><a class="headerlink" href="#Melodie.GridAgent.category" title="Permalink to this definition"></a></dt>
-<dd><p>Category indicating agent class, an <code class="docutils literal notranslate"><span class="pre">int</span></code>.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="Melodie.GridAgent.set_category">
-<span class="sig-name descname"><span class="pre">set_category</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="headerlink" href="#Melodie.GridAgent.set_category" title="Permalink to this definition"></a></dt>
-<dd><p>Set the category of GridAgent.</p>
-<p>As there may be more than one types of agent wandering around the grid, <cite>category</cite> is used to tell the type of
-<cite>GridAgent</cite>. So be sure to inherit this method in custom GridAgent implementation.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>int</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="Melodie.GridAgent.rand_move_agent">
-<span class="sig-name descname"><span class="pre">rand_move_agent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x_range</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_range</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.GridAgent.rand_move_agent" title="Permalink to this definition"></a></dt>
-<dd><p>Randomly move to a new position within x and y range.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>None</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="Melodie.Spot">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Melodie.</span></span><span class="sig-name descname"><span class="pre">Spot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spot_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grid</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#Melodie.Grid" title="MelodieInfra.core.grid.Grid"><span class="pre">Grid</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.Spot" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="#Melodie.GridItem" title="MelodieInfra.core.grid.GridItem"><code class="xref py py-class docutils literal notranslate"><span class="pre">GridItem</span></code></a></p>
-<dl class="py method">
-<dt class="sig sig-object py" id="Melodie.Spot.get_spot_agents">
-<span class="sig-name descname"><span class="pre">get_spot_agents</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.Spot.get_spot_agents" title="Permalink to this definition"></a></dt>
-<dd><p>Get all agents on the spot.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>a list of grid agent.</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
+  <section id="grid-spot">
+<h1>Grid &amp; Spot<a class="headerlink" href="#grid-spot" title="Link to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="Melodie.Grid">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Melodie.</span></span><span class="sig-name descname"><span class="pre">Grid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spot_cls</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#Melodie.Spot" title="MelodieInfra.core.grid.Spot"><span class="pre">Spot</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scenario</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.Grid" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Melodie.</span></span><span class="sig-name descname"><span class="pre">Grid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spot_cls</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#Melodie.Spot" title="MelodieInfra.core.grid.Spot"><span class="pre">Spot</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scenario</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.Grid" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Grid is a widely-used discrete space for ABM.
 Grid contains many <cite>Spot`s, each `Spot</cite> could contain several agents.</p>
@@ -604,28 +448,37 @@ Grid contains many <cite>Spot`s, each `Spot</cite> could contain several agents.
 </dd>
 </dl>
 <dl class="py method">
+<dt class="sig sig-object py" id="Melodie.Grid.init_grid">
+<span class="sig-name descname"><span class="pre">init_grid</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.Grid.init_grid" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="Melodie.Grid.setup_params">
-<span class="sig-name descname"><span class="pre">setup_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">width</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wrap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">caching</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">multi</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.Grid.setup_params" title="Permalink to this definition"></a></dt>
-<dd><p>Setup the parameters of grid.</p>
+<span class="sig-name descname"><span class="pre">setup_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">width</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wrap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">caching</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">multi</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.Grid.setup_params" title="Link to this definition"></a></dt>
+<dd><p>Setup the parameters of the grid.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>width</strong> – int</p></li>
-<li><p><strong>height</strong> – int</p></li>
-<li><p><strong>wrap</strong> – bool, True by default.</p></li>
+<li><p><strong>width</strong> – An integer for the grid width.</p></li>
+<li><p><strong>height</strong> – An integer for the grid height.</p></li>
+<li><p><strong>wrap</strong> – A boolean (default True). If True, an agent moving out of
+the grid on one side will re-enter from the opposite side.</p></li>
+<li><p><strong>caching</strong> – A boolean (default True). If True, the grid caches the
+neighbors of each spot to improve performance.</p></li>
+<li><p><strong>multi</strong> – A boolean (default True). If True, more than one agent can
+stand on the same spot. If False, an error will be raised when
+attempting to place multiple agents on one spot.</p></li>
 </ul>
 </dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
 </dl>
-<p>If True, GridAgent will re-enter the grid on the other side if it moves out of the grid on one side.
-:param caching: bool, True by default. If true, the grid caches the neighbor of each spot.
-:param multi: bool, True by default. If true, more than one agent could stand on one spot. If false, error will
-be raised when attempting to place multiple agents on one spot.
-:return: None</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="Melodie.Grid.setup">
-<span class="sig-name descname"><span class="pre">setup</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.Grid.setup" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">setup</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.Grid.setup" title="Link to this definition"></a></dt>
 <dd><p>Be sure to inherit this function.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -636,7 +489,7 @@ be raised when attempting to place multiple agents on one spot.
 
 <dl class="py method">
 <dt class="sig sig-object py" id="Melodie.Grid.add_category">
-<span class="sig-name descname"><span class="pre">add_category</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">category_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.Grid.add_category" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">add_category</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">category_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.Grid.add_category" title="Link to this definition"></a></dt>
 <dd><p>Add agent category
 :param category_name:
 :return:</p>
@@ -644,13 +497,13 @@ be raised when attempting to place multiple agents on one spot.
 
 <dl class="py method">
 <dt class="sig sig-object py" id="Melodie.Grid.get_spot">
-<span class="sig-name descname"><span class="pre">get_spot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#Melodie.Spot" title="MelodieInfra.core.grid.Spot"><span class="pre">Spot</span></a></span></span><a class="headerlink" href="#Melodie.Grid.get_spot" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">get_spot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#Melodie.Spot" title="MelodieInfra.core.grid.Spot"><span class="pre">Spot</span></a></span></span><a class="headerlink" href="#Melodie.Grid.get_spot" title="Link to this definition"></a></dt>
 <dd><p>Get a <code class="docutils literal notranslate"><span class="pre">Spot</span></code> at position <code class="docutils literal notranslate"><span class="pre">(x,</span> <span class="pre">y)</span></code></p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>x</strong> – </p></li>
-<li><p><strong>y</strong> – </p></li>
+<li><p><strong>x</strong></p></li>
+<li><p><strong>y</strong></p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -661,7 +514,7 @@ be raised when attempting to place multiple agents on one spot.
 
 <dl class="py method">
 <dt class="sig sig-object py" id="Melodie.Grid.get_agent_ids">
-<span class="sig-name descname"><span class="pre">get_agent_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">category</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Set</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#Melodie.Grid.get_agent_ids" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">get_agent_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">category</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Set</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#Melodie.Grid.get_agent_ids" title="Link to this definition"></a></dt>
 <dd><p>Get all agent of a specific category from the spot at (x, y)
 :param category:
 :param x:
@@ -671,7 +524,7 @@ be raised when attempting to place multiple agents on one spot.
 
 <dl class="py method">
 <dt class="sig sig-object py" id="Melodie.Grid.coords_wrap">
-<span class="sig-name descname"><span class="pre">coords_wrap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.Grid.coords_wrap" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">coords_wrap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.Grid.coords_wrap" title="Link to this definition"></a></dt>
 <dd><p>Wrap the coordination
 :param x:
 :param y:
@@ -679,8 +532,18 @@ be raised when attempting to place multiple agents on one spot.
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="Melodie.Grid.get_agent_neighborhood">
+<span class="sig-name descname"><span class="pre">get_agent_neighborhood</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">moore</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">except_self</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.Grid.get_agent_neighborhood" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Melodie.Grid.get_spot_neighborhood">
+<span class="sig-name descname"><span class="pre">get_spot_neighborhood</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spot</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">moore</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">except_self</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.Grid.get_spot_neighborhood" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="Melodie.Grid.add_agent">
-<span class="sig-name descname"><span class="pre">add_agent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#Melodie.GridAgent" title="MelodieInfra.core.grid.GridAgent"><span class="pre">GridAgent</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.Grid.add_agent" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">add_agent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">GridAgent</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.Grid.add_agent" title="Link to this definition"></a></dt>
 <dd><p>Add an agent to the grid</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -697,11 +560,11 @@ be raised when attempting to place multiple agents on one spot.
 
 <dl class="py method">
 <dt class="sig sig-object py" id="Melodie.Grid.remove_agent">
-<span class="sig-name descname"><span class="pre">remove_agent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#Melodie.GridAgent" title="MelodieInfra.core.grid.GridAgent"><span class="pre">GridAgent</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.Grid.remove_agent" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">remove_agent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">GridAgent</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.Grid.remove_agent" title="Link to this definition"></a></dt>
 <dd><p>Remove agent from the grid</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>agent</strong> – </p>
+<dd class="field-odd"><p><strong>agent</strong></p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p></p>
@@ -711,7 +574,7 @@ be raised when attempting to place multiple agents on one spot.
 
 <dl class="py method">
 <dt class="sig sig-object py" id="Melodie.Grid.move_agent">
-<span class="sig-name descname"><span class="pre">move_agent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#Melodie.GridAgent" title="MelodieInfra.core.grid.GridAgent"><span class="pre">GridAgent</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_y</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.Grid.move_agent" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">move_agent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">GridAgent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_y</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.Grid.move_agent" title="Link to this definition"></a></dt>
 <dd><p>Move agent to target position.
 :param agent_id:
 :param category:
@@ -722,7 +585,7 @@ be raised when attempting to place multiple agents on one spot.
 
 <dl class="py method">
 <dt class="sig sig-object py" id="Melodie.Grid.get_agent_pos">
-<span class="sig-name descname"><span class="pre">get_agent_pos</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">category</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#Melodie.Grid.get_agent_pos" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">get_agent_pos</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">category</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#Melodie.Grid.get_agent_pos" title="Link to this definition"></a></dt>
 <dd><p>Get the agent position at the grid.
 :param agent_id:
 :param category:
@@ -731,7 +594,7 @@ be raised when attempting to place multiple agents on one spot.
 
 <dl class="py method">
 <dt class="sig sig-object py" id="Melodie.Grid.height">
-<span class="sig-name descname"><span class="pre">height</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.Grid.height" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">height</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.Grid.height" title="Link to this definition"></a></dt>
 <dd><p>Get the height of grid</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -742,7 +605,7 @@ be raised when attempting to place multiple agents on one spot.
 
 <dl class="py method">
 <dt class="sig sig-object py" id="Melodie.Grid.width">
-<span class="sig-name descname"><span class="pre">width</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.Grid.width" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">width</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.Grid.width" title="Link to this definition"></a></dt>
 <dd><p>Get the width of grid</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -753,16 +616,16 @@ be raised when attempting to place multiple agents on one spot.
 
 <dl class="py method">
 <dt class="sig sig-object py" id="Melodie.Grid.get_neighbors">
-<span class="sig-name descname"><span class="pre">get_neighbors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#Melodie.GridAgent" title="MelodieInfra.core.grid.GridAgent"><span class="pre">GridAgent</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">moore</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">except_self</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.Grid.get_neighbors" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">get_neighbors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">GridAgent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">moore</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">except_self</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.Grid.get_neighbors" title="Link to this definition"></a></dt>
 <dd><p>Get the neighbors of one spot at (x, y).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>x</strong> – </p></li>
-<li><p><strong>y</strong> – </p></li>
-<li><p><strong>radius</strong> – </p></li>
-<li><p><strong>moore</strong> – </p></li>
-<li><p><strong>except_self</strong> – </p></li>
+<li><p><strong>x</strong></p></li>
+<li><p><strong>y</strong></p></li>
+<li><p><strong>radius</strong></p></li>
+<li><p><strong>moore</strong></p></li>
+<li><p><strong>except_self</strong></p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -773,13 +636,13 @@ be raised when attempting to place multiple agents on one spot.
 
 <dl class="py method">
 <dt class="sig sig-object py" id="Melodie.Grid.get_spot_agents">
-<span class="sig-name descname"><span class="pre">get_spot_agents</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spot</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#Melodie.Spot" title="MelodieInfra.core.grid.Spot"><span class="pre">Spot</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.Grid.get_spot_agents" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">get_spot_agents</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spot</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#Melodie.Spot" title="MelodieInfra.core.grid.Spot"><span class="pre">Spot</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.Grid.get_spot_agents" title="Link to this definition"></a></dt>
 <dd><p>Get agents on the spot.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="Melodie.Grid.get_colormap">
-<span class="sig-name descname"><span class="pre">get_colormap</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.Grid.get_colormap" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">get_colormap</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.Grid.get_colormap" title="Link to this definition"></a></dt>
 <dd><p>Get the role of each spot.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -790,7 +653,7 @@ be raised when attempting to place multiple agents on one spot.
 
 <dl class="py method">
 <dt class="sig sig-object py" id="Melodie.Grid.spots_to_json">
-<span class="sig-name descname"><span class="pre">spots_to_json</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.Grid.spots_to_json" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">spots_to_json</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.Grid.spots_to_json" title="Link to this definition"></a></dt>
 <dd><p>Convert spots in this grid into a list of json-serializable dict</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -801,7 +664,7 @@ be raised when attempting to place multiple agents on one spot.
 
 <dl class="py method">
 <dt class="sig sig-object py" id="Melodie.Grid.get_empty_spots">
-<span class="sig-name descname"><span class="pre">get_empty_spots</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.Grid.get_empty_spots" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">get_empty_spots</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.Grid.get_empty_spots" title="Link to this definition"></a></dt>
 <dd><p>Get all empty spots from grid.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -811,8 +674,13 @@ be raised when attempting to place multiple agents on one spot.
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="Melodie.Grid.find_empty_spot">
+<span class="sig-name descname"><span class="pre">find_empty_spot</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.Grid.find_empty_spot" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="Melodie.Grid.setup_agent_locations">
-<span class="sig-name descname"><span class="pre">setup_agent_locations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">category</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_placement</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'direct'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#Melodie.Grid.setup_agent_locations" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">setup_agent_locations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">category</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_placement</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'direct'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'random_single'</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'direct'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#Melodie.Grid.setup_agent_locations" title="Link to this definition"></a></dt>
 <dd><p>Add an agent category.</p>
 <p>For example, if there are two classes of agents: <cite>Wolf(GridAgent)</cite> and <cite>Sheep(GridAgent)</cite>,
 and there are 100 agents with id 0~99 for each class. It is obvious in such a circumstance that
@@ -822,7 +690,9 @@ we cannot identify an agent only with agent <em>id</em>.So it is essential to us
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>category_id</strong> – The id of new category.</p></li>
 <li><p><strong>category</strong> – An AgentList object</p></li>
-<li><p><strong>initial_placement</strong> – A str object stand for initial placement.</p></li>
+<li><p><strong>initial_placement</strong> – A str object stand for initial placement, which can be <code class="docutils literal notranslate"><span class="pre">direct</span></code> or <code class="docutils literal notranslate"><span class="pre">random_single</span></code>
+<code class="docutils literal notranslate"><span class="pre">direct</span></code> means that the agent is placed at the position of its x and y;
+<code class="docutils literal notranslate"><span class="pre">random_single</span></code> means that the agent is placed at a random position.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -833,13 +703,13 @@ we cannot identify an agent only with agent <em>id</em>.So it is essential to us
 
 <dl class="py method">
 <dt class="sig sig-object py" id="Melodie.Grid.set_spot_property">
-<span class="sig-name descname"><span class="pre">set_spot_property</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">attr_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">array_2d</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.Grid.set_spot_property" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">set_spot_property</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">attr_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">array_2d</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.Grid.set_spot_property" title="Link to this definition"></a></dt>
 <dd><p>Extract property values from a 2d-numpy-array and assign to each spot.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="Melodie.Grid.rand_move_agent">
-<span class="sig-name descname"><span class="pre">rand_move_agent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#Melodie.GridAgent" title="MelodieInfra.core.grid.GridAgent"><span class="pre">GridAgent</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">category</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">range_x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">range_y</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.Grid.rand_move_agent" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">rand_move_agent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">GridAgent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">category</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">range_x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">range_y</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.Grid.rand_move_agent" title="Link to this definition"></a></dt>
 <dd><p>Randomly move an agent with maximum movement <cite>range_x</cite> in x axis and <cite>range_y</cite> in y axis.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -859,6 +729,38 @@ we cannot identify an agent only with agent <em>id</em>.So it is essential to us
 </dl>
 </dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="Melodie.Grid.get_agent_container">
+<span class="sig-name descname"><span class="pre">get_agent_container</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">category_id</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="agent_list.html#Melodie.AgentList" title="MelodieInfra.core.agent_list.AgentList"><span class="pre">AgentList</span></a></span></span><a class="headerlink" href="#Melodie.Grid.get_agent_container" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="Melodie.Grid.agent_categories">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">agent_categories</span></span><a class="headerlink" href="#Melodie.Grid.agent_categories" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="Melodie.Spot">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Melodie.</span></span><span class="sig-name descname"><span class="pre">Spot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spot_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grid</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#Melodie.Grid" title="MelodieInfra.core.grid.Grid"><span class="pre">Grid</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.Spot" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">GridItem</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="Melodie.Spot.get_spot_agents">
+<span class="sig-name descname"><span class="pre">get_spot_agents</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.Spot.get_spot_agents" title="Link to this definition"></a></dt>
+<dd><p>Get all agents on the spot.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>a list of grid agent.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Melodie.Spot.get_style">
+<span class="sig-name descname"><span class="pre">get_style</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.Spot.get_style" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
 </section>
@@ -867,8 +769,8 @@ we cannot identify an agent only with agent <em>id</em>.So it is essential to us
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="data_collector.html" class="btn btn-neutral float-left" title="DataCollector" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="network.html" class="btn btn-neutral float-right" title="Network" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="data_collector.html" class="btn btn-neutral float-left" title="Data Collector" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="network.html" class="btn btn-neutral float-right" title="Network &amp; Edge" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

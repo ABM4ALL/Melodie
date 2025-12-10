@@ -1,9 +1,9 @@
 
 Trainer
-============
+=======
 
-.. automodule:: Melodie.trainer
-               :members: Trainer
-               :undoc-members:
-               :show-inheritance:
+.. autoclass:: Melodie.Trainer
+   :members:
+   :undoc-members:
+   :show-inheritance:
 

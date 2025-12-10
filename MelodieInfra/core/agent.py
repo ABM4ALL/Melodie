@@ -55,19 +55,27 @@ class Agent(Element):
 
     def setup(self):
         """
-        This is the initialization method, declare properties here.
-        Here, "Declare" is to define properties with zero as initial value, such as:
-        ```python
-        class NewAgent(Agent)
-            def setup(self):
-                self.int_property = 0
-                self.float_property = 0.0
-                self.str_property = ""
-        ```
-        It is also fine to define properties with complex data structure such as dict/list/set, but the values in the
-        complex data structure is hard to be recorded by the `DataCollector`
-        This method is executed at the end of the `__init__` method of the corresponding agent container.
-        :return:
+        This is the initialization method where agent properties can be declared.
+
+        "Declaration" means defining properties with initial values, such as 0, 0.0,
+        or "". For example:
+
+        .. code-block:: python
+
+            class NewAgent(Agent)
+                def setup(self):
+                    self.int_property = 0
+                    self.float_property = 0.0
+                    self.str_property = ""
+
+        While it is possible to define properties with complex data structures like
+        dicts, lists, or sets, their values can be difficult for the `DataCollector`
+        to record automatically.
+
+        This method is executed automatically at the end of the agent's ``__init__``
+        method.
+
+        :return: None
         """
         pass
 

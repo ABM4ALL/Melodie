@@ -23,4 +23,4 @@ def test_sim_parallel():
         model_cls=DCTestModel,
         scenario_cls=TestScenario,
     )
-    sim.new_parallel(2)
+    sim.run_parallel_multithread(2)

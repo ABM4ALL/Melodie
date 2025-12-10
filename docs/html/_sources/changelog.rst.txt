@@ -5,70 +5,80 @@ Change Log
 Major Version 0.x
 _________________
 
-v0.8.0 (May. 10, 2023)
-~~~~~~~~~~~~~~~~~~~~~~
-- Removed Cythonized modules, in order to gain maintainability and make Melodie more pypy-friendly.
+Version 1.1.0 (Dec. 10, 2025)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+- Add new examples and update documentation.
+- Fixed small bugs in `Calibrator` and `Trainer`.
+- Add a new parallel execution mode for the simulator: ``run_parallel_multithread`` based on Python 3.14+ free-threaded mode (No-GIL).
+- Add thread-based parallel execution mode for `Calibrator` and `Trainer` via the ``parallel_mode`` parameter (recommended for Python 3.13+).
+- Upgrade supported Python version from 3.12 to 3.14+ (tested on 3.14.2).
 
-v0.7.0 (Mar. 25, 2023)
-~~~~~~~~~~~~~~~~~~~~~~
-- Fixed version compatibility problem for sqlalchemy.
-- Fixed numpy data type error mentioned in issue #12, #18.
-- Deleted unused dependencies in ``requirements.txt`` and ``setup.py``.
-- Modified docs according to reviewers' advice (submission to JOSS).
-- Fixed path problem on *nix platforms.
-- Added proxy router to adapt to the gateway in MelodieStudio.
+Version 1.0.0 (Mar. 14, 2024)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+- Clean up unused files and code.
+- Simplify output format: CSV is now the default, with SQLite as an optional choice.
+- Improve multi-processing performance for calibrator and trainer.
+- Unify predefined names for special input files (e.g., ``SimulatorScenarios``, ``TrainerScenarios``, ``CalibratorScenarios``).
+- Upgrade supported Python version from 3.8 to 3.12.
 
-v0.6.0 (Jan. 04, 2023)
-~~~~~~~~~~~~~~~~~~~~~~
-- Modified ``Calibrator.distance`` method, used ``model`` instead of ``environment`` as parameter.
-- Modified parameter names in ``Trainer.add_agent_training_property``.
-- Added API Reference page in docs.
+Version 0.8.0 (May. 10, 2023)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+- Remove Cythonized modules to improve maintainability and compatibility with PyPy.
 
-v0.5.0 (Dec. 17, 2022)
-~~~~~~~~~~~~~~~~~~~~~~
-- Added visualizer API on ``Grid`` and ``Network``
-- Fixed port resource holding bugs in ``Trainer``
-- Fixed datacollector time counting bug
+Version 0.7.0 (Mar. 25, 2023)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+- Fix version compatibility issue for SQLAlchemy.
+- Fix NumPy data type error (issues #12, #18).
+- Remove unused dependencies from ``requirements.txt`` and ``setup.py``.
+- Update documentation based on JOSS reviewer feedback.
+- Fix path resolution issue on ``*nix`` platforms.
+- Add a proxy router to support the gateway in MelodieStudio.
 
-v0.4.2 (Dec. 15, 2022)
-~~~~~~~~~~~~~~~~~~~~~~
-- Fixed some errors in the ``Calibrator`` class, including logging, environment property, multiple paths, column names.
+Version 0.6.0 (Jan. 04, 2023)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+- Modify ``Calibrator.distance`` method to use ``model`` instead of ``environment`` as a parameter.
+- Modify parameter names in ``Trainer.add_agent_training_property``.
+- Add the API Reference page to the documentation.
 
+Version 0.5.0 (Dec. 17, 2022)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+- Add visualizer API for ``Grid`` and ``Network``.
+- Fix port resource leak bugs in ``Trainer``.
+- Fix a time-counting bug in the data collector.
 
-v0.4.1 (Dec. 12, 2022)
-~~~~~~~~~~~~~~~~~~~~~~
-- Documentation finished and the project is released!
+Version 0.4.2 (Dec. 15, 2022)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+- Fix several bugs in the ``Calibrator`` class, related to logging, environment properties, multiple paths, and column names.
 
-
-v0.4.0 (Nov. 15, 2022)
-~~~~~~~~~~~~~~~~~~~~~~
-- Separated the MelodieInfra package containing infrastructure.
-- Added HTTP Get support in the websocket protocol.
-- Support for connection string in `DBConn` class.
-
-
-v0.3.0 (Oct. 28, 2022)
-~~~~~~~~~~~~~~~~~~~~~~
-- Batch load API for `DataframeInfo`.
-- Logger API.
-
-
-v0.2.0 (Oct. 24, 2022)
-~~~~~~~~~~~~~~~~~~~~~~
-- DB module supported reading from specific directories.
-- Added `filter` method to select agents of given conditions.
+Version 0.4.1 (Dec. 12, 2022)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+- Complete and release the first version of the documentation.
 
 
-v0.1.1 (Aug. 23, 2022)
-~~~~~~~~~~~~~~~~~~~~~~
-- Added specific description for assertion error in `Grid.set_spot_property`.
+Version 0.4.0 (Nov. 15, 2022)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+- Separate the ``MelodieInfra`` package, which contains infrastructure components.
+- Add HTTP GET support to the WebSocket protocol.
+- Add support for connection strings in the `DBConn` class.
 
+Version 0.3.0 (Oct. 28, 2022)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+- Implement batch loading API for `DataframeInfo`.
+- Implement Logger API.
 
-v0.1.0 (Jul. 22, 2022)
-~~~~~~~~~~~~~~~~~~~~~~
-- first version, all main modules created.
+Version 0.2.0 (Oct. 24, 2022)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+- Enable the DB module to read from specific directories.
+- Add the ``filter`` method to select agents based on specified conditions.
 
+Version 0.1.1 (Aug. 23, 2022)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+- Add a specific description for the assertion error in `Grid.set_spot_property`.
 
-Start (May. 10, 2021)
-~~~~~~~~~~~~~~~~~~~~~
+Version 0.1.0 (Jul. 22, 2022)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+- First version, with all main modules created.
+
+Project Start (May. 10, 2021)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
 - Start of the journey.

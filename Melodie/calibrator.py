@@ -20,7 +20,7 @@ from typing import (
 import pandas as pd
 
 from MelodieInfra import Config, MelodieExceptions
-from MelodieInfra.parallel.parallel_manager import ParallelManager
+from MelodieInfra.parallel.parallel_manager import ParallelManager, ThreadParallelManager
 from MelodieInfra.utils import underline_to_camel
 
 from .algorithms import AlgorithmParameters
@@ -121,9 +121,12 @@ class GACalibratorAlgorithmMeta(CalibratorAlgorithmMeta):
 
 class GACalibratorAlgorithm:
     """
-    参数：一个tuple
-    每次会跑20条染色体，然后将参数缓存起来。
-    目标函数从TargetFcnCache中查询。
+    (Internal) The genetic algorithm implementation for the Calibrator.
+
+    This class orchestrates the GA process, including managing the population of
+    chromosomes (parameter sets), distributing simulation tasks to parallel
+
+    workers, caching results, and evolving the population across generations.
     """
 
     def __init__(
@@ -135,6 +138,7 @@ class GACalibratorAlgorithm:
         target_func: "Callable[[Model], Union[float, int]]",
         manager: "Calibrator" = None,
         processors=1,
+        parallel_mode: Literal["process", "thread"] = "process",
     ):
         self.manager = manager
         self.params = params
@@ -164,44 +168,108 @@ class GACalibratorAlgorithm:
         self._chromosome_counter = 0
         self._current_generation = 0
         self.processors = processors
-        d = {
-            "model": (
-                self.manager.model_cls.__name__,
-                self.manager.model_cls.__module__,
-            ),
-            "scenario": (
-                self.manager.scenario_cls.__name__,
-                self.manager.scenario_cls.__module__,
-            ),
-            "trainer": (
-                self.manager.__class__.__name__,
-                self.manager.__class__.__module__,
-            ),
-            "data_loader": (
-                self.manager.df_loader_cls.__name__,
-                self.manager.df_loader_cls.__module__,
-            ),
-        }
+        self.parallel_mode = parallel_mode
 
-        self.parallel_manager = ParallelManager(
-            self.processors, configs=(d, self.manager.config.to_dict())
+        if self.parallel_mode == "process":
+            d = {
+                "model": (
+                    self.manager.model_cls.__name__,
+                    self.manager.model_cls.__module__,
+                ),
+                "scenario": (
+                    self.manager.scenario_cls.__name__,
+                    self.manager.scenario_cls.__module__,
+                ),
+                "trainer": (
+                    self.manager.__class__.__name__,
+                    self.manager.__class__.__module__,
+                ),
+                "data_loader": (
+                    self.manager.df_loader_cls.__name__,
+                    self.manager.df_loader_cls.__module__,
+                ),
+            }
+            self.parallel_manager = ParallelManager(
+                self.processors, configs=(d, self.manager.config.to_dict())
+            )
+            self.parallel_manager.run("calibrator")
+        elif self.parallel_mode == "thread":
+            self.parallel_manager = ThreadParallelManager(
+                cores=self.processors,
+                worker_func=self._thread_worker_func,
+                worker_init_args=(self.manager,),
+            )
+            self.parallel_manager.run("calibrator")
+        else:
+            raise ValueError(f"Unknown parallel_mode: {parallel_mode}")
+
+    def _thread_worker_func(
+        self, core_id: int, task: Tuple, calibrator: "Calibrator"
+    ) -> Tuple:
+        """
+        Worker function for thread-based parallelism.
+        Runs a single simulation for a given chromosome.
+        """
+        import logging
+        import time
+        from Melodie import Environment
+        from MelodieInfra.config.global_configs import MelodieGlobalConfig
+
+        # Set up logging for this thread worker (similar to process workers)
+        thread_logger = logging.getLogger(f"Calibrator-processor-{core_id}")
+        
+        t0 = time.time()
+        chrom, scenario_json, env_params = task
+        thread_logger.debug(f"processor {core_id} got chrom {chrom}")
+        
+        scenario = calibrator.scenario_cls()
+        scenario.manager = calibrator
+        scenario._setup(scenario_json)
+        scenario.set_params(env_params, asserts_key_exist=False)
+
+        model = calibrator.model_cls(calibrator.config, scenario)
+        model.create()
+        model._setup()
+        model.run()
+
+        agent_data = {}
+        for container_name, props in calibrator.recorded_agent_properties.items():
+            agent_container = getattr(model, container_name)
+            df = agent_container.to_list(props)
+            agent_data[container_name] = df
+            for row in df:
+                row["agent_id"] = row.pop("id")
+
+        env: Environment = model.environment
+        env_data = env.to_dict(calibrator.watched_env_properties)
+        env_data.update({prop: scenario.to_dict()[prop] for prop in calibrator.properties})
+        env_data["target_function_value"] = env_data["distance"] = calibrator.distance(
+            model
         )
-        self.parallel_manager.run("calibrator")
+
+        t1 = time.time()
+        thread_logger.info(
+            f"Processor {core_id}, chromosome {chrom}, time: {MelodieGlobalConfig.Logger.round_elapsed_time(t1 - t0)}s"
+        )
+
+        return (chrom, agent_data, env_data)
 
     def stop(self):
         self.parallel_manager.close()
 
     def get_params(self, id_chromosome: int) -> Dict[str, Any]:
         """
-        Pass parameters from the chromosome to the Environment.
+        Decode a chromosome into a dictionary of scenario parameters.
 
-        :param id_chromosome:
-        :return:
+        :param id_chromosome: The index of the chromosome in the current
+            population.
+        :return: A dictionary mapping parameter names to their float values.
         """
         chromosome_value = self.algorithm.chrom2x(self.algorithm.Chrom)[id_chromosome]
         env_parameters_dict = {}
         for i, param_name in enumerate(self.env_param_names):
-            env_parameters_dict[param_name] = chromosome_value[i]
+            # Convert numpy float to native Python float for serialization
+            env_parameters_dict[param_name] = float(chromosome_value[i])
         return env_parameters_dict
 
     def target_function_to_cache(
@@ -211,17 +279,17 @@ class GACalibratorAlgorithm:
         id_chromosome: int,
     ):
         """
-        Extract the value of target functions from Model, and write them into cache.
-
-        :return:
+        (Internal) Store the output of the target function (distance) in a cache.
         """
         self.cache[(generation, id_chromosome)] = env_data["target_function_value"]
 
     def generate_target_function(self) -> Callable[[], float]:
         """
-        Generate the target function.
+        (Internal) Create the fitness function for the genetic algorithm.
 
-        :return:
+        This function retrieves pre-computed distance values from the cache for
+        each chromosome, allowing the GA to evaluate fitness without re-running
+        the simulation.
         """
 
         def f(*args):
@@ -259,11 +327,6 @@ class GACalibratorAlgorithm:
                 d.update(agent_container_data)
 
                 agent_records[container_name].append(d)
-            self.manager._write_to_table(
-                "csv",
-                f"Result_Calibrator_{underline_to_camel(container_name)}",
-                pd.DataFrame(agent_records[container_name]),
-            )
         environment_record.update(meta_dict)
         environment_record.update(env_data)
         environment_record.pop("target_function_value")
@@ -396,8 +459,10 @@ class GACalibratorAlgorithm:
 
 class Calibrator(BaseModellingManager):
     """
-    Calibrator calibrates the parameters of the scenario
-    by minimizing the distance between model output and empirical evidence.
+    The ``Calibrator`` uses a genetic algorithm to tune scenario parameters.
+
+    It aims to find the parameter set that minimizes the "distance" between a
+    model's output and a predefined target (e.g., empirical data).
     """
 
     def __init__(
@@ -406,15 +471,21 @@ class Calibrator(BaseModellingManager):
         scenario_cls: "Optional[Type[Scenario]]",
         model_cls: "Optional[Type[Model]]",
         data_loader_cls: Type["DataLoader"] = None,
-        processors=1,
+        processors: int = 1,
+        parallel_mode: Literal["process", "thread"] = "process",
     ):
         """
-        :param config: Config instance for current project.
-        :param scenario_cls: Scenario class for current project.
-        :param model_cls: Model class in current project.
-        :param data_loader_cls: DataLoader class in current project.
-        :param processors: Each path in current iteration will be computed parallelly, this parameter
-         stands for processor cores used in parallel computation.
+        :param config: The project :class:`~Melodie.Config` object.
+        :param scenario_cls: The :class:`~Melodie.Scenario` subclass for the model.
+        :param model_cls: The :class:`~Melodie.Model` subclass for the model.
+        :param data_loader_cls: The :class:`~Melodie.DataLoader` subclass for the
+            model.
+        :param processors: The number of processor cores to use for parallel
+            computation of the genetic algorithm.
+        :param parallel_mode: The parallelization mode. ``"process"`` (default)
+            uses subprocess-based parallelism, suitable for all Python versions.
+            ``"thread"`` uses thread-based parallelism, which is recommended for
+            Python 3.13+ (free-threaded/No-GIL builds) for better performance.
         """
         super().__init__(
             config=config,
@@ -423,6 +494,7 @@ class Calibrator(BaseModellingManager):
             data_loader_cls=data_loader_cls,
         )
         self.processes = processors
+        self.parallel_mode = parallel_mode
         self.training_strategy: "Optional[Type[SearchingAlgorithm]]" = None
         self.container_name: str = ""
 
@@ -438,30 +510,39 @@ class Calibrator(BaseModellingManager):
 
     def setup(self):
         """
-        Setup method, be sure to inherit this method in custom calibrator class.
+        A hook for setting up the Calibrator.
+
+        This method should be overridden in a subclass to define which
+        scenario properties to calibrate using
+        :meth:`add_scenario_calibrating_property`.
         """
         pass
 
     def collect_data(self):
         """
-        Set the agent and environment properties to be collected.
+        (Optional) A hook to define which agent and environment properties to record.
 
+        This is not required for calibration itself but is useful for saving
+        detailed simulation data during the calibration process. Use
+        :meth:`add_environment_property` to register properties.
         """
         pass
 
     def generate_scenarios(self) -> List["Scenario"]:
         """
-        Generate scenario objects by the parameter from static tables or scenarios_dataframe.
+        Generate scenarios from the ``CalibratorScenarios`` table.
 
-        :return: A list of generated scenarios.
+        :return: A list of ``Scenario`` objects.
         """
         return self.data_loader.generate_scenarios("Calibrator")
 
     def get_params_scenarios(self) -> List:
         """
-        Get the parameters of calibrator parameters from the registered dataframe.
+        Load the genetic algorithm parameters from the
+        ``CalibratorParamsScenarios`` table.
 
-        :return: A list of dict, and each dict contains parameters.
+        :return: A list of dictionaries, where each dictionary contains the GA
+            parameters for one calibration run.
         """
 
         calibrator_scenarios_table = self.get_dataframe("CalibratorParamsScenarios")
@@ -472,8 +553,7 @@ class Calibrator(BaseModellingManager):
 
     def run(self):
         """
-        The main method for calibrator.
-
+        The main entry point for starting the calibration process.
         """
         self.setup()
         self.pre_run()
@@ -496,11 +576,7 @@ class Calibrator(BaseModellingManager):
 
     def run_once_new(self, scenario: Scenario, calibration_params: GACalibratorParams):
         """
-        Run for one calibration path
-
-        :param scenario: The scenario to run.
-        :param calibration_params: calibration parameters.
-        :return: None
+        (Internal) Run a single calibration path.
         """
         self.algorithm = GACalibratorAlgorithm(
             self.properties,
@@ -510,27 +586,28 @@ class Calibrator(BaseModellingManager):
             self.target_function,
             manager=self,
             processors=self.processes,
+            parallel_mode=self.parallel_mode,
         )
         self.algorithm.run(scenario, self.current_algorithm_meta)
         self.algorithm.stop()
 
     def target_function(self, model: "Model") -> Union[float, int]:
         """
-        The target function to be minimized
-
-        :param env: Environment of the current model.
-        :return:
+        (Internal) A wrapper for the user-defined distance function.
         """
         return self.distance(model)
 
     def distance(self, model: "Model") -> float:
         """
-        The optimization of calibrator is to minimize the distance.
+        The distance function to be minimized by the calibrator.
 
-        Be sure to inherit this function in custom calibrator, and return a float value.
+        This method **must be overridden** in a subclass. It should take a
+        ``Model`` object (representing the final state of a simulation run) and
+        return a single float value representing the "distance" or error between
+        the model's output and the desired target.
 
-        :param model: The current model after running the current parameter set.
-        :return: None
+        :param model: The ``Model`` object after a simulation run.
+        :return: A float representing the distance.
         """
         raise NotImplementedError(
             "Calibrator.distance(model) must be overridden in sub-class!"
@@ -538,10 +615,12 @@ class Calibrator(BaseModellingManager):
 
     def add_scenario_calibrating_property(self, prop: str):
         """
-        Add a property to be tuned in the calibration, and ``prop`` should be a name of property in the environment.
+        Register a scenario property to be calibrated.
 
-        :param prop: Property name
-        :return: None
+        The specified property will be tuned by the genetic algorithm within the
+        bounds defined in the ``CalibratorParamsScenarios`` table.
+
+        :param prop: The name of the scenario property to calibrate.
         """
         assert (
             prop not in self.properties
@@ -550,10 +629,12 @@ class Calibrator(BaseModellingManager):
 
     def add_environment_property(self, prop: str):
         """
-        Add a property of environment to be recorded in the calibration voyage.
+        Register an environment property to be recorded during calibration.
 
-        :param prop: Property name
-        :return: None
+        This allows for saving the values of specific environment properties
+        for each simulation run within the calibration process.
+
+        :param prop: The name of the environment property to record.
         """
         assert prop not in self.watched_env_properties
         self.watched_env_properties.append(prop)

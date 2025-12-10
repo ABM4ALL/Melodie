@@ -1,0 +1,977 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RockPaperScissorsTrainer &mdash; Melodie 1.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=292eb321"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="API Reference" href="../api/index.html" />
+    <link rel="prev" title="CovidContagionCalibrator" href="covid_contagion_calibrator.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Melodie
+              <img src="../_static/logo.jpg" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#user-installation">User Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#developer-installation">Developer Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#dependency-note">Dependency Note</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction.html">Introduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../introduction.html#agent-based-model-abm">Agent-based Model (ABM)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../introduction.html#melodie-framework">Melodie Framework</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../introduction.html#the-model">The Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../introduction.html#the-scenario">The Scenario</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../introduction.html#modelling-manager">Modelling Manager</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../introduction.html#infrastructure">Infrastructure</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">Tutorial</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial.html#model">Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial.html#scenario-definition">Scenario Definition</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial.html#environment-logic">Environment Logic</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial.html#agent-behavior">Agent Behavior</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial.html#data-collection-setup">Data Collection Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial.html#run-the-model">Run the model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial.html#parallel-execution">Parallel Execution</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../framework_comparison.html">Framework Comparison</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../framework_comparison.html#project-structure">Project Structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../framework_comparison.html#high-level-comparison">High-Level Comparison</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../framework_comparison.html#a-note-on-this-comparison">A Note on This Comparison</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../framework_comparison.html#advanced-features-in-melodie">Advanced Features in Melodie</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="_index.html">Model Gallery</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="covid_contagion_grid.html">CovidContagionGrid</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="covid_contagion_grid.html#grid-project-structure">Grid: Project Structure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="covid_contagion_grid.html#grid-key-changes">Grid: Key Changes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="covid_contagion_grid.html#grid-input-data">Grid: Input Data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="covid_contagion_grid.html#grid-running-the-model">Grid: Running the Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="covid_contagion_grid.html#grid-code">Grid: Code</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="covid_contagion_grid.html#model-structure">Model Structure</a></li>
+<li class="toctree-l4"><a class="reference internal" href="covid_contagion_grid.html#environment-logic">Environment Logic</a></li>
+<li class="toctree-l4"><a class="reference internal" href="covid_contagion_grid.html#agent-behavior">Agent Behavior</a></li>
+<li class="toctree-l4"><a class="reference internal" href="covid_contagion_grid.html#data-collection-setup">Data Collection Setup</a></li>
+<li class="toctree-l4"><a class="reference internal" href="covid_contagion_grid.html#grid-and-spot-definition">Grid and Spot Definition</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="covid_contagion_grid_visual.html">CovidContagionGridVisual</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="covid_contagion_grid_visual.html#visualizer-project-structure">Visualizer: Project Structure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="covid_contagion_grid_visual.html#visualizer-key-changes">Visualizer: Key Changes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="covid_contagion_grid_visual.html#visualizer-running-the-model">Visualizer: Running the Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="covid_contagion_grid_visual.html#visualizer-customization-guide">Visualizer: Customization Guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="covid_contagion_grid_visual.html#visualizer-code">Visualizer: Code</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="covid_contagion_grid_visual.html#visualizer-definition">Visualizer Definition</a></li>
+<li class="toctree-l4"><a class="reference internal" href="covid_contagion_grid_visual.html#model-structure">Model Structure</a></li>
+<li class="toctree-l4"><a class="reference internal" href="covid_contagion_grid_visual.html#environment-logic">Environment Logic</a></li>
+<li class="toctree-l4"><a class="reference internal" href="covid_contagion_grid_visual.html#agent-behavior">Agent Behavior</a></li>
+<li class="toctree-l4"><a class="reference internal" href="covid_contagion_grid_visual.html#grid-definition">Grid Definition</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="covid_contagion_network.html">CovidContagionNetwork</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="covid_contagion_network.html#network-project-structure">Network: Project Structure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="covid_contagion_network.html#network-key-changes">Network: Key Changes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="covid_contagion_network.html#network-input-data">Network: Input Data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="covid_contagion_network.html#network-running-the-model">Network: Running the Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="covid_contagion_network.html#network-code">Network: Code</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="covid_contagion_network.html#model-structure">Model Structure</a></li>
+<li class="toctree-l4"><a class="reference internal" href="covid_contagion_network.html#environment-logic">Environment Logic</a></li>
+<li class="toctree-l4"><a class="reference internal" href="covid_contagion_network.html#agent-behavior">Agent Behavior</a></li>
+<li class="toctree-l4"><a class="reference internal" href="covid_contagion_network.html#scenario-definition">Scenario Definition</a></li>
+<li class="toctree-l4"><a class="reference internal" href="covid_contagion_network.html#data-collection-setup">Data Collection Setup</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="covid_contagion_calibrator.html">CovidContagionCalibrator</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="covid_contagion_calibrator.html#calibrator-project-structure">Calibrator: Project Structure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="covid_contagion_calibrator.html#calibrator-key-changes">Calibrator: Key Changes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="covid_contagion_calibrator.html#calibrator-ga-concepts">Calibrator: GA Concepts</a></li>
+<li class="toctree-l3"><a class="reference internal" href="covid_contagion_calibrator.html#calibrator-input-data">Calibrator: Input Data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="covid_contagion_calibrator.html#calibrator-running-the-model">Calibrator: Running the Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="covid_contagion_calibrator.html#calibrator-code">Calibrator: Code</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="covid_contagion_calibrator.html#calibrator-definition">Calibrator Definition</a></li>
+<li class="toctree-l4"><a class="reference internal" href="covid_contagion_calibrator.html#scenario-definition">Scenario Definition</a></li>
+<li class="toctree-l4"><a class="reference internal" href="covid_contagion_calibrator.html#model-structure">Model Structure</a></li>
+<li class="toctree-l4"><a class="reference internal" href="covid_contagion_calibrator.html#environment-logic">Environment Logic</a></li>
+<li class="toctree-l4"><a class="reference internal" href="covid_contagion_calibrator.html#agent-behavior">Agent Behavior</a></li>
+<li class="toctree-l4"><a class="reference internal" href="covid_contagion_calibrator.html#data-collection-setup">Data Collection Setup</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">RockPaperScissorsTrainer</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#trainer-project-structure">Trainer: Project Structure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#trainer-ga-concepts">Trainer: GA Concepts</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#trainer-how-it-works">Trainer: How It Works</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#trainer-results">Trainer: Results</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#trainer-running-the-model">Trainer: Running the Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#trainer-code">Trainer: Code</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#model-structure">Model Structure</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#environment-logic">Environment Logic</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#agent-behavior">Agent Behavior</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#data-collection-setup">Data Collection Setup</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#scenario-definition">Scenario Definition</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#trainer-definition">Trainer Definition</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api/index.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../api/simulator.html">Simulator</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api/simulator.html#Melodie.Simulator"><code class="docutils literal notranslate"><span class="pre">Simulator</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/simulator.html#Melodie.Simulator.generate_scenarios"><code class="docutils literal notranslate"><span class="pre">Simulator.generate_scenarios()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/simulator.html#Melodie.Simulator.run_model"><code class="docutils literal notranslate"><span class="pre">Simulator.run_model()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/simulator.html#Melodie.Simulator.setup"><code class="docutils literal notranslate"><span class="pre">Simulator.setup()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/simulator.html#Melodie.Simulator.run"><code class="docutils literal notranslate"><span class="pre">Simulator.run()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/simulator.html#Melodie.Simulator.run_visual"><code class="docutils literal notranslate"><span class="pre">Simulator.run_visual()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/simulator.html#Melodie.Simulator.run_parallel"><code class="docutils literal notranslate"><span class="pre">Simulator.run_parallel()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/simulator.html#Melodie.Simulator.run_parallel_multithread"><code class="docutils literal notranslate"><span class="pre">Simulator.run_parallel_multithread()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api/model.html">Model</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api/model.html#Melodie.Model"><code class="docutils literal notranslate"><span class="pre">Model</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/model.html#Melodie.Model.create"><code class="docutils literal notranslate"><span class="pre">Model.create()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/model.html#Melodie.Model.setup"><code class="docutils literal notranslate"><span class="pre">Model.setup()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/model.html#Melodie.Model.create_db_conn"><code class="docutils literal notranslate"><span class="pre">Model.create_db_conn()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/model.html#Melodie.Model.create_agent_list"><code class="docutils literal notranslate"><span class="pre">Model.create_agent_list()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/model.html#Melodie.Model.create_environment"><code class="docutils literal notranslate"><span class="pre">Model.create_environment()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/model.html#Melodie.Model.create_grid"><code class="docutils literal notranslate"><span class="pre">Model.create_grid()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/model.html#Melodie.Model.create_network"><code class="docutils literal notranslate"><span class="pre">Model.create_network()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/model.html#Melodie.Model.create_data_collector"><code class="docutils literal notranslate"><span class="pre">Model.create_data_collector()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/model.html#Melodie.Model.create_agent_container"><code class="docutils literal notranslate"><span class="pre">Model.create_agent_container()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/model.html#Melodie.Model.run"><code class="docutils literal notranslate"><span class="pre">Model.run()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/model.html#Melodie.Model.iterator"><code class="docutils literal notranslate"><span class="pre">Model.iterator()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/model.html#Melodie.Model.init_visualize"><code class="docutils literal notranslate"><span class="pre">Model.init_visualize()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api/scenario.html">Scenario</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api/scenario.html#Melodie.Scenario"><code class="docutils literal notranslate"><span class="pre">Scenario</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/scenario.html#Melodie.Scenario.copy"><code class="docutils literal notranslate"><span class="pre">Scenario.copy()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/scenario.html#Melodie.Scenario.load_data"><code class="docutils literal notranslate"><span class="pre">Scenario.load_data()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/scenario.html#Melodie.Scenario.setup_data"><code class="docutils literal notranslate"><span class="pre">Scenario.setup_data()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/scenario.html#Melodie.Scenario.initialize"><code class="docutils literal notranslate"><span class="pre">Scenario.initialize()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/scenario.html#Melodie.Scenario.setup"><code class="docutils literal notranslate"><span class="pre">Scenario.setup()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/scenario.html#Melodie.Scenario.load_dataframe"><code class="docutils literal notranslate"><span class="pre">Scenario.load_dataframe()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/scenario.html#Melodie.Scenario.load_matrix"><code class="docutils literal notranslate"><span class="pre">Scenario.load_matrix()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/scenario.html#Melodie.Scenario.to_dict"><code class="docutils literal notranslate"><span class="pre">Scenario.to_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/scenario.html#Melodie.Scenario.to_json"><code class="docutils literal notranslate"><span class="pre">Scenario.to_json()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/scenario.html#Melodie.Scenario.get_dataframe"><code class="docutils literal notranslate"><span class="pre">Scenario.get_dataframe()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/scenario.html#Melodie.Scenario.get_matrix"><code class="docutils literal notranslate"><span class="pre">Scenario.get_matrix()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api/environment.html">Environment</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api/environment.html#Melodie.Environment"><code class="docutils literal notranslate"><span class="pre">Environment</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/environment.html#Melodie.Environment.setup"><code class="docutils literal notranslate"><span class="pre">Environment.setup()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/environment.html#Melodie.Environment.to_dict"><code class="docutils literal notranslate"><span class="pre">Environment.to_dict()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api/agent.html">Agent</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api/agent.html#Melodie.Agent"><code class="docutils literal notranslate"><span class="pre">Agent</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/agent.html#Melodie.Agent.setup"><code class="docutils literal notranslate"><span class="pre">Agent.setup()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api/agent_list.html">Agent List</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api/agent_list.html#Melodie.AgentList"><code class="docutils literal notranslate"><span class="pre">AgentList</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/agent_list.html#Melodie.AgentList.setup_agents"><code class="docutils literal notranslate"><span class="pre">AgentList.setup_agents()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/agent_list.html#Melodie.AgentList.setup"><code class="docutils literal notranslate"><span class="pre">AgentList.setup()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/agent_list.html#Melodie.AgentList.init_agents"><code class="docutils literal notranslate"><span class="pre">AgentList.init_agents()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/agent_list.html#Melodie.AgentList.random_sample"><code class="docutils literal notranslate"><span class="pre">AgentList.random_sample()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/agent_list.html#Melodie.AgentList.filter"><code class="docutils literal notranslate"><span class="pre">AgentList.filter()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/agent_list.html#Melodie.AgentList.add"><code class="docutils literal notranslate"><span class="pre">AgentList.add()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/agent_list.html#Melodie.AgentList.to_list"><code class="docutils literal notranslate"><span class="pre">AgentList.to_list()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/agent_list.html#Melodie.AgentList.to_dataframe"><code class="docutils literal notranslate"><span class="pre">AgentList.to_dataframe()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/agent_list.html#Melodie.AgentList.set_properties"><code class="docutils literal notranslate"><span class="pre">AgentList.set_properties()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/agent_list.html#Melodie.AgentList.get_agent"><code class="docutils literal notranslate"><span class="pre">AgentList.get_agent()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/agent_list.html#Melodie.AgentList.method_foreach"><code class="docutils literal notranslate"><span class="pre">AgentList.method_foreach()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/agent_list.html#Melodie.AgentList.vectorize"><code class="docutils literal notranslate"><span class="pre">AgentList.vectorize()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/agent_list.html#Melodie.AgentList.remove"><code class="docutils literal notranslate"><span class="pre">AgentList.remove()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api/data_collector.html">Data Collector</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api/data_collector.html#Melodie.DataCollector"><code class="docutils literal notranslate"><span class="pre">DataCollector</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/data_collector.html#Melodie.DataCollector.setup"><code class="docutils literal notranslate"><span class="pre">DataCollector.setup()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/data_collector.html#Melodie.DataCollector.time_elapsed"><code class="docutils literal notranslate"><span class="pre">DataCollector.time_elapsed()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/data_collector.html#Melodie.DataCollector.add_agent_property"><code class="docutils literal notranslate"><span class="pre">DataCollector.add_agent_property()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/data_collector.html#Melodie.DataCollector.add_environment_property"><code class="docutils literal notranslate"><span class="pre">DataCollector.add_environment_property()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/data_collector.html#Melodie.DataCollector.add_custom_collector"><code class="docutils literal notranslate"><span class="pre">DataCollector.add_custom_collector()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/data_collector.html#Melodie.DataCollector.env_property_names"><code class="docutils literal notranslate"><span class="pre">DataCollector.env_property_names()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/data_collector.html#Melodie.DataCollector.agent_property_names"><code class="docutils literal notranslate"><span class="pre">DataCollector.agent_property_names()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/data_collector.html#Melodie.DataCollector.agent_containers"><code class="docutils literal notranslate"><span class="pre">DataCollector.agent_containers()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/data_collector.html#Melodie.DataCollector.collect_agent_properties"><code class="docutils literal notranslate"><span class="pre">DataCollector.collect_agent_properties()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/data_collector.html#Melodie.DataCollector.collect_custom_properties"><code class="docutils literal notranslate"><span class="pre">DataCollector.collect_custom_properties()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/data_collector.html#Melodie.DataCollector.collect_single_custom_property"><code class="docutils literal notranslate"><span class="pre">DataCollector.collect_single_custom_property()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/data_collector.html#Melodie.DataCollector.append_agent_properties_by_records"><code class="docutils literal notranslate"><span class="pre">DataCollector.append_agent_properties_by_records()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/data_collector.html#Melodie.DataCollector.append_environment_properties"><code class="docutils literal notranslate"><span class="pre">DataCollector.append_environment_properties()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/data_collector.html#Melodie.DataCollector.status"><code class="docutils literal notranslate"><span class="pre">DataCollector.status</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/data_collector.html#Melodie.DataCollector.collect"><code class="docutils literal notranslate"><span class="pre">DataCollector.collect()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/data_collector.html#Melodie.DataCollector.calc_time"><code class="docutils literal notranslate"><span class="pre">DataCollector.calc_time()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/data_collector.html#Melodie.DataCollector.get_single_agent_data"><code class="docutils literal notranslate"><span class="pre">DataCollector.get_single_agent_data()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/data_collector.html#Melodie.DataCollector.save"><code class="docutils literal notranslate"><span class="pre">DataCollector.save()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/data_collector.html#Melodie.DataCollector.save_dataframe"><code class="docutils literal notranslate"><span class="pre">DataCollector.save_dataframe()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api/grid.html">Grid &amp; Spot</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api/grid.html#Melodie.Grid"><code class="docutils literal notranslate"><span class="pre">Grid</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/grid.html#Melodie.Grid.init_grid"><code class="docutils literal notranslate"><span class="pre">Grid.init_grid()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/grid.html#Melodie.Grid.setup_params"><code class="docutils literal notranslate"><span class="pre">Grid.setup_params()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/grid.html#Melodie.Grid.setup"><code class="docutils literal notranslate"><span class="pre">Grid.setup()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/grid.html#Melodie.Grid.add_category"><code class="docutils literal notranslate"><span class="pre">Grid.add_category()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/grid.html#Melodie.Grid.get_spot"><code class="docutils literal notranslate"><span class="pre">Grid.get_spot()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/grid.html#Melodie.Grid.get_agent_ids"><code class="docutils literal notranslate"><span class="pre">Grid.get_agent_ids()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/grid.html#Melodie.Grid.coords_wrap"><code class="docutils literal notranslate"><span class="pre">Grid.coords_wrap()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/grid.html#Melodie.Grid.get_agent_neighborhood"><code class="docutils literal notranslate"><span class="pre">Grid.get_agent_neighborhood()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/grid.html#Melodie.Grid.get_spot_neighborhood"><code class="docutils literal notranslate"><span class="pre">Grid.get_spot_neighborhood()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/grid.html#Melodie.Grid.add_agent"><code class="docutils literal notranslate"><span class="pre">Grid.add_agent()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/grid.html#Melodie.Grid.remove_agent"><code class="docutils literal notranslate"><span class="pre">Grid.remove_agent()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/grid.html#Melodie.Grid.move_agent"><code class="docutils literal notranslate"><span class="pre">Grid.move_agent()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/grid.html#Melodie.Grid.get_agent_pos"><code class="docutils literal notranslate"><span class="pre">Grid.get_agent_pos()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/grid.html#Melodie.Grid.height"><code class="docutils literal notranslate"><span class="pre">Grid.height()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/grid.html#Melodie.Grid.width"><code class="docutils literal notranslate"><span class="pre">Grid.width()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/grid.html#Melodie.Grid.get_neighbors"><code class="docutils literal notranslate"><span class="pre">Grid.get_neighbors()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/grid.html#Melodie.Grid.get_spot_agents"><code class="docutils literal notranslate"><span class="pre">Grid.get_spot_agents()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/grid.html#Melodie.Grid.get_colormap"><code class="docutils literal notranslate"><span class="pre">Grid.get_colormap()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/grid.html#Melodie.Grid.spots_to_json"><code class="docutils literal notranslate"><span class="pre">Grid.spots_to_json()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/grid.html#Melodie.Grid.get_empty_spots"><code class="docutils literal notranslate"><span class="pre">Grid.get_empty_spots()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/grid.html#Melodie.Grid.find_empty_spot"><code class="docutils literal notranslate"><span class="pre">Grid.find_empty_spot()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/grid.html#Melodie.Grid.setup_agent_locations"><code class="docutils literal notranslate"><span class="pre">Grid.setup_agent_locations()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/grid.html#Melodie.Grid.set_spot_property"><code class="docutils literal notranslate"><span class="pre">Grid.set_spot_property()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/grid.html#Melodie.Grid.rand_move_agent"><code class="docutils literal notranslate"><span class="pre">Grid.rand_move_agent()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/grid.html#Melodie.Grid.get_agent_container"><code class="docutils literal notranslate"><span class="pre">Grid.get_agent_container()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/grid.html#Melodie.Grid.agent_categories"><code class="docutils literal notranslate"><span class="pre">Grid.agent_categories</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api/grid.html#Melodie.Spot"><code class="docutils literal notranslate"><span class="pre">Spot</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/grid.html#Melodie.Spot.get_spot_agents"><code class="docutils literal notranslate"><span class="pre">Spot.get_spot_agents()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/grid.html#Melodie.Spot.get_style"><code class="docutils literal notranslate"><span class="pre">Spot.get_style()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api/network.html">Network &amp; Edge</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api/network.html#Melodie.Network"><code class="docutils literal notranslate"><span class="pre">Network</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/network.html#Melodie.Network.setup"><code class="docutils literal notranslate"><span class="pre">Network.setup()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/network.html#Melodie.Network.add_edge"><code class="docutils literal notranslate"><span class="pre">Network.add_edge()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/network.html#Melodie.Network.get_edge"><code class="docutils literal notranslate"><span class="pre">Network.get_edge()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/network.html#Melodie.Network.remove_edge"><code class="docutils literal notranslate"><span class="pre">Network.remove_edge()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/network.html#Melodie.Network.get_neighbors"><code class="docutils literal notranslate"><span class="pre">Network.get_neighbors()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/network.html#Melodie.Network.remove_agent"><code class="docutils literal notranslate"><span class="pre">Network.remove_agent()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/network.html#Melodie.Network.add_agent"><code class="docutils literal notranslate"><span class="pre">Network.add_agent()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/network.html#Melodie.Network.create_edge"><code class="docutils literal notranslate"><span class="pre">Network.create_edge()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/network.html#Melodie.Network.all_agents"><code class="docutils literal notranslate"><span class="pre">Network.all_agents()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/network.html#Melodie.Network.get_node_edges"><code class="docutils literal notranslate"><span class="pre">Network.get_node_edges()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/network.html#Melodie.Network.setup_layout_creator"><code class="docutils literal notranslate"><span class="pre">Network.setup_layout_creator()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/network.html#Melodie.Network.update_layout"><code class="docutils literal notranslate"><span class="pre">Network.update_layout()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/network.html#Melodie.Network.get_position"><code class="docutils literal notranslate"><span class="pre">Network.get_position()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/network.html#Melodie.Network.setup_agent_connections"><code class="docutils literal notranslate"><span class="pre">Network.setup_agent_connections()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api/network.html#Melodie.Edge"><code class="docutils literal notranslate"><span class="pre">Edge</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/network.html#Melodie.Edge.setup"><code class="docutils literal notranslate"><span class="pre">Edge.setup()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/network.html#Melodie.Edge.post_setup"><code class="docutils literal notranslate"><span class="pre">Edge.post_setup()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api/calibrator.html">Calibrator</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api/calibrator.html#Melodie.Calibrator"><code class="docutils literal notranslate"><span class="pre">Calibrator</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/calibrator.html#Melodie.Calibrator.setup"><code class="docutils literal notranslate"><span class="pre">Calibrator.setup()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/calibrator.html#Melodie.Calibrator.collect_data"><code class="docutils literal notranslate"><span class="pre">Calibrator.collect_data()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/calibrator.html#Melodie.Calibrator.generate_scenarios"><code class="docutils literal notranslate"><span class="pre">Calibrator.generate_scenarios()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/calibrator.html#Melodie.Calibrator.get_params_scenarios"><code class="docutils literal notranslate"><span class="pre">Calibrator.get_params_scenarios()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/calibrator.html#Melodie.Calibrator.run"><code class="docutils literal notranslate"><span class="pre">Calibrator.run()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/calibrator.html#Melodie.Calibrator.run_once_new"><code class="docutils literal notranslate"><span class="pre">Calibrator.run_once_new()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/calibrator.html#Melodie.Calibrator.target_function"><code class="docutils literal notranslate"><span class="pre">Calibrator.target_function()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/calibrator.html#Melodie.Calibrator.distance"><code class="docutils literal notranslate"><span class="pre">Calibrator.distance()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/calibrator.html#Melodie.Calibrator.add_scenario_calibrating_property"><code class="docutils literal notranslate"><span class="pre">Calibrator.add_scenario_calibrating_property()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/calibrator.html#Melodie.Calibrator.add_environment_property"><code class="docutils literal notranslate"><span class="pre">Calibrator.add_environment_property()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api/trainer.html">Trainer</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api/trainer.html#Melodie.Trainer"><code class="docutils literal notranslate"><span class="pre">Trainer</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../api/trainer.html#Melodie.Trainer.add_agent_training_property"><code class="docutils literal notranslate"><span class="pre">Trainer.add_agent_training_property()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/trainer.html#Melodie.Trainer.setup"><code class="docutils literal notranslate"><span class="pre">Trainer.setup()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/trainer.html#Melodie.Trainer.get_trainer_scenario_cls"><code class="docutils literal notranslate"><span class="pre">Trainer.get_trainer_scenario_cls()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/trainer.html#Melodie.Trainer.collect_data"><code class="docutils literal notranslate"><span class="pre">Trainer.collect_data()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/trainer.html#Melodie.Trainer.run"><code class="docutils literal notranslate"><span class="pre">Trainer.run()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/trainer.html#Melodie.Trainer.run_once_new"><code class="docutils literal notranslate"><span class="pre">Trainer.run_once_new()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/trainer.html#Melodie.Trainer.utility"><code class="docutils literal notranslate"><span class="pre">Trainer.utility()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/trainer.html#Melodie.Trainer.target_function"><code class="docutils literal notranslate"><span class="pre">Trainer.target_function()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/trainer.html#Melodie.Trainer.add_agent_property"><code class="docutils literal notranslate"><span class="pre">Trainer.add_agent_property()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/trainer.html#Melodie.Trainer.add_environment_property"><code class="docutils literal notranslate"><span class="pre">Trainer.add_environment_property()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/trainer.html#Melodie.Trainer.generate_scenarios"><code class="docutils literal notranslate"><span class="pre">Trainer.generate_scenarios()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/trainer.html#Melodie.Trainer.generate_trainer_params_list"><code class="docutils literal notranslate"><span class="pre">Trainer.generate_trainer_params_list()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Development</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../contribution.html">Contribution</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../contribution.html#reporting-issues">Reporting Issues</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../contribution.html#contributing-code">Contributing Code</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../contribution.html#adding-to-the-model-gallery">Adding to the Model Gallery</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Change Log</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../changelog.html#major-version-0-x">Major Version 0.x</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../changelog.html#version-1-1-0-dec-10-2025">Version 1.1.0 (Dec. 10, 2025)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../changelog.html#version-1-0-0-mar-14-2024">Version 1.0.0 (Mar. 14, 2024)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../changelog.html#version-0-8-0-may-10-2023">Version 0.8.0 (May. 10, 2023)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../changelog.html#version-0-7-0-mar-25-2023">Version 0.7.0 (Mar. 25, 2023)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../changelog.html#version-0-6-0-jan-04-2023">Version 0.6.0 (Jan. 04, 2023)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../changelog.html#version-0-5-0-dec-17-2022">Version 0.5.0 (Dec. 17, 2022)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../changelog.html#version-0-4-2-dec-15-2022">Version 0.4.2 (Dec. 15, 2022)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../changelog.html#version-0-4-1-dec-12-2022">Version 0.4.1 (Dec. 12, 2022)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../changelog.html#version-0-4-0-nov-15-2022">Version 0.4.0 (Nov. 15, 2022)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../changelog.html#version-0-3-0-oct-28-2022">Version 0.3.0 (Oct. 28, 2022)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../changelog.html#version-0-2-0-oct-24-2022">Version 0.2.0 (Oct. 24, 2022)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../changelog.html#version-0-1-1-aug-23-2022">Version 0.1.1 (Aug. 23, 2022)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../changelog.html#version-0-1-0-jul-22-2022">Version 0.1.0 (Jul. 22, 2022)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../changelog.html#project-start-may-10-2021">Project Start (May. 10, 2021)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../about.html">About</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Melodie</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="_index.html">Model Gallery</a></li>
+      <li class="breadcrumb-item active">RockPaperScissorsTrainer</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/gallery/rock_paper_scissors_trainer.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="rockpaperscissorstrainer">
+<span id="rock-paper-scissors-trainer"></span><h1>RockPaperScissorsTrainer<a class="headerlink" href="#rockpaperscissorstrainer" title="Link to this heading"></a></h1>
+<p>This example demonstrates Melodie’s <strong>Trainer</strong> module using a Rock-Paper-Scissors game model.
+In this model, agents start with heterogeneous payoff preferences and strategy weights. The trainer then uses a genetic algorithm (GA) to evolve these strategy parameters, aiming for higher accumulated payoffs for each agent.</p>
+<section id="trainer-project-structure">
+<h2>Trainer: Project Structure<a class="headerlink" href="#trainer-project-structure" title="Link to this heading"></a></h2>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>examples/rock_paper_scissors_trainer
+├── core/
+│   ├── agent.py            # Defines agent&#39;s strategy, actions, and payoff logic
+│   ├── data_collector.py   # Collects micro and macro simulation results
+│   ├── environment.py      # Manages pairwise agent battles
+│   ├── model.py            # Contains the main simulation loop
+│   ├── scenario.py         # Defines scenarios and generates agent parameters
+│   └── trainer.py          # Configures and runs the GA-based training
+├── data/
+│   ├── input/
+│   │   ├── SimulatorScenarios.csv
+│   │   ├── TrainerScenarios.csv
+│   │   └── TrainerParamsScenarios.csv
+│   └── output/
+└── main.py
+</pre></div>
+</div>
+</section>
+<section id="trainer-ga-concepts">
+<h2>Trainer: GA Concepts<a class="headerlink" href="#trainer-ga-concepts" title="Link to this heading"></a></h2>
+<p>While the <code class="docutils literal notranslate"><span class="pre">Calibrator</span></code> tunes parameters to match an external target, the <code class="docutils literal notranslate"><span class="pre">Trainer</span></code> is designed for an <strong>internal</strong> optimization process. Its goal is to allow agents to “learn” and evolve their individual behaviors to maximize their own objectives within the model’s world.</p>
+<p><strong>Core Idea: Maximizing Utility</strong></p>
+<ul class="simple">
+<li><p><strong>Agent-Level Objective</strong>: Each agent has a goal, which is quantified by a <code class="docutils literal notranslate"><span class="pre">utility</span></code> function. In this example, the utility for an agent is its <code class="docutils literal notranslate"><span class="pre">accumulated_payoff</span></code> at the end of a simulation run. The Trainer’s objective is to find the behavioral parameters that maximize this utility for each agent.</p></li>
+<li><p><strong>Parameters</strong>: You specify which agent-level parameter(s) the Trainer should evolve. Here, it’s the three strategy weights: <code class="docutils literal notranslate"><span class="pre">strategy_param_1</span></code>, <code class="docutils literal notranslate"><span class="pre">strategy_param_2</span></code>, and <code class="docutils literal notranslate"><span class="pre">strategy_param_3</span></code>.</p></li>
+<li><p><strong>Utility Function</strong>: You must implement a <code class="docutils literal notranslate"><span class="pre">utility(agent)</span></code> method. This function is called after a simulation run and must return a single float value representing that agent’s performance or “fitness.”</p></li>
+</ul>
+<p><strong>Genetic Algorithm (GA) for Agent Learning</strong></p>
+<p>The Trainer applies a separate genetic algorithm to <em>each agent individually</em>.</p>
+<ul class="simple">
+<li><p><strong>Chromosome</strong>: An agent’s set of trainable parameters (e.g., the three strategy weights) is treated as its “chromosome.”</p></li>
+<li><p><strong>Population</strong>: For each agent, the GA maintains a “population” of these chromosomes (i.e., different sets of strategy weights).</p></li>
+<li><p><strong>Fitness</strong>: To evaluate a chromosome, the model is run with the agent using that set of strategy weights. The agent’s final <code class="docutils literal notranslate"><span class="pre">utility</span></code> (accumulated payoff) serves as the fitness score.</p></li>
+<li><p><strong>Evolution</strong>: Through generations, the GA for each agent independently selects, breeds, and mutates its population of strategy weights, converging on the strategy that yields the highest personal payoff for that agent, given the behavior of all other agents.</p></li>
+<li><p><strong>Parameter Encoding</strong>: The Trainer uses the same binary encoding mechanism as the Calibrator to represent continuous strategy parameters for the GA. For a detailed explanation of this process, please see the <em>Parameter Encoding: From Float to Binary</em> section in the <a class="reference internal" href="covid_contagion_calibrator.html"><span class="doc">CovidContagionCalibrator</span></a> documentation.</p></li>
+</ul>
+<p><strong>Parameter Configuration (`TrainerParamsScenarios.csv`)</strong></p>
+<p>This file controls the behavior of the genetic algorithm for all agents:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">id</span></code>: Unique identifier for a set of GA parameters.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">path_num</span></code>: How many independent training processes (paths) to run. Each path is a complete run of the GA, helping to test the robustness of the evolutionary outcome.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">generation_num</span></code>: The number of generations the GA will run for.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">strategy_population</span></code>: The size of the chromosome population maintained for each agent.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">mutation_prob</span></code>: The probability of random mutations.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">strategy_param_code_length</span></code>: The precision of the strategy parameters.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">strategy_param_1_min/max</span></code>, etc.: These define the search space bounds for each parameter being trained.</p></li>
+</ul>
+</section>
+<section id="trainer-how-it-works">
+<h2>Trainer: How It Works<a class="headerlink" href="#trainer-how-it-works" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><strong>Simulation Loop</strong>: In each period, agents normalize their strategy weights into action probabilities (rock, paper, or scissors). They are then randomly paired to play one round, and their payoffs are recorded. At the end of the simulation run, each agent’s long-term share of actions is calculated.</p></li>
+<li><p><strong>Training Loop</strong>: The <code class="docutils literal notranslate"><span class="pre">RPSTrainer</span></code> evolves the strategy parameters for every agent. The <strong>fitness</strong> is each agent’s <code class="docutils literal notranslate"><span class="pre">accumulated_payoff</span></code>. Training settings come from <code class="docutils literal notranslate"><span class="pre">TrainerParamsScenarios.csv</span></code>.</p></li>
+<li><p><strong>Input Data</strong>: The scenarios for the simulator and trainer are defined in their respective CSV files. Agent-level parameters are generated dynamically within the <code class="docutils literal notranslate"><span class="pre">RPSScenario</span></code> class. <code class="docutils literal notranslate"><span class="pre">agent_num</span></code> must be an even number, as agents are paired up in each period.</p></li>
+</ul>
+</section>
+<section id="trainer-results">
+<h2>Trainer: Results<a class="headerlink" href="#trainer-results" title="Link to this heading"></a></h2>
+<p>The following plots, taken from the original model, show the evolution of the mean and coefficient of variance for the total accumulated payoff across all agents. This illustrates the effectiveness of the training process.</p>
+<a class="reference internal image-reference" href="../_images/trainer_payoff.png"><img alt="Total payoff mean across generations" class="align-center" src="../_images/trainer_payoff.png" style="width: 70%;" />
+</a>
+<a class="reference internal image-reference" href="../_images/trainer_payoff_cov.png"><img alt="Total payoff coefficient of variance across generations" class="align-center" src="../_images/trainer_payoff_cov.png" style="width: 70%;" />
+</a>
+</section>
+<section id="trainer-running-the-model">
+<h2>Trainer: Running the Model<a class="headerlink" href="#trainer-running-the-model" title="Link to this heading"></a></h2>
+<p>You can run both the simulator and the trainer using the main script:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>examples/rock_paper_scissors_trainer/main.py
+</pre></div>
+</div>
+<p>The trainer clears the output directory before it runs. Therefore, after executing the command, you will only find the trainer’s output tables in <code class="docutils literal notranslate"><span class="pre">examples/rock_paper_scissors_trainer/data/output</span></code>. If you need the simulator’s results, you should run it separately (for example, by commenting out the <code class="docutils literal notranslate"><span class="pre">run_trainer</span></code> call in <code class="docutils literal notranslate"><span class="pre">main.py</span></code>).</p>
+<p><strong>Parallel Execution Mode</strong></p>
+<p>The <code class="docutils literal notranslate"><span class="pre">Trainer</span></code> supports two parallelization modes, controlled by the <code class="docutils literal notranslate"><span class="pre">parallel_mode</span></code> parameter when creating the trainer instance:</p>
+<ul class="simple">
+<li><p><strong>``parallel_mode=”process”``</strong> (default): Uses subprocess-based parallelism via <code class="docutils literal notranslate"><span class="pre">multiprocessing</span></code>. This is the traditional approach and works on all Python versions. It is recommended for most use cases.</p></li>
+<li><p><strong>``parallel_mode=”thread”``</strong>: Uses thread-based parallelism via <code class="docutils literal notranslate"><span class="pre">ThreadPoolExecutor</span></code>. This mode is <strong>recommended for Python 3.13+</strong> (free-threaded/No-GIL builds) as it can provide better performance by avoiding the overhead of process creation and data serialization. In older Python versions, this mode will still run but may be limited by the Global Interpreter Lock (GIL).</p></li>
+</ul>
+<p>You can specify the mode when creating the trainer:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">trainer</span> <span class="o">=</span> <span class="n">RPSTrainer</span><span class="p">(</span>
+    <span class="n">config</span><span class="o">=</span><span class="n">cfg</span><span class="p">,</span>
+    <span class="n">scenario_cls</span><span class="o">=</span><span class="n">RPSScenario</span><span class="p">,</span>
+    <span class="n">model_cls</span><span class="o">=</span><span class="n">RPSModel</span><span class="p">,</span>
+    <span class="n">processors</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+    <span class="n">parallel_mode</span><span class="o">=</span><span class="s2">&quot;thread&quot;</span><span class="p">,</span>  <span class="c1"># or &quot;process&quot; (default)</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="trainer-code">
+<h2>Trainer: Code<a class="headerlink" href="#trainer-code" title="Link to this heading"></a></h2>
+<p>This section shows the key code implementation for the trainer model.</p>
+<section id="model-structure">
+<h3>Model Structure<a class="headerlink" href="#model-structure" title="Link to this heading"></a></h3>
+<p>Defined in <code class="docutils literal notranslate"><span class="pre">core/model.py</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TYPE_CHECKING</span>
+<span class="linenos"> 2</span>
+<span class="linenos"> 3</span><span class="kn">from</span><span class="w"> </span><span class="nn">Melodie</span><span class="w"> </span><span class="kn">import</span> <span class="n">Model</span>
+<span class="linenos"> 4</span>
+<span class="linenos"> 5</span><span class="kn">from</span><span class="w"> </span><span class="nn">examples.rock_paper_scissors_trainer.core.agent</span><span class="w"> </span><span class="kn">import</span> <span class="n">RPSAgent</span>
+<span class="linenos"> 6</span><span class="kn">from</span><span class="w"> </span><span class="nn">examples.rock_paper_scissors_trainer.core.data_collector</span><span class="w"> </span><span class="kn">import</span> <span class="n">RPSDataCollector</span>
+<span class="linenos"> 7</span><span class="kn">from</span><span class="w"> </span><span class="nn">examples.rock_paper_scissors_trainer.core.environment</span><span class="w"> </span><span class="kn">import</span> <span class="n">RPSEnvironment</span>
+<span class="linenos"> 8</span><span class="kn">from</span><span class="w"> </span><span class="nn">examples.rock_paper_scissors_trainer.core.scenario</span><span class="w"> </span><span class="kn">import</span> <span class="n">RPSScenario</span>
+<span class="linenos"> 9</span>
+<span class="linenos">10</span><span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
+<span class="linenos">11</span>    <span class="kn">from</span><span class="w"> </span><span class="nn">Melodie</span><span class="w"> </span><span class="kn">import</span> <span class="n">AgentList</span>
+<span class="linenos">12</span>
+<span class="linenos">13</span>
+<span class="linenos">14</span><span class="k">class</span><span class="w"> </span><span class="nc">RPSModel</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+<span class="linenos">15</span><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos">16</span><span class="sd">    The main model class for the Rock-Paper-Scissors simulation.</span>
+<span class="linenos">17</span>
+<span class="linenos">18</span><span class="sd">    It sets up the agents, environment, and data collector, and defines the</span>
+<span class="linenos">19</span><span class="sd">    main simulation loop that runs for a specified number of periods.</span>
+<span class="linenos">20</span><span class="sd">    &quot;&quot;&quot;</span>
+<span class="linenos">21</span>
+<span class="linenos">22</span>    <span class="n">scenario</span><span class="p">:</span> <span class="s2">&quot;RPSScenario&quot;</span>
+<span class="linenos">23</span>    <span class="n">data_collector</span><span class="p">:</span> <span class="n">RPSDataCollector</span>
+<span class="linenos">24</span>
+<span class="linenos">25</span>    <span class="k">def</span><span class="w"> </span><span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="linenos">26</span>        <span class="bp">self</span><span class="o">.</span><span class="n">agents</span><span class="p">:</span> <span class="s2">&quot;AgentList[RPSAgent]&quot;</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_agent_list</span><span class="p">(</span><span class="n">RPSAgent</span><span class="p">)</span>
+<span class="linenos">27</span>        <span class="bp">self</span><span class="o">.</span><span class="n">environment</span><span class="p">:</span> <span class="n">RPSEnvironment</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_environment</span><span class="p">(</span><span class="n">RPSEnvironment</span><span class="p">)</span>
+<span class="linenos">28</span>        <span class="bp">self</span><span class="o">.</span><span class="n">data_collector</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_data_collector</span><span class="p">(</span><span class="n">RPSDataCollector</span><span class="p">)</span>
+<span class="linenos">29</span>
+<span class="linenos">30</span>    <span class="k">def</span><span class="w"> </span><span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="linenos">31</span>        <span class="c1"># Populates the agent list using the dynamically generated parameter table</span>
+<span class="linenos">32</span>        <span class="c1"># from the scenario.</span>
+<span class="linenos">33</span>        <span class="bp">self</span><span class="o">.</span><span class="n">agents</span><span class="o">.</span><span class="n">setup_agents</span><span class="p">(</span>
+<span class="linenos">34</span>            <span class="n">agents_num</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">agent_num</span><span class="p">,</span>
+<span class="linenos">35</span>            <span class="n">params_df</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">agent_params</span><span class="p">,</span>
+<span class="linenos">36</span>        <span class="p">)</span>
+<span class="linenos">37</span>
+<span class="linenos">38</span>    <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="linenos">39</span><span class="w">        </span><span class="sd">&quot;&quot;&quot;Executes the main simulation loop for `scenario.period_num` periods.&quot;&quot;&quot;</span>
+<span class="linenos">40</span>        <span class="k">for</span> <span class="n">period</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">period_num</span><span class="p">):</span>
+<span class="linenos">41</span>            <span class="bp">self</span><span class="o">.</span><span class="n">environment</span><span class="o">.</span><span class="n">agents_setup_data</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">agents</span><span class="p">)</span>
+<span class="linenos">42</span>            <span class="bp">self</span><span class="o">.</span><span class="n">environment</span><span class="o">.</span><span class="n">run_game_rounds</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">agents</span><span class="p">)</span>
+<span class="linenos">43</span>            <span class="bp">self</span><span class="o">.</span><span class="n">environment</span><span class="o">.</span><span class="n">agents_calc_action_share</span><span class="p">(</span><span class="n">period</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">agents</span><span class="p">)</span>
+<span class="linenos">44</span>            <span class="bp">self</span><span class="o">.</span><span class="n">data_collector</span><span class="o">.</span><span class="n">collect</span><span class="p">(</span><span class="n">period</span><span class="p">)</span>
+<span class="linenos">45</span>        <span class="bp">self</span><span class="o">.</span><span class="n">data_collector</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+<span class="linenos">46</span>
+</pre></div>
+</div>
+</section>
+<section id="environment-logic">
+<h3>Environment Logic<a class="headerlink" href="#environment-logic" title="Link to this heading"></a></h3>
+<p>Defined in <code class="docutils literal notranslate"><span class="pre">core/environment.py</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
+<span class="linenos"> 2</span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TYPE_CHECKING</span>
+<span class="linenos"> 3</span>
+<span class="linenos"> 4</span><span class="kn">from</span><span class="w"> </span><span class="nn">Melodie</span><span class="w"> </span><span class="kn">import</span> <span class="n">AgentList</span><span class="p">,</span> <span class="n">Environment</span>
+<span class="linenos"> 5</span>
+<span class="linenos"> 6</span><span class="kn">from</span><span class="w"> </span><span class="nn">examples.rock_paper_scissors_trainer.core.agent</span><span class="w"> </span><span class="kn">import</span> <span class="n">RPSAgent</span>
+<span class="linenos"> 7</span>
+<span class="linenos"> 8</span><span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
+<span class="linenos"> 9</span>    <span class="kn">from</span><span class="w"> </span><span class="nn">examples.rock_paper_scissors_trainer.core.scenario</span><span class="w"> </span><span class="kn">import</span> <span class="n">RPSScenario</span>
+<span class="linenos">10</span>
+<span class="linenos">11</span>
+<span class="linenos">12</span><span class="k">class</span><span class="w"> </span><span class="nc">RPSEnvironment</span><span class="p">(</span><span class="n">Environment</span><span class="p">):</span>
+<span class="linenos">13</span><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos">14</span><span class="sd">    The environment for the Rock-Paper-Scissors model.</span>
+<span class="linenos">15</span>
+<span class="linenos">16</span><span class="sd">    It is responsible for orchestrating the agent interactions by randomly</span>
+<span class="linenos">17</span><span class="sd">    pairing them up for battles in each period. It also tracks the total</span>
+<span class="linenos">18</span><span class="sd">    accumulated payoff across all agents as a macro-level indicator.</span>
+<span class="linenos">19</span><span class="sd">    &quot;&quot;&quot;</span>
+<span class="linenos">20</span>
+<span class="linenos">21</span>    <span class="n">scenario</span><span class="p">:</span> <span class="s2">&quot;RPSScenario&quot;</span>
+<span class="linenos">22</span>
+<span class="linenos">23</span>    <span class="k">def</span><span class="w"> </span><span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="linenos">24</span><span class="w">        </span><span class="sd">&quot;&quot;&quot;Initializes environment-level properties.&quot;&quot;&quot;</span>
+<span class="linenos">25</span>        <span class="bp">self</span><span class="o">.</span><span class="n">total_accumulated_payoff</span> <span class="o">=</span> <span class="mf">0.0</span>
+<span class="linenos">26</span>
+<span class="linenos">27</span>    <span class="nd">@staticmethod</span>
+<span class="linenos">28</span>    <span class="k">def</span><span class="w"> </span><span class="nf">agents_setup_data</span><span class="p">(</span><span class="n">agents</span><span class="p">:</span> <span class="s2">&quot;AgentList[RPSAgent]&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="linenos">29</span><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos">30</span><span class="sd">        Prepares derived variables for all agents at the beginning of each period.</span>
+<span class="linenos">31</span><span class="sd">        &quot;&quot;&quot;</span>
+<span class="linenos">32</span>        <span class="k">for</span> <span class="n">agent</span> <span class="ow">in</span> <span class="n">agents</span><span class="p">:</span>
+<span class="linenos">33</span>            <span class="n">agent</span><span class="o">.</span><span class="n">setup_action_prob</span><span class="p">()</span>
+<span class="linenos">34</span>            <span class="n">agent</span><span class="o">.</span><span class="n">setup_action_payoff</span><span class="p">()</span>
+<span class="linenos">35</span>
+<span class="linenos">36</span>    <span class="k">def</span><span class="w"> </span><span class="nf">run_game_rounds</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agents</span><span class="p">:</span> <span class="s2">&quot;AgentList[RPSAgent]&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="linenos">37</span><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos">38</span><span class="sd">        In each period, randomly pairs up all agents to play one round of the game.</span>
+<span class="linenos">39</span><span class="sd">        &quot;&quot;&quot;</span>
+<span class="linenos">40</span>        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">agent_num</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;scenario.agent_num must be even.&quot;</span>
+<span class="linenos">41</span>        <span class="n">agent_ids</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">agent_num</span><span class="p">))</span>
+<span class="linenos">42</span>        <span class="n">random</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">agent_ids</span><span class="p">)</span>
+<span class="linenos">43</span>        <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">agent_ids</span><span class="p">),</span> <span class="mi">2</span><span class="p">):</span>
+<span class="linenos">44</span>            <span class="n">opponent_idx</span> <span class="o">=</span> <span class="n">idx</span> <span class="o">+</span> <span class="mi">1</span>
+<span class="linenos">45</span>            <span class="k">if</span> <span class="n">opponent_idx</span> <span class="o">&gt;=</span> <span class="nb">len</span><span class="p">(</span><span class="n">agent_ids</span><span class="p">):</span>
+<span class="linenos">46</span>                <span class="k">break</span>
+<span class="linenos">47</span>            <span class="bp">self</span><span class="o">.</span><span class="n">agents_battle</span><span class="p">(</span><span class="n">agents</span><span class="p">[</span><span class="n">agent_ids</span><span class="p">[</span><span class="n">idx</span><span class="p">]],</span> <span class="n">agents</span><span class="p">[</span><span class="n">agent_ids</span><span class="p">[</span><span class="n">opponent_idx</span><span class="p">]])</span>
+<span class="linenos">48</span>
+<span class="linenos">49</span>    <span class="k">def</span><span class="w"> </span><span class="nf">agents_battle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent_1</span><span class="p">:</span> <span class="s2">&quot;RPSAgent&quot;</span><span class="p">,</span> <span class="n">agent_2</span><span class="p">:</span> <span class="s2">&quot;RPSAgent&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="linenos">50</span><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos">51</span><span class="sd">        Executes a single battle between two agents, determines the outcome,</span>
+<span class="linenos">52</span><span class="sd">        and updates their payoffs.</span>
+<span class="linenos">53</span><span class="sd">        &quot;&quot;&quot;</span>
+<span class="linenos">54</span>        <span class="n">agent_1</span><span class="o">.</span><span class="n">id_competitor</span> <span class="o">=</span> <span class="n">agent_2</span><span class="o">.</span><span class="n">id</span>
+<span class="linenos">55</span>        <span class="n">agent_2</span><span class="o">.</span><span class="n">id_competitor</span> <span class="o">=</span> <span class="n">agent_1</span><span class="o">.</span><span class="n">id</span>
+<span class="linenos">56</span>
+<span class="linenos">57</span>        <span class="n">agent_1</span><span class="o">.</span><span class="n">select_action</span><span class="p">()</span>
+<span class="linenos">58</span>        <span class="n">agent_2</span><span class="o">.</span><span class="n">select_action</span><span class="p">()</span>
+<span class="linenos">59</span>
+<span class="linenos">60</span>        <span class="k">if</span> <span class="n">agent_1</span><span class="o">.</span><span class="n">action</span> <span class="o">==</span> <span class="n">agent_2</span><span class="o">.</span><span class="n">action</span><span class="p">:</span>
+<span class="linenos">61</span>            <span class="n">agent_1</span><span class="o">.</span><span class="n">result</span> <span class="o">=</span> <span class="n">agent_2</span><span class="o">.</span><span class="n">result</span> <span class="o">=</span> <span class="s2">&quot;tie&quot;</span>
+<span class="linenos">62</span>        <span class="k">elif</span> <span class="p">(</span>
+<span class="linenos">63</span>            <span class="p">(</span><span class="n">agent_1</span><span class="o">.</span><span class="n">action</span> <span class="o">==</span> <span class="s2">&quot;rock&quot;</span> <span class="ow">and</span> <span class="n">agent_2</span><span class="o">.</span><span class="n">action</span> <span class="o">==</span> <span class="s2">&quot;paper&quot;</span><span class="p">)</span>
+<span class="linenos">64</span>            <span class="ow">or</span> <span class="p">(</span><span class="n">agent_1</span><span class="o">.</span><span class="n">action</span> <span class="o">==</span> <span class="s2">&quot;paper&quot;</span> <span class="ow">and</span> <span class="n">agent_2</span><span class="o">.</span><span class="n">action</span> <span class="o">==</span> <span class="s2">&quot;scissors&quot;</span><span class="p">)</span>
+<span class="linenos">65</span>            <span class="ow">or</span> <span class="p">(</span><span class="n">agent_1</span><span class="o">.</span><span class="n">action</span> <span class="o">==</span> <span class="s2">&quot;scissors&quot;</span> <span class="ow">and</span> <span class="n">agent_2</span><span class="o">.</span><span class="n">action</span> <span class="o">==</span> <span class="s2">&quot;rock&quot;</span><span class="p">)</span>
+<span class="linenos">66</span>        <span class="p">):</span>
+<span class="linenos">67</span>            <span class="n">agent_1</span><span class="o">.</span><span class="n">result</span> <span class="o">=</span> <span class="s2">&quot;lose&quot;</span>
+<span class="linenos">68</span>            <span class="n">agent_2</span><span class="o">.</span><span class="n">result</span> <span class="o">=</span> <span class="s2">&quot;win&quot;</span>
+<span class="linenos">69</span>        <span class="k">else</span><span class="p">:</span>
+<span class="linenos">70</span>            <span class="n">agent_1</span><span class="o">.</span><span class="n">result</span> <span class="o">=</span> <span class="s2">&quot;win&quot;</span>
+<span class="linenos">71</span>            <span class="n">agent_2</span><span class="o">.</span><span class="n">result</span> <span class="o">=</span> <span class="s2">&quot;lose&quot;</span>
+<span class="linenos">72</span>
+<span class="linenos">73</span>        <span class="n">agent_1</span><span class="o">.</span><span class="n">set_action_payoff</span><span class="p">()</span>
+<span class="linenos">74</span>        <span class="n">agent_2</span><span class="o">.</span><span class="n">set_action_payoff</span><span class="p">()</span>
+<span class="linenos">75</span>        <span class="bp">self</span><span class="o">.</span><span class="n">total_accumulated_payoff</span> <span class="o">+=</span> <span class="n">agent_1</span><span class="o">.</span><span class="n">payoff</span> <span class="o">+</span> <span class="n">agent_2</span><span class="o">.</span><span class="n">payoff</span>
+<span class="linenos">76</span>
+<span class="linenos">77</span>    <span class="k">def</span><span class="w"> </span><span class="nf">agents_calc_action_share</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">period</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">agents</span><span class="p">:</span> <span class="s2">&quot;AgentList[RPSAgent]&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="linenos">78</span><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos">79</span><span class="sd">        Triggers the calculation of action shares for all agents at the very</span>
+<span class="linenos">80</span><span class="sd">        end of the simulation run.</span>
+<span class="linenos">81</span><span class="sd">        &quot;&quot;&quot;</span>
+<span class="linenos">82</span>        <span class="k">if</span> <span class="n">period</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">period_num</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+<span class="linenos">83</span>            <span class="k">for</span> <span class="n">agent</span> <span class="ow">in</span> <span class="n">agents</span><span class="p">:</span>
+<span class="linenos">84</span>                <span class="n">agent</span><span class="o">.</span><span class="n">calc_action_percentage</span><span class="p">()</span>
+<span class="linenos">85</span>
+</pre></div>
+</div>
+</section>
+<section id="agent-behavior">
+<h3>Agent Behavior<a class="headerlink" href="#agent-behavior" title="Link to this heading"></a></h3>
+<p>Defined in <code class="docutils literal notranslate"><span class="pre">core/agent.py</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">  1</span><span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
+<span class="linenos">  2</span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">TYPE_CHECKING</span>
+<span class="linenos">  3</span>
+<span class="linenos">  4</span><span class="kn">from</span><span class="w"> </span><span class="nn">Melodie</span><span class="w"> </span><span class="kn">import</span> <span class="n">Agent</span>
+<span class="linenos">  5</span>
+<span class="linenos">  6</span><span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
+<span class="linenos">  7</span>    <span class="kn">from</span><span class="w"> </span><span class="nn">examples.rock_paper_scissors_trainer.core.scenario</span><span class="w"> </span><span class="kn">import</span> <span class="n">RPSScenario</span>
+<span class="linenos">  8</span>
+<span class="linenos">  9</span>
+<span class="linenos"> 10</span><span class="k">class</span><span class="w"> </span><span class="nc">RPSAgent</span><span class="p">(</span><span class="n">Agent</span><span class="p">):</span>
+<span class="linenos"> 11</span><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos"> 12</span><span class="sd">    Represents an agent playing the Rock-Paper-Scissors game.</span>
+<span class="linenos"> 13</span>
+<span class="linenos"> 14</span><span class="sd">    Each agent has its own unique payoff settings for winning, losing, or tying,</span>
+<span class="linenos"> 15</span><span class="sd">    as well as three strategy parameters that determine the probabilities of</span>
+<span class="linenos"> 16</span><span class="sd">    choosing rock, paper, or scissors. These strategy parameters are the target</span>
+<span class="linenos"> 17</span><span class="sd">    for the evolutionary training by the Trainer module. The agent also tracks</span>
+<span class="linenos"> 18</span><span class="sd">    its own play history and accumulated payoffs.</span>
+<span class="linenos"> 19</span><span class="sd">    &quot;&quot;&quot;</span>
+<span class="linenos"> 20</span>
+<span class="linenos"> 21</span>    <span class="n">scenario</span><span class="p">:</span> <span class="s2">&quot;RPSScenario&quot;</span>
+<span class="linenos"> 22</span>
+<span class="linenos"> 23</span>    <span class="k">def</span><span class="w"> </span><span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="linenos"> 24</span>        <span class="c1"># Payoff settings injected via agent params dataframe.</span>
+<span class="linenos"> 25</span>        <span class="bp">self</span><span class="o">.</span><span class="n">payoff_rock_win</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
+<span class="linenos"> 26</span>        <span class="bp">self</span><span class="o">.</span><span class="n">payoff_rock_lose</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
+<span class="linenos"> 27</span>        <span class="bp">self</span><span class="o">.</span><span class="n">payoff_paper_win</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
+<span class="linenos"> 28</span>        <span class="bp">self</span><span class="o">.</span><span class="n">payoff_paper_lose</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
+<span class="linenos"> 29</span>        <span class="bp">self</span><span class="o">.</span><span class="n">payoff_scissors_win</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
+<span class="linenos"> 30</span>        <span class="bp">self</span><span class="o">.</span><span class="n">payoff_scissors_lose</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
+<span class="linenos"> 31</span>        <span class="bp">self</span><span class="o">.</span><span class="n">payoff_tie</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
+<span class="linenos"> 32</span>
+<span class="linenos"> 33</span>        <span class="c1"># Strategy weights to be trained by the Trainer.</span>
+<span class="linenos"> 34</span>        <span class="bp">self</span><span class="o">.</span><span class="n">strategy_param_1</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
+<span class="linenos"> 35</span>        <span class="bp">self</span><span class="o">.</span><span class="n">strategy_param_2</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
+<span class="linenos"> 36</span>        <span class="bp">self</span><span class="o">.</span><span class="n">strategy_param_3</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
+<span class="linenos"> 37</span>
+<span class="linenos"> 38</span>        <span class="bp">self</span><span class="o">.</span><span class="n">_reset_counters</span><span class="p">()</span>
+<span class="linenos"> 39</span>
+<span class="linenos"> 40</span>    <span class="k">def</span><span class="w"> </span><span class="nf">_reset_counters</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="linenos"> 41</span><span class="w">        </span><span class="sd">&quot;&quot;&quot;Initializes or resets the agent&#39;s state for a new simulation run.&quot;&quot;&quot;</span>
+<span class="linenos"> 42</span>        <span class="bp">self</span><span class="o">.</span><span class="n">id_competitor</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="linenos"> 43</span>        <span class="bp">self</span><span class="o">.</span><span class="n">action</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+<span class="linenos"> 44</span>        <span class="bp">self</span><span class="o">.</span><span class="n">result</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+<span class="linenos"> 45</span>        <span class="bp">self</span><span class="o">.</span><span class="n">payoff</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
+<span class="linenos"> 46</span>        <span class="bp">self</span><span class="o">.</span><span class="n">accumulated_payoff</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
+<span class="linenos"> 47</span>        <span class="bp">self</span><span class="o">.</span><span class="n">n_rock</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="linenos"> 48</span>        <span class="bp">self</span><span class="o">.</span><span class="n">n_paper</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="linenos"> 49</span>        <span class="bp">self</span><span class="o">.</span><span class="n">n_scissors</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="linenos"> 50</span>        <span class="bp">self</span><span class="o">.</span><span class="n">share_rock</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
+<span class="linenos"> 51</span>        <span class="bp">self</span><span class="o">.</span><span class="n">share_paper</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
+<span class="linenos"> 52</span>        <span class="bp">self</span><span class="o">.</span><span class="n">share_scissors</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
+<span class="linenos"> 53</span>
+<span class="linenos"> 54</span>    <span class="k">def</span><span class="w"> </span><span class="nf">setup_action_prob</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="linenos"> 55</span><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos"> 56</span><span class="sd">        Normalizes the three strategy parameters into a probability distribution</span>
+<span class="linenos"> 57</span><span class="sd">        for choosing rock, paper, or scissors.</span>
+<span class="linenos"> 58</span><span class="sd">        &quot;&quot;&quot;</span>
+<span class="linenos"> 59</span>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">strategy_param_1</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">strategy_param_2</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">strategy_param_3</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+<span class="linenos"> 60</span>            <span class="c1"># Avoid division by zero if a chromosome is all zeros during training.</span>
+<span class="linenos"> 61</span>            <span class="bp">self</span><span class="o">.</span><span class="n">strategy_param_1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">strategy_param_2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">strategy_param_3</span> <span class="o">=</span> <span class="mf">1.0</span>
+<span class="linenos"> 62</span>        <span class="n">total</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">strategy_param_1</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">strategy_param_2</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">strategy_param_3</span>
+<span class="linenos"> 63</span>        <span class="bp">self</span><span class="o">.</span><span class="n">action_prob</span> <span class="o">=</span> <span class="p">{</span>
+<span class="linenos"> 64</span>            <span class="s2">&quot;rock&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">strategy_param_1</span> <span class="o">/</span> <span class="n">total</span><span class="p">,</span>
+<span class="linenos"> 65</span>            <span class="s2">&quot;paper&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">strategy_param_2</span> <span class="o">/</span> <span class="n">total</span><span class="p">,</span>
+<span class="linenos"> 66</span>            <span class="s2">&quot;scissors&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">strategy_param_3</span> <span class="o">/</span> <span class="n">total</span><span class="p">,</span>
+<span class="linenos"> 67</span>        <span class="p">}</span>
+<span class="linenos"> 68</span>
+<span class="linenos"> 69</span>    <span class="k">def</span><span class="w"> </span><span class="nf">setup_action_payoff</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="linenos"> 70</span><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos"> 71</span><span class="sd">        Creates a lookup dictionary that maps (action, outcome) pairs to their</span>
+<span class="linenos"> 72</span><span class="sd">        corresponding payoffs. This helps to keep the battle logic clean.</span>
+<span class="linenos"> 73</span><span class="sd">        &quot;&quot;&quot;</span>
+<span class="linenos"> 74</span>        <span class="bp">self</span><span class="o">.</span><span class="n">action_payoff</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+<span class="linenos"> 75</span>            <span class="p">(</span><span class="s2">&quot;rock&quot;</span><span class="p">,</span> <span class="s2">&quot;win&quot;</span><span class="p">):</span> <span class="bp">self</span><span class="o">.</span><span class="n">payoff_rock_win</span><span class="p">,</span>
+<span class="linenos"> 76</span>            <span class="p">(</span><span class="s2">&quot;rock&quot;</span><span class="p">,</span> <span class="s2">&quot;lose&quot;</span><span class="p">):</span> <span class="bp">self</span><span class="o">.</span><span class="n">payoff_rock_lose</span><span class="p">,</span>
+<span class="linenos"> 77</span>            <span class="p">(</span><span class="s2">&quot;paper&quot;</span><span class="p">,</span> <span class="s2">&quot;win&quot;</span><span class="p">):</span> <span class="bp">self</span><span class="o">.</span><span class="n">payoff_paper_win</span><span class="p">,</span>
+<span class="linenos"> 78</span>            <span class="p">(</span><span class="s2">&quot;paper&quot;</span><span class="p">,</span> <span class="s2">&quot;lose&quot;</span><span class="p">):</span> <span class="bp">self</span><span class="o">.</span><span class="n">payoff_paper_lose</span><span class="p">,</span>
+<span class="linenos"> 79</span>            <span class="p">(</span><span class="s2">&quot;scissors&quot;</span><span class="p">,</span> <span class="s2">&quot;win&quot;</span><span class="p">):</span> <span class="bp">self</span><span class="o">.</span><span class="n">payoff_scissors_win</span><span class="p">,</span>
+<span class="linenos"> 80</span>            <span class="p">(</span><span class="s2">&quot;scissors&quot;</span><span class="p">,</span> <span class="s2">&quot;lose&quot;</span><span class="p">):</span> <span class="bp">self</span><span class="o">.</span><span class="n">payoff_scissors_lose</span><span class="p">,</span>
+<span class="linenos"> 81</span>            <span class="p">(</span><span class="s2">&quot;rock&quot;</span><span class="p">,</span> <span class="s2">&quot;tie&quot;</span><span class="p">):</span> <span class="bp">self</span><span class="o">.</span><span class="n">payoff_tie</span><span class="p">,</span>
+<span class="linenos"> 82</span>            <span class="p">(</span><span class="s2">&quot;paper&quot;</span><span class="p">,</span> <span class="s2">&quot;tie&quot;</span><span class="p">):</span> <span class="bp">self</span><span class="o">.</span><span class="n">payoff_tie</span><span class="p">,</span>
+<span class="linenos"> 83</span>            <span class="p">(</span><span class="s2">&quot;scissors&quot;</span><span class="p">,</span> <span class="s2">&quot;tie&quot;</span><span class="p">):</span> <span class="bp">self</span><span class="o">.</span><span class="n">payoff_tie</span><span class="p">,</span>
+<span class="linenos"> 84</span>        <span class="p">}</span>
+<span class="linenos"> 85</span>
+<span class="linenos"> 86</span>    <span class="k">def</span><span class="w"> </span><span class="nf">select_action</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="linenos"> 87</span><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos"> 88</span><span class="sd">        Selects an action (rock, paper, or scissors) based on the current</span>
+<span class="linenos"> 89</span><span class="sd">        strategy probabilities and updates the action counter.</span>
+<span class="linenos"> 90</span><span class="sd">        &quot;&quot;&quot;</span>
+<span class="linenos"> 91</span>        <span class="n">rand</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span>
+<span class="linenos"> 92</span>        <span class="k">if</span> <span class="n">rand</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">action_prob</span><span class="p">[</span><span class="s2">&quot;rock&quot;</span><span class="p">]:</span>
+<span class="linenos"> 93</span>            <span class="bp">self</span><span class="o">.</span><span class="n">action</span> <span class="o">=</span> <span class="s2">&quot;rock&quot;</span>
+<span class="linenos"> 94</span>            <span class="bp">self</span><span class="o">.</span><span class="n">n_rock</span> <span class="o">+=</span> <span class="mi">1</span>
+<span class="linenos"> 95</span>        <span class="k">elif</span> <span class="n">rand</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">action_prob</span><span class="p">[</span><span class="s2">&quot;rock&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">action_prob</span><span class="p">[</span><span class="s2">&quot;paper&quot;</span><span class="p">]:</span>
+<span class="linenos"> 96</span>            <span class="bp">self</span><span class="o">.</span><span class="n">action</span> <span class="o">=</span> <span class="s2">&quot;paper&quot;</span>
+<span class="linenos"> 97</span>            <span class="bp">self</span><span class="o">.</span><span class="n">n_paper</span> <span class="o">+=</span> <span class="mi">1</span>
+<span class="linenos"> 98</span>        <span class="k">else</span><span class="p">:</span>
+<span class="linenos"> 99</span>            <span class="bp">self</span><span class="o">.</span><span class="n">action</span> <span class="o">=</span> <span class="s2">&quot;scissors&quot;</span>
+<span class="linenos">100</span>            <span class="bp">self</span><span class="o">.</span><span class="n">n_scissors</span> <span class="o">+=</span> <span class="mi">1</span>
+<span class="linenos">101</span>
+<span class="linenos">102</span>    <span class="k">def</span><span class="w"> </span><span class="nf">set_action_payoff</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="linenos">103</span><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos">104</span><span class="sd">        Records the payoff for the last action taken and adds it to the</span>
+<span class="linenos">105</span><span class="sd">        accumulated payoff for the current simulation run.</span>
+<span class="linenos">106</span><span class="sd">        &quot;&quot;&quot;</span>
+<span class="linenos">107</span>        <span class="bp">self</span><span class="o">.</span><span class="n">payoff</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">action_payoff</span><span class="p">[(</span><span class="bp">self</span><span class="o">.</span><span class="n">action</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">result</span><span class="p">)]</span>
+<span class="linenos">108</span>        <span class="bp">self</span><span class="o">.</span><span class="n">accumulated_payoff</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">payoff</span>
+<span class="linenos">109</span>
+<span class="linenos">110</span>    <span class="k">def</span><span class="w"> </span><span class="nf">calc_action_percentage</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="linenos">111</span><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos">112</span><span class="sd">        Calculates the agent&#39;s long-term share of each action at the end of a</span>
+<span class="linenos">113</span><span class="sd">        simulation run. This is useful for analyzing the evolved strategies.</span>
+<span class="linenos">114</span><span class="sd">        &quot;&quot;&quot;</span>
+<span class="linenos">115</span>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">period_num</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+<span class="linenos">116</span>            <span class="bp">self</span><span class="o">.</span><span class="n">share_rock</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_rock</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">period_num</span>
+<span class="linenos">117</span>            <span class="bp">self</span><span class="o">.</span><span class="n">share_paper</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_paper</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">period_num</span>
+<span class="linenos">118</span>            <span class="bp">self</span><span class="o">.</span><span class="n">share_scissors</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_scissors</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">period_num</span>
+<span class="linenos">119</span>
+</pre></div>
+</div>
+</section>
+<section id="data-collection-setup">
+<h3>Data Collection Setup<a class="headerlink" href="#data-collection-setup" title="Link to this heading"></a></h3>
+<p>Defined in <code class="docutils literal notranslate"><span class="pre">core/data_collector.py</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">from</span><span class="w"> </span><span class="nn">Melodie</span><span class="w"> </span><span class="kn">import</span> <span class="n">DataCollector</span>
+<span class="linenos"> 2</span>
+<span class="linenos"> 3</span>
+<span class="linenos"> 4</span><span class="k">class</span><span class="w"> </span><span class="nc">RPSDataCollector</span><span class="p">(</span><span class="n">DataCollector</span><span class="p">):</span>
+<span class="linenos"> 5</span><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos"> 6</span><span class="sd">    A custom data collector for the Rock-Paper-Scissors model.</span>
+<span class="linenos"> 7</span>
+<span class="linenos"> 8</span><span class="sd">    It is configured to save detailed agent-level data about each game round</span>
+<span class="linenos"> 9</span><span class="sd">    (e.g., opponent, action, result, payoff) as well as the final evolved</span>
+<span class="linenos">10</span><span class="sd">    strategy shares. It also records the environment-level total payoff.</span>
+<span class="linenos">11</span><span class="sd">    &quot;&quot;&quot;</span>
+<span class="linenos">12</span>
+<span class="linenos">13</span>    <span class="k">def</span><span class="w"> </span><span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="linenos">14</span>        <span class="bp">self</span><span class="o">.</span><span class="n">add_agent_property</span><span class="p">(</span><span class="s2">&quot;agents&quot;</span><span class="p">,</span> <span class="s2">&quot;id_competitor&quot;</span><span class="p">)</span>
+<span class="linenos">15</span>        <span class="bp">self</span><span class="o">.</span><span class="n">add_agent_property</span><span class="p">(</span><span class="s2">&quot;agents&quot;</span><span class="p">,</span> <span class="s2">&quot;action&quot;</span><span class="p">)</span>
+<span class="linenos">16</span>        <span class="bp">self</span><span class="o">.</span><span class="n">add_agent_property</span><span class="p">(</span><span class="s2">&quot;agents&quot;</span><span class="p">,</span> <span class="s2">&quot;n_rock&quot;</span><span class="p">)</span>
+<span class="linenos">17</span>        <span class="bp">self</span><span class="o">.</span><span class="n">add_agent_property</span><span class="p">(</span><span class="s2">&quot;agents&quot;</span><span class="p">,</span> <span class="s2">&quot;n_paper&quot;</span><span class="p">)</span>
+<span class="linenos">18</span>        <span class="bp">self</span><span class="o">.</span><span class="n">add_agent_property</span><span class="p">(</span><span class="s2">&quot;agents&quot;</span><span class="p">,</span> <span class="s2">&quot;n_scissors&quot;</span><span class="p">)</span>
+<span class="linenos">19</span>        <span class="bp">self</span><span class="o">.</span><span class="n">add_agent_property</span><span class="p">(</span><span class="s2">&quot;agents&quot;</span><span class="p">,</span> <span class="s2">&quot;result&quot;</span><span class="p">)</span>
+<span class="linenos">20</span>        <span class="bp">self</span><span class="o">.</span><span class="n">add_agent_property</span><span class="p">(</span><span class="s2">&quot;agents&quot;</span><span class="p">,</span> <span class="s2">&quot;payoff&quot;</span><span class="p">)</span>
+<span class="linenos">21</span>        <span class="bp">self</span><span class="o">.</span><span class="n">add_agent_property</span><span class="p">(</span><span class="s2">&quot;agents&quot;</span><span class="p">,</span> <span class="s2">&quot;accumulated_payoff&quot;</span><span class="p">)</span>
+<span class="linenos">22</span>        <span class="bp">self</span><span class="o">.</span><span class="n">add_agent_property</span><span class="p">(</span><span class="s2">&quot;agents&quot;</span><span class="p">,</span> <span class="s2">&quot;share_rock&quot;</span><span class="p">)</span>
+<span class="linenos">23</span>        <span class="bp">self</span><span class="o">.</span><span class="n">add_agent_property</span><span class="p">(</span><span class="s2">&quot;agents&quot;</span><span class="p">,</span> <span class="s2">&quot;share_paper&quot;</span><span class="p">)</span>
+<span class="linenos">24</span>        <span class="bp">self</span><span class="o">.</span><span class="n">add_agent_property</span><span class="p">(</span><span class="s2">&quot;agents&quot;</span><span class="p">,</span> <span class="s2">&quot;share_scissors&quot;</span><span class="p">)</span>
+<span class="linenos">25</span>        <span class="bp">self</span><span class="o">.</span><span class="n">add_environment_property</span><span class="p">(</span><span class="s2">&quot;total_accumulated_payoff&quot;</span><span class="p">)</span>
+<span class="linenos">26</span>
+</pre></div>
+</div>
+</section>
+<section id="scenario-definition">
+<h3>Scenario Definition<a class="headerlink" href="#scenario-definition" title="Link to this heading"></a></h3>
+<p>Defined in <code class="docutils literal notranslate"><span class="pre">core/scenario.py</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span>
+<span class="linenos"> 2</span>
+<span class="linenos"> 3</span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="linenos"> 4</span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="linenos"> 5</span><span class="kn">from</span><span class="w"> </span><span class="nn">Melodie</span><span class="w"> </span><span class="kn">import</span> <span class="n">Scenario</span>
+<span class="linenos"> 6</span>
+<span class="linenos"> 7</span>
+<span class="linenos"> 8</span><span class="k">class</span><span class="w"> </span><span class="nc">RPSScenario</span><span class="p">(</span><span class="n">Scenario</span><span class="p">):</span>
+<span class="linenos"> 9</span><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos">10</span><span class="sd">    Defines and manages scenarios for the Rock-Paper-Scissors model.</span>
+<span class="linenos">11</span>
+<span class="linenos">12</span><span class="sd">    This class handles loading all input data and, notably, dynamically</span>
+<span class="linenos">13</span><span class="sd">    generates the agent parameter dataframe for each scenario. This approach</span>
+<span class="linenos">14</span><span class="sd">    is used instead of a static input file to ensure that each simulation</span>
+<span class="linenos">15</span><span class="sd">    run uses a unique but reproducible set of heterogeneous agent parameters</span>
+<span class="linenos">16</span><span class="sd">    based on the scenario&#39;s defined bounds.</span>
+<span class="linenos">17</span><span class="sd">    &quot;&quot;&quot;</span>
+<span class="linenos">18</span>
+<span class="linenos">19</span>    <span class="k">def</span><span class="w"> </span><span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="linenos">20</span>        <span class="c1"># Payoff parameters, loaded from scenario tables.</span>
+<span class="linenos">21</span>        <span class="bp">self</span><span class="o">.</span><span class="n">payoff_win_min</span> <span class="o">=</span> <span class="mf">0.0</span>
+<span class="linenos">22</span>        <span class="bp">self</span><span class="o">.</span><span class="n">payoff_win_max</span> <span class="o">=</span> <span class="mf">0.0</span>
+<span class="linenos">23</span>        <span class="bp">self</span><span class="o">.</span><span class="n">payoff_lose_min</span> <span class="o">=</span> <span class="mf">0.0</span>
+<span class="linenos">24</span>        <span class="bp">self</span><span class="o">.</span><span class="n">payoff_lose_max</span> <span class="o">=</span> <span class="mf">0.0</span>
+<span class="linenos">25</span>        <span class="bp">self</span><span class="o">.</span><span class="n">payoff_tie</span> <span class="o">=</span> <span class="mf">0.0</span>
+<span class="linenos">26</span>
+<span class="linenos">27</span>    <span class="k">def</span><span class="w"> </span><span class="nf">load_data</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="linenos">28</span>        <span class="bp">self</span><span class="o">.</span><span class="n">agent_params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generate_agent_params</span><span class="p">()</span>
+<span class="linenos">29</span>
+<span class="linenos">30</span>    <span class="k">def</span><span class="w"> </span><span class="nf">_generate_agent_params</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="linenos">31</span><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos">32</span><span class="sd">        Dynamically builds the agent parameter dataframe.</span>
+<span class="linenos">33</span>
+<span class="linenos">34</span><span class="sd">        For each agent, it generates random payoff values within the bounds</span>
+<span class="linenos">35</span><span class="sd">        specified by the current scenario (`self.payoff_win_min`, etc.) and</span>
+<span class="linenos">36</span><span class="sd">        initial random strategy parameters. Using the scenario `id` as a seed</span>
+<span class="linenos">37</span><span class="sd">        for the random number generator ensures that the parameter set is</span>
+<span class="linenos">38</span><span class="sd">        reproducible for each specific scenario.</span>
+<span class="linenos">39</span><span class="sd">        &quot;&quot;&quot;</span>
+<span class="linenos">40</span>        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">agent_num</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;agent_num must be positive.&quot;</span>
+<span class="linenos">41</span>        <span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+<span class="linenos">42</span>
+<span class="linenos">43</span>        <span class="k">def</span><span class="w"> </span><span class="nf">generator</span><span class="p">(</span><span class="n">agent_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="linenos">44</span>            <span class="k">return</span> <span class="p">{</span>
+<span class="linenos">45</span>                <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="n">agent_id</span><span class="p">,</span>
+<span class="linenos">46</span>                <span class="s2">&quot;id_scenario&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+<span class="linenos">47</span>                <span class="s2">&quot;payoff_rock_win&quot;</span><span class="p">:</span> <span class="n">rng</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">payoff_win_min</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">payoff_win_max</span><span class="p">),</span>
+<span class="linenos">48</span>                <span class="s2">&quot;payoff_rock_lose&quot;</span><span class="p">:</span> <span class="n">rng</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">payoff_lose_min</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">payoff_lose_max</span><span class="p">),</span>
+<span class="linenos">49</span>                <span class="s2">&quot;payoff_paper_win&quot;</span><span class="p">:</span> <span class="n">rng</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">payoff_win_min</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">payoff_win_max</span><span class="p">),</span>
+<span class="linenos">50</span>                <span class="s2">&quot;payoff_paper_lose&quot;</span><span class="p">:</span> <span class="n">rng</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">payoff_lose_min</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">payoff_lose_max</span><span class="p">),</span>
+<span class="linenos">51</span>                <span class="s2">&quot;payoff_scissors_win&quot;</span><span class="p">:</span> <span class="n">rng</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">payoff_win_min</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">payoff_win_max</span><span class="p">),</span>
+<span class="linenos">52</span>                <span class="s2">&quot;payoff_scissors_lose&quot;</span><span class="p">:</span> <span class="n">rng</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">payoff_lose_min</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">payoff_lose_max</span><span class="p">),</span>
+<span class="linenos">53</span>                <span class="s2">&quot;payoff_tie&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">payoff_tie</span><span class="p">,</span>
+<span class="linenos">54</span>                <span class="s2">&quot;strategy_param_1&quot;</span><span class="p">:</span> <span class="n">rng</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">),</span>
+<span class="linenos">55</span>                <span class="s2">&quot;strategy_param_2&quot;</span><span class="p">:</span> <span class="n">rng</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">),</span>
+<span class="linenos">56</span>                <span class="s2">&quot;strategy_param_3&quot;</span><span class="p">:</span> <span class="n">rng</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">),</span>
+<span class="linenos">57</span>            <span class="p">}</span>
+<span class="linenos">58</span>
+<span class="linenos">59</span>        <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">generator</span><span class="p">(</span><span class="n">agent_id</span><span class="p">)</span> <span class="k">for</span> <span class="n">agent_id</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">agent_num</span><span class="p">))</span>
+<span class="linenos">60</span>
+</pre></div>
+</div>
+</section>
+<section id="trainer-definition">
+<h3>Trainer Definition<a class="headerlink" href="#trainer-definition" title="Link to this heading"></a></h3>
+<p>Defined in <code class="docutils literal notranslate"><span class="pre">core/trainer.py</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kn">from</span><span class="w"> </span><span class="nn">Melodie</span><span class="w"> </span><span class="kn">import</span> <span class="n">Trainer</span>
+<span class="linenos"> 2</span>
+<span class="linenos"> 3</span><span class="kn">from</span><span class="w"> </span><span class="nn">examples.rock_paper_scissors_trainer.core.agent</span><span class="w"> </span><span class="kn">import</span> <span class="n">RPSAgent</span>
+<span class="linenos"> 4</span>
+<span class="linenos"> 5</span>
+<span class="linenos"> 6</span><span class="k">class</span><span class="w"> </span><span class="nc">RPSTrainer</span><span class="p">(</span><span class="n">Trainer</span><span class="p">):</span>
+<span class="linenos"> 7</span><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos"> 8</span><span class="sd">    A custom Trainer for evolving agents&#39; strategies in the Rock-Paper-Scissors model.</span>
+<span class="linenos"> 9</span>
+<span class="linenos">10</span><span class="sd">    This trainer uses a genetic algorithm to tune the three strategy parameters</span>
+<span class="linenos">11</span><span class="sd">    for each agent. The goal is to maximize the agent&#39;s final accumulated payoff,</span>
+<span class="linenos">12</span><span class="sd">    which serves as the fitness function for the evolutionary process.</span>
+<span class="linenos">13</span><span class="sd">    &quot;&quot;&quot;</span>
+<span class="linenos">14</span>
+<span class="linenos">15</span>    <span class="k">def</span><span class="w"> </span><span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="linenos">16</span>        <span class="c1"># Configures the trainer to target the three strategy parameters for all</span>
+<span class="linenos">17</span>        <span class="c1"># agents in the &#39;agents&#39; list.</span>
+<span class="linenos">18</span>        <span class="bp">self</span><span class="o">.</span><span class="n">add_agent_training_property</span><span class="p">(</span>
+<span class="linenos">19</span>            <span class="s2">&quot;agents&quot;</span><span class="p">,</span>
+<span class="linenos">20</span>            <span class="p">[</span><span class="s2">&quot;strategy_param_1&quot;</span><span class="p">,</span> <span class="s2">&quot;strategy_param_2&quot;</span><span class="p">,</span> <span class="s2">&quot;strategy_param_3&quot;</span><span class="p">],</span>
+<span class="linenos">21</span>            <span class="k">lambda</span> <span class="n">scenario</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">scenario</span><span class="o">.</span><span class="n">agent_num</span><span class="p">)),</span>
+<span class="linenos">22</span>        <span class="p">)</span>
+<span class="linenos">23</span>
+<span class="linenos">24</span>    <span class="k">def</span><span class="w"> </span><span class="nf">collect_data</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="linenos">25</span>        <span class="c1"># Specifies which properties to save during the training process.</span>
+<span class="linenos">26</span>        <span class="c1"># This allows for analysis of how strategies and outcomes evolve over generations.</span>
+<span class="linenos">27</span>        <span class="bp">self</span><span class="o">.</span><span class="n">add_agent_property</span><span class="p">(</span><span class="s2">&quot;agents&quot;</span><span class="p">,</span> <span class="s2">&quot;strategy_param_1&quot;</span><span class="p">)</span>
+<span class="linenos">28</span>        <span class="bp">self</span><span class="o">.</span><span class="n">add_agent_property</span><span class="p">(</span><span class="s2">&quot;agents&quot;</span><span class="p">,</span> <span class="s2">&quot;strategy_param_2&quot;</span><span class="p">)</span>
+<span class="linenos">29</span>        <span class="bp">self</span><span class="o">.</span><span class="n">add_agent_property</span><span class="p">(</span><span class="s2">&quot;agents&quot;</span><span class="p">,</span> <span class="s2">&quot;strategy_param_3&quot;</span><span class="p">)</span>
+<span class="linenos">30</span>        <span class="bp">self</span><span class="o">.</span><span class="n">add_agent_property</span><span class="p">(</span><span class="s2">&quot;agents&quot;</span><span class="p">,</span> <span class="s2">&quot;share_rock&quot;</span><span class="p">)</span>
+<span class="linenos">31</span>        <span class="bp">self</span><span class="o">.</span><span class="n">add_agent_property</span><span class="p">(</span><span class="s2">&quot;agents&quot;</span><span class="p">,</span> <span class="s2">&quot;share_paper&quot;</span><span class="p">)</span>
+<span class="linenos">32</span>        <span class="bp">self</span><span class="o">.</span><span class="n">add_agent_property</span><span class="p">(</span><span class="s2">&quot;agents&quot;</span><span class="p">,</span> <span class="s2">&quot;share_scissors&quot;</span><span class="p">)</span>
+<span class="linenos">33</span>        <span class="bp">self</span><span class="o">.</span><span class="n">add_environment_property</span><span class="p">(</span><span class="s2">&quot;total_accumulated_payoff&quot;</span><span class="p">)</span>
+<span class="linenos">34</span>
+<span class="linenos">35</span>    <span class="k">def</span><span class="w"> </span><span class="nf">utility</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">:</span> <span class="n">RPSAgent</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="linenos">36</span><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos">37</span><span class="sd">        Defines the fitness function for the genetic algorithm.</span>
+<span class="linenos">38</span>
+<span class="linenos">39</span><span class="sd">        The trainer will aim to maximize this value. In this model, the fitness</span>
+<span class="linenos">40</span><span class="sd">        is simply the agent&#39;s total accumulated payoff at the end of a simulation run.</span>
+<span class="linenos">41</span><span class="sd">        &quot;&quot;&quot;</span>
+<span class="linenos">42</span>        <span class="k">return</span> <span class="n">agent</span><span class="o">.</span><span class="n">accumulated_payoff</span>
+<span class="linenos">43</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="covid_contagion_calibrator.html" class="btn btn-neutral float-left" title="CovidContagionCalibrator" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../api/index.html" class="btn btn-neutral float-right" title="API Reference" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021-2022, ABM4ALL.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

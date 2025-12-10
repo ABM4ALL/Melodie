@@ -116,7 +116,12 @@ def sub_routine_trainer(
 
     from Melodie import Agent, AgentList, Config, Environment, Trainer
 
-    logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
+    logging.basicConfig(
+        stream=sys.stderr,
+        level=logging.DEBUG,
+        format="%(filename)s:%(lineno)d %(levelname)s %(message)s",
+        datefmt="%a, %d %b %Y %H:%M:%S",
+    )
     logger = logging.getLogger(f"Trainer-processor-{proc_id}")
     logger.info("subroutine started!")
     try:
@@ -220,9 +225,9 @@ def sub_routine_calibrator(
             logger.debug(f"processor {proc_id} got chrom {chrom}")
             scenario: Scenario = scenario_cls()
             scenario.manager = calibrator
-            # scenario.set_params(d, asserts_key_exist=False)
-            # scenario.set_params(env_params, asserts_key_exist=False)
             scenario._setup(d)
+            # Override scenario parameters with GA-proposed values.
+            scenario.set_params(env_params, asserts_key_exist=False)
 
             model = model_cls(config, scenario)
             model.create()

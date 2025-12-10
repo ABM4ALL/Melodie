@@ -2,7 +2,5 @@
 Melodie Exceptions
 ==================
 
-.. automodule:: MelodieInfra.exceptions.exceptions
-               :members:
-               :undoc-members:
-               :show-inheritance:
+.. automodule:: MelodieInfra.exceptions
+   :members:
