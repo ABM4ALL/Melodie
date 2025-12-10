@@ -18,7 +18,7 @@ from sphinx.builders.html import StandaloneHTMLBuilder
 # -- Project information -----------------------------------------------------
 
 project = "Melodie"
-copyright = "2021-2022, ABM4ALL"
+copyright = "2021-2025, ABM4ALL"
 author = "Songmin Yu, Zhanyi Hou"
 with open(
     os.path.join(
