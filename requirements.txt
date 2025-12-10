@@ -1,12 +1,10 @@
 matplotlib
-seaborn~=0.11.2
 numpy >= 1.20
 pandas
 flask
 flask-cors
 flask_sock
 openpyxl
-xlrd==1.2.0
 networkx
 chardet~=4.0.0
 sqlalchemy>=2.0
@@ -24,4 +22,3 @@ setuptools
 cloudpickle~=2.0
 scikit-opt~=0.6
 rpyc
-MelodieTable
