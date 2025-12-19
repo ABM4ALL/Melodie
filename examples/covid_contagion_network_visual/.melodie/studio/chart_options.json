@@ -1,0 +1,20 @@
+{
+    "health_state_trend": {
+        "legend": {
+            "show": true,
+            "top": 10
+        },
+        "grid": {
+            "left": 60,
+            "right": 20,
+            "top": 40,
+            "bottom": 50
+        },
+        "xAxis": {
+            "name": "Step"
+        },
+        "yAxis": {
+            "name": "Population"
+        }
+    }
+}

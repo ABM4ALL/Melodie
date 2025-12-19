@@ -1,7 +1,0 @@
-
-DB
-=============
-
-.. automodule:: MelodieInfra.db
-   :members:
-

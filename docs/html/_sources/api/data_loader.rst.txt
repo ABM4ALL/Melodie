@@ -1,8 +1,0 @@
-
-DataLoader
-==========
-
-.. automodule:: Melodie.data_loader
-   :members:
-
-

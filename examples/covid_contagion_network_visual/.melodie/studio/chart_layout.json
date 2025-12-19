@@ -1,0 +1,20 @@
+{
+    "controls": {
+        "left": 40,
+        "top": 60,
+        "height": 400,
+        "width": 220
+    },
+    "visualizer-network": {
+        "left": 280,
+        "top": 60,
+        "height": 400,
+        "width": 400
+    },
+    "chart-health_state_trend": {
+        "left": 700,
+        "top": 60,
+        "height": 400,
+        "width": 500
+    }
+}

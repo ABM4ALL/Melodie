@@ -1,6 +1,0 @@
-
-Melodie Exceptions
-==================
-
-.. automodule:: MelodieInfra.exceptions
-   :members:
