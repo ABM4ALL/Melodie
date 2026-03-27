@@ -200,6 +200,29 @@ def test_agents_nojit():
     # convert(grid)
 
 
+def test_grid_bounds_and_coordinate_conversion():
+    class GridForBounds(Grid):
+        pass
+
+    grid = GridForBounds(Spot)
+    grid.setup_params(3, 5, wrap=False)
+
+    assert grid._in_bounds(2, 4) is True
+    assert grid._in_bounds(3, 4) is False
+    assert grid._in_bounds(2, 5) is False
+
+    try:
+        grid.get_spot(2, 5)
+        assert False, "y == height should be rejected as out of bounds"
+    except IndexError:
+        pass
+
+    assert grid._num_to_2d_coor(grid._convert_to_1d(2, 4)) == (2, 4)
+
+    empty_spots = set(grid.get_empty_spots())
+    assert (2, 4) in empty_spots
+
+
 class Grid2(Grid):
     pass
 

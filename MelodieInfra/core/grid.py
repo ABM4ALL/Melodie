@@ -191,10 +191,10 @@ class Grid:
         return x * self._height + y
 
     def _num_to_2d_coor(self, num: int):
-        return floor(num / self._height), num % self._width
+        return floor(num / self._height), num % self._height
 
     def _in_bounds(self, x, y):
-        return (0 <= x < self.width) and (0 <= y <= self._height)
+        return (0 <= x < self._width) and (0 <= y < self._height)
 
     def _get_category_of_agents(self, category_name: str):
         # category = self._existed_agents.get(category_name)
@@ -207,7 +207,7 @@ class Grid:
             return self.coords_wrap(x, y)
         if not (0 <= x < self._width):
             raise IndexError("grid index x was out of range")
-        elif not (0 <= y <= self._height):
+        elif not (0 <= y < self._height):
             raise IndexError("grid index y was out of range")
         else:
             return x, y
