@@ -142,6 +142,19 @@ class DBConn:
         """
         self.connection.dispose()
 
+    def __enter__(self) -> "DBConn":
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.close()
+        return False
+
+    def __del__(self):
+        try:
+            self.close()
+        except Exception:
+            pass
+
     def table_names(self) -> List[str]:
         """
         Get all table names
@@ -302,8 +315,10 @@ class DBConn:
 @contextmanager
 def db_conn(config: "Config") -> Generator[DBConn, None, None]:
     conn = create_db_conn(config)
-    yield conn
-    conn.close()
+    try:
+        yield conn
+    finally:
+        conn.close()
 
 
 def create_db_conn(config: "Config") -> DBConn:

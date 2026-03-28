@@ -396,46 +396,47 @@ class DataCollector:
         write_db_time = 0
         assert self.model is not None
         connection = self.model.create_db_conn()
-
-        _t = time.time()
-        if self.environment_properties_list is not None:
-            self._write_list_to_table(
-                connection.get_engine(),
-                DBConn.ENVIRONMENT_RESULT_TABLE,
-                self.environment_properties_list,
-            )
-        self.environment_properties_list = None
-        write_db_time += time.time() - _t
-
-        for container_name in self.agent_properties_dict.keys():
+        try:
             _t = time.time()
-            self._write_list_to_table(
-                connection.get_engine(),
-                "Result_Simulator_" + underline_to_camel(container_name),
-                self.agent_properties_dict[container_name],
-            )
+            if self.environment_properties_list is not None:
+                self._write_list_to_table(
+                    connection.get_engine(),
+                    DBConn.ENVIRONMENT_RESULT_TABLE,
+                    self.environment_properties_list,
+                )
+            self.environment_properties_list = None
             write_db_time += time.time() - _t
 
-        for custom_table_name in self._custom_collected_data.keys():
-            _t = time.time()
-            self._write_list_to_table(
-                connection.get_engine(),
-                custom_table_name,
-                self._custom_collected_data[custom_table_name],
+            for container_name in self.agent_properties_dict.keys():
+                _t = time.time()
+                self._write_list_to_table(
+                    connection.get_engine(),
+                    "Result_Simulator_" + underline_to_camel(container_name),
+                    self.agent_properties_dict[container_name],
+                )
+                write_db_time += time.time() - _t
+
+            for custom_table_name in self._custom_collected_data.keys():
+                _t = time.time()
+                self._write_list_to_table(
+                    connection.get_engine(),
+                    custom_table_name,
+                    self._custom_collected_data[custom_table_name],
+                )
+                write_db_time += time.time() - _t
+            self.agent_properties_dict = {}
+
+            t1 = time.time()
+
+            collect_time = self._time_elapsed
+            self._time_elapsed += t1 - t0
+            logger.debug(
+                f"datacollector took {MelodieGlobalConfig.Logger.round_elapsed_time(t1 - t0)}s to format dataframe and write it to data.\n"
+                f"    {MelodieGlobalConfig.Logger.round_elapsed_time(write_db_time)} for writing into database, and "
+                f"{MelodieGlobalConfig.Logger.round_elapsed_time(collect_time)} for collect data."
             )
-            write_db_time += time.time() - _t
-        self.agent_properties_dict = {}
-
-        t1 = time.time()
-
-        collect_time = self._time_elapsed
-        self._time_elapsed += t1 - t0
-        logger.debug(
-            f"datacollector took {MelodieGlobalConfig.Logger.round_elapsed_time(t1 - t0)}s to format dataframe and write it to data.\n"
-            f"    {MelodieGlobalConfig.Logger.round_elapsed_time(write_db_time)} for writing into database, and "
-            f"{MelodieGlobalConfig.Logger.round_elapsed_time(collect_time)} for collect data."
-        )
-        connection.close()
+        finally:
+            connection.close()
 
     def save_dataframe(self, df: pd.DataFrame, df_name: str, if_exists: str = "append"):
         """

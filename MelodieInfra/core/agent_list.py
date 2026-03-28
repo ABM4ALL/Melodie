@@ -34,6 +34,9 @@ class SeqIter:
         self._seq = seq
         self._i = 0
 
+    def __iter__(self):
+        return self
+
     def __next__(self):
         if self._i >= len(self._seq):
             raise StopIteration

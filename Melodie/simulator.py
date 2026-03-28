@@ -182,11 +182,12 @@ class BaseModellingManager(abc.ABC):
         the output directory or to a table in the database.
         """
         if kind == "sql":
-            create_db_conn(self.config).write_dataframe(
-                table_name,
-                data,
-                if_exists="append",
-            )
+            with db_conn(self.config) as conn:
+                conn.write_dataframe(
+                    table_name,
+                    data,
+                    if_exists="append",
+                )
         elif kind == "csv":
             csv_file = os.path.join(
                 self.config.output_tables_path(), table_name + ".csv"
