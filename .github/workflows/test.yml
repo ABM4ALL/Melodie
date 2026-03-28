@@ -1,5 +1,14 @@
 name: Tests
-on: [push]
+on:
+  push:
+    paths:
+      - "Melodie/**"
+      - "MelodieInfra/**"
+      - "tests/**"
+      - "setup.py"
+      - "pyproject.toml"
+      - "requirements.txt"
+      - ".github/workflows/test.yml"
 
 jobs:
   build:
