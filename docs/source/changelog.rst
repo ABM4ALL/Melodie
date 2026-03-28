@@ -8,6 +8,7 @@ _________________
 Version 1.1.1 (Mar. 27, 2026)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 - Fix packaging, CI, and Python metadata inconsistencies.
+- Fix grid coordinates bugs.
 - Fix multiple runtime correctness bugs in scenario copying, agent indexing, visualization, table utilities, and parallel execution.
 - Improve configuration round-tripping, cache recovery, and development environment metadata.
 
