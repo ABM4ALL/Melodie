@@ -19,6 +19,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument("--core_id", help="ID of core")
 parser.add_argument("--workdirs", help="Working directories")
 parser.add_argument("--role", help="Roles,`calibrator` or `trainer`")
+parser.add_argument("--port", default="12233", help="RPyC server port")
 args = parser.parse_args()
 
 workdirs = json.loads(args.workdirs)
@@ -31,7 +32,10 @@ class ParallelWorker:
         assert self.role in {"trainer", "calibrator", "simulator"}
         self.core_id = args.core_id
         self.conn = rpyc.connect(
-            "localhost", 12233, keepalive=True, config={"sync_request_timeout": None}
+            "localhost",
+            int(args.port),
+            keepalive=True,
+            config={"sync_request_timeout": None},
         )
 
     def get_config(self):
@@ -133,11 +137,12 @@ def sub_routine_trainer(
         import traceback
 
         traceback.print_exc()
-        dumped = cloudpickle.dumps(0)
+        dumped = cloudpickle.dumps((None, None, None))
         worker.put_result(base64.b64encode(dumped))
         return
 
     while 1:
+        chrom = None
         try:
             t0 = time.time()
             # chrom = -1
@@ -185,6 +190,8 @@ def sub_routine_trainer(
             import traceback
 
             traceback.print_exc()
+            dumped = cloudpickle.dumps((chrom, None, None))
+            worker.put_result(base64.b64encode(dumped))
 
 
 def sub_routine_calibrator(
@@ -216,8 +223,11 @@ def sub_routine_calibrator(
         import traceback
 
         traceback.print_exc()
+        dumped = cloudpickle.dumps((None, None, None))
+        worker.put_result(base64.b64encode(dumped))
         return
     while 1:
+        chrom = None
         try:
             ret = worker.get_task()
             t0 = time.time()
@@ -258,6 +268,8 @@ def sub_routine_calibrator(
             import traceback
 
             traceback.print_exc()
+            dumped = cloudpickle.dumps((chrom, None, None))
+            worker.put_result(base64.b64encode(dumped))
 
 
 def sub_routine_simulator(

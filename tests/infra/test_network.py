@@ -107,6 +107,12 @@ def test_relationship_directed():
         0,
     )
     assert len(n._get_neighbor_positions(agent_list[1].id, "agents")) == 1
+    assert ("agents", 0) not in n.edges[("agents", 1)]
+
+
+def test_network_init_without_model():
+    n = DemoNetwork()
+    assert n.layout_file == "network_layout.gexf"
 
 
 def test_create_ba():

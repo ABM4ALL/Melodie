@@ -63,14 +63,11 @@ class Config:
         self.setup()
 
     def init_temp_folders(self):
-        if not os.path.exists(self.temp_folder):
-            os.makedirs(self.temp_folder)
-        if not os.path.exists(self.visualizer_tmpdir):
-            os.makedirs(self.visualizer_tmpdir)
+        os.makedirs(self.temp_folder, exist_ok=True)
+        os.makedirs(self.visualizer_tmpdir, exist_ok=True)
 
     def setup_folder_path(self, folder_path):
-        if not os.path.exists(folder_path):
-            os.makedirs(folder_path)
+        os.makedirs(folder_path, exist_ok=True)
         return folder_path
 
     def setup(self):
@@ -89,7 +86,13 @@ class Config:
             d["project_root"],
             d["input_folder"],
             d["output_folder"],
+            visualizer_entry=d.get("visualizer_entry", ""),
+            data_output_type=d.get("data_output_type", "csv"),
             database_config=db_conf,
+            input_cache=d.get("input_dataframe_cache", d.get("input_cache", False)),
+            studio_port=d.get("studio_port", 8089),
+            visualizer_port=d.get("visualizer_port", 8765),
+            parallel_port=d.get("parallel_port", 12233),
         )
         return c
 

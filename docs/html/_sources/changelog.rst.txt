@@ -5,13 +5,19 @@ Change Log
 Major Version 0.x
 _________________
 
+Version 1.1.1 (Mar. 27, 2026)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+- Fix packaging, CI, and Python metadata inconsistencies.
+- Fix multiple runtime correctness bugs in scenario copying, agent indexing, visualization, table utilities, and parallel execution.
+- Improve configuration round-tripping, cache recovery, and development environment metadata.
+
 Version 1.1.0 (Dec. 10, 2025)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 - Add new examples and update documentation.
 - Fixed small bugs in `Calibrator` and `Trainer`.
-- Add a new parallel execution mode for the simulator: ``run_parallel_multithread`` based on Python 3.14+ free-threaded mode (No-GIL).
-- Add thread-based parallel execution mode for `Calibrator` and `Trainer` via the ``parallel_mode`` parameter (recommended for Python 3.13+).
-- Upgrade supported Python version from 3.12 to 3.14+ (tested on 3.14.2).
+- Add a new parallel execution mode for the simulator: ``run_parallel_multithread`` for Python 3.13+ free-threaded builds (best tested on Python 3.14.2).
+- Add thread-based parallel execution mode for `Calibrator` and `Trainer` via the ``parallel_mode`` parameter, intended for Python 3.13+ free-threaded builds.
+- Expand tested Python version coverage through 3.14 (tested on 3.14.2).
 
 Version 1.0.0 (Mar. 14, 2024)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -80,5 +86,5 @@ Version 0.1.0 (Jul. 22, 2022)
 - First version, with all main modules created.
 
 Project Start (May. 10, 2021)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 - Start of the journey.

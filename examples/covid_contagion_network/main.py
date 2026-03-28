@@ -1,14 +1,9 @@
 """
 Entry point for the CovidContagionNetwork example.
-Usage: python main.py
+Usage: python -m examples.covid_contagion_network.main
 """
 import os
-import sys
 from Melodie import Config, Simulator
-# Get the project root directory
-PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-if PROJECT_ROOT not in sys.path:
-    sys.path.insert(0, PROJECT_ROOT)
 
 from examples.covid_contagion_network.core.model import CovidModel
 from examples.covid_contagion_network.core.scenario import CovidScenario
@@ -29,4 +24,3 @@ if __name__ == "__main__":
         scenario_cls=CovidScenario,
     )
     simulator.run()
-

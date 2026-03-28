@@ -2,6 +2,7 @@ import os
 import time
 from typing import List
 
+import pytest
 from base import OUTPUT_DIR
 from sqlalchemy import BigInteger, Integer, create_engine
 
@@ -179,3 +180,14 @@ def test_create_autodetect():
     agents = [{"a": i, "b": i + 0.5} for i in range(1000)]
     row_cls = TableRow.subcls_from_dict(agents[0])
     Table.from_dicts(row_cls, agents)
+
+
+def test_append_and_parse_header():
+    table = Table(TableRowType1)
+    row = table.row_cls(table, a=1, b=2)
+    table.append(row)
+    assert len(table.data) == 1
+    assert table.data[0].a == 1
+
+    with pytest.raises(AssertionError):
+        Table.parse_header(["not valid"])

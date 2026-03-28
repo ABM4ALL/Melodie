@@ -88,7 +88,6 @@ class DownloadOperation(Operation):
         self.name = "op-download"
         self.optypes = [FileOprandType()]
         self.rettype = None
-        print(self.oprands)
 
 
 class ShowChartWindowOperation(Operation):
@@ -97,7 +96,6 @@ class ShowChartWindowOperation(Operation):
         self.name = "op-show-chart-window"
         self.optypes = [JSONOprandType()]
         self.rettype = None
-        print(self.oprands)
 
 
 class ToolbarAction(JSONBase):

@@ -75,7 +75,7 @@ Run the model using the provided entry script:
 
 .. code-block:: bash
 
-   python examples/covid_contagion_grid/main.py
+   python -m examples.covid_contagion_grid.main
 
 This will generate ``Result_Simulator_Agents.csv`` and ``Result_Simulator_Environment.csv`` in the ``data/output`` folder.
 

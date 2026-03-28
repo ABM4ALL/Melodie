@@ -84,6 +84,8 @@ def test_properties():
 
     test_routine(df)
     test_routine(table)
+    for agent_id in range(n):
+        assert al.get_agent(agent_id).id == agent_id
 
 
 def test_add_del_agents():

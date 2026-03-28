@@ -1,17 +1,11 @@
 """
 Main entry point for the visual grid-based CovidContagion example.
 
-Usage: python main.py
+Usage: python -m examples.covid_contagion_grid_visual.run_studio
 Then open http://localhost:8089 in browser.
 """
 import os
-import sys
 from Melodie import Config
-# Get the project root directory
-PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-if PROJECT_ROOT not in sys.path:
-    sys.path.insert(0, PROJECT_ROOT)
-
 from MelodieStudio.main import studio_main
 
 if __name__ == "__main__":

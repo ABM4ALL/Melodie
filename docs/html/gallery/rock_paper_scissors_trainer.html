@@ -6,14 +6,14 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>RockPaperScissorsTrainer &mdash; Melodie 1.1.0 documentation</title>
+  <title>RockPaperScissorsTrainer &mdash; Melodie 1.1.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
 
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=fc837d61"></script>
+      <script src="../_static/documentation_options.js?v=58fbf978"></script>
       <script src="../_static/doctools.js?v=9bcbadda"></script>
       <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
@@ -396,6 +396,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../changelog.html">Change Log</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../changelog.html#major-version-0-x">Major Version 0.x</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../changelog.html#version-1-1-1-mar-27-2026">Version 1.1.1 (Mar. 27, 2026)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../changelog.html#version-1-1-0-dec-10-2025">Version 1.1.0 (Dec. 10, 2025)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../changelog.html#version-1-0-0-mar-14-2024">Version 1.0.0 (Mar. 14, 2024)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../changelog.html#version-0-8-0-may-10-2023">Version 0.8.0 (May. 10, 2023)</a></li>
@@ -515,7 +516,7 @@ In this model, agents start with heterogeneous payoff preferences and strategy w
 <section id="trainer-running-the-model">
 <h2>Trainer: Running the Model<a class="headerlink" href="#trainer-running-the-model" title="Link to this heading"></a></h2>
 <p>You can run both the simulator and the trainer using the main script:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>examples/rock_paper_scissors_trainer/main.py
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>examples.rock_paper_scissors_trainer.main
 </pre></div>
 </div>
 <p>The trainer clears the output directory before it runs. Therefore, after executing the command, you will only find the trainer’s output tables in <code class="docutils literal notranslate"><span class="pre">examples/rock_paper_scissors_trainer/data/output</span></code>. If you need the simulator’s results, you should run it separately (for example, by commenting out the <code class="docutils literal notranslate"><span class="pre">run_trainer</span></code> call in <code class="docutils literal notranslate"><span class="pre">main.py</span></code>).</p>
@@ -523,7 +524,7 @@ In this model, agents start with heterogeneous payoff preferences and strategy w
 <p>The <code class="docutils literal notranslate"><span class="pre">Trainer</span></code> supports two parallelization modes, controlled by the <code class="docutils literal notranslate"><span class="pre">parallel_mode</span></code> parameter when creating the trainer instance:</p>
 <ul class="simple">
 <li><p><strong>``parallel_mode=”process”``</strong> (default): Uses subprocess-based parallelism via <code class="docutils literal notranslate"><span class="pre">multiprocessing</span></code>. This is the traditional approach and works on all Python versions. It is recommended for most use cases.</p></li>
-<li><p><strong>``parallel_mode=”thread”``</strong>: Uses thread-based parallelism via <code class="docutils literal notranslate"><span class="pre">ThreadPoolExecutor</span></code>. This mode is <strong>recommended for Python 3.13+</strong> (free-threaded/No-GIL builds) as it can provide better performance by avoiding the overhead of process creation and data serialization. In older Python versions, this mode will still run but may be limited by the Global Interpreter Lock (GIL).</p></li>
+<li><p><strong>``parallel_mode=”thread”``</strong>: Uses thread-based parallelism via <code class="docutils literal notranslate"><span class="pre">ThreadPoolExecutor</span></code>. This mode is recommended for <strong>Python 3.13+ free-threaded builds</strong>, with the best-tested path currently being <strong>Python 3.14</strong>. In older Python versions, this mode will still run but may be limited by the Global Interpreter Lock (GIL).</p></li>
 </ul>
 <p>You can specify the mode when creating the trainer:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">trainer</span> <span class="o">=</span> <span class="n">RPSTrainer</span><span class="p">(</span>

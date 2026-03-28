@@ -171,8 +171,8 @@ class Table(TableBase, Generic[TableRowGeneric]):
     def create_empty(self):
         return Table(self.row_cls)
 
-    def append(self):
-        return self.data.append()
+    def append(self, item):
+        return self.data.append(item)
 
     @staticmethod
     def parse_header(header_colnames_list: List[str]):
@@ -183,7 +183,7 @@ class Table(TableBase, Generic[TableRowGeneric]):
         for col_index, col_name in enumerate(header_colnames_list):
             cols.append(col_name)
             assert (
-                col_name.isidentifier
+                col_name.isidentifier()
             ), f"Column name '{col_name}' should be an identifier!"
         return cols
 

@@ -118,9 +118,12 @@ class Network:
         self.edge_cls: Type[Edge] = edge_cls if edge_cls is not None else Edge
         self.agent_categories: Dict[int, AgentList] = {}
 
-        self.layout_file = os.path.join(
-            model.config.visualizer_tmpdir, name + "_layout.gexf"
-        )
+        if model is not None:
+            self.layout_file = os.path.join(
+                model.config.visualizer_tmpdir, name + "_layout.gexf"
+            )
+        else:
+            self.layout_file = name + "_layout.gexf"
         self.layout = {}
         self._layout_creator = lambda G: nx.spring_layout(G)
 
@@ -202,10 +205,13 @@ class Network:
     def _remove_agent(self, category: int, agent_id: int):
         agent_tuple = (category, agent_id)
         self.nodes.remove(agent_tuple)
-        target_edges = self.edges.pop(agent_tuple)
+        target_edges = self.edges.pop(agent_tuple, {})
         if not self.directed:
             for target_node, edge in target_edges.items():
-                self.edges[target_node].pop(agent_tuple)
+                self.edges[target_node].pop(agent_tuple, None)
+        else:
+            for edges in self.edges.values():
+                edges.pop(agent_tuple, None)
 
     def remove_agent(self, agent: Agent):
         """

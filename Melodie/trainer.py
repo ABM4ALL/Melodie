@@ -194,7 +194,7 @@ class GATrainerAlgorithm:
         self.manager = manager
         self.params = params
         self.chromosomes = 20
-        self.algorithms_dict: Dict[Tuple[int, str], Union["GA"]] = {}
+        self.algorithms_dict: Dict[Tuple[int, str], "GA"] = {}
 
         self.target_fcn_cache = TargetFcnCache()
         self.agent_container_getters: Dict[str, Callable[[Model], AgentList]] = {}
@@ -233,7 +233,9 @@ class GATrainerAlgorithm:
                 ),
             }
             self.parallel_manager = ParallelManager(
-                self.processors, configs=(d, self.manager.config.to_dict())
+                self.processors,
+                configs=(d, self.manager.config.to_dict()),
+                port=self.manager.config.parallel_port,
             )
             self.parallel_manager.run("trainer")
         elif self.parallel_mode == "thread":
@@ -440,15 +442,14 @@ class GATrainerAlgorithm:
                 d.update(agent_container_data)
                 d.pop("target_function_value")
                 agent_records[container_name].append(d)
+            self.manager._write_to_table(
+                "csv",
+                f"Result_Trainer_{underline_to_camel(container_name)}",
+                pd.DataFrame(agent_records[container_name]),
+            )
 
         env_record.update(meta_dict)
         env_record.update(env_data)
-
-        self.manager._write_to_table(
-            "csv",
-            f"Result_Trainer_{underline_to_camel(container_name)}",
-            pd.DataFrame(agent_records[container_name]),
-        )
 
         self.manager._write_to_table(
             "csv",
@@ -490,7 +491,7 @@ class GATrainerAlgorithm:
                 ]:
                     p: pd.Series = agent_data[prop_name]
                     mean = p.mean()
-                    cov = p.std() / p.mean()
+                    cov = float("nan") if mean == 0 else p.std() / mean
                     cov_records.update(
                         {prop_name + "_mean": mean, prop_name + "_cov": cov}
                     )
@@ -504,7 +505,7 @@ class GATrainerAlgorithm:
         env_record.update(meta_dict)
         for prop_name in self.recorded_env_properties:
             mean = env_df[prop_name].mean()
-            cov = env_df[prop_name].std() / env_df[prop_name].mean()
+            cov = float("nan") if mean == 0 else env_df[prop_name].std() / mean
             env_record.update({prop_name + "_mean": mean, prop_name + "_cov": cov})
         self.manager._write_to_table(
             "csv", "Result_Trainer_Environment_Cov", pd.DataFrame([env_record])
@@ -559,6 +560,10 @@ class GATrainerAlgorithm:
                 ) = (
                     self.parallel_manager.get_result()
                 )  # cloudpickle.loads(base64.b64decode(v))
+                if chrom is None or agents_data is None or env_data is None:
+                    raise RuntimeError(
+                        "Parallel trainer worker failed; see worker traceback above."
+                    )
                 t00 = time.time()
                 meta.id_chromosome = chrom
                 agent_records, env_record = self.record_agent_properties(
@@ -661,7 +666,8 @@ class Trainer(BaseModellingManager):
         :param parallel_mode: The parallelization mode. ``"process"`` (default)
             uses subprocess-based parallelism, suitable for all Python versions.
             ``"thread"`` uses thread-based parallelism, which is recommended for
-            Python 3.13+ (free-threaded/No-GIL builds) for better performance.
+            Python 3.13+ free-threaded builds, with the best-tested path
+            currently being Python 3.14.
         """
         super().__init__(
             config=config,
@@ -677,7 +683,7 @@ class Trainer(BaseModellingManager):
 
         self.algorithm_type: str = "ga"
         self.algorithm: Optional[GATrainerAlgorithm] = None
-        self.algorithm_instance: Iterator[List[float]] = {}
+        self.algorithm_instance: Dict[str, Any] = {}
 
         self.save_agent_trainer_result = False
         self.save_env_trainer_result = True

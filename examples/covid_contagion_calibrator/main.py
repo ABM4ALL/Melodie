@@ -2,25 +2,17 @@ import os
 import sys
 from Melodie import Config, Simulator
 
-# -------------------------------------------------------------------------
-# IMPORT PATH HACK FOR PARALLEL WORKERS
-# -------------------------------------------------------------------------
-# Calibrator uses multiprocessing. Sub-processes must be able to import 
-# the 'examples' package to load model/scenario classes.
-# By adding the project root (../../) to sys.path, we ensure that:
-#   from examples.covid_contagion_calibrator.core...
-# works correctly in both the main process and worker processes.
-PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
-if PROJECT_ROOT not in sys.path:
-    sys.path.insert(0, PROJECT_ROOT)
-# -------------------------------------------------------------------------
-
 from examples.covid_contagion_calibrator.core.calibrator import CovidCalibrator
 from examples.covid_contagion_calibrator.core.model import CovidModel
 from examples.covid_contagion_calibrator.core.scenario import CovidScenario
 
 
 def run_calibrator(cfg):
+    if sys.version_info >= (3, 13):
+        parallel_mode = "thread"
+    else:
+        parallel_mode = "process"
+
     # The `parallel_mode` parameter controls the parallelization strategy:
     #   - "process" (default): Uses subprocess-based parallelism. Works on all
     #     Python versions. Recommended for most use cases.
@@ -32,7 +24,7 @@ def run_calibrator(cfg):
         model_cls=CovidModel,
         scenario_cls=CovidScenario,
         processors=8,
-        parallel_mode="process",  # or "thread" for Python 3.13+
+        parallel_mode=parallel_mode,
     )
     calibrator.run()
 

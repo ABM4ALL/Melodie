@@ -51,7 +51,7 @@ To run the model with the visualizer, execute the main script:
 
 .. code-block:: bash
 
-   python examples/covid_contagion_grid_visual/run_studio.py
+   python -m examples.covid_contagion_grid_visual.run_studio
 
 Then, open your browser and navigate to ``http://localhost:8089``. This is the web gateway for MelodieStudio. The backend simulation service will automatically run on ``127.0.0.1:8765``.
 
@@ -148,4 +148,3 @@ Grid Definition
 .. literalinclude:: ../../../examples/covid_contagion_grid_visual/core/grid.py
    :language: python
    :linenos:
-

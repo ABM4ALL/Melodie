@@ -6,14 +6,14 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CovidContagionCalibrator &mdash; Melodie 1.1.0 documentation</title>
+  <title>CovidContagionCalibrator &mdash; Melodie 1.1.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
 
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=fc837d61"></script>
+      <script src="../_static/documentation_options.js?v=58fbf978"></script>
       <script src="../_static/doctools.js?v=9bcbadda"></script>
       <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
@@ -396,6 +396,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../changelog.html">Change Log</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../changelog.html#major-version-0-x">Major Version 0.x</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../changelog.html#version-1-1-1-mar-27-2026">Version 1.1.1 (Mar. 27, 2026)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../changelog.html#version-1-1-0-dec-10-2025">Version 1.1.0 (Dec. 10, 2025)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../changelog.html#version-1-0-0-mar-14-2024">Version 1.0.0 (Mar. 14, 2024)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../changelog.html#version-0-8-0-may-10-2023">Version 0.8.0 (May. 10, 2023)</a></li>
@@ -467,7 +468,7 @@
 <ul class="simple">
 <li><p><strong>A ``calibrator.py`` Module</strong>: This new file defines the <code class="docutils literal notranslate"><span class="pre">CovidCalibrator</span></code> class, which inherits from <code class="docutils literal notranslate"><span class="pre">Melodie.Calibrator</span></code>.</p></li>
 <li><p><strong>Calibrator Scenarios</strong>: The input data now includes <code class="docutils literal notranslate"><span class="pre">CalibratorScenarios.csv</span></code> and <code class="docutils literal notranslate"><span class="pre">CalibratorParamsScenarios.csv</span></code> to control the calibration process. <code class="docutils literal notranslate"><span class="pre">CalibratorScenarios.csv</span></code> is similar to <code class="docutils literal notranslate"><span class="pre">SimulatorScenarios</span></code> but does not use a <code class="docutils literal notranslate"><span class="pre">run_num</span></code> column.</p></li>
-<li><p><strong>Path Modification in ``main.py``</strong>: A special modification to <code class="docutils literal notranslate"><span class="pre">sys.path</span></code> is included. This is necessary because the <code class="docutils literal notranslate"><span class="pre">Calibrator</span></code> uses multiprocessing for parallel execution. Worker processes are spawned in a new environment and need to be able to find and import the project’s modules (e.g., <cite>from examples.covid_contagion_calibrator.core…</cite>). This path modification is a robust way to ensure modules are discoverable when running examples directly from the Melodie repository, which is not a standard installed package.</p></li>
+<li><p><strong>Module Execution</strong>: This example should be launched from the repository root with <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-m</span> <span class="pre">examples.covid_contagion_calibrator.main</span></code>. Running it as a module keeps imports stable for both the main process and parallel worker processes.</p></li>
 </ul>
 </section>
 <section id="calibrator-ga-concepts">
@@ -522,15 +523,16 @@
 <section id="calibrator-running-the-model">
 <h2>Calibrator: Running the Model<a class="headerlink" href="#calibrator-running-the-model" title="Link to this heading"></a></h2>
 <p>You can run the calibrator using the main script:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>examples/covid_contagion_calibrator/main.py
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>examples.covid_contagion_calibrator.main
 </pre></div>
 </div>
 <p>This will execute the genetic algorithm, running multiple simulations in parallel to find the optimal <code class="docutils literal notranslate"><span class="pre">infection_prob</span></code>. The results, including the progression of parameters and distances across generations, are saved to the <code class="docutils literal notranslate"><span class="pre">data/output</span></code> folder.</p>
+<p>When running on Python 3.13+ from the repository, this example now defaults to the thread-based mode. This avoids the local TCP socket requirement of the process-based <code class="docutils literal notranslate"><span class="pre">rpyc</span></code> worker mode and is the recommended path for modern free-threaded builds.</p>
 <p><strong>Parallel Execution Mode</strong></p>
 <p>The <code class="docutils literal notranslate"><span class="pre">Calibrator</span></code> supports two parallelization modes, controlled by the <code class="docutils literal notranslate"><span class="pre">parallel_mode</span></code> parameter when creating the calibrator instance:</p>
 <ul class="simple">
-<li><p><strong>``parallel_mode=”process”``</strong> (default): Uses subprocess-based parallelism via <code class="docutils literal notranslate"><span class="pre">multiprocessing</span></code>. This is the traditional approach and works on all Python versions. It is recommended for most use cases.</p></li>
-<li><p><strong>``parallel_mode=”thread”``</strong>: Uses thread-based parallelism via <code class="docutils literal notranslate"><span class="pre">ThreadPoolExecutor</span></code>. This mode is <strong>recommended for Python 3.13+</strong> (free-threaded/No-GIL builds) as it can provide better performance by avoiding the overhead of process creation and data serialization. In older Python versions, this mode will still run but may be limited by the Global Interpreter Lock (GIL).</p></li>
+<li><p><strong>``parallel_mode=”process”``</strong>: Uses subprocess-based parallelism via <code class="docutils literal notranslate"><span class="pre">multiprocessing</span></code>. This is the traditional approach and works on all Python versions, but it requires local TCP sockets for the <code class="docutils literal notranslate"><span class="pre">rpyc</span></code> worker bridge.</p></li>
+<li><p><strong>``parallel_mode=”thread”``</strong>: Uses thread-based parallelism via <code class="docutils literal notranslate"><span class="pre">ThreadPoolExecutor</span></code>. This mode is recommended for <strong>Python 3.13+ free-threaded builds</strong>, with the best-tested path currently being <strong>Python 3.14</strong>. In older Python versions, this mode will still run but may be limited by the Global Interpreter Lock (GIL).</p></li>
 </ul>
 <p>You can specify the mode when creating the calibrator:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">calibrator</span> <span class="o">=</span> <span class="n">CovidCalibrator</span><span class="p">(</span>

@@ -120,6 +120,9 @@ class AgentList(BaseAgentContainer, Generic[AgentGeneric]):
         # print(deref(self.indices))
         self.indices[agent_id] = index
 
+    def _rebuild_indices(self):
+        self.indices = {agent.id: i for i, agent in enumerate(self.agents)}
+
     def _get_index(self, agent_id):
         if agent_id in self.indices:
             return self.indices[agent_id]
@@ -182,7 +185,13 @@ class AgentList(BaseAgentContainer, Generic[AgentGeneric]):
                 params = {k: row[k] for k in param_names}
                 agent = self.get_agent(params["id"])
                 if agent is None:
-                    agent = self.add()
+                    agent = self.agent_class(params["id"])
+                    agent.scenario = self.model.scenario
+                    agent.model = self.model
+                    agent.setup()
+                    self.agents.append(agent)
+                    self._set_index(agent.id, len(self.agents) - 1)
+                    self._id_offset = max(self._id_offset, agent.id)
                 agent.set_params(params)
         else:
             row: Dict[str, Any]
@@ -244,15 +253,6 @@ class AgentList(BaseAgentContainer, Generic[AgentGeneric]):
 
         self._set_index(agent.id, len(self.agents) - 1)
         return agent
-
-    def set_properties(self, props_df: TABLE_TYPE):
-        """
-        Extract properties from a dataframe, and Each row in the dataframe represents the property of an agent.
-        :param props_df:
-        :return:
-        """
-        self._set_properties(props_df)
-        self.agents.sort(key=lambda agent: agent.id)
 
     def to_list(self, column_names: List[str]) -> List[Dict]:
         """
@@ -342,6 +342,7 @@ class AgentList(BaseAgentContainer, Generic[AgentGeneric]):
         """
         self._set_properties(props_df)
         self.agents.sort(key=lambda agent: agent.id)
+        self._rebuild_indices()
 
     def get_agent(self, agent_id):
         """

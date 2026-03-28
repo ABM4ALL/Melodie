@@ -51,9 +51,11 @@ class TableReader:
             current_row += 1
 
         def row_iter():
-            for row_data in reader:
-                yield row_data
-            f.close()
+            try:
+                for row_data in reader:
+                    yield row_data
+            finally:
+                f.close()
 
         return header, row_iter()
 
@@ -74,8 +76,11 @@ class TableReader:
         def excel_max_col(sheet):
             i = sheet.max_column
             real_max_col = 0
+            rows_in_sheet = excel_max_row(sheet)
             while i > 0:
-                col_dict = {table.cell(row + 1, i).value for row in range(rows)}
+                col_dict = {
+                    sheet.cell(row + 1, i).value for row in range(rows_in_sheet)
+                }
                 if col_dict == {None}:
                     i = i - 1
                 else:
@@ -189,7 +194,7 @@ class DatabaseConnector:
             conn.execute(sql, data)
 
     def read_sql(
-        self, table_name: str, sql: str
+        self, table_name: str, sql, params=None
     ) -> Tuple[List[Dict[str, Any]], Dict[str, TypeEngine]]:
         # 创建inspector对象
         insp = inspect(self.engine)
@@ -203,7 +208,10 @@ class DatabaseConnector:
             index_mapping.append(column_name)
 
         with self.engine.connect() as conn:
-            result = conn.execute(sql)
+            if params is None:
+                result = conn.execute(sql)
+            else:
+                result = conn.execute(sql, params)
             data = []
             for row in result.fetchall():
                 data.append({index_mapping[i]: item for i, item in enumerate(row)})

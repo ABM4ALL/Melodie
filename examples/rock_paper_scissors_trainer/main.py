@@ -1,18 +1,4 @@
 import os
-import sys
-
-# -------------------------------------------------------------------------
-# IMPORT PATH HACK FOR PARALLEL WORKERS
-# -------------------------------------------------------------------------
-# The Trainer uses multiprocessing. To ensure that worker processes can
-# correctly import the 'examples' package to load model and scenario
-# classes, the project's root directory is added to Python's path.
-# This is a common pattern for running nested example modules directly
-# from a repository without requiring an editable installation.
-# -------------------------------------------------------------------------
-PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
-if PROJECT_ROOT not in sys.path:
-    sys.path.insert(0, PROJECT_ROOT)
 
 from Melodie import Config, Simulator
 
@@ -61,4 +47,3 @@ if __name__ == "__main__":
     # run_simulator(config)
 
     run_trainer(config)
-

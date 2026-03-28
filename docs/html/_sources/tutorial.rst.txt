@@ -138,9 +138,9 @@ To run the example from the repository root (after activating your virtual envir
 
 .. code-block:: bash
 
-   python examples/covid_contagion/main.py
+   python -m examples.covid_contagion.main
 
-This ``main.py`` file is the entry point that loads the configuration and starts the simulation. It mirrors how you would run any Melodie project from a script.
+This ``main.py`` file is the entry-point module that loads the configuration and starts the simulation. The same module-style invocation pattern can be used for the other examples under ``examples/``.
 
 .. literalinclude:: ../../examples/covid_contagion/main.py
    :language: python
@@ -186,17 +186,18 @@ This is the recommended and most robust method for parallelization in Melodie.
 
 **2. ``run_parallel_multithread()``: Thread-Based Parallelism (Experimental)**
 
-This method is an experimental feature designed to leverage modern Python versions (3.13+).
+This method is an experimental feature designed to leverage Python 3.13+
+free-threaded builds, with the best-tested path currently being Python 3.14.
 
 - **Mechanism**: It uses a thread pool instead of a process pool. This avoids the overhead of creating new processes and serializing (pickling) data between them.
 - **Use Case**:
-    - **Python 3.13+ (with free-threading mode)**: This method can offer significant performance gains over ``run_parallel()`` by running threads on multiple cores without the GIL.
+    - **Python 3.13+ free-threaded builds**: This method can offer significant performance gains over ``run_parallel()`` by running threads on multiple cores without the GIL.
     - **Older Python Versions**: It will run concurrently but will be limited by the GIL. For CPU-bound ABM simulations, it is unlikely to provide a speedup and may even be slower than a sequential run.
 - **Usage**:
 
 .. code-block:: python
 
-   # In main.py, for experiments on Python 3.13+
+   # In main.py, for experiments on Python 3.13+ free-threaded builds
    simulator.run_parallel_multithread(cores=4)
 
 **Performance Comparison: A Quick Case Study**
@@ -223,7 +224,7 @@ With the official support for a free-threaded model (No-GIL) in Python 3.14+, th
     - **Total Time**: ~1.56 seconds
     - **Mechanism**: The 8 threads now run on 8 cores in true parallelism within a single process. By avoiding the overhead of process creation and data serialization, this method is now **over 3.4x faster** for this specific task.
 
-**Conclusion**: For CPU-bound agent-based models, ``run_parallel()`` remains a robust choice for all Python versions. However, if you are using **Python 3.14+**, ``run_parallel_multithread()`` is now the **highly recommended method** for achieving superior performance on multi-core systems, thanks to the removal of the GIL.
+**Conclusion**: For CPU-bound agent-based models, ``run_parallel()`` remains a robust choice for all Python versions. However, if you are using **Python 3.14+** or another **Python 3.13+ free-threaded build**, ``run_parallel_multithread()`` is the recommended method for achieving superior performance on multi-core systems.
 
 **A Note on Performance Trade-offs**
 
@@ -231,10 +232,10 @@ An astute observer might notice that the absolute execution times on Python 3.14
 
 In our test, the simulation task for each scenario is very short (milliseconds). Consequently, the overhead of creating new Python processes for ``run_parallel()`` becomes a significant portion of the total time, causing its slowdown from ~0.9s to ~5.37s.
 
-The key takeaway is not the absolute speed on this micro-task, but the **relative speedup**. The test clearly demonstrates that for Python 3.14+, ``run_parallel_multithread()`` effectively eliminates this high process-creation overhead, making it the superior architecture for computationally intensive models where the simulation time far outweighs the initial setup time.
+The key takeaway is not the absolute speed on this micro-task, but the **relative speedup**. The test clearly demonstrates that on Python 3.14 and newer free-threaded builds, ``run_parallel_multithread()`` effectively eliminates this high process-creation overhead, making it the superior architecture for computationally intensive models where the simulation time far outweighs the initial setup time.
 
 **A Note on Paths and Parallel Execution**
 
-You may have noticed that some examples in the `examples/` directory require special handling to run in parallel, such as being executed as a module (e.g., `python -m examples.covid_contagion.main`) and having `__init__.py` files in their directories.
+All examples in the `examples/` directory should be executed from the repository root as Python modules, for example `python -m examples.covid_contagion.main`.
 
-This is a specific consequence of these examples being **nested inside a larger project structure** (the Melodie repository itself). When `run_parallel()` creates new processes, those processes need to be able to import the model's code (like `core.model`). The path manipulation ensures they can find the `examples` package from the project's root.
+This keeps imports consistent for both normal execution and parallel worker processes. The example directories are structured as packages, so no `sys.path` manipulation is needed.

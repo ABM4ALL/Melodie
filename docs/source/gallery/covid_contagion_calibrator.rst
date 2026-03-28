@@ -29,7 +29,7 @@ The primary changes for the calibrator example are:
 
 - **A ``calibrator.py`` Module**: This new file defines the ``CovidCalibrator`` class, which inherits from ``Melodie.Calibrator``.
 - **Calibrator Scenarios**: The input data now includes ``CalibratorScenarios.csv`` and ``CalibratorParamsScenarios.csv`` to control the calibration process. ``CalibratorScenarios.csv`` is similar to ``SimulatorScenarios`` but does not use a ``run_num`` column.
-- **Path Modification in ``main.py``**: A special modification to ``sys.path`` is included. This is necessary because the ``Calibrator`` uses multiprocessing for parallel execution. Worker processes are spawned in a new environment and need to be able to find and import the project's modules (e.g., `from examples.covid_contagion_calibrator.core...`). This path modification is a robust way to ensure modules are discoverable when running examples directly from the Melodie repository, which is not a standard installed package.
+- **Module Execution**: This example should be launched from the repository root with ``python -m examples.covid_contagion_calibrator.main``. Running it as a module keeps imports stable for both the main process and parallel worker processes.
 
 Calibrator: GA Concepts
 -----------------------
@@ -87,17 +87,19 @@ You can run the calibrator using the main script:
 
 .. code-block:: bash
 
-   python examples/covid_contagion_calibrator/main.py
+   python -m examples.covid_contagion_calibrator.main
 
 This will execute the genetic algorithm, running multiple simulations in parallel to find the optimal ``infection_prob``. The results, including the progression of parameters and distances across generations, are saved to the ``data/output`` folder.
+
+When running on Python 3.13+ from the repository, this example now defaults to the thread-based mode. This avoids the local TCP socket requirement of the process-based ``rpyc`` worker mode and is the recommended path for modern free-threaded builds.
 
 **Parallel Execution Mode**
 
 The ``Calibrator`` supports two parallelization modes, controlled by the ``parallel_mode`` parameter when creating the calibrator instance:
 
-- **``parallel_mode="process"``** (default): Uses subprocess-based parallelism via ``multiprocessing``. This is the traditional approach and works on all Python versions. It is recommended for most use cases.
+- **``parallel_mode="process"``**: Uses subprocess-based parallelism via ``multiprocessing``. This is the traditional approach and works on all Python versions, but it requires local TCP sockets for the ``rpyc`` worker bridge.
 
-- **``parallel_mode="thread"``**: Uses thread-based parallelism via ``ThreadPoolExecutor``. This mode is **recommended for Python 3.13+** (free-threaded/No-GIL builds) as it can provide better performance by avoiding the overhead of process creation and data serialization. In older Python versions, this mode will still run but may be limited by the Global Interpreter Lock (GIL).
+- **``parallel_mode="thread"``**: Uses thread-based parallelism via ``ThreadPoolExecutor``. This mode is recommended for **Python 3.13+ free-threaded builds**, with the best-tested path currently being **Python 3.14**. In older Python versions, this mode will still run but may be limited by the Global Interpreter Lock (GIL).
 
 You can specify the mode when creating the calibrator:
 

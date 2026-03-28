@@ -173,6 +173,7 @@ class CandleStickChart(Chart):
 
 class Gauge(JSONBase, ChartBase):
     def __init__(self, source: Callable[[], Union[int, float, Dict]]):
+        self._source = source
         self._sources: Dict[str, Callable[[], Union[int, float]]] = {}
         self.value: Dict[str, Union[int, float]] = {}
 

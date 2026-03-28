@@ -190,7 +190,9 @@ class GACalibratorAlgorithm:
                 ),
             }
             self.parallel_manager = ParallelManager(
-                self.processors, configs=(d, self.manager.config.to_dict())
+                self.processors,
+                configs=(d, self.manager.config.to_dict()),
+                port=self.manager.config.parallel_port,
             )
             self.parallel_manager.run("calibrator")
         elif self.parallel_mode == "thread":
@@ -359,7 +361,7 @@ class GACalibratorAlgorithm:
         for container_name in self.recorded_agent_properties.keys():
             df = agent_container_df_dict[container_name]
             container_agent_record_list = []
-            for agent_id in self.recorded_agent_properties[container_name]:
+            for agent_id in df["agent_id"].unique():
                 agent_data = df.loc[df["agent_id"] == agent_id]
                 cov_records = {}
                 cov_records.update(meta_dict)
@@ -369,7 +371,7 @@ class GACalibratorAlgorithm:
                 ]:
                     p: pd.Series = agent_data[prop_name]
                     mean = p.mean()
-                    cov = p.std() / p.mean()
+                    cov = float("nan") if mean == 0 else p.std() / mean
                     cov_records.update(
                         {prop_name + "_mean": mean, prop_name + "_cov": cov}
                     )
@@ -386,7 +388,7 @@ class GACalibratorAlgorithm:
             self.env_param_names + self.recorded_env_properties + ["distance"]
         ):
             mean = env_df[prop_name].mean()
-            cov = env_df[prop_name].std() / env_df[prop_name].mean()
+            cov = float("nan") if mean == 0 else env_df[prop_name].std() / mean
             env_record.update({prop_name + "_mean": mean, prop_name + "_cov": cov})
 
         self.manager._write_to_table(
@@ -436,6 +438,10 @@ class GACalibratorAlgorithm:
 
             for _id_chromosome in range(self.params.strategy_population):
                 chrom, agents_data, env_data = self.parallel_manager.get_result()
+                if chrom is None or agents_data is None or env_data is None:
+                    raise RuntimeError(
+                        "Parallel calibrator worker failed; see worker traceback above."
+                    )
                 meta.id_chromosome = chrom
                 agent_records, env_record = self.record_agent_properties(
                     agents_data, env_data, meta
@@ -485,7 +491,8 @@ class Calibrator(BaseModellingManager):
         :param parallel_mode: The parallelization mode. ``"process"`` (default)
             uses subprocess-based parallelism, suitable for all Python versions.
             ``"thread"`` uses thread-based parallelism, which is recommended for
-            Python 3.13+ (free-threaded/No-GIL builds) for better performance.
+            Python 3.13+ free-threaded builds, with the best-tested path
+            currently being Python 3.14.
         """
         super().__init__(
             config=config,
@@ -502,7 +509,7 @@ class Calibrator(BaseModellingManager):
         self.watched_env_properties: List[str] = []
         self.recorded_agent_properties: Dict[str, List[str]] = {}
         self.algorithm: Optional[GACalibratorAlgorithm] = None
-        self.algorithm_instance: Iterator[List[float]] = {}
+        self.algorithm_instance: Dict[str, Any] = {}
 
         self.model: Optional[Model] = None
 

@@ -55,8 +55,10 @@ class StaticCheckerRoutine:
                         self.check(file_path)
                     except KeyboardInterrupt as e:
                         raise e
-                    except:
-                        pass
+                    except Exception:
+                        import traceback
+
+                        traceback.print_exc()
         for msg in self.messages:
             print(msg)
 

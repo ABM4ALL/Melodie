@@ -47,7 +47,7 @@ class DataFrameGenerator:
         from Melodie.data_loader import DataLoader
 
         if not isinstance(self.df_loader, DataLoader):
-            MelodieExceptions.Data.NoDataframeLoaderDefined()
+            raise MelodieExceptions.Data.NoDataframeLoaderDefined()
 
         self._row_generator: Optional[Callable[[Scenario], Union[dict, object]]] = None
 
@@ -125,7 +125,7 @@ class DataFrameGenerator:
             generated = self._row_generator(scenario)
             if isinstance(generated, dict):
                 d.update(generated)
-            elif not type(generated).__module__ == "__builtin__":
+            elif hasattr(generated, "__dict__"):
                 d.update(generated.__dict__)
             else:
                 raise TypeError(

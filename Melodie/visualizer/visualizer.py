@@ -140,7 +140,7 @@ class BaseVisualizer:
             args=(self.recv_queue, self.send_queue, self.config.visualizer_port),
         )
 
-        self.th.setDaemon(True)
+        self.th.daemon = True
         self.th.start()
 
         logger.info(
@@ -354,7 +354,7 @@ class BaseVisualizer:
                             "name": data["name"] + ".sqlite",
                             "content": base64.b64encode(f.read()).decode("ascii"),
                         },
-                        ERROR,
+                        OK,
                     )
 
                 self.send_notification("Database exported successfully!", "success")
@@ -372,7 +372,7 @@ class BaseVisualizer:
         self.reset()
         try:
             self.send_current_data()
-        except:
+        except Exception:
             import traceback
 
             traceback.print_exc()
@@ -569,7 +569,7 @@ class Visualizer(BaseVisualizer):
         symbol="rect",
     ):
         if series_type not in {"scatter"}:
-            MelodieExceptions.Program.Variable.VariableNotInSet(
+            raise MelodieExceptions.Program.Variable.VariableNotInSet(
                 "series_type", series_type, {"scatter"}
             )
         if component_name not in self.agent_series_managers:
@@ -636,8 +636,6 @@ class Visualizer(BaseVisualizer):
         ) in self.visualizer_components:
             if vis_component_type == "grid":
                 r = self.parse_grid_series(vis_component(), roles, var_getter)
-                r['rows'] = 40
-                r['columns'] = 40
                 visualizers.append(r)
             elif vis_component_type == "network":
                 visualizers.append(

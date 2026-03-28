@@ -16,8 +16,6 @@ from rpyc.utils.server import ThreadedServer
 
 logger = logging.getLogger("ParallelManager-MainThread")
 
-tasks: Optional["Tasks"] = None
-
 
 class Tasks:
     def __init__(self):
@@ -56,28 +54,36 @@ class Tasks:
 
 
 class ParallelManager:
-    def __init__(self, cores: int, configs: Tuple):
+    def __init__(self, cores: int, configs: Tuple, port: int = 12233):
         self.th_server = threading.Thread(target=self.run_server)
         self.processes: List[subprocess.Popen] = []
         self.cores = cores
+        self.port = port
         self.server: ThreadedServer = None
+        self.tasks = Tasks()
+        self.tasks.config = configs
+        self.service_cls = type(
+            "BoundParallelDataService",
+            (ParallelDataService,),
+            {"tasks": self.tasks},
+        )
         self.set_tasks(configs)
 
     def set_tasks(self, config):
-        global tasks
-        tasks = Tasks()
-        tasks.config = config
+        self.tasks = Tasks()
+        self.tasks.config = config
+        self.service_cls.tasks = self.tasks
 
     def put_task(self, task):
-        tasks.put_task(task)
+        self.tasks.put_task(task)
 
     def get_result(self):
-        return tasks.get_result()
+        return self.tasks.get_result()
 
     def run_server(self):
         try:
             self.server = ThreadedServer(
-                service=ParallelDataService, port=12233, auto_register=False
+                service=self.service_cls, port=self.port, auto_register=False
             )
             self.server.start()
         except OSError as e:
@@ -93,8 +99,9 @@ class ParallelManager:
         :param role: run as calibrator or trainer
         :return:
         """
-        assert role in {"calibrator", "trainer", "simulator"}
-        self.th_server.setDaemon(True)
+        if role not in {"calibrator", "trainer", "simulator"}:
+            raise ValueError(f"Unsupported parallel role: {role}")
+        self.th_server.daemon = True
         self.th_server.start()
         for core_id in range(self.cores):
             p = subprocess.Popen(
@@ -107,6 +114,8 @@ class ParallelManager:
                     json.dumps([os.getcwd()]),
                     "--role",
                     role,
+                    "--port",
+                    str(self.port),
                 ],
                 # env={"PYTHONPATH": ";".join(sys.path)},
             )
@@ -124,23 +133,29 @@ class ParallelManager:
         if self.server is not None:
             self.server.close()
             logger.info("Server closed!")
-        global tasks
-        tasks = None
 
 
 class ParallelDataService(Service):
+    tasks: Optional["Tasks"] = None
+
     def exposed_get_time(self):
         return time.ctime()
 
     def exposed_get_task(self):
-        return base64.b64encode(cloudpickle.dumps(tasks.get_task()))
+        if self.tasks is None:
+            raise RuntimeError("Parallel tasks are not initialized")
+        return base64.b64encode(cloudpickle.dumps(self.tasks.get_task()))
 
     def exposed_put_result(self, result):
         loaded = cloudpickle.loads(base64.b64decode(result))
-        tasks.put_result(loaded)
+        if self.tasks is None:
+            raise RuntimeError("Parallel tasks are not initialized")
+        self.tasks.put_result(loaded)
 
     def exposed_get_config(self):
-        return json.dumps(tasks.get_config())
+        if self.tasks is None:
+            raise RuntimeError("Parallel tasks are not initialized")
+        return json.dumps(self.tasks.get_config())
 
 
 class ThreadParallelManager:
@@ -209,8 +224,7 @@ class ThreadParallelManager:
                 import traceback
 
                 traceback.print_exc()
-                # Put a failure marker or re-raise depending on desired behavior
-                self.result_queue.put(None)  # Or handle more gracefully
+                self.result_queue.put((None, None, None))
 
     def put_task(self, task: Any):
         """

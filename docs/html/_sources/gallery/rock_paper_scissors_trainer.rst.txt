@@ -91,7 +91,7 @@ You can run both the simulator and the trainer using the main script:
 
 .. code-block:: bash
 
-   python examples/rock_paper_scissors_trainer/main.py
+   python -m examples.rock_paper_scissors_trainer.main
 
 The trainer clears the output directory before it runs. Therefore, after executing the command, you will only find the trainer's output tables in ``examples/rock_paper_scissors_trainer/data/output``. If you need the simulator's results, you should run it separately (for example, by commenting out the ``run_trainer`` call in ``main.py``).
 
@@ -101,7 +101,7 @@ The ``Trainer`` supports two parallelization modes, controlled by the ``parallel
 
 - **``parallel_mode="process"``** (default): Uses subprocess-based parallelism via ``multiprocessing``. This is the traditional approach and works on all Python versions. It is recommended for most use cases.
 
-- **``parallel_mode="thread"``**: Uses thread-based parallelism via ``ThreadPoolExecutor``. This mode is **recommended for Python 3.13+** (free-threaded/No-GIL builds) as it can provide better performance by avoiding the overhead of process creation and data serialization. In older Python versions, this mode will still run but may be limited by the Global Interpreter Lock (GIL).
+- **``parallel_mode="thread"``**: Uses thread-based parallelism via ``ThreadPoolExecutor``. This mode is recommended for **Python 3.13+ free-threaded builds**, with the best-tested path currently being **Python 3.14**. In older Python versions, this mode will still run but may be limited by the Global Interpreter Lock (GIL).
 
 You can specify the mode when creating the trainer:
 
@@ -167,4 +167,3 @@ Defined in ``core/trainer.py``.
 .. literalinclude:: ../../../examples/rock_paper_scissors_trainer/core/trainer.py
    :language: python
    :linenos:
-

@@ -78,9 +78,9 @@ class GeneralTable(TableBase):
         conn.write_table(table_name, self.row_types, self.data)
 
     @staticmethod
-    def from_database(engine, table: str, sql: str):
+    def from_database(engine, table: str, sql, params=None):
         conn = DatabaseConnector(engine)
-        data, types = conn.read_sql(table, sql)
+        data, types = conn.read_sql(table, sql, params=params)
         return GeneralTable.from_dicts(types, data, copy=False)
 
     @property

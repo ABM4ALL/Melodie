@@ -6,14 +6,14 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CovidContagionGridVisual &mdash; Melodie 1.1.0 documentation</title>
+  <title>CovidContagionGridVisual &mdash; Melodie 1.1.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
 
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=fc837d61"></script>
+      <script src="../_static/documentation_options.js?v=58fbf978"></script>
       <script src="../_static/doctools.js?v=9bcbadda"></script>
       <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
@@ -396,6 +396,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../changelog.html">Change Log</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../changelog.html#major-version-0-x">Major Version 0.x</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../changelog.html#version-1-1-1-mar-27-2026">Version 1.1.1 (Mar. 27, 2026)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../changelog.html#version-1-1-0-dec-10-2025">Version 1.1.0 (Dec. 10, 2025)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../changelog.html#version-1-0-0-mar-14-2024">Version 1.0.0 (Mar. 14, 2024)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../changelog.html#version-0-8-0-may-10-2023">Version 0.8.0 (May. 10, 2023)</a></li>
@@ -484,7 +485,7 @@ Instead of running a batch simulation immediately, the <code class="docutils lit
 <section id="visualizer-running-the-model">
 <h2>Visualizer: Running the Model<a class="headerlink" href="#visualizer-running-the-model" title="Link to this heading"></a></h2>
 <p>To run the model with the visualizer, execute the main script:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>examples/covid_contagion_grid_visual/run_studio.py
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>examples.covid_contagion_grid_visual.run_studio
 </pre></div>
 </div>
 <p>Then, open your browser and navigate to <code class="docutils literal notranslate"><span class="pre">http://localhost:8089</span></code>. This is the web gateway for MelodieStudio. The backend simulation service will automatically run on <code class="docutils literal notranslate"><span class="pre">127.0.0.1:8765</span></code>.</p>

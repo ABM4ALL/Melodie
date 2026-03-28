@@ -129,7 +129,8 @@ class BaseModellingManager(abc.ABC):
         :param clear_output_data: If ``True``, all existing output tables in the
             database and CSV files in the output directory will be deleted.
         """
-        assert self.config is not None, MelodieExceptions.MLD_INTL_EXC
+        if self.config is None:
+            raise RuntimeError(str(MelodieExceptions.MLD_INTL_EXC))
         if clear_output_data:
             with db_conn(self.config) as conn:
                 conn.clear_database()
@@ -356,7 +357,8 @@ class Simulator(BaseModellingManager):
 
         self.pre_run()
 
-        assert self.scenarios is not None, MelodieExceptions.MLD_INTL_EXC
+        if self.scenarios is None:
+            raise RuntimeError(str(MelodieExceptions.MLD_INTL_EXC))
         for scenario_index, scenario in enumerate(self.scenarios):
             for id_run in range(scenario.run_num):
                 self.run_model(
@@ -387,8 +389,10 @@ class Simulator(BaseModellingManager):
         t1 = time.time()
         logger.info(f"Simulator start up cost: {t1 - t0}s")
 
-        assert self.visualizer is not None, MelodieExceptions.MLD_INTL_EXC
-        assert self.config is not None, MelodieExceptions.MLD_INTL_EXC
+        if self.visualizer is None:
+            raise RuntimeError(str(MelodieExceptions.MLD_INTL_EXC))
+        if self.config is None:
+            raise RuntimeError(str(MelodieExceptions.MLD_INTL_EXC))
 
         while True:
             logger.info(
@@ -396,12 +400,17 @@ class Simulator(BaseModellingManager):
             )
             fn = get_sqlite_filename(self.config)
             if os.path.exists(fn):
+                conn_string = self.config.database_config.connection_string()
+                existing_conn = DBConn.existing_connections.pop(conn_string, None)
+                if existing_conn is not None:
+                    existing_conn.close()
                 os.remove(fn)
             self.data_loader: "Optional[DataLoader]" = None
             self.scenarios = None
             DBConn.table_dtypes = {}
             self.pre_run()
-            assert self.scenarios is not None, MelodieExceptions.MLD_INTL_EXC
+            if self.scenarios is None:
+                raise RuntimeError(str(MelodieExceptions.MLD_INTL_EXC))
             logger.warning(
                 "When running visualizer, only the first scenario will be run."
             )
@@ -464,7 +473,9 @@ class Simulator(BaseModellingManager):
             else None,
         }
         parallel_manager = ParallelManager(
-            cores, configs=(parallel_manager_data, self.config.to_dict())
+            cores,
+            configs=(parallel_manager_data, self.config.to_dict()),
+            port=self.config.parallel_port,
         )
         parallel_manager.run("simulator")
         try:
@@ -486,7 +497,11 @@ class Simulator(BaseModellingManager):
                         tasks_count += 1
 
             for i in range(tasks_count):
-                parallel_manager.get_result()
+                run_id, _, _ = parallel_manager.get_result()
+                if run_id is None:
+                    raise RuntimeError(
+                        "Parallel simulator worker failed; see worker traceback above."
+                    )
                 logger.info(f"finished {i+1} tasks!")
             t2 = time.time()
             logger.info(
@@ -498,18 +513,21 @@ class Simulator(BaseModellingManager):
             import traceback
 
             traceback.print_exc()
+            raise
         finally:
             logger.info("quit parallel manager!")
             parallel_manager.close()
 
     def run_parallel_multithread(self, cores: int = 1):
         """
-        Experimental parallel execution utilizing Python 3.13+ Free-threaded mode (No-GIL).
+        Experimental parallel execution utilizing Python 3.13+ free-threaded
+        builds, with the best-tested path currently being Python 3.14.
 
         This method uses a ThreadPoolExecutor.
-        In Python 3.13+ (free-threaded build), it can leverage multiple cores without the overhead of
-        process creation or object pickling. In older Python versions, it still runs concurrently but is
-        limited by the GIL, so CPU-bound workloads may not see a speedup.
+        In Python 3.13+ free-threaded builds, it can leverage multiple cores
+        without the overhead of process creation or object pickling. In older
+        Python versions, it still runs concurrently but is limited by the GIL,
+        so CPU-bound workloads may not see a speedup.
 
         :param cores: Number of threads to use.
         """
@@ -522,10 +540,10 @@ class Simulator(BaseModellingManager):
         tasks = []
         for scenario in self.scenarios:
             for id_run in range(scenario.run_num):
-                tasks.append((self.config, scenario, id_run, self.model_cls))
+                tasks.append((self.config, scenario.copy(), id_run, self.model_cls))
 
         logger.info(
-            f"Starting multithreaded simulation with {cores} threads (Targeting Python 3.13+ No-GIL)..."
+            f"Starting multithreaded simulation with {cores} threads (Targeting Python 3.13+ free-threaded builds)..."
         )
 
         # Use ThreadPoolExecutor instead of ProcessPool

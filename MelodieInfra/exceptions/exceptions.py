@@ -332,7 +332,7 @@ class MelodieExceptions:
         def TableNameAlreadyExists(table_name: str, existed: str):
             return MelodieException(
                 1501,
-                f"Table Named {table_name} does not exist. All existed tables are: {existed}",
+                f"Table Named {table_name} already exists. All existed tables are: {existed}",
             )
 
         @staticmethod

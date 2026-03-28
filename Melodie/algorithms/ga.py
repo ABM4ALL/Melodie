@@ -4,7 +4,7 @@ import numpy as np
 
 try:
     from sko.GA import GA
-except:
+except ImportError:
 
     class GA:
         def __init__(self, *args, **kwargs):

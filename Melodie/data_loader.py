@@ -98,7 +98,6 @@ class MatrixInfo:
             return np.int64
         elif issubclass(py_type, float):
             return np.float64
-            return np.float64
         else:
             raise NotImplementedError(
                 f"Cannot convert this type {self.data_type} to numpy data type!"
@@ -258,7 +257,9 @@ class DataLoader:
             elif ext in {".csv"}:
                 return pandas.read_csv(filename)
             else:
-                raise NotImplemented(file_path_abs)
+                raise NotImplementedError(
+                    f"Unsupported dataframe file extension for '{file_path_abs}'"
+                )
 
         if self.config.input_dataframe_cache and not disable_cache:
             reader = PickledCacheFileReader(self._cache_dir, original_read_method)
@@ -359,7 +360,9 @@ class DataLoader:
         """
         scenarios_dataframe = self.registered_dataframes.get(df_name)
         if scenarios_dataframe is None:
-            MelodieExceptions.Data.TableNotFound(df_name, self.registered_dataframes)
+            raise MelodieExceptions.Data.TableNotFound(
+                df_name, self.registered_dataframes
+            )
         scenarios_dataframe = TableInterface(scenarios_dataframe)
         cols = [col for col in scenarios_dataframe.columns]
         scenarios: List[Scenario] = []

@@ -8,7 +8,7 @@ from typing import Dict, Set
 
 try:
     from termcolor import cprint
-except:
+except ImportError:
 
     def cprint(s, **kwargs):
         print(s)

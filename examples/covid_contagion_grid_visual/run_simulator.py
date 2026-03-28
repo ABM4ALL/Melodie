@@ -1,12 +1,6 @@
 """Visualizer runner - called by MelodieStudio."""
 import os
-import sys
 from Melodie import Config, Simulator
-
-# Get the project root directory
-PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-if PROJECT_ROOT not in sys.path:
-    sys.path.insert(0, PROJECT_ROOT)
 
 from examples.covid_contagion_grid_visual.core.model import CovidModel
 from examples.covid_contagion_grid_visual.core.scenario import CovidScenario
@@ -30,4 +24,3 @@ if __name__ == "__main__":
         visualizer_cls=CovidVisualizer,
     )
     simulator.run_visual()
-

@@ -90,14 +90,6 @@ def neighbors(grid: Grid):
     grid.get_spot(0, 0)
 
 
-# def test_agent_list():
-#     if JIT_AVAILABLE:
-#         from Melodie.boost import JITGrid
-#     else:
-#         return
-#     grid = JITGrid(5, 5)
-#     grid.add_category('wolfs')
-#     grid.add_category('sheeps')
 #
 #     al1 = AgentList(Agent, 10, model)
 #     al2 = AgentList(Agent, 10, model)

@@ -13,7 +13,7 @@ Dependencies:
 import os
 import pandas as pd
 
-from core.model import CovidModel
+from examples.covid_contagion_mesa.core.model import CovidModel
 
 
 def run_scenarios() -> None:

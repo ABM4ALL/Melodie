@@ -33,7 +33,7 @@ class SQLiteDBConfig(BaseMelodieDBConfig):
 class MysqlDBConfig(BaseMelodieDBConfig):
     def __init__(self, db_name: str, host: str, user: str, password: str):
         super().__init__()
-        self.type == "mysql"
+        self.type = "mysql"
         self.db_name = db_name
         self.host = host
         self.user = user

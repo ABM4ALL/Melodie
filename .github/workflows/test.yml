@@ -7,18 +7,13 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
+        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13", "3.14"]
 
     steps:
-      - uses: actions/checkout@v2
-
-      - name: Setup timezone
-        uses: zcong1993/setup-timezone@master
-        with:
-          timezone: UTC
+      - uses: actions/checkout@v4
 
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
 
@@ -26,9 +21,13 @@ jobs:
         run: |
           python3 -m pip install --upgrade pip
           pip3 install .
-          pip3 install pytest
+          pip3 install pytest pytest-timeout pytest-cov
 
       - name: Test with pytest
-        run: |
-          pytest tests/infra -s
-          pytest tests/procedures -s
+        run: pytest -q --cov=Melodie --cov=MelodieInfra --cov-report=xml
+
+      - name: Upload coverage
+        uses: codecov/codecov-action@v4
+        with:
+          files: ./coverage.xml
+          fail_ci_if_error: false

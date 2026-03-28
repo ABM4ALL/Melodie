@@ -34,5 +34,14 @@ subparser_studio.set_defaults(func=handle_studio)
 subparser_info.set_defaults(func=handle_info)
 
 
-args = parser.parse_args()
-args.func(args)
+def main(argv=None) -> int:
+    args = parser.parse_args(argv)
+    if not hasattr(args, "func"):
+        parser.print_help()
+        return 1
+    args.func(args)
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

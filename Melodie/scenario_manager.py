@@ -48,11 +48,13 @@ class Scenario(Element):
         :return: A new ``Scenario`` object.
         """
         new_scenario = self.__class__()
-        for property_name, property in self.__dict__.items():
-            # assert property_name in new_scenario.__dict__, (property_name, new_scenario.__dict__)
-            setattr(new_scenario, property_name, property)
-        for parameter in self._parameters:
-            parameter.init = getattr(self, parameter.name)
+        for property_name, value in self.__dict__.items():
+            if property_name == "manager":
+                setattr(new_scenario, property_name, value)
+            else:
+                setattr(new_scenario, property_name, copy.deepcopy(value))
+        for parameter in new_scenario._parameters:
+            parameter.init = getattr(new_scenario, parameter.name)
         return new_scenario
 
     def load_data(self):

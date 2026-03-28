@@ -6,14 +6,14 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Change Log &mdash; Melodie 1.1.0 documentation</title>
+  <title>Change Log &mdash; Melodie 1.1.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
 
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=fc837d61"></script>
+      <script src="_static/documentation_options.js?v=58fbf978"></script>
       <script src="_static/doctools.js?v=9bcbadda"></script>
       <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
@@ -396,6 +396,7 @@
 </li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Change Log</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#major-version-0-x">Major Version 0.x</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#version-1-1-1-mar-27-2026">Version 1.1.1 (Mar. 27, 2026)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#version-1-1-0-dec-10-2025">Version 1.1.0 (Dec. 10, 2025)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#version-1-0-0-mar-14-2024">Version 1.0.0 (Mar. 14, 2024)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#version-0-8-0-may-10-2023">Version 0.8.0 (May. 10, 2023)</a></li>
@@ -445,14 +446,22 @@
 <h1>Change Log<a class="headerlink" href="#change-log" title="Link to this heading"></a></h1>
 <section id="major-version-0-x">
 <h2>Major Version 0.x<a class="headerlink" href="#major-version-0-x" title="Link to this heading"></a></h2>
+<section id="version-1-1-1-mar-27-2026">
+<h3>Version 1.1.1 (Mar. 27, 2026)<a class="headerlink" href="#version-1-1-1-mar-27-2026" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Fix packaging, CI, and Python metadata inconsistencies.</p></li>
+<li><p>Fix multiple runtime correctness bugs in scenario copying, agent indexing, visualization, table utilities, and parallel execution.</p></li>
+<li><p>Improve configuration round-tripping, cache recovery, and development environment metadata.</p></li>
+</ul>
+</section>
 <section id="version-1-1-0-dec-10-2025">
 <h3>Version 1.1.0 (Dec. 10, 2025)<a class="headerlink" href="#version-1-1-0-dec-10-2025" title="Link to this heading"></a></h3>
 <ul class="simple">
 <li><p>Add new examples and update documentation.</p></li>
 <li><p>Fixed small bugs in <cite>Calibrator</cite> and <cite>Trainer</cite>.</p></li>
-<li><p>Add a new parallel execution mode for the simulator: <code class="docutils literal notranslate"><span class="pre">run_parallel_multithread</span></code> based on Python 3.14+ free-threaded mode (No-GIL).</p></li>
-<li><p>Add thread-based parallel execution mode for <cite>Calibrator</cite> and <cite>Trainer</cite> via the <code class="docutils literal notranslate"><span class="pre">parallel_mode</span></code> parameter (recommended for Python 3.13+).</p></li>
-<li><p>Upgrade supported Python version from 3.12 to 3.14+ (tested on 3.14.2).</p></li>
+<li><p>Add a new parallel execution mode for the simulator: <code class="docutils literal notranslate"><span class="pre">run_parallel_multithread</span></code> for Python 3.13+ free-threaded builds (best tested on Python 3.14.2).</p></li>
+<li><p>Add thread-based parallel execution mode for <cite>Calibrator</cite> and <cite>Trainer</cite> via the <code class="docutils literal notranslate"><span class="pre">parallel_mode</span></code> parameter, intended for Python 3.13+ free-threaded builds.</p></li>
+<li><p>Expand tested Python version coverage through 3.14 (tested on 3.14.2).</p></li>
 </ul>
 </section>
 <section id="version-1-0-0-mar-14-2024">

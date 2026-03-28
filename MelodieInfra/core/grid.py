@@ -22,7 +22,7 @@ class GridAgent(GridItem):
         super().__init__(agent_id, grid, x, y)
         self.category = -1
         self.set_category()
-        assert self.category >= 0, "Category should be larger or "
+        assert self.category >= 0, "Category should be larger than or equal to 0"
 
     def set_category(self) -> int:
         """
@@ -352,7 +352,6 @@ class Grid:
         if agent_id not in self._existed_agents[category]:
             raise ValueError("Agent does not exist on the grid!")
         if agent_id not in self._agent_ids[category][pos_1d]:
-            print("Melodie-boost error occured. agent_id:", agent_id, "x:", x, "y:", y)
             raise IndexError("agent_id does not exist on such coordinate.")
         else:
             self._agent_ids[category][pos_1d].remove(agent_id)

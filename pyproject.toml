@@ -1,3 +1,8 @@
 [build-system]
-requires = ["Cython>=3.0.0", "numpy>= 1.20", "setuptools"]
-build-backend = "setuptools.build_meta:__legacy__"
+requires = ["numpy>=1.20", "setuptools>=64", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.pytest.ini_options]
+markers = [
+    "timeout(timeout): test timeout marker used by pytest-timeout",
+]

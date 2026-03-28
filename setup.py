@@ -1,8 +1,7 @@
-# import os
-import sys
-import setuptools
 import platform
-from distutils.extension import Extension
+import sys
+
+import setuptools
 
 
 with open("Melodie/version.txt", "r", encoding="utf8") as fv:
@@ -34,14 +33,6 @@ def scientific_toolchain_versions():
             scipy_requirement = "scipy <= 1.9.1"
 
     return [numpy_requirement, matplotlib_requirement, scipy_requirement]
-
-
-def db_tools_versions():
-    pandas_req = "pandas"
-    sqlalchemy_req = "sqlalchemy"
-    return []
-
-
 setuptools.setup(
     name="Melodie",
     version=version,
@@ -64,6 +55,8 @@ setuptools.setup(
         "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3.11",
         "Programming Language :: Python :: 3.12",
+        "Programming Language :: Python :: 3.13",
+        "Programming Language :: Python :: 3.14",
         "Topic :: Scientific/Engineering :: Artificial Intelligence",
     ],
     project_urls={
@@ -91,6 +84,6 @@ setuptools.setup(
         "flask_sock",
     ],
     python_requires=">=3.8",
-    entry_points={"console_scripts": ["Melodie=Melodie.scripts.scripts:cli"]},
+    entry_points={"console_scripts": ["Melodie=Melodie.__main__:main"]},
     include_package_data=True,
 )

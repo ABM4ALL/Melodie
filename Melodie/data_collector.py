@@ -85,7 +85,9 @@ class DataCollector:
             are "sqlite" (default) and "csv".
         """
         if target not in {"sqlite", "csv", None}:
-            MelodieExceptions.Data.InvalidDatabaseType(target, {"sqlite", "csv"})
+            raise MelodieExceptions.Data.InvalidDatabaseType(
+                target, {"sqlite", "csv"}
+            )
 
         self.target = target
         self.config: Optional[Config] = None

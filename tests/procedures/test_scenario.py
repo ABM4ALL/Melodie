@@ -109,3 +109,20 @@ def test_load_data():
     s = Simulator4Test(cfg_for_temp, TestScenario, DCTestModel)
     # s.data_loader.load_dataframe("demo-data.xlsx")
     s.run()
+
+
+def test_scenario_copy_deepcopy():
+    scenario = TestScenario(id_scenario=1)
+    scenario.manager = object()
+    scenario.values = [1, 2]
+    scenario.payload = {"a": [3, 4]}
+    scenario._parameters = []
+
+    cloned = scenario.copy()
+    cloned.values.append(3)
+    cloned.payload["a"].append(5)
+
+    assert cloned is not scenario
+    assert cloned.manager is scenario.manager
+    assert scenario.values == [1, 2]
+    assert scenario.payload["a"] == [3, 4]

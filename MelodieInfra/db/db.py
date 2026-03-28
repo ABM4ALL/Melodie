@@ -7,6 +7,7 @@ from typing import TYPE_CHECKING, Dict, Generator, List, Optional, Tuple
 import pandas as pd
 import sqlalchemy
 from sqlalchemy.exc import OperationalError
+from sqlalchemy.sql import text
 from sqlalchemy_utils import create_database, database_exists
 
 from ..exceptions import MelodieExceptions
@@ -45,7 +46,9 @@ class DBConn:
         self.db_name = db_name
 
         if db_type not in {"sqlite", "mysql"}:
-            MelodieExceptions.Data.InvalidDatabaseType(db_type, {"sqlite"})
+            raise MelodieExceptions.Data.InvalidDatabaseType(
+                db_type, {"sqlite", "mysql"}
+            )
         if db_type == "sqlite":
             if conn_params is None:
                 conn_params = {"db_path": ""}
@@ -153,9 +156,12 @@ class DBConn:
         """
         if sqlalchemy.__version__[0] == "2":
             with self.connection.connect() as conn:
-                return conn.execute(sqlalchemy.text(sql))
+                return conn.execute(text(sql))
         else:
             return self.connection.execute(sql)
+
+    def _quote_identifier(self, name: str) -> str:
+        return self.connection.dialect.identifier_preparer.quote(name)
 
     def clear_database(self):
         """
@@ -165,7 +171,7 @@ class DBConn:
             table_names = self.table_names()
             logger.info(f"Database contains tables: {table_names}.")
             for table_name in table_names:
-                self.execute(f"drop table {table_name}")
+                self.execute(f"drop table {self._quote_identifier(table_name)}")
             logger.info(f"Dropped tables: {table_names}.")
         else:
             create_database(self.connection.url)
@@ -201,8 +207,6 @@ class DBConn:
                 dtype=data_types,
                 if_exists=if_exists,
             )
-            t1 = time.time()
-            print("t1-t0", t1 - t0, t2 - t0, data_frame.shape)
 
     def read_dataframe(
         self,
@@ -232,23 +236,41 @@ class DBConn:
         """
         assert df_type in {"pandas", "melodie-table"}
 
-        where_condition_phrase = ""
         condition_phrases = []
+        params = {}
         if conditions is not None:
-            condition_phrases.extend([item[0] + item[1] for item in conditions])
+            for index, item in enumerate(conditions):
+                if len(item) == 2:
+                    condition_phrases.append(item[0] + item[1])
+                elif len(item) == 3:
+                    column_name, operator, value = item
+                    param_name = f"cond_{index}"
+                    condition_phrases.append(
+                        f"{self._quote_identifier(column_name)} {operator} :{param_name}"
+                    )
+                    params[param_name] = value
+                else:
+                    raise ValueError(f"Unsupported condition tuple: {item}")
         if id_scenario is not None:
-            condition_phrases.append(f"id_scenario={id_scenario}")
+            condition_phrases.append(
+                f"{self._quote_identifier('id_scenario')} = :id_scenario"
+            )
+            params["id_scenario"] = id_scenario
         if id_run is not None:
-            condition_phrases.append(f"id_run={id_scenario}")
+            condition_phrases.append(f"{self._quote_identifier('id_run')} = :id_run")
+            params["id_run"] = id_run
         try:
-            sql = f"select * from {table_name}"
+            sql = f"select * from {self._quote_identifier(table_name)}"
             if len(condition_phrases) != 0:
                 sql += " where " + " and ".join(condition_phrases)
             logger.debug("Querying database: " + sql)
+            sql_text = text(sql)
             if df_type == "pandas":
-                return pd.read_sql(sql, self.connection)
+                return pd.read_sql(sql_text, self.connection, params=params)
             else:
-                return GeneralTable.from_database(self.connection, table_name, sql)
+                return GeneralTable.from_database(
+                    self.connection, table_name, sql_text, params=params
+                )
         except OperationalError:
             import traceback
 
@@ -262,7 +284,7 @@ class DBConn:
         :param table_name: The name of table to drop.
         :return:
         """
-        self.connection.execute(f"drop table if exists  {table_name} ;")
+        self.execute(f"drop table if exists {self._quote_identifier(table_name)}")
 
     def query(self, sql) -> "pd.DataFrame":
         """

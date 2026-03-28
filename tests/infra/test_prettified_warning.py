@@ -1,6 +1,3 @@
-import sys
-
-sys.path.append("/Users/hzy/Documents/Projects/MelodieABM/Melodie")
 from MelodieInfra.exceptions.pretty_warnings import ColorParseFSM, show_link
 
 

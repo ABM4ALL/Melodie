@@ -29,7 +29,7 @@ def venvpackup():
 
     os.chdir(os.path.dirname(__file__))
     os.system(
-        f'{executable} -c "import Melodie.boost as boost;import Melodie.boost.hello; print(dir(boost));boost.b"'
+        f'{executable} -c "import Melodie; print(Melodie.__all__[:5])"'
     )
     # print(proj_root)
     os.chdir(proj_root)

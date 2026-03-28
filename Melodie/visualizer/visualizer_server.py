@@ -42,7 +42,7 @@ def create_visualizer_server(
                 pass
 
     thread_send = threading.Thread(target=send)
-    thread_send.setDaemon(True)
+    thread_send.daemon = True
     thread_send.start()
 
     @app.route("/visualizer/action/<string:action_name>")
@@ -82,7 +82,7 @@ def create_visualizer_server(
                 if 0 <= cmd < 100:
                     try:
                         recv_queue.put((cmd, data), timeout=1)
-                    except:
+                    except Exception:
                         import traceback
 
                         traceback.print_exc()

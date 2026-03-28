@@ -1,9 +1,9 @@
 import abc
 import hashlib
 import os
+import pickle
 from typing import Callable, Generic, TypeVar
 
-import cloudpickle
 import pandas as pd
 
 CachedDataType = TypeVar("CachedDataType")
@@ -59,7 +59,19 @@ class CacheFileReader(abc.ABC, Generic[CachedDataType]):
 
         cache_file = os.path.join(self.cache_dir, hash_value + self.cache_file_ext)
         if os.path.exists(cache_file):
-            return self.read_cache(cache_file)
+            try:
+                return self.read_cache(cache_file)
+            except (
+                EOFError,
+                pickle.UnpicklingError,
+                AttributeError,
+                ImportError,
+                ModuleNotFoundError,
+            ):
+                os.remove(cache_file)
+                data = self.read_original_file(filename)
+                self.write_cache(cache_file, data)
+                return data
         else:
             data = self.read_original_file(filename)
             self.write_cache(cache_file, data)
@@ -79,11 +91,11 @@ class PickledCacheFileReader(CacheFileReader[CachedDataType]):
 
     def read_cache(self, cache_file: str) -> CachedDataType:
         with open(cache_file, "rb") as f:
-            return cloudpickle.load(f)
+            return pickle.load(f)
 
     def write_cache(self, cache_file: str, data: CachedDataType) -> None:
         with open(cache_file, "wb") as f:
-            cloudpickle.dump(data, f)
+            pickle.dump(data, f, protocol=pickle.HIGHEST_PROTOCOL)
 
     def read_original_file(self, filename: str) -> CachedDataType:
         return self.original_read_method(filename)

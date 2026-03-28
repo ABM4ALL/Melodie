@@ -8,11 +8,7 @@ from MelodieInfra import (
     show_link,
     show_prettified_warning,
 )
-
-# from .boost.grid import Grid, Spot
 from MelodieInfra.config.config import Config
-
-# from .boost.agent_list import AgentList, BaseAgentContainer, AgentDict
 from MelodieInfra.core import (
     Agent,
     AgentList,
@@ -255,11 +251,11 @@ class Model:
         """
         from Melodie import AgentList
 
-        agent_container_class: Union[Type[AgentList], Type["AgentDict"], None]
+        agent_container_class: Type[AgentList]
         if container_type == "list":
             agent_container_class = AgentList
         elif container_type == "dict":
-            agent_container_class = AgentDict
+            raise NotImplementedError("AgentDict is not yet implemented")
         else:
             raise NotImplementedError(
                 f"Container type '{container_type}' is not valid!"
