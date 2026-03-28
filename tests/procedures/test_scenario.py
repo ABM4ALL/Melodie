@@ -26,19 +26,19 @@ class DFLoader(DataLoader):
     pass
 
 
-class TestAgent(Agent):
+class DemoAgent(Agent):
     def setup(self):
         self.a = 123
         self.b = 456
         self.productivity = 0  # self.productivity
 
 
-class TestEnv(Environment):
+class DemoEnv(Environment):
     def setup(self):
         pass
 
 
-class TestScenario(Scenario):
+class DemoScenario(Scenario):
     def load_data(self):
         self.demo_data1 = self.load_dataframe("demo-data.xlsx")
         self.demo_data2 = self.load_dataframe("demo-data.csv")
@@ -55,7 +55,7 @@ class TestScenario(Scenario):
 
 
 class DCTestModel(Model):
-    scenario: TestScenario
+    scenario: DemoScenario
 
     def setup(self):
         params_df_1 = pd.DataFrame(
@@ -67,11 +67,11 @@ class DCTestModel(Model):
         # params_df_3 = pd.DataFrame(
         #     [{"a": 1.0, "b": 1, "productivity": 0} for i in range(20)]
         # )
-        self.agent_list1 = self.create_agent_container(TestAgent, 10, params_df_1)
+        self.agent_list1 = self.create_agent_container(DemoAgent, 10, params_df_1)
         self.agent_list1.setup_agents(10, params_df_1)
-        self.agent_list2 = self.create_agent_container(TestAgent, 20, params_df_2)
+        self.agent_list2 = self.create_agent_container(DemoAgent, 20, params_df_2)
         self.agent_list2.setup_agents(20, params_df_2)
-        self.environment = self.create_environment(TestEnv)
+        self.environment = self.create_environment(DemoEnv)
         # self.data_collector = self.create_data_collector(DataCollector1)
 
     def run(self):
@@ -95,8 +95,8 @@ class Simulator4Test(Simulator):
     def register_static_dataframes(self):
         return
 
-    def generate_scenarios(self) -> List[TestScenario]:
-        scenarios = [TestScenario(id_scenario=i) for i in range(2)]
+    def generate_scenarios(self) -> List[DemoScenario]:
+        scenarios = [DemoScenario(id_scenario=i) for i in range(2)]
         for s in scenarios:
             s.run_num = 2
             s.manager = self
@@ -106,13 +106,13 @@ class Simulator4Test(Simulator):
 
 @pytest.mark.timeout(15)
 def test_load_data():
-    s = Simulator4Test(cfg_for_temp, TestScenario, DCTestModel)
+    s = Simulator4Test(cfg_for_temp, DemoScenario, DCTestModel)
     # s.data_loader.load_dataframe("demo-data.xlsx")
     s.run()
 
 
 def test_scenario_copy_deepcopy():
-    scenario = TestScenario(id_scenario=1)
+    scenario = DemoScenario(id_scenario=1)
     scenario.manager = object()
     scenario.values = [1, 2]
     scenario.payload = {"a": [3, 4]}

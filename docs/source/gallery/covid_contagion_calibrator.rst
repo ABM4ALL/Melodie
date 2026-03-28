@@ -91,15 +91,17 @@ You can run the calibrator using the main script:
 
 This will execute the genetic algorithm, running multiple simulations in parallel to find the optimal ``infection_prob``. The results, including the progression of parameters and distances across generations, are saved to the ``data/output`` folder.
 
-When running on Python 3.13+ from the repository, this example now defaults to the thread-based mode. This avoids the local TCP socket requirement of the process-based ``rpyc`` worker mode and is the recommended path for modern free-threaded builds.
+When running on Python 3.13+ from the repository, this example defaults to the thread-based mode. On older Python versions it defaults to process-based execution. You can still override the choice manually with ``parallel_mode="thread"`` or ``parallel_mode="process"``.
 
 **Parallel Execution Mode**
 
-The ``Calibrator`` supports two parallelization modes, controlled by the ``parallel_mode`` parameter when creating the calibrator instance:
+The ``Calibrator`` supports two parallelization modes, controlled by the optional ``parallel_mode`` parameter when creating the calibrator instance:
 
 - **``parallel_mode="process"``**: Uses subprocess-based parallelism via ``multiprocessing``. This is the traditional approach and works on all Python versions, but it requires local TCP sockets for the ``rpyc`` worker bridge.
 
-- **``parallel_mode="thread"``**: Uses thread-based parallelism via ``ThreadPoolExecutor``. This mode is recommended for **Python 3.13+ free-threaded builds**, with the best-tested path currently being **Python 3.14**. In older Python versions, this mode will still run but may be limited by the Global Interpreter Lock (GIL).
+- **``parallel_mode="thread"``**: Uses thread-based parallelism via ``ThreadPoolExecutor``. This is the default mode on Python 3.13+ and avoids the ``rpyc`` worker socket requirement.
+
+- **``parallel_mode=None``** (default): Lets Melodie choose automatically. It selects ``"thread"`` on Python 3.13+ and ``"process"`` on older Python versions.
 
 You can specify the mode when creating the calibrator:
 
@@ -110,7 +112,7 @@ You can specify the mode when creating the calibrator:
        model_cls=CovidModel,
        scenario_cls=CovidScenario,
        processors=8,
-       parallel_mode="thread",  # or "process" (default)
+       parallel_mode="thread",  # or "process"; omit to auto-select
    )
 
 Calibrator: Code

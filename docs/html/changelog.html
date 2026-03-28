@@ -188,7 +188,6 @@
 <li class="toctree-l4"><a class="reference internal" href="api/simulator.html#Melodie.Simulator.run"><code class="docutils literal notranslate"><span class="pre">Simulator.run()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="api/simulator.html#Melodie.Simulator.run_visual"><code class="docutils literal notranslate"><span class="pre">Simulator.run_visual()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="api/simulator.html#Melodie.Simulator.run_parallel"><code class="docutils literal notranslate"><span class="pre">Simulator.run_parallel()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="api/simulator.html#Melodie.Simulator.run_parallel_multithread"><code class="docutils literal notranslate"><span class="pre">Simulator.run_parallel_multithread()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -450,6 +449,7 @@
 <h3>Version 1.1.1 (Mar. 27, 2026)<a class="headerlink" href="#version-1-1-1-mar-27-2026" title="Link to this heading"></a></h3>
 <ul class="simple">
 <li><p>Fix packaging, CI, and Python metadata inconsistencies.</p></li>
+<li><p>Fix grid coordinates bugs.</p></li>
 <li><p>Fix multiple runtime correctness bugs in scenario copying, agent indexing, visualization, table utilities, and parallel execution.</p></li>
 <li><p>Improve configuration round-tripping, cache recovery, and development environment metadata.</p></li>
 </ul>
@@ -459,8 +459,8 @@
 <ul class="simple">
 <li><p>Add new examples and update documentation.</p></li>
 <li><p>Fixed small bugs in <cite>Calibrator</cite> and <cite>Trainer</cite>.</p></li>
-<li><p>Add a new parallel execution mode for the simulator: <code class="docutils literal notranslate"><span class="pre">run_parallel_multithread</span></code> for Python 3.13+ free-threaded builds (best tested on Python 3.14.2).</p></li>
-<li><p>Add thread-based parallel execution mode for <cite>Calibrator</cite> and <cite>Trainer</cite> via the <code class="docutils literal notranslate"><span class="pre">parallel_mode</span></code> parameter, intended for Python 3.13+ free-threaded builds.</p></li>
+<li><p>Add thread-based execution support to <code class="docutils literal notranslate"><span class="pre">Simulator.run_parallel()</span></code> via the <code class="docutils literal notranslate"><span class="pre">parallel_mode</span></code> parameter.</p></li>
+<li><p>Add thread-based parallel execution mode for <code class="docutils literal notranslate"><span class="pre">Calibrator</span></code> and <code class="docutils literal notranslate"><span class="pre">Trainer</span></code> via the <code class="docutils literal notranslate"><span class="pre">parallel_mode</span></code> parameter.</p></li>
 <li><p>Expand tested Python version coverage through 3.14 (tested on 3.14.2).</p></li>
 </ul>
 </section>

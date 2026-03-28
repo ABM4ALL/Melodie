@@ -23,6 +23,7 @@ from MelodieInfra import (
     show_prettified_warning,
 )
 from MelodieInfra.db.db import db_conn
+from MelodieInfra.parallel.utils import resolve_parallel_mode
 
 from .data_loader import DataLoader
 from .model import Model
@@ -430,12 +431,21 @@ class Simulator(BaseModellingManager):
                 self.visualizer.reset()
                 logger.info("Model reset.")
 
-    def run_parallel(self, cores: int = 1):
+    def run_parallel(
+        self,
+        cores: int = 1,
+        parallel_mode: Optional[Literal["process", "thread"]] = None,
+    ):
         """
-        Run simulations in parallel using multiple processes.
+        Run simulations in parallel.
 
-        This method uses Python's ``multiprocessing.Pool`` to distribute the
-        simulation runs across a specified number of CPU cores.
+        If ``parallel_mode`` is explicitly set, that mode is used directly. If
+        it is left as ``None``, Melodie auto-selects ``"thread"`` on Python
+        3.13+ and ``"process"`` on older Python versions.
+
+        In process mode, this method uses a separate worker manager to
+        distribute simulation runs across CPU cores. In thread mode, it uses a
+        thread pool.
 
         To avoid race conditions during database table creation, the first
         simulation run is executed in the main process. This ensures that all
@@ -445,7 +455,41 @@ class Simulator(BaseModellingManager):
         :param cores: The number of CPU cores to use for parallel execution. It is
             recommended to set this to the number of **physical cores** on your
             machine for optimal performance.
+        :param parallel_mode: ``"process"`` or ``"thread"``. If omitted,
+            Melodie chooses automatically based on the Python version.
         """
+        resolved_parallel_mode = resolve_parallel_mode(parallel_mode)
+        if resolved_parallel_mode == "thread":
+            import concurrent.futures
+
+            t0 = time.time()
+            self.pre_run()
+
+            tasks = []
+            for scenario in self.scenarios:
+                for id_run in range(scenario.run_num):
+                    tasks.append((self.config, scenario.copy(), id_run, self.model_cls))
+
+            logger.info(
+                f"Starting multithreaded simulation with {cores} threads..."
+            )
+
+            with concurrent.futures.ThreadPoolExecutor(max_workers=cores) as executor:
+                futures = [executor.submit(self.run_model, *args) for args in tasks]
+                for future in concurrent.futures.as_completed(futures):
+                    try:
+                        future.result()
+                    except Exception as e:
+                        logger.error(f"Thread execution failed: {e}")
+                        import traceback
+
+                        traceback.print_exc()
+                        raise e
+
+            t2 = time.time()
+            logger.info(f"Multithreaded simulation completed. Time elapsed: {t2 - t0}s")
+            return
+
         from MelodieInfra.parallel.parallel_manager import ParallelManager
 
         t0 = time.time()
@@ -517,50 +561,3 @@ class Simulator(BaseModellingManager):
         finally:
             logger.info("quit parallel manager!")
             parallel_manager.close()
-
-    def run_parallel_multithread(self, cores: int = 1):
-        """
-        Experimental parallel execution utilizing Python 3.13+ free-threaded
-        builds, with the best-tested path currently being Python 3.14.
-
-        This method uses a ThreadPoolExecutor.
-        In Python 3.13+ free-threaded builds, it can leverage multiple cores
-        without the overhead of process creation or object pickling. In older
-        Python versions, it still runs concurrently but is limited by the GIL,
-        so CPU-bound workloads may not see a speedup.
-
-        :param cores: Number of threads to use.
-        """
-        import concurrent.futures
-
-        t0 = time.time()
-        self.pre_run()
-
-        # Prepare tasks
-        tasks = []
-        for scenario in self.scenarios:
-            for id_run in range(scenario.run_num):
-                tasks.append((self.config, scenario.copy(), id_run, self.model_cls))
-
-        logger.info(
-            f"Starting multithreaded simulation with {cores} threads (Targeting Python 3.13+ free-threaded builds)..."
-        )
-
-        # Use ThreadPoolExecutor instead of ProcessPool
-        with concurrent.futures.ThreadPoolExecutor(max_workers=cores) as executor:
-            # Submit all tasks
-            futures = [executor.submit(self.run_model, *args) for args in tasks]
-
-            # Wait for completion and handle exceptions
-            for future in concurrent.futures.as_completed(futures):
-                try:
-                    future.result()
-                except Exception as e:
-                    logger.error(f"Thread execution failed: {e}")
-                    import traceback
-
-                    traceback.print_exc()
-                    raise e
-
-        t2 = time.time()
-        logger.info(f"Multithreaded simulation completed. Time elapsed: {t2 - t0}s")

@@ -188,7 +188,6 @@
 <li class="toctree-l4"><a class="reference internal" href="api/simulator.html#Melodie.Simulator.run"><code class="docutils literal notranslate"><span class="pre">Simulator.run()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="api/simulator.html#Melodie.Simulator.run_visual"><code class="docutils literal notranslate"><span class="pre">Simulator.run_visual()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="api/simulator.html#Melodie.Simulator.run_parallel"><code class="docutils literal notranslate"><span class="pre">Simulator.run_parallel()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="api/simulator.html#Melodie.Simulator.run_parallel_multithread"><code class="docutils literal notranslate"><span class="pre">Simulator.run_parallel_multithread()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -505,9 +504,9 @@ pytest
 <li><p>rpyc (Parallel computing)</p></li>
 <li><p>flask (Web interface)</p></li>
 </ul>
-<p>Python versions 3.8 through 3.14 are tested and supported. Thread-based
-parallel execution is intended for Python 3.13+ free-threaded builds, with the
-best-tested path currently being Python 3.14.</p>
+<p>Python versions 3.8 through 3.14 are tested and supported. When no explicit
+parallel mode is provided, Melodie defaults to thread-based parallel execution
+on Python 3.13+ and process-based execution on older Python versions.</p>
 <p>For detailed dependencies, please visit
 <a class="reference external" href="https://github.com/ABM4ALL/Melodie/blob/master/requirements.txt">requirements.txt</a></p>
 </section>

@@ -97,11 +97,13 @@ The trainer clears the output directory before it runs. Therefore, after executi
 
 **Parallel Execution Mode**
 
-The ``Trainer`` supports two parallelization modes, controlled by the ``parallel_mode`` parameter when creating the trainer instance:
+The ``Trainer`` supports two parallelization modes, controlled by the optional ``parallel_mode`` parameter when creating the trainer instance:
 
-- **``parallel_mode="process"``** (default): Uses subprocess-based parallelism via ``multiprocessing``. This is the traditional approach and works on all Python versions. It is recommended for most use cases.
+- **``parallel_mode="process"``**: Uses subprocess-based parallelism via ``multiprocessing``. This is the traditional approach and works on all Python versions.
 
-- **``parallel_mode="thread"``**: Uses thread-based parallelism via ``ThreadPoolExecutor``. This mode is recommended for **Python 3.13+ free-threaded builds**, with the best-tested path currently being **Python 3.14**. In older Python versions, this mode will still run but may be limited by the Global Interpreter Lock (GIL).
+- **``parallel_mode="thread"``**: Uses thread-based parallelism via ``ThreadPoolExecutor``. This is the default mode on Python 3.13+.
+
+- **``parallel_mode=None``** (default): Lets Melodie choose automatically. It selects ``"thread"`` on Python 3.13+ and ``"process"`` on older Python versions.
 
 You can specify the mode when creating the trainer:
 
@@ -112,7 +114,7 @@ You can specify the mode when creating the trainer:
        scenario_cls=RPSScenario,
        model_cls=RPSModel,
        processors=4,
-       parallel_mode="thread",  # or "process" (default)
+       parallel_mode="thread",  # or "process"; omit to auto-select
    )
 
 Trainer: Code

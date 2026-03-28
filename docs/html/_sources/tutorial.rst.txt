@@ -169,14 +169,14 @@ After a run, the ``data/output`` folder will contain CSV files for analysis:
 Parallel Execution
 ------------------
 
-For large-scale experiments, running simulations sequentially can be time-consuming. Melodie provides two methods for parallel execution on multi-core machines, available on the ``Simulator`` object.
+For large-scale experiments, running simulations sequentially can be time-consuming. Melodie provides a single parallel entry point on the ``Simulator`` object.
 
-**1. ``run_parallel()``: Process-Based Parallelism**
+**``run_parallel()``: Auto-Selected Parallelism**
 
-This is the recommended and most robust method for parallelization in Melodie.
+This is the recommended high-level entry point for parallelization in Melodie.
 
-- **Mechanism**: It uses Python's ``multiprocessing`` module to spawn multiple independent worker processes. Each worker runs a subset of the simulation scenarios/runs on a separate CPU core.
-- **Use Case**: Ideal for any substantial simulation task. It scales well as it bypasses Python's Global Interpreter Lock (GIL), allowing for true parallel computation on CPU-bound models.
+- **Mechanism**: If you do not specify a mode, Melodie automatically chooses thread-based execution on Python 3.13+ and process-based execution on older Python versions. You can still override the choice manually with ``parallel_mode="process"`` or ``parallel_mode="thread"``.
+- **Use Case**: This is the default API to use when you want Melodie to choose a sensible parallel backend for the current interpreter.
 - **Usage**:
 
 .. code-block:: python
@@ -184,21 +184,9 @@ This is the recommended and most robust method for parallelization in Melodie.
    # In main.py, instead of simulator.run():
    simulator.run_parallel(cores=4)  # Use 4 CPU cores
 
-**2. ``run_parallel_multithread()``: Thread-Based Parallelism (Experimental)**
-
-This method is an experimental feature designed to leverage Python 3.13+
-free-threaded builds, with the best-tested path currently being Python 3.14.
-
-- **Mechanism**: It uses a thread pool instead of a process pool. This avoids the overhead of creating new processes and serializing (pickling) data between them.
-- **Use Case**:
-    - **Python 3.13+ free-threaded builds**: This method can offer significant performance gains over ``run_parallel()`` by running threads on multiple cores without the GIL.
-    - **Older Python Versions**: It will run concurrently but will be limited by the GIL. For CPU-bound ABM simulations, it is unlikely to provide a speedup and may even be slower than a sequential run.
-- **Usage**:
-
-.. code-block:: python
-
-   # In main.py, for experiments on Python 3.13+ free-threaded builds
-   simulator.run_parallel_multithread(cores=4)
+   # Or override the automatic choice explicitly:
+   simulator.run_parallel(cores=4, parallel_mode="process")
+   simulator.run_parallel(cores=4, parallel_mode="thread")
 
 **Performance Comparison: A Quick Case Study**
 
@@ -208,31 +196,31 @@ To demonstrate the difference, we ran the ``covid_contagion`` example with 24 sc
     - **Total Time**: ~0.90 seconds
     - **Mechanism**: Spawns 8 separate Python processes. Each process has its own memory and GIL, allowing them to run computations on different cores simultaneously. This is highly effective for CPU-bound tasks like ABM.
 
-- **`run_parallel_multithread(cores=8)`**:
+- **`run_parallel(cores=8, parallel_mode="thread")`**:
     - **Total Time**: ~1.01 seconds
     - **Mechanism**: Spawns 8 threads within a single Python process. In Python versions before 3.13, the GIL prevents these threads from executing Python code on more than one core at a time. The overhead of thread management can even make it slightly slower than the process-based approach.
 
-**Update: Test Results on Python 3.14.2 (Free-Threaded)**
+**Update: Test Results on Python 3.14.2**
 
-With the official support for a free-threaded model (No-GIL) in Python 3.14+, the performance dynamic has shifted dramatically as predicted. We ran the same test on the same 8-core machine using Python 3.14.2:
+On Python 3.14.2, the performance dynamic shifts because the thread-based backend avoids process startup and pickling overhead. We ran the same test on the same 8-core machine:
 
 - **`run_parallel(cores=8)`**:
     - **Total Time**: ~5.37 seconds
     - **Mechanism**: Still effective, but the overhead of creating 8 separate processes and pickling data for communication is now more apparent compared to the lightweight thread-based alternative.
 
-- **`run_parallel_multithread(cores=8)`**:
+- **`run_parallel(cores=8, parallel_mode="thread")`**:
     - **Total Time**: ~1.56 seconds
     - **Mechanism**: The 8 threads now run on 8 cores in true parallelism within a single process. By avoiding the overhead of process creation and data serialization, this method is now **over 3.4x faster** for this specific task.
 
-**Conclusion**: For CPU-bound agent-based models, ``run_parallel()`` remains a robust choice for all Python versions. However, if you are using **Python 3.14+** or another **Python 3.13+ free-threaded build**, ``run_parallel_multithread()`` is the recommended method for achieving superior performance on multi-core systems.
+**Conclusion**: For most use cases, call ``run_parallel()`` and let Melodie choose the backend automatically. If you want to force a specific backend, use ``parallel_mode=...`` explicitly.
 
 **A Note on Performance Trade-offs**
 
-An astute observer might notice that the absolute execution times on Python 3.14.2 for *both* methods were slower than on Python 3.11. This is an expected trade-off. The Python 3.14+ interpreter is more complex to support features like free-threading, leading to a higher startup overhead for each process.
+An astute observer might notice that the absolute execution times on Python 3.14.2 for *both* methods were slower than on Python 3.11. This is an expected trade-off. The newer interpreter has a higher startup overhead for each process in this micro-benchmark.
 
 In our test, the simulation task for each scenario is very short (milliseconds). Consequently, the overhead of creating new Python processes for ``run_parallel()`` becomes a significant portion of the total time, causing its slowdown from ~0.9s to ~5.37s.
 
-The key takeaway is not the absolute speed on this micro-task, but the **relative speedup**. The test clearly demonstrates that on Python 3.14 and newer free-threaded builds, ``run_parallel_multithread()`` effectively eliminates this high process-creation overhead, making it the superior architecture for computationally intensive models where the simulation time far outweighs the initial setup time.
+The key takeaway is not the absolute speed on this micro-task, but the **relative speedup**. The test clearly demonstrates that on Python 3.14 and newer builds, ``run_parallel(..., parallel_mode="thread")`` effectively eliminates this high process-creation overhead, making it the superior architecture for computationally intensive models where the simulation time far outweighs the initial setup time.
 
 **A Note on Paths and Parallel Execution**
 

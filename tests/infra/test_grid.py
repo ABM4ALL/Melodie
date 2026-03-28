@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 N = 10000_000
 
 
-class TestGridAgent(GridAgent):
+class DemoGridAgent(GridAgent):
     def set_category(self):
         self.category = 0
 
@@ -124,7 +124,7 @@ def test_roles():
             self.set_size(5, 5)
             self.set_multi(True)
 
-    agents = [TestGridAgent(i) for i in range(10)]
+    agents = [DemoGridAgent(i) for i in range(10)]
     grid2 = GridForRoles(Spot)
     grid2.setup_params(5, 5, multi=True)
     for agent in agents:
@@ -142,7 +142,7 @@ def test_single_grid():
     class GridForTest(Grid):
         pass
 
-    agents = [TestGridAgent(i) for i in range(15)]
+    agents = [DemoGridAgent(i) for i in range(15)]
 
     grid = GridForTest(
         Spot,
@@ -168,12 +168,12 @@ def test_single_grid():
     assert len(es) == 1
     assert spot in es
 
-    neighbors = grid.get_neighbors(TestGridAgent(100, 2, 2))
+    neighbors = grid.get_neighbors(DemoGridAgent(100, 2, 2))
     assert len(neighbors) == 8
     nbhd = grid.get_spot_neighborhood(grid.get_spot(2, 2))
     assert len(nbhd) == 8 and isinstance(nbhd, list)
 
-    nbhd = grid.get_agent_neighborhood(TestGridAgent(100, 2, 2))
+    nbhd = grid.get_agent_neighborhood(DemoGridAgent(100, 2, 2))
     assert len(nbhd) == 8 and isinstance(nbhd, list)
 
 
@@ -225,8 +225,8 @@ def test_containers():
     print("grid created!")
     grid.setup_params(10, 10)
     print("params setup!")
-    agent_list: AgentList[TestGridAgent] = model.create_agent_container(
-        TestGridAgent, 10
+    agent_list: AgentList[DemoGridAgent] = model.create_agent_container(
+        DemoGridAgent, 10
     )
     print(217)
     agent_list.setup_agents(10)
@@ -254,8 +254,8 @@ def test_roles_2():
     class GridForRoles(Grid):
         pass
 
-    # agents = [TestGridAgent(i) for i in range(10)]
-    # agents_b = [TestGridAgent(i) for i in range(10)]
+    # agents = [DemoGridAgent(i) for i in range(10)]
+    # agents_b = [DemoGridAgent(i) for i in range(10)]
     grid = GridForRoles(MySpot)
     grid.setup_params(100, 100, multi=True)
     grid.set_spot_property(

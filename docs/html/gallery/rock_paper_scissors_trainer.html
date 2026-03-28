@@ -188,7 +188,6 @@
 <li class="toctree-l4"><a class="reference internal" href="../api/simulator.html#Melodie.Simulator.run"><code class="docutils literal notranslate"><span class="pre">Simulator.run()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/simulator.html#Melodie.Simulator.run_visual"><code class="docutils literal notranslate"><span class="pre">Simulator.run_visual()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/simulator.html#Melodie.Simulator.run_parallel"><code class="docutils literal notranslate"><span class="pre">Simulator.run_parallel()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/simulator.html#Melodie.Simulator.run_parallel_multithread"><code class="docutils literal notranslate"><span class="pre">Simulator.run_parallel_multithread()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -521,10 +520,11 @@ In this model, agents start with heterogeneous payoff preferences and strategy w
 </div>
 <p>The trainer clears the output directory before it runs. Therefore, after executing the command, you will only find the trainer’s output tables in <code class="docutils literal notranslate"><span class="pre">examples/rock_paper_scissors_trainer/data/output</span></code>. If you need the simulator’s results, you should run it separately (for example, by commenting out the <code class="docutils literal notranslate"><span class="pre">run_trainer</span></code> call in <code class="docutils literal notranslate"><span class="pre">main.py</span></code>).</p>
 <p><strong>Parallel Execution Mode</strong></p>
-<p>The <code class="docutils literal notranslate"><span class="pre">Trainer</span></code> supports two parallelization modes, controlled by the <code class="docutils literal notranslate"><span class="pre">parallel_mode</span></code> parameter when creating the trainer instance:</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">Trainer</span></code> supports two parallelization modes, controlled by the optional <code class="docutils literal notranslate"><span class="pre">parallel_mode</span></code> parameter when creating the trainer instance:</p>
 <ul class="simple">
-<li><p><strong>``parallel_mode=”process”``</strong> (default): Uses subprocess-based parallelism via <code class="docutils literal notranslate"><span class="pre">multiprocessing</span></code>. This is the traditional approach and works on all Python versions. It is recommended for most use cases.</p></li>
-<li><p><strong>``parallel_mode=”thread”``</strong>: Uses thread-based parallelism via <code class="docutils literal notranslate"><span class="pre">ThreadPoolExecutor</span></code>. This mode is recommended for <strong>Python 3.13+ free-threaded builds</strong>, with the best-tested path currently being <strong>Python 3.14</strong>. In older Python versions, this mode will still run but may be limited by the Global Interpreter Lock (GIL).</p></li>
+<li><p><strong>``parallel_mode=”process”``</strong>: Uses subprocess-based parallelism via <code class="docutils literal notranslate"><span class="pre">multiprocessing</span></code>. This is the traditional approach and works on all Python versions.</p></li>
+<li><p><strong>``parallel_mode=”thread”``</strong>: Uses thread-based parallelism via <code class="docutils literal notranslate"><span class="pre">ThreadPoolExecutor</span></code>. This is the default mode on Python 3.13+.</p></li>
+<li><p><strong>``parallel_mode=None``</strong> (default): Lets Melodie choose automatically. It selects <code class="docutils literal notranslate"><span class="pre">&quot;thread&quot;</span></code> on Python 3.13+ and <code class="docutils literal notranslate"><span class="pre">&quot;process&quot;</span></code> on older Python versions.</p></li>
 </ul>
 <p>You can specify the mode when creating the trainer:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">trainer</span> <span class="o">=</span> <span class="n">RPSTrainer</span><span class="p">(</span>
@@ -532,7 +532,7 @@ In this model, agents start with heterogeneous payoff preferences and strategy w
     <span class="n">scenario_cls</span><span class="o">=</span><span class="n">RPSScenario</span><span class="p">,</span>
     <span class="n">model_cls</span><span class="o">=</span><span class="n">RPSModel</span><span class="p">,</span>
     <span class="n">processors</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
-    <span class="n">parallel_mode</span><span class="o">=</span><span class="s2">&quot;thread&quot;</span><span class="p">,</span>  <span class="c1"># or &quot;process&quot; (default)</span>
+    <span class="n">parallel_mode</span><span class="o">=</span><span class="s2">&quot;thread&quot;</span><span class="p">,</span>  <span class="c1"># or &quot;process&quot;; omit to auto-select</span>
 <span class="p">)</span>
 </pre></div>
 </div>

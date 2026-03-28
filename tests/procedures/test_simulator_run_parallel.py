@@ -3,7 +3,7 @@
 import os
 
 from MelodieInfra import Config
-from tests.procedures.simulator_demo import DCTestModel, Simulator4Test, TestScenario
+from tests.procedures.simulator_demo import DCTestModel, DemoScenario, Simulator4Test
 
 cfg_for_temp2 = Config(
     "temp_db_for_parallel_simulation",
@@ -21,6 +21,6 @@ def test_sim_parallel():
     sim = Simulator4Test(
         config=cfg_for_temp2,
         model_cls=DCTestModel,
-        scenario_cls=TestScenario,
+        scenario_cls=DemoScenario,
     )
-    sim.run_parallel_multithread(2)
+    sim.run_parallel(2)

@@ -21,6 +21,7 @@ import pandas as pd
 
 from MelodieInfra import Config, MelodieExceptions
 from MelodieInfra.parallel.parallel_manager import ParallelManager, ThreadParallelManager
+from MelodieInfra.parallel.utils import resolve_parallel_mode
 from MelodieInfra.utils import underline_to_camel
 
 from .algorithms import AlgorithmParameters
@@ -138,7 +139,7 @@ class GACalibratorAlgorithm:
         target_func: "Callable[[Model], Union[float, int]]",
         manager: "Calibrator" = None,
         processors=1,
-        parallel_mode: Literal["process", "thread"] = "process",
+        parallel_mode: Optional[Literal["process", "thread"]] = None,
     ):
         self.manager = manager
         self.params = params
@@ -168,7 +169,7 @@ class GACalibratorAlgorithm:
         self._chromosome_counter = 0
         self._current_generation = 0
         self.processors = processors
-        self.parallel_mode = parallel_mode
+        self.parallel_mode = resolve_parallel_mode(parallel_mode)
 
         if self.parallel_mode == "process":
             d = {
@@ -202,9 +203,6 @@ class GACalibratorAlgorithm:
                 worker_init_args=(self.manager,),
             )
             self.parallel_manager.run("calibrator")
-        else:
-            raise ValueError(f"Unknown parallel_mode: {parallel_mode}")
-
     def _thread_worker_func(
         self, core_id: int, task: Tuple, calibrator: "Calibrator"
     ) -> Tuple:
@@ -478,7 +476,7 @@ class Calibrator(BaseModellingManager):
         model_cls: "Optional[Type[Model]]",
         data_loader_cls: Type["DataLoader"] = None,
         processors: int = 1,
-        parallel_mode: Literal["process", "thread"] = "process",
+        parallel_mode: Optional[Literal["process", "thread"]] = None,
     ):
         """
         :param config: The project :class:`~Melodie.Config` object.
@@ -488,11 +486,10 @@ class Calibrator(BaseModellingManager):
             model.
         :param processors: The number of processor cores to use for parallel
             computation of the genetic algorithm.
-        :param parallel_mode: The parallelization mode. ``"process"`` (default)
-            uses subprocess-based parallelism, suitable for all Python versions.
-            ``"thread"`` uses thread-based parallelism, which is recommended for
-            Python 3.13+ free-threaded builds, with the best-tested path
-            currently being Python 3.14.
+        :param parallel_mode: The parallelization mode. If explicitly set to
+            ``"process"`` or ``"thread"``, that value is used directly. If left
+            as ``None``, Melodie auto-selects ``"thread"`` on Python 3.13+ and
+            ``"process"`` on older Python versions.
         """
         super().__init__(
             config=config,
@@ -501,7 +498,7 @@ class Calibrator(BaseModellingManager):
             data_loader_cls=data_loader_cls,
         )
         self.processes = processors
-        self.parallel_mode = parallel_mode
+        self.parallel_mode = resolve_parallel_mode(parallel_mode)
         self.training_strategy: "Optional[Type[SearchingAlgorithm]]" = None
         self.container_name: str = ""
 

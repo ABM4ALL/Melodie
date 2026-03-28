@@ -8,32 +8,32 @@ from MelodieInfra import GeneralTable
 from tests.infra.config import model
 
 
-class TestAgent(Agent):
+class DemoAgent(Agent):
     def setup(self):
         self.a = 0
 
 
-class TestAgentToFilter(Agent):
+class DemoAgentToFilter(Agent):
     def setup(self):
         self.a = 0
         self.b = 0.001
 
 
 def test_repr():
-    ta = TestAgent(0)
+    ta = DemoAgent(0)
     ta.setup()
     ret = repr(ta)
     print(ret)
-    assert "<TestAgent " in ret
+    assert "<DemoAgent " in ret
     assert "'a'" in ret
     assert "'id'" in ret
     assert isinstance(ta.id, int)
 
 
 def test_agent_manager_filter():
-    am = AgentList(TestAgentToFilter, model)
+    am = AgentList(DemoAgentToFilter, model)
     for i in range(10):
-        ta = TestAgentToFilter(0)
+        ta = DemoAgentToFilter(0)
         am.add(ta)
         ta.a = i
         ta.b = float(i)
@@ -43,11 +43,11 @@ def test_agent_manager_filter():
 
 
 def test_agent_manager_type_hinting():
-    ta = TestAgent(0)
+    ta = DemoAgent(0)
     # ta.setup()
-    am = AgentList(TestAgent, model)
+    am = AgentList(DemoAgent, model)
     am.add(ta, {"a": 0})
-    ta_2 = TestAgent(1)
+    ta_2 = DemoAgent(1)
     # ta_2.setup()
     ta_2.a = 1
     am.add(ta_2, {"a": 1})
@@ -69,7 +69,7 @@ def test_agent_manager_type_hinting():
 
 def test_properties():
     n = random.randint(10, 1000)
-    al: AgentList[TestAgent] = AgentList(TestAgent, model)
+    al: AgentList[DemoAgent] = AgentList(DemoAgent, model)
     l = [j for j in range(n)]
     random.shuffle(l)
     df = pd.DataFrame([{"id": i, "a": random.randint(-100, 100)} for i in l])
@@ -90,7 +90,7 @@ def test_properties():
 
 def test_add_del_agents():
     n = 20
-    al = AgentList(TestAgent, model)
+    al = AgentList(DemoAgent, model)
     al.setup_agents(n)
     al.remove(al[10])
     al.add()
@@ -100,7 +100,7 @@ def test_add_del_agents():
     assert al.get_agent(-1) is None
     for agent in al:
         assert al.get_agent(agent.id).id == agent.id
-    new_agent = TestAgent(100)
+    new_agent = DemoAgent(100)
     al.add(new_agent, {"id": 1000})
     ids = al.all_agent_ids()
     assert len(ids) == len(al.agents)
@@ -108,25 +108,25 @@ def test_add_del_agents():
 
 def test_repr_agent_manager():
     n = 20
-    al = AgentList(TestAgent, model)
+    al = AgentList(DemoAgent, model)
     al.setup_agents(n)
     repr(al)  # Not check
 
 
 # def test_add_del_agents_dict():
 #     n = 20
-#     al = AgentDict(TestAgent, n, model)
+#     al = AgentDict(DemoAgent, n, model)
 #     al.remove(al[10])
 #     al.add()
 #     assert len(al) == 20
 #     for agent in al:
 #         assert al.get_agent(agent.id).id == agent.id
-#     new_agent = TestAgent(100)
+#     new_agent = DemoAgent(100)
 #     al.add(new_agent, {"id": 1000})
 
 
 def test_agent_list_iteration():
-    al = AgentList(TestAgent, model)
+    al = AgentList(DemoAgent, model)
     times = 0
     for _ in al:
         l = [a.id for a in al]
@@ -146,7 +146,7 @@ def test_properties_with_scenario():
     """
     n = 10
     assert isinstance(model.scenario.id, int)
-    for al in [AgentList(TestAgent, model)]:
+    for al in [AgentList(DemoAgent, model)]:
         l = [j for j in range(n)]
         random.shuffle(l)
         df = pd.DataFrame(

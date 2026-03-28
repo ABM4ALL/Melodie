@@ -6,6 +6,7 @@ from typing import TYPE_CHECKING, Dict, Generator, List, Optional, Tuple
 
 import pandas as pd
 import sqlalchemy
+from pandas.errors import DatabaseError as PandasDatabaseError
 from sqlalchemy.exc import OperationalError
 from sqlalchemy.sql import text
 from sqlalchemy_utils import create_database, database_exists
@@ -271,7 +272,7 @@ class DBConn:
                 return GeneralTable.from_database(
                     self.connection, table_name, sql_text, params=params
                 )
-        except OperationalError:
+        except (OperationalError, PandasDatabaseError):
             import traceback
 
             traceback.print_exc()

@@ -188,7 +188,6 @@
 <li class="toctree-l4"><a class="reference internal" href="#Melodie.Simulator.run"><code class="docutils literal notranslate"><span class="pre">Simulator.run()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#Melodie.Simulator.run_visual"><code class="docutils literal notranslate"><span class="pre">Simulator.run_visual()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#Melodie.Simulator.run_parallel"><code class="docutils literal notranslate"><span class="pre">Simulator.run_parallel()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#Melodie.Simulator.run_parallel_multithread"><code class="docutils literal notranslate"><span class="pre">Simulator.run_parallel_multithread()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -510,36 +509,27 @@ resets from the web interface.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="Melodie.Simulator.run_parallel">
-<span class="sig-name descname"><span class="pre">run_parallel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cores</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.Simulator.run_parallel" title="Link to this definition"></a></dt>
-<dd><p>Run simulations in parallel using multiple processes.</p>
-<p>This method uses Python’s <code class="docutils literal notranslate"><span class="pre">multiprocessing.Pool</span></code> to distribute the
-simulation runs across a specified number of CPU cores.</p>
+<span class="sig-name descname"><span class="pre">run_parallel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cores</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parallel_mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'process'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'thread'</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.Simulator.run_parallel" title="Link to this definition"></a></dt>
+<dd><p>Run simulations in parallel.</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">parallel_mode</span></code> is explicitly set, that mode is used directly. If
+it is left as <code class="docutils literal notranslate"><span class="pre">None</span></code>, Melodie auto-selects <code class="docutils literal notranslate"><span class="pre">&quot;thread&quot;</span></code> on Python
+3.13+ and <code class="docutils literal notranslate"><span class="pre">&quot;process&quot;</span></code> on older Python versions.</p>
+<p>In process mode, this method uses a separate worker manager to
+distribute simulation runs across CPU cores. In thread mode, it uses a
+thread pool.</p>
 <p>To avoid race conditions during database table creation, the first
 simulation run is executed in the main process. This ensures that all
 necessary tables are created before the parallel workers start writing
 to them.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>cores</strong> – The number of CPU cores to use for parallel execution. It is
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cores</strong> – The number of CPU cores to use for parallel execution. It is
 recommended to set this to the number of <strong>physical cores</strong> on your
-machine for optimal performance.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="Melodie.Simulator.run_parallel_multithread">
-<span class="sig-name descname"><span class="pre">run_parallel_multithread</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cores</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Melodie.Simulator.run_parallel_multithread" title="Link to this definition"></a></dt>
-<dd><p>Experimental parallel execution utilizing Python 3.13+ free-threaded
-builds, with the best-tested path currently being Python 3.14.</p>
-<p>This method uses a ThreadPoolExecutor.
-In Python 3.13+ free-threaded builds, it can leverage multiple cores
-without the overhead of process creation or object pickling. In older
-Python versions, it still runs concurrently but is limited by the GIL,
-so CPU-bound workloads may not see a speedup.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>cores</strong> – Number of threads to use.</p>
+machine for optimal performance.</p></li>
+<li><p><strong>parallel_mode</strong> – <code class="docutils literal notranslate"><span class="pre">&quot;process&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">&quot;thread&quot;</span></code>. If omitted,
+Melodie chooses automatically based on the Python version.</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>

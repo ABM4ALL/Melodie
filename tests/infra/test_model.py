@@ -6,20 +6,20 @@ from MelodieInfra import MelodieException
 from tests.infra.config import cfg
 
 
-class TestAgent(Agent):
+class DemoAgent(Agent):
     def setup(self):
         self.a = 123
         self.b = 456
         self.productivity = 0.0
 
 
-class TestModel(Model):
+class DemoModel(Model):
     def setup(self):
         N = 10
         params_df = pd.DataFrame(
             [{"id": i, "a": 123, "b": 456, "productivity": 0.0} for i in range(N)]
         )
-        self.agent_list1 = self.create_agent_list(TestAgent)
+        self.agent_list1 = self.create_agent_list(DemoAgent)
         self.agent_list1.setup_agents(N, params_df)
         self.agent_list1[2].id = 1
         self.agent_list1[3].id = 1
@@ -29,7 +29,7 @@ class TestModel(Model):
 
 
 def test_agent_container_id_check():
-    tm = TestModel(config=cfg, scenario=Scenario(id_scenario=0))
+    tm = DemoModel(config=cfg, scenario=Scenario(id_scenario=0))
     tm.setup()
     try:
         tm._check_agent_containers()

@@ -1,7 +1,7 @@
 from Melodie import Agent
 
 
-class TestAgent(Agent):
+class DemoAgent(Agent):
     def setup(self):
         self.param_a = 0.1
         self.param_b = 0.1

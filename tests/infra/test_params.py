@@ -11,7 +11,7 @@ from Melodie import Scenario
 from MelodieInfra.lowcode.params import ArrayParam, FloatParam, IntParam, ParamsManager
 
 
-class TestScenario(Scenario):
+class DemoScenario(Scenario):
     def setup(self):
         self.a = 123
         self.f = 455.0
@@ -31,7 +31,7 @@ def create_index_setter_pattern(index):
 
 
 def test_array_params():
-    scenario = TestScenario(0)
+    scenario = DemoScenario(0)
     scenario._setup()
     p1 = IntParam(
         "0", (0, 20), lambda scenario: scenario.e123[0], create_index_setter_pattern(0)
@@ -70,7 +70,7 @@ def test_array_params():
     print("value json", pm.to_value_json())
     ParamsManager.for_each_param(pm.params, "", lambda name, param: print(name, param))
 
-    scenario2 = TestScenario()
+    scenario2 = DemoScenario()
     scenario2.setup()
     scenario2.e123 = [4, 5]
     ParamsManager.write_obj_attrs_to_params_list(scenario2, pm.params)
@@ -80,7 +80,7 @@ def test_array_params():
 
 def test_param_inheritance():
     int_param = IntParam("a", (0, 200))
-    scenario = TestScenario(0)
+    scenario = DemoScenario(0)
     scenario._setup()
     int_param.extract_value(scenario)
 

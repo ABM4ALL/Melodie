@@ -74,9 +74,9 @@ Melodie's core functionality relies on several key packages:
 * rpyc (Parallel computing)
 * flask (Web interface)
 
-Python versions 3.8 through 3.14 are tested and supported. Thread-based
-parallel execution is intended for Python 3.13+ free-threaded builds, with the
-best-tested path currently being Python 3.14.
+Python versions 3.8 through 3.14 are tested and supported. When no explicit
+parallel mode is provided, Melodie defaults to thread-based parallel execution
+on Python 3.13+ and process-based execution on older Python versions.
 
 For detailed dependencies, please visit
 `requirements.txt <https://github.com/ABM4ALL/Melodie/blob/master/requirements.txt>`_

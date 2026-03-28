@@ -188,7 +188,6 @@
 <li class="toctree-l4"><a class="reference internal" href="../api/simulator.html#Melodie.Simulator.run"><code class="docutils literal notranslate"><span class="pre">Simulator.run()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/simulator.html#Melodie.Simulator.run_visual"><code class="docutils literal notranslate"><span class="pre">Simulator.run_visual()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../api/simulator.html#Melodie.Simulator.run_parallel"><code class="docutils literal notranslate"><span class="pre">Simulator.run_parallel()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../api/simulator.html#Melodie.Simulator.run_parallel_multithread"><code class="docutils literal notranslate"><span class="pre">Simulator.run_parallel_multithread()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -527,12 +526,13 @@
 </pre></div>
 </div>
 <p>This will execute the genetic algorithm, running multiple simulations in parallel to find the optimal <code class="docutils literal notranslate"><span class="pre">infection_prob</span></code>. The results, including the progression of parameters and distances across generations, are saved to the <code class="docutils literal notranslate"><span class="pre">data/output</span></code> folder.</p>
-<p>When running on Python 3.13+ from the repository, this example now defaults to the thread-based mode. This avoids the local TCP socket requirement of the process-based <code class="docutils literal notranslate"><span class="pre">rpyc</span></code> worker mode and is the recommended path for modern free-threaded builds.</p>
+<p>When running on Python 3.13+ from the repository, this example defaults to the thread-based mode. On older Python versions it defaults to process-based execution. You can still override the choice manually with <code class="docutils literal notranslate"><span class="pre">parallel_mode=&quot;thread&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">parallel_mode=&quot;process&quot;</span></code>.</p>
 <p><strong>Parallel Execution Mode</strong></p>
-<p>The <code class="docutils literal notranslate"><span class="pre">Calibrator</span></code> supports two parallelization modes, controlled by the <code class="docutils literal notranslate"><span class="pre">parallel_mode</span></code> parameter when creating the calibrator instance:</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">Calibrator</span></code> supports two parallelization modes, controlled by the optional <code class="docutils literal notranslate"><span class="pre">parallel_mode</span></code> parameter when creating the calibrator instance:</p>
 <ul class="simple">
 <li><p><strong>``parallel_mode=”process”``</strong>: Uses subprocess-based parallelism via <code class="docutils literal notranslate"><span class="pre">multiprocessing</span></code>. This is the traditional approach and works on all Python versions, but it requires local TCP sockets for the <code class="docutils literal notranslate"><span class="pre">rpyc</span></code> worker bridge.</p></li>
-<li><p><strong>``parallel_mode=”thread”``</strong>: Uses thread-based parallelism via <code class="docutils literal notranslate"><span class="pre">ThreadPoolExecutor</span></code>. This mode is recommended for <strong>Python 3.13+ free-threaded builds</strong>, with the best-tested path currently being <strong>Python 3.14</strong>. In older Python versions, this mode will still run but may be limited by the Global Interpreter Lock (GIL).</p></li>
+<li><p><strong>``parallel_mode=”thread”``</strong>: Uses thread-based parallelism via <code class="docutils literal notranslate"><span class="pre">ThreadPoolExecutor</span></code>. This is the default mode on Python 3.13+ and avoids the <code class="docutils literal notranslate"><span class="pre">rpyc</span></code> worker socket requirement.</p></li>
+<li><p><strong>``parallel_mode=None``</strong> (default): Lets Melodie choose automatically. It selects <code class="docutils literal notranslate"><span class="pre">&quot;thread&quot;</span></code> on Python 3.13+ and <code class="docutils literal notranslate"><span class="pre">&quot;process&quot;</span></code> on older Python versions.</p></li>
 </ul>
 <p>You can specify the mode when creating the calibrator:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">calibrator</span> <span class="o">=</span> <span class="n">CovidCalibrator</span><span class="p">(</span>
@@ -540,7 +540,7 @@
     <span class="n">model_cls</span><span class="o">=</span><span class="n">CovidModel</span><span class="p">,</span>
     <span class="n">scenario_cls</span><span class="o">=</span><span class="n">CovidScenario</span><span class="p">,</span>
     <span class="n">processors</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span>
-    <span class="n">parallel_mode</span><span class="o">=</span><span class="s2">&quot;thread&quot;</span><span class="p">,</span>  <span class="c1"># or &quot;process&quot; (default)</span>
+    <span class="n">parallel_mode</span><span class="o">=</span><span class="s2">&quot;thread&quot;</span><span class="p">,</span>  <span class="c1"># or &quot;process&quot;; omit to auto-select</span>
 <span class="p">)</span>
 </pre></div>
 </div>

@@ -22,4 +22,4 @@ if __name__ == "__main__":
     )
     simulator.run()
     # simulator.run_parallel(cores=8)
-    # simulator.run_parallel_multithread(cores=8)
+    # simulator.run_parallel(cores=8, parallel_mode="thread")

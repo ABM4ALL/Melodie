@@ -12,6 +12,9 @@ class DFLoader(DataLoader):
 @pytest.mark.timeout(15)
 def test_calibrator():
     calibrator = CovidCalibrator(
-        cfg_for_calibrator, CovidScenario, CovidModel, processors=2
+        cfg_for_calibrator,
+        CovidScenario,
+        CovidModel,
+        processors=2,
     )
     calibrator.run()

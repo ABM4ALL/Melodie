@@ -32,19 +32,19 @@ class DFLoader(DataLoader):
     pass
 
 
-class TestAgent(Agent):
+class DemoAgent(Agent):
     def setup(self):
         self.a = 123
         self.b = 456
         self.productivity = 0  # self.productivity
 
 
-class TestEnv(Environment):
+class DemoEnv(Environment):
     def setup(self):
         pass
 
 
-class TestScenario(Scenario):
+class DemoScenario(Scenario):
     def setup(self):
         self.period_num = 1
         self.productivity = random.random()
@@ -61,11 +61,11 @@ class DCTestModel(Model):
         # params_df_3 = pd.DataFrame(
         #     [{"a": 1.0, "b": 1, "productivity": 0} for i in range(20)]
         # )
-        self.agent_list1 = self.create_agent_container(TestAgent, 10, params_df_1)
+        self.agent_list1 = self.create_agent_container(DemoAgent, 10, params_df_1)
         self.agent_list1.setup_agents(10, params_df_1)
-        self.agent_list2 = self.create_agent_container(TestAgent, 20, params_df_2)
+        self.agent_list2 = self.create_agent_container(DemoAgent, 20, params_df_2)
         self.agent_list2.setup_agents(20, params_df_2)
-        self.environment = self.create_environment(TestEnv)
+        self.environment = self.create_environment(DemoEnv)
         self.data_collector = self.create_data_collector(DataCollector1)
 
     def run(self):
@@ -85,7 +85,7 @@ class Simulator4Test(Simulator):
         return
 
     def generate_scenarios(self) -> List["Scenario"]:
-        scenarios = [TestScenario() for i in range(2)]
+        scenarios = [DemoScenario() for i in range(2)]
         for s in scenarios:
             s.manager = self
         return scenarios
@@ -107,7 +107,7 @@ def test_sim_parallel():
     sim = Simulator4Test(
         config=cfg_for_temp,
         model_cls=DCTestModel,
-        scenario_cls=TestScenario,
+        scenario_cls=DemoScenario,
     )
     sim.run_parallel()
 

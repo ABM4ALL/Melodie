@@ -2,6 +2,7 @@ import pandas as pd
 
 from Melodie.calibrator import GACalibratorParams
 from Melodie.trainer import GATrainerParams
+from MelodieInfra.parallel.utils import resolve_parallel_mode
 
 
 def test_trainer_params():
@@ -48,3 +49,10 @@ def test_calibrator_params():
     assert gcp_1.parameters[0].min == 0
     assert gcp_2.parameters[0].max == 1
     assert gcp_2.parameters[0].min == 0
+
+
+def test_resolve_parallel_mode():
+    assert resolve_parallel_mode("process", (3, 14)) == "process"
+    assert resolve_parallel_mode("thread", (3, 11)) == "thread"
+    assert resolve_parallel_mode(None, (3, 12)) == "process"
+    assert resolve_parallel_mode(None, (3, 13)) == "thread"
